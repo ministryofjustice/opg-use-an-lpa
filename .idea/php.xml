@@ -219,6 +219,202 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/psr/clock" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/var-exporter" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-key-mgmt" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-core" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-signature" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-checker" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/spomky-labs/base64url" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/spomky-labs/pki-framework" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-signature-algorithm-rsa" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-encryption" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/facile-it/php-openid-client" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/facile-it/php-jose-verifier" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/guzzle6-adapter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpstan/phpdoc-parser" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/fig/http-message-util" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/brick/varexporter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/brick/math" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/slevomat/coding-standard" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-server-handler" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-server-middleware" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/alphagov/notifications-php-client" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/openlss/lib-array2xml" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/netresearch/jsonmapper" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/behat/gherkin" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/behat/transliterator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mtdowling/jmespath.php" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/behat/mink" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/elie29/zend-phpdi-config" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/behat/behat" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/smart-gamma/pact-behat-extension" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/nikic/php-parser" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/nikic/fast-route" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/league/uri-parser" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/paragonie/hidden-string" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/paragonie/random_compat" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/paragonie/sodium_compat" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/blazon/psr11-monolog" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/friends-of-behat/mink-extension" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laravel/serializable-closure" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/friends-of-behat/mink-browserkit-driver" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-eventmanager" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/cash/lrucache" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-di/php-di" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-di/phpdoc-reader" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-cache" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-di/invoker" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-servicemanager" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/composer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/monolog/monolog" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/filp/whoops" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio-helpers" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio-router" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio-fastroute" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio-template" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/mezzio/mezzio-tooling" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/webimpress/coding-standard" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/webimpress/safe-writer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/dealerdirect/phpcodesniffer-composer-installer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpspec/prophecy" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/phpspec/prophecy-phpunit" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/cooperaj/behat-psr-extension" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/felixfbecker/advanced-json-rpc" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/felixfbecker/language-server-protocol" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psalm/plugin-phpunit" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/simple-cache" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-core" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-signature" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-signature-algorithm-ecdsa" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-checker" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/spomky-labs/pki-framework" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-signature-algorithm-rsa" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-encryption" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-key-mgmt" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/vimeo/psalm" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/facile-it/php-openid-client" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/facile-it/php-jose-verifier" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/dnoegel/php-xdg-base-dir" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/spomky-labs/base64url" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/kelunik/certificate" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/aws/aws-crt-php" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/webmozart/path-util" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/aws/aws-sdk-php" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/amp" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/sync" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/hpack" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/dns" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-httphandlerrunner" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/parser" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-config-aggregator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/psr-http-message-bridge" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/cache" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-diactoros" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/pact-foundation/pact-php" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/log" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-code" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/serialization" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-component-installer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/windows-registry" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-development-mode" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/socket" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-cli" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/http" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-stdlib" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/byte-stream" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-stratigility" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/http-server" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/laminas/laminas-escaper" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/event-dispatcher-contracts" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/process" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/error-handler" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php73" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/daverandom/libdns" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/http-foundation" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/doctrine/instantiator" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/http-kernel" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/doctrine/deprecations" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/process" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/ramsey/collection" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/ramsey/uuid" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/stella-maris/clock" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -434,14 +630,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="smoke">
-        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.2">
-          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini, /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini</additional_php_ini>
+        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.25">
+          <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.1.3">
+            <debugger_info debugger="xdebug" debugger_version="3.2.2">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -607,10 +803,8 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
-      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" custom_loader_path="$PROJECT_DIR$/service-api/app/vendor/autoload.php" phpunit_phar_path="" use_configuration_file="true" />
-      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/service-front/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="Psalm">
@@ -618,6 +812,7 @@
       <PsalmConfiguration tool_path="$PROJECT_DIR$/service-api/app/vendor/bin/psalm" />
       <psalm_fixer_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" tool_path="/app/vendor/bin/psalm" timeout="60000" />
       <psalm_fixer_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" tool_path="/app/vendor/bin/psalm" timeout="60000" />
+      <psalm_fixer_by_interpreter interpreter_id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" tool_path="/app/vendor/bin/psalm" timeout="60000" />
     </Psalm_settings>
   </component>
   <component name="PsalmOptionsConfiguration">

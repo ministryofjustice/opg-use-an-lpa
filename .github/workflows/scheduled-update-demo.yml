@@ -18,6 +18,7 @@ permissions:
   statuses: none
 
 jobs:
+  
   terraform_apply_environment:
     name: terraform apply demo environment
     uses: ./.github/workflows/_run-terraform.yml
@@ -66,5 +67,6 @@ jobs:
       - force_redeployment
     with:
       template: successful_demo_release.txt
+      workflow_status: ${{ needs.force_redeployment.result }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}

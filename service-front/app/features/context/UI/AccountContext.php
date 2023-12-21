@@ -2045,7 +2045,7 @@ class AccountContext implements Context
         $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
+        $this->ui->assertElementOnPage('button[name=sign-in-one-login]');
     }
 
     /**
@@ -2068,8 +2068,21 @@ class AccountContext implements Context
         );
 
         $this->iDoNotFollowRedirects();
-        $this->ui->pressButton('Sign in via One Login');
+        $this->ui->pressButton('sign-in-one-login');
         $this->iDoFollowRedirects();
+    }
+
+    /**
+     * @When /^I have logged in to one login in (English|Welsh)$/
+     */
+    public function iHaveLoggedInToOneLogin($language): void
+    {
+        $this->iAmOnTheTemporaryOneLoginPage();
+        $this->language = $language === 'English' ? 'en' : 'cy';
+        if ($this->language === 'cy') {
+            $this->iSelectTheWelshLanguage();
+        }
+        $this->iClickTheOneLoginButton();
     }
 
     /**
@@ -2095,5 +2108,23 @@ class AccountContext implements Context
     {
         $this->language = 'cy';
         $this->ui->clickLink('Cymraeg');
+    }
+
+    /**
+     * @When /^One Login returns a "(.*)" error$/
+     */
+    public function oneLoginReturnsAError($errorType): void
+    {
+        $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
+    }
+
+    /**
+     * @Then /^I am redirected to the login page with a "(.*)" error and "(.*)"$/
+     */
+    public function iAmRedirectedToTheLanguageErrorPage($errorType, $errorMessage): void
+    {
+        $basePath = $this->language === 'cy' ? '/cy' : '';
+        $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
+        $this->ui->assertPageContainsText($errorMessage);
     }
 }

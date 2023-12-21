@@ -138,6 +138,23 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   provider = aws.region
 }
 
+//----------------------------------
+// Allow API to access Elasticache
+resource "aws_security_group_rule" "api_ecs_service_elasticache_ingress" {
+  description              = "Allow elasticache ingress for API service"
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 6379
+  protocol                 = "tcp"
+  security_group_id        = data.aws_security_group.brute_force_cache_service.id
+  source_security_group_id = aws_security_group.api_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  provider = aws.region
+}
+
 //--------------------------------------
 // Api ECS Service Task level config
 
@@ -153,6 +170,7 @@ resource "aws_ecs_task_definition" "api" {
 
   provider = aws.region
 }
+
 
 //----------------
 // Permissions
@@ -428,6 +446,18 @@ locals {
         {
           name  = "ALLOW_GOV_ONE_LOGIN",
           value = tostring(var.feature_flags.allow_gov_one_login)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_URL",
+          value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_PORT",
+          value = tostring(data.aws_elasticache_replication_group.brute_force_cache_replication_group.port)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_TIMEOUT",
+          value = "60"
         }
       ]
   })

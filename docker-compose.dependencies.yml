@@ -16,6 +16,7 @@ services:
   codes-gateway:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
+      dockerfile: Dockerfile-Local-Helper
     ports:
       - 4343:4343
     volumes:
@@ -43,7 +44,7 @@ services:
   kms:
     image: nsmithuk/local-kms:3
     volumes:
-      - ./local-config:/init
+      - ./local-config/kms:/init
     environment:
       KMS_REGION: eu-west-1
       KMS_SEED_PATH: /init/kms-seed.yaml
@@ -99,16 +100,15 @@ services:
       - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
-    healthcheck:
-      test: ["CMD", "curl", "http://localhost:4566/_localstack/health?reload"]
+      - ./mock-integrations/secrets-manager/onelogin_mock_public_key.pem:/onelogin_mock_public_key.pem
 
   mock-one-login:
     container_name: mock-one-login
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/mock_onelogin_app
-    platform: linux/amd64
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/mock_onelogin_app:v0.46.0
     ports:
       - "4013:8080"
     environment:
       PUBLIC_URL: http://localhost:4013
       INTERNAL_URL: http://mock-one-login:8080
       REDIRECT_URL: http://localhost:9002/home/login
+      CLIENT_ID: client-id

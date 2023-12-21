@@ -68,7 +68,7 @@ class PopulateLpaMetadataTest extends TestCase
         $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
-        $this->assertObjectHasAttribute('56-5-5-5-5678', $result);
+        $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(1, $result->{'56-5-5-5-5678'}->{'activeCodeCount'});
     }
 
@@ -81,7 +81,7 @@ class PopulateLpaMetadataTest extends TestCase
         $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
-        $this->assertObjectHasAttribute('56-5-5-5-5678', $result);
+        $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->{'actorActive'});
     }
 
@@ -111,7 +111,7 @@ class PopulateLpaMetadataTest extends TestCase
         $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
-        $this->assertObjectHasAttribute('56-5-5-5-5678', $result);
+        $this->assertObjectHasProperty('56-5-5-5-5678', $result);
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->{'actorActive'});
     }
 }
