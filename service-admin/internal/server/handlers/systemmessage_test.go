@@ -20,14 +20,16 @@ func (m mockSystemMessageService) PutSystemMessages(ctx context.Context, message
 
 func Test_RenderTemplateLoadsFromParameterStore(t *testing.T) {
 	t.Parallel()
+
 	// TODO the mock should record a call to GetSystemMessages
-	// TODO the text areas should now contain the messages defined in the mock at the top of this file
+	// TODO given that the mock service returns certain message, the text areas should now contain the messages defined in the mock at the top of this file
 	t.Errorf("Oh no !!!")
 }
 
 func Test_SaveButtonSavesToParameterStore(t *testing.T) {
 	t.Parallel()
-	// TODO ensure we called PutSsytemMessages on mock service
+	// TODO ensure we called PutSsytemMessages on mock service when the button is pressed
+	// edge cases?  blank text areas?
 
 	t.Errorf("Oh no 2!!!")
 }

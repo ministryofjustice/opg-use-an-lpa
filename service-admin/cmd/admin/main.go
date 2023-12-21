@@ -41,6 +41,11 @@ func main() {
 			env.Get("AWS_REGION", "eu-west-1"),
 			"",
 		)
+		awsEndpoint = flag.String(
+			"dbRegion",
+			env.Get("AWS_ENDPOINT_URL", ""),
+			"",
+		)
 		dbTablePrefix = flag.String(
 			"dbTablePrefix",
 			env.Get("ADMIN_DYNAMODB_TABLE_PREFIX", ""),
@@ -85,7 +90,9 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
-	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config))
+	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config, func(o *ssm.Options) {
+		o.BaseEndpoint = aws.String(*awsEndpoint)
+	}))
 
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 
