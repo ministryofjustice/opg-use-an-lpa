@@ -120,5 +120,6 @@ class OneLoginServiceTest extends TestCase
         $this->assertEquals(new DateTime($lastLogin), $response->getDetail('lastLogin'));
         $this->assertEquals('fake@email.com', $response->getDetail('email'));
         $this->assertEquals('fake-sub-identity', $response->getDetail('subject'));
+        $this->assertEquals(false, $response->getDetail('NeedsReset'));
     }
 }

@@ -3,12 +3,15 @@
 namespace Service\OneLogin;
 
 use Common\Service\ApiClient\Client;
+use Common\Service\OneLogin\OneLoginService;
 use Common\Service\OneLogin\OneLoginServiceFactory;
 use Mezzio\Authentication\UserInterface;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-class OneLoginServiceFactoryTest
+class OneLoginServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -20,14 +23,11 @@ class OneLoginServiceFactoryTest
         $containerProphecy
             ->get(Client::class)
             ->willReturn($this->prophesize(Client::class)->reveal());
-
-        $containerProphecy
-            ->get(UserInterface::class)
-            ->willReturn($this->prophesize(UserInterface::class)->reveal());
-
         $containerProphecy
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+
+        $containerProphecy->get(UserInterface::class)->willReturn(function () {});
 
         $factory = new OneLoginServiceFactory();
 
