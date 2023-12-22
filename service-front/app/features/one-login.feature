@@ -3,13 +3,13 @@
 
     @ui @actor @ff:allow_gov_one_login:true
     Scenario: I initiate authentication via one login
-      Given I am on the temporary one login page
+      Given I am on the one login page
       When I click the one login button
       Then I am redirected to the redirect page in English
 
     @ui @actor @ff:allow_gov_one_login:true @welsh
     Scenario: I initiate authentication via one login in Welsh
-      Given I am on the temporary one login page
+      Given I am on the one login page
       And I select the Welsh language
       When I click the one login button
       Then I am redirected to the redirect page in Welsh
@@ -40,3 +40,15 @@
         | invalid_scope             |
         | unsupported_response_type |
         | server_error              |
+
+    @ui @actor @ff:allow_gov_one_login:true
+    Scenario: I am redirected to the dashboard when I have logged in
+      Given I have logged in to one login in English
+      When I successfully login to One Login
+      Then I am directed to my dashboard
+
+    @ui @actor @ff:allow_gov_one_login:true
+    Scenario: I am redirected to the add an lpa page on first login
+      Given I have logged in to one login in English
+      When I successfully login to One Login for the first time
+      Then I am taken to the add an LPA triage page
