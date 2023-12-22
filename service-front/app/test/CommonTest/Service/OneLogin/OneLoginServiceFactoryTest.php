@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Service\OneLogin;
 
 use Common\Service\ApiClient\Client;
@@ -26,8 +28,9 @@ class OneLoginServiceFactoryTest extends TestCase
         $containerProphecy
             ->get(LoggerInterface::class)
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
-
-        $containerProphecy->get(UserInterface::class)->willReturn(function () {});
+        $containerProphecy->get(UserInterface::class)
+            ->willReturn(function () {
+            });
 
         $factory = new OneLoginServiceFactory();
 
