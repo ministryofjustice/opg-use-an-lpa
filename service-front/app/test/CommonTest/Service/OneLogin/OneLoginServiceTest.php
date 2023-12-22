@@ -101,11 +101,12 @@ class OneLoginServiceTest extends TestCase
                     'auth_session' => $authCredentials,
                 ]
             )->willReturn([
-                'Id'        => 'fake-id',
-                'Identity'  => 'fake-sub-identity',
-                'Email'     => 'fake@email.com',
-                'LastLogin' => $lastLogin,
-                'Birthday'  => '1990-01-01'
+                'Id'         => 'fake-id',
+                'Identity'   => 'fake-sub-identity',
+                'Email'      => 'fake@email.com',
+                'LastLogin'  => $lastLogin,
+                'Birthday'   => '1990-01-01',
+                'NeedsReset' => false,
             ]);
 
         $oneLoginService = new OneLoginService(
