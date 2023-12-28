@@ -30,12 +30,22 @@ jobs:
     name: output workflow variables
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
+      semver_tag: ${{ steps.semver_tag.outputs.new_tag }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+  
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.64.0
+        id: semver_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          INITIAL_VERSION: 1.0.0
+          DEFAULT_BUMP: minor
 
   terraform_lint:
     name: lint terraform code
@@ -66,7 +76,7 @@ jobs:
       - node_test
       - node_build
     with:
-      tag: main-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: main-${{ needs.workflow_variables.outputs.semver_tag }}
       branch_name: main
       push_to_ecr: true
       specific_path: all
@@ -133,7 +143,7 @@ jobs:
     with:
       workspace: preproduction
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
     secrets: inherit
@@ -175,7 +185,7 @@ jobs:
     with:
       workspace: production
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
       extra_vars: "-var public_access_enabled=true"
@@ -217,21 +227,6 @@ jobs:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: always()
 
-  semver_tag:
-    name: update semantic version
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
-        
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.64.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: minor
-
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
@@ -245,5 +240,5 @@ jobs:
       - name: workflow has ended without issue
         run: |
           echo "Deployment to production successful"
-          echo "Tag Used: main-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
           echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
