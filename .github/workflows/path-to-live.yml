@@ -28,6 +28,8 @@ jobs:
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
+    permissions:
+      contents: write # To create a semver tag
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.new_tag }}
