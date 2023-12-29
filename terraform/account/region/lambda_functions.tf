@@ -11,7 +11,7 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
-  lambda_name       = "clsf-to-sqs"
+  lambda_name       = "clsf-to-sqs-${data.aws_region.current.name}"
   description       = "Function to take Cloudwatch Logs Subscription Filters and send them to SQS"
   working_directory = "/var/task"
   environment_variables = {
@@ -62,7 +62,7 @@ data "aws_kms_alias" "opg_metrics_api_key_encryption" {
 module "ship_to_opg_metrics" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
-  lambda_name       = "ship-to-opg-metrics"
+  lambda_name       = "ship-to-opg-metrics-${data.aws_region.current.name}"
   description       = "Function to take metrics from SQS and PUT them to OPG Metrics"
   working_directory = "/var/task"
   environment_variables = {
