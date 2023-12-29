@@ -74,7 +74,7 @@ resource "aws_s3_bucket_logging" "bucket" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "main" {
-  bucket = aws_s3_bucket.bucket.id 
+  bucket = aws_s3_bucket.bucket.id
 
   rule {
     object_ownership = var.object_ownership

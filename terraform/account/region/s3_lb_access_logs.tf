@@ -139,7 +139,7 @@ data "aws_iam_policy_document" "access_log" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "access_log" {
-  bucket = aws_s3_bucket.access_log.id 
+  bucket = aws_s3_bucket.access_log.id
 
   rule {
     object_ownership = "ObjectWriter"
