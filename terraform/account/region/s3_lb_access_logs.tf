@@ -150,6 +150,8 @@ resource "aws_s3_bucket_ownership_controls" "access_log" {
   rule {
     object_ownership = "ObjectWriter"
   }
+
+  provider = aws.region
 }
 
 resource "aws_s3_bucket_public_access_block" "access_log" {
