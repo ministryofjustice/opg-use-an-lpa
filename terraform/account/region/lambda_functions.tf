@@ -25,6 +25,10 @@ module "clsf_to_sqs" {
   ecr_arn                             = data.aws_ecr_repository.clsf_to_sqs.arn
   lambda_role_policy_document         = data.aws_iam_policy_document.clsf_to_sqs_lambda_function_policy[0].json
   aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
+
+  providers = {
+    aws = aws.region
+  }
 }
 
 data "aws_iam_policy_document" "clsf_to_sqs_lambda_function_policy" {
@@ -73,6 +77,10 @@ module "ship_to_opg_metrics" {
   ecr_arn                             = data.aws_ecr_repository.ship_to_opg_metrics.arn
   lambda_role_policy_document         = data.aws_iam_policy_document.ship_to_opg_metrics_lambda_function_policy[0].json
   aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
+
+  providers = {
+    aws = aws.region
+  }
 }
 
 data "aws_iam_policy_document" "ship_to_opg_metrics_lambda_function_policy" {
