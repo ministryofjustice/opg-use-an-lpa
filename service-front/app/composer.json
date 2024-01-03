@@ -40,7 +40,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-redis": "*",
-        "aws/aws-sdk-php": "^3.208.9",
+        "aws/aws-sdk-php": "3.283.2",
         "blazon/psr11-monolog": "^4.0",
         "cooperaj/better-twig-i18n": "^3.0",
         "dflydev/fig-cookies": "^3.0",
