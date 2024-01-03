@@ -1,5 +1,19 @@
-resource "aws_s3_bucket" "access_log" {
+# Old version of the access log bucket. The new version is suffixed with the region name. We're keeping this around for a while to ensure we don't lose any logs.
+resource "aws_s3_bucket" "old_access_log" {
+  count  = data.aws_region.current.name == "eu-west-1" ? 1 : 0
   bucket = "opg-ual-${var.environment_name}-lb-access-logs"
+
+  provider = aws.region
+}
+
+resource "null_resource" "old_access_log" {
+  provisioner "local-exec" {
+    command = "echo 'Reading ${data.aws_region.current.name}'"
+  }
+}
+
+resource "aws_s3_bucket" "access_log" {
+  bucket = "opg-ual-${var.environment_name}-lb-access-logs-${data.aws_region.current.name}"
 
   provider = aws.region
 }
@@ -7,6 +21,10 @@ resource "aws_s3_bucket" "access_log" {
 resource "aws_s3_bucket_acl" "access_log" {
   bucket = aws_s3_bucket.access_log.id
   acl    = "private"
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.access_log
+  ]
 
   provider = aws.region
 }
@@ -124,6 +142,16 @@ data "aws_iam_policy_document" "access_log" {
       type        = "AWS"
     }
   }
+}
+
+resource "aws_s3_bucket_ownership_controls" "access_log" {
+  bucket = aws_s3_bucket.access_log.id
+
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+
+  provider = aws.region
 }
 
 resource "aws_s3_bucket_public_access_block" "access_log" {

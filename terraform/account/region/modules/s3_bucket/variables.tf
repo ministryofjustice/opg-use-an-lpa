@@ -56,6 +56,16 @@ variable "versioning_enabled" {
   default     = false
 }
 
+variable "object_ownership" {
+  description = "The object ownership setting. Valid values are BucketOwnerPreferred and ObjectWriter."
+  default     = "ObjectWriter"
+
+  validation {
+    condition     = can(regex("BucketOwnerPreferred|ObjectWriter", var.object_ownership))
+    error_message = "object_ownership must be either BucketOwnerPreferred or ObjectWriter"
+  }
+}
+
 locals {
   environment = split("_", terraform.workspace)[0]
 }
