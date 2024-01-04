@@ -1,7 +1,7 @@
+# Function to update use a lpa event statistics to stats table
 module "lambda_update_statistics" {
   source      = "./modules/lambda"
   lambda_name = "update-statistics"
-  description = "Function to update use a lpa event statistics to stats table"
   environment_variables = {
     ENVIRONMENT = local.environment_name
     REGION      = data.aws_region.current.name
