@@ -32,13 +32,13 @@ data "aws_cloudwatch_log_group" "use-an-lpa" {
 }
 
 data "aws_kms_alias" "sessions_viewer" {
-  name = "alias/sessions-viewer"
+  name = "alias/sessions-viewer-mrk"
 
   provider = aws.region
 }
 
 data "aws_kms_alias" "sessions_actor" {
-  name = "alias/sessions-actor"
+  name = "alias/sessions-actor-mrk"
 
   provider = aws.region
 }
