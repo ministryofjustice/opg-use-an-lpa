@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "use_an_lpa" {
 }
 
 resource "aws_iam_role_policy" "execution_role" {
-  name   = "${var.environment_name}_execution_role"
+  name   = "${var.environment_name}_execution_role_${data.aws_region.current.name}"
   policy = data.aws_iam_policy_document.execution_role.json
   role   = var.ecs_execution_role.id
 
