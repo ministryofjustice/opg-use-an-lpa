@@ -34,15 +34,6 @@ module "eu_west_1" {
   ship_metrics_queue_enabled                = local.environment.ship_metrics_queue_enabled
   sirius_account_id                         = local.environment.sirius_account_id
 
-
-  acm_certificate_arns = {
-    use                = data.aws_acm_certificate.certificate_use.arn
-    view               = data.aws_acm_certificate.certificate_view.arn
-    admin              = data.aws_acm_certificate.certificate_admin.arn
-    public_facing_use  = data.aws_acm_certificate.public_facing_certificate_use.arn
-    public_facing_view = data.aws_acm_certificate.public_facing_certificate_view.arn
-  }
-
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
     user_pool_id                = local.admin_cognito_user_pool_id
@@ -111,15 +102,6 @@ module "eu_west_2" {
   session_expiry_warning                    = local.environment.session_expiry_warning
   ship_metrics_queue_enabled                = local.environment.ship_metrics_queue_enabled
   sirius_account_id                         = local.environment.sirius_account_id
-
-
-  acm_certificate_arns = {
-    use                = data.aws_acm_certificate.certificate_use.arn
-    view               = data.aws_acm_certificate.certificate_view.arn
-    admin              = data.aws_acm_certificate.certificate_admin.arn
-    public_facing_use  = data.aws_acm_certificate.public_facing_certificate_use.arn
-    public_facing_view = data.aws_acm_certificate.public_facing_certificate_view.arn
-  }
 
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id

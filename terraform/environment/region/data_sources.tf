@@ -25,11 +25,6 @@ data "aws_subnets" "public" {
 }
 
 
-data "aws_cloudwatch_log_group" "use-an-lpa" {
-  name = "use-an-lpa"
-
-  provider = aws.region
-}
 
 data "aws_kms_alias" "sessions_viewer" {
   name = "alias/sessions-viewer-mrk"
@@ -101,25 +96,8 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
-data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
-  provider = aws.management
-  name     = "use_an_lpa/stats_upload_lambda"
-}
-
 data "aws_secretsmanager_secret" "notify_api_key" {
   name = var.notify_key_secret_name
-
-  provider = aws.region
-}
-
-data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-private-key" {
-  name = "gov-uk-onelogin-identity-private-key"
-
-  provider = aws.region
-}
-
-data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-public-key" {
-  name = "gov-uk-onelogin-identity-public-key"
 
   provider = aws.region
 }

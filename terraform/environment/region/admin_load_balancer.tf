@@ -76,7 +76,7 @@ resource "aws_lb_listener" "admin_loadbalancer" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-2019-08"
 
-  certificate_arn = var.acm_certificate_arns.admin
+  certificate_arn = data.aws_acm_certificate.certificate_admin.arn
 
   default_action {
     type = "authenticate-oidc"
@@ -110,7 +110,7 @@ moved {
 
 resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certificate" {
   listener_arn    = aws_lb_listener.admin_loadbalancer.arn
-  certificate_arn = var.acm_certificate_arns.public_facing_use
+  certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
 
   provider = aws.region
 }

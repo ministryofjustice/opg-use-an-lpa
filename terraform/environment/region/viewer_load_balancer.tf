@@ -62,7 +62,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-2019-08"
 
-  certificate_arn = var.acm_certificate_arns.view
+  certificate_arn = data.aws_acm_certificate.certificate_view.arn
 
   default_action {
     target_group_arn = aws_lb_target_group.viewer.arn
@@ -74,7 +74,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 
 resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certificate" {
   listener_arn    = aws_lb_listener.viewer_loadbalancer.arn
-  certificate_arn = var.acm_certificate_arns.public_facing_view
+  certificate_arn = data.aws_acm_certificate.public_facing_certificate_view.arn
 
   provider = aws.region
 }
