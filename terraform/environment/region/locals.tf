@@ -31,4 +31,6 @@ locals {
     actor              = local.is_active_region ? module.actor_use_my_lpa.fqdn : ""
     viewer             = local.is_active_region ? module.viewer_use_my_lpa.fqdn : ""
   }
+
+  dev_wildcard = var.account_name == "production" ? "" : "*."
 }
