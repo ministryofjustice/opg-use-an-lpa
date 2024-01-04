@@ -2,6 +2,8 @@ resource "aws_shield_application_layer_automatic_response" "actor" {
   count        = var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
   resource_arn = aws_lb.actor.arn
   action       = "COUNT"
+
+  provider = aws.region
 }
 
 resource "aws_lb_target_group" "actor" {
@@ -76,6 +78,8 @@ resource "aws_lb_listener" "actor_loadbalancer" {
 resource "aws_lb_listener_certificate" "actor_loadbalancer_live_service_certificate" {
   listener_arn    = aws_lb_listener.actor_loadbalancer.arn
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
+
+  provider = aws.region
 }
 
 # redirect root to gov.uk

@@ -2,6 +2,8 @@
 data "aws_lambda_function" "clsf_to_sqs" {
   count         = var.ship_metrics_queue_enabled ? 1 : 0
   function_name = "clsf-to-sqs-${data.aws_region.current.name}"
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "events" {
