@@ -48,7 +48,8 @@
       Then I am directed to my dashboard
 
     @ui @actor @ff:allow_gov_one_login:true
-    Scenario: I am redirected to the add an lpa page on first login
+    Scenario: I am redirected to the add an lpa page on first login with no LPAs
       Given I have logged in to one login in English
       When I successfully login to One Login for the first time
-      Then I am taken to the add an LPA triage page
+      Then I am directed to my dashboard
+      And I choose to add my first LPA

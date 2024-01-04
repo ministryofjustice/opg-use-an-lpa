@@ -2174,6 +2174,13 @@ class AccountContext implements Context
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
         );
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 }
