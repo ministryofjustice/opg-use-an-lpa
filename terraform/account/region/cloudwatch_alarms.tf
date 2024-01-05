@@ -18,6 +18,8 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
   dimensions = {
     CacheClusterId = each.value
   }
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "elasticache_high_swap_utilization" {
@@ -40,4 +42,6 @@ resource "aws_cloudwatch_metric_alarm" "elasticache_high_swap_utilization" {
   dimensions = {
     CacheClusterId = each.value
   }
+
+  provider = aws.region
 }

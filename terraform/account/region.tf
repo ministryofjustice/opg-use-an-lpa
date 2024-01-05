@@ -13,7 +13,7 @@ module "eu_west_1" {
 
   providers = {
     aws.region     = aws.eu_west_1
-    aws.management = aws.management
+    aws.management = aws.management_eu_west_1
     aws.shared     = aws.shared
   }
 }
@@ -34,7 +34,7 @@ module "eu_west_2" {
 
   providers = {
     aws.region     = aws.eu_west_2
-    aws.management = aws.management
+    aws.management = aws.management_eu_west_2
     aws.shared     = aws.shared
   }
 }
