@@ -48,8 +48,7 @@
       Then I am directed to my dashboard
 
     @ui @actor @ff:allow_gov_one_login:true
-    Scenario: I am redirected to the add an lpa page on first login with no LPAs
+    Scenario: I am redirected to an empty dashboard when local account does not exist
       Given I have logged in to one login in English
-      When I successfully login to One Login for the first time
-      Then I am directed to my dashboard
-      And I choose to add my first LPA
+      When I have an email address that does not match a local account
+      Then I see an empty LPA dashboard

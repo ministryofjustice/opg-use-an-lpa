@@ -2156,9 +2156,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I successfully login to One Login for the first time$/
+     * @Then /^I have an email address that does not match a local account$/
      */
-    public function iSuccessfullyLoginToOneLoginForTheFirstTime(): void
+    public function iHaveAnEmailAddressThatDoesNotMatchALocalAccount(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -2182,5 +2182,14 @@ class AccountContext implements Context
             )
         );
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+    }
+
+    /**
+     * @Then /I see an empty LPA dashboard$/
+     */
+    public function iSeeAnEmptyLPADashboard(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Add your first LPA');
     }
 }
