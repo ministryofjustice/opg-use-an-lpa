@@ -26,7 +26,7 @@ class IngressManager:
         with open(config_file) as json_file:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
-            self.region = parameters['region']
+            self.region = parameters['active_region']
             self.security_groups = [
                 parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name']]
