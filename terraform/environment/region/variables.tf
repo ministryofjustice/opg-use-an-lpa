@@ -177,6 +177,11 @@ variable "regions" {
     condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
     error_message = "One (and only one) region must be marked as primary"
   }
+
+  validation {
+    condition     = length([for region in keys(var.regions) : region if var.regions[region].is_active]) == 1
+    error_message = "One (and only one) region must be marked as active"
+  }
 }
 
 variable "session_expires_use" {
