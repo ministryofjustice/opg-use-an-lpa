@@ -22,6 +22,6 @@ locals {
     public_facing_view_fqdn                  = local.active_region == "eu-west-1" ? module.eu_west_1.route53_fqdns.public_facing_view : module.eu_west_2.route53_fqdns.public_facing_view
     viewer_load_balancer_security_group_name = local.active_region == "eu-west-1" ? module.eu_west_1.security_group_names.viewer_loadbalancer : module.eu_west_2.security_group_names.viewer_loadbalancer
     actor_load_balancer_security_group_name  = local.active_region == "eu-west-1" ? module.eu_west_1.security_group_names.actor_loadbalancer : module.eu_west_2.security_group_names.actor_loadbalancer
-
+    active_region                            = local.active_region
   }
 }
