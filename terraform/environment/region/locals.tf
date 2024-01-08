@@ -1,8 +1,8 @@
 locals {
   policy_region_prefix = lower(replace(data.aws_region.current.name, "-", ""))
 
-  # The primary region is the region where the DynamoDB tables are created and replicated to the secondary region.
-  # The active region is the region where the ECS services are running.
+  # The primary region is the region where the DynamoDB tables are created and replicated to the secondary region. This should not be changed once the environment is created.
+  # The active region is the region where the ECS services are running. The is also the region where users will access the application.
   primary_region   = keys({ for region, region_data in var.regions : region => region_data if region_data.is_primary })[0]
   is_active_region = var.regions[data.aws_region.current.name].is_active
 
