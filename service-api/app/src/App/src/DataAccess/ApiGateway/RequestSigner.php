@@ -23,8 +23,6 @@ class RequestSigner
         $provider    = CredentialProvider::defaultProvider();
         $credentials = $provider()->wait();
 
-        $this->signer->region = 'eu-west-2';
-
         return $this->signer->signRequest($request, $credentials);
     }
 }
