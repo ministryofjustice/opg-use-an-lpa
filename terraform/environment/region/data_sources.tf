@@ -153,7 +153,7 @@ data "aws_iam_role" "ecs_autoscaling_service_role" {
 }
 
 data "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${var.account_name}-lb-access-logs"
+  bucket = "opg-ual-${var.account_name}-lb-access-logs-${data.aws_region.current.name}"
 
   provider = aws.region
 }
