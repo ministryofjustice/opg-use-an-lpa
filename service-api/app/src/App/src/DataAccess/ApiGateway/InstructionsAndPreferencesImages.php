@@ -14,7 +14,6 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
-use Aws\Credentials\CredentialProvider;
 
 class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImagesInterface
 {
@@ -43,12 +42,8 @@ class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImag
     private function makeGetRequest(string $url): ResponseInterface
     {
         $url     = sprintf('%s/%s', $this->apiBaseUri, $url);
-        $s4      = new SignatureV4('execute-api', 'eu-west-1');
         $request = new Request('GET', $url, $this->buildHeaders());
-
-        $provider = CredentialProvider::defaultProvider();
-
-        $request  = $s4->signRequest($request, $provider()->wait());
+        $request = $this->awsSignature->sign($request);
 
         try {
             $response = $this->httpClient->send($request);
