@@ -38,9 +38,9 @@ RUN python -m pip install \
         --target ${FUNCTION_DIR} \
         --requirement requirements.txt
 
-# Multi-stage build: grab a fresh copy of the base image
-FROM python-alpine
+FROM python:3.11-slim
 
+RUN apt -y update && apt -y install gcc python3-dev
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
 # Set working directory to function root directory
