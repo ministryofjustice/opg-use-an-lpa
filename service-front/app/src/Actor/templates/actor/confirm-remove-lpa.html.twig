@@ -13,13 +13,13 @@
                             {
                                 '%firstname%': lpa.getDonor.firstname,
                                 '%surname%': lpa.getDonor.surname,
-                            }
-                        %}Are you sure you want to remove %firstname% %surname%'s LPA?{% endtrans %}</h1>
+                            } %}Are you sure you want to remove %firstname% %surname%'s LPA?{% endtrans %}</h1>
 
                     <p class="govuk-body"><strong>{% trans %}LPA type:{% endtrans %}</strong> {{ lpaType }}</p>
 
                     {% if lpa is not null and lpa.status|lower == 'registered' %}
-                        <p class="govuk-body">{% trans %}This <abbr title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}This <abbr
+                                    title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}</p>
                     {% endif %}
 
                     {% if lpa is not null and (lpa.status|lower == 'registered' or lpa.status|lower == 'cancelled') %}
@@ -34,16 +34,25 @@
                         </ul>
                     {% endif %}
                     {{ govuk_form_open(form) }}
-                        {{ govuk_form_element(form.get('__csrf')) }}
-                        {{ govuk_form_element(form.get('actor_lpa_token')) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+                    {{ govuk_form_element(form.get('actor_lpa_token')) }}
 
-                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button govuk-button--secondary govuk-!-margin-right-1">
-                            {% trans %}Cancel{% endtrans %}
-                        </a>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
 
-                        <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--warning govuk-!-margin-right-1 ">
-                            {% trans %}Yes, remove LPA{% endtrans %}
-                        </button>
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item  " data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+
+                            <button data-prevent-double-click="true" type="submit" draggable="false"
+                                    class="govuk-button govuk-button--warning moj-button-menu__item govuk-button--secondary "
+                                    data-module="govuk-button">
+                                {% trans %}Yes, remove LPA{% endtrans %}
+                            </button>
+
+                        </div>
+                    </div>
 
                     {{ govuk_form_close() }}
                 </div>

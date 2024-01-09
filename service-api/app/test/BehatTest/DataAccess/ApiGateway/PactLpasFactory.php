@@ -26,7 +26,7 @@ class PactLpasFactory
 
         return new Lpas(
             new HttpClient(),
-            new SignatureV4('execute-api', 'eu-west-1'),
+            new SignatureV4('execute-api', $config['aws']['region']),
             $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),
