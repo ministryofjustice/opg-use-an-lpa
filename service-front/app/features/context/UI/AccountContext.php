@@ -2137,7 +2137,7 @@ class AccountContext implements Context
      * @Then /^I have an account whose sub matches a local account$/
      * @Then /^I have an email address that matches a local account$/
      */
-    public function iSuccessfullyLoginToOneLogin(): void
+    public function iHaveAMatchingLocalAccount(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
