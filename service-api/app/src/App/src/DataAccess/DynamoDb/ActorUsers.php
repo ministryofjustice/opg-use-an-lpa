@@ -13,6 +13,9 @@ use ParagonIE\HiddenString\HiddenString;
 
 use function password_hash;
 
+/**
+ * @psalm-import-type ActorUser from ActorUsersInterface
+ */
 class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
@@ -101,6 +104,32 @@ class ActorUsers implements ActorUsersInterface
 
         if (empty($usersData)) {
             throw new NotFoundException('User not found for email', ['email' => $email]);
+        }
+
+        return array_pop($usersData);
+    }
+
+    public function getByIdentity(string $identity): array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->query(
+            [
+                'TableName'                 => $this->actorUsersTable,
+                'IndexName'                 => 'IdentityIndex',
+                'KeyConditionExpression'    => 'Identity = :identity',
+                'ExpressionAttributeValues' => $marshaler->marshalItem(
+                    [
+                        ':identity' => $identity,
+                    ]
+                ),
+            ]
+        );
+
+        $usersData = $this->getDataCollection($result);
+
+        if (empty($usersData)) {
+            throw new NotFoundException('User not found for identity', ['identity' => $identity]);
         }
 
         return array_pop($usersData);

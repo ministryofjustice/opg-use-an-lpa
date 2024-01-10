@@ -63,6 +63,14 @@ interface ActorUsersInterface
     public function getByEmail(string $email): array;
 
     /**
+     * @param string $identity
+     * @return array
+     * @psalm-return ActorUser
+     * @throws NotFoundException
+     */
+    public function getByIdentity(string $identity): array;
+
+    /**
      * Gets an actor user when queried for by a password reset token
      *
      * @param string $resetToken
