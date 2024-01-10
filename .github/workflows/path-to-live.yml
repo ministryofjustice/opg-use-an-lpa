@@ -32,7 +32,7 @@ jobs:
       contents: write
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
-      semver_tag: ${{ steps.semver_tag.outputs.new_tag }}
+      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: extract variables for workflow
