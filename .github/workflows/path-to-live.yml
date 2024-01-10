@@ -43,9 +43,9 @@ jobs:
       - name: Bump version and push tag
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.3.1
         id: semver_tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          with_v: true
 
   terraform_lint:
     name: lint terraform code
