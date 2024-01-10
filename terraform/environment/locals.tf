@@ -107,9 +107,9 @@ variable "environments" {
       }),
       regions = map(
         object({
-          name       = string
-          is_active  = bool
-          is_primary = bool
+          enabled    = bool // Are we creating resources other than DynamoDB tables in this region? (e.g. ECS services, ALBs, etc.)
+          is_active  = bool // Is this the region that is currently receiving traffic? Only one region should be active at a time.
+          is_primary = bool // Is this the region where the primary DynamoDB tables are located? The primary region should not be changed once set.
         })
       )
     })

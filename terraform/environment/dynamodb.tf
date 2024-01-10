@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "actor_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
 
     }
@@ -66,7 +66,7 @@ resource "aws_dynamodb_table" "stats_table" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
     }
   }
@@ -164,7 +164,7 @@ resource "aws_dynamodb_table" "actor_users_table" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
     }
   }
@@ -219,7 +219,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
     }
   }
@@ -263,7 +263,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
     }
   }
@@ -340,7 +340,7 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     ]
 
     content {
-      region_name    = replica.value.name
+      region_name    = replica.key
       propagate_tags = true
     }
   }

@@ -1,4 +1,7 @@
 module "eu_west_1" {
+
+  count = local.environment.regions["eu-west-2"].enabled ? 1 : 0
+
   source = "./region"
 
   account_name                              = local.environment.account_name
@@ -67,7 +70,15 @@ module "eu_west_1" {
   }
 }
 
+moved {
+  from = module.eu_west_1
+  to  = module.eu_west_1[0]
+}
+
 module "eu_west_2" {
+
+  count = local.environment.regions["eu-west-2"].enabled ? 1 : 0
+
   source = "./region"
 
   account_name                              = local.environment.account_name
@@ -134,4 +145,9 @@ module "eu_west_2" {
     aws.management = aws.management
     aws.us-east-1  = aws.us-east-1
   }
+}
+
+moved {
+  from = module.eu_west_2
+  to  = module.eu_west_2[0]
 }
