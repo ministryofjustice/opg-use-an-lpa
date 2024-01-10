@@ -36,7 +36,7 @@ services:
   # Cache service
 
   redis:
-    image: redis:5
+    image: redis:7
 
   # ---------------------------
   # AWS KMS mock service
