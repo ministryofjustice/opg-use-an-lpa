@@ -72,7 +72,7 @@ module "eu_west_1" {
 
 moved {
   from = module.eu_west_1
-  to  = module.eu_west_1[0]
+  to   = module.eu_west_1[0]
 }
 
 module "eu_west_2" {
@@ -149,5 +149,5 @@ module "eu_west_2" {
 
 moved {
   from = module.eu_west_2
-  to  = module.eu_west_2[0]
+  to   = module.eu_west_2[0]
 }
