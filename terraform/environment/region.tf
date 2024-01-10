@@ -1,6 +1,6 @@
 module "eu_west_1" {
 
-  count = local.environment.regions["eu-west-2"].enabled ? 1 : 0
+  count = local.environment.regions["eu-west-1"].enabled ? 1 : 0
 
   source = "./region"
 
