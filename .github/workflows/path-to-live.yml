@@ -41,12 +41,15 @@ jobs:
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
 
       - name: Bump version and push tag
+<<<<<<< HEAD
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+=======
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.6.2
+>>>>>>> 650e1708 (UML-3242: #patch change back to 2.6.2 (#2499))
         id: semver_tag
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           with_v: true
-          default_bump: minor
 
   terraform_lint:
     name: lint terraform code
