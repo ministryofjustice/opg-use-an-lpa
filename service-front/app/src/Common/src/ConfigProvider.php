@@ -113,6 +113,7 @@ class ConfigProvider
 
                 // Auth
                 UserInterface::class => Entity\UserFactory::class,
+                Service\OneLogin\OneLoginService::class => Service\OneLogin\OneLoginServiceFactory::class,
 
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,

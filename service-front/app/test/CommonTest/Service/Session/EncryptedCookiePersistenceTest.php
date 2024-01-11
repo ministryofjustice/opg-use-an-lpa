@@ -21,6 +21,7 @@ namespace CommonTest\Service\Session;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\Encryption\EncryptInterface;
 use Common\Service\Session\KeyManager\Key;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Crypt\BlockCipher;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
@@ -259,6 +260,7 @@ class EncryptedCookiePersistenceTest extends TestCase
         ];
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
 
         // Boiler plate
         $responseProphecy->hasHeader('Expires')->willReturn(false);
