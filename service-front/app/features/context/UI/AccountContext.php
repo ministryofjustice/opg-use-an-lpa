@@ -2233,7 +2233,8 @@ class AccountContext implements Context
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
         );
-        $this->apiFixtures->append(
+
+      $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),

@@ -11,9 +11,6 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
     attribute_name = "ExpiresTTL"
     enabled        = true
   }
-  lifecycle {
-    prevent_destroy = true
-  }
 
   provider = aws.region
 }
