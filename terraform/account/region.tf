@@ -1,6 +1,8 @@
 module "eu_west_1" {
   source = "./region"
 
+  count = local.account.regions.eu_west_1.enabled ? 1 : 0
+
   account                  = local.account
   account_name             = local.account_name
   environment_name         = local.environment
@@ -18,9 +20,15 @@ module "eu_west_1" {
   }
 }
 
+moved {
+  from = module.eu_west_1
+  to   = module.eu_west_1[0]
+}
+
 module "eu_west_2" {
-  count  = local.environment == "development" ? 1 : 0
   source = "./region"
+
+  count = local.account.regions.eu_west_2.enabled ? 1 : 0
 
   account                  = local.account
   account_name             = local.account_name
