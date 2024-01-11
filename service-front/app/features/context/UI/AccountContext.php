@@ -8,6 +8,8 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use DateTime;
+use DateTimeInterface;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -46,6 +48,8 @@ class AccountContext implements Context
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
     private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
     private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
+    private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
+
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -2038,9 +2042,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the temporary one login page$/
+     * @Given /^I am on the one login page$/
      */
-    public function iAmOnTheTemporaryOneLoginPage(): void
+    public function iAmOnTheOneLoginPage(): void
     {
         $this->language = 'en';
         $this->ui->visit('/home');
@@ -2077,7 +2081,7 @@ class AccountContext implements Context
      */
     public function iHaveLoggedInToOneLogin($language): void
     {
-        $this->iAmOnTheTemporaryOneLoginPage();
+        $this->iAmOnTheOneLoginPage();
         $this->language = $language === 'English' ? 'en' : 'cy';
         if ($this->language === 'cy') {
             $this->iSelectTheWelshLanguage();
@@ -2126,5 +2130,50 @@ class AccountContext implements Context
         $basePath = $this->language === 'cy' ? '/cy' : '';
         $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
         $this->ui->assertPageContainsText($errorMessage);
+    }
+
+    /**
+     * @Then /^I successfully login to One Login$/
+     */
+    public function iSuccessfullyLoginToOneLogin(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                        'Identity'  => 'fakeSub',
+                        'Email'     => 'fake@email.com',
+                        'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        'Birthday'  => '01-01-1990',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+    }
+
+    /**
+     * @Then /^I successfully login to One Login for the first time$/
+     */
+    public function iSuccessfullyLoginToOneLoginForTheFirstTime(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                        'Identity'  => 'fakeSub',
+                        'Email'     => 'fake@email.com',
+                        'Birthday'  => '01-01-1990',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 }

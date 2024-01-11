@@ -37,6 +37,11 @@ variable "accounts" {
         bucket_name_suffix = string
       })
       s3_access_log_bucket_name = string
+      regions = map(
+        object({
+          enabled = bool
+        })
+      )
     })
   )
 }

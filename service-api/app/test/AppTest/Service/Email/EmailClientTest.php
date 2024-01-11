@@ -8,10 +8,13 @@ use Alphagov\Notifications\Client as NotifyClient;
 use App\Service\Email\EmailClient;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class EmailClientTest extends TestCase
 {
+    use ProphecyTrait;
+
     private NotifyClient|ObjectProphecy $notifyClientProphecy;
 
     private string $defaultLocale;

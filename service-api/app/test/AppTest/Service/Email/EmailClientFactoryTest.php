@@ -7,12 +7,15 @@ namespace AppTest\Service\Email;
 use App\Service\Email\EmailClient;
 use App\Service\Email\EmailClientFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
 class EmailClientFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
