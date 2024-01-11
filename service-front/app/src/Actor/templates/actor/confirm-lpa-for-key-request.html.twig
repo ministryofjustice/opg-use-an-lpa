@@ -6,7 +6,8 @@
 
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -71,15 +72,22 @@
 
                             <div class="moj-button-menu">
                                 <div class="moj-button-menu__wrapper">
-                                    <button type="submit" draggable="false" class="govuk-button moj-button-menu__item  " data-module="govuk-button">
-                                        {% trans %}Continue{% endtrans %}</button>
+
+                                    <button role="button" data-prevent-double-click="true" type="submit"
+                                            draggable="false" class="govuk-button moj-button-menu__item  "
+                                            data-module="govuk-button">
+                                        {% trans %}Continue{% endtrans %}
                                     </button>
-                                    <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+
+                                    <a href="{{ path('lpa.add') }}" role="button" draggable="false"
+                                       class="govuk-button moj-button-menu__item govuk-button--secondary "
+                                       data-module="govuk-button">
                                         {% trans %}This is not the correct LPA{% endtrans %}
                                     </a>
                                 </div>
                             </div>
                         </div>
+
                         {{ govuk_form_close() }}
                     </div>
                 </div>

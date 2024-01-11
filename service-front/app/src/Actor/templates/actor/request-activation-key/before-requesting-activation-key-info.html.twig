@@ -5,7 +5,8 @@
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.add') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.add') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -40,7 +41,10 @@
                     </ul>
 
 
-                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Unkown Reference Number" data-gaLabel="I do not know the LPA reference number">
+                    <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details"
+                             data-gaEventType="onClick" data-gaAction="Details"
+                             data-gaCategory="Unkown Reference Number"
+                             data-gaLabel="I do not know the LPA reference number">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
                                 {% trans %}I do not know the LPA reference number{% endtrans %}
@@ -51,10 +55,20 @@
                             <p>{% trans %}On the LPA, the donor told us who they wanted the registered paper LPA sent to. This may have been the donor or an attorney. If a professional, such as a solicitor, helped to make the LPA, it may have been sent to them.{% endtrans %}</p>
                         </div>
                     </details>
-
-                    <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" class="govuk-button">{% trans %}Continue{% endtrans %}</a>
-                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
-
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+                            <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
+                               draggable="false" class="govuk-button moj-button-menu__item  "
+                               data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </a>
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
