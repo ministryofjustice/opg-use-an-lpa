@@ -42,13 +42,19 @@
         | server_error              |
 
     @ui @actor @ff:allow_gov_one_login:true
-    Scenario: I am redirected to the dashboard when I have logged in
+    Scenario: I am redirected to the dashboard when local account does exist
       Given I have logged in to one login in English
-      When I successfully login to One Login
-      Then I am directed to my dashboard
+      When I have an email address that matches a local account
+      Then I see the LPA dashboard with any LPAs that are in the account
 
     @ui @actor @ff:allow_gov_one_login:true
-    Scenario: I am redirected to the add an lpa page on first login
+    Scenario: I am redirected to an empty dashboard when local account does not exist
       Given I have logged in to one login in English
-      When I successfully login to One Login for the first time
-      Then I am taken to the add an LPA triage page
+      When I have an email address that does not match a local account
+      Then I see an empty LPA dashboard
+
+    @ui @actor @ff:allow_gov_one_login:true
+    Scenario: I am redirected to the dashboard when local account already flagged as one-login
+      Given I have logged in to one login in English
+      When I have an account whose sub matches a local account
+      Then I see the LPA dashboard with any LPAs that are in the account

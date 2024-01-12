@@ -100,6 +100,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Encode to string
         $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
+        // Chromium based browsers do not work with a 'strict' SameSite values when redirecting from a
+        // third-party request. In this one situation it's ok to use a 'lax' value.
         $sameSite =
             $session->has(UserInterface::class)
             && $response->getStatusCode() !== StatusCodeInterface::STATUS_FOUND

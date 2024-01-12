@@ -49,6 +49,7 @@ class AccountContext implements Context
     private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
     private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
     private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES   = 'ViewerCodeService::getShareCodes';
 
 
     /**
@@ -2133,9 +2134,10 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I successfully login to One Login$/
+     * @Then /^I have an account whose sub matches a local account$/
+     * @Then /^I have an email address that matches a local account$/
      */
-    public function iSuccessfullyLoginToOneLogin(): void
+    public function iHaveAMatchingLocalAccount(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -2152,13 +2154,70 @@ class AccountContext implements Context
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
         );
+
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $userLpaActorToken = '12345789';
+        $lpaData           = [
+            'user-lpa-actor-token'       => $userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1975-10-05',
+                    'email'        => 'string',
+                    'firstname'    => 'Ian',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => 'Mr',
+                    'surname'      => 'Deputy',
+                    'systemStatus' => true,
+                    'uId'          => '700000000054',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $lpa,
+            'added'                      => '2021-10-5 12:00:00',
+        ];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$userLpaActorToken => $lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 
     /**
-     * @Then /^I successfully login to One Login for the first time$/
+     * @Then /^I have an email address that does not match a local account$/
      */
-    public function iSuccessfullyLoginToOneLoginForTheFirstTime(): void
+    public function iHaveAnEmailAddressThatDoesNotMatchALocalAccount(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -2174,6 +2233,32 @@ class AccountContext implements Context
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
         );
+
+      $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+    }
+
+    /**
+     * @Then /^I see the LPA dashboard with any LPAs that are in the account$/
+     */
+    public function iSeeTheLPADashboardWithAnyLPAsInAccount(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @Then /I see an empty LPA dashboard$/
+     */
+    public function iSeeAnEmptyLPADashboard(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Add your first LPA');
     }
 }
