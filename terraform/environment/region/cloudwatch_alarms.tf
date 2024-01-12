@@ -77,6 +77,8 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   threshold           = 5
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   treat_missing_data  = "notBreaching"
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
@@ -113,6 +115,8 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
   dimensions = {
     ResourceArn = aws_lb.viewer.arn
   }
+
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {

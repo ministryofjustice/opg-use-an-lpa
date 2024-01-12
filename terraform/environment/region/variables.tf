@@ -3,17 +3,6 @@ variable "account_name" {
   type        = string
 }
 
-variable "acm_certificate_arns" {
-  description = "The ARNs of the ACM certificates to use."
-  type = object({
-    use                = string
-    view               = string
-    admin              = string
-    public_facing_use  = string
-    public_facing_view = string
-  })
-}
-
 variable "admin_cognito" {
   description = "Settings for the AWS Cognito to use for the admin interface."
   type = object({
@@ -187,6 +176,11 @@ variable "regions" {
   validation {
     condition     = length([for region in keys(var.regions) : region if var.regions[region].is_primary]) == 1
     error_message = "One (and only one) region must be marked as primary"
+  }
+
+  validation {
+    condition     = length([for region in keys(var.regions) : region if var.regions[region].is_active]) == 1
+    error_message = "One (and only one) region must be marked as active"
   }
 }
 

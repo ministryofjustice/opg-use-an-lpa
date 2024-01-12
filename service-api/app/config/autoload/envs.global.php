@@ -29,6 +29,9 @@ return [
         'region' => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
 
+        'ApiGateway' => [
+            'endpoint_region' => getenv('API_GATEWAY_REGION') ?: 'eu-west-1',
+        ],
         'DynamoDb' => [
             'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],
