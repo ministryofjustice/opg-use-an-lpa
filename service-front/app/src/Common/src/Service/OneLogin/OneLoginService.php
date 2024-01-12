@@ -65,10 +65,6 @@ class OneLoginService
             $filteredDetails['LastLogin'] = $userData['LastLogin'];
         }
 
-        if (!empty($userData['NeedsReset'])) {
-            $filteredDetails['NeedsReset'] = $userData['NeedsReset'];
-        }
-
         return ($this->userModelFactory)(
             $userData['Id'],
             [],

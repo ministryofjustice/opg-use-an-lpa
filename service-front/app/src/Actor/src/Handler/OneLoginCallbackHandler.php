@@ -78,11 +78,7 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
                 'details'  => $user->getDetails(),
             ]);
             $session->regenerate();
-            if (empty($user->getDetail('LastLogin'))) {
-                return $this->redirectToRoute('lpa.add', [], [], $ui_locale === 'cy' ? $ui_locale : null);
-            } else {
-                return $this->redirectToRoute('lpa.dashboard', [], [], $ui_locale === 'cy' ? $ui_locale : null);
-            }
+            return $this->redirectToRoute('lpa.dashboard', [], [], $ui_locale === 'cy' ? $ui_locale : null);
         }
 
         return new HtmlResponse('<h1>User not found</h1>');
