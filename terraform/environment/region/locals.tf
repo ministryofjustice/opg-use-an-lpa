@@ -1,11 +1,10 @@
 locals {
   policy_region_prefix = lower(replace(data.aws_region.current.name, "-", ""))
 
-  # The primary region is the region where the DynamoDB tables are created and replicated to the secondary region.
-  # The active region is the region where the ECS services are running.
-  primary_region    = keys({ for region, region_data in var.regions : region => region_data if region_data.is_primary })[0]
-  is_primary_region = local.primary_region == data.aws_region.current.name ? true : false
-  is_active_region  = var.regions[data.aws_region.current.name].is_active
+  # The primary region is the region where the DynamoDB tables are created and replicated to the secondary region. This should not be changed once the environment is created.
+  # The active region is the region where the ECS services are running. The is also the region where users will access the application.
+  primary_region   = keys({ for region, region_data in var.regions : region => region_data if region_data.is_primary })[0]
+  is_active_region = var.regions[data.aws_region.current.name].is_active
 
   # Desired count of the ECS services. Only an active region will have a desired count greater than 0.
   use_desired_count   = local.is_active_region ? var.autoscaling.use.minimum : 0
@@ -32,4 +31,6 @@ locals {
     actor              = local.is_active_region ? module.actor_use_my_lpa.fqdn : ""
     viewer             = local.is_active_region ? module.viewer_use_my_lpa.fqdn : ""
   }
+
+  dev_wildcard = var.account_name == "production" ? "" : "*."
 }

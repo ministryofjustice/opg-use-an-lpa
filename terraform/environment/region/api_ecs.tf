@@ -458,6 +458,10 @@ locals {
         {
           name  = "LOGIN_SERIAL_CACHE_TIMEOUT",
           value = "60"
+        },
+        {
+          name  = "API_GATEWAY_REGION",
+          value = "eu-west-1"
         }
       ]
   })

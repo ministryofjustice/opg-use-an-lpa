@@ -9,6 +9,7 @@ class IngressManager:
     aws_account_id = ''
     aws_iam_session = ''
     aws_ec2_client = ''
+    aws_region = ''
     security_groups = []
 
     def __init__(self, config_file):
@@ -16,7 +17,7 @@ class IngressManager:
         self.set_iam_role_session()
         self.aws_ec2_client = boto3.client(
             'ec2',
-            region_name='eu-west-1',
+            region_name=self.aws_region,
             aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
             aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
             aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
@@ -25,6 +26,7 @@ class IngressManager:
         with open(config_file) as json_file:
             parameters = json.load(json_file)
             self.aws_account_id = parameters['account_id']
+            self.aws_region = parameters['active_region']
             self.security_groups = [
                 parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name']]
@@ -39,7 +41,7 @@ class IngressManager:
 
         sts = boto3.client(
             'sts',
-            region_name='eu-west-1',
+            region_name=self.aws_region,
         )
         session = sts.assume_role(
             RoleArn=role_arn,
