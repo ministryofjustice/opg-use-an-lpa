@@ -98,6 +98,8 @@ resource "aws_security_group_rule" "pdf_ecs_service_viewer_ingress" {
   lifecycle {
     create_before_destroy = true
   }
+
+  provider = aws.region
 }
 
 //----------------------------------
