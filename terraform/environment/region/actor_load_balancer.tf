@@ -111,7 +111,7 @@ resource "aws_lb_listener_rule" "redirect_use_root_to_gov" {
 
 # rewrite to live service url
 resource "aws_lb_listener_rule" "rewrite_use_to_live_service_url" {
-  count = local.route53_fqdns.public_facing_use != "" ? 1 : 0
+  count = local.is_active_region ? 1 : 0
 
   listener_arn = aws_lb_listener.actor_loadbalancer.arn
   priority     = 2
