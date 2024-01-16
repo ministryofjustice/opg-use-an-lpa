@@ -3,7 +3,7 @@ ARG FUNCTION_DIR="/function"
 
 FROM python:3.11-slim
 
-RUN apt -y update && apt -y install gcc python3-dev
+RUN apt --assume-yes update && apt --assume-yes upgrade && apt --assume-yes install gcc python3-dev 
 
 ARG FUNCTION_DIR
 
