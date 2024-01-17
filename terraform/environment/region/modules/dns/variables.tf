@@ -31,7 +31,11 @@ variable "dns_namespace_env" {
 }
 
 variable "loadbalancer" {
-  description = "The loadbalancer to point the DNS record to"
+  description = "The loadbalancer object to point the DNS record to"
+  type = object({
+    dns_name = string
+    zone_id  = string
+  })
 }
 
 variable "service_name" {

@@ -9,6 +9,7 @@ terraform {
         aws.management,
         aws.us-east-1,
       ]
+      version = "~> 5.24.0"
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
