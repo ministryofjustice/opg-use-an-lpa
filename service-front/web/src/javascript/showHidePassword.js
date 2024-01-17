@@ -8,6 +8,9 @@ const showHidePassword = () => {
         let showPasswordText = showHidePwdButton.dataset.showpassword;
         let hidePasswordText = showHidePwdButton.dataset.hidepassword;
 
+        //to display the show button
+        showHidePwdButton.style.display = 'inline-block';
+
         showHidePwdButton.innerText = showPasswordText;
 
         showHidePwdButton.onclick = function () {
