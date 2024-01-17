@@ -36,9 +36,10 @@ func (s *SystemMessageService) GetSystemMessages(ctx context.Context) (systemMes
 func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (err error) {
 	for messageKey, messageValue := range messages {
 		_, err := s.ssmConn.Client.PutParameter(ctx, &ssm.PutParameterInput{
-			Name:  aws.String(s.ssmConn.prefixedParameterName(messageKey)),
-			Value: aws.String(messageValue),
-			Type:  types.ParameterTypeString,
+			Name:      aws.String(s.ssmConn.prefixedParameterName(messageKey)),
+			Value:     aws.String(messageValue),
+			Type:      types.ParameterTypeString,
+			Overwrite: aws.Bool(true),
 		})
 		if err != nil {
 			return fmt.Errorf("error writing parameter: %w", err)
