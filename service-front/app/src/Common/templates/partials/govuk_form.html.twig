@@ -231,9 +231,9 @@
 {%- endblock input_hint -%}
 
 {%- block input_show_hide_password -%}
-    <div class="moj-password-reveal">
+    <div class="moj-password-reveal" >
         {{- block('form_input') -}}
-        <button class="govuk-button govuk-button--secondary moj-password-reveal__button govuk-!-margin-bottom-0" type="button"
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button govuk-!-margin-bottom-0" type="button" style="display: none"
                 data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans %}"
                 data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
         </button>
