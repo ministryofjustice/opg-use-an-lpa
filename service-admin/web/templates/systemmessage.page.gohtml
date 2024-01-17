@@ -3,44 +3,45 @@
 {{ define "title" }}System Message{{ end }}
 
 {{ define "main" }}
-<div class="govuk-grid-row">
-<div class="govuk-grid-column-two-thirds">
-<form method="post">
-<div class="govuk-form-group {{ if .Errors.Query }}govuk-form-group--error{{ end }}">
-<h1 class="govuk-label-wrapper">
-<label class="govuk-heading-l govuk-!-margin-bottom-2">
-System message
-</label>
-</h1>
-    <p class="govuk-body">System messages will be seen by all visitors to the LPA service. They should be used to inform users of scheduled periods of maintenance or changes to the LPA service.</p>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form method="post">
+                <div class="govuk-form-group {{ if .Errors.Query }}govuk-form-group--error{{ end }}">
+                    <h1 class="govuk-label-wrapper">
+                        <label class="govuk-heading-l govuk-!-margin-bottom-2">
+                            System message
+                        </label>
+                    </h1>
+                    <p class="govuk-body">System messages will be seen by all visitors to the LPA service. They should
+                        be used to inform users of scheduled periods of maintenance or changes to the LPA service.</p>
 
-{{ if .Errors.Query }}
-<span class="govuk-error-message">
-<span class="govuk-visually-hidden">Error:</span> {{ .Errors.Query }}
-</span>
-{{ end }}
-    <div class="govuk-form-group">
-    <h2 class="govuk-heading-l">Use an LPA</h2>
-    <p class="govuk-body">Message in English</p>
-<textarea class="govuk-textarea" id="use-eng">{{ index . "system-message-use-en"}}</textarea>
-        <p class="govuk-body">Message in Welsh</p>
-        <textarea class="govuk-textarea" id="use-cy">{{ index . "system-message-use-cy"}}</textarea>
-</div>
+                    {{ if .Errors.Query }}
+                        <span class="govuk-error-message">
+                            <span class="govuk-visually-hidden">Error:</span> {{ .Errors.Query }}
+                        </span>
+                    {{ end }}
+                    <div class="govuk-form-group">
+                        <h2 class="govuk-heading-l">Use an LPA</h2>
+                        <p class="govuk-body">Message in English</p>
+                        <textarea class="govuk-textarea" name="use-eng" id="use-eng">{{ index . "system-message-use-en"}}</textarea>
+                        <p class="govuk-body">Message in Welsh</p>
+                        <textarea class="govuk-textarea" name="use-cy" id="use-cy">{{ index . "system-message-use-cy"}}</textarea>
+                    </div>
 
 
-    <div class="govuk-form-group">
-        <h2 class="govuk-heading-l">View an LPA</h2>
-        <p class="govuk-body">Message in English</p>
-        <textarea class="govuk-textarea" id="view-eng">{{ index . "system-message-view-en"}}</textarea>
-        <p class="govuk-body">Message in Welsh</p>
-        <textarea class="govuk-textarea" id="view-cy">{{ index . "system-message-view-cy"}}</textarea>
+                    <div class="govuk-form-group">
+                        <h2 class="govuk-heading-l">View an LPA</h2>
+                        <p class="govuk-body">Message in English</p>
+                        <textarea class="govuk-textarea" name="view-eng" id="view-eng">{{ index . "system-message-view-en"}}</textarea>
+                        <p class="govuk-body">Message in Welsh</p>
+                        <textarea class="govuk-textarea" name="view-cy" id="view-cy">{{ index . "system-message-view-cy"}}</textarea>
+                    </div>
+
+                    <button class="govuk-button" data-module="govuk-button">
+                        Set system message
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-
-<button class="govuk-button" data-module="govuk-button">
-Set system message
-</button>
-</div>
-</form>
-</div>
-</div>
 {{ end }}

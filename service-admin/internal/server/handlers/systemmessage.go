@@ -28,25 +28,20 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 
 		err := r.ParseForm()
 		if err == nil {
-			// TODO hardcoded for now, will need to get this from text area
-			//messages := map[string]string{"system-message-use-en": "use hello bob en", "system-message-use-cy": "use helo bob",
-			//	"system-message-view-en": "view hello bob", "system-message-view-cy": "view helo bob"}
+			messages := map[string]string{
+				"system-message-use-en":  r.PostFormValue("use-eng"),
+				"system-message-use-cy":  r.PostFormValue("use-cy"),
+				"system-message-view-en": r.PostFormValue("view-eng"),
+				"system-message-view-cy": r.PostFormValue("view-cy"),
+			}
 
-			messages := map[string]string{"system-message-use-en": r.PostFormValue("index . \"system-message-use-en\""), "system-message-use-cy": "use helo bob",
-				"system-message-view-en": "view hello bob", "system-message-view-cy": "view helo bob"}
-
-			s.systemMessageService.PutSystemMessages(context.Background(), messages)
+			s.systemMessageService.PutSystemMessages(r.Context(), messages)
 		} else {
 			log.Error().Err(err).Msg("failed to parse form input")
 		}
 	}
 
-	// TODO line below will hardcode messages - can delete this line once sure we can write to param store from the submit button
-
-	//messages := map[string]string{"system-message-use-en": "use hello world en", "system-message-use-cy": "use helo byd",
-	//	"system-message-view-en": "view hello world", "system-message-view-cy": "view helo byd"}
-
-	messages, _ := s.systemMessageService.GetSystemMessages(context.Background())
+	messages, _ := s.systemMessageService.GetSystemMessages(r.Context())
 	if err := s.templateService.RenderTemplate(w, r.Context(), "systemmessage.page.gohtml", messages); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 	}
