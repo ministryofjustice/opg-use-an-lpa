@@ -6,12 +6,6 @@ resource "aws_s3_bucket" "old_access_log" {
   provider = aws.region
 }
 
-resource "null_resource" "old_access_log" {
-  provisioner "local-exec" {
-    command = "echo 'Reading ${data.aws_region.current.name}'"
-  }
-}
-
 resource "aws_s3_bucket" "access_log" {
   bucket = "opg-ual-${var.environment_name}-lb-access-logs-${data.aws_region.current.name}"
 
