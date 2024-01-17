@@ -1,10 +1,10 @@
 {%- block form_open -%}
-    <form name="{{ form.getName() }}" method="post" novalidate action="{{ form.getAttribute('action') ?: path() }}">
-{%- endblock form_open -%}
+<form name="{{ form.getName() }}" method="post" novalidate action="{{ form.getAttribute('action') ?: path() }}">
+    {%- endblock form_open -%}
 
 
-{%- block form_close -%}
-    </form>
+    {%- block form_close -%}
+</form>
 {%- endblock form_close -%}
 
 
@@ -30,7 +30,7 @@
         {% else %}
             {% if input_prefix is defined %}
                 <div class="govuk-input__wrapper">
-                    <div class="govuk-input__prefix" aria-hidden="true">{{ input_prefix }}</div>
+                <div class="govuk-input__prefix" aria-hidden="true">{{ input_prefix }}</div>
             {% endif %}
 
             {{- block('form_input') -}}
@@ -73,7 +73,9 @@
         <div class="govuk-checkboxes">
             <div class="govuk-checkboxes__item">
 
-                <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}" value="{{ element.getCheckedValue() }}" type="checkbox" {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
+                <input class="govuk-checkboxes__input" id="{{ element.getName() }}" name="{{ element.getName() }}"
+                       value="{{ element.getCheckedValue() }}" type="checkbox"
+                       {% if element.getValue() == element.getCheckedValue() %}checked="checked"{% endif %}>
 
                 <label class="govuk-label govuk-checkboxes__label" for="{{ element.getName() }}">
                     {{ label | raw }}
@@ -95,10 +97,13 @@
 
     <div class="govuk-form-group {% if element.getMessages() is not empty %}govuk-form-group--error{% endif %}">
         {{ govuk_error(element) }}
-        <div class="govuk-radios {% if hasConditional %}govuk-radios--conditional{% endif %}" data-module="govuk-radios">
-            {%-  for option in value_options -%}
+        <div class="govuk-radios {% if hasConditional %}govuk-radios--conditional{% endif %}"
+             data-module="govuk-radios">
+            {%- for option in value_options -%}
                 <div class="govuk-radios__item">
-                    <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}" name="{{ element.getName() }}" type="radio" value="{{ option.value }}" {% if option.value == element.getValue() %}checked="checked"{% endif %} {% if option.conditionalContent is defined %}data-aria-controls="conditional-{{ element.getName() }}-{{ loop.index }}"{% endif %}>
+                    <input class="govuk-radios__input" id="{{ element.getName() }}-{{ loop.index }}"
+                           name="{{ element.getName() }}" type="radio" value="{{ option.value }}"
+                           {% if option.value == element.getValue() %}checked="checked"{% endif %} {% if option.conditionalContent is defined %}data-aria-controls="conditional-{{ element.getName() }}-{{ loop.index }}"{% endif %}>
                     <label class="govuk-label govuk-radios__label" for="{{ element.getName() }}-{{ loop.index }}">
                         {{ option.label }}
                     </label>
@@ -109,8 +114,9 @@
                     {%- endif -%}
                 </div>
                 {%- if option.conditionalContent is defined -%}
-                    <div class="govuk-radios__item govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-{{ element.getName() }}-{{ loop.index }}">
-                        {%-  for content in option.conditionalContent -%}
+                    <div class="govuk-radios__item govuk-radios__conditional govuk-radios__conditional--hidden"
+                         id="conditional-{{ element.getName() }}-{{ loop.index }}">
+                        {%- for content in option.conditionalContent -%}
                             {{ content | raw }}
                         {%- endfor -%}
                     </div>
@@ -186,7 +192,7 @@
 
 
 {% block form_input_hidden %}
-    <input id="{{ element.getName() }}" name="{{ element.getName() }}" type="hidden" value="{{ element.getValue() }}" />
+    <input id="{{ element.getName() }}" name="{{ element.getName() }}" type="hidden" value="{{ element.getValue() }}"/>
 {% endblock form_input_hidden %}
 
 
@@ -231,9 +237,10 @@
 {%- endblock input_hint -%}
 
 {%- block input_show_hide_password -%}
-    <div class="moj-password-reveal" >
+    <div class="moj-password-reveal">
         {{- block('form_input') -}}
-        <button class="govuk-button govuk-button--secondary moj-password-reveal__button govuk-!-margin-bottom-0" type="button" style="display: none"
+        <button class="govuk-button govuk-button--secondary moj-password-reveal__button govuk-!-margin-bottom-0"
+                type="button" style="display: none"
                 data-showpassword="{% trans %}Show{% notes %}Show password label{% endtrans %}"
                 data-hidepassword="{% trans %}Hide{% notes %}Hide password label{% endtrans %}">
         </button>
@@ -243,7 +250,7 @@
 {%- block form_input -%}
     <input class="govuk-input {{- block('input_extra_class') -}} {{- block('input_error_class') -}}"
            id="{{ element.getName() }}" name="{{ element.getName() }}" type="{{ type }}" value="{{ value }}"
-            {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
+           {% if inputmode is defined and inputmode is not empty %}inputmode="{{ inputmode }}"{% endif %}
             {% if pattern is defined and pattern is not empty %}pattern="{{ pattern }}"{% endif %}
             {% if spellcheck is defined and spellcheck is not empty %}spellcheck="{{ spellcheck }}"{% endif %}
             {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
@@ -252,8 +259,8 @@
 
 {%- block form_input_area -%}
     <textarea class="govuk-textarea" id="{{ element.getName() }}" name="{{ element.getName() }}"
-            rows="{% if rows is defined %}{{ rows }}{% else %}5{% endif %}"
-            {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
+              rows="{% if rows is defined %}{{ rows }}{% else %}5{% endif %}"
+              {% if autocomplete is defined and autocomplete is not empty %}autocomplete="{{ autocomplete }}"{% endif %}
             {% if aria_labelledby is defined and aria_labelledby is not empty %}aria-labelledby="{{ aria_labelledby }}"{% endif %}>
         {{- element.getValue() -}}
     </textarea>
