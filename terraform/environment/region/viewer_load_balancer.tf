@@ -1,7 +1,7 @@
 resource "aws_shield_application_layer_automatic_response" "viewer" {
   count        = var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
   resource_arn = aws_lb.viewer.arn
-  action       = "COUNT"
+  action       = "BLOCK"
 }
 
 resource "aws_lb_target_group" "viewer" {
