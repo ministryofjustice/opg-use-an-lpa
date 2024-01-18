@@ -45,5 +45,6 @@ variable "ecr_arn" {
 }
 
 variable "kms_key" {
-  description = "KMS key for the lambda log group"
+  description = "ARN of KMS key for the lambda log group"
+  type        = string
 }
