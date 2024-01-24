@@ -1,6 +1,6 @@
 locals {
   # HACK: Without this, we would need to do a targetted apply on the replication group before the alarms can be created
-  brute_force_cache_replication_group_members = [ for i in range(0, aws_elasticache_replication_group.brute_force_cache_replication_group.num_cache_clusters) : "${aws_elasticache_replication_group.brute_force_cache_replication_group.replication_group_id}-00${i+1}" ]
+  brute_force_cache_replication_group_members = [for i in range(0, aws_elasticache_replication_group.brute_force_cache_replication_group.num_cache_clusters) : "${aws_elasticache_replication_group.brute_force_cache_replication_group.replication_group_id}-00${i + 1}"]
 }
 
 resource "aws_cloudwatch_metric_alarm" "elasticache_high_cpu_utilization" {
