@@ -18,6 +18,10 @@ func (m MockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamete
 	return nil, nil
 }
 
+func (m MockSSMClient) DeleteParameter(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
+	return nil, nil
+}
+
 // test for new method, which takes in ssmclient
 func TestNewSSMConnection(t *testing.T) {
 	t.Parallel()
