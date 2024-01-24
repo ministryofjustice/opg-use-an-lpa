@@ -160,7 +160,9 @@ resource "aws_s3_bucket" "old_access_log" {
 }
 
 resource "aws_s3_bucket_public_access_block" "old_access_log" {
-  bucket                  = aws_s3_bucket.old_access_log.id
+  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+
+  bucket                  = aws_s3_bucket.old_access_log[0].id
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -170,7 +172,9 @@ resource "aws_s3_bucket_public_access_block" "old_access_log" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "old_access_log" {
-  bucket = aws_s3_bucket.old_access_log.id
+  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+
+  bucket = aws_s3_bucket.old_access_log[0].id
 
   rule {
     object_ownership = "ObjectWriter"
@@ -180,11 +184,13 @@ resource "aws_s3_bucket_ownership_controls" "old_access_log" {
 }
 
 resource "aws_s3_bucket_acl" "old_access_log" {
-  bucket = aws_s3_bucket.old_access_log.id
+  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+
+  bucket = aws_s3_bucket.old_access_log[0].id
   acl    = "private"
 
   depends_on = [
-    aws_s3_bucket_ownership_controls.old_access_log
+    aws_s3_bucket_ownership_controls.old_access_log[0]
   ]
 
   provider = aws.region
