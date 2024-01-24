@@ -8,7 +8,7 @@ import (
 
 type SystemMessageService interface {
 	GetSystemMessages(ctx context.Context) (systemMessages map[string]string, err error)
-	PutSystemMessages(ctx context.Context, messages map[string]string) (err error)
+	PutSystemMessages(ctx context.Context, messages map[string]string) (deleted bool, err error)
 }
 
 type SystemMessageServer struct {
@@ -60,20 +60,24 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		}
 
 		if errorMessage == "" {
-			err = s.systemMessageService.PutSystemMessages(ctx, messages)
+			deleted, err := s.systemMessageService.PutSystemMessages(ctx, messages)
 			if err != nil {
-				log.Error().Err(err).Msg("failed to store system messages")
-				errorMessage = "Error storing system messages"
+				log.Error().Err(err).Msg("failed to update system messages")
+				errorMessage = "Error updating system messages"
+			} else if deleted {
+				successMessage := "System message has been removed"
+				templateData.SuccessMessage = &successMessage
 			} else {
-				successMessage := "System message has been added"
+				successMessage := "System message has been updated"
 				templateData.SuccessMessage = &successMessage
 			}
 		}
+
 		templateData.Messages = messages
 	} else {
 		messages, err := s.systemMessageService.GetSystemMessages(ctx)
 		if err != nil {
-			log.Panic().Err(err).Msg(err.Error())
+			log.Error().Err(err).Msg(err.Error())
 			errorMessage = "Error retrieving system messages"
 		}
 
@@ -85,7 +89,7 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 	}
 
 	if err := s.templateService.RenderTemplate(w, ctx, "systemmessage.page.gohtml", templateData); err != nil {
-		log.Panic().Err(err).Msg(err.Error())
+		log.Error().Err(err).Msg(err.Error())
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
 	}
 }
