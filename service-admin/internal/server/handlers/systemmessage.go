@@ -23,8 +23,17 @@ func NewSystemMessageServer(systemMessageService SystemMessageService, templateW
 	}
 }
 
+type SystemMessageData struct {
+	Messages       map[string]string
+	ErrorMessage   *string
+	SuccessMessage *string
+	Path           string
+}
+
 func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	errorMessage := ""
+	templateData := SystemMessageData{}
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
@@ -47,26 +56,35 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 			(messages["system-message-use-en"] != "" && messages["system-message-use-cy"] == "") ||
 			(messages["system-message-view-en"] == "" && messages["system-message-view-cy"] != "") ||
 			(messages["system-message-view-en"] != "" && messages["system-message-view-cy"] == "") {
-			http.Error(w, "Both English and Welsh versions are required for each message", http.StatusBadRequest)
-			return
+			errorMessage = "Both English and Welsh versions are required for each message"
 		}
 
-		err = s.systemMessageService.PutSystemMessages(ctx, messages)
+		if errorMessage == "" {
+			err = s.systemMessageService.PutSystemMessages(ctx, messages)
+			if err != nil {
+				log.Error().Err(err).Msg("failed to store system messages")
+				errorMessage = "Error storing system messages"
+			} else {
+				successMessage := "System message has been added"
+				templateData.SuccessMessage = &successMessage
+			}
+		}
+		templateData.Messages = messages
+	} else {
+		messages, err := s.systemMessageService.GetSystemMessages(ctx)
 		if err != nil {
-			log.Error().Err(err).Msg("failed to store system messages")
-			http.Error(w, "Error storing system messages", http.StatusInternalServerError)
-			return
+			log.Panic().Err(err).Msg(err.Error())
+			errorMessage = "Error retrieving system messages"
 		}
+
+		templateData.Messages = messages
 	}
 
-	messages, err := s.systemMessageService.GetSystemMessages(ctx)
-	if err != nil {
-		log.Panic().Err(err).Msg(err.Error())
-		http.Error(w, "Error retrieving system messages", http.StatusInternalServerError)
-		return
+	if errorMessage != "" {
+		templateData.ErrorMessage = &errorMessage
 	}
 
-	if err := s.templateService.RenderTemplate(w, ctx, "systemmessage.page.gohtml", messages); err != nil {
+	if err := s.templateService.RenderTemplate(w, ctx, "systemmessage.page.gohtml", templateData); err != nil {
 		log.Panic().Err(err).Msg(err.Error())
 		http.Error(w, "error rendering template", http.StatusInternalServerError)
 	}
