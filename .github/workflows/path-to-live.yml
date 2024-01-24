@@ -28,14 +28,25 @@ jobs:
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
+    permissions:
+      contents: write
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
+      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+
+      - name: Bump version and push tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+        id: semver_tag
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          with_v: true
+          default_bump: minor
 
   terraform_lint:
     name: lint terraform code
@@ -66,7 +77,7 @@ jobs:
       - node_test
       - node_build
     with:
-      tag: main-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: main-${{ needs.workflow_variables.outputs.semver_tag }}
       branch_name: main
       push_to_ecr: true
       specific_path: all
@@ -133,7 +144,7 @@ jobs:
     with:
       workspace: preproduction
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
     secrets: inherit
@@ -175,7 +186,7 @@ jobs:
     with:
       workspace: production
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
       extra_vars: "-var public_access_enabled=true"
@@ -230,5 +241,5 @@ jobs:
       - name: workflow has ended without issue
         run: |
           echo "Deployment to production successful"
-          echo "Tag Used: main-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
           echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"

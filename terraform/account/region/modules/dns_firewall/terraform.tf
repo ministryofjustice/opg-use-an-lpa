@@ -7,6 +7,7 @@ terraform {
       configuration_aliases = [
         aws.region,
       ]
+      version = "~> 5.24.0"
     }
   }
 }

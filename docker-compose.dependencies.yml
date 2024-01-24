@@ -36,7 +36,7 @@ services:
   # Cache service
 
   redis:
-    image: redis:5
+    image: redis:7
 
   # ---------------------------
   # AWS KMS mock service
@@ -65,7 +65,7 @@ services:
 
   mock-data-lpa:
     container_name: mock-data-lpa
-    image: stoplight/prism:4
+    image: stoplight/prism:5
     command:
       - "mock"
       - "-h"
@@ -104,11 +104,11 @@ services:
 
   mock-one-login:
     container_name: mock-one-login
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/mock_onelogin_app
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/use_an_lpa/mock_onelogin_app:v0.58.0
     ports:
       - "4013:8080"
     environment:
       PUBLIC_URL: http://localhost:4013
       INTERNAL_URL: http://mock-one-login:8080
-      REDIRECT_URL: http://localhost:9002/home/login
+      REDIRECT_URL: https://localhost:9042/home/login
       CLIENT_ID: client-id

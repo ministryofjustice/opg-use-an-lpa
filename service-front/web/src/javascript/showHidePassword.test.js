@@ -1,6 +1,6 @@
 import showHidePassword from './showHidePassword';
 describe('given a password and confirm password input is defined', () => {
-    test('it hides the confirm password box and changes the password type to text', () => {
+    test('it makes the show password button visible, and toggles the password visibility', () => {
         document.body.innerHTML = `
             <div class="govuk-form-group">
 
@@ -27,9 +27,15 @@ describe('given a password and confirm password input is defined', () => {
         const button = document.querySelector(".moj-password-reveal__button");
         const passwordInput = document.querySelector(".moj-password-reveal__input");
 
+        expect(button.style.display).toBe('');
+
         showHidePassword();
+
+        expect(button.style.display).toBe('inline-block');
+
         expect(passwordInput.getAttribute('type')).toBe('password');
         expect(button.innerText).toBe('Show');
+
         button.click();
         expect(passwordInput.getAttribute('type')).toBe('text');
         expect(button.innerText).toBe('Hide');

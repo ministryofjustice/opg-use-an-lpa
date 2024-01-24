@@ -12,7 +12,7 @@ return [
         'uri' => getenv('PDF_SERVICE_URL') ?: null,
     ],
     'aws'            => [
-        'region'  => 'eu-west-1',
+        'region'  => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
         'Kms'     => [
             'endpoint' => getenv('AWS_ENDPOINT_KMS') ?: null,

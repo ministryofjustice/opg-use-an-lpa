@@ -5,7 +5,8 @@
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link"
+               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -53,9 +54,9 @@
 
                                 <div class="govuk-details__text">
                                     <p>
-                                    {% trans %}
-                                        Activation keys are sent to donors and attorneys by letter or email.
-                                    {% endtrans %}
+                                        {% trans %}
+                                            Activation keys are sent to donors and attorneys by letter or email.
+                                        {% endtrans %}
                                     </p>
                                 </div>
                                 <div class="govuk-details__text">
@@ -73,9 +74,9 @@
 
                                 <div class="govuk-details__text">
                                     <h3 class="govuk-heading-s">
-                                            {% trans %}
-                                                For LPAs registered before 17 July 2020
-                                            {% endtrans %}
+                                        {% trans %}
+                                            For LPAs registered before 17 July 2020
+                                        {% endtrans %}
                                     </h3>
                                 </div>
 
@@ -117,15 +118,24 @@
 
                         </fieldset>
                     </div>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
 
-                    <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </button>
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
 
-                    <a href="{{ path('lpa.dashboard') }}" draggable="false"
-                       class="govuk-button govuk-button--secondary">{% trans %}Cancel{% endtrans %}</a>
-
+                        </div>
+                    </div>
                     {{ govuk_form_close() }}
                 </div>
+
             </div>
         </main>
     </div>

@@ -3,12 +3,7 @@ terraform {
 
   required_providers {
     aws = {
-      source = "hashicorp/aws"
-      configuration_aliases = [
-        aws.region,
-        aws.management,
-        aws.shared,
-      ]
+      source  = "hashicorp/aws"
       version = "~> 5.24.0"
     }
     pagerduty = {

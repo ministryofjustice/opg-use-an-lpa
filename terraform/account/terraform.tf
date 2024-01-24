@@ -23,11 +23,17 @@ terraform {
       source  = "PagerDuty/pagerduty"
       version = "~> 3.1.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0.0"
+    }
   }
 }
 
 variable "default_role" {
-  default = "opg-use-an-lpa-ci"
+  default     = "opg-use-an-lpa-ci"
+  type        = string
+  description = "The default role to assume for the AWS providers"
 }
 
 provider "aws" {
@@ -81,6 +87,34 @@ provider "aws" {
     session_name = "terraform-session"
   }
 }
+
+provider "aws" {
+  region = "eu-west-2"
+  alias  = "management_eu_west_2"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::311462405659:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-1"
+  alias  = "management_eu_west_1"
+  default_tags {
+    tags = local.default_tags
+  }
+
+  assume_role {
+    role_arn     = "arn:aws:iam::311462405659:role/${var.default_role}"
+    session_name = "terraform-session"
+  }
+}
+
+
 
 provider "aws" {
   region = "eu-west-1"

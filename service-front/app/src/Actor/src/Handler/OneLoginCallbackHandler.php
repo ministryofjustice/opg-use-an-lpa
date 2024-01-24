@@ -12,6 +12,7 @@ use Common\Handler\Traits\Session;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
@@ -68,17 +69,18 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
             throw new RuntimeException('Required parameters not passed for authentication', 500);
         }
 
-        return new HtmlResponse('<h1>Hello World</h1>');
+        $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
 
-        //TODO: UML-3078
-//        $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
-//        //Add user to session
-//        if (! is_null($user)) {
-//            if (empty($user->getDetail('LastLogin'))) {
-//                return $this->redirectToRoute('lpa.add');
-//            } else {
-//                return $this->redirectToRoute('lpa.dashboard');
-//            }
-//        }
+        if (! is_null($user)) {
+            $session->set(UserInterface::class, [
+                'username' => $user->getIdentity(),
+                'roles'    => $user->getRoles(),
+                'details'  => $user->getDetails(),
+            ]);
+            $session->regenerate();
+            return $this->redirectToRoute('lpa.dashboard', [], [], $ui_locale === 'cy' ? $ui_locale : null);
+        }
+
+        return new HtmlResponse('<h1>User not found</h1>');
     }
 }
