@@ -17,6 +17,14 @@ import (
 
 type mockTemplates struct{}
 
+type mockTemplateWriterService struct {
+	RenderTemplateFunc func(http.ResponseWriter, context.Context, string, interface{}) error
+}
+
+func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx context.Context, templateName string, data interface{}) error {
+	return m.RenderTemplateFunc(w, ctx, templateName, data)
+}
+
 func (m *mockTemplates) Get(name string) (*template.Template, error) {
 	if name == "test" {
 		return mockTemplate(), nil
