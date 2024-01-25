@@ -568,14 +568,6 @@ func Test_SearchByActivationCode(t *testing.T) {
 	}
 }
 
-type mockTemplateWriterService struct {
-	RenderTemplateFunc func(http.ResponseWriter, context.Context, string, interface{}) error
-}
-
-func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx context.Context, name string, data interface{}) error {
-	return m.RenderTemplateFunc(w, ctx, name, data)
-}
-
 func Test_SearchHandler(t *testing.T) {
 	t.Parallel()
 
