@@ -250,52 +250,66 @@ class DynamoDBExporterAndQuerier:
 
         while "NextToken" in response:
             response = self.aws_athena_client.get_query_results(
-                QueryExecutionId=query_execution_id, MaxResults=500,
-                NextToken=response["NextToken"])
+                QueryExecutionId=query_execution_id,
+                MaxResults=500,
+                NextToken=response["NextToken"],
+            )
             results.extend(response["ResultSet"]["Rows"])
 
         if outputFileName:
             self.output_athena_results(results, outputFileName)
 
     def output_athena_results(self, results, outputFileName):
-        with open(f"results/{outputFileName}.csv", "w", newline="") as outFile:
+        with open(
+            f"results/{outputFileName}-{self.start_date}-{self.end_date}.csv",
+            "w",
+            newline="",
+        ) as outFile:
             wr = csv.writer(outFile, quoting=csv.QUOTE_ALL)
             for row in results:
                 outputRow = ""
                 csvRow = []
                 for field in row["Data"]:
                     cell = (list)(field.values())
-                    outputRow = f"{outputRow} | {cell[0]}"
-                    csvRow.append(cell[0])
+                    if cell:
+                        outputRow = f"{outputRow} | {cell[0]}"
+                        csvRow.append(cell[0])
+                    else:
+                        outputRow = f"{outputRow} | "
+                        csvRow.append("")
 
                 print(outputRow)
                 wr.writerow(csvRow)
 
     def get_expired_viewed_access_codes(self):
         sql_string = f'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER by Organisation;'
-        self.run_athena_query(
-            sql_string, outputFileName="ExpiredViewedAccessCodes"
-        )
+        self.run_athena_query(sql_string, outputFileName="ExpiredViewedAccessCodes")
 
     def get_expired_unviewed_access_codes(self):
         sql_string = f'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER BY vc.item.viewerCode.s'
-        self.run_athena_query(
-            sql_string, outputFileName="ExpiredUnviewedAccessCodes"
-        )
+        self.run_athena_query(sql_string, outputFileName="ExpiredUnviewedAccessCodes")
 
     def get_count_of_viewed_access_codes(self):
-        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_activity\" WHERE Item.Viewed.S BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\');"
+        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_activity\" WHERE Item.Viewed.S BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
         self.run_athena_query(
             sql_string,
             outputFileName="CountofViewedAccessCodes",
         )
 
     def get_count_of_expired_access_codes(self):
-        sql_string = f"SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\');"
+        sql_string = f"SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
         self.run_athena_query(
             sql_string,
             outputFileName="CountofExpiredAccessCodes",
         )
+
+    def get_organisations_field(self):
+        sql_string = f"SELECT a.Item.ViewerCode.S as viewercode, a.Item.Organisation.S as organisation, b.Item.ViewedBy.S as viewedby, a.Item.Added.S as dateadded from viewer_codes a left join viewer_activity b on a.Item.ViewerCode.S = b.Item.ViewerCode.S where date_add('day', -30, a.Item.Added.s) BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="OrganisationsField",
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -360,6 +374,7 @@ def main():
     work.get_expired_unviewed_access_codes()
     work.get_count_of_viewed_access_codes()
     work.get_count_of_expired_access_codes()
+    work.get_organisations_field()
 
 
 if __name__ == "__main__":
