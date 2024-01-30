@@ -43,7 +43,7 @@ func main() {
 		)
 		awsEndpoint = flag.String(
 			"awsEndpoint",
-			env.Get("AWS_ENDPOINT_URL", ""),
+			env.Get("AWS_ENDPOINT_URL_SSM", ""),
 			"",
 		)
 		dbTablePrefix = flag.String(
