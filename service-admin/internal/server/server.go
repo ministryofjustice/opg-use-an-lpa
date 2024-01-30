@@ -46,7 +46,6 @@ func (w *errorInterceptResponseWriter) Write(p []byte) (int, error) {
 	if w.h == nil {
 		return len(p), nil
 	}
-
 	return w.ResponseWriter.Write(p)
 }
 
