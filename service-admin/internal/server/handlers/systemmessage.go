@@ -32,24 +32,22 @@ type SystemMessageData struct {
 
 func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	errorMessage := ""
+	var errorMessage string
 	templateData := SystemMessageData{}
 
 	if r.Method == "POST" {
 		err := r.ParseForm()
 		if err != nil {
 			log.Error().Err(err).Msg("failed to parse form input")
-
 			http.Error(w, "Error parsing form input", http.StatusBadRequest)
 			return
 		}
 
-		messages := map[string]string{
-			"system-message-use-en":  r.PostFormValue("use-eng"),
-			"system-message-use-cy":  r.PostFormValue("use-cy"),
-			"system-message-view-en": r.PostFormValue("view-eng"),
-			"system-message-view-cy": r.PostFormValue("view-cy"),
-		}
+		messages := make(map[string]string)
+		messages["system-message-use-en"] = r.PostFormValue("use-eng")
+		messages["system-message-use-cy"] = r.PostFormValue("use-cy")
+		messages["system-message-view-en"] = r.PostFormValue("view-eng")
+		messages["system-message-view-cy"] = r.PostFormValue("view-cy")
 
 		// Checks English and Welsh are present
 		if (messages["system-message-use-en"] == "" && messages["system-message-use-cy"] != "") ||

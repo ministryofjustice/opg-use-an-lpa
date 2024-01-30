@@ -16,7 +16,7 @@ type mockSystemMessageService struct {
 	putMessagesFunc func(ctx context.Context, messages map[string]string) (bool, error)
 }
 
-func (m *mockSystemMessageService) GetSystemMessages(ctx context.Context) (systemMessages map[string]string, err error) {
+func (m *mockSystemMessageService) GetSystemMessages(ctx context.Context) (map[string]string, error) {
 	return m.getMessagesFunc(ctx)
 }
 
@@ -53,8 +53,8 @@ func Test_RenderTemplateLoadsFromParameterStore(t *testing.T) {
 
 	req, err := http.NewRequest("GET", "/some-url", nil)
 	assert.NoError(t, err)
-	rr := httptest.NewRecorder()
 
+	rr := httptest.NewRecorder()
 	handler := http.HandlerFunc(server.SystemMessageHandler)
 	handler.ServeHTTP(rr, req)
 
@@ -85,6 +85,7 @@ func Test_SaveButtonSavesToParameterStore(t *testing.T) {
 
 	req, err := http.NewRequest("POST", "/some-url", strings.NewReader(form.Encode()))
 	assert.NoError(t, err)
+
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	rr := httptest.NewRecorder()
 
