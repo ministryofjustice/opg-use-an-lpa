@@ -94,3 +94,24 @@ func Test_SaveButtonSavesToParameterStore(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, rr.Code)
 }
+
+func Test_SystemMessageHandlerParseFormError(t *testing.T) {
+	t.Parallel()
+
+	mockSysMsgService := &mockSystemMessageService{}
+	mockTemplateService := &mockTemplateWriterService{}
+
+	server := handlers.NewSystemMessageServer(mockSysMsgService, mockTemplateService)
+
+	invalidFormData := strings.NewReader("%")
+	req, err := http.NewRequest("POST", "/some-url", invalidFormData)
+	assert.NoError(t, err)
+
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	rr := httptest.NewRecorder()
+
+	handler := http.HandlerFunc(server.SystemMessageHandler)
+	handler.ServeHTTP(rr, req)
+
+	assert.Equal(t, http.StatusBadRequest, rr.Code)
+}
