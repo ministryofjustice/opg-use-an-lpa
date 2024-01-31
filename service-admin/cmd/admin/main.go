@@ -20,7 +20,6 @@ import (
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
 )
 
@@ -71,11 +70,12 @@ func main() {
 			env.Get("LPA_CODES_API_ENDPOINT", ""),
 			"The codes endpoint",
 		)
+		log = zerolog.New(os.Stdout).With().Timestamp().Logger()
 	)
 
-	log.Info().Msgf("endpoint is set to %s.", awsEndpoint)
-
 	flag.Parse()
+    
+	log.Info().Msgf("endpoint is set to %s", *awsEndpoint)
 
 	v := url.Values{}
 	v.Set("client_id", *cognitoClientID)
