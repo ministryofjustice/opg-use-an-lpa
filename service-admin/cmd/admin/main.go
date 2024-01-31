@@ -73,6 +73,8 @@ func main() {
 		)
 	)
 
+	log.Info().Msgf("endpoint is set to %s.", awsEndpoint)
+
 	flag.Parse()
 
 	v := url.Values{}
