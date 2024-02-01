@@ -16,7 +16,6 @@ type mockSSMClient struct {
 	GetParameterFunc         func(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error)
 	DeleteParameterFunc      func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error)
 	DeleteParameterCallCount int
-	parameters               map[string]string
 }
 
 func (m *mockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
@@ -24,6 +23,7 @@ func (m *mockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParamet
 	if m.PutParameterFunc != nil {
 		return m.PutParameterFunc(ctx, params, optFns...)
 	}
+
 	return nil, nil
 }
 
@@ -31,6 +31,7 @@ func (m *mockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamet
 	if m.GetParameterFunc != nil {
 		return m.GetParameterFunc(ctx, params, optFns...)
 	}
+
 	return nil, nil
 }
 
@@ -39,6 +40,7 @@ func (m *mockSSMClient) DeleteParameter(ctx context.Context, params *ssm.DeleteP
 	if m.DeleteParameterFunc != nil {
 		return m.DeleteParameterFunc(ctx, params, optFns...)
 	}
+
 	return &ssm.DeleteParameterOutput{}, nil
 }
 

@@ -32,6 +32,7 @@ type SystemMessageData struct {
 
 func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	
 	var errorMessage string
 	templateData := SystemMessageData{}
 
