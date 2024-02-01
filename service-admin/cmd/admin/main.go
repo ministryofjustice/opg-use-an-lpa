@@ -93,7 +93,7 @@ func main() {
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
 	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config, func(o *ssm.Options) {
-		o.BaseEndpoint = aws.String(*awsEndpoint)
+		o.Region = "eu-west-1"
 	}))
 
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
