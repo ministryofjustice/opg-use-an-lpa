@@ -32,8 +32,9 @@ type SystemMessageData struct {
 
 func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	
+
 	var errorMessage string
+
 	templateData := SystemMessageData{}
 
 	if r.Method == "POST" {
@@ -63,6 +64,7 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 			deleted, err := s.systemMessageService.PutSystemMessages(ctx, messages)
 			if err != nil {
 				log.Error().Err(err).Msg("failed to update system messages")
+
 				errorMessage = "Error updating system messages"
 			} else if deleted {
 				successMessage := "System message has been removed"

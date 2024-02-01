@@ -88,6 +88,7 @@ func TestPutSystemMessages(t *testing.T) {
 	}
 
 	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
+
 	assert.NoError(t, err)
 	assert.True(t, deleted, "Expected at least one message to be deleted")
 	assert.Equal(t, 0, mockClient.PutParameterCallCount, "Expected PutParameter to be called once for deleting")

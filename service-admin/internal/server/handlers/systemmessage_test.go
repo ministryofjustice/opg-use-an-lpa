@@ -88,6 +88,7 @@ func Test_SaveButtonSavesToParameterStore(t *testing.T) {
 	assert.NoError(t, err)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
 	rr := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(server.SystemMessageHandler)
@@ -195,6 +196,7 @@ func Test_SystemMessageHandlerParseFormError(t *testing.T) {
 	assert.NoError(t, err)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	
 	rr := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(server.SystemMessageHandler)
