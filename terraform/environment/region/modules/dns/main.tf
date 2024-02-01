@@ -29,7 +29,7 @@ resource "aws_route53_record" "this" {
 resource "aws_route53_record" "spf" {
   count   = var.create_block_email_records ? 1 : 0
   zone_id = var.zone_id
-  name    = var.dns_name
+  name    = "${var.dns_namespace_env}${var.dns_name}"
   type    = "TXT"
   ttl     = 300
 
@@ -48,7 +48,7 @@ resource "aws_route53_record" "spf" {
 resource "aws_route53_record" "dmarc" {
   count   = var.create_block_email_records ? 1 : 0
   zone_id = var.zone_id
-  name    = "_dmarc.${var.dns_name}"
+  name    = "_dmarc.${var.dns_namespace_env}${var.dns_name}"
   type    = "TXT"
   ttl     = 300
 
