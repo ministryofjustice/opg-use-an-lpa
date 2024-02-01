@@ -75,7 +75,7 @@
         "mezzio/mezzio-tooling": "^2.5",
         "phpspec/prophecy": "^1.15",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.0",
         "psalm/plugin-phpunit": "^0.18.0",
         "roave/security-advisories": "dev-master",
         "slevomat/coding-standard": "^8.9",
