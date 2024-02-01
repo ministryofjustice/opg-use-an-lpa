@@ -55,3 +55,9 @@ variable "current_region" {
   type        = string
   default     = "eu-west-1"
 }
+
+variable "create_block_email_records" {
+  description = "Create the SPF and DMARC records to block all emails from being sent from this domain."
+  type        = bool
+  default     = false
+}
