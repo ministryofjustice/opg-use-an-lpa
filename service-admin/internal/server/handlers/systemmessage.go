@@ -40,6 +40,7 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		if err != nil {
 			log.Error().Err(err).Msg("failed to parse form input")
 			http.Error(w, "Error parsing form input", http.StatusBadRequest)
+
 			return
 		}
 
