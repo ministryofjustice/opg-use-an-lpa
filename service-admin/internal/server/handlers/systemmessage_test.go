@@ -196,7 +196,7 @@ func Test_SystemMessageHandlerParseFormError(t *testing.T) {
 	assert.NoError(t, err)
 
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	
+
 	rr := httptest.NewRecorder()
 
 	handler := http.HandlerFunc(server.SystemMessageHandler)
@@ -304,4 +304,63 @@ func Test_SystemMessageHandler_PostRequest_ValidationError(t *testing.T) {
 
 	assert.NotNil(t, capturedTemplateData, "Template data was not set")
 	assert.NotNil(t, capturedTemplateData.ErrorMessage, "Error message was not set")
+	assert.Equal(t, capturedTemplateData.ErrorMessage, "Both English and Welsh versions are required for each message")
+}
+
+func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
+	t.Parallel()
+
+	var capturedTemplateData *handlers.SystemMessageData
+
+	mockSysMsgService := &mockSystemMessageService{
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
+			return false, nil
+		},
+	}
+	mockTemplateService := &mockTemplateWriterService{
+		RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, templateName string, data interface{}) error {
+			if td, ok := data.(handlers.SystemMessageData); ok {
+				capturedTemplateData = &td
+			}
+			return nil
+		},
+	}
+
+	server := handlers.NewSystemMessageServer(mockSysMsgService, mockTemplateService)
+
+	form := url.Values{}
+	form.Add("use-eng", "English message")
+	form.Add("use-cy", "Welsh message")
+
+	req, err := http.NewRequest("POST", "/some-url", strings.NewReader(form.Encode()))
+	assert.NoError(t, err)
+	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	rr := httptest.NewRecorder()
+	handler := http.HandlerFunc(server.SystemMessageHandler)
+	handler.ServeHTTP(rr, req)
+
+	assert.Nil(t, capturedTemplateData.ErrorMessage)
+	assert.NotNil(t, capturedTemplateData.SuccessMessage)
+	assert.Equal(t, *capturedTemplateData.SuccessMessage, "System message has been updated")
+
+	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, error) {
+		return false, fmt.Errorf("mock failure")
+	}
+
+	handler.ServeHTTP(rr, req)
+
+	assert.NotNil(t, capturedTemplateData.ErrorMessage)
+	assert.Equal(t, *capturedTemplateData.ErrorMessage, "Error updating system messages")
+
+	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, error) {
+		return true, nil
+	}
+
+	handler.ServeHTTP(rr, req)
+
+	assert.Nil(t, capturedTemplateData.ErrorMessage)
+	assert.NotNil(t, capturedTemplateData.SuccessMessage)
+	assert.Equal(t, *capturedTemplateData.SuccessMessage, "System message has been removed")
+
 }
