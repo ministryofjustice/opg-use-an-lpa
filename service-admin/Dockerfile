@@ -11,7 +11,11 @@ RUN npm ci && npm run build
 # Build Go app
 FROM golang:1.21.3-alpine as build-env
 
-RUN apk --update --no-cache add build-base
+RUN apk --update --no-cache add build-base && apk --update --no-cache add \
+  ca-certificates \
+  tzdata \
+  && rm -rf /var/cache/apk/* && update-ca-certificates && \
+  adduser -D appuser
 
 WORKDIR /app
 
@@ -24,18 +28,16 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o admin cmd/admin/main.go
 
 # Bundle all
-FROM alpine:3.18 as production
+FROM scratch as production
 
 WORKDIR /go/bin
 
-RUN apk --update --no-cache add \
-  ca-certificates \
-  tzdata \
-  && rm -rf /var/cache/apk/*
-
-RUN apk upgrade libcrypto3 libssl3
-
+COPY --from=build-env /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build-env /etc/passwd /etc/passwd
 COPY --from=build-env /app/admin admin
 COPY --from=build-env /app/web/templates web/templates
 COPY --from=asset-env /app/web/static web/static
+
+USER appuser
+
 ENTRYPOINT ["./admin"]
