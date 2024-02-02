@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"flag"
-	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"net/http"
 	"net/url"
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
@@ -40,8 +41,8 @@ func main() {
 			env.Get("AWS_REGION", "eu-west-1"),
 			"",
 		)
-		awsEndpoint = flag.String(
-			"awsEndpoint",
+		ssmEndpoint = flag.String(
+			"ssmEndpoint",
 			env.Get("AWS_ENDPOINT_SSM", ""),
 			"",
 		)
@@ -75,8 +76,6 @@ func main() {
 
 	flag.Parse()
 
-	log.Info().Msgf("endpoint is set to %s", *awsEndpoint)
-
 	v := url.Values{}
 	v.Set("client_id", *cognitoClientID)
 
@@ -93,7 +92,10 @@ func main() {
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
 	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config, func(o *ssm.Options) {
-		o.Region = "eu-west-1"
+		if *ssmEndpoint != "" {
+			endpoint := *ssmEndpoint
+			o.BaseEndpoint = &endpoint
+		}
 	}))
 
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
