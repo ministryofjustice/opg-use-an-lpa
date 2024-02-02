@@ -362,5 +362,4 @@ func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
 	assert.Nil(t, capturedTemplateData.ErrorMessage)
 	assert.NotNil(t, capturedTemplateData.SuccessMessage)
 	assert.Equal(t, *capturedTemplateData.SuccessMessage, "System message has been removed")
-
 }
