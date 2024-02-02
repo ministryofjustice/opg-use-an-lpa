@@ -2,6 +2,7 @@ package data_test
 
 import (
 	"context"
+	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
@@ -95,6 +96,72 @@ func TestPutSystemMessages(t *testing.T) {
 	assert.Equal(t, 1, mockClient.DeleteParameterCallCount, "Expected DeleteParameter to be called once for deleting")
 }
 
+func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
+	t.Parallel()
+
+	messages := map[string]string{
+		"system-message-use-en": "use hello world en",
+		"system-message-use-cy": "use helo byd",
+	}
+
+	mockClient := &mockSSMClient{
+		PutParameterFunc: func(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
+			return nil, fmt.Errorf("Failed to write parameter")
+		},
+	}
+
+	ssmConn := data.NewSSMConnection(mockClient)
+	service := data.NewSystemMessageService(*ssmConn)
+
+	deleted, err := service.PutSystemMessages(context.Background(), messages)
+	assert.Error(t, err, "Should have reported error")
+	assert.False(t, deleted)
+}
+
+func TestPutSystemMessages_DeletionFailureHandling_NoParameter(t *testing.T) {
+	t.Parallel()
+
+	mockClient := &mockSSMClient{
+		DeleteParameterFunc: func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
+			return nil, &types.ParameterNotFound{}
+		},
+	}
+
+	ssmConn := data.NewSSMConnection(mockClient)
+	service := data.NewSystemMessageService(*ssmConn)
+
+	messagesToDelete := map[string]string{
+		"system-message-use-en": "",
+	}
+
+	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
+
+	assert.NoError(t, err)
+	assert.False(t, deleted, "No messages should be deleted")
+}
+
+func TestPutSystemMessages_DeletionFailureHandling_SSM_Error(t *testing.T) {
+	t.Parallel()
+
+	mockClient := &mockSSMClient{
+		DeleteParameterFunc: func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
+			return nil, fmt.Errorf("any other type of error")
+		},
+	}
+
+	ssmConn := data.NewSSMConnection(mockClient)
+	service := data.NewSystemMessageService(*ssmConn)
+
+	messagesToDelete := map[string]string{
+		"system-message-use-en": "",
+	}
+
+	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
+
+	assert.Error(t, err)
+	assert.False(t, deleted, "No messages should be deleted")
+}
+
 func TestGetSystemMessages(t *testing.T) {
 	t.Parallel()
 
@@ -121,5 +188,35 @@ func TestGetSystemMessages(t *testing.T) {
 
 	messages, err := service.GetSystemMessages(context.Background())
 	assert.NoError(t, err)
+	assert.Equal(t, predefinedValues, messages)
+}
+
+func TestGetSystemMessages_ErrorHandling_FailedToRetrieve(t *testing.T) {
+	t.Parallel()
+
+	predefinedValues := map[string]string{
+		"system-message-use-en": "use hello world en",
+		"system-message-use-cy": "use helo byd",
+		// No view messages set
+	}
+
+	mockClient := &mockSSMClient{
+		GetParameterFunc: func(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error) {
+			if value, ok := predefinedValues[*params.Name]; ok {
+				return &ssm.GetParameterOutput{
+					Parameter: &types.Parameter{Value: aws.String(value)},
+				}, nil
+			}
+			return nil, &types.ParameterNotFound{}
+		},
+	}
+
+	ssmConn := data.NewSSMConnection(mockClient)
+	service := data.NewSystemMessageService(*ssmConn)
+
+	messages, err := service.GetSystemMessages(context.Background())
+	assert.NoError(t, err)
+
+	// Should return present messages and ignore missing parameters system-message-view-en and system-message-view-cy
 	assert.Equal(t, predefinedValues, messages)
 }
