@@ -304,7 +304,7 @@ func Test_SystemMessageHandler_PostRequest_ValidationError(t *testing.T) {
 
 	assert.NotNil(t, capturedTemplateData, "Template data was not set")
 	assert.NotNil(t, capturedTemplateData.ErrorMessage, "Error message was not set")
-	assert.Equal(t, capturedTemplateData.ErrorMessage, "Both English and Welsh versions are required for each message")
+	assert.Equal(t, *capturedTemplateData.ErrorMessage, "Both English and Welsh versions are required for each message")
 }
 
 func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
