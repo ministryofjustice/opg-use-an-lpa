@@ -223,9 +223,12 @@ class ActorUsersTest extends TestCase
                 $this->assertEquals('IdentityIndex', $data['IndexName']);
 
                 $this->assertArrayHasKey('ExpressionAttributeValues', $data);
-                $this->assertArrayHasKey(':identity', $data['ExpressionAttributeValues']);
+                $this->assertArrayHasKey(':sub', $data['ExpressionAttributeValues']);
 
-                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':identity']);
+                $this->assertArrayHasKey('ExpressionAttributeNames', $data);
+                $this->assertArrayHasKey('#sub', $data['ExpressionAttributeNames']);
+
+                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':sub']);
 
                 return true;
             }))

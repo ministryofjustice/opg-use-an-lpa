@@ -109,6 +109,9 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getByIdentity(string $identity): array
     {
         $marshaler = new Marshaler();
@@ -117,12 +120,15 @@ class ActorUsers implements ActorUsersInterface
             [
                 'TableName'                 => $this->actorUsersTable,
                 'IndexName'                 => 'IdentityIndex',
-                'KeyConditionExpression'    => 'Identity = :identity',
+                'KeyConditionExpression'    => '#sub = :sub',
                 'ExpressionAttributeValues' => $marshaler->marshalItem(
                     [
-                        ':identity' => $identity,
+                        ':sub' => $identity,
                     ]
                 ),
+                'ExpressionAttributeNames'  => [
+                    '#sub' => 'Identity',
+                ],
             ]
         );
 
