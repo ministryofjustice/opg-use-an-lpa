@@ -9,6 +9,8 @@ use App\Service\Authentication\AuthorisationService;
 use App\Service\Authentication\AuthorisationServiceBuilder;
 use App\Service\Authentication\OneLoginService;
 use App\Service\Authentication\UserInfoService;
+use App\Service\RandomByteGenerator;
+use App\Service\User\ResolveOAuthUser;
 use Facile\OpenIDClient\Token\TokenSetInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -48,13 +50,22 @@ class OneLoginServiceTest extends TestCase
             return true;
         }))->willReturn($fakeRedirect . '?with_suitable_values=true');
 
-        $userInfoService = $this->prophesize(UserInfoService::class);
-
         $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
         $serviceBuilder->build()
             ->willReturn($service->reveal());
 
-        $authorisationRequestService = new OneLoginService($serviceBuilder->reveal(), $userInfoService->reveal());
+        $randomByteGenerator = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGenerator->__invoke(12)
+            ->willReturn('random');
+        $randomByteGenerator->__invoke(24)
+            ->willReturn('long_random');
+
+        $authorisationRequestService = new OneLoginService(
+            $serviceBuilder->reveal(),
+            $this->prophesize(UserInfoService::class)->reveal(),
+            $this->prophesize(ResolveOAuthUser::class)->reveal(),
+            $randomByteGenerator->reveal(),
+        );
 
         $authorisationRequest = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
     }
@@ -81,6 +92,10 @@ class OneLoginServiceTest extends TestCase
             ->callback('fake_code', 'fake_state', $fakeSession)
             ->willReturn($tokenSet->reveal());
 
+        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
+        $serviceBuilder->build()
+            ->willReturn($service->reveal());
+
         $userInfoService = $this->prophesize(UserInfoService::class);
         $userInfoService
             ->getUserInfo($tokenSet->reveal())
@@ -101,11 +116,23 @@ class OneLoginServiceTest extends TestCase
                 ],
             );
 
-        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
-        $serviceBuilder->build()
-            ->willReturn($service->reveal());
+        $resolveOAuthUser = $this->prophesize(ResolveOAuthUser::class);
+        $resolveOAuthUser
+            ->__invoke('fakeSub', 'fakeEmail')
+            ->willReturn(
+                [
+                    'Id'       => 'fakeId',
+                    'Identity' => 'fakeSub',
+                    'Email'    => 'fakeEmail',
+                ],
+            );
 
-        $sut = new OneLoginService($serviceBuilder->reveal(), $userInfoService->reveal());
+        $sut = new OneLoginService(
+            $serviceBuilder->reveal(),
+            $userInfoService->reveal(),
+            $resolveOAuthUser->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+        );
 
         $user = $sut->handleCallback(
             'fake_code',
@@ -116,11 +143,9 @@ class OneLoginServiceTest extends TestCase
         $this->assertArrayHasKey('Id', $user);
         $this->assertArrayHasKey('Identity', $user);
         $this->assertArrayHasKey('Email', $user);
-        $this->assertArrayHasKey('Birthday', $user);
 
         $this->assertSame('fakeSub', $user['Identity']);
         $this->assertSame('fakeEmail', $user['Email']);
-        $this->assertSame('1982-10-82', $user['Birthday']);
     }
 
     /**
@@ -144,13 +169,16 @@ class OneLoginServiceTest extends TestCase
             ->callback('fake_code', 'fake_state', $fakeSession)
             ->willReturn($tokenSet->reveal());
 
-        $userInfoService = $this->prophesize(UserInfoService::class);
-
         $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
         $serviceBuilder->build()
             ->willReturn($service->reveal());
 
-        $sut = new OneLoginService($serviceBuilder->reveal(), $userInfoService->reveal());
+        $sut = new OneLoginService(
+            $serviceBuilder->reveal(),
+            $this->prophesize(UserInfoService::class)->reveal(),
+            $this->prophesize(ResolveOAuthUser::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+        );
 
         $this->expectException(AuthorisationServiceException::class);
         $user = $sut->handleCallback(
@@ -182,6 +210,10 @@ class OneLoginServiceTest extends TestCase
             ->callback('fake_code', 'fake_state', $fakeSession)
             ->willReturn($tokenSet->reveal());
 
+        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
+        $serviceBuilder->build()
+            ->willReturn($service->reveal());
+
         $userInfoService = $this->prophesize(UserInfoService::class);
         $userInfoService
             ->getUserInfo($tokenSet->reveal())
@@ -192,11 +224,12 @@ class OneLoginServiceTest extends TestCase
                 ]
             );
 
-        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
-        $serviceBuilder->build()
-            ->willReturn($service->reveal());
-
-        $sut = new OneLoginService($serviceBuilder->reveal(), $userInfoService->reveal());
+        $sut = new OneLoginService(
+            $serviceBuilder->reveal(),
+            $userInfoService->reveal(),
+            $this->prophesize(ResolveOAuthUser::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+        );
 
         $this->expectException(AuthorisationServiceException::class);
         $user = $sut->handleCallback(
