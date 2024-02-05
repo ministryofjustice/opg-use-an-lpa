@@ -15,6 +15,12 @@
     <option name="showSniffs" value="true" />
     <option name="transferred" value="true" />
   </component>
+  <component name="PhpAnalysisConfiguration">
+    <unchecked_exceptions>
+      <fqn value="\Error" />
+      <fqn value="\LogicException" />
+    </unchecked_exceptions>
+  </component>
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <PhpCSConfiguration beautifier_path="$PROJECT_DIR$/service-api/app/vendor/squizlabs/php_codesniffer/bin/phpcbf" standards="MySource;PEAR;PSR1;PSR12;PSR2;SlevomatCodingStandard;Squiz;WebimpressCodingStandard;Zend;coding-standard" tool_path="$PROJECT_DIR$/service-api/app/vendor/squizlabs/php_codesniffer/bin/phpcs" />
@@ -107,7 +113,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/netresearch/jsonmapper" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/nikic/fast-route" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/openlss/lib-array2xml" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/opis/closure" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/paragonie/halite" />
@@ -192,7 +197,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/vimeo/psalm" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/webimpress/safe-writer" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/path-util" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laravel/serializable-closure" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-composer-autoloading" />
@@ -262,7 +266,6 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/psr/http-server-middleware" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/psr/log" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/alphagov/notifications-php-client" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/openlss/lib-array2xml" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/netresearch/jsonmapper" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/phar-io/version" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/phar-io/manifest" />
@@ -341,7 +344,6 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/kelunik/certificate" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/aws/aws-crt-php" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/webmozart/path-util" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/aws/aws-sdk-php" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/amp" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/sync" />
@@ -411,7 +413,10 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/diff" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/httplug" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/lines-of-code" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/stella-maris/clock" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/spatie/array-to-xml" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/fidry/cpu-core-counter" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/spatie/array-to-xml" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
