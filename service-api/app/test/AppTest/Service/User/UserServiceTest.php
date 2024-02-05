@@ -12,13 +12,16 @@ use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Exception\UnauthorizedException;
 use App\Service\Log\Output\Email;
+use App\Service\RandomByteGenerator;
 use App\Service\User\UserService;
 use DateTime;
+use DateTimeImmutable;
 use Exception;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -40,10 +43,12 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_create_a_valid_instance(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $this->prophesize(ActorUsersInterface::class)->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->assertInstanceOf(UserService::class, $us);
     }
@@ -55,23 +60,19 @@ class UserServiceTest extends TestCase
         $password = 'password1';
 
         $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
         $repoProphecy->exists($email)->willReturn(false);
-
         $repoProphecy
             ->getUserByNewEmail($email)
             ->willReturn([])
             ->shouldBeCalled();
-
         $repoProphecy
             ->add(
                 Argument::that(function (string $data) {
                     $this->id = $data;
                     return Uuid::isValid($data);
                 }),
-                Argument::exact($email),
-                Argument::exact($password),
+                $email,
+                $password,
                 Argument::that(function (string $activationToken) {
                     $this->activationToken = $activationToken;
                     return true;
@@ -82,7 +83,17 @@ class UserServiceTest extends TestCase
                 })
             );
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $randomByteGenerator = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGenerator
+            ->__invoke(Argument::any())
+            ->willReturn('bigRandomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGenerator->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
 
         $return = $us->add(['email' => $email, 'password' => new HiddenString($password)]);
 
@@ -97,7 +108,7 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
-    public function can_reset_existing_user_for_add(): void
+    public function will_reset_existing_inactive_user_when_adding_again(): void
     {
         $id              = '12345678-1234-1234-1234-123456789012';
         $email           = 'a@b.com';
@@ -106,9 +117,7 @@ class UserServiceTest extends TestCase
         $ttl             = (new DateTime('+24 hours'))->getTimestamp();
         $userData        = ['email' => $email, 'password' => new HiddenString($password), 'id' => $id];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->exists($userData['email'])
             ->willReturn(true);
         $repoProphecy->getByEmail($userData['email'])
@@ -124,7 +133,12 @@ class UserServiceTest extends TestCase
                 'Email' => $email,
             ]);
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $return = $us->add($userData);
 
@@ -142,17 +156,20 @@ class UserServiceTest extends TestCase
         $userData = ['email' => 'a@b.com', 'password' => $password];
 
         $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
         $repoProphecy->exists($userData['email'])
             ->willReturn(true);
-
         $repoProphecy->getByEmail($userData['email'])
             ->willReturn([
                 'Id'    => $id,
                 'Email' => $email,
             ]);
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ConflictException::class);
         $us->add($userData);
@@ -165,12 +182,10 @@ class UserServiceTest extends TestCase
     {
         $id       = '12345678-1234-1234-1234-123456789012';
         $email    = 'a@b.com';
-        $password = 'password1';
+        $password = new HiddenString('password1');
         $userData = ['email' => 'a@b.com', 'password' => $password];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->exists($userData['email'])
             ->willReturn(false);
         $repoProphecy->getUserByNewEmail($userData['email'])
@@ -184,7 +199,15 @@ class UserServiceTest extends TestCase
                 ]
             );
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ConflictException::class);
         $us->add($userData);
@@ -196,23 +219,32 @@ class UserServiceTest extends TestCase
         $email        = 'nonexistent@example.com';
         $hashed_email = hash('sha256', $email);
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->recordPasswordResetRequest(Argument::cetera())
-            ->willThrow(Exception::class);
+            ->willThrow(NotFoundException::class);
 
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy
             ->notice(
                 'Attempt made to reset password for non-existent account',
                 Argument::that(function ($arg) use ($hashed_email) {
-                    return $arg['email'] instanceof Email && (string)($arg['email']) == $hashed_email;
+                    return $arg['email'] instanceof Email && (string)($arg['email']) === $hashed_email;
                 })
             )
             ->shouldBeCalled();
 
-        $userService = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $userService = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $loggerProphecy->reveal(),
+        );
 
         try {
             $userService->requestPasswordReset($email);
@@ -223,13 +255,16 @@ class UserServiceTest extends TestCase
     /** @test */
     public function can_get_a_user_from_storage(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $return = $us->getByEmail('a@b.com');
 
@@ -239,24 +274,74 @@ class UserServiceTest extends TestCase
     /** @test */
     public function cannot_retrieve_a_user_that_doesnt_exist(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willThrow(new NotFoundException());
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(NotFoundException::class);
         $return = $us->getByEmail('a@b.com');
     }
 
+    public function can_get_a_user_from_storage_using_identity(): void
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->getByIdentity('urn:fdc:one-login:2023:HASH=')
+            ->willReturn(
+                [
+                    'Email'    => 'a@b.com',
+                    'Identity' => 'urn:fdc:one-login:2023:HASH=',
+                    'Password' => self::PASS_HASH,
+                ]
+            );
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $return = $us->getByIdentity('urn:fdc:one-login:2023:HASH=');
+
+        $this->assertEquals(
+            [
+                'Email'    => 'a@b.com',
+                'Identity' => 'urn:fdc:one-login:2023:HASH=',
+                'Password' => self::PASS_HASH,
+            ],
+            $return,
+        );
+    }
+
+    /** @test */
+    public function cannot_retrieve_a_user_that_doesnt_exist_using_identity(): void
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->getByIdentity('urn:fdc:one-login:2023:HASH=')
+            ->willThrow(new NotFoundException());
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $this->expectException(NotFoundException::class);
+        $return = $us->getByIdentity('urn:fdc:one-login:2023:HASH=');
+    }
+
     /** @test */
     public function can_authenticate_a_user_with_valid_credentials(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(
                 [
@@ -274,10 +359,18 @@ class UserServiceTest extends TestCase
 
             return true;
         }));
-        $repoProphecy->rehashPassword(Argument::any(), Argument::any())
+        $repoProphecy->rehashPassword(Argument::cetera())
             ->shouldNotBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
@@ -294,9 +387,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function will_update_the_password_hash_on_successful_authentication(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(
                 [
@@ -312,7 +403,15 @@ class UserServiceTest extends TestCase
         $repoProphecy->recordSuccessfulLogin('1234-1234-1234', Argument::any())
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
 
@@ -329,13 +428,16 @@ class UserServiceTest extends TestCase
     /** @test */
     public function will_not_authenticate_invalid_credentials(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ForbiddenException::class);
         $return = $us->authenticate('a@b.com', new HiddenString('badpassword'));
@@ -344,13 +446,16 @@ class UserServiceTest extends TestCase
     /** @test */
     public function will_not_authenticate_unknown_user(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('baduser@b.com')
             ->willThrow(new NotFoundException());
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(NotFoundException::class);
         $return = $us->authenticate('baduser@b.com', new HiddenString(self::PASS));
@@ -359,9 +464,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function will_not_authenticate_unverified_account(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
             ->willReturn(
                 [
@@ -374,7 +477,12 @@ class UserServiceTest extends TestCase
         $repoProphecy->rehashPassword(Argument::any(), Argument::any())
             ->shouldNotBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(UnauthorizedException::class);
         $return = $us->authenticate('a@b.com', new HiddenString(self::PASS));
@@ -383,18 +491,26 @@ class UserServiceTest extends TestCase
     /** @test */
     public function will_generate_and_record_a_password_reset_token(): void
     {
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
-            ->recordPasswordResetRequest('a@b.com', Argument::type('string'), Argument::type('int'))
+            ->recordPasswordResetRequest('a@b.com', Argument::cetera())
             ->willReturn([
                 'Email'              => 'a@b.com',
                 'PasswordResetToken' => 'resetTokenAABBCCDDEE',
                 'Id'                 => '1234-1234-1234',
             ]);
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $return = $us->requestPasswordReset('a@b.com');
 
@@ -410,14 +526,11 @@ class UserServiceTest extends TestCase
         $password = 'newpassword';
         $id       = '12345-1234-1234-1234-12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willReturn($id)
             ->shouldBeCalled();
-
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -426,12 +539,19 @@ class UserServiceTest extends TestCase
                 'PasswordResetExpiry' => (new DateTime('+1 week'))->format('U'),
             ])
             ->shouldBeCalled();
-
         $repoProphecy
             ->resetPassword($id, $password)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $us->completePasswordReset($token, new HiddenString($password));
     }
@@ -443,14 +563,11 @@ class UserServiceTest extends TestCase
         $password = 'newpassword';
         $id       = '12345-1234-1234-1234-12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willReturn($id)
             ->shouldBeCalled();
-
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -460,7 +577,15 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(BadRequestException::class);
         $us->completePasswordReset($token, new HiddenString($password));
@@ -472,14 +597,11 @@ class UserServiceTest extends TestCase
         $token = 'RESET_TOKEN_123';
         $id    = '12345-1234-1234-1234-12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willReturn($id)
             ->shouldBeCalled();
-
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -489,7 +611,15 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $result = $us->canResetPassword($token);
 
@@ -502,14 +632,11 @@ class UserServiceTest extends TestCase
         $token = 'RESET_TOKEN_123';
         $id    = '12345-1234-1234-1234-12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willReturn($id)
             ->shouldBeCalled();
-
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -519,7 +646,15 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(GoneException::class);
         $result = $us->canResetPassword($token);
@@ -529,17 +664,19 @@ class UserServiceTest extends TestCase
     public function will_reject_non_existent_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_123';
-        $id    = '12345-1234-1234-1234-12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByPasswordResetToken($token)
             ->willThrow(new GoneException())
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(GoneException::class);
         $result = $us->canResetPassword($token);
@@ -557,20 +694,22 @@ class UserServiceTest extends TestCase
             'Password'  => self::PASS_HASH,
         ];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->get($id)
             ->willReturn($userData)
             ->shouldBeCalled();
-
         $repoProphecy
             ->delete($id)
             ->willReturn($userData)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $result = $us->deleteUserAccount($id);
 
@@ -586,9 +725,7 @@ class UserServiceTest extends TestCase
         $resetToken  = 'abcde12345';
         $resetExpiry = time() + (60 * 60 * 48);
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -598,19 +735,16 @@ class UserServiceTest extends TestCase
                 'Password'  => self::PASS_HASH,
             ])
             ->shouldBeCalled();
-
         $repoProphecy
             ->exists($newEmail)
             ->willReturn(false)
             ->shouldBeCalled();
-
         $repoProphecy
             ->getUserByNewEmail($newEmail)
             ->willReturn([])
             ->shouldBeCalled();
-
         $repoProphecy
-            ->recordChangeEmailRequest($id, $newEmail, Argument::type('string'), Argument::type('int'))
+            ->recordChangeEmailRequest($id, $newEmail, Argument::cetera())
             ->willReturn([
                 'Id'               => $id,
                 'EmailResetExpiry' => $resetExpiry,
@@ -621,7 +755,17 @@ class UserServiceTest extends TestCase
                 'Password'         => self::PASS_HASH,
             ])->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $reset = $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
 
@@ -647,15 +791,23 @@ class UserServiceTest extends TestCase
             'Password'  => self::PASS_HASH,
         ];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->get($id)
             ->willReturn($userData)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ForbiddenException::class);
         $us->requestChangeEmail($id, $newEmail, new HiddenString($password));
@@ -674,20 +826,27 @@ class UserServiceTest extends TestCase
             'Password'  => self::PASS_HASH,
         ];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->get($id)
             ->willReturn($userData)
             ->shouldBeCalled();
-
         $repoProphecy
             ->exists($newEmail)
             ->willReturn(true)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ConflictException::class);
         $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
@@ -706,19 +865,15 @@ class UserServiceTest extends TestCase
             'Password'  => self::PASS_HASH,
         ];
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->get($id)
             ->willReturn($userData)
             ->shouldBeCalled();
-
         $repoProphecy
             ->exists($newEmail)
             ->willReturn(false)
             ->shouldBeCalled();
-
         $repoProphecy
             ->getUserByNewEmail($newEmail)
             ->willReturn([
@@ -734,7 +889,20 @@ class UserServiceTest extends TestCase
             ])
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $randomByteGeneratorProphecy = $this->prophesize(RandomByteGenerator::class);
+        $randomByteGeneratorProphecy
+            ->__invoke(Argument::any())
+            ->willReturn('randomBytes');
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $randomByteGeneratorProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(ConflictException::class);
         $us->requestChangeEmail($id, $newEmail, new HiddenString(self::PASS));
@@ -745,15 +913,18 @@ class UserServiceTest extends TestCase
     {
         $token = 't0k3n12345';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByEmailResetToken($token)
             ->willThrow(new NotFoundException())
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
         $this->expectException(GoneException::class);
         $us->canResetEmail($token);
@@ -766,14 +937,11 @@ class UserServiceTest extends TestCase
         $token    = 're3eT0ken';
         $newEmail = 'new@email.com';
 
-        $repoProphecy   = $this->prophesize(ActorUsersInterface::class);
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
-
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy
             ->getIdByEmailResetToken($token)
             ->willReturn($id)
             ->shouldBeCalled();
-
         $repoProphecy
             ->get($id)
             ->willReturn([
@@ -786,15 +954,18 @@ class UserServiceTest extends TestCase
                 'Password'         => self::PASS_HASH,
             ])
             ->shouldBeCalled();
-
         $repoProphecy
             ->changeEmail($id, $token, $newEmail)
             ->willReturn(true)
             ->shouldBeCalled();
 
-        $us = new UserService($repoProphecy->reveal(), $loggerProphecy->reveal());
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
 
-        $response = $us->completeChangeEmail($token);
-        $this->assertNull($response);
+        $us->completeChangeEmail($token);
     }
 }
