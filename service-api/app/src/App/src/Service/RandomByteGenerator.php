@@ -11,6 +11,7 @@ use function random_bytes;
 
 /**
  * @internal
+ *
  * @todo This is redundant under PHP 8.3 as random_bytes throws a named exception.
  */
 class RandomByteGenerator
