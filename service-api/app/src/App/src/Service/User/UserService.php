@@ -108,6 +108,17 @@ class UserService
     }
 
     /**
+     * @param string $identity
+     * @return array
+     * @psalm-return ActorUser
+     * @throws NotFoundException
+     */
+    public function getByIdentity(string $identity): array
+    {
+        return $this->usersRepository->getByIdentity($identity);
+    }
+
+    /**
      * Activate a user account
      *
      * @param string $activationToken
