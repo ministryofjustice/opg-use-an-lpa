@@ -1050,4 +1050,69 @@ class ActorUsersTest extends TestCase
 
         $this->assertTrue($result);
     }
+
+    /** @test */
+    public function will_migrate_a_local_account_to_oidc(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $identity = 'sub:gov.uk:identity';
+
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(function (array $data) use ($id, $identity) {
+                $this->assertIsArray($data);
+
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+                $this->assertStringContainsString($identity, serialize($data));
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(
+                    [
+                        'Item' => [
+                            'Id'       => [
+                                'S' => $id,
+                            ],
+                            'Identity' => [
+                                'S' => $identity,
+                            ],
+                        ],
+                    ],
+                ),
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $user = $actorRepo->migrateToOAuth($id, $identity);
+
+        $this->assertEquals($id, $user['Id']);
+        $this->assertEquals($identity, $user['Identity']);
+    }
+
+    /** @test */
+    public function migration_fails_when_user_not_found(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $identity = 'sub:gov.uk:identity';
+
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(function (array $data) use ($id, $identity) {
+                $this->assertIsArray($data);
+
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+                $this->assertStringContainsString($identity, serialize($data));
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(),
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $this->expectException(NotFoundException::class);
+        $user = $actorRepo->migrateToOAuth($id, $identity);
+    }
 }

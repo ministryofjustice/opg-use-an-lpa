@@ -271,6 +271,45 @@ class ActorUsers implements ActorUsersInterface
     /**
      * @inheritDoc
      */
+    public function migrateToOAuth(string $id, string $identity): array
+    {
+        $marshaler = new Marshaler();
+
+        $result = $this->client->updateItem(
+            [
+                'TableName' => $this->actorUsersTable,
+                'Key'       => [
+                    'Id' => [
+                        'S' => $id,
+                    ],
+                ],
+                'UpdateExpression'
+                    => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
+                        . 'PasswordResetExpiry, NeedsReset',
+                'ExpressionAttributeValues' => $marshaler->marshalItem(
+                    [
+                        ':sub' => $identity,
+                    ]
+                ),
+                'ExpressionAttributeNames'  => [
+                    '#sub' => 'Identity',
+                ],
+                'ReturnValues'              => 'ALL_NEW',
+            ]
+        );
+
+        $user = $this->getData($result);
+
+        if (empty($user)) {
+            throw new NotFoundException('User not found when updating', ['id' => $id]);
+        }
+
+        return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function exists(string $email): bool
     {
         try {
