@@ -296,6 +296,13 @@ class DynamoDBExporterAndQuerier:
             outputFileName="CountofViewedAccessCodes",
         )
 
+    def get_count_of_created_access_codes(self):
+        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_codes\" WHERE Item.Added.S BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="CountofCreatedAccessCodes",
+        )
+
     def get_count_of_expired_access_codes(self):
         sql_string = f"SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
         self.run_athena_query(
@@ -373,6 +380,7 @@ def main():
     work.get_expired_viewed_access_codes()
     work.get_expired_unviewed_access_codes()
     work.get_count_of_viewed_access_codes()
+    work.get_count_of_created_access_codes()
     work.get_count_of_expired_access_codes()
     work.get_organisations_field()
 
