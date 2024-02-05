@@ -26,6 +26,43 @@ resource "aws_route53_record" "this" {
   provider       = aws.management
 }
 
+resource "aws_route53_record" "spf" {
+  count   = var.create_block_email_records ? 1 : 0
+  zone_id = var.zone_id
+  name    = "${var.dns_namespace_env}${var.dns_name}"
+  type    = "TXT"
+  ttl     = 300
+
+  records = [
+    "v=spf1 -all",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  provider = aws.management
+}
+
+
+resource "aws_route53_record" "dmarc" {
+  count   = var.create_block_email_records ? 1 : 0
+  zone_id = var.zone_id
+  name    = "_dmarc.${var.dns_namespace_env}${var.dns_name}"
+  type    = "TXT"
+  ttl     = 300
+
+  records = [
+    "v=DMARC1; p=reject; sp=reject; fo=1; rua=mailto:dmarc-rua@dmarc.service.gov.uk; ruf=mailto:dmarc-ruf@dmarc.service.gov.uk",
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  provider = aws.management
+}
+
 resource "aws_route53_health_check" "this" {
   count             = var.create_health_check ? 1 : 0
   fqdn              = aws_route53_record.this.fqdn
