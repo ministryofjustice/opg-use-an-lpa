@@ -72,7 +72,7 @@ func main() {
 			"The codes endpoint",
 		)
 		environmentName = flag.String(
-			"lpa-codes-endpoint",
+			"environment-name",
 			env.Get("ENVIRONMENT_NAME", ""),
 			"Environment name - used to avoid clashes between CI environments",
 		)
@@ -101,7 +101,7 @@ func main() {
 			endpoint := *ssmEndpoint
 			o.BaseEndpoint = &endpoint
 		}
-	}))
+	}), *environmentName)
 
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 

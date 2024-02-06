@@ -16,8 +16,8 @@ type SSMConnection struct {
 	Client SSMClient
 }
 
-func NewSSMConnection(client SSMClient) *SSMConnection {
-	return &SSMConnection{Client: client}
+func NewSSMConnection(client SSMClient, prefix string) *SSMConnection {
+	return &SSMConnection{Client: client, Prefix: prefix}
 }
 
 func (s *SSMConnection) prefixedParameterName(name string) string {

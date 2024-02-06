@@ -74,7 +74,7 @@ func TestPutSystemMessages(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	_, err := service.PutSystemMessages(context.Background(), initialMessages)
@@ -110,7 +110,7 @@ func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	deleted, err := service.PutSystemMessages(context.Background(), messages)
@@ -127,7 +127,7 @@ func TestPutSystemMessages_DeletionFailureHandling_NoParameter(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messagesToDelete := map[string]string{
@@ -149,7 +149,7 @@ func TestPutSystemMessages_DeletionFailureHandling_SSM_Error(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messagesToDelete := map[string]string{
@@ -183,7 +183,7 @@ func TestGetSystemMessages(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messages, err := service.GetSystemMessages(context.Background())
@@ -211,7 +211,7 @@ func TestGetSystemMessages_ErrorHandling_FailedToRetrieve(t *testing.T) {
 		},
 	}
 
-	ssmConn := data.NewSSMConnection(mockClient)
+	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messages, err := service.GetSystemMessages(context.Background())

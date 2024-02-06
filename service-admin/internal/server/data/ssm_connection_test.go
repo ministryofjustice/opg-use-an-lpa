@@ -26,6 +26,6 @@ func (m MockSSMClient) DeleteParameter(ctx context.Context, params *ssm.DeletePa
 func TestNewSSMConnection(t *testing.T) {
 	t.Parallel()
 
-	got := data.NewSSMConnection(&MockSSMClient{})
+	got := data.NewSSMConnection(&MockSSMClient{}, "")
 	assert.NotNil(t, got)
 }
