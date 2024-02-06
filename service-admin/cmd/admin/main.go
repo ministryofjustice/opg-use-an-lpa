@@ -73,7 +73,7 @@ func main() {
 		)
 		environmentName = flag.String(
 			"lpa-codes-endpoint",
-			env.Get("ENVIRONMENT NAME", ""),
+			env.Get("ENVIRONMENT_NAME", ""),
 			"Environment name - used to avoid clashes between CI environments",
 		)
 		log = zerolog.New(os.Stdout).With().Timestamp().Logger()
