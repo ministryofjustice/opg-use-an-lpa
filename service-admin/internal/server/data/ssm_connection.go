@@ -28,5 +28,5 @@ func (s *SSMConnection) prefixedParameterName(name string) string {
 		i = 0
 	}
 
-	return name[:i] + s.Prefix + name[i+1:]
+	return name[:i] + "/" + s.Prefix + name[i:]
 }
