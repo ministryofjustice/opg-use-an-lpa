@@ -44,3 +44,17 @@ go:
 javascript:
 - changed-files:
   - any-glob-to-any-file: '**/*.js'
+
+dependencies:
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/requirements*.txt'
+    - '**/package*.json'
+    - '**/yarn*.lock'
+    - '**/Gemfile*'
+    - '**/composer*.json'
+    - '**/go.mod'
+    - '**/go.sum'
+    - '**/vendor/**'
+    - '**/node_modules/**'
+    - '**/vendor/**'
