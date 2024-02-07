@@ -274,7 +274,7 @@ locals {
           value = var.lpa_codes_endpoint
         },
         {
-          name  = "ENVIROMENT_NAME",
+          name  = "ENVIRONMENT_NAME",
           value = tostring(var.environment_name)
         },
       ]
