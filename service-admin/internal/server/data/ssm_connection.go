@@ -22,12 +22,13 @@ func NewSSMConnection(client SSMClient, prefix string) *SSMConnection {
 }
 
 func (s *SSMConnection) prefixedParameterName(name string) string {
-	// if no prefix, or not empty string or no /, then return unchanged
+	// if no prefix, then return unchanged
 	if s.Prefix == "" {
 		return name
 	}
 
-	if strings.Index(name[1:], "/") == -1 {
+	// if or no / to insert prefix next to, then return unchanged
+	if !strings.Contains(name[1:], "/") {
 		return name
 	}
 
