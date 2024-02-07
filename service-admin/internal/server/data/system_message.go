@@ -19,7 +19,7 @@ func NewSystemMessageService(ssmConn SSMConnection) *SystemMessageService {
 }
 
 func (s *SystemMessageService) GetSystemMessages(ctx context.Context) (map[string]string, error) {
-	messageKeys := []string{"system-message-use-en", "system-message-use-cy", "system-message-view-en", "system-message-view-cy"}
+	messageKeys := []string{"/system-message/use/en", "/system-message/use/cy", "/system-message/view/en", "/system-message/view/cy"}
 	messages := make(map[string]string)
 
 	for _, messageKey := range messageKeys {

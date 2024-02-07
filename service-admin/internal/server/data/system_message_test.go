@@ -49,10 +49,10 @@ func TestPutSystemMessages(t *testing.T) {
 	t.Parallel()
 
 	initialMessages := map[string]string{
-		"system-message-use-en":  "use hello world en",
-		"system-message-use-cy":  "use helo byd",
-		"system-message-view-en": "view hello world",
-		"system-message-view-cy": "view helo byd",
+		"/system-message/use/en":  "use hello world en",
+		"/system-message/use/cy":  "use helo byd",
+		"/system-message/view/en": "view hello world",
+		"/system-message/view/cy": "view helo byd",
 	}
 
 	mockClient := &mockSSMClient{
@@ -85,7 +85,7 @@ func TestPutSystemMessages(t *testing.T) {
 	mockClient.DeleteParameterCallCount = 0
 
 	messagesToDelete := map[string]string{
-		"system-message-use-en": "",
+		"/system-message/use/en": "",
 	}
 
 	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
@@ -100,8 +100,8 @@ func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
 	t.Parallel()
 
 	messages := map[string]string{
-		"system-message-use-en": "use hello world en",
-		"system-message-use-cy": "use helo byd",
+		"/system-message/use/en": "use hello world en",
+		"/system-message/use/cy": "use helo byd",
 	}
 
 	mockClient := &mockSSMClient{
@@ -131,7 +131,7 @@ func TestPutSystemMessages_DeletionFailureHandling_NoParameter(t *testing.T) {
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messagesToDelete := map[string]string{
-		"system-message-use-en": "",
+		"/system-message/use/en": "",
 	}
 
 	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
@@ -153,7 +153,7 @@ func TestPutSystemMessages_DeletionFailureHandling_SSM_Error(t *testing.T) {
 	service := data.NewSystemMessageService(*ssmConn)
 
 	messagesToDelete := map[string]string{
-		"system-message-use-en": "",
+		"/system-message/use/en": "",
 	}
 
 	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
@@ -166,10 +166,10 @@ func TestGetSystemMessages(t *testing.T) {
 	t.Parallel()
 
 	predefinedValues := map[string]string{
-		"system-message-use-en":  "use hello world en",
-		"system-message-use-cy":  "use helo byd",
-		"system-message-view-en": "view hello world",
-		"system-message-view-cy": "view helo byd",
+		"/system-message/use/en":  "use hello world en",
+		"/system-message/use/cy":  "use helo byd",
+		"/system-message/view/en": "view hello world",
+		"/system-message/view/cy": "view helo byd",
 	}
 
 	mockClient := &mockSSMClient{
@@ -195,8 +195,8 @@ func TestGetSystemMessages_ErrorHandling_FailedToRetrieve(t *testing.T) {
 	t.Parallel()
 
 	predefinedValues := map[string]string{
-		"system-message-use-en": "use hello world en",
-		"system-message-use-cy": "use helo byd",
+		"/system-message/use/en": "use hello world en",
+		"/system-message/use/cy": "use helo byd",
 		// No view messages set
 	}
 
@@ -217,6 +217,6 @@ func TestGetSystemMessages_ErrorHandling_FailedToRetrieve(t *testing.T) {
 	messages, err := service.GetSystemMessages(context.Background())
 	assert.NoError(t, err)
 
-	// Should return present messages and ignore missing parameters system-message-view-en and system-message-view-cy
+	// Should return present messages and ignore missing parameters /system-message/view/en and /system-message/view/cy
 	assert.Equal(t, predefinedValues, messages)
 }

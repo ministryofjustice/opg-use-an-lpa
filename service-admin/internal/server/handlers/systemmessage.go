@@ -47,16 +47,16 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		}
 
 		messages := make(map[string]string)
-		messages["system-message-use-en"] = r.PostFormValue("use-eng")
-		messages["system-message-use-cy"] = r.PostFormValue("use-cy")
-		messages["system-message-view-en"] = r.PostFormValue("view-eng")
-		messages["system-message-view-cy"] = r.PostFormValue("view-cy")
+		messages["/system-message/use/en"] = r.PostFormValue("use-eng")
+		messages["/system-message/use/cy"] = r.PostFormValue("use-cy")
+		messages["/system-message/view/en"] = r.PostFormValue("view-eng")
+		messages["/system-message/view/cy"] = r.PostFormValue("view-cy")
 
 		// Checks English and Welsh are present
-		if (messages["system-message-use-en"] == "" && messages["system-message-use-cy"] != "") ||
-			(messages["system-message-use-en"] != "" && messages["system-message-use-cy"] == "") ||
-			(messages["system-message-view-en"] == "" && messages["system-message-view-cy"] != "") ||
-			(messages["system-message-view-en"] != "" && messages["system-message-view-cy"] == "") {
+		if (messages["/system-message/use/en"] == "" && messages["/system-message/use/cy"] != "") ||
+			(messages["/system-message/use/en"] != "" && messages["/system-message/use/cy"] == "") ||
+			(messages["/system-message/view/en"] == "" && messages["/system-message/view/cy"] != "") ||
+			(messages["/system-message/view/en"] != "" && messages["/system-message/view/cy"] == "") {
 			errorMessage = "Both English and Welsh versions are required for each message"
 		}
 

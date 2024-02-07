@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"strings"
 )
 
 type SSMClient interface {
@@ -21,5 +22,11 @@ func NewSSMConnection(client SSMClient, prefix string) *SSMConnection {
 }
 
 func (s *SSMConnection) prefixedParameterName(name string) string {
-	return s.Prefix + name
+	// try to insert after first / . If there's no / then just put it on the front
+	i := strings.Index(name, "/")
+	if i == -1 {
+		i = 0
+	}
+
+	return name[:i] + s.Prefix + name[i+1:]
 }
