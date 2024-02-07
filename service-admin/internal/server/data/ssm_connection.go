@@ -22,11 +22,18 @@ func NewSSMConnection(client SSMClient, prefix string) *SSMConnection {
 }
 
 func (s *SSMConnection) prefixedParameterName(name string) string {
-	// try to insert after first / . If there's no / then just put it on the front
-	i := strings.Index(name, "/")
-	if i == -1 {
-		i = 0
+	// if no prefix, or not empty string or no /, then return unchanged
+	if s.Prefix == "" {
+		return name
 	}
 
-	return name[:i] + "/" + s.Prefix + name[i:]
+	if strings.Index(name[1:], "/") == -1 {
+		return name
+	}
+
+	i := strings.Index(name[1:], "/")
+
+	x := name[:i+1] + "/" + s.Prefix + "/" + strings.TrimLeft(name[i+1:], "/")
+
+	return x
 }
