@@ -95,7 +95,19 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
+    $app->route('/login', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $ALLOW_GOV_ONE_LOGIN,
+            function ($request, $handler) use ($container) {
+                $responseFactory = $container->get(\Psr\Http\Message\ResponseFactoryInterface::class);
+                $response = $responseFactory->createResponse(301);
+                return $response->withHeader('Location', '/home');
+            },
+            Actor\Handler\LoginPageHandler::class
+        )
+    ], ['GET', 'POST'], 'login');
+
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
