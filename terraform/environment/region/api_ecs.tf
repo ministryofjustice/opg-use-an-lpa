@@ -364,7 +364,7 @@ locals {
     {
       cpu       = 0,
       essential = false,
-      image     = "ntse/export-php-metrics:v0.13.0",
+      image     = "ntse/export-php-metrics:v0.14.0",
       name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
