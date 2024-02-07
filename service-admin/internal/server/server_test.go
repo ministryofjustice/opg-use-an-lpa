@@ -240,9 +240,10 @@ func Test_app_InitialiseServer(t *testing.T) {
 	t.Parallel()
 
 	type fields struct {
-		db data.DynamoConnection
-		r  *mux.Router
-		tw handlers.TemplateWriterService
+		db  data.DynamoConnection
+		ssm data.SSMConnection
+		r   *mux.Router
+		tw  handlers.TemplateWriterService
 	}
 
 	type args struct {
@@ -261,8 +262,9 @@ func Test_app_InitialiseServer(t *testing.T) {
 				db: data.DynamoConnection{
 					Client: &mockDynamoDBClient{},
 				},
-				r:  mux.NewRouter(),
-				tw: &mockTemplateWriterService{},
+				ssm: data.SSMConnection{},
+				r:   mux.NewRouter(),
+				tw:  &mockTemplateWriterService{},
 			},
 			args: args{""},
 		},
@@ -274,7 +276,7 @@ func Test_app_InitialiseServer(t *testing.T) {
 			t.Parallel()
 
 			tt.fields.r.Handle("/hello", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {}))
-			a := server.NewAdminApp(tt.fields.db, tt.fields.r, tt.fields.tw, &mockActivationKeyService{})
+			a := server.NewAdminApp(tt.fields.db, tt.fields.ssm, tt.fields.r, tt.fields.tw, &mockActivationKeyService{})
 			handler := a.InitialiseServer(tt.args.keyURL, &url.URL{})
 			assert.HTTPStatusCode(t, handler.ServeHTTP, "GET", "/hello", nil, 200)
 		})
