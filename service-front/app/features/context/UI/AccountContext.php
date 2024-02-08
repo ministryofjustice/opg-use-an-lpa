@@ -112,6 +112,14 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I access the login page$/
+     */
+    public function iAccessTheLoginPage(): void
+    {
+        $this->ui->visit('/login');
+    }
+
+    /**
      * @When /^I access the use a lasting power of attorney web page$/
      */
     public function iAccessTheUseALastingPowerOfAttorneyWebPage(): void
@@ -310,6 +318,14 @@ class AccountContext implements Context
     public function iAmOnTheYourDetailsPage(): void
     {
         $this->ui->clickLink('Your details');
+    }
+
+    /**
+     * @Then /^I am redirected to the one login page$/
+     */
+    public function iAmRedirectedToTheOneLoginPage(): void
+    {
+        $this->ui->assertPageAddress('/home');
     }
 
     /**

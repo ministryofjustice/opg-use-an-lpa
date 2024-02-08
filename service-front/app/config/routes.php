@@ -70,6 +70,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/home', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\AuthenticateOneLoginHandler::class,
             Actor\Handler\ActorTriagePageHandler::class
@@ -98,11 +99,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/login', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             function ($request, $handler) use ($container) {
-                $responseFactory = $container->get(\Psr\Http\Message\ResponseFactoryInterface::class);
-                $response = $responseFactory->createResponse(301);
-                return $response->withHeader('Location', '/home');
+                return new \Laminas\Diactoros\Response\RedirectResponse('/home');
             },
             Actor\Handler\LoginPageHandler::class
         )
@@ -114,6 +114,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/home/login', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\OneLoginCallbackHandler::class,
             Mezzio\Handler\NotFoundHandler::class
@@ -324,6 +325,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $DELETE_LPA_FEATURE,
             Actor\Handler\RemoveLpaHandler::class,
             $defaultNotFoundPage
