@@ -494,7 +494,7 @@ locals {
           value = "eu-west-1"
         },
         {
-          name = "APPLICATION_NAME",
+          name  = "APPLICATION_NAME",
           value = "api"
         }
       ]
