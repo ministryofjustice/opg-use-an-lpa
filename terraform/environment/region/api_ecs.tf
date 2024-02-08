@@ -374,6 +374,12 @@ locals {
           awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
         }
       },
+      environment = [
+        {
+          name  = "APPLICATION_NAME",
+          value = "api"
+        }
+      ]
       dependsOn = [{
         containerName = "app"
         condition     = "HEALTHY"
@@ -492,10 +498,6 @@ locals {
         {
           name  = "API_GATEWAY_REGION",
           value = "eu-west-1"
-        },
-        {
-          name  = "APPLICATION_NAME",
-          value = "api"
         }
       ]
   })
