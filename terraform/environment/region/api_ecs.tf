@@ -364,7 +364,7 @@ locals {
     {
       cpu       = 0,
       essential = false,
-      image     = "ntse/export-php-metrics:v0.14.0",
+      image     = "ntse/export-php-metrics:v0.15.0",
       name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
@@ -492,6 +492,10 @@ locals {
         {
           name  = "API_GATEWAY_REGION",
           value = "eu-west-1"
+        },
+        {
+          name = "APPLICATION_NAME",
+          value = "api"
         }
       ]
   })
