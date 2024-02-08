@@ -378,6 +378,14 @@ locals {
         {
           name  = "APPLICATION_NAME",
           value = "api"
+        },
+        {
+          name  = "PHP_FPM_HOST",
+          value = "127.0.0.1"
+        },
+        {
+          name  = "PHP_FPM_PORT",
+          value = "9001"
         }
       ]
       dependsOn = [{
