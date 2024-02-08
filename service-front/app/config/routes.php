@@ -101,7 +101,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $container,
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
-            function ($request, $handler) {
+            function () {
                 return new \Laminas\Diactoros\Response\RedirectResponse('/home');
             },
             Actor\Handler\LoginPageHandler::class
