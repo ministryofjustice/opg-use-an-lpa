@@ -1,5 +1,5 @@
 resource "aws_ssm_parameter" "system_message_view_en" {
-  name  = "/system/${local.environment_name}/view/en"
+  name  = "/system-message/${local.environment_name}/view/en"
   type  = "String"
   value = " "
 
@@ -11,7 +11,7 @@ resource "aws_ssm_parameter" "system_message_view_en" {
 }
 
 resource "aws_ssm_parameter" "system_message_view_cy" {
-  name  = "/system/${local.environment_name}/view/cy"
+  name  = "/system-message/${local.environment_name}/view/cy"
   type  = "String"
   value = " "
 
@@ -23,7 +23,7 @@ resource "aws_ssm_parameter" "system_message_view_cy" {
 }
 
 resource "aws_ssm_parameter" "system_message_use_en" {
-  name  = "/system/${local.environment_name}/use/en"
+  name  = "/system-message/${local.environment_name}/use/en"
   type  = "String"
   value = " "
 
@@ -35,7 +35,7 @@ resource "aws_ssm_parameter" "system_message_use_en" {
 }
 
 resource "aws_ssm_parameter" "system_message_use_cy" {
-  name  = "/system/${local.environment_name}/use/cy"
+  name  = "/system-message/${local.environment_name}/use/cy"
   type  = "String"
   value = " "
 

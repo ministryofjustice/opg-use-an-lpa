@@ -273,6 +273,10 @@ locals {
           name  = "LPA_CODES_API_ENDPOINT",
           value = var.lpa_codes_endpoint
         },
+        {
+          name  = "ENVIRONMENT_NAME",
+          value = tostring(var.environment_name)
+        },
       ]
     }
   )
