@@ -16,6 +16,7 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
 {
 
     /**
+     * @param ContainerInterface         $container It is necessary to pass the container so we can resolve the feature flag
      * @param ContainerInterface         $middlewareContainer
      * @param MiddlewareFactoryInterface $middlewareFactory
      * @param string                     $featureFlagName The name of the feature flag that will be used to determine the
