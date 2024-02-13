@@ -164,7 +164,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.fpm_stats_export}, ${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
+  container_definitions    = "[${local.api_fpm_stats_export}, ${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.api_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
@@ -360,11 +360,11 @@ locals {
       environment = []
   })
 
-  fpm_stats_export = jsonencode(
+  api_fpm_stats_export = jsonencode(
     {
       cpu       = 0,
       essential = false,
-      image     = "ntse/export-php-metrics:v0.17.0",
+      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.2",
       name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
