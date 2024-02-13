@@ -58,3 +58,8 @@
       Given I have logged in to one login in English
       When I have an account whose sub matches a local account
       Then I see the LPA dashboard with any LPAs that are in the account
+
+    @ui @actor @ff:allow_gov_one_login:true
+    Scenario: I am redirected to the one login page from the login page
+      When I access the login page
+      Then I am redirected to the one login page
