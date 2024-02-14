@@ -364,7 +364,7 @@ locals {
     {
       cpu       = 0,
       essential = false,
-      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.2",
+      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.3",
       name      = "fpm-stats-export",
       logConfiguration = {
         logDriver = "awslogs",
