@@ -1,5 +1,5 @@
-@actor @yourdetails
-Feature: Your Details dashboard
+@actor @settings
+Feature: Settings dashboard
   As a user
   If I have created an account
   I can request to change my log in details any time

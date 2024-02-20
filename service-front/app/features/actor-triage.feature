@@ -46,6 +46,6 @@ Feature: Triage
   Scenario: When signed in, clicking on the banner will redirect to the dashboard
     Given I am a user of the lpa application
     And I sign in
-    And I am on the your details page
+    And I am on the settings page
     When I click the Use a lasting power of attorney link on the page
     Then I am taken to the dashboard page
