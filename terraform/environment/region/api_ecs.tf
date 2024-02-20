@@ -164,7 +164,7 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
+  container_definitions    = "[${local.api_fpm_stats_export}, ${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.api_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
@@ -275,6 +275,15 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
   }
 
+  statement {
+    sid    = "${local.policy_region_prefix}CloudWatchMetricsAccess"
+    effect = "Allow"
+    actions = [
+      "cloudwatch:PutMetricData",
+    ]
+    resources = ["*"]
+  }
+
   provider = aws.region
 }
 
@@ -350,6 +359,41 @@ locals {
       },
       environment = []
   })
+
+  api_fpm_stats_export = jsonencode(
+    {
+      cpu       = 0,
+      essential = false,
+      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.3",
+      name      = "fpm-stats-export",
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
+        }
+      },
+      environment = [
+        {
+          name  = "APPLICATION_NAME",
+          value = "api"
+        },
+        {
+          name  = "PHP_FPM_HOST",
+          value = "127.0.0.1"
+        },
+        {
+          name  = "PHP_FPM_PORT",
+          value = "9001"
+        }
+      ]
+      dependsOn = [{
+        containerName = "app"
+        condition     = "HEALTHY"
+      }]
+    }
+  )
 
   api_app = jsonencode(
     {
