@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Middleware\Routing;
 
+use Mezzio\MiddlewareFactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -13,25 +14,23 @@ use UnexpectedValueException;
 
 class ConditionalRoutingMiddleware implements MiddlewareInterface
 {
-    private ContainerInterface $middlewareContainer;
 
     /**
-     * @param ContainerInterface $container It is necessary to pass the container so we can resolve the feature flag
-     *                                      at runtime. Passing just the FeatureEnabled component results in having to
-     *                                      re-initialise a number of container items to facilitate testing
-     *                                      - increasing complexity.
-     * @param string $featureFlagName       The name of the feature flag that will be used to determine the
-     *                                      correct route
-     * @param string             $trueRoute The route taken if the feature flag is true
-     * @param string             $falseRoute The route taken if the feature flag is false Or undefined.
+     * @param ContainerInterface         $container It is necessary to pass the container so we can resolve the feature flag
+     * @param ContainerInterface         $middlewareContainer
+     * @param MiddlewareFactoryInterface $middlewareFactory
+     * @param string                     $featureFlagName The name of the feature flag that will be used to determine the
+     *                                                    correct route
+     * @param string|callable            $trueRoute       The route taken if the feature flag is true
+     * @param string|callable            $falseRoute      The route taken if the feature flag is false Or undefined.
      */
     public function __construct(
-        ContainerInterface $container,
+        private ContainerInterface $middlewareContainer,
+        private MiddlewareFactoryInterface $middlewareFactory,
         private string $featureFlagName,
-        private string $trueRoute,
-        private string $falseRoute,
+        private mixed $trueRoute,
+        private mixed $falseRoute,
     ) {
-        $this->middlewareContainer = $container;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -44,8 +43,7 @@ class ConditionalRoutingMiddleware implements MiddlewareInterface
 
         $flagEnabled = $config['feature_flags'][$this->featureFlagName] ?? false;
 
-        $middleware = $this->middlewareContainer->get($flagEnabled ? $this->trueRoute : $this->falseRoute);
-
-        return $middleware->handle($request, $handler);
+        $middleware = $this->middlewareFactory->prepare($flagEnabled ? $this->trueRoute : $this->falseRoute);
+        return $middleware->process($request, $handler);
     }
 }

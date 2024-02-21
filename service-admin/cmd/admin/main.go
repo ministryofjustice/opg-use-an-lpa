@@ -10,6 +10,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -19,7 +21,6 @@ import (
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
 )
 
@@ -38,6 +39,11 @@ func main() {
 		dbRegion = flag.String(
 			"dbRegion",
 			env.Get("AWS_REGION", "eu-west-1"),
+			"",
+		)
+		ssmEndpoint = flag.String(
+			"ssmEndpoint",
+			env.Get("AWS_ENDPOINT_SSM", ""),
 			"",
 		)
 		dbTablePrefix = flag.String(
@@ -63,8 +69,14 @@ func main() {
 		lpaCodesEndpoint = flag.String(
 			"lpa-codes-endpoint",
 			env.Get("LPA_CODES_API_ENDPOINT", ""),
-			"The codes enpoint",
+			"The codes endpoint",
 		)
+		environmentName = flag.String(
+			"environment-name",
+			env.Get("ENVIRONMENT_NAME", ""),
+			"Environment name - used to avoid clashes between CI environments",
+		)
+		log = zerolog.New(os.Stdout).With().Timestamp().Logger()
 	)
 
 	flag.Parse()
@@ -84,11 +96,18 @@ func main() {
 
 	dynamoDB := data.NewDynamoConnection(config, *dbEndpoint, *dbTablePrefix)
 
+	ssmConn := data.NewSSMConnection(ssm.NewFromConfig(config, func(o *ssm.Options) {
+		if *ssmEndpoint != "" {
+			endpoint := *ssmEndpoint
+			o.BaseEndpoint = &endpoint
+		}
+	}), *environmentName)
+
 	activationKeyService := createActivationKeyService(*lpaCodesEndpoint, *dynamoDB, config)
 
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 
-	app := server.NewAdminApp(*dynamoDB, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
+	app := server.NewAdminApp(*dynamoDB, *ssmConn, mux.NewRouter(), handlers.NewTemplateWriterService(), activationKeyService)
 
 	srv := &http.Server{
 		Handler:      app.InitialiseServer(*keyURL, u),

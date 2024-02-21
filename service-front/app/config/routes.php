@@ -70,6 +70,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->route('/home', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\AuthenticateOneLoginHandler::class,
             Actor\Handler\ActorTriagePageHandler::class
@@ -95,13 +96,25 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
+    $app->route('/login', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            function () {
+                return new \Laminas\Diactoros\Response\RedirectResponse('/home');
+            },
+            Actor\Handler\LoginPageHandler::class
+        )
+    ], ['GET', 'POST'], 'login');
+
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->get('/home/login', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\OneLoginCallbackHandler::class,
             Mezzio\Handler\NotFoundHandler::class
@@ -312,6 +325,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $DELETE_LPA_FEATURE,
             Actor\Handler\RemoveLpaHandler::class,
             $defaultNotFoundPage
