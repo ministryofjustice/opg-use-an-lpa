@@ -1,6 +1,6 @@
 locals {
-  create_alarm = var.create_alarm && var.create_health_check && var.is_active_region
-  route_weight = var.is_active_region ? 100 : 0
+  create_alarm               = var.create_alarm && var.create_health_check && var.is_active_region
+  route_weight               = var.is_active_region ? 100 : 0
   create_block_email_records = var.create_block_email_records && var.is_active_region
 }
 
