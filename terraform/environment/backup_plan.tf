@@ -45,8 +45,8 @@ resource "aws_backup_selection" "main" {
   plan_id      = aws_backup_plan.main[0].id
 
   resources = [
-    aws_dynamodb_table.actor_codes_table.arn,
-    aws_dynamodb_table.actor_users_table.arn,
+    aws_dynamodb_table.use_codes_table.arn,
+    aws_dynamodb_table.use_users_table.arn,
     aws_dynamodb_table.viewer_codes_table.arn,
     aws_dynamodb_table.viewer_activity_table.arn,
     aws_dynamodb_table.user_lpa_actor_map.arn,

@@ -165,8 +165,8 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      local.dynamodb_tables_arns.actor_users_table_arn,
-      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_users_table_arn,
+      "${local.dynamodb_tables_arns.use_users_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_codes_table_arn,
       "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_activity_table_arn,
