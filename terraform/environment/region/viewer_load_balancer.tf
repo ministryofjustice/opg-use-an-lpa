@@ -147,7 +147,7 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   value           = "false"
   description     = "values of either 'true' or 'false' only"
   allowed_pattern = "^(true|false)"
-  overwrite       = true
+
   lifecycle {
     ignore_changes = [value]
   }

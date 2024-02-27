@@ -1,24 +1,24 @@
-resource "aws_shield_application_layer_automatic_response" "actor" {
+resource "aws_shield_application_layer_automatic_response" "use" {
   count        = var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
-  resource_arn = aws_lb.actor.arn
+  resource_arn = aws_lb.use.arn
   action       = "BLOCK"
 
   provider = aws.region
 }
 
-resource "aws_lb_target_group" "actor" {
+resource "aws_lb_target_group" "use" {
   name                 = "${var.environment_name}-actor"
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.default.id
   deregistration_delay = 0
-  depends_on           = [aws_lb.actor]
+  depends_on           = [aws_lb.use]
 
   provider = aws.region
 }
 
-resource "aws_lb" "actor" {
+resource "aws_lb" "use" {
   name                       = "${var.environment_name}-actor"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - Intentionally public facing
   load_balancer_type         = "application"
@@ -28,8 +28,8 @@ resource "aws_lb" "actor" {
   enable_deletion_protection = var.load_balancer_deletion_protection_enabled
 
   security_groups = [
-    aws_security_group.actor_loadbalancer.id,
-    aws_security_group.actor_loadbalancer_route53.id,
+    aws_security_group.use_loadbalancer.id,
+    aws_security_group.use_loadbalancer_route53.id,
   ]
 
   access_logs {
@@ -41,8 +41,8 @@ resource "aws_lb" "actor" {
   provider = aws.region
 }
 
-resource "aws_lb_listener" "actor_loadbalancer_http_redirect" {
-  load_balancer_arn = aws_lb.actor.arn
+resource "aws_lb_listener" "use_loadbalancer_http_redirect" {
+  load_balancer_arn = aws_lb.use.arn
   port              = "80"
   protocol          = "HTTP"
 
@@ -59,8 +59,8 @@ resource "aws_lb_listener" "actor_loadbalancer_http_redirect" {
   provider = aws.region
 }
 
-resource "aws_lb_listener" "actor_loadbalancer" {
-  load_balancer_arn = aws_lb.actor.arn
+resource "aws_lb_listener" "use_loadbalancer" {
+  load_balancer_arn = aws_lb.use.arn
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-2019-08"
@@ -68,15 +68,15 @@ resource "aws_lb_listener" "actor_loadbalancer" {
   certificate_arn = data.aws_acm_certificate.certificate_use.arn
 
   default_action {
-    target_group_arn = aws_lb_target_group.actor.arn
+    target_group_arn = aws_lb_target_group.use.arn
     type             = "forward"
   }
 
   provider = aws.region
 }
 
-resource "aws_lb_listener_certificate" "actor_loadbalancer_live_service_certificate" {
-  listener_arn    = aws_lb_listener.actor_loadbalancer.arn
+resource "aws_lb_listener_certificate" "use_loadbalancer_live_service_certificate" {
+  listener_arn    = aws_lb_listener.use_loadbalancer.arn
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
 
   provider = aws.region
@@ -84,7 +84,7 @@ resource "aws_lb_listener_certificate" "actor_loadbalancer_live_service_certific
 
 # redirect root to gov.uk
 resource "aws_lb_listener_rule" "redirect_use_root_to_gov" {
-  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  listener_arn = aws_lb_listener.use_loadbalancer.arn
   priority     = 1
   action {
     type = "redirect"
@@ -113,7 +113,7 @@ resource "aws_lb_listener_rule" "redirect_use_root_to_gov" {
 resource "aws_lb_listener_rule" "rewrite_use_to_live_service_url" {
   count = local.is_active_region ? 1 : 0
 
-  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+  listener_arn = aws_lb_listener.use_loadbalancer.arn
   priority     = 2
   action {
     type = "redirect"
@@ -130,7 +130,7 @@ resource "aws_lb_listener_rule" "rewrite_use_to_live_service_url" {
   condition {
     host_header {
       values = [
-        local.route53_fqdns.actor
+        local.route53_fqdns.use
       ]
     }
   }
@@ -144,13 +144,13 @@ moved {
 }
 
 # maintenance site switching
-resource "aws_ssm_parameter" "actor_maintenance_switch" {
+resource "aws_ssm_parameter" "use_maintenance_switch" {
   name            = "${var.environment_name}_actor_enable_maintenance"
   type            = "String"
   value           = "false"
   description     = "values of either 'true' or 'false' only"
   allowed_pattern = "^(true|false)"
-  overwrite       = true
+
   lifecycle {
     ignore_changes = [value]
   }
@@ -158,8 +158,8 @@ resource "aws_ssm_parameter" "actor_maintenance_switch" {
   provider = aws.region
 }
 
-resource "aws_lb_listener_rule" "actor_maintenance" {
-  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+resource "aws_lb_listener_rule" "use_maintenance" {
+  listener_arn = aws_lb_listener.use_loadbalancer.arn
   priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
     type = "redirect"
@@ -189,8 +189,8 @@ resource "aws_lb_listener_rule" "actor_maintenance" {
   provider = aws.region
 }
 
-resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
-  listener_arn = aws_lb_listener.actor_loadbalancer.arn
+resource "aws_lb_listener_rule" "use_maintenance_welsh" {
+  listener_arn = aws_lb_listener.use_loadbalancer.arn
   priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
     type = "redirect"
@@ -222,7 +222,7 @@ resource "aws_lb_listener_rule" "actor_maintenance_welsh" {
 
 
 
-resource "aws_security_group" "actor_loadbalancer" {
+resource "aws_security_group" "use_loadbalancer" {
   name_prefix = "${var.environment_name}-actor-loadbalancer"
   description = "Allow inbound traffic"
   vpc_id      = data.aws_vpc.default.id
@@ -230,31 +230,31 @@ resource "aws_security_group" "actor_loadbalancer" {
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_ingress_http" {
+resource "aws_security_group_rule" "use_loadbalancer_ingress_http" {
   description       = "Port 80 ingress from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr - open ingress for load balancers
-  security_group_id = aws_security_group.actor_loadbalancer.id
+  security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_ingress" {
+resource "aws_security_group_rule" "use_loadbalancer_ingress" {
   description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = var.moj_sites
-  security_group_id = aws_security_group.actor_loadbalancer.id
+  security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_ingress_public_access" {
+resource "aws_security_group_rule" "use_loadbalancer_ingress_public_access" {
   count             = var.public_access_enabled ? 1 : 0
   description       = "Port 443 ingress for production from the internet to the application load balancer"
   type              = "ingress"
@@ -262,24 +262,24 @@ resource "aws_security_group_rule" "actor_loadbalancer_ingress_public_access" {
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr - open ingress for load balancers
-  security_group_id = aws_security_group.actor_loadbalancer.id
+  security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_egress" {
+resource "aws_security_group_rule" "use_loadbalancer_egress" {
   description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for load balancers
-  security_group_id = aws_security_group.actor_loadbalancer.id
+  security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
 }
 
-resource "aws_security_group" "actor_loadbalancer_route53" {
+resource "aws_security_group" "use_loadbalancer_route53" {
   name_prefix = "${var.environment_name}-actor-loadbalancer-route53"
   description = "Allow Route53 healthchecks"
   vpc_id      = data.aws_vpc.default.id
@@ -287,14 +287,14 @@ resource "aws_security_group" "actor_loadbalancer_route53" {
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_loadbalancer_ingress_route53_healthchecks" {
+resource "aws_security_group_rule" "use_loadbalancer_ingress_route53_healthchecks" {
   description       = "Loadbalancer ingresss from Route53 healthchecks"
   type              = "ingress"
   protocol          = "tcp"
   from_port         = "443"
   to_port           = "443"
   cidr_blocks       = data.aws_ip_ranges.route53_healthchecks.cidr_blocks
-  security_group_id = aws_security_group.actor_loadbalancer_route53.id
+  security_group_id = aws_security_group.use_loadbalancer_route53.id
 
   provider = aws.region
 }

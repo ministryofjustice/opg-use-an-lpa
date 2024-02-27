@@ -1,4 +1,4 @@
-resource "aws_dynamodb_table" "actor_codes_table" {
+resource "aws_dynamodb_table" "use_codes_table" {
   name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "ActorCode"
@@ -78,7 +78,7 @@ resource "aws_dynamodb_table" "stats_table" {
   provider = aws.eu_west_1
 }
 
-resource "aws_dynamodb_table" "actor_users_table" {
+resource "aws_dynamodb_table" "use_users_table" {
   name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "Id"

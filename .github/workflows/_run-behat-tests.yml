@@ -72,7 +72,7 @@ jobs:
       - name: run behat test suite
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
-          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .actor_fqdn | xargs)
+          use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
           public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
 
@@ -82,7 +82,7 @@ jobs:
           BEHAT_VIEWER_URL=https://$public_facing_view_fqdn \
             BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
             BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
-            BEHAT_OLD_ACTOR_URL=https://$actor_fqdn \
+            BEHAT_OLD_ACTOR_URL=https://$use_fqdn \
             vendor/bin/behat
 
       - name: archive failed test screenshots

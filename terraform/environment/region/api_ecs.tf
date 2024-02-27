@@ -106,14 +106,14 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
 //----------------------------------
 // 80 in from Actor ECS service
 
-resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
+resource "aws_security_group_rule" "api_ecs_service_use_ingress" {
   description              = "Allow Port 80 ingress from the Use service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
-  source_security_group_id = aws_security_group.actor_ecs_service.id
+  source_security_group_id = aws_security_group.use_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
@@ -211,10 +211,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      local.dynamodb_tables_arns.actor_codes_table_arn,
-      "${local.dynamodb_tables_arns.actor_codes_table_arn}/index/*",
-      local.dynamodb_tables_arns.actor_users_table_arn,
-      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_codes_table_arn,
+      "${local.dynamodb_tables_arns.use_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_users_table_arn,
+      "${local.dynamodb_tables_arns.use_users_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_codes_table_arn,
       "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_activity_table_arn,
@@ -433,11 +433,11 @@ locals {
       environment = [
         {
           name  = "DYNAMODB_TABLE_ACTOR_CODES",
-          value = var.dynamodb_tables.actor_codes_table.name
+          value = var.dynamodb_tables.use_codes_table.name
         },
         {
           name  = "DYNAMODB_TABLE_ACTOR_USERS",
-          value = var.dynamodb_tables.actor_users_table.name
+          value = var.dynamodb_tables.use_users_table.name
         },
         {
           name  = "DYNAMODB_TABLE_VIEWER_CODES",

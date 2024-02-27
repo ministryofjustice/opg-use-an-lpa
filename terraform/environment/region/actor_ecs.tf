@@ -1,21 +1,21 @@
 //----------------------------------
 // Actor ECS Service level config
 
-resource "aws_ecs_service" "actor" {
+resource "aws_ecs_service" "use" {
   name             = "actor-service"
   cluster          = aws_ecs_cluster.use_an_lpa.id
-  task_definition  = aws_ecs_task_definition.actor.arn
+  task_definition  = aws_ecs_task_definition.use.arn
   desired_count    = local.use_desired_count
   platform_version = "1.4.0"
 
   network_configuration {
-    security_groups  = [aws_security_group.actor_ecs_service.id]
+    security_groups  = [aws_security_group.use_ecs_service.id]
     subnets          = data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.actor.arn
+    target_group_arn = aws_lb_target_group.use.arn
     container_name   = "web"
     container_port   = 80
   }
@@ -43,10 +43,14 @@ resource "aws_ecs_service" "actor" {
   provider = aws.region
 }
 
+moved {
+  from = aws_ecs_service.actor
+  to   = aws_ecs_service.use
+}
 //----------------------------------
 // The service's Security Groups
 
-resource "aws_security_group" "actor_ecs_service" {
+resource "aws_security_group" "use_ecs_service" {
   name_prefix = "${var.environment_name}-actor-ecs-service"
   description = "Use service security group"
   vpc_id      = data.aws_vpc.default.id
@@ -57,15 +61,20 @@ resource "aws_security_group" "actor_ecs_service" {
   provider = aws.region
 }
 
+moved {
+  from = aws_security_group.actor_ecs_service
+  to   = aws_security_group.use_ecs_service
+}
+
 // 80 in from the ELB
-resource "aws_security_group_rule" "actor_ecs_service_ingress" {
+resource "aws_security_group_rule" "use_ecs_service_ingress" {
   description              = "Allow Port 80 ingress from the application load balancer"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.actor_ecs_service.id
-  source_security_group_id = aws_security_group.actor_loadbalancer.id
+  security_group_id        = aws_security_group.use_ecs_service.id
+  source_security_group_id = aws_security_group.use_loadbalancer.id
   lifecycle {
     create_before_destroy = true
   }
@@ -73,15 +82,20 @@ resource "aws_security_group_rule" "actor_ecs_service_ingress" {
   provider = aws.region
 }
 
+moved {
+  from = aws_security_group_rule.actor_ecs_service_ingress
+  to   = aws_security_group_rule.use_ecs_service_ingress
+}
+
 // Anything out
-resource "aws_security_group_rule" "actor_ecs_service_egress" {
+resource "aws_security_group_rule" "use_ecs_service_egress" {
   description       = "Allow any egress from Use service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
-  security_group_id = aws_security_group.actor_ecs_service.id
+  security_group_id = aws_security_group.use_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
@@ -89,14 +103,19 @@ resource "aws_security_group_rule" "actor_ecs_service_egress" {
   provider = aws.region
 }
 
-resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
+moved {
+  from = aws_security_group_rule.actor_ecs_service_egress
+  to   = aws_security_group_rule.use_ecs_service_egress
+}
+
+resource "aws_security_group_rule" "use_ecs_service_elasticache_ingress" {
   description              = "Allow elasticache ingress for Use service"
   type                     = "ingress"
   from_port                = 0
   to_port                  = 6379
   protocol                 = "tcp"
   security_group_id        = data.aws_security_group.brute_force_cache_service.id
-  source_security_group_id = aws_security_group.actor_ecs_service.id
+  source_security_group_id = aws_security_group.use_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
@@ -104,17 +123,22 @@ resource "aws_security_group_rule" "actor_ecs_service_elasticache_ingress" {
   provider = aws.region
 }
 
+moved {
+  from = aws_security_group_rule.actor_ecs_service_elasticache_ingress
+  to   = aws_security_group_rule.use_ecs_service_elasticache_ingress
+}
+
 //--------------------------------------
 // Actor ECS Service Task level config
 
-resource "aws_ecs_task_definition" "actor" {
+resource "aws_ecs_task_definition" "use" {
   family                   = "${var.environment_name}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.actor_web}, ${local.actor_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
-  task_role_arn            = var.ecs_task_roles.actor_task_role.arn
+  task_role_arn            = var.ecs_task_roles.use_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
   provider = aws.region
@@ -123,10 +147,10 @@ resource "aws_ecs_task_definition" "actor" {
 //----------------
 // Permissions
 
-resource "aws_iam_role_policy" "actor_permissions_role" {
+resource "aws_iam_role_policy" "use_permissions_role" {
   name   = "${var.environment_name}-${local.policy_region_prefix}-ActorApplicationPermissions"
-  policy = data.aws_iam_policy_document.actor_permissions_role.json
-  role   = var.ecs_task_roles.actor_task_role.id
+  policy = data.aws_iam_policy_document.use_permissions_role.json
+  role   = var.ecs_task_roles.use_task_role.id
 
   provider = aws.region
 }
@@ -134,7 +158,7 @@ resource "aws_iam_role_policy" "actor_permissions_role" {
 /*
   Defines permissions that the application running within the task has.
 */
-data "aws_iam_policy_document" "actor_permissions_role" {
+data "aws_iam_policy_document" "use_permissions_role" {
   statement {
     sid    = "${local.policy_region_prefix}XRayAccess"
     effect = "Allow"

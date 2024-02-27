@@ -30,7 +30,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   comparison_operator = "GreaterThanThreshold"
   datapoints_to_alarm = 2
   dimensions = {
-    "LoadBalancer" = trimprefix(split(":", aws_lb.actor.arn)[5], "loadbalancer/")
+    "LoadBalancer" = trimprefix(split(":", aws_lb.use.arn)[5], "loadbalancer/")
   }
   evaluation_periods        = 2
   insufficient_data_actions = []
@@ -94,7 +94,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = aws_lb.actor.arn
+    ResourceArn = aws_lb.use.arn
   }
 
   provider = aws.region
