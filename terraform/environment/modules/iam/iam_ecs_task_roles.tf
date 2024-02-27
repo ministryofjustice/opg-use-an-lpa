@@ -26,8 +26,8 @@ resource "aws_iam_role" "use_task_role" {
 }
 
 moved {
-  from = "aws_iam_role.use_task_role"
-  to   = "aws_iam_role.actor_task_role"
+  from = aws_iam_role.actor_task_role
+  to   = aws_iam_role.use_task_role
 }
 
 resource "aws_iam_role" "viewer_task_role" {

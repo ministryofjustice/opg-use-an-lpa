@@ -43,7 +43,7 @@ jobs:
           fi
           export DYNAMODB_TABLE_ACTOR_CODES=$(cat ./terraform/environment/cluster_config.json | jq .actor_lpa_codes_table | xargs)
           export DYNAMODB_TABLE_VIEWER_CODES=$(cat ./terraform/environment/cluster_config.json | jq .viewer_codes_table | xargs)
-          export DYNAMODB_TABLE_ACTOR_USERS=$(cat ./terraform/environment/cluster_config.json | jq .actor_users_table | xargs)
+          export DYNAMODB_TABLE_USE_USERS=$(cat ./terraform/environment/cluster_config.json | jq .use_users_table | xargs)
           export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat ./terraform/environment/cluster_config.json | jq .user_lpa_actor_map | xargs)
           export DYNAMODB_TABLE_STATS=$(cat ./terraform/environment/cluster_config.json | jq .stats_table | xargs)
           python service-api/seeding/dynamodb.py

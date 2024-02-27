@@ -210,11 +210,11 @@ jobs:
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-          [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+          [[ $viewer_response == 200 ]] || (echo "Error with Viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
-          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-          actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
-          [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+          use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+          use_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$use_fqdn/healthcheck)
+          [[ $use_response == 200 ]] || (echo "Error with Use health check. HTTP status: ${use_response}" && exit 1)
 
   slack_notify:
     name: notify of result

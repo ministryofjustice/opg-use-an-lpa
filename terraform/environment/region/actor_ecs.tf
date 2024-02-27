@@ -44,8 +44,8 @@ resource "aws_ecs_service" "use" {
 }
 
 moved {
-  from = "aws_ecs_service.actor"
-  to   = "aws_ecs_service.use"
+  from = aws_ecs_service.actor
+  to   = aws_ecs_service.use
 }
 //----------------------------------
 // The service's Security Groups
@@ -62,8 +62,8 @@ resource "aws_security_group" "use_ecs_service" {
 }
 
 moved {
-  from = "aws_security_group.actor_ecs_service"
-  to   = "aws_security_group.use_ecs_service"
+  from = aws_security_group.actor_ecs_service
+  to   = aws_security_group.use_ecs_service
 }
 
 // 80 in from the ELB
@@ -83,8 +83,8 @@ resource "aws_security_group_rule" "use_ecs_service_ingress" {
 }
 
 moved {
-  from = "aws_security_group_rule.actor_ecs_service_ingress"
-  to   = "aws_security_group_rule.use_ecs_service_ingress"
+  from = aws_security_group_rule.actor_ecs_service_ingress
+  to   = aws_security_group_rule.use_ecs_service_ingress
 }
 
 // Anything out
@@ -104,8 +104,8 @@ resource "aws_security_group_rule" "use_ecs_service_egress" {
 }
 
 moved {
-  from = "aws_security_group_rule.actor_ecs_service_egress"
-  to   = "aws_security_group_rule.use_ecs_service_egress"
+  from = aws_security_group_rule.actor_ecs_service_egress
+  to   = aws_security_group_rule.use_ecs_service_egress
 }
 
 resource "aws_security_group_rule" "use_ecs_service_elasticache_ingress" {
@@ -124,8 +124,8 @@ resource "aws_security_group_rule" "use_ecs_service_elasticache_ingress" {
 }
 
 moved {
-  from = "aws_security_group_rule.actor_ecs_service_elasticache_ingress"
-  to   = "aws_security_group_rule.use_ecs_service_elasticache_ingress"
+  from = aws_security_group_rule.actor_ecs_service_elasticache_ingress
+  to   = aws_security_group_rule.use_ecs_service_elasticache_ingress
 }
 
 //--------------------------------------
@@ -144,24 +144,15 @@ resource "aws_ecs_task_definition" "use" {
   provider = aws.region
 }
 
-moved {
-  from = "aws_ecs_task_definition.actor"
-  to   = "aws_ecs_task_definition.use"
-}
 //----------------
 // Permissions
 
 resource "aws_iam_role_policy" "use_permissions_role" {
-  name   = "${var.environment_name}-${local.policy_region_prefix}-UseApplicationPermissions"
+  name   = "${var.environment_name}-${local.policy_region_prefix}-ActorApplicationPermissions"
   policy = data.aws_iam_policy_document.use_permissions_role.json
   role   = var.ecs_task_roles.use_task_role.id
 
   provider = aws.region
-}
-
-moved {
-  from = "aws_iam_role_policy.actor_permissions_role"
-  to   = "aws_iam_role_policy.use_permissions_role"   
 }
 
 /*

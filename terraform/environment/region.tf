@@ -46,9 +46,9 @@ module "eu_west_1" {
   }
 
   dynamodb_tables = {
-    "actor_codes_table"     = aws_dynamodb_table.actor_codes_table
+    "use_codes_table"       = aws_dynamodb_table.use_codes_table
     "stats_table"           = aws_dynamodb_table.stats_table
-    "actor_users_table"     = aws_dynamodb_table.actor_users_table
+    "use_users_table"       = aws_dynamodb_table.use_users_table
     "viewer_codes_table"    = aws_dynamodb_table.viewer_codes_table
     "viewer_activity_table" = aws_dynamodb_table.viewer_activity_table
     "user_lpa_actor_map"    = aws_dynamodb_table.user_lpa_actor_map
@@ -123,9 +123,9 @@ module "eu_west_2" {
   }
 
   dynamodb_tables = {
-    "actor_codes_table"     = aws_dynamodb_table.actor_codes_table
+    "use_codes_table"       = aws_dynamodb_table.use_codes_table
     "stats_table"           = aws_dynamodb_table.stats_table
-    "actor_users_table"     = aws_dynamodb_table.actor_users_table
+    "use_users_table"       = aws_dynamodb_table.use_users_table
     "viewer_codes_table"    = aws_dynamodb_table.viewer_codes_table
     "viewer_activity_table" = aws_dynamodb_table.viewer_activity_table
     "user_lpa_actor_map"    = aws_dynamodb_table.user_lpa_actor_map

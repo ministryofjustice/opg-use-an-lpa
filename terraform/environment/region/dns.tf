@@ -67,7 +67,7 @@ module "public_facing_use_lasting_power_of_attorney" {
   current_region             = data.aws_region.current.name
   zone_id                    = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
   dns_name                   = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name
-  loadbalancer               = aws_lb.actor
+  loadbalancer               = aws_lb.use
   environment_name           = var.environment_name
   create_block_email_records = true
 
@@ -84,7 +84,7 @@ module "actor_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = data.aws_region.current.name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = aws_lb.actor
+  loadbalancer               = aws_lb.use
   dns_name                   = "use.lastingpowerofattorney"
   service_name               = "actor"
   create_alarm               = true
