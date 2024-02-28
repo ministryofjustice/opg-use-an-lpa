@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "execution_role" {
   name               = "${var.environment_name}-execution-role-ecs-cluster"
   assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
