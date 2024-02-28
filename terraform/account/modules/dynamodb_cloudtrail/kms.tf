@@ -73,6 +73,12 @@ data "aws_iam_policy_document" "cloudtrail_s3_key" {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 
@@ -123,6 +129,12 @@ data "aws_iam_policy_document" "cloudtrail_log_group_key" {
         "logs.${data.aws_region.current.name}.amazonaws.com",
         "events.amazonaws.com"
       ]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
   }
 

@@ -11,6 +11,12 @@ data "aws_iam_policy_document" "vpc_flow_logs_role_assume_role_policy" {
       type        = "Service"
       identifiers = ["vpc-flow-logs.amazonaws.com"]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 

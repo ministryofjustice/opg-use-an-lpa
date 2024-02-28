@@ -64,6 +64,11 @@ data "aws_iam_policy_document" "cloudtrail" {
       identifiers = ["cloudtrail.amazonaws.com"]
       type        = "Service"
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
     resources = [aws_s3_bucket.cloudtrail.arn]
   }
 
@@ -81,6 +86,11 @@ data "aws_iam_policy_document" "cloudtrail" {
       values   = ["bucket-owner-full-control"]
       variable = "s3:x-amz-acl"
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 
   statement {
@@ -90,6 +100,11 @@ data "aws_iam_policy_document" "cloudtrail" {
     principals {
       identifiers = ["cloudtrail.amazonaws.com"]
       type        = "Service"
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
     resources = [aws_s3_bucket.cloudtrail.arn]
   }

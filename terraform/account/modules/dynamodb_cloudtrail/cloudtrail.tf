@@ -38,6 +38,12 @@ data "aws_iam_policy_document" "cloudtrail_role_assume_role_policy" {
       type        = "Service"
       identifiers = ["cloudtrail.amazonaws.com"]
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 

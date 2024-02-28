@@ -12,5 +12,11 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
       identifiers = ["ecs-tasks.amazonaws.com"]
       type        = "Service"
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
