@@ -76,11 +76,6 @@ data "aws_iam_policy_document" "access_log" {
       identifiers = [data.aws_elb_service_account.main.id]
       type        = "AWS"
     }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [data.aws_caller_identity.current.account_id]
-    }
   }
 
   statement {
