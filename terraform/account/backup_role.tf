@@ -20,6 +20,12 @@ data "aws_iam_policy_document" "aws_backup_assume_policy" {
       identifiers = ["backup.amazonaws.com"]
       type        = "Service"
     }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 }
 
