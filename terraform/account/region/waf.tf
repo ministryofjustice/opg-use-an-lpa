@@ -8,8 +8,30 @@ resource "aws_wafv2_web_acl" "main" {
   }
 
   rule {
-    name     = "AWS-AWSManagedRulesPHPRuleSet"
+    name     = "AWS-AWSManagedRulesAmazonIpReputationList"
     priority = 0
+
+    override_action {
+      count {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesAmazonIpReputationList"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesAmazonIpReputationList"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "AWS-AWSManagedRulesPHPRuleSet"
+    priority = 1
 
     override_action {
       none {}
@@ -30,7 +52,7 @@ resource "aws_wafv2_web_acl" "main" {
   }
   rule {
     name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
-    priority = 1
+    priority = 2
 
     override_action {
       none {}
@@ -51,7 +73,7 @@ resource "aws_wafv2_web_acl" "main" {
   }
   rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 2
+    priority = 3
 
     override_action {
       none {}
@@ -79,6 +101,7 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "${var.account_name}-web-acl"
