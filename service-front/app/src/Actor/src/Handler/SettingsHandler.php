@@ -17,7 +17,7 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @codeCoverageIgnore
  */
-class YourDetailsHandler extends AbstractHandler implements UserAware
+class SettingsHandler extends AbstractHandler implements UserAware
 {
     use User;
 
@@ -41,7 +41,7 @@ class YourDetailsHandler extends AbstractHandler implements UserAware
     {
         $user = $this->getUser($request);
 
-        return new HtmlResponse($this->renderer->render('actor::your-details', [
+        return new HtmlResponse($this->renderer->render('actor::settings', [
             'user' => $user,
         ]));
     }

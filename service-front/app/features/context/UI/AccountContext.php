@@ -254,7 +254,7 @@ class AccountContext implements Context
         $this->newUserEmail        = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
 
-        $this->ui->visit('/your-details');
+        $this->ui->visit('/settings');
 
         $session = $this->ui->getSession();
         $page    = $session->getPage();
@@ -275,7 +275,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheConfirmAccountDeletionPage(): void
     {
-        $this->iAmOnTheYourDetailsPage();
+        $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
     }
 
@@ -313,11 +313,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the your details page$/
+     * @Given /^I am on the settings page$/
      */
-    public function iAmOnTheYourDetailsPage(): void
+    public function iAmOnTheSettingsPage(): void
     {
-        $this->ui->clickLink('Your details');
+        $this->ui->clickLink('Settings');
     }
 
     /**
@@ -356,12 +356,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am taken back to the your details page$/
+     * @Then /^I am taken back to the settings page$/
      */
-    public function iAmTakenBackToTheYourDetailsPage(): void
+    public function iAmTakenBackToTheSettingsPage(): void
     {
-        $this->ui->assertPageAddress('/your-details');
-        $this->ui->assertPageContainsText('Your details');
+        $this->ui->assertPageAddress('/settings');
+        $this->ui->assertPageContainsText('Settings');
     }
 
     /**
@@ -507,7 +507,7 @@ class AccountContext implements Context
      */
     public function iAskForAChangeOfDonorsOrAttorneysDetails(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
         $this->ui->clickLink('Change a donor or attorney\'s details');
@@ -640,7 +640,7 @@ class AccountContext implements Context
      */
     public function iCanChangeMyEmailIfRequired(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Email address');
         $this->ui->assertPageContainsText($this->userEmail);
@@ -660,7 +660,7 @@ class AccountContext implements Context
      */
     public function iCanChangeMyPasscodeIfRequired(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Password');
 
@@ -1311,7 +1311,7 @@ class AccountContext implements Context
      */
     public function iHaveDeletedMyAccount(): void
     {
-        $this->iAmOnTheYourDetailsPage();
+        $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
         $this->iConfirmThatIWantToDeleteMyAccount();
     }
@@ -1689,7 +1689,7 @@ class AccountContext implements Context
      */
     public function iRequestToDeleteMyAccount(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
         $this->ui->clickLink('Delete account');
     }
 
@@ -1702,9 +1702,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to return to the your details page$/
+     * @When /^I request to return to the settings page$/
      */
-    public function iRequestToReturnToTheYourDetailsPage(): void
+    public function iRequestToReturnToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
         $this->ui->clickLink('No, return to my details');
@@ -1777,8 +1777,8 @@ class AccountContext implements Context
             $this->ui->assertPageAddress('/login');
         } elseif ($page === 'dashboard') {
             $this->ui->assertPageAddress('/lpa/dashboard');
-        } elseif ($page === 'your details') {
-            $this->ui->assertPageAddress('/your-details');
+        } elseif ($page === 'settings') {
+            $this->ui->assertPageAddress('/settings');
         } elseif ($page === 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
         } elseif ($page === 'add by code') {
@@ -1888,8 +1888,8 @@ class AccountContext implements Context
      */
     public function iViewMyUserDetails(): void
     {
-        $this->ui->visit('/your-details');
-        $this->ui->assertPageContainsText('Your details');
+        $this->ui->visit('/settings');
+        $this->ui->assertPageContainsText('Settings');
     }
 
     /**

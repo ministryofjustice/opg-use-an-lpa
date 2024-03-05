@@ -156,10 +156,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\DeleteAccountHandler::class], 'delete-account');
 
     // User details
-    $app->get('/your-details', [
+    $app->get('/settings', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\YourDetailsHandler::class,
-    ], 'your-details');
+        Actor\Handler\SettingsHandler::class,
+    ], 'settings');
     $app->route('/change-password', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class

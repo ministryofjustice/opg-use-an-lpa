@@ -19,7 +19,7 @@ Feature: Back navigation
     And I view my user details
     And I ask to change my password
     When I click the Back link on the page
-    Then I should be taken to the <your details> page
+    Then I should be taken to the <settings> page
 
   @ui
   Scenario: Check back function on add LPA page
@@ -49,4 +49,4 @@ Feature: Back navigation
     When I click the Back link on the page
     Then I should be taken to the <change details> page
     And I click the Back link on the page
-    Then I am on the your details page
+    Then I am on the settings page

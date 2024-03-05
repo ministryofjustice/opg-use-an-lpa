@@ -753,9 +753,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the your details page$/
+     * @Given /^I am on the settings page$/
      */
-    public function iAmOnTheYourDetailsPage(): void
+    public function iAmOnTheSettingsPage(): void
     {
         // Not needed in this context
     }
