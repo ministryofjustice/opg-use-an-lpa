@@ -95,6 +95,11 @@ data "aws_iam_policy_document" "access_log" {
       values   = ["bucket-owner-full-control"]
       variable = "s3:x-amz-acl"
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
 
   statement {
@@ -107,6 +112,11 @@ data "aws_iam_policy_document" "access_log" {
     principals {
       identifiers = ["delivery.logs.amazonaws.com"]
       type        = "Service"
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
   }
 
