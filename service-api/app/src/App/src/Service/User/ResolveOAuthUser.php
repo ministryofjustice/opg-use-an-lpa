@@ -7,8 +7,8 @@ namespace App\Service\User;
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\{ConflictException, CreationException, DateTimeException, NotFoundException, RandomException};
 use App\Service\Log\Output\Email;
-use DateTime;
 use DateTimeInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -23,6 +23,7 @@ class ResolveOAuthUser
     public function __construct(
         private ActorUsersInterface $usersRepository,
         private UserService $userService,
+        private ClockInterface $clock,
         private LoggerInterface $logger,
     ) {
     }
@@ -50,7 +51,7 @@ class ResolveOAuthUser
 
         $this->usersRepository->recordSuccessfulLogin(
             $user['Id'],
-            (new DateTime('now'))->format(DateTimeInterface::ATOM)
+            $this->clock->now()->format(DateTimeInterface::ATOM)
         );
 
         // Ensure we don't return our Password over the wire.
