@@ -18,9 +18,10 @@ return [
     'debug'                        => false,
     'dependencies'                 => [
         'factories' => [
-            Client::class                 => TestClientFactory::class,
-            Sdk::class                    => SdkFactory::class,
-            ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
+            Client::class                                       => TestClientFactory::class,
+            Sdk::class                                          => SdkFactory::class,
+            ErrorResponseGenerator::class                       => ErrorResponseGeneratorFactory::class,
+            \Common\Middleware\ErrorHandling\GoneHandler::class => \Common\Middleware\ErrorHandling\GoneHandlerFactory::class
         ],
     ],
     'api'                          => [
