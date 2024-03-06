@@ -30,8 +30,12 @@ class GoneHandler implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (in_array($request->getUri()->getPath(), $this->goneUris)) {
-            return $this->generateTemplatedResponse($this->renderer);
+        $uriPath = $request->getUri()->getPath();
+
+        foreach ($this->goneUris as $goneUri) {
+            if (str_starts_with($uriPath, $goneUri)) {
+                return $this->generateTemplatedResponse($this->renderer);
+            }
         }
 
         return $handler->handle($request);
