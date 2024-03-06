@@ -94,6 +94,39 @@ class UserServiceTest extends TestCase
     }
 
     /** @test */
+    public function can_activate_a_user_account(): void
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy
+            ->activate('activationToken')
+            ->willReturn(
+                [
+                    'Id'              => 'id',
+                    'ActivationToken' => 'activationToken',
+                    'ExpiresTTL'      => 12345,
+                ],
+            );
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
+            $this->prophesize(RandomByteGenerator::class)->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $return = $us->activate('activationToken');
+
+        $this->assertEquals(
+            [
+                'Id'              => 'id',
+                'ActivationToken' => 'activationToken',
+                'ExpiresTTL'      => 12345,
+            ],
+            $return,
+        );
+    }
+
+    /** @test */
     public function can_authenticate_a_user_with_valid_credentials(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);

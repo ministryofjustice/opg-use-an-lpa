@@ -142,6 +142,7 @@ class UserService
      *
      * @param string $activationToken
      * @return array
+     * @psalm-return ActorUser
      * @throws NotFoundException
      */
     public function activate(string $activationToken): array
