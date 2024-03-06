@@ -20,6 +20,9 @@ class GoneHandler implements MiddlewareInterface
     private array $goneUris = [
         '/reset-password',
         '/verify-new-email',
+        '/create-account',
+        '/create-account-success',
+        '/activate-account',
     ];
 
     public function __construct(
