@@ -16,6 +16,7 @@ use DateTimeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -46,9 +47,13 @@ class ResolveOAuthUserTest extends TestCase
                 ]
             );
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -86,9 +91,13 @@ class ResolveOAuthUserTest extends TestCase
                 ]
             );
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -133,9 +142,13 @@ class ResolveOAuthUserTest extends TestCase
                 ]
             );
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -188,9 +201,13 @@ class ResolveOAuthUserTest extends TestCase
                 ];
             });
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -226,9 +243,13 @@ class ResolveOAuthUserTest extends TestCase
             ->add(['email' => 'fakeEmail'])
             ->willThrow(ConflictException::class);
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -258,9 +279,13 @@ class ResolveOAuthUserTest extends TestCase
             ->add(['email' => 'fakeEmail'])
             ->willThrow(RandomException::class);
 
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
         $sut = new ResolveOAuthUser(
             $actorUsersInterfaceProphecy->reveal(),
             $userServiceProphecy->reveal(),
+            $clockProphecy->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
