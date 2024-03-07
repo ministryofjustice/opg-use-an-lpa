@@ -106,6 +106,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);
 
+    // Catch specific urls that are no longer routed so we can return 410 Gone.
+    $app->pipe(\Common\Middleware\ErrorHandling\GoneHandler::class);
+
     // At this point, if no Response is returned by any middleware, the
     // NotFoundHandler kicks in; alternately, you can provide other fallback
     // middleware to execute.

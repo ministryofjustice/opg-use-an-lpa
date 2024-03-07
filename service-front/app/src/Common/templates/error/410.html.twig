@@ -1,0 +1,31 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{% trans %}Gone{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}Gone{% endtrans %}</h1>
+                    <p class="govuk-body">
+                        {% trans %}This page is no longer available and has been removed permanently.{% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}If you entered a web address, check it's correct.{% endtrans %}
+                    </p>
+                    <p class="govuk-body">
+                        {% trans %}
+                            You can <a class="govuk-link" href="https://www.gov.uk/">return to GOV.UK</a> or start again.
+                        {% endtrans %}
+                    </p><br>
+                    <p class="govuk-body">
+                        {%trans with {'%link%': path('home')} %}
+                            <a href="%link%" draggable="false" class="govuk-button">Start again</a>
+                        {% endtrans %}
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

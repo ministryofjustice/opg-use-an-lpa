@@ -67,6 +67,9 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
+    $config = $container->get("config");
+    $feature_flags = $config["feature_flags"];
+
     $app->route('/home', [
         new ConditionalRoutingMiddleware(
             $container,
@@ -131,21 +134,25 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     );
 
     // User management
-    $app->route(
-        '/reset-password',
-        Actor\Handler\PasswordResetRequestPageHandler::class,
-        ['GET', 'POST'],
-        'password-reset'
-    );
-    $app->route(
-        '/reset-password/{token}',
-        Actor\Handler\PasswordResetPageHandler::class,
-        ['GET', 'POST'],
-        'password-reset-token'
-    );
-    $app->get('/verify-new-email/{token}', [
-        Actor\Handler\CompleteChangeEmailHandler::class,
-    ], 'verify-new-email');
+    if (!$feature_flags[$ALLOW_GOV_ONE_LOGIN]) {
+        $app->route(
+            '/reset-password',
+            Actor\Handler\PasswordResetRequestPageHandler::class,
+            ['GET', 'POST'],
+            'password-reset'
+        );
+
+        $app->route(
+            '/reset-password/{token}',
+            Actor\Handler\PasswordResetPageHandler::class,
+            ['GET', 'POST'],
+            'password-reset-token'
+        );
+
+        $app->get('/verify-new-email/{token}', [
+            Actor\Handler\CompleteChangeEmailHandler::class,
+        ],        'verify-new-email');
+    }
 
     // User deletion
     $app->get('/confirm-delete-account', [
