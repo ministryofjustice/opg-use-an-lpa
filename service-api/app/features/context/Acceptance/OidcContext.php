@@ -11,6 +11,7 @@ use Aws\ResultInterface;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use Jose\Component\Core\AlgorithmManager;
@@ -188,7 +189,7 @@ class OidcContext implements Context
     {
         $this->oidcFixtureSetup();
 
-        // AuthorisationService::callback()
+        /** @link AuthorisationService::callback() */
         $this->apiFixtures->append(
             function (RequestInterface $request): ResponseInterface {
                 Assert::assertSame('/token', $request->getUri()->getPath());
@@ -220,7 +221,7 @@ class OidcContext implements Context
             },
         );
 
-        // AuthorisationService::callback()
+        /** @link AuthorisationService::callback() */
         // Call to fetch issuer signing certificate for id_token
         $this->apiFixtures->append(
             function (RequestInterface $request): ResponseInterface {
@@ -240,8 +241,10 @@ class OidcContext implements Context
             },
         );
 
-        // AuthorisationService::callback()
-        // Call to fetch user identity
+        /**
+         * @link AuthorisationService::callback()
+         * Call to fetch user identity
+         */
         $this->apiFixtures->append(
             function (RequestInterface $request): ResponseInterface {
                 Assert::assertSame('/userinfo', $request->getUri()->getPath());
@@ -265,7 +268,7 @@ class OidcContext implements Context
             },
         );
 
-        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        /** @link AbstractKeyPairManager::fetchKeyPairFromSecretsManager() */
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
                 Assert::assertSame('GetSecretValue', $command->getName());
@@ -274,6 +277,28 @@ class OidcContext implements Context
                 return new Result(['SecretString' => $this->oneLoginOutOfBandPublicKey]);
             }
         );
+
+        /** @link ActorUsers::getByIdentity() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id'        => '0000-00-00-00-000',
+                                'Identity'  => $this->sub,
+                                'Email'     => $this->email,
+                                'Password'  => 'password',
+                                'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
+                            ]
+                        ),
+                    ],
+                ],
+            ),
+        );
+
+        /** @link ActorUsers::recordSuccessfulLogin() */
+        $this->awsFixtures->append(new Result([]));
 
         $this->apiPost(
             '/v1/auth/callback',
@@ -304,11 +329,11 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('Identity', $response);
         Assert::assertArrayHasKey('Email', $response);
         Assert::assertArrayHasKey('LastLogin', $response);
-        Assert::assertArrayHasKey('Birthday', $response);
+
+        Assert::assertArrayNotHasKey('Password', $response);
 
         Assert::assertSame($response['Identity'], $this->sub);
         Assert::assertSame($response['Email'], $this->email);
-        Assert::assertSame($response['Birthday'], $this->birthday);
     }
 
     /**
@@ -322,7 +347,7 @@ class OidcContext implements Context
     /**
      * @Given /^I have completed a successful one login sign\-in process$/
      */
-    public function iHaveCompletedASuccessfulOneLoginSignInProcess()
+    public function iHaveCompletedASuccessfulOneLoginSignInProcess(): void
     {
         // Not needed in this context
     }
@@ -330,7 +355,7 @@ class OidcContext implements Context
     /**
      * @When /^I start the login process$/
      */
-    public function iStartTheLoginProcess()
+    public function iStartTheLoginProcess(): void
     {
         $this->oidcFixtureSetup();
 
@@ -340,7 +365,7 @@ class OidcContext implements Context
     /**
      * @Given /^I wish to login to the use an lpa service$/
      */
-    public function iWishToLoginToTheUseAnLpaService()
+    public function iWishToLoginToTheUseAnLpaService(): void
     {
         // Not needed in this context
     }

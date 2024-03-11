@@ -210,6 +210,50 @@ class ActorUsersTest extends TestCase
     }
 
     /** @test */
+    public function will_get_a_user_record_by_identity(): void
+    {
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+        $id       = '12345-1234-1234-1234-12345';
+
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function (array $data) use ($identity) {
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+                $this->assertArrayHasKey('IndexName', $data);
+                $this->assertEquals('IdentityIndex', $data['IndexName']);
+
+                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
+                $this->assertArrayHasKey(':sub', $data['ExpressionAttributeValues']);
+
+                $this->assertArrayHasKey('ExpressionAttributeNames', $data);
+                $this->assertArrayHasKey('#sub', $data['ExpressionAttributeNames']);
+
+                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':sub']);
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(
+                    [
+                        'Items' => [
+                            [
+                                'Id' => [
+                                    'S' => $id,
+                                ],
+                            ],
+                        ],
+                    ]
+                )
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $result = $actorRepo->getByIdentity($identity);
+
+        $this->assertEquals($id, $result['Id']);
+    }
+
+    /** @test */
     public function will_get_a_user_record_by_email(): void
     {
         $email = 'a@b.com';
@@ -347,6 +391,45 @@ class ActorUsersTest extends TestCase
         $this->expectExceptionMessage('User not found');
 
         $actorRepo->getByEmail($email);
+    }
+
+    public function will_fail_to_get_a_user_record_by_identity_when_it_doesnt_exist(): void
+    {
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+
+        $this->dynamoDbClientProphecy
+            ->query(Argument::that(function (array $data) use ($identity) {
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+                //---
+
+                $this->assertArrayHasKey('IndexName', $data);
+                $this->assertEquals('IdentityIndex', $data['IndexName']);
+
+                //---
+
+                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
+                $this->assertArrayHasKey(':identity', $data['ExpressionAttributeValues']);
+
+                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':identity']);
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(
+                    [
+                        'Item' => [],
+                    ]
+                )
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('User not found');
+
+        $actorRepo->getByIdentity($identity);
     }
 
     /** @test */
@@ -966,5 +1049,70 @@ class ActorUsersTest extends TestCase
         $result = $actorRepo->rehashPassword($id, new HiddenString($password));
 
         $this->assertTrue($result);
+    }
+
+    /** @test */
+    public function will_migrate_a_local_account_to_oidc(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $identity = 'sub:gov.uk:identity';
+
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(function (array $data) use ($id, $identity) {
+                $this->assertIsArray($data);
+
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+                $this->assertStringContainsString($identity, serialize($data));
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(
+                    [
+                        'Item' => [
+                            'Id'       => [
+                                'S' => $id,
+                            ],
+                            'Identity' => [
+                                'S' => $identity,
+                            ],
+                        ],
+                    ],
+                ),
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $user = $actorRepo->migrateToOAuth($id, $identity);
+
+        $this->assertEquals($id, $user['Id']);
+        $this->assertEquals($identity, $user['Identity']);
+    }
+
+    /** @test */
+    public function migration_fails_when_user_not_found(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $identity = 'sub:gov.uk:identity';
+
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(function (array $data) use ($id, $identity) {
+                $this->assertIsArray($data);
+
+                $this->assertStringContainsString('users-table', serialize($data));
+                $this->assertStringContainsString($id, serialize($data));
+                $this->assertStringContainsString($identity, serialize($data));
+
+                return true;
+            }))
+            ->willReturn(
+                $this->createAWSResult(),
+            );
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+
+        $this->expectException(NotFoundException::class);
+        $user = $actorRepo->migrateToOAuth($id, $identity);
     }
 }

@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 
 class UserInfoServiceFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): UserInfoService
     {
         return new UserInfoService(
             $container->get(UserInfoServiceBuilder::class),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use ParagonIE\HiddenString\HiddenString;
 
@@ -12,7 +13,9 @@ use ParagonIE\HiddenString\HiddenString;
  *
  * @psalm-type ActorUser = array{
  *     Id: string,
+ *     Identity?: string,
  *     Email: string,
+ *     Password?: string,
  *     LastLogin: string,
  *     ActivationToken?: string,
  *     ExpiresTTL?: int,
@@ -35,6 +38,7 @@ interface ActorUsersInterface
      * @param string $activationToken
      * @param int $activationTtl
      * @return void
+     * @throws CreationException
      */
     public function add(
         string $id,
@@ -61,6 +65,14 @@ interface ActorUsersInterface
      * @throws NotFoundException
      */
     public function getByEmail(string $email): array;
+
+    /**
+     * @param string $identity
+     * @return array
+     * @psalm-return ActorUser
+     * @throws NotFoundException
+     */
+    public function getByIdentity(string $identity): array;
 
     /**
      * Gets an actor user when queried for by a password reset token
@@ -96,6 +108,17 @@ interface ActorUsersInterface
      * @throws NotFoundException
      */
     public function activate(string $activationToken): array;
+
+    /**
+     * Migrates a user account to being authenticated by OAuth
+     *
+     * @param string $id
+     * @param string $identity
+     * @return array
+     * @psalm-return ActorUser
+     * @throws NotFoundException
+     */
+    public function migrateToOAuth(string $id, string $identity): array;
 
     /**
      * Check for the existence of an actor user
