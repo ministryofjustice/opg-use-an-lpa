@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Service\Log\EventCodes;
 use App\Exception\{ConflictException, CreationException, DateTimeException, NotFoundException, RandomException};
 use App\Service\Log\Output\Email;
 use DateTimeInterface;
@@ -116,8 +117,9 @@ class ResolveOAuthUser
             $this->logger->info(
                 'Migrated existing account with email {email} to OIDC login',
                 [
-                    'identity' => $identity,
-                    'email'    => new Email($email),
+                    'identity'   => $identity,
+                    'email'      => new Email($email),
+                    'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_MIGRATED,
                 ]
             );
         } catch (NotFoundException) {
@@ -142,8 +144,9 @@ class ResolveOAuthUser
             $this->logger->info(
                 'Created new OIDC login for account with email {email}',
                 [
-                    'identity' => $identity,
-                    'email'    => new Email($email),
+                    'identity'   => $identity,
+                    'email'      => new Email($email),
+                    'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CREATED,
                 ]
             );
 
