@@ -174,12 +174,8 @@ class OidcContext implements Context
         Assert::assertSame('http://sut', $query['redirect_uri']);
         Assert::assertSame($response['state'], $query['state']);
         Assert::assertSame($response['nonce'], $query['nonce']);
-        Assert::assertSame('["Cl.Cm.P2"]', $query['vtr']);
+        Assert::assertSame('["Cl.Cm"]', $query['vtr']);
         Assert::assertSame('en', $query['ui_locales']);
-        Assert::assertSame(
-            '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT":null}}',
-            $query['claims']
-        );
     }
 
     /**
@@ -266,16 +262,6 @@ class OidcContext implements Context
                     ),
                 );
             },
-        );
-
-        /** @link AbstractKeyPairManager::fetchKeyPairFromSecretsManager() */
-        $this->awsFixtures->append(
-            function (Command $command): ResultInterface {
-                Assert::assertSame('GetSecretValue', $command->getName());
-                Assert::assertSame('gov_uk_onelogin_userinfo_public_key', $command['SecretId']);
-
-                return new Result(['SecretString' => $this->oneLoginOutOfBandPublicKey]);
-            }
         );
 
         /** @link ActorUsers::getByIdentity() */

@@ -25,9 +25,6 @@ class UserInfoService
     public function __construct(
         private FacileUserInfoServiceBuilder $userInfoServiceBuilder,
         private AuthorisationClientManager $authorisationClientManager,
-        private KeyPairManagerInterface $outOfBandKeyManager,
-        private JWKFactory $jwkFactory,
-        private OutOfBandCoreIdentityVerifierBuilder $identityVerifierFactory,
     ) {
     }
 
@@ -47,28 +44,6 @@ class UserInfoService
         } catch (Throwable $e) {
             throw new AuthorisationServiceException(
                 'Error encountered whilst fetching userinfo from OIDC service',
-                500,
-                $e
-            );
-        }
-    }
-
-    /**
-     * @param string $jwt A signed and encoded JWT to be verified
-     * @return array
-     * @throws AuthorisationServiceException
-     */
-    public function processCoreIdentity(string $jwt): array
-    {
-        try {
-            return $this->identityVerifierFactory
-                ->build(
-                    $this->authorisationClientManager->get(),
-                    ($this->jwkFactory)($this->outOfBandKeyManager),
-                )->verify($jwt);
-        } catch (Throwable $e) {
-            throw new AuthorisationServiceException(
-                'Error encountered whilst verifying userinfo from OIDC service',
                 500,
                 $e
             );

@@ -17,9 +17,6 @@ class UserInfoServiceFactory implements FactoryInterface
         return new UserInfoService(
             $container->get(UserInfoServiceBuilder::class),
             $container->get(AuthorisationClientManager::class),
-            $container->get(OneLoginUserInfoKeyPairManager::class), // defined as KeyPairManagerInterface in class
-            $container->get(JWKFactory::class),
-            $container->get(OutOfBandCoreIdentityVerifierBuilder::class),
         );
     }
 }

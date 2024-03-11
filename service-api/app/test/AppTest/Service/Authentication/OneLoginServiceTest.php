@@ -40,9 +40,8 @@ class OneLoginServiceTest extends TestCase
                 [
                     'scope'        => 'openid email',
                     'redirect_uri' => $fakeRedirect,
-                    'vtr'          => '["Cl.Cm.P2"]',
+                    'vtr'          => '["Cl.Cm"]',
                     'ui_locales'   => 'en',
-                    'claims'       => '{"userinfo":{"https://vocab.account.gov.uk/v1/coreIdentityJWT":null}}',
                 ],
                 $configuration,
             );
@@ -103,17 +102,7 @@ class OneLoginServiceTest extends TestCase
                 [
                     'sub'                                             => 'fakeSub',
                     'email'                                           => 'fakeEmail',
-                    'https://vocab.account.gov.uk/v1/coreIdentityJWT' => 'fakeJWT',
                 ]
-            );
-        $userInfoService
-            ->processCoreIdentity('fakeJWT')
-            ->willReturn(
-                [
-                    'birthDate' => [
-                        ['value' => '1982-10-82'],
-                    ],
-                ],
             );
 
         $resolveOAuthUser = $this->prophesize(ResolveOAuthUser::class);
@@ -176,57 +165,6 @@ class OneLoginServiceTest extends TestCase
         $sut = new OneLoginService(
             $serviceBuilder->reveal(),
             $this->prophesize(UserInfoService::class)->reveal(),
-            $this->prophesize(ResolveOAuthUser::class)->reveal(),
-            $this->prophesize(RandomByteGenerator::class)->reveal(),
-        );
-
-        $this->expectException(AuthorisationServiceException::class);
-        $user = $sut->handleCallback(
-            'fake_code',
-            'fake_state',
-            $fakeSession,
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function handle_callback_missing_identity(): void
-    {
-        $fakeRedirect = 'http://fakehost/auth/redirect';
-        $fakeSession  = [
-            'state'   => 'fake_state',
-            'nonce'   => 'fake_nonce',
-            'customs' => [
-                'redirect_uri' => $fakeRedirect,
-            ],
-        ];
-
-        $tokenSet = $this->prophesize(TokenSetInterface::class);
-        $tokenSet->getIdToken()->willReturn('fakeToken');
-
-        $service = $this->prophesize(AuthorisationService::class);
-        $service
-            ->callback('fake_code', 'fake_state', $fakeSession)
-            ->willReturn($tokenSet->reveal());
-
-        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
-        $serviceBuilder->build()
-            ->willReturn($service->reveal());
-
-        $userInfoService = $this->prophesize(UserInfoService::class);
-        $userInfoService
-            ->getUserInfo($tokenSet->reveal())
-            ->willReturn(
-                [
-                    'sub'   => 'fakeSub',
-                    'email' => 'fakeEmail',
-                ]
-            );
-
-        $sut = new OneLoginService(
-            $serviceBuilder->reveal(),
-            $userInfoService->reveal(),
             $this->prophesize(ResolveOAuthUser::class)->reveal(),
             $this->prophesize(RandomByteGenerator::class)->reveal(),
         );

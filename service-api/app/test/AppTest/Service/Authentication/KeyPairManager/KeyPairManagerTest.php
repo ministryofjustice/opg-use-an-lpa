@@ -24,9 +24,6 @@ class KeyPairManagerTest extends TestCase
     private ObjectProphecy|SecretsManagerClient $secretsManagerClient;
     private ObjectProphecy|LoggerInterface $logger;
 
-    public const PUBLIC_KEY  = 'gov_uk_onelogin_identity_public_key';
-    public const PRIVATE_KEY = 'gov_uk_onelogin_identity_private_key';
-
     public function setUp(): void
     {
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
@@ -45,11 +42,6 @@ class KeyPairManagerTest extends TestCase
     public function keyPairManagerTypes(): array
     {
         return [
-            'OneLoginUserInfoKeyPairManager' => [
-                'type'      => OneLoginUserInfoKeyPairManager::class,
-                'algorithm' => 'ES256',
-                'public'    => 'gov_uk_onelogin_userinfo_public_key',
-            ],
             'OneLoginIdentityKeyPairManager' => [
                 'type'      => OneLoginIdentityKeyPairManager::class,
                 'algorithm' => 'RS256',

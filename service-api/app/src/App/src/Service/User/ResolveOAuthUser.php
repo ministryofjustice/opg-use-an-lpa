@@ -32,6 +32,7 @@ class ResolveOAuthUser
      * @param string $identity
      * @param string $email
      * @return array
+     * @psalm-return ActorUser
      * @throws CreationException|ConflictException|NotFoundException
      */
     public function __invoke(string $identity, string $email): array

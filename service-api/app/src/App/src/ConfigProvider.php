@@ -66,7 +66,6 @@ class ConfigProvider
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
-                Service\Authentication\KeyPairManager\OneLoginUserInfoKeyPairManager::class,
             ],
             'factories'  => [
                 // Services
@@ -98,8 +97,6 @@ class ConfigProvider
                 // One Login
                 Service\Authentication\AuthorisationClientManager::class
                     => Service\Authentication\AuthorisationClientManagerFactory::class,
-                Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilder::class
-                    => Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilderFactory::class,
                 Service\Authentication\UserInfoService::class
                     => Service\Authentication\UserInfoServiceFactory::class,
 
@@ -113,9 +110,6 @@ class ConfigProvider
                     Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
                 ],
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
-                    Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
-                ],
-                Service\Authentication\KeyPairManager\OneLoginUserInfoKeyPairManager::class => [
                     Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
                 ],
             ],
