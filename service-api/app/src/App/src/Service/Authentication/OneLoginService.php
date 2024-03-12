@@ -46,9 +46,8 @@ class OneLoginService
                 'state'        => $state,
                 'redirect_uri' => $redirectURL,
                 'nonce'        => $nonce,
-                'vtr'          => '["Cl.Cm.P2"]',
+                'vtr'          => '["Cl.Cm"]',
                 'ui_locales'   => $uiLocale,
-                'claims'       => '{"userinfo":{"' . self::CORE_IDENTITY_JWT . '":null}}',
             ]
         );
 
@@ -88,13 +87,6 @@ class OneLoginService
         }
 
         $info = $this->userInfoService->getUserInfo($tokens);
-        if (! array_key_exists(self::CORE_IDENTITY_JWT, $info)) {
-            throw new AuthorisationServiceException(
-                'Identity information not returned from authorisation service'
-            );
-        }
-
-        $this->userInfoService->processCoreIdentity($info[self::CORE_IDENTITY_JWT]);
 
         return ($this->resolveOAuthUser)($info['sub'], $info['email']);
     }
