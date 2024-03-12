@@ -17,13 +17,3 @@ terraform {
     }
   }
 }
-
-data "aws_vpc" "default" {
-  default = "true"
-
-  provider = aws.region
-}
-
-data "aws_region" "current" {
-  provider = aws.region
-}
