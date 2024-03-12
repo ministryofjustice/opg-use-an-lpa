@@ -53,6 +53,12 @@ variable "cookie_expires_view" {
   type        = number
 }
 
+variable "create_dashboard" {
+  description = "Whether or not to create the CloudWatch dashboard."
+  type        = bool
+  default     = false
+}
+
 variable "dns_namespace_env" {
   description = "The environment to use for the DNS namespace."
   type        = string

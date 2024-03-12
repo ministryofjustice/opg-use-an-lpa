@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_dashboard" "main" {
+  count          = var.create_dashboard ? 1 : 0
   dashboard_name = "${var.environment_name}-${data.aws_region.current.name}-dashboard"
   dashboard_body = templatefile("${path.module}/templates/cw_dashboard_watching.tftpl", {
     region         = data.aws_region.current.name,
