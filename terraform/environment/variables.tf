@@ -46,6 +46,7 @@ variable "environments" {
       })
       cookie_expires_use                        = number
       cookie_expires_view                       = number
+      create_dashboard                          = bool
       google_analytics_id_use                   = string
       google_analytics_id_view                  = string
       have_a_backup_plan                        = bool

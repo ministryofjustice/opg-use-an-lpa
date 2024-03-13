@@ -1,0 +1,424 @@
+${jsonencode({
+    "widgets": [
+        {
+            "height": 5,
+            "width": 24,
+            "y": 29,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ECS", "CPUUtilization", "ClusterName", "${environment}-use-an-lpa", "ServiceName", "pdf", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "actor", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "viewer", { "stat": "Average", "id": "m0r2" } ],
+                    [ "...", "api", { "stat": "Average", "id": "m0r3" } ],
+                    [ "...", "ServiceName", "viewer", "ClusterName", "${environment}-use-an-lpa", { "stat": "Average" } ],
+                    [ "...", "actor", ".", ".", { "stat": "Average" } ],
+                    [ "...", "pdf-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "viewer-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "actor-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "api-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "api", ".", ".", { "stat": "Average" } ],
+                    [ "...", "pdf", ".", ".", { "stat": "Average" } ]
+                ],
+                "title": "CPU Utilization Average",
+                "copilot": true,
+                "legend": {
+                    "position": "right"
+                },
+                "period": 300,
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "height": 4,
+            "width": 24,
+            "y": 34,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ECS", "MemoryUtilization", "ClusterName", "${environment}-use-an-lpa", "ServiceName", "pdf", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "actor", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "viewer", { "stat": "Average", "id": "m0r2" } ],
+                    [ "...", "api", { "stat": "Average", "id": "m0r3" } ],
+                    [ "...", "ServiceName", "api", "ClusterName", "${environment}-use-an-lpa", { "stat": "Average" } ],
+                    [ "...", "pdf", ".", ".", { "stat": "Average" } ],
+                    [ "...", "pdf-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "viewer-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "api-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "actor-service", ".", ".", { "stat": "Average" } ],
+                    [ "...", "actor", ".", ".", { "stat": "Average" } ],
+                    [ "...", "viewer", ".", ".", { "stat": "Average" } ]
+                ],
+                "title": "Memory Utilization Average",
+                "copilot": true,
+                "legend": {
+                    "position": "right"
+                },
+                "period": 300,
+                "view": "timeSeries",
+                "stacked": false
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 18,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${use_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "Request Count Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 18,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${use_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "HTTP 5XX Count",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 5,
+            "width": 8,
+            "y": 24,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "ActiveConnectionCount", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "Active Connection Count Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 5,
+            "width": 8,
+            "y": 24,
+            "x": 16,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "HTTP_Fixed_Response_Count", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${use_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "HTTP Fixed Response Count Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 5,
+            "width": 8,
+            "y": 24,
+            "x": 8,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "HTTPCode_ELB_3XX_Count", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${use_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "HTTP Code ELB 3 XX Count Sum",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 6,
+            "width": 9,
+            "y": 18,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/ApplicationELB", "HTTPCode_ELB_4XX_Count", "LoadBalancer", "${viewer_alb_arn}", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${use_alb_arn}", { "stat": "Sum", "id": "m0r1" } ]
+                ],
+                "title": "HTTP 4XX Count",
+                "copilot": true,
+                "legend": {
+                    "position": "bottom"
+                }
+            }
+        },
+        {
+            "height": 4,
+            "width": 24,
+            "y": 42,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${environment}-ActorCodes", "Operation", "GetItem", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "${environment}-ActorUsers", ".", ".", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "${environment}-UserLpaActorMap", ".", ".", { "stat": "Average", "id": "m0r2" } ],
+                    [ "...", "${environment}-ViewerActivity", ".", ".", { "stat": "Average", "id": "m0r3" } ],
+                    [ "...", "${environment}-ViewerCodes", ".", ".", { "stat": "Average", "id": "m0r4" } ]
+                ],
+                "title": "Get Item Average Latency",
+                "legend": {
+                    "position": "right"
+                },
+                "copilot": true
+            }
+        },
+        {
+            "height": 4,
+            "width": 24,
+            "y": 38,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/DynamoDB", "SuccessfulRequestLatency", "TableName", "${environment}-ActorCodes", "Operation", "PutItem", { "stat": "Average", "id": "m0r0" } ],
+                    [ "...", "${environment}-ActorUsers", ".", ".", { "stat": "Average", "id": "m0r1" } ],
+                    [ "...", "${environment}-UserLpaActorMap", ".", ".", { "stat": "Average", "id": "m0r2" } ],
+                    [ "...", "${environment}-ViewerActivity", ".", ".", { "stat": "Average", "id": "m0r3" } ],
+                    [ "...", "${environment}-ViewerCodes", ".", ".", { "stat": "Average", "id": "m0r4" } ]
+                ],
+                "title": "Put Item Average Latency",
+                "legend": {
+                    "position": "right"
+                },
+                "copilot": true
+            }
+        },
+        {
+            "height": 4,
+            "width": 24,
+            "y": 46,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${environment}-ActorCodes", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${environment}-ActorUsers", { "stat": "Sum", "id": "m0r1" } ],
+                    [ "...", "${environment}-UserLpaActorMap", { "stat": "Sum", "id": "m0r2" } ],
+                    [ "...", "${environment}-ViewerActivity", { "stat": "Sum", "id": "m0r3" } ],
+                    [ "...", "${environment}-ViewerCodes", { "stat": "Sum", "id": "m0r4" } ]
+                ],
+                "title": "Consumed Read Capacity Units Sum",
+                "legend": {
+                    "position": "right"
+                },
+                "copilot": true
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 50,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "region": "${region}",
+                "metrics": [
+                    [ "AWS/DynamoDB", "ConsumedWriteCapacityUnits", "TableName", "${environment}-ActorCodes", { "stat": "Sum", "id": "m0r0" } ],
+                    [ "...", "${environment}-ActorUsers", { "stat": "Sum", "id": "m0r1" } ],
+                    [ "...", "${environment}-UserLpaActorMap", { "stat": "Sum", "id": "m0r2" } ],
+                    [ "...", "${environment}-ViewerActivity", { "stat": "Sum", "id": "m0r3" } ],
+                    [ "...", "${environment}-ViewerCodes", { "stat": "Sum", "id": "m0r4" } ]
+                ],
+                "title": "Consumed Write Capacity Units Sum",
+                "legend": {
+                    "position": "right"
+                },
+                "copilot": true
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "account_created_event", { "label": "account created" } ],
+                    [ ".", "account_activated_event", { "label": "account activated" } ],
+                    [ ".", "account_deleted_event", { "label": "account deleted" } ]
+                ],
+                "view": "singleValue",
+                "region": "${region}",
+                "stat": "Sum",
+                "period": 2592000,
+                "title": "Account Events"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 9,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "older_lpa_success_event", { "label": "older LPA journey success" } ],
+                    [ ".", "older_lpa_found_event", { "label": "LPA found" } ],
+                    [ ".", "older_lpa_already_added_event", { "label": "LPA already added" } ],
+                    [ ".", "older_lpa_does_not_match_event", { "label": "LPA does not match" } ],
+                    [ ".", "older_lpa_has_activation_key_event", { "label": "LPA has activation key" } ],
+                    [ ".", "older_lpa_key_already_requested_event", { "label": "Activation Key Already Requested" } ],
+                    [ ".", "older_lpa_not_eligible_event", { "label": "LPA not eligible" } ],
+                    [ ".", "older_lpa_not_found_event", { "label": "LPA not found" } ],
+                    [ ".", "older_lpa_too_old_event", { "label": "LPA too old" } ],
+                    [ ".", "older_lpa_invalid_status_event", { "label": "LPA status not valid" } ],
+                    [ ".", "older_lpa_force_activation_key_event", { "label": "user forced request for key" } ]
+                ],
+                "view": "singleValue",
+                "stacked": false,
+                "region": "${region}",
+                "stat": "Sum",
+                "period": 2592000,
+                "title": "Older Journey Outcomes"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 3,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "view_lpa_share_code_success_event", { "label": "lpa viewed (share code found)" } ],
+                    [ ".", "download_summary_event", { "label": "LPA summary downloaded" } ],
+                    [ ".", "view_lpa_share_code_cancelled_event", { "label": "share code was cancelled" } ],
+                    [ ".", "view_lpa_share_code_expired_event", { "label": "share code was expired" } ],
+                    [ ".", "view_lpa_share_code_not_found_event", { "label": "share code not found" } ],
+                    [ ".", "share_code_not_found_event", { "label": "share code not found (legacy)" } ]
+                ],
+                "view": "singleValue",
+                "region": "${region}",
+                "title": "View Events",
+                "period": 2592000,
+                "stat": "Sum"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 6,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "add_lpa_found_event", { "label": "LPA found" } ],
+                    [ ".", "add_lpa_success_event", { "label": "add LPA success" } ],
+                    [ ".", "add_lpa_already_added_event", { "label": "LPA already added" } ],
+                    [ ".", "add_lpa_not_eligible_event", { "label": "LPA not eligible" } ],
+                    [ ".", "add_lpa_not_found_event", { "label": "LPA not found" } ],
+                    [ ".", "add_lpa_failure_event", { "label": "add LPA failure (legacy event)" } ]
+                ],
+                "view": "singleValue",
+                "title": "Add LPA Events",
+                "region": "${region}",
+                "stat": "Sum",
+                "period": 2592000
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 12,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/WAFV2", "AllowedRequests", "WebACL", "${environment}-web-acl", "Region", "${region}", "Rule", "ALL", { "label": "Allowed" } ],
+                    [ ".", "BlockedRequests", ".", ".", ".", ".", ".", ".", { "label": "Blocked" } ],
+                    [ "...", "AWS-AWSManagedRulesKnownBadInputsRuleSet", { "label": "(Blocked) Bad Inputs" } ],
+                    [ ".", "CountedRequests", ".", ".", ".", ".", ".", "ALL", { "visible": false } ],
+                    [ ".", "BlockedRequests", ".", ".", ".", ".", ".", "AWS-AWSManagedRulesPHPRuleSet", { "label": "(Blocked) PHP Vulns" } ]
+                ],
+                "view": "singleValue",
+                "region": "${region}",
+                "stat": "Sum",
+                "period": 86400,
+                "title": "AWS WAF Actions (${environment} ALBs)"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 15,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "stat": "Sum",
+                "view": "timeSeries",
+                "stacked": false,
+                "metrics": [
+                    [ "AWS/WAFV2", "AllowedRequests", "Region", "${region}", "Rule", "AWS-AWSManagedRulesPHPRuleSet", "WebACL", "${environment}-web-acl" ],
+                    [ ".", "BlockedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CountedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CaptchaRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "AllowedRequests", ".", ".", ".", "AWS-AWSManagedRulesKnownBadInputsRuleSet", ".", "." ],
+                    [ ".", "BlockedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CountedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CaptchaRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "AllowedRequests", ".", ".", ".", "ALL", ".", "." ],
+                    [ ".", "BlockedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CountedRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "CaptchaRequests", ".", ".", ".", ".", ".", "." ],
+                    [ ".", "AllowedRequests", ".", ".", ".", "${environment}-web-acl", ".", "." ]
+                ],
+                "region": "${region}",
+                "title": "WAF Actions Graphed",
+                "yAxis": {
+                    "left": {
+                        "showUnits": false
+                    },
+                    "right": {
+                        "showUnits": false
+                    }
+                },
+                "period": 300,
+                "legend": {
+                    "position": "hidden"
+                }
+            }
+        }
+    ]
+}
+)}

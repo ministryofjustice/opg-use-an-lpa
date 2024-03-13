@@ -12,6 +12,7 @@ module "eu_west_1" {
   container_version                         = var.container_version
   cookie_expires_use                        = local.environment.cookie_expires_use
   cookie_expires_view                       = local.environment.cookie_expires_view
+  create_dashboard                          = local.environment.create_dashboard
   dns_namespace_env                         = local.dns_namespace_env
   ecs_execution_role                        = module.iam.ecs_execution_role
   ecs_task_roles                            = module.iam.ecs_task_roles
@@ -89,6 +90,7 @@ module "eu_west_2" {
   container_version                         = var.container_version
   cookie_expires_use                        = local.environment.cookie_expires_use
   cookie_expires_view                       = local.environment.cookie_expires_view
+  create_dashboard                          = local.environment.create_dashboard
   dns_namespace_env                         = local.dns_namespace_env
   ecs_execution_role                        = module.iam.ecs_execution_role
   ecs_task_roles                            = module.iam.ecs_task_roles
