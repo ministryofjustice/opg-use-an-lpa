@@ -432,7 +432,7 @@ locals {
         },
         {
           name      = "ONE_LOGIN_CLIENT_ID"
-          valueFrom = data.aws_secretsmanager_secret.gov_uk_one_login_client_id.arn
+          valueFrom = data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
         }
       ],
       environment = [

@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "execution_role" {
 
     resources = [
       data.aws_secretsmanager_secret.notify_api_key.arn,
-      data.aws_secretsmanager_secret.gov_uk_one_login_client_id.arn
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
     ]
 
     actions = [
