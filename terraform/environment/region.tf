@@ -98,6 +98,7 @@ module "eu_west_2" {
   environment_name                          = local.environment_name
   google_analytics_id_use                   = local.environment.google_analytics_id_use
   google_analytics_id_view                  = local.environment.google_analytics_id_view
+  gov_uk_onelogin_client_id_secret_name     = local.environment.gov_uk_onelogin_client_id_secret_name
   iap_images_endpoint                       = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled = local.environment.load_balancer_deletion_protection_enabled
   logging_level                             = local.environment.logging_level
