@@ -44,7 +44,7 @@
         "ext-apcu": "*",
         "ext-gmp": "*",
         "ext-openssl": "*",
-        "alphagov/notifications-php-client": "^4.1.0",
+        "alphagov/notifications-php-client": "^6.0.0",
         "aws/aws-sdk-php": "^3.93",
         "blazon/psr11-monolog": "^4.0",
         "elie29/zend-phpdi-config": "^8.0",
