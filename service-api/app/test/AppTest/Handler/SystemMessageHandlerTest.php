@@ -1,6 +1,5 @@
 <?php
 
-
 declare(strict_types=1);
 
 namespace AppTest\Handler;
@@ -13,10 +12,11 @@ use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class SystemMessageHandlerTest extends TestCase
 {
-    private SystemMessage|\PHPUnit\Framework\MockObject\MockObject $systemMessageService;
+    private SystemMessage|MockObject $systemMessageService;
     private SystemMessageHandler $handler;
 
     protected function setUp(): void
