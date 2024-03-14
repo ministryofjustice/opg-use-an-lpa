@@ -79,6 +79,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.older.cleanse'
     );
 
+    $app->get('/v1/system-message', \App\Handler\SystemMessageHandler::class, 'system.message');
+
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.remove');
     $app->post(
