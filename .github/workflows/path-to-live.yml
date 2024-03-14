@@ -34,19 +34,19 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v2.7.3
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.4
         id: semver_tag
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           with_v: true
           default_bump: minor
+          prerelease: false
 
   terraform_lint:
     name: lint terraform code
@@ -90,7 +90,7 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
       - name: download artifact for front tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
@@ -198,7 +198,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
