@@ -1,4 +1,4 @@
-resource "aws_dynamodb_table" "actor_codes_table" {
+resource "aws_dynamodb_table" "use_codes_table" {
   name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "ActorCode"
@@ -78,7 +78,7 @@ resource "aws_dynamodb_table" "stats_table" {
   provider = aws.eu_west_1
 }
 
-resource "aws_dynamodb_table" "actor_users_table" {
+resource "aws_dynamodb_table" "use_users_table" {
   name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
   billing_mode     = "PAY_PER_REQUEST"
   hash_key         = "Id"
@@ -90,6 +90,10 @@ resource "aws_dynamodb_table" "actor_users_table" {
 
   attribute {
     name = "Id"
+    type = "S"
+  }
+  attribute {
+    name = "Identity"
     type = "S"
   }
   attribute {
@@ -113,6 +117,11 @@ resource "aws_dynamodb_table" "actor_users_table" {
     type = "S"
   }
 
+  global_secondary_index {
+    name            = "IdentityIndex"
+    hash_key        = "Identity"
+    projection_type = "ALL"
+  }
   global_secondary_index {
     name            = "EmailIndex"
     hash_key        = "Email"

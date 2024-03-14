@@ -6,6 +6,8 @@ resource "aws_s3_bucket" "bucket" {
 resource "aws_s3_bucket_acl" "bucket_acl" {
   bucket = aws_s3_bucket.bucket.id
   acl    = var.acl
+
+  depends_on = [aws_s3_bucket_ownership_controls.main]
 }
 
 resource "aws_s3_bucket_versioning" "bucket_versioning" {
@@ -71,6 +73,14 @@ resource "aws_s3_bucket_logging" "bucket" {
   target_prefix = "log/${aws_s3_bucket.bucket.id}/"
 }
 
+resource "aws_s3_bucket_ownership_controls" "main" {
+  bucket = aws_s3_bucket.bucket.id
+
+  rule {
+    object_ownership = var.object_ownership
+  }
+}
+
 data "aws_iam_policy_document" "bucket" {
   policy_id = "PutObjPolicy"
 
@@ -113,3 +123,4 @@ data "aws_iam_policy_document" "bucket" {
     }
   }
 }
+

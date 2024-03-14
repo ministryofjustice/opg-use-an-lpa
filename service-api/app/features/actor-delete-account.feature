@@ -10,7 +10,7 @@ Feature: The user is able to delete their account
 
   @integration @acceptance
   Scenario: As a user I can delete my account
-    Given I am on the your details page
+    Given I am on the settings page
     When I request to delete my account
     And I confirm that I want to delete my account
     Then My account is deleted

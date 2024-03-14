@@ -28,14 +28,25 @@ jobs:
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
+    permissions:
+      contents: write
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
+      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+
+      - name: Bump version and push tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.4
+        id: semver_tag
+        with:
+          with_v: true
+          default_bump: minor
+          prerelease: false
 
   terraform_lint:
     name: lint terraform code
@@ -66,7 +77,7 @@ jobs:
       - node_test
       - node_build
     with:
-      tag: main-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: main-${{ needs.workflow_variables.outputs.semver_tag }}
       branch_name: main
       push_to_ecr: true
       specific_path: all
@@ -79,7 +90,7 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
       - name: download artifact for front tests
         uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
@@ -95,7 +106,7 @@ jobs:
         with:
           name: service-admin
           path: service-admin
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           name: codecov-use-an-lpa
 
@@ -133,7 +144,7 @@ jobs:
     with:
       workspace: preproduction
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
     secrets: inherit
@@ -175,7 +186,7 @@ jobs:
     with:
       workspace: production
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
       extra_vars: "-var public_access_enabled=true"
@@ -187,7 +198,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
@@ -199,11 +210,11 @@ jobs:
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-          [[ $viewer_response == 200 ]] || (echo "Error with viewer health check. HTTP status: ${viewer_response}" && exit 1)
+          [[ $viewer_response == 200 ]] || (echo "Error with Viewer health check. HTTP status: ${viewer_response}" && exit 1)
 
-          actor_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-          actor_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$actor_fqdn/healthcheck)
-          [[ $actor_response == 200 ]] || (echo "Error with actor health check. HTTP status: ${actor_response}" && exit 1)
+          use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+          use_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$use_fqdn/healthcheck)
+          [[ $use_response == 200 ]] || (echo "Error with Use health check. HTTP status: ${use_response}" && exit 1)
 
   slack_notify:
     name: notify of result
@@ -230,5 +241,5 @@ jobs:
       - name: workflow has ended without issue
         run: |
           echo "Deployment to production successful"
-          echo "Tag Used: main-${{ needs.workflow_variables.outputs.short_sha }}"
+          echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
           echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"

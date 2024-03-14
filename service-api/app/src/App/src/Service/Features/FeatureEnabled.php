@@ -8,19 +8,12 @@ use RuntimeException;
 
 class FeatureEnabled
 {
-    /** @var array<string, mixed> */
-    private array $featureFlags;
-
     /**
-     * FeatureEnabled constructor.
-     *
      * @param array<string, mixed> $featureFlags An key value map of feature names to boolean values
-     *
      * @codeCoverageIgnore
      */
-    public function __construct(array $featureFlags)
+    public function __construct(private array $featureFlags)
     {
-        $this->featureFlags = $featureFlags;
     }
 
     public function __invoke(string $featureName): bool

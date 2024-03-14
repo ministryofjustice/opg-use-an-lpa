@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace App\Service\Log;
 
 /**
- * Class Event
- *
  * Contains definitions for event codes to be attached to logged messages where needed.
  * Generally only needed when doing work on the logs that require filtering of specific logging entries.
- *
- * @package App\Service\Log
  */
 class EventCodes
 {
@@ -52,4 +48,14 @@ class EventCodes
      * Activation key request is successful for partial match LPA type pfa
      */
     public const PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA';
+
+    /**
+     * A one login authentication transaction resulted in a username/password account being migrated.
+     */
+    public const AUTH_ONELOGIN_ACCOUNT_MIGRATED = 'AUTH_ONELOGIN_ACCOUNT_MIGRATED';
+
+    /**
+     * A one login authentication transaction resulted in a new local account being created.
+     */
+    public const AUTH_ONELOGIN_ACCOUNT_CREATED = 'AUTH_ONELOGIN_ACCOUNT_CREATED';
 }

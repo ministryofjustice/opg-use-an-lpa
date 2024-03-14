@@ -24,10 +24,10 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@e8111cec9d3dc15220d8a3b638f08419f57b906a # pin@v4.2.0
+        uses: actions/setup-python@9a7ac94420f42ee15fc60ab88d0dca4be1fd5757 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
@@ -48,10 +48,17 @@ jobs:
           TEMPLATE: ${{ inputs.template }}
         if: inputs.workflow_status == 'success'
         run: |
+          commit_message="Merge ${{ github.head_ref }} into ${{ github.base_ref }}"
+
+          if [[ ${{ inputs.template }} != "successful_dev_build.txt" ]]
+          then
+            commit_message="$(git log -1 --pretty=%B)"
+          fi
+
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-          --slack_webhook ${SLACK_WEB_HOOK} \
-          --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
-          --commit_message "$(git log -1 --pretty=%B)"
+            --slack_webhook ${SLACK_WEB_HOOK} \
+            --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
+            --commit_message "$commit_message"
 
       - name: Notify Slack Failure
         env:
@@ -62,4 +69,4 @@ jobs:
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
           --slack_webhook ${SLACK_WEB_HOOK} \
           --template_path scripts/pipeline/post_release_slack_notification/unsuccessful_release.txt \
-          --commit_message "$(git log -1 --pretty=%B)"
+          --commit_message "$(git log -2 --pretty=%B)"

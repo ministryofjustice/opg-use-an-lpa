@@ -8,15 +8,12 @@ use Psr\Log\LoggerInterface;
 
 class GetTrustCorporationStatus
 {
-    public const ACTIVE_TC = 0;
-    public const GHOST_TC = 1;
+    public const ACTIVE_TC   = 0;
+    public const GHOST_TC    = 1;
     public const INACTIVE_TC = 2;
 
-    private LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     public function __invoke(array $trustCorporation): int

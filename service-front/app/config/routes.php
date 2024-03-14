@@ -67,9 +67,13 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
+    $config = $container->get("config");
+    $feature_flags = $config["feature_flags"];
+
     $app->route('/home', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\AuthenticateOneLoginHandler::class,
             Actor\Handler\ActorTriagePageHandler::class
@@ -95,13 +99,25 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
 
     // User auth
-    $app->route('/login', Actor\Handler\LoginPageHandler::class, ['GET', 'POST'], 'login');
+    $app->route('/login', [
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            function () {
+                return new \Laminas\Diactoros\Response\RedirectResponse('/home');
+            },
+            Actor\Handler\LoginPageHandler::class
+        )
+    ], ['GET', 'POST'], 'login');
+
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->get('/home/login', [
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\OneLoginCallbackHandler::class,
             Mezzio\Handler\NotFoundHandler::class
@@ -118,21 +134,25 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     );
 
     // User management
-    $app->route(
-        '/reset-password',
-        Actor\Handler\PasswordResetRequestPageHandler::class,
-        ['GET', 'POST'],
-        'password-reset'
-    );
-    $app->route(
-        '/reset-password/{token}',
-        Actor\Handler\PasswordResetPageHandler::class,
-        ['GET', 'POST'],
-        'password-reset-token'
-    );
-    $app->get('/verify-new-email/{token}', [
-        Actor\Handler\CompleteChangeEmailHandler::class,
-    ], 'verify-new-email');
+    if (!$feature_flags[$ALLOW_GOV_ONE_LOGIN]) {
+        $app->route(
+            '/reset-password',
+            Actor\Handler\PasswordResetRequestPageHandler::class,
+            ['GET', 'POST'],
+            'password-reset'
+        );
+
+        $app->route(
+            '/reset-password/{token}',
+            Actor\Handler\PasswordResetPageHandler::class,
+            ['GET', 'POST'],
+            'password-reset-token'
+        );
+
+        $app->get('/verify-new-email/{token}', [
+            Actor\Handler\CompleteChangeEmailHandler::class,
+        ],        'verify-new-email');
+    }
 
     // User deletion
     $app->get('/confirm-delete-account', [
@@ -143,10 +163,10 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\DeleteAccountHandler::class], 'delete-account');
 
     // User details
-    $app->get('/your-details', [
+    $app->get('/settings', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\YourDetailsHandler::class,
-    ], 'your-details');
+        Actor\Handler\SettingsHandler::class,
+    ], 'settings');
     $app->route('/change-password', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangePasswordHandler::class
@@ -312,6 +332,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         new ConditionalRoutingMiddleware(
             $container,
+            $factory,
             $DELETE_LPA_FEATURE,
             Actor\Handler\RemoveLpaHandler::class,
             $defaultNotFoundPage

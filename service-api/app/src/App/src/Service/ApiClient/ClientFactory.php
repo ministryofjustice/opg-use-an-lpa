@@ -7,20 +7,20 @@ namespace App\Service\ApiClient;
 use App\Service\Log\RequestTracing;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use Exception;
 
 class ClientFactory
 {
-
     public function __invoke(ContainerInterface $container)
     {
         $config = $container->get('config');
 
         if (! array_key_exists('sirius_api', $config)) {
-            throw new \Exception('Sirius API configuration not present');
+            throw new Exception('Sirius API configuration not present');
         }
 
         if (! array_key_exists('aws', $config)) {
-            throw new \Exception('AWS configuration not present');
+            throw new Exception('AWS configuration not present');
         }
 
         return new Client(

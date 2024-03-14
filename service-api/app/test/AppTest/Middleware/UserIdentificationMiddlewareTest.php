@@ -19,7 +19,7 @@ class UserIdentificationMiddlewareTest extends TestCase
     /** @test */
     public function it_correctly_produces_a_successful_response(): void
     {
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
 
         $requestProphecy->getHeader('User-Token')
@@ -41,7 +41,7 @@ class UserIdentificationMiddlewareTest extends TestCase
     /** @test */
     public function it_throws_an_unauthorized_exception_when_no_user_token(): void
     {
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
 
         $requestProphecy->getHeader('User-Token')

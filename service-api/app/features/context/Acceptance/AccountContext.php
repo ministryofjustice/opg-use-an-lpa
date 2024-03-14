@@ -753,9 +753,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the your details page$/
+     * @Given /^I am on the settings page$/
      */
-    public function iAmOnTheYourDetailsPage(): void
+    public function iAmOnTheSettingsPage(): void
     {
         // Not needed in this context
     }
@@ -1291,36 +1291,5 @@ class AccountContext implements Context
     public function iShouldBeToldThatABadRequestWasMade(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-    }
-
-    /**
-     * @Given /^I am on the temporary one login page$/
-     */
-    public function iAmOnTheTemporaryOneLoginPage(): void
-    {
-        // Not needed in this context
-    }
-
-    /**
-     * @When /^I click the one login button$/
-     */
-    public function iClickTheOneLoginButton(): void
-    {
-        // Not needed in this context
-    }
-
-    /**
-     * @Then /^I am redirected to the redirect page$/
-     */
-    public function iAmRedirectedToTheRedirectPage(): void
-    {
-        $this->apiGet('/v1/auth/callback', []);
-
-        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
-
-        $response = $this->getResponseAsJson();
-
-        Assert::assertEquals('bf9e7e77-f283-49c6-a79c-65d5d309ef77', $response['Id']);
-        Assert::assertEquals('opg-use-an-lpa+test-user@digital.justice.gov.uk', $response['Email']);
     }
 }

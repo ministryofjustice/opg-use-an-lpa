@@ -16,21 +16,21 @@ class DynamoDbClientFactoryTest extends TestCase
     use ProphecyTrait;
 
     /** @test */
-    public function it_creates_a_dbclient() :void
+    public function it_creates_a_dbclient(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         // Use a real Aws\Sdk to sense check the method.
         $containerProphecy->get(Sdk::class)
             ->willReturn(new Sdk([
-                'region'    => 'eu-west-1',
-                'version'   => 'latest',
+                'region'  => 'eu-west-1',
+                'version' => 'latest',
             ]));
 
         //---
 
         $factory = new DynamoDbClientFactory();
-        $client = $factory($containerProphecy->reveal());
+        $client  = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(DynamoDbClient::class, $client);
     }

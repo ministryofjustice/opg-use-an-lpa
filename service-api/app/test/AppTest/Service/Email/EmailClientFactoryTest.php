@@ -7,18 +7,22 @@ namespace AppTest\Service\Email;
 use App\Service\Email\EmailClient;
 use App\Service\Email\EmailClientFactory;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
+use RuntimeException;
 
 class EmailClientFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @test
      */
     public function can_create_an_instance_of_the_email_client()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $key = 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012';
+        $key               = 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012';
 
         $containerProphecy->get('config')
             ->willReturn(
@@ -53,7 +57,7 @@ class EmailClientFactoryTest extends TestCase
 
         $factory = new EmailClientFactory();
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Missing notify API key');
         $emailClient = $factory($containerProphecy->reveal());
     }

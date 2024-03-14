@@ -7,28 +7,16 @@ namespace App\Exception;
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
-/**
- * Class ApiException
- * @package App\Service\ApiClient
- */
 class ApiException extends AbstractApiException
 {
     // A safe bet for an exception is a 500 error response
-    const DEFAULT_ERROR = 500;
+    public const DEFAULT_ERROR = 500;
 
     // The title is suitably generic, further details (from previous Throwables) will be
     // encapsulated in the stacktrace.
-    const DEFAULT_TITLE = 'An API exception has occurred';
+    public const DEFAULT_TITLE = 'An API exception has occurred';
 
-    /**
-     * @var int|null
-     */
-    protected $code;
-
-    /**
-     * @var ResponseInterface
-     */
-    protected $response;
+    protected ?ResponseInterface $response;
 
     /**
      * ApiException constructor
@@ -38,12 +26,12 @@ class ApiException extends AbstractApiException
      * @param ResponseInterface|null $response
      * @param Throwable|null $previous
      */
-    public function __construct(string $message, int $code = self::DEFAULT_ERROR, ResponseInterface $response = null, Throwable $previous = null)
+    public function __construct(string $message, int $code = self::DEFAULT_ERROR, ?ResponseInterface $response = null, ?Throwable $previous = null)
     {
         $this->response = $response;
-        $this->code = $code;
+        $this->code     = $code;
 
-        parent::__construct(self::DEFAULT_TITLE, $message, null, $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message, [], $previous);
     }
 
     public function getResponse(): ?ResponseInterface
@@ -64,7 +52,7 @@ class ApiException extends AbstractApiException
             : [];
     }
 
-    public static function create(string $message = null, ResponseInterface $response = null, Throwable $previous = null): ApiException
+    public static function create(?string $message = null, ?ResponseInterface $response = null, ?Throwable $previous = null): ApiException
     {
         $code = self::DEFAULT_ERROR;
 

@@ -1,3 +1,17 @@
+data "aws_vpc" "default" {
+  default = "true"
+
+  provider = aws.region
+}
+
+data "aws_region" "current" {
+  provider = aws.region
+}
+
+data "aws_caller_identity" "current" {
+  provider = aws.region
+}
+
 data "aws_subnets" "private" {
   filter {
     name   = "vpc-id"
@@ -25,20 +39,15 @@ data "aws_subnets" "public" {
 }
 
 
-data "aws_cloudwatch_log_group" "use-an-lpa" {
-  name = "use-an-lpa"
-
-  provider = aws.region
-}
 
 data "aws_kms_alias" "sessions_viewer" {
-  name = "alias/sessions-viewer"
+  name = "alias/sessions-viewer-mrk"
 
   provider = aws.region
 }
 
 data "aws_kms_alias" "sessions_actor" {
-  name = "alias/sessions-actor"
+  name = "alias/sessions-actor-mrk"
 
   provider = aws.region
 }
@@ -101,25 +110,8 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
-data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
-  provider = aws.management
-  name     = "use_an_lpa/stats_upload_lambda"
-}
-
 data "aws_secretsmanager_secret" "notify_api_key" {
   name = var.notify_key_secret_name
-
-  provider = aws.region
-}
-
-data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-private-key" {
-  name = "gov-uk-onelogin-identity-private-key"
-
-  provider = aws.region
-}
-
-data "aws_secretsmanager_secret" "gov-uk-onelogin-identity-public-key" {
-  name = "gov-uk-onelogin-identity-public-key"
 
   provider = aws.region
 }
@@ -153,7 +145,7 @@ data "aws_iam_role" "ecs_autoscaling_service_role" {
 }
 
 data "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${var.account_name}-lb-access-logs"
+  bucket = "opg-ual-${var.account_name}-lb-access-logs-${data.aws_region.current.name}"
 
   provider = aws.region
 }

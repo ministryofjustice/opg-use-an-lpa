@@ -30,12 +30,14 @@ class UserTest extends TestCase
             'Email'      => 'a@b.com',
             'LastLogin'  => $date->format(DateTimeInterface::ATOM),
             'NeedsReset' => strtotime('now'),
+            'Subject'    => 'fakeSubId',
         ]);
 
         $this->assertIsArray($user->getDetails());
-        $this->assertCount(3, $user->getDetails());
+        $this->assertCount(4, $user->getDetails());
         $this->assertArrayHasKey('LastLogin', $user->getDetails());
         $this->assertArrayHasKey('NeedsReset', $user->getDetails());
+        $this->assertArrayHasKey('Subject', $user->getDetails());
     }
 
     /** @test */
@@ -52,6 +54,7 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('LastLogin', $user->getDetails());
         $this->assertArrayHasKey('NeedsReset', $user->getDetails());
         $this->assertFalse($user->getDetail('NeedsReset'));
+        $this->assertArrayNotHasKey('Subject', $user->getDetails());
     }
 
     /** @test */

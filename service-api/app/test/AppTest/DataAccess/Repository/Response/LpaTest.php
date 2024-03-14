@@ -14,7 +14,7 @@ class LpaTest extends TestCase
     public function can_get_data_array_and_time(): void
     {
         $testArray = [
-            'test' => true
+            'test' => true,
         ];
 
         $testDateTime = new DateTime();
@@ -28,10 +28,9 @@ class LpaTest extends TestCase
     /** @test */
     public function can_get_null_data_array_and_null_time(): void
     {
-        $lpa = new Lpa(null, null);
+        $lpa = new Lpa([], new DateTime());
 
-        $this->assertNull($lpa->getData());
-        $this->assertNull($lpa->getLookupTime());
+        $this->assertEmpty($lpa->getData());
+        $this->assertInstanceOf(DateTime::class, $lpa->getLookupTime());
     }
-
 }

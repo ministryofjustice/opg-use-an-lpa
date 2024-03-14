@@ -15,8 +15,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class AddLpaConfirmationHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class AddLpaConfirmationHandler implements RequestHandlerInterface
@@ -28,7 +26,6 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
 
     /**
      * @param ServerRequestInterface $request
-     *
      * @return ResponseInterface
      * @throws Exception
      */
@@ -56,7 +53,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
 
         return new JsonResponse(
             [
-                'user-lpa-actor-token' => $response
+                'user-lpa-actor-token' => $response,
             ],
             StatusCodeInterface::STATUS_CREATED,
         );

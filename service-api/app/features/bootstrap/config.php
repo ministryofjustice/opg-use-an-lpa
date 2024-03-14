@@ -18,7 +18,7 @@ return [
     ],
 
     'aws' => [
-        'region' => 'eu-west-1',
+        'region' => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
 
         'DynamoDb' => [
@@ -69,6 +69,12 @@ return [
 
     'iap_images_api' => [
         'endpoint' => 'http://iap-images-mock',
+    ],
+
+    'one_login'      => [
+        'client_id'       => 'client-id',
+        'discovery_url'   => 'http://one-login-mock/.well-known/openid-configuration',
+        'identity_issuer' => 'http://identity.one-login-mock/',
     ],
 
     'feature_flags' => [],

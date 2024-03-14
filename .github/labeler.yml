@@ -1,0 +1,60 @@
+documentation:
+- changed-files:
+  - any-glob-to-any-file: docs/**
+
+terraform:
+- changed-files:
+  - any-glob-to-any-file: terraform/**
+
+github-actions:
+- changed-files:
+  - any-glob-to-any-file: .github/workflows/**
+
+service-admin:
+- changed-files:
+  - any-glob-to-any-file: services-admin/**
+
+service-api:
+- changed-files:
+  - any-glob-to-any-file: services-api/**
+
+service-front:
+- changed-files:
+  - any-glob-to-any-file: services-front/**
+
+
+docker:
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/Dockerfile'
+    - '**/docker-compose*'
+
+python:
+- changed-files:
+  - any-glob-to-any-file: '**/*.py'
+
+php:
+- changed-files:
+  - any-glob-to-any-file: '**/*.php'
+
+go:
+- changed-files:
+  - any-glob-to-any-file: '**/*.go'
+
+javascript:
+- changed-files:
+  - any-glob-to-any-file: '**/*.js'
+
+dependencies:
+- changed-files:
+  - any-glob-to-any-file:
+    - '**/requirements*.txt'
+    - '**/package*.json'
+    - '**/yarn*.lock'
+    - '**/Gemfile*'
+    - '**/composer*.json'
+    - '**/go.mod'
+    - '**/go.sum'
+    - '**/vendor/**'
+    - '**/node_modules/**'
+    - '**/vendor/**'

@@ -13,11 +13,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class UserServiceTest
- *
- * @package AppTest\Service\User
- */
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
@@ -44,5 +39,4 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
 
         $this->assertEquals($errorHandler->reveal(), $result);
     }
-
 }

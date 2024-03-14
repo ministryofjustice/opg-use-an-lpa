@@ -19,10 +19,19 @@ return [
         'endpoint' => getenv('IAP_IMAGES_API_ENDPOINT') ?: null,
     ],
 
+    'one_login'      => [
+        'client_id'       => getenv('ONE_LOGIN_CLIENT_ID') ?: null,
+        'discovery_url'   => getenv('ONE_LOGIN_DISCOVERY_URL') ?: null,
+        'identity_issuer' => getenv('ONE_LOGIN_IDENTITY_ISSUER') ?: null,
+    ],
+
     'aws' => [
-        'region'  => 'eu-west-1',
+        'region' => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
 
+        'ApiGateway' => [
+            'endpoint_region' => getenv('API_GATEWAY_REGION') ?: 'eu-west-1',
+        ],
         'DynamoDb' => [
             'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],

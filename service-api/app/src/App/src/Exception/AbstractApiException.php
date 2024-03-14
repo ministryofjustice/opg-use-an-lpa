@@ -9,21 +9,13 @@ use Throwable;
 
 /**
  * Custom exception that can be caught and translated into an API response
- *
- * Class AbstractApiException
- * @package App\Exception
  */
 abstract class AbstractApiException extends RuntimeException
 {
     /**
-     * @var string
-     */
-    private $title;
-
-    /**
      * @var array
      */
-    private $additionalData = [];
+    private array $additionalData = [];
 
     /**
      * AbstractApiException constructor
@@ -35,7 +27,7 @@ abstract class AbstractApiException extends RuntimeException
      * @param array $additionalData
      * @param Throwable|null $previous
      */
-    public function __construct(string $title, ?string $message = null, ?array $additionalData = [], ?Throwable $previous = null)
+    public function __construct(private string $title, ?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {
         //  Ensure the the required data is set in the extending exception classes
         if (!is_numeric($this->getCode())) {
@@ -48,15 +40,11 @@ abstract class AbstractApiException extends RuntimeException
         }
 
         //  Set the remaining data for the exception
-        $this->title = $title;
         $this->additionalData = $additionalData;
 
         parent::__construct($message, $this->getCode(), $previous);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;

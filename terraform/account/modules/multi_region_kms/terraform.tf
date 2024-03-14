@@ -8,6 +8,7 @@ terraform {
         aws.primary,
         aws.secondary,
       ]
+      version = "~> 5.24.0"
     }
   }
 }

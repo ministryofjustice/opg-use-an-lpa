@@ -17,7 +17,7 @@ class CodeGeneratorTest extends TestCase
          * Thus them appearing here.
          */
         $this->assertEquals(12, CodeGenerator::CODE_LENGTH);
-        $this->assertEquals('346789BCDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
+        $this->assertEquals('36789BDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
     }
 
     /**
@@ -48,7 +48,7 @@ class CodeGeneratorTest extends TestCase
             //---
 
             $usedCharsArray = str_split($code);
-            $diff = array_diff($usedCharsArray, $allowedCharArray);
+            $diff           = array_diff($usedCharsArray, $allowedCharArray);
 
             // This should always be 0.
             // i.e. A code should never contain a character that's not in CodeGenerator::ALLOWED_CHARACTERS
@@ -71,7 +71,7 @@ class CodeGeneratorTest extends TestCase
 
         asort($characterCount);
 
-        $lowestFrequency = array_shift($characterCount);
+        $lowestFrequency  = array_shift($characterCount);
         $highestFrequency = array_pop($characterCount);
 
         $ratio = $highestFrequency / $lowestFrequency;

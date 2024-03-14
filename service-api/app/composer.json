@@ -42,11 +42,13 @@
     "require": {
         "php": "^8.1",
         "ext-apcu": "*",
+        "ext-gmp": "*",
+        "ext-openssl": "*",
         "alphagov/notifications-php-client": "^4.1.0",
         "aws/aws-sdk-php": "^3.93",
         "blazon/psr11-monolog": "^4.0",
         "elie29/zend-phpdi-config": "^8.0",
-        "facile-it/php-openid-client": "^0.3.4",
+        "facile-it/php-openid-client": "^0.3.5",
         "guzzlehttp/guzzle": "^7.0",
         "laminas/laminas-cache": "^3.11",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.4",
@@ -79,7 +81,7 @@
         "slevomat/coding-standard": "^8.9",
         "smart-gamma/pact-behat-extension": "^3.0",
         "squizlabs/php_codesniffer": "^3.0",
-        "vimeo/psalm": "^4.19",
+        "vimeo/psalm": "^5.0",
         "webimpress/coding-standard": "^1.0"
     },
     "replace": {

@@ -11,39 +11,18 @@ use App\Service\Lpa\ResolveActor;
 
 class ActorCodeService
 {
-    private CodeValidationStrategyInterface $codeValidator;
-
-    private UserLpaActorMapInterface $userLpaActorMapRepository;
-
-    private LpaService $lpaService;
-
-    private ResolveActor $resolveActor;
-
-    /**
-     * ActorCodeService constructor.
-     *
-     * @param CodeValidationStrategyInterface $codeValidator
-     * @param UserLpaActorMapInterface $userLpaActorMapRepository
-     * @param LpaService $lpaService
-     * @param ResolveActor $resolveActor
-     */
     public function __construct(
-        CodeValidationStrategyInterface $codeValidator,
-        UserLpaActorMapInterface $userLpaActorMapRepository,
-        LpaService $lpaService,
-        ResolveActor $resolveActor
+        private CodeValidationStrategyInterface $codeValidator,
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private LpaService $lpaService,
+        private ResolveActor $resolveActor,
     ) {
-        $this->codeValidator = $codeValidator;
-        $this->lpaService = $lpaService;
-        $this->userLpaActorMapRepository = $userLpaActorMapRepository;
-        $this->resolveActor = $resolveActor;
     }
 
     /**
      * Removes TTL from entry that is already inside the database
      *
      * @param string $userLpaActorMapId the database id to remove the TTL from
-     *
      * @return string returns the database ID of the LPA that has had it's TTL removed
      */
     private function activateRecord(string $userLpaActorMapId, string $actorId, string $code): string
@@ -73,13 +52,12 @@ class ActorCodeService
 
             return [
                 'actor' => $actor,
-                'lpa' => $lpaData
+                'lpa'   => $lpaData,
             ];
-        } catch (ActorCodeValidationException $acve) {
+        } catch (ActorCodeValidationException) {
             return null;
         }
     }
-
 
     /**
      * Confirms adding an LPA into a user's account.
@@ -109,7 +87,7 @@ class ActorCodeService
         //---
         $lpaId = $details['lpa']['uId'];
 
-        $lpas = $this->userLpaActorMapRepository->getByUserId($userId);
+        $lpas       = $this->userLpaActorMapRepository->getByUserId($userId);
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
@@ -127,7 +105,7 @@ class ActorCodeService
 
         try {
             $this->codeValidator->flagCodeAsUsed($code);
-        } catch (ActorCodeMarkAsUsedException $e) {
+        } catch (ActorCodeMarkAsUsedException) {
             $this->userLpaActorMapRepository->delete($id);
         }
 

@@ -19,14 +19,16 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
                     {{ govuk_form_element(form.get('force_activation')) }}
 
-                    <a href="{{ path('lpa.dashboard') }}" draggable="false" class="govuk-button">
-                        {% trans %}Back to your LPAs{% endtrans %}
-                    </a>
-
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-button--secondary">
-                        {% trans %}Continue and ask for a new key{% endtrans %}
-                    </button>
-
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item  " data-module="govuk-button">
+                                {% trans %}Back to your LPAs{% endtrans %}
+                            </a>
+                            <button type="submit" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                                {% trans %}Continue and ask for a new key{% endtrans %}
+                            </button>
+                        </div>
+                    </div>
                     {{ govuk_form_close() }}
                 </div>
             </div>

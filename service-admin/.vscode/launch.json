@@ -14,8 +14,8 @@
             "env": {
                 "AWS_DYNAMODB_ENDPOINT": "http://localhost:8000",
                 "ADMIN_JWT_SIGNING_KEY_URL": "http://localhost:5000",
-                "AWS_ACCESS_KEY_ID": "-",
-                "AWS_SECRET_ACCESS_KEY": "-",
+                "AWS_ACCESS_KEY_ID": "devkey",
+                "AWS_SECRET_ACCESS_KEY": "secretkey",
                 "ADMIN_LOGOUT_URL": "https://login-admin-lastingpowerofattorney.auth.eu-west-1.amazoncognito.com/logout",
             }
         }

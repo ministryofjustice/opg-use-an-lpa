@@ -9,30 +9,18 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class AddLpa
- * @package App\Service\Lpa
- */
 class AddLpa
 {
-    private LoggerInterface $logger;
-    private ActorCodeService $actorCodeService;
-    private LpaAlreadyAdded $lpaAlreadyAdded;
-
     public function __construct(
-        LoggerInterface $logger,
-        ActorCodeService $actorCodeService,
-        LpaAlreadyAdded $lpaAlreadyAdded
+        private LoggerInterface $logger,
+        private ActorCodeService $actorCodeService,
+        private LpaAlreadyAdded $lpaAlreadyAdded,
     ) {
-        $this->logger = $logger;
-        $this->actorCodeService = $actorCodeService;
-        $this->lpaAlreadyAdded = $lpaAlreadyAdded;
     }
 
     /**
      * @param array  $data
      * @param string $userId
-     *
      * @return array
      */
     public function validateAddLpaData(array $data, string $userId): array
@@ -42,8 +30,8 @@ class AddLpa
                 $this->logger->notice(
                     'User {id} attempted to add an LPA {uId} which already exists in their account',
                     [
-                        'id' => $userId,
-                        'uId' => $data['uid']
+                        'id'  => $userId,
+                        'uId' => $data['uid'],
                     ]
                 );
                 throw new BadRequestException('LPA already added', $lpaAddedData);
@@ -66,8 +54,8 @@ class AddLpa
             $this->logger->notice(
                 'User {id} has found an LPA with Id {uId} using their activation key',
                 [
-                    'id' => $userId,
-                    'uId' => $data['uid']
+                    'id'  => $userId,
+                    'uId' => $data['uid'],
                 ]
             );
             return $lpaData;
@@ -76,8 +64,8 @@ class AddLpa
         $this->logger->notice(
             'Failed to add an LPA for user {id} as the LPA {uId} status is not registered',
             [
-                'id' => $userId,
-                'uId' => $data['uid']
+                'id'  => $userId,
+                'uId' => $data['uid'],
             ]
         );
         throw new BadRequestException('LPA status is not registered');

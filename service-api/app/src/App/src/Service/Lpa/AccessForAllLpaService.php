@@ -31,7 +31,6 @@ class AccessForAllLpaService
      *
      * @param string $lpaId
      * @param string $actorId
-     *
      * @return DateTime|null
      */
     public function hasActivationCode(string $lpaId, string $actorId): ?DateTime

@@ -6,6 +6,7 @@ namespace App\DataAccess\DynamoDb;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ActorCodesFactory
 {
@@ -14,7 +15,7 @@ class ActorCodesFactory
         $config = $container->get('config');
 
         if (!isset($config['repositories']['dynamodb']['actor-codes-table'])) {
-            throw new \Exception('Actor Codes table configuration not present');
+            throw new Exception('Actor Codes table configuration not present');
         }
 
         return new ActorCodes(

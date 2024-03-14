@@ -27,13 +27,13 @@ class ViewerCodesFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'viewer-codes-table' => 'test-table'
-                ]
-            ]
+                    'viewer-codes-table' => 'test-table',
+                ],
+            ],
         ]);
 
         $factory = new ViewerCodesFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(ViewerCodes::class, $repo);
     }
 

@@ -28,6 +28,11 @@ data "aws_iam_policy_document" "pagerduty_sns_kms" {
       identifiers = ["cloudwatch.amazonaws.com"]
       type        = "Service"
     }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
   }
   statement {
     sid       = "Enable Root account permissions on Key"

@@ -15,7 +15,7 @@ class GoneExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $ge = new GoneException($message, $additionalData);

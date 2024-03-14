@@ -13,8 +13,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 
 class ViewerCodeActivityTest extends TestCase
 {
-    use ProphecyTrait;
     use GenerateAwsResultTrait;
+    use ProphecyTrait;
 
     const TABLE_NAME = 'test-table-name';
 
@@ -27,10 +27,10 @@ class ViewerCodeActivityTest extends TestCase
 
     public function testRecordSuccessfulLookupActivity()
     {
-        $testCode = '123456789ABC';
+        $testCode     = '123456789ABC';
         $organisation = 'HSBC';
 
-        $this->dynamoDbClient->putItem(Argument::that(function ($v) use ($testCode, $organisation) {
+        $this->dynamoDbClient->putItem(Argument::that(function ($v) use ($testCode) {
             $this->assertArrayHasKey('TableName', $v);
             $this->assertEquals(self::TABLE_NAME, $v['TableName']);
 
@@ -69,8 +69,8 @@ class ViewerCodeActivityTest extends TestCase
     {
         $testCodes = [
             0 => [
-                'ViewerCode' => 'RT6Y98VEF7A2'
-                ]
+                'ViewerCode' => 'RT6Y98VEF7A2',
+                ],
         ];
 
         $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {
@@ -88,29 +88,29 @@ class ViewerCodeActivityTest extends TestCase
             ->willReturn($this->createAWSResult([
                 'Items' => [
                     [
-                        'Viewed' => [
-                            'S' => '2020-01-11'
+                        'Viewed'     => [
+                            'S' => '2020-01-11',
                         ],
                         'ViewerCode' => [
-                            'S' => $testCodes[0]['ViewerCode']
+                            'S' => $testCodes[0]['ViewerCode'],
                         ],
-                        'ViewedBy' => [
-                            'S' => 'Some organisation1'
+                        'ViewedBy'   => [
+                            'S' => 'Some organisation1',
                         ],
                     ],
                     [
-                        'Viewed' => [
-                            'S' => '2020-01-11'
+                        'Viewed'     => [
+                            'S' => '2020-01-11',
                         ],
                         'ViewerCode' => [
-                            'S' => $testCodes[0]['ViewerCode']
+                            'S' => $testCodes[0]['ViewerCode'],
                         ],
-                        'ViewedBy' => [
-                            'S' => 'Some organisation2'
+                        'ViewedBy'   => [
+                            'S' => 'Some organisation2',
                         ],
                     ],
                 ],
-                'Count' => 1
+                'Count' => 1,
             ]));
 
         $repo = new ViewerCodeActivity($this->dynamoDbClient->reveal(), self::TABLE_NAME);
@@ -147,7 +147,7 @@ class ViewerCodeActivityTest extends TestCase
         }))
             ->willReturn($this->createAWSResult([
                 'Items' => [],
-                'Count' => 0
+                'Count' => 0,
             ]));
 
         $repo = new ViewerCodeActivity($this->dynamoDbClient->reveal(), self::TABLE_NAME);
@@ -156,6 +156,5 @@ class ViewerCodeActivityTest extends TestCase
 
         $this->assertEquals($testCodes[0]['ViewerCode'], $result[0]['ViewerCode']);
         $this->assertEquals(false, $result[0]['Viewed']);
-
     }
 }

@@ -28,13 +28,13 @@ class ActorUsersFactoryTest extends TestCase
         $containerProphecy->get('config')->willReturn([
             'repositories' => [
                 'dynamodb' => [
-                    'actor-users-table' => 'test-table'
-                ]
-            ]
+                    'actor-users-table' => 'test-table',
+                ],
+            ],
         ]);
 
         $factory = new ActorUsersFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
         $this->assertInstanceOf(ActorUsers::class, $repo);
     }
 
@@ -56,5 +56,4 @@ class ActorUsersFactoryTest extends TestCase
 
         $factory($containerProphecy->reveal());
     }
-
 }

@@ -8,12 +8,14 @@ use Alphagov\Notifications\Client as NotifyClient;
 use App\Service\Email\EmailClient;
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class EmailClientTest extends TestCase
 {
-    /** @var NotifyClient|ObjectProphecy */
-    private $notifyClientProphecy;
+    use ProphecyTrait;
+
+    private NotifyClient|ObjectProphecy $notifyClientProphecy;
 
     private string $defaultLocale;
 
@@ -23,7 +25,7 @@ class EmailClientTest extends TestCase
     public function setUp(): void
     {
         $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
-        $this->defaultLocale = self::EN_LOCALE;
+        $this->defaultLocale        = self::EN_LOCALE;
     }
 
     /** @test */
@@ -131,7 +133,7 @@ class EmailClientTest extends TestCase
     public function can_send_change_email_to_current_email()
     {
         $recipient = 'current@email.com';
-        $newEmail = 'new@email.com';
+        $newEmail  = 'new@email.com';
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -290,7 +292,7 @@ class EmailClientTest extends TestCase
     public function can_send_change_email_to_current_email_if_locale_is_cy()
     {
         $recipient = 'current@email.com';
-        $newEmail = 'new@email.com';
+        $newEmail  = 'new@email.com';
 
         $this->notifyClientProphecy->sendEmail(
             $recipient,
@@ -347,9 +349,9 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email_if_locale_is_cy()
     {
-        $recipient = 'a@b.com';
-        $referenceNumber = '700000000138';
-        $postCode = 'HS8 2YB';
+        $recipient          = 'a@b.com';
+        $referenceNumber    = '700000000138';
+        $postCode           = 'HS8 2YB';
         $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
@@ -357,8 +359,8 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[EmailClient::CY_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'postcode' => $postCode,
-                'date' => $letterExpectedDate,
+                'postcode'         => $postCode,
+                'date'             => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
@@ -377,9 +379,9 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email()
     {
-        $recipient = 'a@b.com';
-        $referenceNumber = '700000000138';
-        $postCode = 'HS8 2YB';
+        $recipient          = 'a@b.com';
+        $referenceNumber    = '700000000138';
+        $postCode           = 'HS8 2YB';
         $letterExpectedDate = (new DateTime())->modify('+2 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
@@ -387,8 +389,8 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_CONFIRMATION[EmailClient::EN_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'postcode' => $postCode,
-                'date' => $letterExpectedDate,
+                'postcode'         => $postCode,
+                'date'             => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
@@ -407,8 +409,8 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleansing()
     {
-        $recipient = 'a@b.com';
-        $referenceNumber = '700000000138';
+        $recipient          = 'a@b.com';
+        $referenceNumber    = '700000000138';
         $letterExpectedDate = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
@@ -416,7 +418,7 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[EmailClient::EN_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'date' => $letterExpectedDate,
+                'date'             => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();
@@ -434,8 +436,8 @@ class EmailClientTest extends TestCase
     /** @test */
     public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy()
     {
-        $recipient = 'a@b.com';
-        $referenceNumber = '700000000138';
+        $recipient          = 'a@b.com';
+        $referenceNumber    = '700000000138';
         $letterExpectedDate = (new DateTime())->modify('+4 weeks')->format('j F Y');
 
         $this->notifyClientProphecy->sendEmail(
@@ -443,7 +445,7 @@ class EmailClientTest extends TestCase
             EmailClient::TEMPLATE_ID_ACTIVATION_KEY_REQUEST_WHEN_LPA_NEEDS_CLEANSING[EmailClient::CY_LOCALE],
             [
                 'reference_number' => $referenceNumber,
-                'date' => $letterExpectedDate,
+                'date'             => $letterExpectedDate,
             ]
         )
             ->shouldBeCalledOnce();

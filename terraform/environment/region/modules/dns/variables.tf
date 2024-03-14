@@ -31,7 +31,11 @@ variable "dns_namespace_env" {
 }
 
 variable "loadbalancer" {
-  description = "The loadbalancer to point the DNS record to"
+  description = "The loadbalancer object to point the DNS record to"
+  type = object({
+    dns_name = string
+    zone_id  = string
+  })
 }
 
 variable "service_name" {
@@ -50,4 +54,10 @@ variable "current_region" {
   description = "The current region"
   type        = string
   default     = "eu-west-1"
+}
+
+variable "create_block_email_records" {
+  description = "Create the SPF and DMARC records to block all emails from being sent from this domain."
+  type        = bool
+  default     = false
 }

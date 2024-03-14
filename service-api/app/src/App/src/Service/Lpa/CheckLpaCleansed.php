@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
@@ -10,14 +12,10 @@ class CheckLpaCleansed
 {
     public const EARLIEST_REG_DATE = '2019-09-01';
 
-    private LoggerInterface $logger;
-    private LpaService $lpaService;
     private DateTimeImmutable $earliestDate;
 
-    public function __construct(LoggerInterface $logger, LpaService $lpaService)
+    public function __construct(private LoggerInterface $logger, private LpaService $lpaService)
     {
-        $this->logger = $logger;
-        $this->lpaService = $lpaService;
         $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
     }
 
@@ -46,7 +44,7 @@ class CheckLpaCleansed
             throw new BadRequestException(
                 'LPA needs cleansing',
                 [
-                    'actor_id' => $actorDetailsMatch['actor']['uId']
+                    'actor_id' => $actorDetailsMatch['actor']['uId'],
                 ]
             );
         }

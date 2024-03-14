@@ -110,9 +110,11 @@ class ConfigProvider
                 SessionMiddleware::class                   => SessionMiddlewareFactory::class,
                 SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
+                Middleware\ErrorHandling\GoneHandler::class => Middleware\ErrorHandling\GoneHandlerFactory::class,
 
                 // Auth
                 UserInterface::class => Entity\UserFactory::class,
+                Service\OneLogin\OneLoginService::class => Service\OneLogin\OneLoginServiceFactory::class,
 
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,

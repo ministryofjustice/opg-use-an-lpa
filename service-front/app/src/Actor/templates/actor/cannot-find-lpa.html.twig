@@ -102,12 +102,20 @@
                         </details>
                     {% endif %}
 
-                    <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" draggable="false"
-                       class="govuk-button">{% trans %}Try again{% endtrans %}</a>
-                    <a class="govuk-button govuk-button--secondary govuk-!-margin-bottom-1"
-                       href="{{ path('lpa.dashboard') }}">
-                        {% trans %}Back to your LPAs{% endtrans %}
-                    </a>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+                            <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
+                               draggable="false" class="govuk-button moj-button-menu__item  "
+                               data-module="govuk-button">
+                                {% trans %}Try again{% endtrans %}
+                            </a>
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Back to your LPAs{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

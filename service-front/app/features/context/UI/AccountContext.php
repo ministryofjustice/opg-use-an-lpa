@@ -8,6 +8,8 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use DateTime;
+use DateTimeInterface;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -46,6 +48,9 @@ class AccountContext implements Context
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
     private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
     private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
+    private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES   = 'ViewerCodeService::getShareCodes';
+
 
     /**
      * @Then /^An account is created using (.*) (.*) (.*)$/
@@ -104,6 +109,14 @@ class AccountContext implements Context
         $this->ui->visit('/login');
         $this->ui->assertPageAddress('/login');
         $this->ui->assertElementContainsText('button[name=sign-in]', 'Sign in');
+    }
+
+    /**
+     * @When /^I access the login page$/
+     */
+    public function iAccessTheLoginPage(): void
+    {
+        $this->ui->visit('/login');
     }
 
     /**
@@ -241,7 +254,7 @@ class AccountContext implements Context
         $this->newUserEmail        = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
 
-        $this->ui->visit('/your-details');
+        $this->ui->visit('/settings');
 
         $session = $this->ui->getSession();
         $page    = $session->getPage();
@@ -262,7 +275,7 @@ class AccountContext implements Context
      */
     public function iAmOnTheConfirmAccountDeletionPage(): void
     {
-        $this->iAmOnTheYourDetailsPage();
+        $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
     }
 
@@ -300,11 +313,19 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the your details page$/
+     * @Given /^I am on the settings page$/
      */
-    public function iAmOnTheYourDetailsPage(): void
+    public function iAmOnTheSettingsPage(): void
     {
-        $this->ui->clickLink('Your details');
+        $this->ui->clickLink('Settings');
+    }
+
+    /**
+     * @Then /^I am redirected to the one login page$/
+     */
+    public function iAmRedirectedToTheOneLoginPage(): void
+    {
+        $this->ui->assertPageAddress('/home');
     }
 
     /**
@@ -335,12 +356,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am taken back to the your details page$/
+     * @Then /^I am taken back to the settings page$/
      */
-    public function iAmTakenBackToTheYourDetailsPage(): void
+    public function iAmTakenBackToTheSettingsPage(): void
     {
-        $this->ui->assertPageAddress('/your-details');
-        $this->ui->assertPageContainsText('Your details');
+        $this->ui->assertPageAddress('/settings');
+        $this->ui->assertPageContainsText('Settings');
     }
 
     /**
@@ -486,7 +507,7 @@ class AccountContext implements Context
      */
     public function iAskForAChangeOfDonorsOrAttorneysDetails(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
         $this->ui->clickLink('Change a donor or attorney\'s details');
@@ -619,7 +640,7 @@ class AccountContext implements Context
      */
     public function iCanChangeMyEmailIfRequired(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Email address');
         $this->ui->assertPageContainsText($this->userEmail);
@@ -639,7 +660,7 @@ class AccountContext implements Context
      */
     public function iCanChangeMyPasscodeIfRequired(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
 
         $this->ui->assertPageContainsText('Password');
 
@@ -1290,7 +1311,7 @@ class AccountContext implements Context
      */
     public function iHaveDeletedMyAccount(): void
     {
-        $this->iAmOnTheYourDetailsPage();
+        $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
         $this->iConfirmThatIWantToDeleteMyAccount();
     }
@@ -1668,7 +1689,7 @@ class AccountContext implements Context
      */
     public function iRequestToDeleteMyAccount(): void
     {
-        $this->ui->assertPageAddress('/your-details');
+        $this->ui->assertPageAddress('/settings');
         $this->ui->clickLink('Delete account');
     }
 
@@ -1681,9 +1702,9 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to return to the your details page$/
+     * @When /^I request to return to the settings page$/
      */
-    public function iRequestToReturnToTheYourDetailsPage(): void
+    public function iRequestToReturnToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
         $this->ui->clickLink('No, return to my details');
@@ -1756,8 +1777,8 @@ class AccountContext implements Context
             $this->ui->assertPageAddress('/login');
         } elseif ($page === 'dashboard') {
             $this->ui->assertPageAddress('/lpa/dashboard');
-        } elseif ($page === 'your details') {
-            $this->ui->assertPageAddress('/your-details');
+        } elseif ($page === 'settings') {
+            $this->ui->assertPageAddress('/settings');
         } elseif ($page === 'add a lpa') {
             $this->ui->assertPageAddress('/lpa/add-details');
         } elseif ($page === 'add by code') {
@@ -1867,8 +1888,8 @@ class AccountContext implements Context
      */
     public function iViewMyUserDetails(): void
     {
-        $this->ui->visit('/your-details');
-        $this->ui->assertPageContainsText('Your details');
+        $this->ui->visit('/settings');
+        $this->ui->assertPageContainsText('Settings');
     }
 
     /**
@@ -2038,14 +2059,14 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I am on the temporary one login page$/
+     * @Given /^I am on the one login page$/
      */
-    public function iAmOnTheTemporaryOneLoginPage(): void
+    public function iAmOnTheOneLoginPage(): void
     {
         $this->language = 'en';
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
-        $this->ui->assertElementContainsText('button[name=sign-in-one-login]', 'Sign in via One Login');
+        $this->ui->assertElementOnPage('button[name=sign-in-one-login]');
     }
 
     /**
@@ -2068,8 +2089,21 @@ class AccountContext implements Context
         );
 
         $this->iDoNotFollowRedirects();
-        $this->ui->pressButton('Sign in via One Login');
+        $this->ui->pressButton('sign-in-one-login');
         $this->iDoFollowRedirects();
+    }
+
+    /**
+     * @When /^I have logged in to one login in (English|Welsh)$/
+     */
+    public function iHaveLoggedInToOneLogin($language): void
+    {
+        $this->iAmOnTheOneLoginPage();
+        $this->language = $language === 'English' ? 'en' : 'cy';
+        if ($this->language === 'cy') {
+            $this->iSelectTheWelshLanguage();
+        }
+        $this->iClickTheOneLoginButton();
     }
 
     /**
@@ -2095,5 +2129,152 @@ class AccountContext implements Context
     {
         $this->language = 'cy';
         $this->ui->clickLink('Cymraeg');
+    }
+
+    /**
+     * @When /^One Login returns a "(.*)" error$/
+     */
+    public function oneLoginReturnsAError($errorType): void
+    {
+        $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
+    }
+
+    /**
+     * @Then /^I am redirected to the login page with a "(.*)" error and "(.*)"$/
+     */
+    public function iAmRedirectedToTheLanguageErrorPage($errorType, $errorMessage): void
+    {
+        $basePath = $this->language === 'cy' ? '/cy' : '';
+        $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
+        $this->ui->assertPageContainsText($errorMessage);
+    }
+
+    /**
+     * @Then /^I have an account whose sub matches a local account$/
+     * @Then /^I have an email address that matches a local account$/
+     */
+    public function iHaveAMatchingLocalAccount(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                        'Identity'  => 'fakeSub',
+                        'Email'     => 'fake@email.com',
+                        'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        'Birthday'  => '01-01-1990',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $userLpaActorToken = '12345789';
+        $lpaData           = [
+            'user-lpa-actor-token'       => $userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1975-10-05',
+                    'email'        => 'string',
+                    'firstname'    => 'Ian',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => 'Mr',
+                    'surname'      => 'Deputy',
+                    'systemStatus' => true,
+                    'uId'          => '700000000054',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $lpa,
+            'added'                      => '2021-10-5 12:00:00',
+        ];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$userLpaActorToken => $lpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+    }
+
+    /**
+     * @Then /^I have an email address that does not match a local account$/
+     */
+    public function iHaveAnEmailAddressThatDoesNotMatchALocalAccount(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                        'Identity'  => 'fakeSub',
+                        'Email'     => 'fake@email.com',
+                        'Birthday'  => '01-01-1990',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+
+      $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+    }
+
+    /**
+     * @Then /^I see the LPA dashboard with any LPAs that are in the account$/
+     */
+    public function iSeeTheLPADashboardWithAnyLPAsInAccount(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Add another LPA');
+    }
+
+    /**
+     * @Then /I see an empty LPA dashboard$/
+     */
+    public function iSeeAnEmptyLPADashboard(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->clickLink('Add your first LPA');
     }
 }

@@ -156,7 +156,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      */
     public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
     {
-        $current = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
+        $current       = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
         $activatedTime = $current->format(DateTimeInterface::ATOM);
 
         $response = $this->client->updateItem(

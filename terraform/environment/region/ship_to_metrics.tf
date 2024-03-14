@@ -1,16 +1,9 @@
-data "aws_sqs_queue" "ship_to_opg_metrics" {
-  count = var.ship_metrics_queue_enabled ? 1 : 0
-  name  = "${var.account_name}-ship-to-opg-metrics"
-}
 
 data "aws_lambda_function" "clsf_to_sqs" {
   count         = var.ship_metrics_queue_enabled ? 1 : 0
-  function_name = "clsf-to-sqs"
-}
+  function_name = "clsf-to-sqs-${data.aws_region.current.name}"
 
-data "aws_lambda_function" "ship_to_opg_metrics" {
-  count         = var.ship_metrics_queue_enabled ? 1 : 0
-  function_name = "ship-to-opg-metrics"
+  provider = aws.region
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "events" {

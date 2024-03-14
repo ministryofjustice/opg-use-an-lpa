@@ -6,6 +6,7 @@ namespace App\DataAccess\DynamoDb;
 
 use Aws\DynamoDb\DynamoDbClient;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ViewerCodeActivityFactory
 {
@@ -14,7 +15,7 @@ class ViewerCodeActivityFactory
         $config = $container->get('config');
 
         if (!isset($config['repositories']['dynamodb']['viewer-activity-table'])) {
-            throw new \Exception('Viewer Activity table configuration not present');
+            throw new Exception('Viewer Activity table configuration not present');
         }
 
         return new ViewerCodeActivity(

@@ -4,11 +4,13 @@
     <working_directory value="$PROJECT_DIR$" />
     <envs>
       <env name="ADMIN_JWT_SIGNING_KEY_URL" value="http://localhost:5000" />
-      <env name="AWS_ACCESS_KEY_ID" value="-" />
+      <env name="AWS_ACCESS_KEY_ID" value="devkey" />
       <env name="AWS_DYNAMODB_ENDPOINT" value="http://localhost:8000" />
-      <env name="AWS_SECRET_ACCESS_KEY" value="-" />
+      <env name="AWS_SECRET_ACCESS_KEY" value="secretdevkey" />
+      <env name="AWS_ENDPOINT_SSM" value="http://localhost:4566" />
     </envs>
     <kind value="FILE" />
+    <package value="github.com/ministryofjustice/opg-use-an-lpa/service-admin" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/cmd/admin/main.go" />
     <method v="2" />

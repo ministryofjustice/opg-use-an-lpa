@@ -10,14 +10,8 @@ use Psr\Http\Message\RequestInterface;
 
 class RequestSigner
 {
-    private ?string $staticAuthToken;
-
-    private SignatureV4 $signer;
-
-    public function __construct(SignatureV4 $signer, ?string $staticAuthToken = null)
+    public function __construct(private SignatureV4 $signer, private ?string $staticAuthToken = null)
     {
-        $this->signer = $signer;
-        $this->staticAuthToken = $staticAuthToken;
     }
 
     public function sign(RequestInterface $request): RequestInterface

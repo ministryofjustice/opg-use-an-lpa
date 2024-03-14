@@ -10,19 +10,19 @@ Feature: The user is able to delete their account
 
   @ui
   Scenario: As a user I am asked to confirm to delete my account if I have requested to do so
-    Given I am on the your details page
+    Given I am on the settings page
     When I request to delete my account
     Then I am asked to confirm whether I am sure if I want to delete my account
 
   @ui
-  Scenario: As a user I can go back to the your details page if I change my mind about deleting my account
+  Scenario: As a user I can go back to the settings page if I change my mind about deleting my account
     Given I am on the confirm account deletion page
-    When I request to return to the your details page
-    Then I am taken back to the your details page
+    When I request to return to the settings page
+    Then I am taken back to the settings page
 
   @integration @ui
   Scenario: As a user I can delete my account
-    Given I am on the your details page
+    Given I am on the settings page
     When I request to delete my account
     And I confirm that I want to delete my account
     Then My account is deleted

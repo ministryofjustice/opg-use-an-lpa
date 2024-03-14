@@ -71,11 +71,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v3
+      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # pin@v3.0.8
+        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -89,12 +89,12 @@ jobs:
           matrix.svc_prefix == 'front' &&
           inputs.specific_path == 'all'
 
-      - uses: unfor19/install-aws-cli-action@46282f151073130d90347412d9c4ef0640177f22 # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
         if: |
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@e6c766a518826746395987edb73a1a5767d0b602 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e0fc2428ccc7f7031a468e4a9d673be1a95fb8b9 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -203,6 +203,7 @@ jobs:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
         if: |
+          (success() || failure()) && contains(fromJson('["front", "api", "admin"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
@@ -238,7 +239,7 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@69cbbc0cbbf6a2b0bab8dcf0e9f2d7ead08e87e4 # pin@v0.7.1
+        uses: aquasecurity/trivy-action@062f2592684a31eb3aa050cc61e7ca1451cecd3d # pin@v0.7.1
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
@@ -249,7 +250,7 @@ jobs:
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         if: |
           (steps.trivy_scan.outcome == 'success' || steps.trivy_scan.outcome == 'failure') &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
@@ -258,7 +259,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@f8672cc4c5410eabbb9df3d9bb4c7ad01fc4cc3e # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@ebdeac79a5f9525e298b368a491c338b8fd60fe9 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |

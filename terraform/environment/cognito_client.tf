@@ -41,8 +41,8 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
   read_attributes        = []
   write_attributes       = []
 
-  callback_urls = ["https://${module.eu_west_1.route53_fqdns.admin}/oauth2/idpresponse"]
-  logout_urls   = ["https://${module.eu_west_1.route53_fqdns.admin}/"]
+  callback_urls = ["https://${module.eu_west_1[0].route53_fqdns.admin}/oauth2/idpresponse"]
+  logout_urls   = ["https://${module.eu_west_1[0].route53_fqdns.admin}/"]
 }
 
 moved {

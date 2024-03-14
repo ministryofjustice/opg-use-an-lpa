@@ -15,7 +15,7 @@ class BadRequestExceptionTest extends TestCase
 
         $additionalData = [
             'some' => 'additional',
-            'data' => 'here,'
+            'data' => 'here,',
         ];
 
         $bre = new BadRequestException($message, $additionalData);

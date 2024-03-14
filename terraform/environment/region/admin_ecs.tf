@@ -17,7 +17,7 @@ resource "aws_ecs_service" "admin" {
   load_balancer {
     target_group_arn = aws_lb_target_group.admin.arn
     container_name   = "app"
-    container_port   = 80
+    container_port   = 8080
   }
 
   capacity_provider_strategy {
@@ -68,12 +68,12 @@ moved {
   to   = aws_security_group.admin_ecs_service
 }
 
-// 80 in from the ELB
+// 8080 in from the ELB
 resource "aws_security_group_rule" "admin_ecs_service_ingress" {
-  description              = "Allow Port 80 ingress from the applciation load balancer"
+  description              = "Allow Port 8080 ingress from the applciation load balancer"
   type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.admin_ecs_service.id
   source_security_group_id = aws_security_group.admin_loadbalancer.id
@@ -165,8 +165,8 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      local.dynamodb_tables_arns.actor_users_table_arn,
-      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_users_table_arn,
+      "${local.dynamodb_tables_arns.use_users_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_codes_table_arn,
       "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_activity_table_arn,
@@ -230,8 +230,8 @@ locals {
       name        = "app",
       portMappings = [
         {
-          containerPort = 80,
-          hostPort      = 80,
+          containerPort = 8080,
+          hostPort      = 8080,
           protocol      = "tcp"
         }
       ],
@@ -251,7 +251,7 @@ locals {
         },
         {
           name  = "ADMIN_PORT",
-          value = tostring(80)
+          value = tostring(8080)
         },
         {
           name  = "ADMIN_DYNAMODB_TABLE_PREFIX",
@@ -272,6 +272,10 @@ locals {
         {
           name  = "LPA_CODES_API_ENDPOINT",
           value = var.lpa_codes_endpoint
+        },
+        {
+          name  = "ENVIRONMENT_NAME",
+          value = tostring(var.environment_name)
         },
       ]
     }

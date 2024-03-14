@@ -13,8 +13,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class CompleteDeleteAccountHandler
- * @package App\Handler
  * @codeCoverageIgnore
  */
 class CompleteDeleteAccountHandler implements RequestHandlerInterface

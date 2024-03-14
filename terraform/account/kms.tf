@@ -94,8 +94,15 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
       type = "Service"
       identifiers = [
         "logs.${data.aws_region.current.name}.amazonaws.com",
+        "logs.eu-west-2.amazonaws.com",
         "events.amazonaws.com"
       ]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
     }
   }
 

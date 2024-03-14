@@ -179,8 +179,8 @@ moved {
 }
 
 moved {
-  from = aws_lb.actor
-  to   = module.eu_west_1.aws_lb.actor
+  from = aws_lb.use
+  to   = module.eu_west_1.aws_lb.use
 }
 
 moved {

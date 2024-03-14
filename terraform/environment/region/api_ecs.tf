@@ -106,14 +106,14 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
 //----------------------------------
 // 80 in from Actor ECS service
 
-resource "aws_security_group_rule" "api_ecs_service_actor_ingress" {
+resource "aws_security_group_rule" "api_ecs_service_use_ingress" {
   description              = "Allow Port 80 ingress from the Use service"
   type                     = "ingress"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
-  source_security_group_id = aws_security_group.actor_ecs_service.id
+  source_security_group_id = aws_security_group.use_ecs_service.id
   lifecycle {
     create_before_destroy = true
   }
@@ -138,6 +138,23 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   provider = aws.region
 }
 
+//----------------------------------
+// Allow API to access Elasticache
+resource "aws_security_group_rule" "api_ecs_service_elasticache_ingress" {
+  description              = "Allow elasticache ingress for API service"
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 6379
+  protocol                 = "tcp"
+  security_group_id        = data.aws_security_group.brute_force_cache_service.id
+  source_security_group_id = aws_security_group.api_ecs_service.id
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  provider = aws.region
+}
+
 //--------------------------------------
 // Api ECS Service Task level config
 
@@ -147,12 +164,13 @@ resource "aws_ecs_task_definition" "api" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
+  container_definitions    = "[${local.api_fpm_stats_export}, ${local.api_web}, ${local.api_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.api_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.api_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
   provider = aws.region
 }
+
 
 //----------------
 // Permissions
@@ -193,10 +211,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      local.dynamodb_tables_arns.actor_codes_table_arn,
-      "${local.dynamodb_tables_arns.actor_codes_table_arn}/index/*",
-      local.dynamodb_tables_arns.actor_users_table_arn,
-      "${local.dynamodb_tables_arns.actor_users_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_codes_table_arn,
+      "${local.dynamodb_tables_arns.use_codes_table_arn}/index/*",
+      local.dynamodb_tables_arns.use_users_table_arn,
+      "${local.dynamodb_tables_arns.use_users_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_codes_table_arn,
       "${local.dynamodb_tables_arns.viewer_codes_table_arn}/index/*",
       local.dynamodb_tables_arns.viewer_activity_table_arn,
@@ -255,6 +273,15 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/image-request/*",
       "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
     ]
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}CloudWatchMetricsAccess"
+    effect = "Allow"
+    actions = [
+      "cloudwatch:PutMetricData",
+    ]
+    resources = ["*"]
   }
 
   provider = aws.region
@@ -333,6 +360,41 @@ locals {
       environment = []
   })
 
+  api_fpm_stats_export = jsonencode(
+    {
+      cpu       = 0,
+      essential = false,
+      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.3",
+      name      = "fpm-stats-export",
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
+          awslogs-region        = data.aws_region.current.name,
+          awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
+        }
+      },
+      environment = [
+        {
+          name  = "APPLICATION_NAME",
+          value = "api"
+        },
+        {
+          name  = "PHP_FPM_HOST",
+          value = "127.0.0.1"
+        },
+        {
+          name  = "PHP_FPM_PORT",
+          value = "9001"
+        }
+      ]
+      dependsOn = [{
+        containerName = "app"
+        condition     = "HEALTHY"
+      }]
+    }
+  )
+
   api_app = jsonencode(
     {
       cpu         = 1,
@@ -371,11 +433,11 @@ locals {
       environment = [
         {
           name  = "DYNAMODB_TABLE_ACTOR_CODES",
-          value = var.dynamodb_tables.actor_codes_table.name
+          value = var.dynamodb_tables.use_codes_table.name
         },
         {
           name  = "DYNAMODB_TABLE_ACTOR_USERS",
-          value = var.dynamodb_tables.actor_users_table.name
+          value = var.dynamodb_tables.use_users_table.name
         },
         {
           name  = "DYNAMODB_TABLE_VIEWER_CODES",
@@ -428,6 +490,22 @@ locals {
         {
           name  = "ALLOW_GOV_ONE_LOGIN",
           value = tostring(var.feature_flags.allow_gov_one_login)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_URL",
+          value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_PORT",
+          value = tostring(data.aws_elasticache_replication_group.brute_force_cache_replication_group.port)
+        },
+        {
+          name  = "LOGIN_SERIAL_CACHE_TIMEOUT",
+          value = "60"
+        },
+        {
+          name  = "API_GATEWAY_REGION",
+          value = "eu-west-1"
         }
       ]
   })

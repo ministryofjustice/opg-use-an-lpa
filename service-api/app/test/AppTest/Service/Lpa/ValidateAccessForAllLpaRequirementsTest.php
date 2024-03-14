@@ -18,7 +18,6 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
 {
     private LoggerInterface|MockObject $mockLogger;
 
-
     public function setUp(): void
     {
         $this->mockLogger = $this->createMock(LoggerInterface::class);
@@ -38,7 +37,7 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     public function throws_bad_request_exception_when_lpa_status_is_not_registered()
     {
         $lpa = [
-            'uId' => '123456789012',
+            'uId'    => '123456789012',
             'status' => 'Pending',
         ];
 
@@ -54,8 +53,8 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     public function when_allow_older_lpa_flag_on_throws_exception_when_status_is_not_registered()
     {
         $lpa = [
-            'uId' => '123456789012',
-            'status' => 'Pending',
+            'uId'              => '123456789012',
+            'status'           => 'Pending',
             'registrationDate' => '2019-08-31',
         ];
 
@@ -71,8 +70,8 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     public function when_allow_older_lpa_flag_on_throws_no_exception_when_status_is_registered()
     {
         $lpa = [
-            'uId' => '123456789012',
-            'status' => 'Registered',
+            'uId'              => '123456789012',
+            'status'           => 'Registered',
             'registrationDate' => '2019-08-31',
         ];
 

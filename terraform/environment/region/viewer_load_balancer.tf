@@ -1,3 +1,9 @@
+resource "aws_shield_application_layer_automatic_response" "viewer" {
+  count        = var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
+  resource_arn = aws_lb.viewer.arn
+  action       = "BLOCK"
+}
+
 resource "aws_lb_target_group" "viewer" {
   name                 = "${var.environment_name}-viewer"
   port                 = 80
@@ -56,7 +62,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-FS-1-2-2019-08"
 
-  certificate_arn = var.acm_certificate_arns.view
+  certificate_arn = data.aws_acm_certificate.certificate_view.arn
 
   default_action {
     target_group_arn = aws_lb_target_group.viewer.arn
@@ -68,7 +74,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 
 resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certificate" {
   listener_arn    = aws_lb_listener.viewer_loadbalancer.arn
-  certificate_arn = var.acm_certificate_arns.public_facing_view
+  certificate_arn = data.aws_acm_certificate.public_facing_certificate_view.arn
 
   provider = aws.region
 }
@@ -102,6 +108,8 @@ resource "aws_lb_listener_rule" "redirect_view_root_to_gov" {
 
 # rewrite to live service url
 resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
+  count = local.is_active_region ? 1 : 0
+
   listener_arn = aws_lb_listener.viewer_loadbalancer.arn
   priority     = 2
   action {
@@ -127,6 +135,11 @@ resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
   provider = aws.region
 }
 
+moved {
+  from = aws_lb_listener_rule.rewrite_view_to_live_service_url
+  to   = aws_lb_listener_rule.rewrite_view_to_live_service_url[0]
+}
+
 # maintenance site switching
 resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   name            = "${var.environment_name}_viewer_enable_maintenance"
@@ -134,7 +147,7 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
   value           = "false"
   description     = "values of either 'true' or 'false' only"
   allowed_pattern = "^(true|false)"
-  overwrite       = true
+
   lifecycle {
     ignore_changes = [value]
   }

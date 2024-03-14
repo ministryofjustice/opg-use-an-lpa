@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AppTest\Service\Lpa;
 
 use App\Exception\BadRequestException;
@@ -29,14 +31,14 @@ class AddLpaTest extends TestCase
 
     public function setUp(): void
     {
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy           = $this->prophesize(LoggerInterface::class);
         $this->actorCodeServiceProphecy = $this->prophesize(ActorCodeService::class);
-        $this->lpaAlreadyAddedProphecy = $this->prophesize(LpaAlreadyAdded::class);
+        $this->lpaAlreadyAddedProphecy  = $this->prophesize(LpaAlreadyAdded::class);
 
         $this->actorCode = '4UAL33PEQNAY';
-        $this->userId = '12345';
-        $this->lpaUid = '700000004321';
-        $this->dob = '1975-10-05';
+        $this->userId    = '12345';
+        $this->lpaUid    = '700000004321';
+        $this->dob       = '1975-10-05';
     }
 
     private function addLpa(): AddLpa
@@ -59,8 +61,8 @@ class AddLpaTest extends TestCase
             $this->addLpa()->validateAddLpaData(
                 [
                 'actor-code' => $this->actorCode,
-                'uid' => $this->lpaUid,
-                'dob' => $this->dob
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
                 ],
                 $this->userId
             );
@@ -79,9 +81,9 @@ class AddLpaTest extends TestCase
     {
         $expectedResponse = [
             'some' => 'other data',
-            'lpa' => [
-                'status' => 'Registered'
-            ]
+            'lpa'  => [
+                'status' => 'Registered',
+            ],
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -89,7 +91,7 @@ class AddLpaTest extends TestCase
             ->willReturn(
                 [
                     'lpaAddedData' => 'data',
-                    'notActivated' => true
+                    'notActivated' => true,
                 ]
             );
 
@@ -100,8 +102,8 @@ class AddLpaTest extends TestCase
         $lpaData = $this->addLpa()->validateAddLpaData(
             [
                 'actor-code' => $this->actorCode,
-                'uid' => $this->lpaUid,
-                'dob' => $this->dob
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
             ],
             $this->userId
         );
@@ -124,8 +126,8 @@ class AddLpaTest extends TestCase
             $this->addLpa()->validateAddLpaData(
                 [
                     'actor-code' => $this->actorCode,
-                    'uid' => $this->lpaUid,
-                    'dob' => $this->dob
+                    'uid'        => $this->lpaUid,
+                    'dob'        => $this->dob,
                 ],
                 $this->userId
             );
@@ -150,8 +152,8 @@ class AddLpaTest extends TestCase
             ->willReturn(
                 [
                     'lpa' => [
-                        'status' => 'Cancelled'
-                    ]
+                        'status' => 'Cancelled',
+                    ],
                 ]
             );
 
@@ -159,8 +161,8 @@ class AddLpaTest extends TestCase
             $this->addLpa()->validateAddLpaData(
                 [
                     'actor-code' => $this->actorCode,
-                    'uid' => $this->lpaUid,
-                    'dob' => $this->dob
+                    'uid'        => $this->lpaUid,
+                    'dob'        => $this->dob,
                 ],
                 $this->userId
             );
@@ -178,9 +180,9 @@ class AddLpaTest extends TestCase
     {
         $expectedResponse = [
             'some' => 'other data',
-            'lpa' => [
-                'status' => 'Registered'
-            ]
+            'lpa'  => [
+                'status' => 'Registered',
+            ],
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -194,8 +196,8 @@ class AddLpaTest extends TestCase
         $lpaData = $this->addLpa()->validateAddLpaData(
             [
                     'actor-code' => $this->actorCode,
-                    'uid' => $this->lpaUid,
-                    'dob' => $this->dob
+                    'uid'        => $this->lpaUid,
+                    'dob'        => $this->dob,
             ],
             $this->userId
         );

@@ -8,7 +8,7 @@
         {% if actorToken != 'null' %}
             {% set backLink = path('lpa.view', {}, {'lpa': actorToken}) %}
         {% else %}
-            {% set backLink = path('your-details') %}
+            {% set backLink = path('settings') %}
         {% endif %}
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ backLink }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
