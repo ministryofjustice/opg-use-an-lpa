@@ -78,7 +78,11 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
                 ($lpaData->lpa->getApplicationHasRestrictions() ?? false)
             )
         ) {
-            $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken);
+            try {
+                $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken);
+            } catch (\Exception) {
+//                maybe return a flag to say whether it should have returned images
+            }
         }
 
         return new HtmlResponse(

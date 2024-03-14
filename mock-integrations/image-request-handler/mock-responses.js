@@ -1,11 +1,16 @@
 var lpa = "lpa" + context.request.pathParams.uid.slice(-4);
 
 switch (lpa) {
-    case 'lpa0138':
     case 'lpa6361':
     case 'lpa7237':
     case 'lpa0252':
         respond().withExampleName(lpa);
+        break;
+    case 'lpa0138':
+        respond()
+            .withStatusCode(500)
+            .withFile("responses/lpa0138.json").template()
+            .usingDefaultBehaviour();
         break;
     case 'lpa0344':
         var lpaStore = stores.open('lpa0344');

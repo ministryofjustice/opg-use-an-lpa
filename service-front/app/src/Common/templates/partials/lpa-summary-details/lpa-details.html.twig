@@ -101,6 +101,8 @@
                         {% if lpa.applicationHasGuidance %}
                             {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                                 {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                            {% elseif feature_enabled("instructions_and_preferences") %}
+                                {% trans %}Sorry{% endtrans %}
                             {% else %}
                                 {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
                                 <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
