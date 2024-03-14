@@ -8,7 +8,11 @@ use Aws\Ssm\SsmClient;
 
 class SystemMessage
 {
-    // TODO add 'environment' prefix?
+    /**
+     * TODO add 'environment' prefix?
+     *
+     * @var string[] List of parameter names.
+     */
     private static array $PARAMETER_NAMES = [
         '/system-message/use/en',
         '/system-message/use/cy',
