@@ -49,7 +49,6 @@ variable "environments" {
       create_dashboard                          = bool
       google_analytics_id_use                   = string
       google_analytics_id_view                  = string
-      gov_uk_onelogin_client_id_secret_name     = string
       have_a_backup_plan                        = bool
       is_production                             = bool
       log_retention_in_days                     = number

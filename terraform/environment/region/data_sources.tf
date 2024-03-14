@@ -116,12 +116,6 @@ data "aws_secretsmanager_secret" "notify_api_key" {
   provider = aws.region
 }
 
-data "aws_secretsmanager_secret" "gov_uk_onelogin_client_id" {
-  name = var.gov_uk_onelogin_client_id_secret_name
-
-  provider = aws.region
-}
-
 data "aws_ip_ranges" "route53_healthchecks" {
   services = ["route53_healthchecks"]
   regions  = ["GLOBAL"]
