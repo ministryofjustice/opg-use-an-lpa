@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Http\Adapter\Guzzle6\Client;
-use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
+use Http\Adapter\Guzzle7\Client;
+use BehatTest\Http\Adapter\Guzzle7\TestClientFactory;
 use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
 use Laminas\ConfigAggregator\ConfigAggregator;

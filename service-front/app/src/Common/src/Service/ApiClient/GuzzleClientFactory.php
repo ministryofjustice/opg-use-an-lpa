@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\ApiClient;
 
-use Http\Adapter\Guzzle6\Client as GuzzleClient;
+use Http\Adapter\Guzzle7\Client as GuzzleClient;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
