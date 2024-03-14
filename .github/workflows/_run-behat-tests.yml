@@ -86,7 +86,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # pin@v3.1.0
+        uses: actions/upload-artifact@v3 # pin@v3.1.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots

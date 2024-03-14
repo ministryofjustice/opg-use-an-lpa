@@ -33,7 +33,7 @@ jobs:
           cd service-front/web/
           npm run build
       - name: archive dist
-        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # pin@v3.1.0
+        uses: actions/upload-artifact@v3 # pin@v3.1.0
         with:
           name: dist-web
           path: service-front/web/dist/
