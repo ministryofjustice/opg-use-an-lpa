@@ -44,9 +44,9 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.4
         id: semver_tag
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           with_v: true
           default_bump: minor
+          prerelease: false
 
   terraform_lint:
     name: lint terraform code
