@@ -28,7 +28,7 @@ jobs:
         uses: browser-actions/setup-chrome@latest # pin@NoVersions
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@546935924a613ee54dad399fc717770ac1f3f34d # pin@v2.21.2
+        uses: shivammathur/setup-php@48e0de2ea6fe020804fef2c54f7730e83c24e30d # pin@v2.21.2
         with:
           php-version: 8.1
 
