@@ -28,7 +28,7 @@ jobs:
         uses: browser-actions/setup-chrome@latest # pin@NoVersions
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@546935924a613ee54dad399fc717770ac1f3f34d # pin@v2.21.2
+        uses: shivammathur/setup-php@48e0de2ea6fe020804fef2c54f7730e83c24e30d # pin@v2.21.2
         with:
           php-version: 8.1
 
@@ -45,7 +45,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
+        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
         with:
           name: environment_config_file
           path: terraform/environment
@@ -86,7 +86,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # pin@v3.1.0
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # pin@v3.1.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
