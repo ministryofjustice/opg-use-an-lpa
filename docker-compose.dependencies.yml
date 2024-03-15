@@ -100,7 +100,6 @@ services:
       - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
-      - ./mock-integrations/secrets-manager/onelogin_mock_public_key.pem:/onelogin_mock_public_key.pem
 
   mock-one-login:
     container_name: mock-one-login
