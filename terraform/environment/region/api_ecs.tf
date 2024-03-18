@@ -429,7 +429,12 @@ locals {
         {
           name      = "NOTIFY_API_KEY",
           valueFrom = data.aws_secretsmanager_secret.notify_api_key.arn
-      }],
+        },
+        {
+          name      = "ONE_LOGIN_CLIENT_ID"
+          valueFrom = data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
+        }
+      ],
       environment = [
         {
           name  = "DYNAMODB_TABLE_ACTOR_CODES",

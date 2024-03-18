@@ -33,7 +33,10 @@ data "aws_iam_policy_document" "execution_role" {
   statement {
     effect = "Allow"
 
-    resources = [data.aws_secretsmanager_secret.notify_api_key.arn]
+    resources = [
+      data.aws_secretsmanager_secret.notify_api_key.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
+    ]
 
     actions = [
       "secretsmanager:GetSecretValue",

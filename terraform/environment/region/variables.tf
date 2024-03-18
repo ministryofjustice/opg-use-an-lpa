@@ -110,6 +110,11 @@ variable "google_analytics_id_view" {
   type        = string
 }
 
+variable "gov_uk_onelogin_client_id_secret_name" {
+  description = "The the name of the secret containing the OneLogin client id"
+  type        = string
+}
+
 variable "iap_images_endpoint" {
   description = "The endpoint to use for IAP images."
   type        = string
