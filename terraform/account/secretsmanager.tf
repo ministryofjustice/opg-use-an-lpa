@@ -28,6 +28,16 @@ resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_identity_public_ke
   secret_string = trimspace(tls_private_key.onelogin_auth_pk.public_key_pem)
 }
 
+resource "aws_secretsmanager_secret" "gov_uk_onelogin_client_id" {
+  name       = "gov-uk-onelogin-client-id"
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
+}
+
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"
   kms_key_id = module.secrets_manager_mrk.key_id
