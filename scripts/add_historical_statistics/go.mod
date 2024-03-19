@@ -1,6 +1,8 @@
 module get_backdated_statistics
 
-go 1.18
+go 1.22
+
+toolchain go1.22.1
 
 require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.13.43
@@ -25,5 +27,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.37 // indirect
 	github.com/aws/smithy-go v1.15.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/ministryofjustice/opg-go-common v0.0.0-20231009133357-1f236d604316
+	github.com/ministryofjustice/opg-go-common v0.0.0-20240227144553-d506200e53d5
 )
