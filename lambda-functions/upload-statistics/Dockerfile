@@ -1,27 +1,9 @@
-# Define function directory
-ARG FUNCTION_DIR="/function"
+FROM public.ecr.aws/lambda/python:3.12
 
-FROM python:3.11-slim
-
-RUN apt --assume-yes update && apt --assume-yes upgrade && apt --assume-yes install gcc python3-dev 
-
-ARG FUNCTION_DIR
-
-WORKDIR ${FUNCTION_DIR}
-
-RUN mkdir -p ${FUNCTION_DIR}
-
-COPY app ${FUNCTION_DIR}/app
+COPY app ${LAMBDA_TASK_ROOT}
 
 COPY requirements.txt requirements.txt
 
-RUN python -m pip install --upgrade pip
-RUN python -m pip install \
-        --target ${FUNCTION_DIR} \
-        --requirement requirements.txt
+RUN pip install --requirement requirements.txt
 
-# Uninstall installation packages
-RUN pip uninstall -y wheel setuptools
-
-ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD [ "app.upload-statistics.lambda_handler" ]
+CMD [ "upload_statistics.lambda_handler" ]

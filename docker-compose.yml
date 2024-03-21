@@ -279,7 +279,6 @@ services:
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
-    entrypoint: /aws-lambda/aws-lambda-rie /usr/local/bin/python -m awslambdaric app.upload-statistics.lambda_handler
 
   proxy:
     container_name: proxy
