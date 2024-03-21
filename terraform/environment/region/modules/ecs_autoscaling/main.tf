@@ -77,7 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
       metric_name = "CPUUtilization"
       namespace   = "AWS/ECS"
       period      = "60"
-      stat        = "Average"
+      stat        = "Maximum"
 
       dimensions = {
         ServiceName = var.aws_ecs_service_name
@@ -145,7 +145,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
       metric_name = "CPUUtilization"
       namespace   = "AWS/ECS"
       period      = "60"
-      stat        = "Average"
+      stat        = "Maximum"
 
       dimensions = {
         ServiceName = var.aws_ecs_service_name
