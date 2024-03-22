@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace BehatTest\Http\Adapter\Guzzle6;
+namespace BehatTest\Http\Adapter\Guzzle7;
 
 use GuzzleHttp\Client;
-use Http\Adapter\Guzzle6\Client as ClientAdapter;
+use Http\Adapter\Guzzle7\Client as ClientAdapter;
 use Psr\Container\ContainerInterface;
 
 class TestClientFactory

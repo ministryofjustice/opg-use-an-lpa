@@ -67,7 +67,7 @@
         "mezzio/mezzio-twigrenderer": "^2.3",
         "nesbot/carbon": "^2.56.0",
         "paragonie/halite": "^5.0",
-        "php-http/guzzle6-adapter": "^2.0"
+        "php-http/guzzle7-adapter": "^1.0"
     },
     "require-dev": {
         "behat/behat": "^3.6",

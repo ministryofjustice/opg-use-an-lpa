@@ -16,7 +16,7 @@ use Gettext\Generator\GeneratorInterface;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\LoaderInterface;
 use Gettext\Loader\PoLoader;
-use Http\Adapter\Guzzle6\Client;
+use Http\Adapter\Guzzle7\Client;
 use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
