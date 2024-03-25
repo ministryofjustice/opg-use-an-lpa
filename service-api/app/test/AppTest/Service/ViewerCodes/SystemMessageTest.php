@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service;
 
-use App\Service\SystemMessage;
+use App\Service\SystemMessage\SystemMessage;
 use Aws\Ssm\SsmClient;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;

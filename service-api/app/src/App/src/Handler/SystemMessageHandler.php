@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Exception\BadRequestException;
-use App\Service\SystemMessage;
-use App\Service\User\UserService;
-use Exception;
+use App\Service\SystemMessage\SystemMessage;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\Handler\SystemMessageHandler;
-use App\Service\SystemMessage;
+use App\Service\SystemMessage\SystemMessage;
+use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use Laminas\Diactoros\Response\JsonResponse;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class SystemMessageHandlerTest extends TestCase
 {
