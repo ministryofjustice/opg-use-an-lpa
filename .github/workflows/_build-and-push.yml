@@ -138,6 +138,7 @@ jobs:
             go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
           elif [ ${SVC_PREFIX} == 'stats_upload' ]; then
             mkdir -p build/service-${SVC_PREFIX}
+            pip install -r lambda-functions/upload-statistics/requirements-tests.txt
             cd lambda-functions/upload-statistics/app
             python -m unittest -v
           else
