@@ -39,7 +39,7 @@ return [
             'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
         ],
         'Ssm' => [
-            'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
+            'endpoint' => getenv('AWS_ENDPOINT_SSM') ?: null,
         ]
     ],
 
