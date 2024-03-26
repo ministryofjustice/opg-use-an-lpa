@@ -67,7 +67,7 @@ jobs:
           - svc_prefix: 'stats_upload'
             svc_suffix: 'lambda'
             build_development_docker: 'false'
-            run_unit_tests: 'false'
+            run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
@@ -136,6 +136,10 @@ jobs:
             mkdir -p build/service-${SVC_PREFIX}
             cd service-${SVC_PREFIX}/
             go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
+          elif [ ${SVC_PREFIX} == 'stats_upload' ]; then
+            mkdir -p build/service-${SVC_PREFIX}
+            cd lambda-functions/upload-statistics/app
+            python -m unittest -v
           else
             docker run -d --name tests ${SVC_PREFIX}-app:latest
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
