@@ -28,7 +28,7 @@ class SSMClientFactoryTest extends TestCase
         parent::setUp();
 
         $this->container = $this->createMock(ContainerInterface::class);
-        $this->factory = new SSMClientFactory();
+        $this->factory   = new SSMClientFactory();
     }
 
     /**
@@ -45,7 +45,7 @@ class SSMClientFactoryTest extends TestCase
      */
     public function testInvokeReturnsSsmClient(): void
     {
-        $sdk = $this->createMock(Sdk::class);
+        $sdk       = $this->createMock(Sdk::class);
         $ssmClient = $this->createMock(SsmClient::class);
 
         $sdk->expects($this->once())
