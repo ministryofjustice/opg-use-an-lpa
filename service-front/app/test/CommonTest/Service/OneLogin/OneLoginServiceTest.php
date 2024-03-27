@@ -101,12 +101,15 @@ class OneLoginServiceTest extends TestCase
                     'auth_session' => $authCredentials,
                 ]
             )->willReturn([
-                'Id'         => 'fake-id',
-                'Identity'   => 'fake-sub-identity',
-                'Email'      => 'fake@email.com',
-                'LastLogin'  => $lastLogin,
-                'Birthday'   => '1990-01-01',
-                'NeedsReset' => false,
+                'user'  => [
+                    'Id'         => 'fake-id',
+                    'Identity'   => 'fake-sub-identity',
+                    'Email'      => 'fake@email.com',
+                    'LastLogin'  => $lastLogin,
+                    'Birthday'   => '1990-01-01',
+                    'NeedsReset' => false,
+                ],
+                'token' => 'large_login_token',
             ]);
 
         $oneLoginService = new OneLoginService(
@@ -122,5 +125,33 @@ class OneLoginServiceTest extends TestCase
         $this->assertEquals('fake@email.com', $response->getDetail('email'));
         $this->assertEquals('fake-sub-identity', $response->getDetail('subject'));
         $this->assertEquals(false, $response->getDetail('NeedsReset'));
+    }
+
+    /** @test */
+    public function can_get_logout_request_uri(): void
+    {
+        $redirect = 'FAKE_REDIRECT';
+
+        $userProphecy = $this->prophesize(User::class);
+        $userProphecy->jsonSerialize()
+            ->willReturn([]);
+
+        $apiClientProphecy = $this->prophesize(ApiClient::class);
+        $apiClientProphecy
+            ->httpPut(
+                '/v1/auth/logout',
+                [
+                    'user' => $userProphecy->reveal(),
+                ]
+            )->willReturn(['redirect_uri' => $redirect]);
+
+        $oneLoginService = new OneLoginService(
+            $apiClientProphecy->reveal(),
+            $this->userFactoryCallable,
+            $this->logger->reveal()
+        );
+
+        $response = $oneLoginService->logout($userProphecy->reveal());
+        $this->assertEquals($redirect, $response);
     }
 }

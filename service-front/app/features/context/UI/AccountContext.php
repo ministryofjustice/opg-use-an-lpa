@@ -8,15 +8,12 @@ use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
+use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use DateTimeInterface;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
-use Psr\Http\Message\RequestInterface;
-
-use function PHPUnit\Framework\assertArrayHasKey;
 
 /**
  * @property string userEmail
@@ -49,7 +46,8 @@ class AccountContext implements Context
     private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
     private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
     private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
-    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES   = 'ViewerCodeService::getShareCodes';
+    private const ONE_LOGIN_SERVICE_LOGOUT             = 'OneLoginService::logout';
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
 
 
     /**
@@ -162,10 +160,31 @@ class AccountContext implements Context
      */
     public function iAmCurrentlySignedIn(): void
     {
-        // do all the steps to sign in
-        $this->iAccessTheLoginForm();
-        $this->iEnterCorrectCredentials();
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->iHaveLoggedInToOneLogin('English');
+            $this->iHaveAMatchingLocalAccount();
+        } else {
+            // do all the steps to sign in
+            $this->iAccessTheLoginForm();
+            $this->iEnterCorrectCredentials();
+        }
+
         $this->iAmSignedIn();
+    }
+
+    /**
+     * @Then /^I am directed to logout of one login$/
+     */
+    public function iAmDirectedToLogoutOfOneLogin()
+    {
+        $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
+        assert::assertTrue(isset($locationHeader));
+        $this->ui->assertResponseStatus(302);
+
+        assert::assertStringContainsString(
+            'http://fake.url/logout?id_token_hint=token',
+            $locationHeader,
+        );
     }
 
     /**
@@ -371,8 +390,16 @@ class AccountContext implements Context
     {
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
         assert::assertTrue(isset($locationHeader));
-        assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
         $this->ui->assertResponseStatus(302);
+
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            assert::assertStringContainsString(
+                'post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+                $locationHeader,
+            );
+        } else {
+            assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
+        }
     }
 
     /**
@@ -1425,6 +1452,22 @@ class AccountContext implements Context
      */
     public function iLogoutOfTheApplication(): void
     {
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'redirect_uri' => 'http://fake.url/logout'
+                                . '?id_token_hint=token'
+                                . '&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+                        ]
+                    ),
+                    self::ONE_LOGIN_SERVICE_LOGOUT
+                )
+            );
+        }
+
         //We cannot follow redirects to external links, returns page not found
         $this->iDoNotFollowRedirects();
         $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
@@ -2098,6 +2141,8 @@ class AccountContext implements Context
      */
     public function iHaveLoggedInToOneLogin($language): void
     {
+        $this->userEmail = 'test@test.com';
+
         $this->iAmOnTheOneLoginPage();
         $this->language = $language === 'English' ? 'en' : 'cy';
         if ($this->language === 'cy') {
@@ -2160,12 +2205,14 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-                        'Identity'  => 'fakeSub',
-                        'Email'     => 'fake@email.com',
-                        'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
-                        'Birthday'  => '01-01-1990',
-                    ]
+                        'user'  => [
+                            'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                            'Identity'  => 'fakeSub',
+                            'Email'     => $this->userEmail,
+                            'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        ],
+                        'token' => 'users_login_token',
+                    ],
                 ),
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
@@ -2240,11 +2287,14 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-                        'Identity'  => 'fakeSub',
-                        'Email'     => 'fake@email.com',
-                        'Birthday'  => '01-01-1990',
-                    ]
+                        'user'  => [
+                            'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                            'Identity'  => 'fakeSub',
+                            'Email'     => 'fake@email.com',
+                            'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        ],
+                        'token' => 'users_login_token',
+                    ],
                 ),
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
