@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service;
+namespace Service\SystemMessage;
 
 use App\Service\SystemMessage\SystemMessage;
 use Aws\Ssm\SsmClient;
