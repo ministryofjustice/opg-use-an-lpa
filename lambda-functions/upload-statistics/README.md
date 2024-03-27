@@ -47,4 +47,4 @@ Choose the required lambda and click test in the test tab.
 
 New metrics will be included automatically. However if the format of the metric either has dimensions or it is named in
 an irregular way with spaces then it may cause the process to fail. In that case you can add the name of the metric
-to the ignore list in the `upload-statistics.py` file.
+to the ignore list in the `upload_statistics.py` file.
