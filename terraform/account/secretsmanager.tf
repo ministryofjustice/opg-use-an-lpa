@@ -38,6 +38,18 @@ resource "aws_secretsmanager_secret" "gov_uk_onelogin_client_id" {
   }
 }
 
+resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_client_id" {
+  secret_id     = aws_secretsmanager_secret.gov_uk_onelogin_client_id.id
+  secret_string = "DEFAULT"
+
+  lifecycle {
+    ignore_changes = [
+      secret_string,
+    ]
+  }
+}
+
+
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"
   kms_key_id = module.secrets_manager_mrk.key_id
