@@ -1292,4 +1292,18 @@ class AccountContext implements Context
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
+
+    /**
+     * @When I view a page and the system message is set
+     */
+    public function iViewAPageAndTheSystemMessageIsSet(): void
+    {
+    }
+
+    /**
+     * @Then I see the system message
+     */
+    public function iSeeTheSystemMessage(): void
+    {
+    }
 }
