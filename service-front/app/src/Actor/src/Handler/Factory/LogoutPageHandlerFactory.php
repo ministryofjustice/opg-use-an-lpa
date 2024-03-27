@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Actor\Handler\Factory;
 
 use Actor\Handler\LogoutPageHandler;
-use Common\Service\Authentication\LocalAccountLogout;
 use Common\Service\Features\FeatureEnabled;
+use Common\Service\Authentication\LocalAccountLogout;
 use Common\Service\OneLogin\OneLoginService;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -16,14 +16,10 @@ use Psr\Log\LoggerInterface;
 
 class LogoutPageHandlerFactory
 {
-    public function __construct(private FeatureEnabled $featureEnabled)
-    {
-    }
-
     public function __invoke(ContainerInterface $container): LogoutPageHandler
     {
         $logoutStrategy = $container->get(
-            ($this->featureEnabled)('allow_gov_one_login')
+            ($container->get(FeatureEnabled::class))('allow_gov_one_login')
                 ? OneLoginService::class
                 : LocalAccountLogout::class,
         );
