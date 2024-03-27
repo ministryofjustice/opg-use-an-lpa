@@ -9,7 +9,9 @@ use Actor\Handler\CheckLpaHandler;
 use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
 use Actor\Handler\Factory\CheckLpaHandlerFactory;
 use Actor\Handler\Factory\LoginPageHandlerFactory;
+use Actor\Handler\Factory\LogoutPageHandlerFactory;
 use Actor\Handler\LoginPageHandler;
+use Actor\Handler\LogoutPageHandler;
 
 /**
  * The configuration provider for the Actor module
@@ -43,6 +45,7 @@ class ConfigProvider
             'factories' => [
                 CheckLpaHandler::class          => CheckLpaHandlerFactory::class,
                 LoginPageHandler::class         => LoginPageHandlerFactory::class,
+                LogoutPageHandler::class        => LogoutPageHandlerFactory::class,
                 ActorSessionCheckHandler::class => ActorSessionCheckHandlerFactory::class,
             ],
         ];

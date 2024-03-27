@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler;
 
+use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\LoggerAware;
 use Common\Handler\SessionAware;
@@ -11,7 +12,6 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
-use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -38,6 +38,10 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
+    /**
+     * @throws ApiException
+     * @throws RuntimeException
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $authParams = $request->getQueryParams();
@@ -71,16 +75,18 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
 
         $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
 
-        if (! is_null($user)) {
-            $session->set(UserInterface::class, [
-                'username' => $user->getIdentity(),
-                'roles'    => $user->getRoles(),
-                'details'  => $user->getDetails(),
-            ]);
-            $session->regenerate();
-            return $this->redirectToRoute('lpa.dashboard', [], [], $ui_locale === 'cy' ? $ui_locale : null);
-        }
+        $session->set(UserInterface::class, [
+            'username' => $user->getIdentity(),
+            'roles'    => $user->getRoles(),
+            'details'  => $user->getDetails(),
+        ]);
+        $session->regenerate();
 
-        return new HtmlResponse('<h1>User not found</h1>');
+        return $this->redirectToRoute(
+            'lpa.dashboard',
+            [],
+            [],
+            $ui_locale === 'cy' ? $ui_locale : null
+        );
     }
 }

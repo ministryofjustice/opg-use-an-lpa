@@ -11,6 +11,7 @@ use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Authentication\LogoutStrategy;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
@@ -34,6 +35,7 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
         UrlHelper $urlHelper,
         AuthenticationInterface $authentication,
         LoggerInterface $logger,
+        private LogoutStrategy $logoutStrategy,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -50,6 +52,10 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
         $session?->unset(UserInterface::class);
         $session?->regenerate();
 
+        if ($user !== null) {
+            $redirectUrl = $this->logoutStrategy->logout($user);
+        }
+
         $this->getLogger()->info(
             'Account with Id {id} has logged out of the service',
             [
@@ -57,6 +63,6 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
             ]
         );
 
-        return new RedirectResponse('https://www.gov.uk/done/use-lasting-power-of-attorney');
+        return new RedirectResponse($redirectUrl ?? $this->urlHelper->generate('home'));
     }
 }
