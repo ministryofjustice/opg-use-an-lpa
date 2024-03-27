@@ -48,7 +48,7 @@ class Client
      * @return array
      * @throws ApiException
      */
-    public function httpGet(string $path, array $query = []): ?array
+    public function httpGet(string $path, array $query = []): array
     {
         $url = new Uri($this->apiBaseUri . $path);
 
