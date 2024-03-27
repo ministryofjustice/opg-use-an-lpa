@@ -33,7 +33,7 @@ class SystemMessageTest extends TestCase
      * @throws ExpectationFailedException
      * @throws IncompatibleReturnValueException
      */
-    public function it_returns_system_messages(): void
+    public function testReturnsSystemMessages(): void
     {
         $mockResponse = [
             'Parameters' => [
