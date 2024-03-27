@@ -46,6 +46,7 @@ resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_client_id" {
     ignore_changes = [
       secret_string,
     ]
+  }
 }
 
 
