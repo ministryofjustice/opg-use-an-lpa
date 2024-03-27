@@ -105,6 +105,10 @@ class OneLoginService implements LogoutStrategy
             ]
         );
 
+//        $logoutData = [
+//            'redirect_uri' => 'http://localhost:4013/logout?id_token_hint=token&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+//        ];
+
         return $logoutData['redirect_uri'];
     }
 }
