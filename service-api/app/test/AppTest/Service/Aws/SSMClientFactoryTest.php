@@ -14,20 +14,20 @@ use PHPUnit\Framework\MockObject\MethodNameAlreadyConfiguredException;
 use PHPUnit\Framework\MockObject\MethodNameNotConfiguredException;
 use PHPUnit\Framework\MockObject\MethodParametersAlreadyConfiguredException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class SSMClientFactoryTest extends TestCase
 {
-    private ContainerInterface $container;
+    use ProphecyTrait;
     private SSMClientFactory $factory;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->container = $this->createMock(ContainerInterface::class);
         $this->factory   = new SSMClientFactory();
     }
 
@@ -45,20 +45,16 @@ class SSMClientFactoryTest extends TestCase
      */
     public function testInvokeReturnsSsmClient(): void
     {
-        $sdk       = $this->createMock(Sdk::class);
-        $ssmClient = $this->createMock(SsmClient::class);
+        $sdkProphecy = $this->prophesize(Sdk::class);
+        $sdkProphecy->createSsm()
+            ->willReturn($this->prophesize(SsmClient::class)->reveal());
 
-        $sdk->expects($this->once())
-            ->method('createClient')
-            ->with('Ssm')
-            ->willReturn($ssmClient);
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $this->container->expects($this->once())
-            ->method('get')
-            ->with(Sdk::class)
-            ->willReturn($sdk);
+        $containerProphecy->get(Sdk::class)
+            ->willReturn($sdkProphecy->reveal());
 
-        $result = ($this->factory)($this->container);
+        $result = ($this->factory)($containerProphecy->reveal());
 
         $this->assertInstanceOf(SsmClient::class, $result);
     }
