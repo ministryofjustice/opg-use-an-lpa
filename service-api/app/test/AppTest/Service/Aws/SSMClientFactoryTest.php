@@ -29,7 +29,7 @@ class SSMClientFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->factory   = new SSMClientFactory();
+        $this->factory = new SSMClientFactory();
     }
 
     /**
