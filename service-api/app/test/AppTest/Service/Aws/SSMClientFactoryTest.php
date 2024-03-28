@@ -22,6 +22,7 @@ use Psr\Container\NotFoundExceptionInterface;
 class SSMClientFactoryTest extends TestCase
 {
     use ProphecyTrait;
+
     private SSMClientFactory $factory;
 
     protected function setUp(): void

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Aws;
 
 use Aws\Sdk;
+use Aws\Ssm\SsmClient;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -18,7 +19,7 @@ class SSMClientFactory
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): SsmClient
     {
         return $container->get(Sdk::class)->createSsm();
     }
