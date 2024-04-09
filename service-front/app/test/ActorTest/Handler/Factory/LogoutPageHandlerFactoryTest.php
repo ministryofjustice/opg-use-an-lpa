@@ -62,12 +62,11 @@ class LogoutPageHandlerFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider featureFlagStrategies
-     *
      * @psalm-param class-string<LogoutStrategy> $strategyClass
      */
     public function it_creates_an_appropriate_logout_page_handler(
         bool $allowGovOneLogin,
-        string $strategyClass
+        string $strategyClass,
     ): void {
         $featureProphecy = $this->prophesize(FeatureEnabled::class);
         $featureProphecy
