@@ -6,6 +6,7 @@ namespace ActorTest\Handler\Factory;
 
 use Actor\Handler\Factory\LogoutPageHandlerFactory;
 use Common\Service\Authentication\LocalAccountLogout;
+use Common\Service\Authentication\LogoutStrategy;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\OneLogin\OneLoginService;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -51,7 +52,7 @@ class LogoutPageHandlerFactoryTest extends TestCase
                 false,
                 LocalAccountLogout::class,
             ],
-            'one-login enabled' => [
+            'one-login enabled'  => [
                 true,
                 OneLoginService::class,
             ],
@@ -61,13 +62,17 @@ class LogoutPageHandlerFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider featureFlagStrategies
+     *
+     * @psalm-param class-string<LogoutStrategy> $strategyClass
      */
-    public function it_creates_an_appropriate_logout_page_handler(bool $allow_gov_one_login, string $strategyClass): void
-    {
+    public function it_creates_an_appropriate_logout_page_handler(
+        bool $allowGovOneLogin,
+        string $strategyClass
+    ): void {
         $featureProphecy = $this->prophesize(FeatureEnabled::class);
         $featureProphecy
             ->__invoke('allow_gov_one_login')
-            ->willReturn($allow_gov_one_login);
+            ->willReturn($allowGovOneLogin);
 
         $this->container
             ->get($strategyClass)
@@ -84,5 +89,4 @@ class LogoutPageHandlerFactoryTest extends TestCase
 
         ($factory)($this->container->reveal());
     }
-
 }

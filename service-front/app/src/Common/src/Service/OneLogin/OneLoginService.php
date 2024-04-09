@@ -98,16 +98,20 @@ class OneLoginService implements LogoutStrategy
 
     public function logout(UserInterface $user): ?string
     {
+        /**
+         * To complete OneLogin logout process, would like something like:
+         * https://host/logout?id_token_hint=TOKEN&post_logout_redirect_uri=USERS_FINAL_URL
+         *
+         * @var array{
+         *     redirect_uri: string
+         * }
+         */
         $logoutData = $this->apiClient->httpPut(
             '/v1/auth/logout',
             [
                 'user' => $user,
             ]
         );
-
-//        $logoutData = [
-//            'redirect_uri' => 'http://localhost:4013/logout?id_token_hint=token&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
-//        ];
 
         return $logoutData['redirect_uri'];
     }
