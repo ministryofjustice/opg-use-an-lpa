@@ -35,7 +35,7 @@ class UserTest extends TestCase
         ]);
 
         $this->assertIsArray($user->getDetails());
-        $this->assertCount(4, $user->getDetails());
+        $this->assertCount(5, $user->getDetails());
         $this->assertArrayHasKey('LastLogin', $user->getDetails());
         $this->assertArrayHasKey('NeedsReset', $user->getDetails());
         $this->assertArrayHasKey('Subject', $user->getDetails());
