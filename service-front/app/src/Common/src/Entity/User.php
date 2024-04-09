@@ -82,7 +82,7 @@ class User implements UserInterface, JsonSerializable
      *
      * @return array{
      *     Email: string,
-     *     LastLogin: ?array,
+     *     LastLogin: ?DateTimeInterface,
      *     NeedsReset: bool,
      *     Subject?: string,
      *     IdToken?: string,
