@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\ActorCodes;
+namespace AppTest\Service\ActorCodes;
 
 use App\DataAccess\ApiGateway\ActorCodes as ActorCodesApi;
-use App\DataAccess\Repository\ActorCodesInterface;
+use App\Service\ActorCodes\CodeValidationStrategyFactory;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
-use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
-use PHPUnit\Framework\IncompleteTestError;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -21,7 +19,7 @@ class CodeValidationStrategyFactoryTest extends TestCase
     use ProphecyTrait;
 
     /** @test */
-    public function it_creates_a_codes_api_strategy_otherwise(): void
+    public function it_creates_a_codes_api_strategy(): void
     {
         $container = $this->prophesize(ContainerInterface::class);
 
@@ -46,11 +44,5 @@ class CodeValidationStrategyFactoryTest extends TestCase
         $strategy = $factory($container->reveal());
 
         $this->assertInstanceOf(CodesApiValidationStrategy::class, $strategy);
-    }
-
-    /** @test */
-    public function it_creates_a_code_api_strategy(): void
-    {
-        throw new IncompleteTestError();
     }
 }

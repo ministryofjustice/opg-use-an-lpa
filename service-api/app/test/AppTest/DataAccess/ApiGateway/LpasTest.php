@@ -154,19 +154,16 @@ class LpasTest extends TestCase
             });
 
         /** @var MockObject|Response $dDBMock */
-        $responseMock = $this->getMockBuilder(Response::class)
-            ->setMethods(['getStatusCode'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $responseMock = $this->createMock(Response::class);
 
         $responseMock
             ->expects($this->exactly(3))
             ->method('getStatusCode')
             ->withAnyParameters()
             ->willReturnOnConsecutiveCalls(
-                $this->returnValue(StatusCodeInterface::STATUS_NO_CONTENT),
-                $this->returnValue(StatusCodeInterface::STATUS_OK),
-                $this->returnValue(StatusCodeInterface::STATUS_OK)
+                StatusCodeInterface::STATUS_NO_CONTENT,
+                StatusCodeInterface::STATUS_OK,
+                StatusCodeInterface::STATUS_OK,
             );
 
         $this->httpClientProphecy

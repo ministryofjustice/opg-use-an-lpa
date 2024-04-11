@@ -293,15 +293,12 @@ class UserLpaActorMapTest extends TestCase
     public function add_conflicting_code(): void
     {
         /** @var MockObject|DynamoDbClient $dDBMock */
-        $dDBMock = $this->getMockBuilder(DynamoDbClient::class)
-            ->setMethods(['putItem'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dDBMock = $this->createMock(DynamoDbClient::class);
 
         $dDBMock
             ->expects($this->exactly(2))
-            ->method('putItem')
-            ->withAnyParameters()
+            ->method('__call')
+            ->with($this->identicalTo('putItem'), $this->anything())
             ->willReturnOnConsecutiveCalls(
                 $this->throwException(
                     new DynamoDbException(
@@ -310,7 +307,7 @@ class UserLpaActorMapTest extends TestCase
                         ['code' => 'ConditionalCheckFailedException']
                     )
                 ),
-                $this->returnValue('')
+                '',
             );
 
         //---
