@@ -11,6 +11,8 @@ use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -22,7 +24,7 @@ class ActorCodesTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_validates_a_correct_code(): void
     {
         $testData = [
@@ -72,7 +74,7 @@ class ActorCodesTest extends TestCase
         $this->assertEquals($testData, $actorCode->getData());
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_client_exception_when_validating_a_code(): void
     {
         $testData = [
@@ -103,7 +105,7 @@ class ActorCodesTest extends TestCase
         $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_not_ok_service_error_code_when_validating_a_code(): void
     {
         $testData = [
@@ -142,7 +144,7 @@ class ActorCodesTest extends TestCase
         $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_flag_a_code_as_used(): void
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
@@ -183,7 +185,7 @@ class ActorCodesTest extends TestCase
         $service->flagCodeAsUsed('code');
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_client_exception_when_flagging_a_code_as_used(): void
     {
         $httpClientProphecy = $this->prophesize(HttpClient::class);
@@ -208,7 +210,7 @@ class ActorCodesTest extends TestCase
         $service->flagCodeAsUsed('code');
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_not_ok_service_error_code_when_flagging_a_code_as_used(): void
     {
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
@@ -241,10 +243,8 @@ class ActorCodesTest extends TestCase
         $service->flagCodeAsUsed('code');
     }
 
-    /**
-     * @test
-     * @dataProvider codeExistsResponse
-     */
+    #[Test]
+    #[DataProvider('codeExistsResponse')]
     public function it_checks_whether_an_actor_has_a_code($codeExistsResponse): void
     {
         $testData = [
@@ -300,7 +300,7 @@ class ActorCodesTest extends TestCase
         $this->assertEquals($expectedResponse, $actorCode->getData());
     }
 
-    public function codeExistsResponse(): array
+    public static function codeExistsResponse(): array
     {
         return [
             [null],
@@ -308,7 +308,7 @@ class ActorCodesTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_client_exception_when_checking_if_a_code_exists_for_an_actor(): void
     {
         $httpClientProphecy = $this->prophesize(HttpClient::class);
@@ -333,7 +333,7 @@ class ActorCodesTest extends TestCase
         $service->checkActorHasCode('test-lpa-id', 'test-actor-id');
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_not_ok_service_error_code_when_checking_if_a_code_exists_for_an_actor(): void
     {
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);

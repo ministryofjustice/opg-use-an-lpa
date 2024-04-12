@@ -12,13 +12,14 @@ use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
+use DateInterval;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use DateInterval;
 
 class ActorCodeServiceTest extends TestCase
 {
@@ -40,7 +41,7 @@ class ActorCodeServiceTest extends TestCase
         $this->resolveActorProphecy             = $this->prophesize(ResolveActor::class);
     }
 
-    /** @test */
+    #[Test]
     public function confirmation_fails_with_invalid_details(): void
     {
         $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', 'test-dob')
@@ -54,7 +55,7 @@ class ActorCodeServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function confirmation_succeeds_with_valid_details(): void
     {
         $this->initValidParameterSet();
@@ -82,7 +83,7 @@ class ActorCodeServiceTest extends TestCase
         $this->assertEquals('00000000-0000-4000-A000-000000000000', $result);
     }
 
-    /** @test */
+    #[Test]
     public function confirmation_succeeds_with_valid_details_ttl_removed(): void
     {
         $this->initValidParameterSet();
@@ -117,7 +118,7 @@ class ActorCodeServiceTest extends TestCase
         $this->assertEquals('token-3', $result);
     }
 
-    /** @test */
+    #[Test]
     public function confirmation_with_valid_details_fails_flag_as_used(): void
     {
         $this->initValidParameterSet();
@@ -146,7 +147,7 @@ class ActorCodeServiceTest extends TestCase
         $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
     }
 
-    /** @test */
+    #[Test]
     public function successful_validation(): void
     {
         [
@@ -170,7 +171,7 @@ class ActorCodeServiceTest extends TestCase
         $this->assertEquals($mockActor, $result['actor']);
     }
 
-    /** @test */
+    #[Test]
     public function validation_fails(): void
     {
         $testCode = 'test-code';

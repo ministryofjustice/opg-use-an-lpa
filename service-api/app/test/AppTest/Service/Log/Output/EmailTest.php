@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace AppTest\Service\Log\Output;
 
 use App\Service\Log\Output\Email;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class EmailTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_hides_a_string()
     {
         $email = new Email('test@test.com');

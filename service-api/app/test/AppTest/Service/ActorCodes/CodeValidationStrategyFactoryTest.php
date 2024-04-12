@@ -9,6 +9,7 @@ use App\Service\ActorCodes\CodeValidationStrategyFactory;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
 use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -18,7 +19,7 @@ class CodeValidationStrategyFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_a_codes_api_strategy(): void
     {
         $container = $this->prophesize(ContainerInterface::class);

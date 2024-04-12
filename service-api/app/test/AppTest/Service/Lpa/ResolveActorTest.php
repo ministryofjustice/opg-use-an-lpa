@@ -6,6 +6,8 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\ResolveActor;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -28,7 +30,7 @@ class ResolveActorTest extends TestCase
         return new ResolveActor();
     }
 
-    /** @test */
+    #[Test]
     public function can_find_actor_who_is_a_donor(): void
     {
         $lpa = [
@@ -61,7 +63,7 @@ class ResolveActorTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_find_actor_who_is_a_donor_by_linked_id(): void
     {
         $lpa = [
@@ -85,7 +87,7 @@ class ResolveActorTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_find_actor_who_is_a_donor_by_linked_uid(): void
     {
         $lpa = [
@@ -109,7 +111,7 @@ class ResolveActorTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_not_find_actor_who_is_not_a_donor_by_linked_id(): void
     {
         $lpa = [
@@ -127,7 +129,7 @@ class ResolveActorTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_not_find_actor_who_is_not_a_donor_by_linked_uid(): void
     {
         $lpa = [
@@ -145,9 +147,7 @@ class ResolveActorTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_find_actor_who_is_an_attorney()
     {
         $lpa = [
@@ -208,10 +208,8 @@ class ResolveActorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @dataProvider ghostAttorneyDataProvider
-     */
+    #[Test]
+    #[DataProvider('ghostAttorneyDataProvider')]
     public function can_not_find_actor_who_is_a_ghost_attorney(int $actorId, array $attorneyData)
     {
         $lpa = [
@@ -236,7 +234,7 @@ class ResolveActorTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function ghostAttorneyDataProvider()
+    public static function ghostAttorneyDataProvider(): array
     {
         return [
             [
@@ -266,7 +264,7 @@ class ResolveActorTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function can_not_find_actor_who_is_an_inactive_attorney(): void
     {
         $lpa = [
@@ -302,9 +300,7 @@ class ResolveActorTest extends TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_find_actor_who_is_a_trust_corporation()
     {
         $lpa = [

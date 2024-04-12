@@ -7,6 +7,7 @@ namespace AppTest\DataAccess\DynamoDb;
 use App\DataAccess\DynamoDb\ViewerCodeActivity;
 use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -64,7 +65,7 @@ class ViewerCodeActivityTest extends TestCase
         $repo->recordSuccessfulLookupActivity($testCode, $organisation);
     }
 
-    /** @test */
+    #[Test]
     public function viewerCodesStatusSetToTrueWithQueryMatch(): void
     {
         $testCodes = [
@@ -127,7 +128,7 @@ class ViewerCodeActivityTest extends TestCase
         $this->assertEquals('Some organisation2', $result[0]['Viewed'][1]['ViewedBy']);
     }
 
-    /** @test */
+    #[Test]
     public function viewerCodesStatusSetToFalseWithNoQueryMatch(): void
     {
 

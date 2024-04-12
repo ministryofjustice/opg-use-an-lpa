@@ -13,6 +13,7 @@ use App\Service\User\ResolveOAuthUser;
 use App\Service\User\UserService;
 use DateTimeImmutable;
 use DateTimeInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -26,7 +27,7 @@ class ResolveOAuthUserTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function existing_user_returns_user(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -67,7 +68,7 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertArrayNotHasKey('Password', $user);
     }
 
-    /** @test */
+    #[Test]
     public function existing_user_updates_email_returns_user(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -111,7 +112,7 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertArrayNotHasKey('Password', $user);
     }
 
-    /** @test */
+    #[Test]
     public function new_onelogin_user_returns_existing_user(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -162,7 +163,7 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertArrayNotHasKey('Password', $user);
     }
 
-    /** @test */
+    #[Test]
     public function new_onelogin_user_returns_brand_new_user(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -221,7 +222,7 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertArrayNotHasKey('Password', $user);
     }
 
-    /** @test */
+    #[Test]
     public function new_onelogin_user_fails_due_to_email_change_conflict(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -257,7 +258,7 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'fakeEmail');
     }
 
-    /** @test */
+    #[Test]
     public function new_onelogin_user_fails_due_to_php_exception(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);

@@ -7,6 +7,7 @@ namespace AppTest\Service\Log;
 use App\Service\Log\LogStderrListener;
 use App\Service\Log\LogStderrListenerDelegatorFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -17,7 +18,7 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_correctly_attaches_a_listener_to_the_error_handler(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -8,6 +8,7 @@ use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\DynamoDb\UserLpaActorMapFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -17,7 +18,7 @@ class UserLpaActorMapFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -43,7 +44,7 @@ class UserLpaActorMapFactoryTest extends TestCase
         $this->assertInstanceOf(UserLpaActorMap::class, $repo);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -32,9 +33,7 @@ class RestrictSendingLpaForCleansingTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_not_found_exception_when_lpa_status_registered_and_actorMatch_is_null(): void
     {
         $lpa = [

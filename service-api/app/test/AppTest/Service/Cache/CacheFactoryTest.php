@@ -9,6 +9,7 @@ use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
 use Laminas\Cache\Storage\Capabilities;
 use Laminas\Cache\Storage\StorageInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -19,7 +20,7 @@ class CacheFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function itRequiresACacheConfiguration()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -30,7 +31,7 @@ class CacheFactoryTest extends TestCase
         $factory->__invoke('a-cache');
     }
 
-    /** @test */
+    #[Test]
     public function itRequiresACacheConfigurationForIndividualCaches()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -45,7 +46,7 @@ class CacheFactoryTest extends TestCase
         $factory->__invoke('a-cache');
     }
 
-    /** @test */
+    #[Test]
     public function itCreatesAConfiguredCache()
     {
         $cacheAdapterProphecy    = $this->prophesize(StorageAdapterFactoryInterface::class);

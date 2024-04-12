@@ -6,13 +6,14 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\KeyCollisionException;
+use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Aws\CommandInterface;
 
 class ViewerCodesTest extends TestCase
 {
@@ -28,7 +29,7 @@ class ViewerCodesTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    /** @test */
+    #[Test]
     public function can_lookup_a_code(): void
     {
         $testCode = 'test-code';
@@ -73,7 +74,7 @@ class ViewerCodesTest extends TestCase
         $this->assertEquals(new DateTime('2019-01-01 12:34:56'), $result['Expires']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_lookup_a_missing_code(): void
     {
         $testCode = 'test-code';
@@ -109,7 +110,7 @@ class ViewerCodesTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_query_by_lpa_id()
     {
         $testSiriusUid = '98765-43210';
@@ -150,7 +151,7 @@ class ViewerCodesTest extends TestCase
         $this->assertEquals($testSiriusUid, $result[0]['SiriusUid']);
     }
 
-    /** @test */
+    #[Test]
     public function lpa_with_no_generated_codes_returns_empty_array()
     {
         $testSiriusUid = '98765-43210';
@@ -185,7 +186,7 @@ class ViewerCodesTest extends TestCase
         $this->assertEmpty($result);
     }
 
-    /** @test */
+    #[Test]
     public function add_unique_code(): void
     {
         $testCode              = 'test-code';
@@ -232,7 +233,7 @@ class ViewerCodesTest extends TestCase
         $repo->add($testCode, $testUserLpaActorToken, $testSiriusUid, $testExpires, $testOrganisation, $testActorId);
     }
 
-    /** @test */
+    #[Test]
     public function add_conflicting_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
@@ -262,7 +263,7 @@ class ViewerCodesTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function test_unknown_exception_when_adding_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
@@ -286,7 +287,7 @@ class ViewerCodesTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_cancel_viewer_code(): void
     {
         $testCode    = 'test-code';
@@ -319,7 +320,7 @@ class ViewerCodesTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_remove_actor_and_code_association(): void
     {
         $testCode  = 'test-code';

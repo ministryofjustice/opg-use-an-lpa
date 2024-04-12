@@ -7,17 +7,18 @@ namespace AppTest\Service\ApiClient;
 use App\Service\ApiClient\Client;
 use App\Service\ApiClient\ClientFactory;
 use App\Service\Log\RequestTracing;
+use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
-use Exception;
 
 class ClientFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_create_an_instance_of_a_client(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -49,7 +50,7 @@ class ClientFactoryTest extends TestCase
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    /** @test */
+    #[Test]
     public function throws_exception_when_missing_sirius_api_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -69,7 +70,7 @@ class ClientFactoryTest extends TestCase
         $factory($containerProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function throws_exception_when_missing_aws_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

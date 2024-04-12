@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace CommonTest\Service\Log;
 
 use App\Service\Log\LogStderrListener;
+use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Exception;
 
 class LogStderrListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function creates_and_pushes_test_message_without_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -50,7 +51,7 @@ class LogStderrListenerTest extends TestCase
         $logStderrListener($exception, $requestProphecy->reveal(), $responseProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function creates_and_pushes_test_message_with_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);

@@ -8,6 +8,7 @@ use App\DataAccess\DynamoDb\ActorCodes;
 use App\DataAccess\DynamoDb\ActorCodesFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -16,7 +17,7 @@ class ActorCodesFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -38,7 +39,7 @@ class ActorCodesFactoryTest extends TestCase
         $this->assertInstanceOf(ActorCodes::class, $repo);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

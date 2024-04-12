@@ -7,6 +7,7 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\RequestSigner;
 use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -30,7 +31,7 @@ class RequestSignerTest extends TestCase
         putenv('AWS_SECRET_ACCESS_KEY=');
     }
 
-    /** @test */
+    #[Test]
     public function it_signs_request_with_a_supplied_static_token(): void
     {
         $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
@@ -46,7 +47,7 @@ class RequestSignerTest extends TestCase
         $request = $signer->sign($requestProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function it_signs_a_request_with_the_aws_signer(): void
     {
         $signatureV4Prophecy = $this->prophesize(SignatureV4::class);

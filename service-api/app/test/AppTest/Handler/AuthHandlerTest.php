@@ -9,6 +9,7 @@ use App\Exception\NotFoundException;
 use App\Handler\AuthHandler;
 use App\Service\User\UserService;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,7 +22,7 @@ class AuthHandlerTest extends TestCase
     // 'test':
     const PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
 
-    /** @test */
+    #[Test]
     public function can_create_an_instance(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
@@ -31,7 +32,7 @@ class AuthHandlerTest extends TestCase
         $this->assertInstanceOf(AuthHandler::class, $handler);
     }
 
-    /** @test */
+    #[Test]
     public function returns_an_error_when_bad_parameters_received(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
@@ -46,7 +47,7 @@ class AuthHandlerTest extends TestCase
         $response = $handler->handle($requestProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function returns_a_valid_user_when_correct_parameters_received(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
@@ -72,7 +73,7 @@ class AuthHandlerTest extends TestCase
         $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $response->getPayload());
     }
 
-    /** @test */
+    #[Test]
     public function returns_a_not_found_when_credentials_incorrect(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);

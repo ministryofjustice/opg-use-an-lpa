@@ -6,6 +6,7 @@ namespace AppTest\Service\Email;
 
 use App\Service\Email\EmailClient;
 use App\Service\Email\EmailClientFactory;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -16,9 +17,7 @@ class EmailClientFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_create_an_instance_of_the_email_client()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -47,9 +46,7 @@ class EmailClientFactoryTest extends TestCase
         $this->assertInstanceOf(EmailClient::class, $emailClient);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function throws_exception_when_missing_configuration()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

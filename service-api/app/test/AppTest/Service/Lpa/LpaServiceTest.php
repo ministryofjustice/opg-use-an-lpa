@@ -16,6 +16,7 @@ use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, L
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateInterval;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -87,7 +88,7 @@ class LpaServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_by_id(): void
     {
         $testUid = '700012349874';
@@ -493,7 +494,7 @@ class LpaServiceTest extends TestCase
         return $t;
     }
 
-    /** @test */
+    #[Test]
     public function can_get_by_user_token(): void
     {
         $t = $this->init_valid_user_token_test();
@@ -543,7 +544,7 @@ class LpaServiceTest extends TestCase
         ], $result['lpa']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_by_user_token_with_an_active_and_inactive_actor(): void
     {
         $t = $this->init_valid_user_token_active_and_inactive_actor();
@@ -556,7 +557,7 @@ class LpaServiceTest extends TestCase
         $this->assertNotNull($result['actor']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_by_user_token_with_an_inactive_actor(): void
     {
         $t = $this->init_valid_user_token_active_and_inactive_actor();
@@ -569,7 +570,7 @@ class LpaServiceTest extends TestCase
         $this->assertNotNull($result['actor']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_by_user_token_with_invalid_userid(): void
     {
         $t = $this->init_valid_user_token_test();
@@ -581,7 +582,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_by_user_token_with_invalid_sirius_uid(): void
     {
         $t = $this->init_valid_user_token_test();
@@ -596,7 +597,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_by_user_token_when_not_valid_lpa(): void
     {
         $t = $this->init_valid_user_token_test(false);
@@ -682,7 +683,7 @@ class LpaServiceTest extends TestCase
         return $t;
     }
 
-    /** @test */
+    #[Test]
     public function can_get_all_lpas_for_user(): void
     {
         $t = $this->init_valid_get_all_users(false);
@@ -714,7 +715,7 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($lpa->getData(), $result['lpa']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_all_lpas_for_user_including_not_activated(): void
     {
         $t = $this->init_valid_get_all_users(true);
@@ -745,7 +746,7 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($lpa->getData(), $result['lpa']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_all_lpas_for_user_when_no_maps_found(): void
     {
         $t = $this->init_valid_get_all_users(false);
@@ -840,7 +841,7 @@ class LpaServiceTest extends TestCase
         return $t;
     }
 
-    /** @test */
+    #[Test]
     public function can_get_all_lpas_for_user_when_linked_donor(): void
     {
         $t = $this->init_valid_get_all_users_with_linked();
@@ -924,7 +925,7 @@ class LpaServiceTest extends TestCase
         return $t;
     }
 
-    /** @test */
+    #[Test]
     public function can_get_lpa_by_viewer_code_no_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -959,7 +960,7 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($t->Lpa->getData(), $result['lpa']);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_lpa_by_viewer_code_with_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -995,7 +996,7 @@ class LpaServiceTest extends TestCase
         $this->assertEquals($t->Lpa->getData(), $result['lpa']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_lpa_by_missing_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1010,7 +1011,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_missing_lpa_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1025,7 +1026,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_lpa_with_invalid_donor_by_viewer_code(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1037,7 +1038,7 @@ class LpaServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_lpa_by_viewer_code_with_missing_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1061,7 +1062,7 @@ class LpaServiceTest extends TestCase
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_lpa_by_viewer_code_with_cancelled(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1086,7 +1087,7 @@ class LpaServiceTest extends TestCase
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_get_lpa_by_viewer_code_with_expired_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1110,7 +1111,7 @@ class LpaServiceTest extends TestCase
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
-    /** @test */
+    #[Test]
     public function lpa_fetched_by_viewer_code_contains_instructions_and_preferences_data(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
@@ -1129,7 +1130,7 @@ class LpaServiceTest extends TestCase
         $this->assertEquals((int) $t->SiriusUid, $result['iap']->uId);
     }
 
-    /** @test */
+    #[Test]
     public function will_return_empty_lpa_array_when_status_invalid(): void
     {
         $t = $this->init_valid_user_token_test();

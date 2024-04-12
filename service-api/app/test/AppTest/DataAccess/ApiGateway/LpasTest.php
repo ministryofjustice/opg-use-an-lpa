@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -63,7 +64,7 @@ class LpasTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_get_an_lpa(): void
     {
         $assert = $this;
@@ -99,7 +100,7 @@ class LpasTest extends TestCase
         $this->assertEquals('7000-0005-5554', $shouldBeAnLPA->getData()['uId']);
     }
 
-    /** @test */
+    #[Test]
     public function lpa_not_found_gives_null(): void
     {
         $assert = $this;
@@ -132,7 +133,7 @@ class LpasTest extends TestCase
         $this->assertNull($shouldBeNull);
     }
 
-    /** @test */
+    #[Test]
     public function requests_a_letter_successfully(): void
     {
         $caseUid  = 700000055554;
@@ -183,7 +184,7 @@ class LpasTest extends TestCase
         $service->requestLetter($caseUid, null, 'Some random string');
     }
 
-    /** @test */
+    #[Test]
     public function requests_a_letter_with_sirius_error(): void
     {
         $caseUid  = 700000055554;
@@ -225,7 +226,7 @@ class LpasTest extends TestCase
         $service->requestLetter($caseUid, $actorUid, null);
     }
 
-    /** @test */
+    #[Test]
     public function requests_a_letter_with_guzzle_error(): void
     {
         $caseUid  = 700000055554;

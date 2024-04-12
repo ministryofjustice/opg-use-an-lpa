@@ -6,16 +6,17 @@ namespace AppTest\Service\Container;
 
 use App\Service\Container\PhpDiModifiableContainer;
 use DI\Container;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
-use InvalidArgumentException;
 
 class PhpDiModifiableContainerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_only_acts_on_a_phpdi_container(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -24,7 +25,7 @@ class PhpDiModifiableContainerTest extends TestCase
         $di = new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function it_decorates_set_on_a_phpdi_container(): void
     {
         $containerProphecy = $this->prophesize(Container::class);

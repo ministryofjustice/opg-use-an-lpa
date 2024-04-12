@@ -11,6 +11,7 @@ use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Jose\Component\Core\JWK;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -59,7 +60,7 @@ class AuthorisationClientManagerTest extends TestCase
         $this->assertInstanceOf(AuthorisationClientManager::class, $sut);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_client(): void
     {
         $this->cacheFactory
