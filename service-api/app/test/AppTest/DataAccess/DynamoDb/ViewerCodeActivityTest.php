@@ -26,7 +26,7 @@ class ViewerCodeActivityTest extends TestCase
         $this->dynamoDbClient = $this->prophesize(DynamoDbClient::class);
     }
 
-    public function testRecordSuccessfulLookupActivity()
+    public function testRecordSuccessfulLookupActivity(): void
     {
         $testCode     = '123456789ABC';
         $organisation = 'HSBC';

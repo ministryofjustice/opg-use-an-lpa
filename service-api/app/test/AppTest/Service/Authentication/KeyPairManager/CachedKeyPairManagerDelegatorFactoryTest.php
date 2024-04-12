@@ -8,22 +8,19 @@ use App\Service\Authentication\KeyPairManager\CachedKeyPairManager;
 use App\Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory;
 use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\SimpleCache\CacheInterface;
 
-/**
- * @coversDefaultClass \App\Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory
- */
+#[CoversClass(CachedKeyPairManagerDelegatorFactory::class)]
 class CachedKeyPairManagerDelegatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_creates_a_delegated_cachedKeyPairManager(): void
     {
         $cacheFactory = $this->prophesize(CacheFactory::class);

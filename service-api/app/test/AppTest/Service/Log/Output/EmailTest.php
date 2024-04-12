@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 class EmailTest extends TestCase
 {
     #[Test]
-    public function it_hides_a_string()
+    public function it_hides_a_string(): void
     {
         $email = new Email('test@test.com');
         $this->assertMatchesRegularExpression('/.*/', (string)$email);

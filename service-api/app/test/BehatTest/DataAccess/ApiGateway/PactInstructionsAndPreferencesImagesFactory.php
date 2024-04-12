@@ -9,15 +9,17 @@ use App\DataAccess\ApiGateway\RequestSigner;
 use App\Service\Log\RequestTracing;
 use DI\NotFoundException;
 use GuzzleHttp\Client as HttpClient;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class PactInstructionsAndPreferencesImagesFactory
 {
     /**
      * @param ContainerInterface $container
      * @return InstructionsAndPreferencesImages
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container)
     {

@@ -18,7 +18,7 @@ class EmailClientFactoryTest extends TestCase
     use ProphecyTrait;
 
     #[Test]
-    public function can_create_an_instance_of_the_email_client()
+    public function can_create_an_instance_of_the_email_client(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $key               = 'notreal_key_testingtestin-12345678-1234-4321-abcd-123456789012-12345678-1234-4321-abcd-123456789012';
@@ -47,7 +47,7 @@ class EmailClientFactoryTest extends TestCase
     }
 
     #[Test]
-    public function throws_exception_when_missing_configuration()
+    public function throws_exception_when_missing_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')->willReturn([]);

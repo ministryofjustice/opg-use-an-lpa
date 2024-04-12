@@ -111,7 +111,7 @@ class ViewerCodesTest extends TestCase
     }
 
     #[Test]
-    public function can_query_by_lpa_id()
+    public function can_query_by_lpa_id(): void
     {
         $testSiriusUid = '98765-43210';
 
@@ -152,7 +152,7 @@ class ViewerCodesTest extends TestCase
     }
 
     #[Test]
-    public function lpa_with_no_generated_codes_returns_empty_array()
+    public function lpa_with_no_generated_codes_returns_empty_array(): void
     {
         $testSiriusUid = '98765-43210';
 

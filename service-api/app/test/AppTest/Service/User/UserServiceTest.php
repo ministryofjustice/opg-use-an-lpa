@@ -205,6 +205,7 @@ class UserServiceTest extends TestCase
         $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
+    #[Test]
     public function can_get_a_user_from_storage_using_identity(): void
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
@@ -323,10 +324,11 @@ class UserServiceTest extends TestCase
         $us->canResetEmail($token);
     }
 
-    /** @test
+    /**
      * @throws Exception
      */
-    public function cannot_add_existing_user_already_activated()
+    #[Test]
+    public function cannot_add_existing_user_already_activated(): void
     {
         $id       = '12345678-1234-1234-1234-123456789012';
         $email    = 'a@b.com';
@@ -353,10 +355,11 @@ class UserServiceTest extends TestCase
         $us->add($userData);
     }
 
-    /** @test
+    /**
      * @throws Exception
      */
-    public function cannot_add_existing_user_as_email_used_in_reset()
+    #[Test]
+    public function cannot_add_existing_user_as_email_used_in_reset(): void
     {
         $id       = '12345678-1234-1234-1234-123456789012';
         $email    = 'a@b.com';

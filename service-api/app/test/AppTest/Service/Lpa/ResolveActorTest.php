@@ -148,7 +148,7 @@ class ResolveActorTest extends TestCase
     }
 
     #[Test]
-    public function can_find_actor_who_is_an_attorney()
+    public function can_find_actor_who_is_an_attorney(): void
     {
         $lpa = [
             'donor'     => [
@@ -210,7 +210,7 @@ class ResolveActorTest extends TestCase
 
     #[Test]
     #[DataProvider('ghostAttorneyDataProvider')]
-    public function can_not_find_actor_who_is_a_ghost_attorney(int $actorId, array $attorneyData)
+    public function can_not_find_actor_who_is_a_ghost_attorney(int $actorId, array $attorneyData): void
     {
         $lpa = [
             'donor'              => [
@@ -301,7 +301,7 @@ class ResolveActorTest extends TestCase
     }
 
     #[Test]
-    public function can_find_actor_who_is_a_trust_corporation()
+    public function can_find_actor_who_is_a_trust_corporation(): void
     {
         $lpa = [
             'donor'             => [

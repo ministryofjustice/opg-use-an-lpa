@@ -30,7 +30,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_email()
+    public function can_send_account_activation_email(): void
     {
         $recipient = 'a@b.com';
 
@@ -53,7 +53,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activated_confirmation_email()
+    public function can_send_account_activated_confirmation_email(): void
     {
         $recipient = 'a@b.com';
 
@@ -76,7 +76,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_already_registered_email()
+    public function can_send_already_registered_email(): void
     {
         $recipient = 'a@b.com';
 
@@ -92,7 +92,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_password_reset_email()
+    public function can_send_password_reset_email(): void
     {
         $recipient = 'a@b.com';
 
@@ -115,7 +115,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_password_change_email()
+    public function can_send_password_change_email(): void
     {
         $recipient = 'a@b.com';
 
@@ -131,7 +131,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_change_email_to_current_email()
+    public function can_send_change_email_to_current_email(): void
     {
         $recipient = 'current@email.com';
         $newEmail  = 'new@email.com';
@@ -151,7 +151,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_change_email_verify_to_new_email()
+    public function can_send_change_email_verify_to_new_email(): void
     {
         $recipient = 'new@email.com';
 
@@ -174,7 +174,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_someone_tried_to_use_your_email_for_email_change()
+    public function can_send_someone_tried_to_use_your_email_for_email_change(): void
     {
         $recipient = 'new@email.com';
 
@@ -189,7 +189,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_email_if_locale_is_cy()
+    public function can_send_account_activation_email_if_locale_is_cy(): void
     {
         $recipient = 'a@b.com';
 
@@ -212,7 +212,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activated_confirmation_email_if_locale_is_cy()
+    public function can_send_account_activated_confirmation_email_if_locale_is_cy(): void
     {
         $recipient = 'a@b.com';
 
@@ -235,7 +235,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_already_registered_email_if_locale_is_cy()
+    public function can_send_already_registered_email_if_locale_is_cy(): void
     {
         $recipient = 'a@b.com';
 
@@ -251,7 +251,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_password_reset_email_if_locale_is_cy()
+    public function can_send_password_reset_email_if_locale_is_cy(): void
     {
         $recipient = 'a@b.com';
 
@@ -274,7 +274,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_password_change_email_if_locale_is_cy()
+    public function can_send_password_change_email_if_locale_is_cy(): void
     {
         $recipient = 'a@b.com';
 
@@ -290,7 +290,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_change_email_to_current_email_if_locale_is_cy()
+    public function can_send_change_email_to_current_email_if_locale_is_cy(): void
     {
         $recipient = 'current@email.com';
         $newEmail  = 'new@email.com';
@@ -310,7 +310,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_change_email_verify_to_new_email_if_locale_is_cy()
+    public function can_send_change_email_verify_to_new_email_if_locale_is_cy(): void
     {
         $recipient = 'new@email.com';
 
@@ -333,7 +333,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_someone_tried_to_use_your_email_for_email_change_if_locale_is_cy()
+    public function can_send_someone_tried_to_use_your_email_for_email_change_if_locale_is_cy(): void
     {
         $recipient = 'new@email.com';
 
@@ -348,7 +348,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_key_request_confirmation_email_if_locale_is_cy()
+    public function can_send_account_activation_key_request_confirmation_email_if_locale_is_cy(): void
     {
         $recipient          = 'a@b.com';
         $referenceNumber    = '700000000138';
@@ -378,7 +378,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_key_request_confirmation_email()
+    public function can_send_account_activation_key_request_confirmation_email(): void
     {
         $recipient          = 'a@b.com';
         $referenceNumber    = '700000000138';
@@ -408,7 +408,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleansing()
+    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $recipient          = 'a@b.com';
         $referenceNumber    = '700000000138';
@@ -435,7 +435,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy()
+    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy(): void
     {
         $recipient          = 'a@b.com';
         $referenceNumber    = '700000000138';
@@ -462,7 +462,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function cannot_send_account_activation_key_as_account_does_not_exist()
+    public function cannot_send_account_activation_key_as_account_does_not_exist(): void
     {
         $recipient = 'a@b.com';
 
@@ -481,7 +481,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function send_force_password_reset_email()
+    public function send_force_password_reset_email(): void
     {
         $recipient = 'a@b.com';
 

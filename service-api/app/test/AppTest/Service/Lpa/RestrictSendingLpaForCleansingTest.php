@@ -6,15 +6,14 @@ namespace AppTest\Service\Lpa;
 
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\RestrictSendingLpaForCleansing
- */
+#[CoversClass(RestrictSendingLpaForCleansing::class)]
 class RestrictSendingLpaForCleansingTest extends TestCase
 {
     use ProphecyTrait;

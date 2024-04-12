@@ -16,7 +16,7 @@ class ViewerCodesFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testValidConfig()
+    public function testValidConfig(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -37,7 +37,7 @@ class ViewerCodesFactoryTest extends TestCase
         $this->assertInstanceOf(ViewerCodes::class, $repo);
     }
 
-    public function testInvalidConfig()
+    public function testInvalidConfig(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

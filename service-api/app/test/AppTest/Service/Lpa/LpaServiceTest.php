@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\{Repository,
-    Repository\InstructionsAndPreferencesImagesInterface,
-    Repository\Response\InstructionsAndPreferencesImages,
-    Repository\Response\InstructionsAndPreferencesImagesResult,
+use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
+    Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
+    Repository\ViewerCodeActivityInterface,
     Repository\ViewerCodesInterface};
-use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
-use App\Service\ViewerCodes\ViewerCodeService;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -29,12 +27,11 @@ class LpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
-    private Repository\LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
     private InstructionsAndPreferencesImagesInterface|ObjectProphecy $iapRepositoryProphecy;
-    private Repository\ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
+    private ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
@@ -44,12 +41,12 @@ class LpaServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(Repository\UserLpaActorMapInterface::class);
-        $this->lpasInterfaceProphecy               = $this->prophesize(Repository\LpasInterface::class);
-        $this->viewerCodesInterfaceProphecy        = $this->prophesize(Repository\ViewerCodesInterface::class);
-        $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(Repository\ViewerCodeActivityInterface::class);
-        $this->iapRepositoryProphecy
-            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
+        $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(UserLpaActorMapInterface::class);
+        $this->lpasInterfaceProphecy               = $this->prophesize(LpasInterface::class);
+        $this->viewerCodesInterfaceProphecy        = $this->prophesize(ViewerCodesInterface::class);
+        $this->viewerCodeActivityInterfaceProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+        $this->iapRepositoryProphecy               =
+            $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
@@ -75,19 +72,6 @@ class LpaServiceTest extends TestCase
         );
     }
 
-    private function getViewerCodeService(): ViewerCodeService
-    {
-        $viewerCodeRepoProphecy   = $this->prophesize(ViewerCodesInterface::class);
-        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $lpaServiceProphecy       = $this->prophesize(LpaService::class);
-
-        return new ViewerCodeService(
-            $viewerCodeRepoProphecy->reveal(),
-            $userActorLpaRepoProphecy->reveal(),
-            $lpaServiceProphecy->reveal()
-        );
-    }
-
     #[Test]
     public function can_get_by_id(): void
     {
@@ -107,7 +91,7 @@ class LpaServiceTest extends TestCase
         ], new DateTime());
 
         $expectedLpaResponse = new Lpa([
-            'attorneys'         => [
+            'attorneys'          => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
@@ -121,13 +105,13 @@ class LpaServiceTest extends TestCase
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 5, 'systemStatus' => true],
             ],
-            'trustCorporations' => [
+            'trustCorporations'  => [
                 ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
             ],
-            'inactiveAttorneys' => [
+            'inactiveAttorneys'  => [
                 ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
             ],
-            'activeAttorneys'   => [
+            'activeAttorneys'    => [
                 ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                 ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                 ['id' => 4, 'surname' => 'B', 'systemStatus' => true],

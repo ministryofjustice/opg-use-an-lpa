@@ -9,15 +9,14 @@ use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\LpaService;
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\CheckLpaCleansed
- */
+#[CoversClass(CheckLpaCleansed::class)]
 class CheckLpaCleansedTest extends TestCase
 {
     use ProphecyTrait;

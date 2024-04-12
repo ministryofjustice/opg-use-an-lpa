@@ -21,7 +21,7 @@ class CacheFactoryTest extends TestCase
     use ProphecyTrait;
 
     #[Test]
-    public function itRequiresACacheConfiguration()
+    public function itRequiresACacheConfiguration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -32,7 +32,7 @@ class CacheFactoryTest extends TestCase
     }
 
     #[Test]
-    public function itRequiresACacheConfigurationForIndividualCaches()
+    public function itRequiresACacheConfigurationForIndividualCaches(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -47,7 +47,7 @@ class CacheFactoryTest extends TestCase
     }
 
     #[Test]
-    public function itCreatesAConfiguredCache()
+    public function itCreatesAConfiguredCache(): void
     {
         $cacheAdapterProphecy    = $this->prophesize(StorageAdapterFactoryInterface::class);
         $storageInterfacePropecy = $this->prophesize(StorageInterface::class);

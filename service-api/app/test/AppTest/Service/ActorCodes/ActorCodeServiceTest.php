@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\ActorCodes;
 
-use App\DataAccess\Repository;
+use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
@@ -224,7 +224,7 @@ class ActorCodeServiceTest extends TestCase
             ->shouldBeCalled();
 
         $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
-            new Repository\Response\Lpa($mockLpa, new DateTime())
+            new Lpa($mockLpa, new DateTime())
         )->shouldBeCalled();
 
         $this->resolveActorProphecy
