@@ -13,7 +13,7 @@ const fs = fsWithCallbacks.promises;
             './src/robots.txt': 'robots.txt',
             './src/budget.json': 'budget.json',
             './src/images': 'assets/images',
-            './node_modules/govuk-frontend/govuk/assets': 'assets',
+            './node_modules/govuk-frontend/dist/govuk/assets': 'assets',
             './node_modules/@ministryofjustice/frontend/moj/assets': 'assets',
         },
         out_dir: './dist',
