@@ -126,14 +126,12 @@ class OneLoginServiceTest extends TestCase
             $fakeSession,
         );
 
-        $this->assertArrayHasKey('user', $user);
+        $this->assertArrayHasKey('Id', $user);
+        $this->assertArrayHasKey('Identity', $user);
+        $this->assertArrayHasKey('Email', $user);
 
-        $this->assertArrayHasKey('Id', $user['user']);
-        $this->assertArrayHasKey('Identity', $user['user']);
-        $this->assertArrayHasKey('Email', $user['user']);
-
-        $this->assertSame('fakeSub', $user['user']['Identity']);
-        $this->assertSame('fakeEmail', $user['user']['Email']);
+        $this->assertSame('fakeSub', $user['Identity']);
+        $this->assertSame('fakeEmail', $user['Email']);
     }
 
     #[Test]
@@ -171,37 +169,6 @@ class OneLoginServiceTest extends TestCase
             'fake_code',
             'fake_state',
             $fakeSession,
-        );
-    }
-
-    #[Test]
-    public function creates_logout_url(): void
-    {
-        $fakeRedirect = 'http://fakehost/logout';
-
-        $service = $this->prophesize(AuthorisationService::class);
-        $service->getLogoutUri()->willReturn($fakeRedirect);
-
-        $serviceBuilder = $this->prophesize(AuthorisationServiceBuilder::class);
-        $serviceBuilder->build()
-            ->willReturn($service->reveal());
-
-        $randomByteGenerator = $this->prophesize(RandomByteGenerator::class);
-
-        $authorisationRequestService = new OneLoginService(
-            $serviceBuilder->reveal(),
-            $this->prophesize(UserInfoService::class)->reveal(),
-            $this->prophesize(ResolveOAuthUser::class)->reveal(),
-            $randomByteGenerator->reveal(),
-        );
-
-        $logoutUrl = $authorisationRequestService->createLogoutUrl('token');
-
-        $this->assertStringContainsString($fakeRedirect, $logoutUrl);
-        $this->assertStringContainsString('id_token_hint=token', $logoutUrl);
-        $this->assertStringContainsString(
-            'post_logout_redirect_uri=' . urlencode(OneLoginService::LOGOUT_REDIRECT_URL),
-            $logoutUrl,
         );
     }
 }
