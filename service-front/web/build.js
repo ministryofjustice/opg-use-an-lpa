@@ -39,7 +39,7 @@ const fs = fsWithCallbacks.promises;
             outdir: config.out_dir,
             minify: true,
             plugins: [],
-            target: ['es2015', 'ie11'],
+            target: ['es2015'],
             platform: 'browser',
             metafile: true,
             supported: {
