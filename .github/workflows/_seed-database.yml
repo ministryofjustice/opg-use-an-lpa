@@ -5,12 +5,12 @@ jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
         with:
           fetch-depth: '0'
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@e0fc2428ccc7f7031a468e4a9d673be1a95fb8b9 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e9cf1db62a2c7bfa124c55c2432ffcf0ae30832b # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -19,13 +19,13 @@ jobs:
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
         with:
           name: environment_config_file
           path: terraform/environment
 
       - name: install python
-        uses: actions/setup-python@9a7ac94420f42ee15fc60ab88d0dca4be1fd5757 # pin@v4.2.0
+        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
