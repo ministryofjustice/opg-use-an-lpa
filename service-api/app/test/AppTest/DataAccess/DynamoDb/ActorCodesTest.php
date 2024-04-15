@@ -7,6 +7,7 @@ namespace AppTest\DataAccess\DynamoDb;
 use App\DataAccess\DynamoDb\ActorCodes;
 use Aws\DynamoDb\DynamoDbClient;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -25,7 +26,7 @@ class ActorCodesTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    /** @test */
+    #[Test]
     public function can_lookup_a_code(): void
     {
         $testCode      = 'test-code';
@@ -79,7 +80,7 @@ class ActorCodesTest extends TestCase
         $this->assertEquals($testActorId, $result['ActorLpaId']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_lookup_a_missing_code(): void
     {
         $testCode = 'test-code';
@@ -110,7 +111,7 @@ class ActorCodesTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_make_a_code_as_used(): void
     {
         $testCode = 'test-code';

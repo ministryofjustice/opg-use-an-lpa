@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AppTest\Service\ViewerCodes;
 
-use PHPUnit\Framework\TestCase;
 use App\Service\ViewerCodes\CodeGenerator;
+use PHPUnit\Framework\TestCase;
 
 class CodeGeneratorTest extends TestCase
 {
-    public function test_constants()
+    public function test_constants(): void
     {
         /*
          * The combination of these 2 values makes up the entropy in the code.
@@ -23,7 +23,7 @@ class CodeGeneratorTest extends TestCase
     /**
      * WARNING: This test is slow; but it's worth the wait!
      */
-    public function test_code_characteristics()
+    public function test_code_characteristics(): void
     {
         $allowedCharArray = str_split(CodeGenerator::ALLOWED_CHARACTERS);
 

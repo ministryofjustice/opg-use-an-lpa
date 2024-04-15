@@ -12,6 +12,7 @@ use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -21,7 +22,7 @@ class ViewerCodeServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_ca_be_instantiated(): void
     {
         $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
@@ -39,7 +40,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertInstanceOf(ViewerCodeService::class, $service);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_make_a_new_viewer_code_for_an_lpa(): void
     {
         // code will expire 30 days from midnight of the day the test runs
@@ -93,7 +94,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals('token name', $result['organisation']);
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_create_a_code_if_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
@@ -125,7 +126,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_generate_codes_until_a_new_one_is_found(): void
     {
         $callCount              = 0;
@@ -178,7 +179,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertTrue($callCount > 0);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_retrieve_codes_of_an_lpa(): void
     {
         $codeExpiry = new DateTimeImmutable(
@@ -322,7 +323,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals('700000000047', $codes[0]['SiriusUid']);
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_get_codes_if_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
@@ -354,7 +355,7 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertNull($codes);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_cancel_a_code(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
@@ -392,7 +393,7 @@ class ViewerCodeServiceTest extends TestCase
         $service->cancelCode('user_actor_lpa_token', 'user_id', '123412341234');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_cancel_a_code_if_the_user_does_not_match(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
@@ -426,7 +427,7 @@ class ViewerCodeServiceTest extends TestCase
         $service->cancelCode('user_actor_lpa_token', 'user_id', '123412341234');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_cancel_a_code_if_it_cant_find_it(): void
     {
         $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);

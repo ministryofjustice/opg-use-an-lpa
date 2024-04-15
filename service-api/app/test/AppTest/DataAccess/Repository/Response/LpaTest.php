@@ -6,11 +6,12 @@ namespace AppTest\DataAccess\Repository\Response;
 
 use App\DataAccess\Repository\Response\Lpa;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class LpaTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_get_data_array_and_time(): void
     {
         $testArray = [
@@ -25,7 +26,7 @@ class LpaTest extends TestCase
         $this->assertEquals($testDateTime, $lpa->getLookupTime());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_null_data_array_and_null_time(): void
     {
         $lpa = new Lpa([], new DateTime());

@@ -12,6 +12,7 @@ use DateTime;
 use DateTimeInterface;
 use Exception;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -31,7 +32,7 @@ class ActorUsersTest extends TestCase
         $this->dynamoDbClientProphecy = $this->prophesize(DynamoDbClient::class);
     }
 
-    /** @test */
+    #[Test]
     public function will_add_a_new_user(): void
     {
         $id              = '12345-1234-1234-1234-12345';
@@ -74,7 +75,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
     }
 
-    /** @test */
+    #[Test]
     public function will_reset_activation_for_existing_user(): void
     {
         $id              = '12345-1234-1234-1234-12345';
@@ -131,7 +132,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($activationTtl, $result['ExpiresTTL']);
     }
 
-    /** @test */
+    #[Test]
     public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed(): void
     {
         $id              = '12345-1234-1234-1234-12345';
@@ -177,7 +178,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->add($id, $email, new HiddenString($password), $activationToken, $activationTtl);
     }
 
-    /** @test */
+    #[Test]
     public function will_get_a_user_record(): void
     {
         $id = '12345-1234-1234-1234-12345';
@@ -209,7 +210,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $result['Id']);
     }
 
-    /** @test */
+    #[Test]
     public function will_get_a_user_record_by_identity(): void
     {
         $identity = 'urn:fdc:one-login:2023:HASH=';
@@ -253,7 +254,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $result['Id']);
     }
 
-    /** @test */
+    #[Test]
     public function will_get_a_user_record_by_email(): void
     {
         $email = 'a@b.com';
@@ -290,7 +291,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $result['Id']);
     }
 
-    /** @test */
+    #[Test]
     public function will_get_a_user_record_by_password_reset_token(): void
     {
         $token = 'RESET_TOKEN_1234';
@@ -328,7 +329,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $result);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_to_get_a_user_record_when_they_dont_exist(): void
     {
         $id = '12345-1234-1234-1234-12345';
@@ -357,7 +358,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->get($id);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_to_get_a_user_record_by_email_when_it_doesnt_exist(): void
     {
         $email = 'c@d.com';
@@ -432,7 +433,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->getByIdentity($identity);
     }
 
-    /** @test */
+    #[Test]
     public function will_activate_a_user_account(): void
     {
         $id              = '12345-1234-1234-1234-12345';
@@ -531,7 +532,7 @@ class ActorUsersTest extends TestCase
         $this->assertEqualsWithDelta(time(), $result['ExpiresTTL'], 3);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_to_activate_a_user_not_found(): void
     {
         $activationToken = 'activateTok123';
@@ -559,7 +560,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->activate($activationToken);
     }
 
-    /** @test */
+    #[Test]
     public function will_find_a_user_exists(): void
     {
         $id    = '12345-1234-1234-1234-12345';
@@ -591,7 +592,7 @@ class ActorUsersTest extends TestCase
         $this->assertTrue($actorRepo->exists($email));
     }
 
-    /** @test */
+    #[Test]
     public function will_not_find_a_user(): void
     {
         $email = 'c@d.com';
@@ -616,7 +617,7 @@ class ActorUsersTest extends TestCase
         $this->assertFalse($actorRepo->exists($email));
     }
 
-    /** @test */
+    #[Test]
     public function will_record_a_successful_login(): void
     {
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
@@ -640,7 +641,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->recordSuccessfulLogin('test@example.com', $date);
     }
 
-    /** @test */
+    #[Test]
     public function will_record_a_password_reset_request(): void
     {
         $id    = '12345-1234-1234-1234-12345';
@@ -711,7 +712,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals('12345678912', $result['PasswordResetExpiry']);
     }
 
-    /** @test */
+    #[Test]
     public function will_fail_to_record_a_password_reset_request_if_user_does_not_exist(): void
     {
         $email = 'a@b.com';
@@ -740,7 +741,7 @@ class ActorUsersTest extends TestCase
         $result = $actorRepo->recordPasswordResetRequest($email, 'resetTokenAABBCCDDEE', $time);
     }
 
-    /** @test */
+    #[Test]
     public function will_reset_a_password_when_given_a_correct_user_id(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -768,7 +769,7 @@ class ActorUsersTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function will_not_reset_a_password_when_given_an_incorrect_user_id(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -795,7 +796,7 @@ class ActorUsersTest extends TestCase
         $result = $actorRepo->resetPassword($id, new HiddenString($password));
     }
 
-    /** @test */
+    #[Test]
     public function will_delete_a_users_account(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -835,7 +836,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($password, $deletedUser['Password']);
     }
 
-    /** @test */
+    #[Test]
     public function will_throw_error_if_account_id_to_delete_doesnt_exist(): void
     {
         $id = 'd0E2nT-ex12t';
@@ -856,7 +857,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->delete($id);
     }
 
-    /** @test */
+    #[Test]
     public function can_record_email_reset_request(): void
     {
         $id          = '12345-1234-1234-1234-12345';
@@ -911,7 +912,7 @@ class ActorUsersTest extends TestCase
         $this->assertArrayHasKey('EmailResetExpiry', $reset);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_id_by_email_reset_token(): void
     {
         $id         = '12345-1234-1234-1234-12345';
@@ -944,7 +945,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($id, $responseId);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_user_by_new_email(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -978,7 +979,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($newEmail, $users[0]['NewEmail']);
     }
 
-    /** @test */
+    #[Test]
     public function will_throw_not_found_exception_if_email_reset_token_not_found(): void
     {
         $resetToken = 'abcde12345';
@@ -1000,7 +1001,7 @@ class ActorUsersTest extends TestCase
         $actorRepo->getIdByPasswordResetToken($resetToken);
     }
 
-    /** @test */
+    #[Test]
     public function can_complete_change_email(): void
     {
         $id         = '12345-1234-1234-1234-12345';
@@ -1023,7 +1024,7 @@ class ActorUsersTest extends TestCase
         $this->assertTrue($reset);
     }
 
-    /** @test */
+    #[Test]
     public function will_rehash_a_users_password_with_updated_techniques(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -1051,7 +1052,7 @@ class ActorUsersTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function will_migrate_a_local_account_to_oidc(): void
     {
         $id       = '12345-1234-1234-1234-12345';
@@ -1090,7 +1091,7 @@ class ActorUsersTest extends TestCase
         $this->assertEquals($identity, $user['Identity']);
     }
 
-    /** @test */
+    #[Test]
     public function migration_fails_when_user_not_found(): void
     {
         $id       = '12345-1234-1234-1234-12345';

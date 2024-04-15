@@ -6,7 +6,10 @@ namespace AppTest\Service\ApiClient;
 
 use App\Exception\ApiException;
 use App\Service\ApiClient\Client;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -16,7 +19,6 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Exception;
 
 class ClientTest extends TestCase
 {
@@ -59,7 +61,7 @@ class ClientTest extends TestCase
     // httpGet
     // ============
 
-    /** @test */
+    #[Test]
     public function can_get_a_simple_endpoint_returning_valid_json(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -72,7 +74,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_an_endpoint_with_parameters_returning_valid_json(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -85,7 +87,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function correctly_processes_a_non_200_response_to_a_get_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -98,7 +100,7 @@ class ClientTest extends TestCase
         $data = $client->httpGet('/simple_bad_get');
     }
 
-    /** @test */
+    #[Test]
     public function client_throws_error_with_get_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
@@ -117,10 +119,8 @@ class ClientTest extends TestCase
     // httpPost
     // ============
 
-    /**
-     * @test
-     * @dataProvider validStatusCodes
-     */
+    #[Test]
+    #[DataProvider('validStatusCodes')]
     public function can_post_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -133,7 +133,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_post_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -146,7 +146,7 @@ class ClientTest extends TestCase
         $data = $client->httpPost('/simple_bad_post', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    #[Test]
     public function client_throws_error_with_post_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
@@ -165,10 +165,8 @@ class ClientTest extends TestCase
     // httpPut
     // ============
 
-    /**
-     * @test
-     * @dataProvider validStatusCodes
-     */
+    #[Test]
+    #[DataProvider('validStatusCodes')]
     public function can_put_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -181,7 +179,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_put_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -194,7 +192,7 @@ class ClientTest extends TestCase
         $data = $client->httpPut('/simple_bad_put', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    #[Test]
     public function client_throws_error_with_put_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
@@ -213,10 +211,8 @@ class ClientTest extends TestCase
     // httpPatch
     // ============
 
-    /**
-     * @test
-     * @dataProvider validStatusCodes
-     */
+    #[Test]
+    #[DataProvider('validStatusCodes')]
     public function can_patch_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -229,7 +225,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_patch_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -242,7 +238,7 @@ class ClientTest extends TestCase
         $data = $client->httpPatch('/simple_bad_patch', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    #[Test]
     public function client_throws_error_with_patch_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
@@ -261,10 +257,8 @@ class ClientTest extends TestCase
     // httpDelete
     // ============
 
-    /**
-     * @test
-     * @dataProvider validStatusCodes
-     */
+    #[Test]
+    #[DataProvider('validStatusCodes')]
     public function can_delete_to_an_endpoint_with_parameters_returning_valid_json(int $statusCode): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -277,7 +271,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function correctly_processes_a_non_2xx_response_to_a_delete_request(): void
     {
         $this->apiClient->sendRequest(Argument::type(RequestInterface::class))
@@ -290,7 +284,7 @@ class ClientTest extends TestCase
         $data = $client->httpDelete('/simple_bad_delete', ['simple_query' => 'query_value']);
     }
 
-    /** @test */
+    #[Test]
     public function client_throws_error_with_delete_request(): void
     {
         $exceptionProphecy = $this->prophesize(ClientExceptionInterface::class);
@@ -312,7 +306,7 @@ class ClientTest extends TestCase
     // These tests operate on all request methods in the Client class but test identical
     // expected functionality in each.
 
-    /** @test */
+    #[Test]
     public function sets_appropriate_request_headers_for_request(): void
     {
         $this->apiClient->sendRequest(Argument::that(function ($request) {
@@ -347,7 +341,7 @@ class ClientTest extends TestCase
         $this->assertIsArray($data);
     }
 
-    /** @test */
+    #[Test]
     public function gracefully_handles_malformed_response_data(): void
     {
         $exceptionProphecy = $this->prophesize(ApiException::class);
@@ -393,7 +387,7 @@ class ClientTest extends TestCase
      *
      * @return array
      */
-    public function validStatusCodes(): array
+    public static function validStatusCodes(): array
     {
         return [
             [StatusCodeInterface::STATUS_OK],

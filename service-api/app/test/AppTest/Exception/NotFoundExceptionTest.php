@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class NotFoundExceptionTest extends TestCase
 {
-    public function testDataGets()
+    public function testDataGets(): void
     {
         $message = 'nfe message';
 

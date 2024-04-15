@@ -16,7 +16,7 @@ class UserActivateHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testHandle()
+    public function testHandle(): void
     {
         $activationToken = 'activateTok123';
 
@@ -55,7 +55,7 @@ class UserActivateHandlerTest extends TestCase
         }
     }
 
-    public function testHandleMissingToken()
+    public function testHandleMissingToken(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 

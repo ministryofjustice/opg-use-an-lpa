@@ -10,6 +10,7 @@ use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\LpaAlreadyAdded;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -50,7 +51,7 @@ class AddLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_a_bad_request_if_lpa_already_added(): void
     {
         $this->lpaAlreadyAddedProphecy
@@ -76,7 +77,7 @@ class AddLpaTest extends TestCase
         throw new ExpectationFailedException('A bad request exception should have been thrown');
     }
 
-    /** @test */
+    #[Test]
     public function it_accepts_lpas_that_have_been_requested_to_be_added_but_not_activated(): void
     {
         $expectedResponse = [
@@ -111,7 +112,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals($expectedResponse, $lpaData);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_a_bad_request_if_code_validation_fails(): void
     {
         $this->lpaAlreadyAddedProphecy
@@ -140,7 +141,7 @@ class AddLpaTest extends TestCase
         throw new ExpectationFailedException('A not found exception should have been thrown');
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_a_bad_request_if_the_lpa_status_is_not_registered(): void
     {
         $this->lpaAlreadyAddedProphecy
@@ -175,7 +176,7 @@ class AddLpaTest extends TestCase
         throw new ExpectationFailedException('A bad request exception should have been thrown');
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_lpa_data_if_all_validation_checks_passed(): void
     {
         $expectedResponse = [

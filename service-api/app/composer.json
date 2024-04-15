@@ -64,7 +64,8 @@
         "psr/http-client-implementation": "^1.0",
         "ramsey/uuid": "^4.0",
         "symfony/console": "^6.1",
-        "web-token/jwt-signature-algorithm-ecdsa": "^3.2"
+        "web-token/jwt-signature-algorithm-ecdsa": "^3.2",
+        "web-token/jwt-encryption-algorithm-aeskw": "^3.4.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -75,7 +76,7 @@
         "mezzio/mezzio-tooling": "^2.5",
         "phpspec/prophecy": "^1.15",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.5",
         "psalm/plugin-phpunit": "^0.18.0",
         "roave/security-advisories": "dev-master",
         "slevomat/coding-standard": "^8.9",

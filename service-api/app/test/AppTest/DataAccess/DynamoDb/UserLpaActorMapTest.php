@@ -11,6 +11,7 @@ use Aws\DynamoDb\Exception\DynamoDbException;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -27,7 +28,7 @@ class UserLpaActorMapTest extends TestCase
 
     private DynamoDbClient|ObjectProphecy $dynamoDbClientProphecy;
 
-    public function assertIsValidUuid($uuid, string $message = '')
+    public function assertIsValidUuid($uuid, string $message = ''): void
     {
         $pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
         self::assertMatchesRegularExpression($pattern, $uuid, $message);
@@ -41,7 +42,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Get
 
-    /** @test */
+    #[Test]
     public function can_lookup_a_token(): void
     {
         $testToken     = 'test-token';
@@ -99,7 +100,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertEquals($testActorId, $result['ActorId']);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_lookup_a_missing_code(): void
     {
         $testToken = 'test-token';
@@ -137,7 +138,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Create
 
-    /** @test */
+    #[Test]
     public function add_unique_token(): void
     {
         $testSiriusUid = 'test-uid';
@@ -188,7 +189,7 @@ class UserLpaActorMapTest extends TestCase
         $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode);
     }
 
-    /** @test */
+    #[Test]
     public function add_unique_token_without_optional_values(): void
     {
         $testSiriusUid = 'test-uid';
@@ -233,7 +234,7 @@ class UserLpaActorMapTest extends TestCase
         $repo->create($testUserId, $testSiriusUid, null);
     }
 
-    /** @test */
+    #[Test]
     public function add_unique_token_with_TTL(): void
     {
         $yearInEpoch   = 31536000;
@@ -289,19 +290,16 @@ class UserLpaActorMapTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function add_conflicting_code(): void
     {
         /** @var MockObject|DynamoDbClient $dDBMock */
-        $dDBMock = $this->getMockBuilder(DynamoDbClient::class)
-            ->setMethods(['putItem'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $dDBMock = $this->createMock(DynamoDbClient::class);
 
         $dDBMock
             ->expects($this->exactly(2))
-            ->method('putItem')
-            ->withAnyParameters()
+            ->method('__call')
+            ->with($this->identicalTo('putItem'), $this->anything())
             ->willReturnOnConsecutiveCalls(
                 $this->throwException(
                     new DynamoDbException(
@@ -310,7 +308,7 @@ class UserLpaActorMapTest extends TestCase
                         ['code' => 'ConditionalCheckFailedException']
                     )
                 ),
-                $this->returnValue('')
+                '',
             );
 
         //---
@@ -326,7 +324,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertIsValidUuid($id);
     }
 
-    /** @test */
+    #[Test]
     public function unknown_exception_when_adding_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
@@ -350,7 +348,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Delete
 
-    /** @test */
+    #[Test]
     public function can_delete_map(): void
     {
         $testToken     = 'test-token';
@@ -401,7 +399,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Activate record
 
-    /** @test */
+    #[Test]
     public function can_activate_record(): void
     {
         $testToken          = 'test-token';
@@ -462,7 +460,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Get All
 
-    /** @test */
+    #[Test]
     public function can_get_all_lpas_for_user(): void
     {
         $testToken     = 'test-token';
@@ -537,7 +535,7 @@ class UserLpaActorMapTest extends TestCase
     //--------------------------------------------------------------------------------
     // Renew Activation Period
 
-    /** @test */
+    #[Test]
     public function can_update_record(): void
     {
         $testToken     = 'test-token';
@@ -609,7 +607,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertEquals($testToken, $renew['Id']);
     }
 
-    /** @test */
+    #[Test]
     public function can_update_record_without_actorId(): void
     {
         $testToken     = 'test-token';

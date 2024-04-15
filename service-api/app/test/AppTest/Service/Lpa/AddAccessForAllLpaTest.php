@@ -19,6 +19,7 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -111,7 +112,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria(): void
     {
         $this->featureEnabledProphecy
@@ -149,7 +150,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals('attorney', $result['role']);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_lpa_already_added(): void
     {
         $alreadyAddedData = [
@@ -173,7 +174,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_lpa_already_requested(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
@@ -231,7 +232,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_successful_if_lpa_already_requested_but_force_flag_true(): void
     {
         $this->featureEnabledProphecy
@@ -284,7 +285,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals($expectedResponse, $response);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_lpa_not_found(): void
     {
         $this->lpaAlreadyAddedProphecy
@@ -303,7 +304,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid(): void
     {
         $invalidLpa = new Lpa(
@@ -335,7 +336,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_lpa_status_not_registered(): void
     {
         $invalidLpa = new Lpa(
@@ -367,7 +368,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_an_exception_if_user_data_doesnt_match_lpa(): void
     {
         $this->featureEnabledProphecy
@@ -401,7 +402,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
@@ -446,7 +447,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true(): void
     {
         $this->featureEnabledProphecy
@@ -544,7 +545,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_lookup_throws_not_found_exception_lpa_registered_after_2019_and_restrict_flag_true(): void
     {
         $this->featureEnabledProphecy

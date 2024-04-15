@@ -6,6 +6,7 @@ namespace AppTest\Middleware\Logging;
 
 use App\Middleware\Logging\RequestTracingMiddleware;
 use App\Service\Container\ModifiableContainerInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -16,7 +17,7 @@ class RequestTracingMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_sets_a_trace_attribute_if_set_as_a_header(): void
     {
         $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);
@@ -35,7 +36,7 @@ class RequestTracingMiddlewareTest extends TestCase
         $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function trace_id_is_blank_if_no_header(): void
     {
         $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);

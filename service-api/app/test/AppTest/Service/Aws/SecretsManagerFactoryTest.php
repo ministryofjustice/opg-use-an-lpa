@@ -8,6 +8,7 @@ use App\Service\Aws\SecretsManagerFactory;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
 use Monolog\Test\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
@@ -15,7 +16,7 @@ class SecretsManagerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_a_SecretsManager(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

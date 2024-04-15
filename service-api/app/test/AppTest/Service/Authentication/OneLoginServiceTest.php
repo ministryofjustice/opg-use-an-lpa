@@ -12,6 +12,7 @@ use App\Service\Authentication\UserInfoService;
 use App\Service\RandomByteGenerator;
 use App\Service\User\ResolveOAuthUser;
 use Facile\OpenIDClient\Token\TokenSetInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -20,9 +21,7 @@ class OneLoginServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function create_authentication_request(): void
     {
         $fakeRedirect = 'http://fakehost/auth/redirect';
@@ -69,9 +68,7 @@ class OneLoginServiceTest extends TestCase
         $authorisationRequest = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function handle_callback(): void
     {
         $fakeRedirect = 'http://fakehost/auth/redirect';
@@ -100,8 +97,8 @@ class OneLoginServiceTest extends TestCase
             ->getUserInfo($tokenSet->reveal())
             ->willReturn(
                 [
-                    'sub'                                             => 'fakeSub',
-                    'email'                                           => 'fakeEmail',
+                    'sub'   => 'fakeSub',
+                    'email' => 'fakeEmail',
                 ]
             );
 
@@ -137,9 +134,7 @@ class OneLoginServiceTest extends TestCase
         $this->assertSame('fakeEmail', $user['Email']);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function handle_callback_missing_token(): void
     {
         $fakeRedirect = 'http://fakehost/auth/redirect';

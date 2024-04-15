@@ -53,7 +53,7 @@ class LpaHandlerTest extends TestCase
         }
     }
 
-    public function testHandleMissingParam()
+    public function testHandleMissingParam(): void
     {
         $this->markTestSkipped('must be revisited.');
         $lpaServiceProphecy = $this->prophesize(LpaService::class);

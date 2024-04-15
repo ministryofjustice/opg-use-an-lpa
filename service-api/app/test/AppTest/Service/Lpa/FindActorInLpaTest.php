@@ -6,6 +6,8 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -24,10 +26,8 @@ class FindActorInLpaTest extends TestCase
         $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
     }
 
-    /**
-     * @test
-     * @dataProvider actorLookupDataProvider
-     */
+    #[Test]
+    #[DataProvider('actorLookupDataProvider')]
     public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
         $lpa = [
@@ -174,7 +174,7 @@ class FindActorInLpaTest extends TestCase
         $this->assertEquals($expectedResponse, $matchData);
     }
 
-    public function actorLookupDataProvider(): array
+    public static function actorLookupDataProvider(): array
     {
         return [
             [

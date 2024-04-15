@@ -7,12 +7,12 @@ namespace AppTest\Service\Notify;
 use App\Exception\BadRequestException;
 use App\Service\Email\EmailClient;
 use App\Service\Notify\NotifyService;
+use DateTime;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use ReflectionClass;
-use DateTime;
-use PHPUnit\Framework\TestCase;
 
 class NotifyServiceTest extends TestCase
 {
@@ -36,7 +36,7 @@ class NotifyServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function can_send_account_activation_email(): void
     {
         $emailTemplate = 'AccountActivationEmail';
@@ -51,7 +51,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_account_activation_email_and_exception_thrown(): void
     {
         $emailTemplate = 'AccountActivationEmail';
@@ -66,7 +66,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_account_activation_confirmation_email(): void
     {
         $emailTemplate = 'AccountActivatedConfirmationEmail';
@@ -81,7 +81,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_account_activation_confirmation_email_throws_exception(): void
     {
         $emailTemplate = 'AccountActivatedConfirmationEmail';
@@ -96,7 +96,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_already_registered_email(): void
     {
         $emailTemplate = 'AlreadyRegisteredEmail';
@@ -110,7 +110,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_already_registered_email_throws_exception(): void
     {
         $emailTemplate = 'AlreadyRegisteredEmail';
@@ -124,7 +124,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_password_reset_email(): void
     {
         $emailTemplate = 'PasswordResetEmail';
@@ -139,7 +139,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_password_reset_email_throws_exception(): void
     {
         $emailTemplate = 'PasswordResetEmail';
@@ -154,7 +154,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_password_changed_email(): void
     {
         $emailTemplate = 'PasswordChangedEmail';
@@ -168,7 +168,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_password_changed_email_throws_exception(): void
     {
         $emailTemplate = 'PasswordChangedEmail';
@@ -180,7 +180,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_request_change_email_to_current_email(): void
     {
         $emailTemplate = 'RequestChangeEmailToCurrentEmail';
@@ -195,7 +195,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_request_change_email_to_current_email_throws_exception(): void
     {
         $emailTemplate = 'RequestChangeEmailToCurrentEmail';
@@ -210,7 +210,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_request_change_email_to_new_email(): void
     {
         $emailTemplate = 'RequestChangeEmailToNewEmail';
@@ -225,7 +225,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_request_change_email_to_new_email_throws_exception(): void
     {
         $emailTemplate = 'RequestChangeEmailToNewEmail';
@@ -240,7 +240,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_someone_tried_to_use_your_email_in_email_reset_request(): void
     {
         $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
@@ -254,7 +254,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_someone_tried_to_use_your_email_in_email_reset_request_throws_exception(): void
     {
         $emailTemplate = 'SomeoneTriedToUseYourEmailInEmailResetRequest';
@@ -268,7 +268,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_activation_key_request_confirmation_mail(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
@@ -285,7 +285,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_activation_key_request_confirmation_mail_throws_exception(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
@@ -302,7 +302,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_activation_key_request_confirmation_mail_throws_exception_again(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmail';
@@ -320,7 +320,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
@@ -336,7 +336,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_activation_key_request_confirmation_email_lpa_needs_cleansing_throws_exception(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
@@ -352,7 +352,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_activation_key_request_confirmation_email_when_lpa_needs_cleansing(): void
     {
         $emailTemplate = 'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
@@ -368,7 +368,7 @@ class NotifyServiceTest extends TestCase
         $result = $notify($emailTemplate, $requestData);
     }
 
-    /** @test */
+    #[Test]
     public function can_send_no_account_exists_email(): void
     {
         $emailTemplate = 'NoAccountExistsEmail';
@@ -382,7 +382,7 @@ class NotifyServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_send_no_account_exists_email_throws_exception(): void
     {
         $emailTemplate = 'NoAccountExistsEmail';

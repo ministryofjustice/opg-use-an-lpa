@@ -34,14 +34,14 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
           echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.4
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.6
         id: semver_tag
         with:
           with_v: true
@@ -90,19 +90,19 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
       - name: download artifact for front tests
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
         with:
           name: service-front
           path: service-front
       - name: download artifact for api tests
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
         with:
           name: service-api
           path: service-api
       - name: download artifact for api tests
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
         with:
           name: service-admin
           path: service-admin
@@ -198,11 +198,11 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@e9ef242655d12993efdcda9058dee2db83a2cb9b
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427
         with:
           name: environment_config_file
           path: terraform/environment

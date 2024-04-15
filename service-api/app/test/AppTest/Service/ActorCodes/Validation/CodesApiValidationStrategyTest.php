@@ -14,6 +14,7 @@ use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -46,7 +47,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_will_validate_a_code(): void
     {
         $this->initDependencies();
@@ -92,7 +93,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $this->assertEquals('123456789', $actorUId);
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_a_nonexistant_code(): void
     {
         $this->initDependencies();
@@ -114,7 +115,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('bad-actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_an_expired_code(): void
     {
         $this->initDependencies();
@@ -136,7 +137,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('expired-actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_a_code_when_lpa_not_found(): void
     {
         $this->initDependencies();
@@ -163,7 +164,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_a_code_with_a_mismatched_actor(): void
     {
         $this->initDependencies();
@@ -201,7 +202,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_a_code_with_a_bad_dob(): void
     {
         $this->initDependencies();
@@ -248,7 +249,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_will_handle_an_exception_when_validating_a_code(): void
     {
         $this->initDependencies();
@@ -270,7 +271,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
     }
 
-    /** @test */
+    #[Test]
     public function it_will_flag_a_code_as_used(): void
     {
         $this->initDependencies();
@@ -284,7 +285,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy->flagCodeAsUsed('actor-code');
     }
 
-    /** @test */
+    #[Test]
     public function it_will_handle_an_exception_when_flagging_a_code_as_used(): void
     {
         $this->initDependencies();
@@ -299,7 +300,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy->flagCodeAsUsed('actor-code');
     }
 
-    /** @test */
+    #[Test]
     public function it_wont_validate_a_code_with_a_bad_dob_for_trust_corporation(): void
     {
         $this->initDependencies();

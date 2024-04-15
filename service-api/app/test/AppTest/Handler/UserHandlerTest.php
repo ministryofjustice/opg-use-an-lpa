@@ -16,7 +16,7 @@ class UserHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testHandleGet()
+    public function testHandleGet(): void
     {
         $email = 'a@b.com';
 
@@ -57,7 +57,7 @@ class UserHandlerTest extends TestCase
         }
     }
 
-    public function testHandleGetMissingToken()
+    public function testHandleGetMissingToken(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 
@@ -77,7 +77,7 @@ class UserHandlerTest extends TestCase
         $handler->handle($requestProphecy->reveal());
     }
 
-    public function testHandlePost()
+    public function testHandlePost(): void
     {
         $email = 'a@b.com';
 
@@ -119,7 +119,7 @@ class UserHandlerTest extends TestCase
         }
     }
 
-    public function testHandlePostMissingParams()
+    public function testHandlePostMissingParams(): void
     {
         $userServiceProphecy = $this->prophesize(UserService::class);
 

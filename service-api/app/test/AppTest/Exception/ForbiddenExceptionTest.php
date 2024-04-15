@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class ForbiddenExceptionTest extends TestCase
 {
-    public function testDataGets()
+    public function testDataGets(): void
     {
         $message = 'fe message';
 

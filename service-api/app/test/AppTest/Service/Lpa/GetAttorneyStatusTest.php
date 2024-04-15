@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -21,7 +22,7 @@ class GetAttorneyStatusTest extends TestCase
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function returns_0_if_attorney_is_active(): void
     {
         $attorney = ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true];
@@ -33,7 +34,7 @@ class GetAttorneyStatusTest extends TestCase
         $this->assertEquals(0, ($status)($attorney));
     }
 
-    /** @test */
+    #[Test]
     public function returns_1_if_attorney_is_a_ghost(): void
     {
         $attorney = ['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true];
@@ -45,7 +46,7 @@ class GetAttorneyStatusTest extends TestCase
         $this->assertEquals(1, ($status)($attorney));
     }
 
-    /** @test */
+    #[Test]
     public function returns_2_if_attorney_is_inactive(): void
     {
         $attorney = ['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false];

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\ApiGateway\Sanitisers;
 
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class SiriusLpaSanitiserTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_removes_hyphens_from_sirius_uids(): void
     {
         $originalLpa = [

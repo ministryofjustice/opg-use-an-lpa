@@ -7,6 +7,7 @@ namespace AppTest\Service\Aws;
 use App\Service\Aws\SdkFactory;
 use Aws\Sdk;
 use Exception;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -15,7 +16,7 @@ class SdkFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -29,7 +30,7 @@ class SdkFactoryTest extends TestCase
         $this->assertInstanceOf(Sdk::class, $repo);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class UnauthorizedExceptionTest extends TestCase
 {
-    public function testDataGets()
+    public function testDataGets(): void
     {
         $message = 'ue message';
 

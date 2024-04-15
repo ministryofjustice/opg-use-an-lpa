@@ -11,6 +11,8 @@ use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Jose\Component\Core\JWK;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -18,9 +20,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
 use Psr\SimpleCache\CacheInterface;
 
-/**
- * @coversDefaultClass \App\Service\Authentication\AuthorisationClientManager
- */
+#[CoversClass(AuthorisationClientManager::class)]
 class AuthorisationClientManagerTest extends TestCase
 {
     use ProphecyTrait;
@@ -40,10 +40,7 @@ class AuthorisationClientManagerTest extends TestCase
         $this->keyPairManager = $this->prophesize(KeyPairManagerInterface::class);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_instantiated(): void
     {
         $sut = new AuthorisationClientManager(
@@ -59,7 +56,7 @@ class AuthorisationClientManagerTest extends TestCase
         $this->assertInstanceOf(AuthorisationClientManager::class, $sut);
     }
 
-    /** @test */
+    #[Test]
     public function it_gets_a_client(): void
     {
         $this->cacheFactory

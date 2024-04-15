@@ -11,13 +11,13 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8410ad0602e1e429cee44a835ae9f77f654a6694 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
       - uses: actions/setup-node@c2ac33f2c62f978d6c944d9648125a294e56dc0b # pin@v3.6.0
         with:
           node-version-file: '.nvmrc'
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319 # pin@v3.0.8
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
