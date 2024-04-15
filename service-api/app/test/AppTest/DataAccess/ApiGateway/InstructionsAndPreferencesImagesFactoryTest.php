@@ -8,17 +8,18 @@ use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\Service\Log\RequestTracing;
+use Exception;
 use GuzzleHttp\Client as HttpClient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
-use Exception;
 
 class InstructionsAndPreferencesImagesFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_an_instance(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -51,7 +52,7 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
         $this->assertInstanceOf(InstructionsAndPreferencesImages::class, $instructionsAndPreferencesImages);
     }
 
-    /** @test */
+    #[Test]
     public function it_fails_with_exception_when_config_missing(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

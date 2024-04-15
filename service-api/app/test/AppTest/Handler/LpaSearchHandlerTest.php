@@ -16,7 +16,7 @@ class LpaSearchHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testHandle()
+    public function testHandle(): void
     {
         $this->markTestSkipped('must be revisited.');
         $params = [
@@ -58,7 +58,7 @@ class LpaSearchHandlerTest extends TestCase
         }
     }
 
-    public function testHandleMissingParams()
+    public function testHandleMissingParams(): void
     {
         $this->markTestSkipped('must be revisited.');
         $lpaServiceProphecy = $this->prophesize(LpaService::class);

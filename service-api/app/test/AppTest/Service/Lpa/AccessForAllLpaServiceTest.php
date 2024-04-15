@@ -14,6 +14,7 @@ use App\Service\Lpa\AccessForAllLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -80,7 +81,7 @@ class AccessForAllLpaServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter(): void
     {
         $this->lpasInterfaceProphecy
@@ -99,7 +100,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
 
-    /** @test */
+    #[Test]
     public function request_cleanse_and_access_code_letter(): void
     {
         $this->userLpaActorMapProphecy->create(
@@ -125,7 +126,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter_record_exists(): void
     {
         $this->lpasInterfaceProphecy
@@ -145,7 +146,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter_and_cleanse_record_exists(): void
     {
         $this->lpasInterfaceProphecy
@@ -171,7 +172,7 @@ class AccessForAllLpaServiceTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter_without_flag(): void
     {
         $this->lpasInterfaceProphecy
@@ -190,7 +191,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter_api_call_fails(): void
     {
         $this->lpasInterfaceProphecy
@@ -217,7 +218,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
     }
 
-    /** @test */
+    #[Test]
     public function request_access_code_letter_and_cleanse_api_call_fails(): void
     {
         $this->lpasInterfaceProphecy
@@ -244,7 +245,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
     }
 
-    /** @test */
+    #[Test]
     public function returns_code_created_date_if_code_exists_for_actor(): void
     {
         $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
@@ -266,7 +267,7 @@ class AccessForAllLpaServiceTest extends TestCase
         $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
     }
 
-    /** @test */
+    #[Test]
     public function returns_null_if_a_code_does_not_exist_for_an_actor(): void
     {
         $lpaCodesResponse = new ActorCode(

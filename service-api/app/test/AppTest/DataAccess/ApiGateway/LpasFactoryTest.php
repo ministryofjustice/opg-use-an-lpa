@@ -10,6 +10,7 @@ use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -19,7 +20,7 @@ class LpasFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -51,7 +52,7 @@ class LpasFactoryTest extends TestCase
         $this->assertInstanceOf(Lpas::class, $repo);
     }
 
-    /** @test */
+    #[Test]
     public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

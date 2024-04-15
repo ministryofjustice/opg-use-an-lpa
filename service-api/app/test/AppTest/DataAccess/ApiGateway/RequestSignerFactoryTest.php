@@ -6,6 +6,7 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -14,7 +15,7 @@ class RequestSignerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_a_static_request_signer(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -35,7 +36,7 @@ class RequestSignerFactoryTest extends TestCase
         $this->assertInstanceOf(RequestSigner::class, $signer);
     }
 
-    /** @test */
+    #[Test]
     public function it_creates_an_aws_request_signer_without_config(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

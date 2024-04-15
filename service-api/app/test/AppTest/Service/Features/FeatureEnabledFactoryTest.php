@@ -6,22 +6,19 @@ namespace AppTest\Service\Features;
 
 use App\Service\Features\FeatureEnabled;
 use App\Service\Features\FeatureEnabledFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use UnexpectedValueException;
 
-/**
- * @coversDefaultClass \App\Service\Features\FeatureEnabledFactory
- */
+#[CoversClass(FeatureEnabledFactory::class)]
 class FeatureEnabledFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_creates_a_featureenabled_service_instance(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -40,10 +37,7 @@ class FeatureEnabledFactoryTest extends TestCase
         $this->assertInstanceOf(FeatureEnabled::class, $instance);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_will_throw_an_exception_if_not_configured(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -57,10 +51,7 @@ class FeatureEnabledFactoryTest extends TestCase
         $instance = $factory($containerProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_will_throw_an_exception_if_badly_configured(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

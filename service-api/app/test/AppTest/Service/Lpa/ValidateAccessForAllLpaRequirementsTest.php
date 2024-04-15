@@ -7,13 +7,13 @@ namespace AppTest\Service\Lpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\ValidateAccessForAllLpaRequirements
- */
+#[CoversClass(ValidateAccessForAllLpaRequirements::class)]
 class ValidateAccessForAllLpaRequirementsTest extends TestCase
 {
     private LoggerInterface|MockObject $mockLogger;
@@ -31,10 +31,10 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     }
 
     /**
-     * @test
      * @throws Exception
      */
-    public function throws_bad_request_exception_when_lpa_status_is_not_registered()
+    #[Test]
+    public function throws_bad_request_exception_when_lpa_status_is_not_registered(): void
     {
         $lpa = [
             'uId'    => '123456789012',
@@ -47,10 +47,10 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     }
 
     /**
-     * @test
      * @throws Exception
      */
-    public function when_allow_older_lpa_flag_on_throws_exception_when_status_is_not_registered()
+    #[Test]
+    public function when_allow_older_lpa_flag_on_throws_exception_when_status_is_not_registered(): void
     {
         $lpa = [
             'uId'              => '123456789012',
@@ -64,10 +64,10 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
     }
 
     /**
-     * @test
      * @throws Exception
      */
-    public function when_allow_older_lpa_flag_on_throws_no_exception_when_status_is_registered()
+    #[Test]
+    public function when_allow_older_lpa_flag_on_throws_no_exception_when_status_is_registered(): void
     {
         $lpa = [
             'uId'              => '123456789012',

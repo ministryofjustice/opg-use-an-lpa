@@ -10,23 +10,20 @@ use App\Service\Authentication\IssuerBuilder;
 use App\Service\Authentication\JWKFactory;
 use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
 use App\Service\Cache\CacheFactory;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface as PsrClientInterface;
 use RuntimeException;
 
-/**
- * @coversDefaultClass \App\Service\Authentication\AuthorisationClientManagerFactory
- */
+#[CoversClass(AuthorisationClientManagerFactory::class)]
 class AuthorisationClientManagerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_constructs_a_configured_authorisationClientManager(): void
     {
         $container = $this->prophesize(ContainerInterface::class);
@@ -60,10 +57,7 @@ class AuthorisationClientManagerFactoryTest extends TestCase
         $this->assertInstanceOf(AuthorisationClientManager::class, $service);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_throws_an_exception_when_not_configured(): void
     {
         $container = $this->prophesize(ContainerInterface::class);

@@ -8,17 +8,14 @@ use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\GetInstructionsAndPreferencesImages
- */
+#[CoversClass(GetInstructionsAndPreferencesImages::class)]
 class GetInstructionsAndPreferencesImagesTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_initialised(): void
     {
         $repositoryStub = $this->createStub(InstructionsAndPreferencesImagesInterface::class);
@@ -28,10 +25,7 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
         $this->assertInstanceOf(GetInstructionsAndPreferencesImages::class, $sut);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_returns_images_when_passed_a_uid(): void
     {
         $images = new InstructionsAndPreferencesImages(

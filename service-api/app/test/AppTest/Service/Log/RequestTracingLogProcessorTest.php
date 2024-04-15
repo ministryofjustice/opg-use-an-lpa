@@ -7,6 +7,7 @@ namespace AppTest\Service\Log;
 use App\Service\Log\RequestTracing;
 use App\Service\Log\RequestTracingLogProcessor;
 use DI\NotFoundException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -15,7 +16,7 @@ class RequestTracingLogProcessorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_adds_the_tracing_parameter(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -29,7 +30,7 @@ class RequestTracingLogProcessorTest extends TestCase
         $this->assertEquals(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'abc']], $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_adds_a_default_tracing_parameter_if_none_found(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

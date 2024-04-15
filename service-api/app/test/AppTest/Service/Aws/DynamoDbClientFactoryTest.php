@@ -7,6 +7,7 @@ namespace AppTest\Service\Aws;
 use App\Service\Aws\DynamoDbClientFactory;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\Sdk;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
@@ -15,7 +16,7 @@ class DynamoDbClientFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_a_dbclient(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

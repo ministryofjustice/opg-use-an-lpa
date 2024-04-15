@@ -7,6 +7,7 @@ namespace AppTest\Service\Authentication\KeyPairManager;
 use App\Service\Authentication\KeyPairManager\CachedKeyPairManager;
 use App\Service\Authentication\KeyPairManager\KeyPair;
 use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -16,9 +17,7 @@ class CachedKeyPairManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_can_be_instantiated(): void
     {
         $sut = new CachedKeyPairManager(
@@ -29,9 +28,7 @@ class CachedKeyPairManagerTest extends TestCase
         $this->assertInstanceOf(KeyPairManagerInterface::class, $sut);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_returns_the_decorated_algorithm(): void
     {
         $keyPairManager = $this->prophesize(KeyPairManagerInterface::class);
@@ -47,9 +44,7 @@ class CachedKeyPairManagerTest extends TestCase
         $this->assertSame('ALGORITHM', $sut->getAlgorithm());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_caches_a_decorated_keypair(): void
     {
         $cacheInterface = $this->prophesize(CacheInterface::class);
@@ -87,9 +82,7 @@ class CachedKeyPairManagerTest extends TestCase
         $this->assertInstanceOf(KeyPair::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_caches_a_decorated_keypair_with_a_custom_ttl(): void
     {
         $cacheInterface = $this->prophesize(CacheInterface::class);
@@ -119,9 +112,7 @@ class CachedKeyPairManagerTest extends TestCase
         $this->assertInstanceOf(KeyPair::class, $result);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_returns_a_cached_keypair(): void
     {
         $cacheInterface = $this->prophesize(CacheInterface::class);

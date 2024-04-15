@@ -6,6 +6,7 @@ namespace AppTest\Exception;
 
 use App\Exception\AbstractApiException;
 use App\Exception\ApiException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -15,7 +16,7 @@ class ApiExceptionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function creates_instance_without_response(): void
     {
         $instance = ApiException::create('test');
@@ -27,7 +28,7 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
 
-    /** @test */
+    #[Test]
     public function creates_instance_with_response(): void
     {
         $message        = 'api message';
@@ -60,7 +61,7 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(404, $ex->getCode());
     }
 
-    /** @test */
+    #[Test]
     public function can_get_exception_message_from_body_details(): void
     {
         $message = null;
@@ -89,7 +90,7 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
 
-    /** @test */
+    #[Test]
     public function can_compose_a_message_from_body_if_no_details(): void
     {
         $message = null;
@@ -117,7 +118,7 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
 
-    /** @test */
+    #[Test]
     public function can_compose_a_standard_message_if_none_found(): void
     {
         $message = null;
@@ -141,7 +142,7 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
     }
 
-    /** @test */
+    #[Test]
     public function can_function_when_lacking_an_associated_response_object(): void
     {
         $instance = ApiException::create('This is an exception', null);

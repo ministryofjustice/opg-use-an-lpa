@@ -6,12 +6,12 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\RequestSigner;
-use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -23,7 +23,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_gets_instructions_and_preferences_images(): void
     {
         $testData = [
@@ -72,7 +72,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $this->assertEquals($testData['signedUrls'], $instructionsAndPreferencesImages->signedUrls);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_client_exception_when_getting_instructions_and_preferences_images(): void
     {
         $httpClientProphecy = $this->prophesize(HttpClient::class);
@@ -97,7 +97,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $service->getInstructionsAndPreferencesImages(700000000001);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_a_not_ok_service_error_code_when_getting_instructions_and_preferences_images(): void
     {
         $testData = [

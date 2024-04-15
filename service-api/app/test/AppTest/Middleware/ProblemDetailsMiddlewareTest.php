@@ -7,6 +7,7 @@ namespace AppTest\Middleware;
 use App\Exception\NotFoundException;
 use App\Middleware\ProblemDetailsMiddleware;
 use Laminas\Diactoros\Response\JsonResponse;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseInterface;
@@ -18,7 +19,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_correctly_handles_a_successful_response(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
@@ -38,7 +39,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_handles_an_exception_thrown_by_its_delegate(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);

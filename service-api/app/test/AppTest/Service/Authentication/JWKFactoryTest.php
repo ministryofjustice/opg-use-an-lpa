@@ -10,6 +10,7 @@ use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
 use InvalidArgumentException;
 use Jose\Component\Core\JWK;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -49,7 +50,7 @@ class JWKFactoryTest extends TestCase
         $this->keyPairManager->getAlgorithm()->willReturn('RS256');
     }
 
-    /** @test */
+    #[Test]
     public function can_create_jwk(): void
     {
         $JWK = (new JWKFactory())($this->keyPairManager->reveal());

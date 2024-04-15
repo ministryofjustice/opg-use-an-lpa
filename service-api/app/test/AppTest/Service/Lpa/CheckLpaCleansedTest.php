@@ -9,14 +9,14 @@ use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\LpaService;
 use DateTime;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\CheckLpaCleansed
- */
+#[CoversClass(CheckLpaCleansed::class)]
 class CheckLpaCleansedTest extends TestCase
 {
     use ProphecyTrait;
@@ -38,7 +38,7 @@ class CheckLpaCleansedTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed_and_registered_before_sep2019(): void
     {
         $userId = '1234';
@@ -67,7 +67,7 @@ class CheckLpaCleansedTest extends TestCase
         $this->checkLpaCleansed()($userId, $actorDetailsMatch);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_add_confirmation_accepts_a_cleansed_lpa_and_registered_before_sep2019(): void
     {
         $userId = '1234';
@@ -91,7 +91,7 @@ class CheckLpaCleansedTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_add_confirmation_accepts_a_lpa_not_cleansed_and_registered_after_sep2019(): void
     {
         $userId = '1234';
@@ -115,7 +115,7 @@ class CheckLpaCleansedTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
+    #[Test]
     public function older_lpa_add_confirmation_accepts_an_lpa_cleansed_and_registered_after_sep2019(): void
     {
         $userId = '1234';

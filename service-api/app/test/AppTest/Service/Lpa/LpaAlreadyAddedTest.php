@@ -8,13 +8,13 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaService;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-/**
- * @coversDefaultClass \App\Service\Lpa\LpaAlreadyAdded
- */
+#[CoversClass(LpaAlreadyAdded::class)]
 class LpaAlreadyAddedTest extends TestCase
 {
     use ProphecyTrait;
@@ -44,12 +44,7 @@ class LpaAlreadyAddedTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     * @covers ::saveOfRequestFeature
-     * @covers ::populateLpaRecord
-     */
+    #[Test]
     public function returns_null_if_lpa_not_already_added(): void
     {
         $this->userLpaActorMapProphecy
@@ -60,12 +55,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertNull($lpaAddedData);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     * @covers ::saveOfRequestFeature
-     * @covers ::populateLpaRecord
-     */
+    #[Test]
     public function returns_not_activated_flag_if_lpa_requested_but_not_active(): void
     {
         $this->userLpaActorMapProphecy
@@ -117,12 +107,7 @@ class LpaAlreadyAddedTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     * @covers ::saveOfRequestFeature
-     * @covers ::populateLpaRecord
-     */
+    #[Test]
     public function returns_null_if_lpa_added_but_not_usable_found_in_api(): void
     {
         $this->userLpaActorMapProphecy
@@ -144,12 +129,7 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertNull($lpaAddedData);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     * @covers ::saveOfRequestFeature
-     * @covers ::populateLpaRecord
-     */
+    #[Test]
     public function returns_lpa_data_if_lpa_is_already_added(): void
     {
         $this->userLpaActorMapProphecy

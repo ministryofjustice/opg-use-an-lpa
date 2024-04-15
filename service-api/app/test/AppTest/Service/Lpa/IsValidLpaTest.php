@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\IsValidLpa;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -29,7 +30,7 @@ class IsValidLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function check_if_lpa_valid_when_status_registered(): void
     {
         $lpa = [
@@ -45,7 +46,7 @@ class IsValidLpaTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function check_if_lpa_valid_when_status_cancelled(): void
     {
         $lpa = [
@@ -61,7 +62,7 @@ class IsValidLpaTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
+    #[Test]
     public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled(): void
     {
         $lpa = [

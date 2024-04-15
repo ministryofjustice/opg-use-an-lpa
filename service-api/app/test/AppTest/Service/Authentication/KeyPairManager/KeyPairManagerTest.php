@@ -7,10 +7,11 @@ namespace AppTest\Service\Authentication\KeyPairManager;
 use App\Service\Authentication\KeyPairManager\KeyPair;
 use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
-use App\Service\Authentication\KeyPairManager\OneLoginUserInfoKeyPairManager;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -31,15 +32,14 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @template T of KeyPairManagerInterface
      * @return array{
-     *     type: class-string<T>,
+     *     type: class-string<KeyPairManagerInterface>,
      *     algorithm: string,
      *     public: string,
      *     private?: string,
      * }
      */
-    public function keyPairManagerTypes(): array
+    public static function keyPairManagerTypes(): array
     {
         return [
             'OneLoginIdentityKeyPairManager' => [
@@ -52,11 +52,10 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider keyPairManagerTypes
-     * @template T of KeyPairManagerInterface
-     * @psalm-param class-string<T> $type
+     * @psalm-param class-string<KeyPairManagerInterface> $type
      */
+    #[Test]
+    #[DataProvider('keyPairManagerTypes')]
     public function can_instantiate(string $type, string $algorithm, string $public, ?string $private = null): void
     {
         $keyPairManager = new $type($this->secretsManagerClient->reveal(), $this->logger->reveal());
@@ -69,11 +68,10 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider keyPairManagerTypes
-     * @template T of KeyPairManagerInterface
-     * @psalm-param class-string<T> $type
+     * @psalm-param class-string<KeyPairManagerInterface> $type
      */
+    #[Test]
+    #[DataProvider('keyPairManagerTypes')]
     public function get_key_pair(string $type, string $algorithm, string $public, ?string $private = null): void
     {
         $testPublicKey  = bin2hex(random_bytes(30));
@@ -113,11 +111,10 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider keyPairManagerTypes
-     * @template T of KeyPairManagerInterface
-     * @psalm-param class-string<T> $type
+     * @psalm-param class-string<KeyPairManagerInterface> $type
      */
+    #[Test]
+    #[DataProvider('keyPairManagerTypes')]
     public function get_key_pair_fails_when_incorrect_secret(
         string $type,
         string $algorithm,
@@ -138,11 +135,10 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider keyPairManagerTypes
-     * @template T of KeyPairManagerInterface
-     * @psalm-param class-string<T> $type
+     * @psalm-param class-string<KeyPairManagerInterface> $type
      */
+    #[Test]
+    #[DataProvider('keyPairManagerTypes')]
     public function get_key_pair_fails_when_null_values_returned(
         string $type,
         string $algorithm,
