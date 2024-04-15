@@ -111,6 +111,7 @@ class OidcContext implements Context
                             'token_endpoint'         => 'https://one-login-mock/token',
                             'userinfo_endpoint'      => 'https://one-login-mock/userinfo',
                             'jwks_uri'               => 'https://one-login-mock/.well-known/jwks',
+                            'end_session_endpoint'   => 'https://one-login-mock/logout',
                         ],
                     ),
                 );
@@ -303,6 +304,18 @@ class OidcContext implements Context
     }
 
     /**
+     * @Then /^I am taken to complete a satisfaction survey$/
+     */
+    public function iAmTakenToCompleteASatisfactionSurvey(): void
+    {
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('redirect_uri', $response);
+    }
+
+    /**
      * @Then /^I am taken to my dashboard$/
      */
     public function iAmTakenToMyDashboard(): void
@@ -311,15 +324,19 @@ class OidcContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        Assert::assertArrayHasKey('Id', $response);
-        Assert::assertArrayHasKey('Identity', $response);
-        Assert::assertArrayHasKey('Email', $response);
-        Assert::assertArrayHasKey('LastLogin', $response);
+        Assert::assertArrayHasKey('user', $response);
+        Assert::assertArrayHasKey('token', $response);
 
-        Assert::assertArrayNotHasKey('Password', $response);
+        $user = $response['user'];
+        Assert::assertArrayHasKey('Id', $user);
+        Assert::assertArrayHasKey('Identity', $user);
+        Assert::assertArrayHasKey('Email', $user);
+        Assert::assertArrayHasKey('LastLogin', $user);
 
-        Assert::assertSame($response['Identity'], $this->sub);
-        Assert::assertSame($response['Email'], $this->email);
+        Assert::assertArrayNotHasKey('Password', $user);
+
+        Assert::assertSame($user['Identity'], $this->sub);
+        Assert::assertSame($user['Email'], $this->email);
     }
 
     /**
@@ -336,6 +353,27 @@ class OidcContext implements Context
     public function iHaveCompletedASuccessfulOneLoginSignInProcess(): void
     {
         // Not needed in this context
+    }
+
+    /**
+     * @When /^I logout of the application$/
+     */
+    public function iLogoutOfTheApplication(): void
+    {
+        $this->oidcFixtureSetup();
+
+        $this->apiPut(
+            '/v1/auth/logout',
+            [
+                'user' => [
+                    'Id'        => '0000-00-00-00-000',
+                    'Identity'  => $this->sub,
+                    'Email'     => $this->email,
+                    'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
+                    'IdToken'   => $this->identityTokenSetup(),
+                ],
+            ],
+        );
     }
 
     /**

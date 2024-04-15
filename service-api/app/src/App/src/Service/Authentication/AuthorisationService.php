@@ -9,10 +9,14 @@ use Facile\OpenIDClient\Client\ClientInterface as OpenIDClient;
 use Facile\OpenIDClient\Service\AuthorizationService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Facile\OpenIDClient\Token\TokenSetInterface;
+use Laminas\Cache\Psr\SimpleCache\SimpleCacheException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use RuntimeException;
 use Throwable;
 
 /**
- * Facade class for Facile AuthorizationService
+ * Facade class for Facile AuthorizationService and components
  *
  * @link https://en.wikipedia.org/wiki/Facade_pattern
  *
@@ -86,8 +90,39 @@ class AuthorisationService
     }
 
     /**
+     * Interrogates the client metadata to find the OIDC end_session_endpoint URI
+     *
+     * @throws AuthorisationServiceException
+     */
+    public function getLogoutUri(): string
+    {
+        try {
+            $endpoint = $this->getClient()->getIssuer()->getMetadata()->get('end_session_endpoint');
+
+            if ($endpoint === null) {
+                throw new AuthorisationServiceException(
+                    '"end_session_endpoint" not defined in Issuers OIDC configuration'
+                );
+            }
+
+            return $endpoint;
+        } catch (Throwable $e) {
+            throw new AuthorisationServiceException(
+                'JSON error encountered when fetching logout uri',
+                500,
+                $e
+            );
+        }
+    }
+
+    /**
      * Ensures each instance of this class only builds a single client instance. In practice this should amount to
      * once per request.
+     *
+     * @throws SimpleCacheException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
      */
     private function getClient(): OpenIDClient
     {

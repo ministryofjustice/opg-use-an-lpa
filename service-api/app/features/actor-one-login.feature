@@ -13,3 +13,10 @@ Feature: Authorise One Login
       And I have an existing local account
      When I am returned to the use an lpa service
      Then I am taken to my dashboard
+
+  @acceptance
+  Scenario: I can successfully log out via one login
+    Given I have completed a successful one login sign-in process
+    And I have an existing local account
+    When I am returned to the use an lpa service
+    Then I am taken to my dashboard
