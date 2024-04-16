@@ -7,6 +7,7 @@ namespace AppTest\Service\Aws;
 use App\Service\Aws\SSMClientFactory;
 use Aws\Sdk;
 use Aws\Ssm\SsmClient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException;
@@ -44,7 +45,8 @@ class SSMClientFactoryTest extends TestCase
      * @throws \PHPUnit\Framework\Exception
      * @throws IncompatibleReturnValueException
      */
-    public function testInvokeReturnsSsmClient(): void
+    #[Test]
+    public function invokeReturnsSsmClient(): void
     {
         $sdkProphecy = $this->prophesize(Sdk::class);
         $sdkProphecy->createSsm()

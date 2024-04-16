@@ -6,6 +6,7 @@ namespace Service\SystemMessage;
 
 use App\Service\SystemMessage\SystemMessage;
 use Aws\Ssm\SsmClient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,7 +37,8 @@ class SystemMessageTest extends TestCase
      * @throws ExpectationFailedException
      * @throws IncompatibleReturnValueException
      */
-    public function testReturnsSystemMessages(): void
+    #[Test]
+    public function returnsSystemMessages(): void
     {
         $mockResponse = [
             'Parameters' => [
