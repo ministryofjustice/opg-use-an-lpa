@@ -52,16 +52,18 @@ class SystemMessageTest extends TestCase
 
         $systemMessages = $this->systemMessage->getSystemMessages();
 
+
         $expected = [
             '/system-message/use/en' => 'English usage message',
             '/system-message/use/cy' => 'Welsh usage message',
         ];
         $this->assertEquals($expected, $systemMessages);
     }
+
     public function testReturnsSystemMessages2(): void
     {
         // this attempts to do the above test, which doesn't currently work, but using prophecies instead
-        $mockResponse = [
+        $mockResponse      = [
             'Parameters' => [
                 ['Name' => '/system-message/use/en', 'Value' => 'English usage message'],
                 ['Name' => '/system-message/use/cy', 'Value' => 'Welsh usage message'],
