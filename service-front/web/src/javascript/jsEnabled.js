@@ -1,5 +1,5 @@
 const jsEnabled = element => {
-  element.classList.add('js-enabled');
+  element.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
 };
 
 export default jsEnabled;
