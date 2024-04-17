@@ -9,30 +9,37 @@ use Aws\Ssm\SsmClient;
 class SystemMessage
 {
     /**
-     * TODO add 'environment' prefix?
-     *
-     * @var string[] List of parameter names.
+     * @var string[] List of parameter names, without the /system-message/$environment prefix
      */
     private static array $PARAMETER_NAMES = [
-        '/system-message/use/en',
-        '/system-message/use/cy',
-        '/system-message/view/en',
-        '/system-message/view/cy',
+        'use/en',
+        'use/cy',
+        'view/en',
+        'view/cy',
     ];
 
     public function __construct(
         private SsmClient $ssmClient,
+        private string $prefix,
     ) {
+    }
+
+    private function stripPrefix(string $parameterName): string
+    {
+        return substr($parameterName, strlen($this->prefix));
     }
 
     public function getSystemMessages(): array
     {
-        $response       = $this->ssmClient->getParameters(['Names' => self::$PARAMETER_NAMES]);
+        $response = $this->ssmClient->getParameters(
+            ['Names' => array_map(fn ($name) => $this->prefix . $name, self::$PARAMETER_NAMES)]
+        );
+
         $parameters     = $response['Parameters'];
         $nameToValueMap = [];
 
         foreach ($parameters as $parameter) {
-            $nameToValueMap[$parameter['Name']] = $parameter['Value'];
+            $nameToValueMap[$this->stripPrefix($parameter['Name'])] = $parameter['Value'];
         }
 
         return $nameToValueMap;

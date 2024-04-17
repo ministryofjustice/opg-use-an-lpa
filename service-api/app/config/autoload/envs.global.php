@@ -68,4 +68,6 @@ return [
             ],
         ],
     ],
+
+    'environment_name' => getenv('ENVIRONMENT_NAME') ?: ''
 ];

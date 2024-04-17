@@ -511,6 +511,10 @@ locals {
         {
           name  = "API_GATEWAY_REGION",
           value = "eu-west-1"
+        },
+        {
+          name = "ENVIRONMENT_NAME",
+          value = var.environment_name
         }
       ]
   })

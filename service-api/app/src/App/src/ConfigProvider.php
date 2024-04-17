@@ -75,6 +75,7 @@ class ConfigProvider
                 Aws\Ssm\SsmClient::class                       => Service\Aws\SSMClientFactory::class,
                 Service\ApiClient\Client::class                => Service\ApiClient\ClientFactory::class,
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
+                Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,
