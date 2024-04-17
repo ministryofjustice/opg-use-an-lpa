@@ -20,6 +20,7 @@ use App\Handler\LpasResourceHandler;
 use App\Handler\LpasResourceImagesCollectionHandler;
 use App\Handler\NotifyHandler;
 use App\Handler\OneLoginAuthenticationCallbackHandler;
+use App\Handler\OneLoginAuthenticationLogoutHandler;
 use App\Handler\OneLoginAuthenticationRequestHandler;
 use App\Handler\RequestChangeEmailHandler;
 use App\Handler\RequestCleanseHandler;
@@ -138,6 +139,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
     $app->post('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
+    $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

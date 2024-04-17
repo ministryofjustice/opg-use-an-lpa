@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="LaravelPintOptionsConfiguration">
-    <option name="ruleset" value="laravel" />
-  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -35,7 +32,6 @@
       <path value="$PROJECT_DIR$/service-front/app/src/Actor/src" />
       <path value="$PROJECT_DIR$/service-front/app/src/Common/src" />
       <path value="$PROJECT_DIR$/service-front/app/src/Viewer/src" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/alphagov/notifications-php-client" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/amp" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/byte-stream" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/aws/aws-crt-php" />
@@ -47,19 +43,16 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/blazon/psr11-monolog" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/brick/varexporter" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/composer" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/container-interop/container-interop" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/cooperaj/behat-psr-extension" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/cooperaj/better-twig-i18n" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/dflydev/fig-cookies" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/dnoegel/php-xdg-base-dir" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/inflector" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/instantiator" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/elie29/zend-phpdi-config" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/felixfbecker/advanced-json-rpc" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/felixfbecker/language-server-protocol" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/fig/http-message-util" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/filp/whoops" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/firebase/php-jwt" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/friends-of-behat/mink-browserkit-driver" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/friends-of-behat/mink-extension" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/gettext/gettext" />
@@ -68,9 +61,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/guzzlehttp/promises" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/guzzlehttp/psr7" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/contracts" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/support" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/jshayes/fake-requests" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-apcu" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-redis" />
@@ -113,7 +103,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/netresearch/jsonmapper" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/nikic/fast-route" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/opis/closure" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/paragonie/constant_time_encoding" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/paragonie/halite" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/paragonie/hidden-string" />
@@ -135,7 +124,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-file-iterator" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-timer" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-token-stream" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/phpunit" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/psr/container" />
@@ -183,7 +171,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php73" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/psr-http-message-bridge" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/service-contracts" />
@@ -199,11 +186,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/assert" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-cache-storage-adapter-memory" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/laravel/serializable-closure" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-composer-autoloading" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-zendframework-bridge" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client-contracts" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/wshafer/psr11-monolog" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/glob" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpspec/prophecy-phpunit" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-invoker" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/phpstan/phpdoc-parser" />
@@ -215,7 +197,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/sebastian/complexity" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/dealerdirect/phpcodesniffer-composer-installer" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/slevomat/coding-standard" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/stella-maris/clock" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/psalm/plugin-phpunit" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/psr/clock" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/var-exporter" />
@@ -565,14 +546,14 @@
   <component name="PhpInterpretersPhpInfoCache">
     <phpInfoCache>
       <interpreter name="test-api-app">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.18">
-          <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-fpm.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
+        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.25">
+          <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-fpm.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-gmp.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.2.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.1">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -591,6 +572,7 @@
             <extension name="fileinfo" />
             <extension name="filter" />
             <extension name="ftp" />
+            <extension name="gmp" />
             <extension name="hash" />
             <extension name="iconv" />
             <extension name="json" />
@@ -616,14 +598,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="api-app">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.18">
-          <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-fpm.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
+        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.25">
+          <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-fpm.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-gmp.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.2.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.1">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -642,6 +624,7 @@
             <extension name="fileinfo" />
             <extension name="filter" />
             <extension name="ftp" />
+            <extension name="gmp" />
             <extension name="hash" />
             <extension name="iconv" />
             <extension name="json" />
@@ -667,14 +650,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="front-app">
-        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.18">
+        <phpinfo binary_type="PHP" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.25">
           <additional_php_ini>/usr/local/etc/php/conf.d/app-php.ini, /usr/local/etc/php/conf.d/docker-fpm.ini, /usr/local/etc/php/conf.d/docker-php-ext-apcu.ini, /usr/local/etc/php/conf.d/docker-php-ext-gettext.ini, /usr/local/etc/php/conf.d/docker-php-ext-intl.ini, /usr/local/etc/php/conf.d/docker-php-ext-redis.ini, /usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.2.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.1">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -721,14 +704,14 @@
         </phpinfo>
       </interpreter>
       <interpreter name="smoke">
-        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.25">
+        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.28">
           <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.2.2">
+            <debugger_info debugger="xdebug" debugger_version="3.3.2">
               <debug_extensions />
             </debugger_info>
           </debuggers>

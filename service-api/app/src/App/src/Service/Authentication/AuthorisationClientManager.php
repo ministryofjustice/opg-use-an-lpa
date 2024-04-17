@@ -11,10 +11,16 @@ use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\ClientInterface;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
+use Laminas\Cache\Psr\SimpleCache\SimpleCacheException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
+use RuntimeException;
 
 class AuthorisationClientManager
 {
+    public const CACHE_TTL = 3600;
+
     public function __construct(
         private string $clientId,
         private string $clientDiscoveryEndpoint,
@@ -26,19 +32,25 @@ class AuthorisationClientManager
     ) {
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws SimpleCacheException
+     * @throws ContainerExceptionInterface
+     * @throws RuntimeException
+     */
     public function get(): ClientInterface
     {
         $cachedBuilder = new MetadataProviderBuilder();
         $cachedBuilder
             ->setHttpClient($this->httpClient)
             ->setCache(($this->cacheFactory)('one-login'))
-            ->setCacheTtl(3600);
+            ->setCacheTtl(self::CACHE_TTL);
 
         $cachedProvider = new JwksProviderBuilder();
         $cachedProvider
             ->setHttpClient($this->httpClient)
             ->setCache(($this->cacheFactory)('one-login'))
-            ->setCacheTtl(3600);
+            ->setCacheTtl(self::CACHE_TTL);
 
         $issuer = $this->issuerBuilder
             ->setMetadataProviderBuilder($cachedBuilder)
