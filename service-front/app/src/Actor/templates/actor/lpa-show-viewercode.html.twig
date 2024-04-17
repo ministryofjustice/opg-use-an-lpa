@@ -52,7 +52,7 @@
                     {% if not feature_enabled("instructions_and_preferences") %}
                         <div class="govuk-warning-text">
                             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                             {% if is_donor_signature_date_too_old(lpa) %}
                                 <p class="govuk-body"><strong class="govuk-warning-text__text">
                                         {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
