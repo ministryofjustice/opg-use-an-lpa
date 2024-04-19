@@ -121,59 +121,59 @@ unit_test_all: | unit_test_viewer_app unit_test_actor_app unit_test_javascript u
 .PHONY: unit_test_all
 
 unit_test_viewer_app:
-	$(COMPOSE) run viewer-app /app/vendor/bin/phpunit
+	$(COMPOSE) run --rm viewer-app /app/vendor/bin/phpunit
 .PHONY: unit_test_viewer_app
 
 unit_test_actor_app:
-	$(COMPOSE) run actor-app /app/vendor/bin/phpunit
+	$(COMPOSE) run --rm actor-app /app/vendor/bin/phpunit
 .PHONY: unit_test_actor_app
 
 unit_test_javascript:
-	$(COMPOSE) run --entrypoint="/bin/sh -c" webpack "npm run test"
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run test"
 .PHONY: unit_test_actor_app
 
 unit_test_api_app:
-	$(COMPOSE) run api-app /app/vendor/bin/phpunit
+	$(COMPOSE) run --rm api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app
 
 enable_development_mode:
-	$(COMPOSE) run front-composer development-enable
-	$(COMPOSE) run api-composer development-enable
+	$(COMPOSE) run --rm front-composer development-enable
+	$(COMPOSE) run --rm api-composer development-enable
 .PHONY: enable_development_mode
 
 development_mode: | enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 run_front_composer:
-	$(COMPOSE) run front-composer $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm front-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run api-composer $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
 
 run_front_composer_install:
-	$(COMPOSE) run front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_front_composer_install
 
 run_api_composer_install:
-	$(COMPOSE) run api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
 .PHONY: run_api_composer_install
 
 run_front_composer_update:
-	$(COMPOSE) run front-composer update
+	$(COMPOSE) run --rm front-composer update
 .PHONY: run_front_composer_update
 
 run_front_npm_update:
-	$(COMPOSE) run --entrypoint="/bin/sh -c" webpack "npm update"
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm update"
 .PHONY: run_front_npm_update
 
 run_api_composer_update:
-	$(COMPOSE) run api-composer update
+	$(COMPOSE) run --rm api-composer update
 .PHONY: run_api_composer_update
 
 run_smoke_composer_update:
-	$(TEST_COMPOSE) run smoke-tests composer update
+	$(TEST_COMPOSE) run --rm smoke-tests composer update
 .PHONY: run_smoke_composer_update
 
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
@@ -186,7 +186,7 @@ clear_config_cache:
 .PHONY: clear_config_cache
 
 smoke_tests:
-	$(TEST_COMPOSE) run smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
+	$(TEST_COMPOSE) run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: smoke_tests
 
 run-structurizr:

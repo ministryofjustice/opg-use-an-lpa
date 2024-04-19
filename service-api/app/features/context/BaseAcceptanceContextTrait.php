@@ -108,7 +108,7 @@ trait BaseAcceptanceContextTrait
 
     protected function apiPut(string $url, array $data, ?array $headers = null): void
     {
-        $this->getSession()->getDriver()->getClient()->jsonRequest(
+        $this->ui->getSession()->getDriver()->getClient()->jsonRequest(
             'PUT',
             $url,
             $data,

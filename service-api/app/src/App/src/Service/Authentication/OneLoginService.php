@@ -21,7 +21,8 @@ use function openssl_digest;
  */
 class OneLoginService
 {
-    public const CORE_IDENTITY_JWT = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
+    public const CORE_IDENTITY_JWT   = 'https://vocab.account.gov.uk/v1/coreIdentityJWT';
+    public const LOGOUT_REDIRECT_URL = 'https://www.gov.uk/done/use-lasting-power-of-attorney';
 
     public function __construct(
         private AuthorisationServiceBuilder $authorisationServiceBuilder,
@@ -68,8 +69,14 @@ class OneLoginService
      *         redirect_uri: string
      *     }
      * }             $authSession A pair of values needed generated at the start of the process
-     * @return array The User retrieved from our records
-     * @psalm-return ActorUser
+     * @return array{
+     *     user: array,
+     *     token: string,
+     * }                          The User retrieved from our records
+     * @psalm-return array{
+     *     user: ActorUser,
+     *     token: string,
+     * }                          The User retrieved from our records
      * @throws AuthorisationServiceException Throw whilst failing to talk to the OIDC service
      * @throws CreationException             It was not possible to create a new user
      * @throws ConflictException             The email exists as a "NewEmail" against an existing account
@@ -88,6 +95,27 @@ class OneLoginService
 
         $info = $this->userInfoService->getUserInfo($tokens);
 
-        return ($this->resolveOAuthUser)($info['sub'], $info['email']);
+        return [
+            'user'  => ($this->resolveOAuthUser)($info['sub'], $info['email']),
+            'token' => $tokens->getIdToken(),
+        ];
+    }
+
+    /**
+     * @param string $idToken The ID token retrieved as a part of the original authentication flow
+     * @return string A URL with populated parameters
+     * @throws AuthorisationServiceException
+     */
+    public function createLogoutUrl(string $idToken): string
+    {
+        $authorisationService = $this->authorisationServiceBuilder->build();
+        $logoutUri            = $authorisationService->getLogoutUri();
+
+        $params = [
+            'id_token_hint'            => $idToken,
+            'post_logout_redirect_uri' => self::LOGOUT_REDIRECT_URL,
+        ];
+
+        return $logoutUri . '?' . http_build_query($params);
     }
 }
