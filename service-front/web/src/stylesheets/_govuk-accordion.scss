@@ -1,5 +1,8 @@
 /* ///////////////// Access code items ///////////////// */
 .govuk-accordion {
+  &__section{
+      position: relative;
+  }
   &__section-heading {
     .govuk-tag {
       position: absolute;
