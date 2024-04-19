@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 require('es6-promise/auto');
-import {Accordion, initAll} from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
+import {Accordion, initAll} from 'govuk-frontend';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
