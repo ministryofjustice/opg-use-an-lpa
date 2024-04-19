@@ -515,7 +515,7 @@ locals {
         {
           name = "ENVIRONMENT_NAME",
           value = var.environment_name
-        }
+        },
       ]
   })
 }
