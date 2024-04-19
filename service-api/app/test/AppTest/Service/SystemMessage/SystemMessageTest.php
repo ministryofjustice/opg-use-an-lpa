@@ -6,8 +6,11 @@ namespace Service\SystemMessage;
 
 use App\Service\SystemMessage\SystemMessage;
 use Aws\Ssm\SsmClient;
+use PHPUnit\Event\NoPreviousThrowableException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\InvalidArgumentException;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -23,13 +26,18 @@ class SystemMessageTest extends TestCase
     private SsmClient $ssmClient;
     private SystemMessage $systemMessage;
 
+    /**
+     * @throws NoPreviousThrowableException
+     * @throws Exception
+     * @throws InvalidArgumentException
+     */
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->ssmClient = $this->createMock(SsmClient::class);
 
-        $this->systemMessage = new SystemMessage($this->ssmClient);
+        $this->systemMessage = new SystemMessage($this->ssmClient, '/system-message/');
     }
 
     /**
@@ -52,14 +60,13 @@ class SystemMessageTest extends TestCase
             ->with($this->identicalTo('getParameters'))
             ->willReturn($mockResponse);
 
-
         $systemMessages = $this->systemMessage->getSystemMessages();
 
-
         $expected = [
-            '/system-message/use/en' => 'English usage message',
-            '/system-message/use/cy' => 'Welsh usage message',
+            'use/en' => 'English usage message',
+            'use/cy' => 'Welsh usage message',
         ];
+
         $this->assertEquals($expected, $systemMessages);
     }
 }
