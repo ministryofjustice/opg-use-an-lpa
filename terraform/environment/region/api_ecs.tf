@@ -513,7 +513,7 @@ locals {
           value = "eu-west-1"
         },
         {
-          name = "ENVIRONMENT_NAME",
+          name  = "ENVIRONMENT_NAME",
           value = var.environment_name
         },
       ]
