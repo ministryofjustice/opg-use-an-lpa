@@ -3,3 +3,4 @@ $moj-images-path: "../assets/images/";
 $govuk-assets-path: "../assets/";
 @import '../node_modules/govuk-frontend/dist/govuk/all';
 @import '../node_modules/@ministryofjustice/frontend/moj/all';
+@import '../node_modules/govuk-one-login-service-header/dist/styles/service-header-no-imports';
