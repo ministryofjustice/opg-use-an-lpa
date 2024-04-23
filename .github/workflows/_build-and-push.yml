@@ -71,11 +71,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017 # pin@v3
+      - uses: actions/checkout@cd7d8d697e10461458bc61a30d094dc601a8b017
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # pin@v3.0.8
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
         env:
           cache-name: cache-node-modules
         with:
@@ -89,12 +89,12 @@ jobs:
           matrix.svc_prefix == 'front' &&
           inputs.specific_path == 'all'
 
-      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06
         if: |
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@e9cf1db62a2c7bfa124c55c2432ffcf0ae30832b # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@e9cf1db62a2c7bfa124c55c2432ffcf0ae30832b
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -203,7 +203,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb # pin@v3.1.0
+        uses: actions/upload-artifact@ef09cdac3e2d3e60d8ccadda691f4f1cec5035cb
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
@@ -244,7 +244,7 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@062f2592684a31eb3aa050cc61e7ca1451cecd3d # pin@v0.7.1
+        uses: aquasecurity/trivy-action@b5f4977b78f81fa3d48865ff0efcc6e279210235
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
