@@ -1,6 +1,6 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}{% trans %}Contact us{% endtrans %} - {{ block('service_name') }} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Contact us{% endtrans %} - {{ serviceName | trans }} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
