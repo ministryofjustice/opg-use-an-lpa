@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-04-23T16:04:43+00:00\n"
+"POT-Creation-Date: 2024-04-23T16:26:10+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -285,9 +285,9 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:126
 #: src/Actor/templates/actor/check-lpa.html.twig:99
-#: src/Actor/templates/actor/one-login.html.twig:55
+#: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
-#: src/Actor/templates/actor/home-page.html.twig:46
+#: src/Actor/templates/actor/home-page.html.twig:44
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
 msgid "Continue"
@@ -2656,7 +2656,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
-#: src/Common/templates/partials/header/default.html.twig:39
+#: src/Common/templates/partials/header/default.html.twig:38
 msgid "Sign out"
 msgstr ""
 
@@ -2824,23 +2824,23 @@ msgstr ""
 msgid "Sign in or create an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:23
+#: src/Actor/templates/actor/home-page.html.twig:21
 msgid "Do you have a Use a lasting power of attorney account?"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:30
+#: src/Actor/templates/actor/home-page.html.twig:28
 msgid "Yes, I already have an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:32
+#: src/Actor/templates/actor/home-page.html.twig:30
 msgid "If you made an LPA online, you will still need to create an account to use this service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:35
+#: src/Actor/templates/actor/home-page.html.twig:33
 msgid "No, this is the first time I’ve used the service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:44
+#: src/Actor/templates/actor/home-page.html.twig:42
 msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
 
@@ -3904,18 +3904,18 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:159
-#: src/Common/templates/partials/header/default.html.twig:29
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:155
+#: src/Common/templates/partials/header/default.html.twig:28
 msgid "Last signed in:"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:161
-#: src/Common/templates/partials/header/default.html.twig:31
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:157
+#: src/Common/templates/partials/header/default.html.twig:30
 msgid "Never"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:133
-#: src/Common/templates/partials/header/default.html.twig:38
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
+#: src/Common/templates/partials/header/default.html.twig:37
 msgid "Your LPAs"
 msgstr ""
 
@@ -4551,7 +4551,7 @@ msgstr ""
 msgid "You’ll need to show the paper EPA to people or organisations instead."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:19
+#: src/Actor/templates/actor/one-login.html.twig:15
 msgid "Sign in to this service"
 msgstr ""
 
@@ -4559,23 +4559,23 @@ msgstr ""
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"url\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:27
+#: src/Actor/templates/actor/one-login.html.twig:23
 msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:32
+#: src/Actor/templates/actor/one-login.html.twig:28
 msgid "If you’ve not used Gov.uk One Login before, you can set up your access on the next page."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:37
+#: src/Actor/templates/actor/one-login.html.twig:33
 msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:41
+#: src/Actor/templates/actor/one-login.html.twig:37
 msgid "What if I’ve used this service before?"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:43
+#: src/Actor/templates/actor/one-login.html.twig:39
 msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear."
 msgstr ""
 
@@ -4583,17 +4583,17 @@ msgstr ""
 msgid "with GOV.UK One Login</p>"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:60
+#: src/Actor/templates/actor/one-login.html.twig:56
 msgid "with GOV.UK One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:21
+#: src/Actor/templates/actor/one-login.html.twig:17
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:141
-#: src/Common/templates/partials/header/default.html.twig:37
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:137
+#: src/Common/templates/partials/header/default.html.twig:36
 msgid "Settings"
 msgstr ""
 
@@ -4613,18 +4613,22 @@ msgstr ""
 msgid "Hide GOV.UK One Login menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:116
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
 msgid "Show service navigation menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:117
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:113
 msgid "Hide service navigation menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:122
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:118
 msgid "Menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:119
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:115
 msgid "Close"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:121
+msgid "%service_name% menu"
 msgstr ""

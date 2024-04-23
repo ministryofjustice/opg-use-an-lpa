@@ -14,8 +14,7 @@
         </div>
         <div class="govuk-header__content">
             <a href="{{ path('home') }}" class="govuk-header__link govuk-header__link--service-name">
-                {% set service_name = ((application == 'actor') ? 'Use' : 'View') ~ ' a lasting power of attorney' %}
-                {{ service_name | trans }}
+                {{ serviceName | trans }}
             </a>
         </div>
     </div>

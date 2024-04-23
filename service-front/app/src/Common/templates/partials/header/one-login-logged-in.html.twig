@@ -98,17 +98,13 @@
         </div>
     </div>
 
-    <!-- Start of service navigation -->
     <div class="service-header" data-one-login-header-nav>
         <div class="govuk-width-container">
             <div class="service-header__container">
-                <!-- The name of your service goes here -->
                 <h2 class="service-header__heading">
-                    {% set service_name = ((application == 'actor') ? 'Use' : 'View') ~ ' a lasting power of attorney' %}
-                    {{ service_name | trans }}
+                    {{ serviceName | trans }}
                 </h2>
                 <div>
-                    <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
                     <button type="button"
                             aria-controls="service-header__nav"
                             data-open-class="cross-service-header__button--open"
@@ -122,7 +118,7 @@
                         <span class="service-header__button-content">{% trans %}Menu{% endtrans %}</span>
                     </button>
                     <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
-                    <nav aria-label="Name of example service menu">
+                    <nav aria-label="{% trans with {'%service_name%': serviceName} %}%service_name% menu{% endtrans %}">
                         <ul class="service-header__nav-list service-header__nav" id="service-header__nav"
                             data-open-class="service-header__nav--open">
 
