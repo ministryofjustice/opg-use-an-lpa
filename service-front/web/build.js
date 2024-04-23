@@ -1,5 +1,5 @@
 import esbuild from 'esbuild';
-import {default as fsWithCallbacks} from 'fs';
+import { default as fsWithCallbacks } from 'fs';
 
 const fs = fsWithCallbacks.promises;
 

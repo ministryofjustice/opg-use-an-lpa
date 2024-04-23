@@ -2,6 +2,7 @@
 require('es6-promise/auto');
 import jsEnabled from './javascript/jsEnabled';
 import {Accordion, initAll} from 'govuk-frontend';
+import initGovUKHeader from './javascript/header';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
@@ -23,7 +24,7 @@ Accordion.prototype.updateOpenAllButton = function (expanded) {
 };
 
 initAll();
-
+initGovUKHeader(document.querySelector("[data-module='one-login-header']"));
 addPolyFill();
 disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(

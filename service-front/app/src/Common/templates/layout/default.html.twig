@@ -78,7 +78,11 @@
     </div>
 </form>
 
-{{ include("@partials/header/default.html.twig") }}
+{% if feature_enabled('allow_gov_one_login') %}
+    {{ include("@partials/header/one-login.html.twig") }}
+{% else %}
+    {{ include("@partials/header/default.html.twig") }}
+{% endif %}
 
 {% block content %}{% endblock %}
 
