@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-02-20T13:12:10+00:00\n"
+"POT-Creation-Date: 2024-04-23T16:04:43+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -475,8 +475,8 @@ msgid "Change your password"
 msgstr ""
 
 #: src/Actor/templates/actor/password-reset.html.twig:40
-#: src/Actor/templates/actor/your-details.html.twig:31
 #: src/Actor/templates/actor/login.html.twig:47
+#: src/Actor/templates/actor/settings.html.twig:31
 msgid "Password"
 msgstr ""
 
@@ -611,7 +611,7 @@ msgid "Try again"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
-#: src/Common/templates/layout/default.html.twig:126
+#: src/Common/templates/partials/footer.html.twig:21
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
 msgid "Terms of use"
 msgstr ""
@@ -924,7 +924,7 @@ msgid "Use a lasting power of attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
-#: src/Common/templates/layout/default.html.twig:131
+#: src/Common/templates/partials/footer.html.twig:26
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:10
 msgid "Privacy notice"
 msgstr ""
@@ -1460,8 +1460,8 @@ msgid "Enter your email address below. If there's an account associated with the
 msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request.html.twig:30
-#: src/Actor/templates/actor/your-details.html.twig:18
 #: src/Actor/templates/actor/login.html.twig:44
+#: src/Actor/templates/actor/settings.html.twig:18
 msgid "Email address"
 msgstr ""
 
@@ -1714,23 +1714,23 @@ msgstr ""
 msgid "Your details"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:25
+#: src/Actor/templates/actor/settings.html.twig:25
 msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:38
+#: src/Actor/templates/actor/settings.html.twig:38
 msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:45
+#: src/Actor/templates/actor/settings.html.twig:45
 msgid "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary?"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:47
+#: src/Actor/templates/actor/settings.html.twig:47
 msgid "Change a donor or attorney's details"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:50
+#: src/Actor/templates/actor/settings.html.twig:50
 msgid "Delete account"
 msgstr ""
 
@@ -2655,7 +2655,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/account-bar.html.twig:13
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
+#: src/Common/templates/partials/header/default.html.twig:39
 msgid "Sign out"
 msgstr ""
 
@@ -2946,7 +2947,7 @@ msgid "If you've asked for a password reset more than once, make sure you clicke
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/layout/default.html.twig:141
+#: src/Common/templates/partials/footer.html.twig:36
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
@@ -3409,7 +3410,7 @@ msgid "Add your first LPA"
 msgstr ""
 
 #: src/Common/templates/common/cookies.html.twig:17
-#: src/Common/templates/layout/default.html.twig:136
+#: src/Common/templates/partials/footer.html.twig:31
 msgid "Cookies"
 msgstr ""
 
@@ -3550,7 +3551,7 @@ msgid "In the meantime, organisations may ask to see the paper LPA so that they 
 msgstr ""
 
 #: src/Common/templates/common/contact-us.html.twig:13
-#: src/Common/templates/layout/default.html.twig:146
+#: src/Common/templates/partials/footer.html.twig:41
 msgid "Contact us"
 msgstr ""
 
@@ -3583,58 +3584,61 @@ msgid "We could not find the page you're looking for."
 msgstr ""
 
 #: src/Common/templates/error/404.html.twig:15
+#: src/Common/templates/error/410.html.twig:15
 msgid "If you entered a web address, check it's correct."
 msgstr ""
 
 #: src/Common/templates/error/404.html.twig:18
+#: src/Common/templates/error/410.html.twig:18
 msgid "You can <a class=\"govuk-link\" href=\"https://www.gov.uk/\">return to GOV.UK</a> or start again."
 msgstr ""
 
 #: src/Common/templates/error/404.html.twig:23
+#: src/Common/templates/error/410.html.twig:23
 msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:49
+#: src/Common/templates/layout/default.html.twig:46
 msgid "Skip to main content"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:60
+#: src/Common/templates/partials/cookie-banner.html.twig:8
 msgid "Cookies on %service_name%"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:63
+#: src/Common/templates/partials/cookie-banner.html.twig:11
 msgid "We use some essential cookies to make this service work."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:64
+#: src/Common/templates/partials/cookie-banner.html.twig:12
 msgid "We’d also like to use analytics cookies so we can understand how you use the service and make improvements."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:71
+#: src/Common/templates/partials/cookie-banner.html.twig:19
 msgid "Accept analytics cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:74
+#: src/Common/templates/partials/cookie-banner.html.twig:22
 msgid "Reject analytics cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:76
+#: src/Common/templates/partials/cookie-banner.html.twig:24
 msgid "View cookies"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:122
+#: src/Common/templates/partials/footer.html.twig:17
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:151
+#: src/Common/templates/partials/footer.html.twig:46
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:161
+#: src/Common/templates/partials/footer.html.twig:56
 msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:170
+#: src/Common/templates/partials/footer.html.twig:65
 msgid "© Crown copyright"
 msgstr ""
 
@@ -3900,15 +3904,18 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
-#: src/Common/templates/partials/account-bar.html.twig:3
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:159
+#: src/Common/templates/partials/header/default.html.twig:29
 msgid "Last signed in:"
 msgstr ""
 
-#: src/Common/templates/partials/account-bar.html.twig:5
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:161
+#: src/Common/templates/partials/header/default.html.twig:31
 msgid "Never"
 msgstr ""
 
-#: src/Common/templates/partials/account-bar.html.twig:12
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:133
+#: src/Common/templates/partials/header/default.html.twig:38
 msgid "Your LPAs"
 msgstr ""
 
@@ -4584,7 +4591,40 @@ msgstr ""
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:12
-#: src/Common/templates/partials/account-bar.html.twig:11
+#: src/Actor/templates/actor/settings.html.twig:12
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:141
+#: src/Common/templates/partials/header/default.html.twig:37
 msgid "Settings"
+msgstr ""
+
+#: src/Common/templates/error/410.html.twig:10
+msgid "Gone"
+msgstr ""
+
+#: src/Common/templates/error/410.html.twig:12
+msgid "This page is no longer available and has been removed permanently."
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+msgid "Show GOV.UK One Login menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+msgid "Hide GOV.UK One Login menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:116
+msgid "Show service navigation menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:117
+msgid "Hide service navigation menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:122
+msgid "Menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:119
+msgid "Close"
 msgstr ""
