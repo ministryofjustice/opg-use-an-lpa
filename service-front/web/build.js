@@ -38,6 +38,7 @@ const fs = fsWithCallbacks.promises;
             allowOverwrite: true,
             outdir: config.out_dir,
             minify: true,
+            sourcemap: true,
             plugins: [],
             target: ['es2015'],
             platform: 'browser',
