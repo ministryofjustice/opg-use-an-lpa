@@ -132,6 +132,11 @@ unit_test_javascript:
 	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run test"
 .PHONY: unit_test_actor_app
 
+build_frontend_assets:
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run build"
+.PHONY: build_frontend_assets
+
+
 unit_test_api_app:
 	$(COMPOSE) run --rm api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app
