@@ -33,11 +33,11 @@
     </header>
 
     {% if not forDownload|default(false) %}
-        <div class="govuk-width-container">
+        <section class="govuk-width-container ancillary-nav" aria-label="{% trans %}Ancillary navigation{% endtrans %}">
             <div class="govuk-clearfix">
                 {{ include('@partials/header/welsh-switch.html.twig') }}
             </div>
-        </div>
+        </section>
     {% endif %}
 {% endif %}
 

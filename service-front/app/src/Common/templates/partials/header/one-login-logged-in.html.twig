@@ -117,7 +117,6 @@
                             class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
                         <span class="service-header__button-content">{% trans %}Menu{% endtrans %}</span>
                     </button>
-                    <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
                     <nav aria-label="{% trans with {'%service_name%': serviceName} %}%service_name% menu{% endtrans %}">
                         <ul class="service-header__nav-list service-header__nav" id="service-header__nav"
                             data-open-class="service-header__nav--open">
@@ -147,11 +146,11 @@
     <!-- End of service navigation -->
 </header>
 
-<div class="govuk-width-container">
+<section class="govuk-width-container ancillary-nav" aria-label="{% trans %}Ancillary navigation{% endtrans %}">
     <div class="govuk-clearfix">
         {{ include('@partials/header/welsh-switch.html.twig') }}
 
-        <p class="govuk-body-s" style="padding-top: 1rem;">
+        <p class="govuk-body-s">
             {% trans %}Last signed in:{% endtrans %}
             {{ user.getDetail('LastLogin') is empty
             ? "Never" | trans
@@ -159,4 +158,4 @@
             }}
         </p>
     </div>
-</div>
+</section>
