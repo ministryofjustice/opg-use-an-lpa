@@ -48,6 +48,8 @@ class AccountContext implements Context
     private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
     private const ONE_LOGIN_SERVICE_LOGOUT             = 'OneLoginService::logout';
     private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES  = 'SystemMessageService::getMessages';
+
 
 
     /**
@@ -2271,6 +2273,14 @@ class AccountContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
 

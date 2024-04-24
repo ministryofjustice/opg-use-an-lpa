@@ -22,6 +22,7 @@ use function PHPUnit\Framework\assertStringContainsString;
  * @property string $userLpaActorToken
  * @property int    $actorId
  * @property array  $lpaData
+ * @property array  $systemMessageData
  * @property string $organisation
  * @property string $accessCode
  * @property string $userFirstName
@@ -45,6 +46,8 @@ class LpaContext implements Context
     private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
     private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
+
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
     private $dashboardLPAs;
 
@@ -400,6 +403,14 @@ class LpaContext implements Context
             }
         }
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -666,6 +677,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -767,6 +786,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -795,6 +822,14 @@ class LpaContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
 
@@ -839,10 +874,27 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText($message);
+    }
+
+    /**
+     * @Then /^I cannot see the message (.*)$/
+     * <Important: This LPA has instructions or preferences>
+     */
+    public function iCanNotSeeTheMessage($message): void
+    {
+        $this->ui->assertPageNotContainsText($message);
     }
 
     /**
@@ -934,6 +986,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
 
@@ -966,6 +1026,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
 
@@ -995,6 +1063,14 @@ class LpaContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
 
@@ -2709,6 +2785,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->assertPageAddress('/lpa/check');
 
         $this->ui->assertPageContainsText('Is this the LPA you want to add?');
@@ -2815,6 +2899,14 @@ class LpaContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
 
@@ -3082,5 +3174,26 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageNotContainsText('Also known as');
+    }
+
+    /**
+     * @Given /^A system message is set$/
+     */
+    public function aSystemMessageIsSet(): void
+    {
+      $this->systemMessageData = [
+          'use/en'  => 'System Message Use English',
+          'use/cy'  => 'System Message Use Welsh',
+          'view/en' => 'System Message View English',
+          'view/cy' => 'System Message View Welsh'
+      ];
+    }
+
+    /**
+     * @Given /^A system message is not set$/
+     */
+    public function aSystemMessageIsNotSet(): void
+    {
+        $this->systemMessageData = [];
     }
 }

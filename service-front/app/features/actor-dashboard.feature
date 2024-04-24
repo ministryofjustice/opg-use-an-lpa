@@ -53,3 +53,15 @@ Feature: The user is able to see correct information on their dashboard
     Given I have added an additional LPA to my account
     When I am on the dashboard page
     Then I am told that I have 2 LPAs in my account
+
+  @ui @integration
+  Scenario: As a user I am shown the system message if it is set
+    Given A system message is set
+    When I am on the dashboard page
+    Then I can see the message System Message Use English
+
+  @ui @integration
+  Scenario: As a user I am not shown the system message if it is not set
+    Given A system message is not set
+    When I am on the dashboard page
+    Then I cannot see the message System Message Use English
