@@ -226,6 +226,7 @@ jobs:
     with:
       template: production_release.txt
       workflow_status: ${{ needs.production_health_check.result }}
+      workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: always()

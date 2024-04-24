@@ -70,5 +70,6 @@ jobs:
     with:
       template: successful_demo_release.txt
       workflow_status: ${{ needs.force_redeployment.result }}
+      workspace: demo
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}

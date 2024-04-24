@@ -228,6 +228,7 @@ jobs:
     with:
       template: successful_dev_build.txt
       workflow_status: ${{ needs.run_behat_suite.result }}
+      workspace: ${{ inputs.terraform_workspace }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
     if: |
