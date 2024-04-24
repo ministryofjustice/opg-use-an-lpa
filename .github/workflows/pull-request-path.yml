@@ -223,6 +223,9 @@ jobs:
     needs:
       - terraform_apply_environment
       - terraform_apply_shared_development
+      - workspace_name
+    with:
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&

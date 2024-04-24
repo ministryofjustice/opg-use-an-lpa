@@ -35,6 +35,8 @@ jobs:
     needs:
       - terraform_apply_environment
     secrets: inherit
+    with:
+      workspace: demo
 
   force_redeployment:
     name: force redeployment

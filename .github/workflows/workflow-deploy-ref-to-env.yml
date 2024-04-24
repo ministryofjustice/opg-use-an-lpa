@@ -199,6 +199,8 @@ jobs:
       - terraform_apply_environment
       - terraform_apply_shared_development
     secrets: inherit
+    with:
+      workspace: ${{ inputs.terraform_workspace }}
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success' &&
