@@ -34,16 +34,7 @@ class SSMClientFactoryTest extends TestCase
     }
 
     /**
-     * @throws MethodCannotBeConfiguredException
-     * @throws ContainerExceptionInterface
-     * @throws MethodNameNotConfiguredException
-     * @throws MethodParametersAlreadyConfiguredException
-     * @throws NotFoundExceptionInterface
-     * @throws ExpectationFailedException
-     * @throws \PHPUnit\Framework\InvalidArgumentException
-     * @throws MethodNameAlreadyConfiguredException
-     * @throws \PHPUnit\Framework\Exception
-     * @throws IncompatibleReturnValueException
+     * @throws Exception
      */
     #[Test]
     public function invokeReturnsSsmClient(): void
