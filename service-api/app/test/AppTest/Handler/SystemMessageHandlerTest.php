@@ -8,10 +8,9 @@ use App\Handler\SystemMessageHandler;
 use App\Service\SystemMessage\SystemMessage;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Event\NoPreviousThrowableException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Exception;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\InvalidArgumentException;
-use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
@@ -37,8 +36,6 @@ class SystemMessageHandlerTest extends TestCase
 
     /**
      * @throws Exception
-     * @throws IncompatibleReturnValueException
-     * @throws ExpectationFailedException
      */
     #[Test]
     public function handleReturnsJsonResponseWithSystemMessages(): void
