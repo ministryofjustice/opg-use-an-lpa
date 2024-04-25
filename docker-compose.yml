@@ -17,7 +17,6 @@ services:
       sh -c "npm ci --verbose && npm run build"
     volumes:
       - ./service-front/web:/web:rw,delegated
-      - webpack_dist:/web/dist
 
   # ---------------------------
   # PDF Generator

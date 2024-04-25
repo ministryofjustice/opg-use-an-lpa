@@ -40,11 +40,11 @@ const fs = fsWithCallbacks.promises;
             minify: true,
             sourcemap: true,
             plugins: [],
-            target: ['es2015'],
+            target: ['es2018'],
             platform: 'browser',
             metafile: true,
             supported: {
-                arrow: false,
+                class:true
             },
         })
         .catch((e) => {

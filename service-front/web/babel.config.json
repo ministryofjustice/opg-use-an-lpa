@@ -6,10 +6,7 @@
         [
           "@babel/preset-env",
           {
-            "targets": {
-              "ie": "11",
-              "esmodules": true 
-            },
+            "targets": ">0.1%, last 4 versions, safari > 11, Firefox ESR, not dead",
             "useBuiltIns": "usage",
             "debug": true,
             "corejs": 3,
