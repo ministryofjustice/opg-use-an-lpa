@@ -11,7 +11,7 @@
     "build": " npm run build-scss && BABEL_ENV=build babel src --out-dir dist && node build.js",
     "watch": "webpack --progress --watch --config webpack.development.js",
     "accessibility-check": "node ./pa11y.js",
-    "build-scss": "npm rebuild sass --verbose && sass --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
+    "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
   },
   "author": "John Nolan <john.nolan@digital.justice.gov.uk>",
   "license": "MIT",
@@ -30,8 +30,8 @@
     "core-js": "^3.26.0",
     "coveralls": "^3.1.1",
     "es6-promise": "^4.2.8",
-    "esbuild": "^0.19.0",
-    "esbuild-sass-plugin": "^2.3.3",
+    "esbuild": "^0.20.1",
+    "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -39,7 +39,7 @@
     "jest-environment-jsdom": "^29.2.2",
     "jest-junit": "^16.0.0",
     "prettier": "^3.0.0",
-    "sass": "^1.55.0"
+    "sass": "^1.75.0"
   },
   "dependencies": {
     "@babel/runtime": "^7.20.1",
