@@ -19,8 +19,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 class SystemMessageTest extends TestCase
 {
     /**
- * @var SsmClient&MockObject
- */
+     * @var SsmClient&MockObject
+     */
     use ProphecyTrait;
 
     private SsmClient $ssmClient;
