@@ -1080,6 +1080,14 @@ class AccountContext implements Context
                     self::LPA_SERVICE_GET_LPAS
                 )
             );
+
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([]),
+                    self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+                )
+            );
         } else {
             // API call for authentication
             $this->apiFixtures->append(
