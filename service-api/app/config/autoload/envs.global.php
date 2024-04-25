@@ -6,6 +6,8 @@ return [
 
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
+    'environment_name' => getenv('ENVIRONMENT_NAME') ?: '',
+
     'sirius_api' => [
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
@@ -68,6 +70,4 @@ return [
             ],
         ],
     ],
-
-    'environment_name' => getenv('ENVIRONMENT_NAME') ?: ''
 ];
