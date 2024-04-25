@@ -37,7 +37,6 @@ class SystemMessage
     public function getSystemMessages(): array
     {
         $response = $this->ssmClient->getParameters(
-            // Add prefix (e.g. '/system-message/<environment_name>') before each parameter name
             ['Names' => array_map(fn ($name) => $this->prefix . $name, self::$PARAMETER_NAMES)]
         );
 
@@ -45,8 +44,6 @@ class SystemMessage
         $nameToValueMap = [];
 
         foreach ($parameters as $parameter) {
-            // Remove prefixes from parameter names before we return them to the client
-            // e.g. so UI doesn't need to care about understanding environment name, etc.
             $nameToValueMap[$this->stripPrefix($parameter['Name'])] = $parameter['Value'];
         }
 
