@@ -40,7 +40,8 @@ class SystemMessageHandlerTest extends TestCase
      * @throws IncompatibleReturnValueException
      * @throws ExpectationFailedException
      */
-    public function testHandleReturnsJsonResponseWithSystemMessages(): void
+    #[Test]
+    public function handleReturnsJsonResponseWithSystemMessages(): void
     {
         $expectedMessages = [
             'use/en' => 'English usage message',
