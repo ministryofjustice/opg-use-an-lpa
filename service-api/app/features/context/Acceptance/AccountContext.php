@@ -6,12 +6,17 @@ namespace BehatTest\Context\Acceptance;
 
 use Aws\Result;
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ExpectationException;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
+use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\ExpectationFailedException;
+
 use function PHPUnit\Framework\assertArrayHasKey;
+use function PHPUnit\Framework\assertEquals;
 
 /**
  * @property array passwordResetData
@@ -1287,9 +1292,42 @@ class AccountContext implements Context
 
     /**
      * @Then /^I should be told that a bad request was made$/
+     * @throws ExpectationException
      */
     public function iShouldBeToldThatABadRequestWasMade(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
+    }
+
+    /**
+     * @When I view a page and the system message is set
+     */
+    public function iViewAPageAndTheSystemMessageIsSet(): void
+    {
+        $this->awsFixtures->append(new Result([
+          'Parameters' => [
+              ['Name' => '/system-message/use/en', 'Value' => 'Use message'],
+              ['Name' => '/system-message/use/cy', 'Value' => 'Neges defnyddio'],
+          ],
+        ]));
+
+        $this->apiGet('/v1/system-message');
+    }
+
+    /**
+     * @Then I see the system message
+     * @throws ExpectationFailedException|ExpectationException
+     * @throws Exception
+     */
+    public function iSeeTheSystemMessage(): void
+    {
+        $response = $this->getResponseAsJson();
+
+        Assert::assertEquals('Use message', $response['use/en']);
+        Assert::assertEquals('Neges defnyddio', $response['use/cy']);
+        Assert::assertArrayNotHasKey('view/en', $response);
+        Assert::assertArrayNotHasKey('view/cy', $response);
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
     }
 }

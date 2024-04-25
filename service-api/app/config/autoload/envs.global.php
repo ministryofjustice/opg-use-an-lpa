@@ -6,6 +6,8 @@ return [
 
     'version' => getenv('CONTAINER_VERSION') ?: 'dev',
 
+    'environment_name' => getenv('ENVIRONMENT_NAME') ?: '',
+
     'sirius_api' => [
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
@@ -38,6 +40,9 @@ return [
         'SecretsManager' => [
             'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
         ],
+        'Ssm' => [
+            'endpoint' => getenv('AWS_ENDPOINT_SSM') ?: null,
+        ]
     ],
 
     'repositories' => [

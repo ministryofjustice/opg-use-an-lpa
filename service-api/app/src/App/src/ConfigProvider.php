@@ -72,8 +72,10 @@ class ConfigProvider
                 Aws\Sdk::class                                 => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class             => Service\Aws\DynamoDbClientFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
+                Aws\Ssm\SsmClient::class                       => Service\Aws\SSMClientFactory::class,
                 Service\ApiClient\Client::class                => Service\ApiClient\ClientFactory::class,
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
+                Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,

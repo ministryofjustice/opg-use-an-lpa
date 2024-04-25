@@ -25,6 +25,7 @@ use App\Handler\OneLoginAuthenticationRequestHandler;
 use App\Handler\RequestChangeEmailHandler;
 use App\Handler\RequestCleanseHandler;
 use App\Handler\RequestPasswordResetHandler;
+use App\Handler\SystemMessageHandler;
 use App\Handler\UserActivateHandler;
 use App\Handler\UserHandler;
 use App\Handler\ViewerCodeFullHandler;
@@ -79,6 +80,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         RequestCleanseHandler::class,
         'lpa.older.cleanse'
     );
+
+    $app->get('/v1/system-message', SystemMessageHandler::class, 'system.message');
 
     $app->get('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.resource');
     $app->delete('/v1/lpas/{user-lpa-actor-token:[0-9a-f\-]+}', LpasResourceHandler::class, 'lpa.remove');
