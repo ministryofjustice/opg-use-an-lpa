@@ -22,7 +22,10 @@ class SystemMessageServiceTest extends TestCase
     public function get_messages_calls_api(): void
     {
         $apiClientProphecy = $this->prophesize(Client::class);
-        $apiClientProphecy->httpGet('/v1/system-message')->shouldBeCalled()->willReturn([ 'use/en' => 'English', 'use/cy' => 'Welsh']);
+        $apiClientProphecy->httpGet('/v1/system-message')->shouldBeCalled()->willReturn([
+            'use/en' => 'English',
+            'use/cy' => 'Welsh',
+        ]);
 
         $systemMessageService = new SystemMessageService($apiClientProphecy->reveal());
 

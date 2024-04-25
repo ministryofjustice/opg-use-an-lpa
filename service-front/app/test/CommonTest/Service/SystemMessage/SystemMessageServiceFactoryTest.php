@@ -32,6 +32,7 @@ class SystemMessageServiceFactoryTest extends TestCase
         $containerProphecy->get(Client::class)->willReturn($apiClientProphecy->reveal());
 
         $systemMessageServiceFactory = new SystemMessageServiceFactory();
+
         $systemMessageService = $systemMessageServiceFactory($containerProphecy->reveal());
 
         $this->assertInstanceOf(SystemMessageService::class, $systemMessageService);
