@@ -55,7 +55,6 @@ class SystemMessageTest extends TestCase
             ],
         ];
 
-        // this test can be deleted once the 2cnd version using prophecy below, is working , as it will replace this
         $this->ssmClient->method('__call')
             ->with($this->identicalTo('getParameters'))
             ->willReturn($mockResponse);
