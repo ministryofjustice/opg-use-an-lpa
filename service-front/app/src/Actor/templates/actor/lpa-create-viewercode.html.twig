@@ -50,7 +50,7 @@
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                             {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
                         </strong>
                     </div>
@@ -60,7 +60,7 @@
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
-                            <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                             {% trans %}
                                 Check that the organisation will accept an online summary of the <abbr title="lasting power of attorney">LPA</abbr> and how they want to receive the access code you make for them.
                             {% endtrans %}

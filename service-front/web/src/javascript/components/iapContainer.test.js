@@ -17,7 +17,7 @@ const html = `
         <div class="govuk-warning-text">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
-                <span class="govuk-warning-text__assistive">{% trans %}Warning{% endtrans %}</span>
+                <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                 This is an error message
             </strong>
         </div>
@@ -26,7 +26,7 @@ const html = `
         <div class="govuk-warning-text iap-wait">
             <strong class="govuk-warning-text__text">
                 <div class="iap-loader"></div>
-                <span class="govuk-warning-text__assistive">Warning</span>
+                <span class="govuk-visually-hidden">Warning</span>
                 A scanned image of the donor’s instructions will appear here soon. The first time may take up to 10 minutes.
                 You do not need to stay on the page or refresh it whilst you wait.
             </strong>
@@ -43,7 +43,7 @@ const html = `
         <div class="govuk-warning-text iap-wait">
             <strong class="govuk-warning-text__text">
                 <div class="iap-loader"></div>
-                <span class="govuk-warning-text__assistive">Warning</span>
+                <span class="govuk-visually-hidden">Warning</span>
                 A scanned image of the donor’s instructions will appear here soon. The first time may
                 take up to 10 minutes. Please refresh this page.
             </strong>

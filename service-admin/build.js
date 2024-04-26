@@ -9,7 +9,7 @@ const fs = fsWithCallbacks.promises;
   let config = {
     entrypoints: ['./web/assets/main.js'],
     copy_files: {
-      './node_modules/govuk-frontend/govuk/assets': 'web/static/assets',
+      './node_modules/govuk-frontend/dist/govuk/assets': 'web/static/assets',
       './node_modules/@ministryofjustice/frontend/moj/assets': 'web/static/assets',
     },
     out_dir: './web/static/javascript',

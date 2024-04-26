@@ -13,7 +13,7 @@ const fs = fsWithCallbacks.promises;
             './src/robots.txt': 'robots.txt',
             './src/budget.json': 'budget.json',
             './src/images': 'assets/images',
-            './node_modules/govuk-frontend/govuk/assets': 'assets',
+            './node_modules/govuk-frontend/dist/govuk/assets': 'assets',
             './node_modules/@ministryofjustice/frontend/moj/assets': 'assets',
         },
         out_dir: './dist',
@@ -38,12 +38,13 @@ const fs = fsWithCallbacks.promises;
             allowOverwrite: true,
             outdir: config.out_dir,
             minify: true,
+            sourcemap: true,
             plugins: [],
-            target: ['es2015', 'ie11'],
+            target: ['es2018'],
             platform: 'browser',
             metafile: true,
             supported: {
-                arrow: false,
+                class:true
             },
         })
         .catch((e) => {

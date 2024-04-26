@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 require('es6-promise/auto');
-import {Accordion, initAll} from 'govuk-frontend';
 import jsEnabled from './javascript/jsEnabled';
+import {Accordion, initAll} from 'govuk-frontend';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
@@ -9,6 +9,9 @@ import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from './javascript/showHidePassword';
 import addPolyFill from './javascript/polyfill.js';
 import registerIapImagesComponents from './javascript/iapImages.js';
+
+//always run this first as GDS FE dependent on it.
+jsEnabled(document.body);
 
 Accordion.prototype.updateOpenAllButton = function (expanded) {
     var newButtonText = expanded
@@ -20,7 +23,7 @@ Accordion.prototype.updateOpenAllButton = function (expanded) {
 };
 
 initAll();
-jsEnabled(document.body);
+
 addPolyFill();
 disableButtonOnClick(document.getElementsByTagName('form'));
 new cookieConsent(
