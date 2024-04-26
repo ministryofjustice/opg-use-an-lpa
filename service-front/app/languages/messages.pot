@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-04-23T16:26:10+00:00\n"
+"POT-Creation-Date: 2024-04-26T12:26:55+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -914,13 +914,7 @@ msgid "Date summary viewed"
 msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:170
-msgid "You cannot use a download or print out of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code."
-msgstr ""
-
-#: src/Actor/templates/actor/layout.html.twig:5
-#: src/Actor/templates/actor/one-login.html.twig:8
-#: src/Actor/templates/actor/home-page.html.twig:5
-msgid "Use a lasting power of attorney"
+msgid "You cannot use a download or printout of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Always use the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
@@ -1709,31 +1703,6 @@ msgstr ""
 msgid "a return address where your documents can be sent back to"
 msgstr ""
 
-#: src/Actor/templates/actor/your-details.html.twig:12
-#: src/Common/templates/partials/account-bar.html.twig:11
-msgid "Your details"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:25
-msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:38
-msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:45
-msgid "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary?"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:47
-msgid "Change a donor or attorney's details"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:50
-msgid "Delete account"
-msgstr ""
-
 #. Global
 #: src/Actor/templates/actor/form-error-messages.html.twig:4
 msgctxt "error"
@@ -1809,7 +1778,7 @@ msgstr ""
 #. login
 #: src/Actor/templates/actor/form-error-messages.html.twig:24
 msgctxt "error"
-msgid "We could not find a Use a lasting power of attorney account with that email address and password. Check your details and try again."
+msgid "Check your details and try again. We could not find a Use a lasting power of attorney account with that email address and password."
 msgstr ""
 
 #. Add LPA
@@ -1947,7 +1916,7 @@ msgstr ""
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:54
 msgctxt "error"
-msgid "Select yes if you live in the UK"
+msgid "Select if you live in the UK or do not live in the UK"
 msgstr ""
 
 #. Add Older LPA
@@ -2114,8 +2083,8 @@ msgstr ""
 msgid "To ask for a key, you'll need to give us:"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
-msgid "your name, date of birth and address"
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
+msgid "your current address - all activation keys are sent by post"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:40
@@ -2225,12 +2194,28 @@ msgstr ""
 msgid "Confirm and submit request"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
+msgid "What is your current postcode?"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+msgid "Where do you live?"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
+msgid "We will send your activation key to you by post."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:29
+msgid "I live in the UK"
+msgstr ""
+
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:31
 msgid "What is your UK postcode?"
 msgstr ""
 
-#: src/Common/templates/common/cookies.html.twig:131
-msgid "Yes"
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
+msgid "I do not live in the UK"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
@@ -2262,16 +2247,12 @@ msgstr ""
 msgid "For example, 08 04 2004"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:3
-msgid "We need some more details"
+#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:19
+msgid "What is your current address?"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
 msgid "We need a few extra details to make sure we have the right LPA for your activation key request."
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:19
-msgid "What is your current address?"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
@@ -2283,10 +2264,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
 msgid "You've already given your postcode as %postcode%"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
-msgid "Your activation key will be posted to this address."
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
@@ -2577,6 +2554,18 @@ msgstr ""
 msgid "If you’ve already requested an activation key, you'll find it on the letter or email we sent you. If you’ve lost it, or it’s expired, you can request a new one below."
 msgstr ""
 
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:93
+msgid "For enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:97
+msgid "The Use a lasting power of attorney service cannot be used for EPAs."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:98
+msgid "You’ll need to show the paper EPA to people or organisations instead."
+msgstr ""
+
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:105
 msgid "Yes, I have an activation key"
 msgstr ""
@@ -2802,6 +2791,42 @@ msgstr ""
 #: src/Actor/src/Handler/CancelCodeHandler.php:76
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:4
+msgid "One Login"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:15
+msgid "Sign in to this service"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:17
+msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:23
+msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid "If you’ve not used Gov.uk One Login before, you can set up your access on the next page."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:33
+msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:37
+msgid "What if I’ve used this service before?"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:39
+msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:56
+msgid "with GOV.UK One Login"
 msgstr ""
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:24
@@ -3147,7 +3172,7 @@ msgid "Check that the organisation will accept an online summary of the <abbr ti
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
-msgid "<strong>Important: </strong>This LPA has instructions.<br>"
+msgid "This LPA has instructions.<br>"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:61
@@ -3160,15 +3185,15 @@ msgid "Read more"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:21
-msgid "<strong>Important: </strong>This LPA has preferences.<br>"
+msgid "This LPA has preferences.<br>"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:39
-msgid "<strong>Important: </strong>This LPA has instructions and preferences.<br>"
+msgid "This LPA has instructions and preferences.<br>"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
-msgid "<strong>Important: </strong>This LPA has instructions and/or preferences.<br>"
+msgid "This LPA has instructions and/or preferences.<br>"
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10
@@ -3397,6 +3422,32 @@ msgstr ""
 msgid "If you have not received an email within a few minutes, please check your spam, bulk or junk email folder &mdash; your email system may have blocked it by mistake. If there’s no account with this email address we’ll also let you know."
 msgstr ""
 
+#: src/Actor/templates/actor/settings.html.twig:12
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
+#: src/Common/templates/partials/header/default.html.twig:36
+msgid "Settings"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:25
+msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:38
+msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:45
+msgid "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary?"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:47
+msgid "Change a donor or attorney's details"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:50
+msgid "Delete account"
+msgstr ""
+
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:19
 msgid "Any lasting power of attorney (LPA) you add to your account will show on this page."
 msgstr ""
@@ -3530,6 +3581,10 @@ msgstr ""
 msgid "Do you want to accept analytics cookies?"
 msgstr ""
 
+#: src/Common/templates/common/cookies.html.twig:131
+msgid "Yes"
+msgstr ""
+
 #: src/Common/templates/common/cookies.html.twig:146
 msgid "Save changes"
 msgstr ""
@@ -3598,48 +3653,16 @@ msgstr ""
 msgid "<a href=\"%link%\" draggable=\"false\" class=\"govuk-button\">Start again</a>"
 msgstr ""
 
+#: src/Common/templates/error/410.html.twig:10
+msgid "Gone"
+msgstr ""
+
+#: src/Common/templates/error/410.html.twig:12
+msgid "This page is no longer available and has been removed permanently."
+msgstr ""
+
 #: src/Common/templates/layout/default.html.twig:46
 msgid "Skip to main content"
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:8
-msgid "Cookies on %service_name%"
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:11
-msgid "We use some essential cookies to make this service work."
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:12
-msgid "We’d also like to use analytics cookies so we can understand how you use the service and make improvements."
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:19
-msgid "Accept analytics cookies"
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:22
-msgid "Reject analytics cookies"
-msgstr ""
-
-#: src/Common/templates/partials/cookie-banner.html.twig:24
-msgid "View cookies"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:17
-msgid "Support links"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:46
-msgid "Built by OPG Digital"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:56
-msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:65
-msgid "© Crown copyright"
 msgstr ""
 
 #: src/Common/templates/layout/default.html.twig:5
@@ -3731,6 +3754,30 @@ msgstr ""
 #. Hide password label
 #: src/Common/templates/partials/govuk_form.html.twig:245
 msgid "Hide"
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:8
+msgid "Cookies on %service_name%"
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:11
+msgid "We use some essential cookies to make this service work."
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:12
+msgid "We’d also like to use analytics cookies so we can understand how you use the service and make improvements."
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:19
+msgid "Accept analytics cookies"
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:22
+msgid "Reject analytics cookies"
+msgstr ""
+
+#: src/Common/templates/partials/cookie-banner.html.twig:24
+msgid "View cookies"
 msgstr ""
 
 #: src/Common/templates/partials/govuk_error.html.twig:6
@@ -3830,6 +3877,11 @@ msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
 msgstr[0] ""
 
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
+msgid "Also known as"
+msgstr ""
+
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
 msgid "(Trust corporation)"
 msgstr ""
@@ -3904,21 +3956,6 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:155
-#: src/Common/templates/partials/header/default.html.twig:28
-msgid "Last signed in:"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:157
-#: src/Common/templates/partials/header/default.html.twig:30
-msgid "Never"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
-#: src/Common/templates/partials/header/default.html.twig:37
-msgid "Your LPAs"
-msgstr ""
-
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr ""
@@ -3951,8 +3988,68 @@ msgstr ""
 msgid "Go back to the page you were looking at"
 msgstr ""
 
-#: src/Viewer/templates/viewer/layout.html.twig:5
-msgid "View a lasting power of attorney"
+#: src/Common/templates/partials/footer.html.twig:17
+msgid "Support links"
+msgstr ""
+
+#: src/Common/templates/partials/footer.html.twig:46
+msgid "Built by OPG Digital"
+msgstr ""
+
+#: src/Common/templates/partials/footer.html.twig:56
+msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
+msgstr ""
+
+#: src/Common/templates/partials/footer.html.twig:65
+msgid "© Crown copyright"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+msgid "Show GOV.UK One Login menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+msgid "Hide GOV.UK One Login menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
+msgid "Show service navigation menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:113
+msgid "Hide service navigation menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:118
+msgid "Menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:115
+msgid "Close"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:120
+msgid "%service_name% menu"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
+#: src/Common/templates/partials/header/default.html.twig:37
+msgid "Your LPAs"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
+#: src/Common/templates/partials/header/one-login.html.twig:36
+msgid "Ancillary navigation"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
+#: src/Common/templates/partials/header/default.html.twig:28
+msgid "Last signed in:"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
+#: src/Common/templates/partials/header/default.html.twig:30
+msgid "Never"
 msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:3
@@ -4464,171 +4561,4 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
-msgstr ""
-
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:170
-msgid "You cannot use a download or printout of this <abbr title=\"lasting power of attorney\">LPA</abbr> summary. Always use the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or give someone an access code."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:4
-msgid "One Login"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:13
-msgid "Sign in via One Login"
-msgstr ""
-
-#. login
-#: src/Actor/templates/actor/form-error-messages.html.twig:24
-msgctxt "error"
-msgid "Check your details and try again. We could not find a Use a lasting power of attorney account with that email address and password."
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-msgid "your current address - all activation keys are sent by post"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
-msgid "What is your current postcode?"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
-msgid "Where do you live?"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
-msgid "We'll send your activation key to you by post."
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:29
-msgid "I live in the UK"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:34
-msgid "I do not live in the UK"
-msgstr ""
-
-#. Add Older LPA
-#: src/Actor/templates/actor/form-error-messages.html.twig:54
-msgctxt "error"
-msgid "Select if you live in the UK or do not live in the UK"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
-msgid "We will send your activation key to you by post."
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
-#: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
-msgid "Also known as"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
-msgid "This LPA has instructions.<br>"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:21
-msgid "This LPA has preferences.<br>"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:39
-msgid "This LPA has instructions and preferences.<br>"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
-msgid "This LPA has instructions and/or preferences.<br>"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:93
-msgid "For enduring powers of attorney (EPAs)"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:97
-msgid "The Use a lasting power of attorney service cannot be used for EPAs."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:98
-msgid "You’ll need to show the paper EPA to people or organisations instead."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:15
-msgid "Sign in to this service"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:16
-msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"url\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:23
-msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:28
-msgid "If you’ve not used Gov.uk One Login before, you can set up your access on the next page."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:33
-msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:37
-msgid "What if I’ve used this service before?"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:39
-msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for Gov.uk One Login, any LPAs you’ve previously added will automatically appear."
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:41
-msgid "with GOV.UK One Login</p>"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:56
-msgid "with GOV.UK One Login"
-msgstr ""
-
-#: src/Actor/templates/actor/one-login.html.twig:17
-msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
-msgstr ""
-
-#: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:137
-#: src/Common/templates/partials/header/default.html.twig:36
-msgid "Settings"
-msgstr ""
-
-#: src/Common/templates/error/410.html.twig:10
-msgid "Gone"
-msgstr ""
-
-#: src/Common/templates/error/410.html.twig:12
-msgid "This page is no longer available and has been removed permanently."
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
-msgid "Show GOV.UK One Login menu"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
-msgid "Hide GOV.UK One Login menu"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
-msgid "Show service navigation menu"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:113
-msgid "Hide service navigation menu"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:118
-msgid "Menu"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:115
-msgid "Close"
-msgstr ""
-
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:121
-msgid "%service_name% menu"
 msgstr ""
