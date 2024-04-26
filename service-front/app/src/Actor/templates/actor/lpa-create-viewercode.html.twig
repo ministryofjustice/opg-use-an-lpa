@@ -33,15 +33,15 @@
 
                     <div class="govuk-form-group">
                             {% if lpa.caseSubtype|lower == 'hw' %}
-                                {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' %}
+                                {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' | trans %}
                             {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                                {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' %}
+                                {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' | trans %}
                             {% endif %}
 
 
                             {{ govuk_form_element(form.get('org_name'), {
                                 'label': 'Organisation name' | trans,
-                                'hint':  hint | trans,
+                                'hint':  hint,
                                 'attr' : {'class': 'govuk-!-width-three-quarters', 'label_class': 'govuk-label--s govuk-!-margin-bottom-3'}
                             }) }}
                     </div>

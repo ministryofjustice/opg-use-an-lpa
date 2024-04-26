@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-04-26T12:26:55+00:00\n"
+"POT-Creation-Date: 2024-04-26T13:09:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -3161,6 +3161,14 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:20
 msgid "Which organisation do you want to give access to?"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:36
+msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode.html.twig:38
+msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:43
