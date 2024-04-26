@@ -19,8 +19,12 @@ class SystemMessageService
      */
     public function getMessages(): array
     {
-        return $this->apiClient->httpGet(
-            '/v1/system-message',
-        );
+        try {
+            return $this->apiClient->httpGet(
+                '/v1/system-message',
+            );
+        } catch (ApiException $exception) {
+            return [];
+        }
     }
 }
