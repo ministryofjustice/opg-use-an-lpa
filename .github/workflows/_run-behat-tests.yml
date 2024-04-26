@@ -16,7 +16,7 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9b4c13b0bfa31b4514c14f74b5a166c2708f43c6 # pin@v3
+      - uses: actions/checkout@8459bc0c7e3759cdf591f513d9f141a95fef0a8f # pin@v3
 
       - name: install python
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # pin@v4.2.0
@@ -45,7 +45,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@0daa75ebeac4617faeb127496dbd716b8bcce26e
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
         with:
           name: environment_config_file
           path: terraform/environment
@@ -86,7 +86,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@79616d2ded92999fceefea2ca2e4bdf6101fa919 # pin@v3.1.0
+        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
