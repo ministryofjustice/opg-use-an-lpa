@@ -14,9 +14,6 @@ class SystemMessageService
     ) {
     }
 
-    /**
-     * @throws ApiException
-     */
     public function getMessages(): array
     {
         try {
