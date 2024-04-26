@@ -20,7 +20,7 @@ class SystemMessageService
             return $this->apiClient->httpGet(
                 '/v1/system-message',
             );
-        } catch (ApiException $exception) {
+        } catch (ApiException) {
             return [];
         }
     }
