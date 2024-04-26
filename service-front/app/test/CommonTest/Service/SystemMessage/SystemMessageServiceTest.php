@@ -7,8 +7,8 @@ namespace CommonTest\Service\SystemMessage;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\SystemMessage\SystemMessageService;
+use Exception;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Exception\Prophecy\ObjectProphecyException;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class SystemMessageServiceTest extends TestCase
@@ -17,8 +17,7 @@ class SystemMessageServiceTest extends TestCase
 
     /**
      * @test
-     * @covers ::__invoke
-     * @throws ObjectProphecyException
+     * @throws Exception
      */
     public function get_messages_calls_api(): void
     {
@@ -36,6 +35,10 @@ class SystemMessageServiceTest extends TestCase
         $this->assertEquals('Welsh', $messages['use/cy'] ?? null);
     }
 
+    /**
+     * @test
+     * @throws Exception
+     */
     public function gets_no_messages_when_api_fails(): void
     {
         $apiClientProphecy = $this->prophesize(Client::class);
