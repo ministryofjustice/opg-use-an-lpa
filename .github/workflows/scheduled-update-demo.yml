@@ -35,6 +35,8 @@ jobs:
     needs:
       - terraform_apply_environment
     secrets: inherit
+    with:
+      workspace: demo
 
   force_redeployment:
     name: force redeployment
@@ -68,5 +70,6 @@ jobs:
     with:
       template: successful_demo_release.txt
       workflow_status: ${{ needs.force_redeployment.result }}
+      workspace: demo
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}

@@ -155,6 +155,8 @@ jobs:
     needs:
       - terraform_apply_preproduction
     secrets: inherit
+    with:
+      workspace: preproduction
 
   run_behat_suite_preproduction:
     name: run behat tests against preproduction
@@ -204,7 +206,7 @@ jobs:
       - name: download cluster_config
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
         with:
-          name: environment_config_file
+          name: environment_config_file_production
           path: terraform/environment
       - name: workflow has ended without issue
         run: |
@@ -224,6 +226,7 @@ jobs:
     with:
       template: production_release.txt
       workflow_status: ${{ needs.production_health_check.result }}
+      workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: always()

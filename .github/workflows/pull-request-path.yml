@@ -223,6 +223,9 @@ jobs:
     needs:
       - terraform_apply_environment
       - terraform_apply_shared_development
+      - workspace_name
+    with:
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets: inherit
     if: |
       always() &&
@@ -249,9 +252,11 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - run_behat_suite
+      - workspace_name
     with:
       template: successful_dev_build.txt
       workflow_status: ${{ needs.run_behat_suite.result }}
+      workspace: ${{ needs.workspace_name.outputs.name }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
     if: |

@@ -154,5 +154,5 @@ jobs:
         if: inputs.terraform_path == 'environment'
         uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
         with:
-          name: environment_config_file
+          name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment/cluster_config.json

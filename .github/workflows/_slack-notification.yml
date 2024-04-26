@@ -16,6 +16,10 @@ on:
         required: false
         type: string
         default: failure
+      workspace:
+        description: 'Suffix of the environment_config_file_ artifact to download'
+        required: true
+        type: string
     secrets:
       webhook:
         required: true
@@ -38,7 +42,7 @@ jobs:
       - name: download cluster_config
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
         with:
-          name: environment_config_file
+          name: environment_config_file_${{ inputs.workspace }}
           path: /tmp
         if: inputs.workflow_status == 'success'
 
