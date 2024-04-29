@@ -11,6 +11,7 @@ scripts/getStatsResultDemo.json
 .python-version
 .pytest_cache
 .coverage
+.phpunit.cache/
 .phpunit.result.cache
 .phpcs-cache
 scripts/analysis_scripts/*.csv

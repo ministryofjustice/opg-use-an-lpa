@@ -1,5 +1,3 @@
 {% extends '@layout/default.html.twig' %}
 
-{% block html_title %}{{ block('service_name') }} - {{ parent() }} {% endblock %}
-
-{% block service_name %}{% trans %}Use a lasting power of attorney{% endtrans %}{% endblock %}
+{% block html_title %}{{ serviceName | trans }} - {{ parent() }} {% endblock %}

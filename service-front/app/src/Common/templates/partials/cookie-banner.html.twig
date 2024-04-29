@@ -1,0 +1,29 @@
+{% block cookie_banner %}
+    <form>
+        <div class="govuk-cookie-banner" data-nosnippet role="region" aria-label="{% trans with { '%service_name%' : serviceName | trans } %}Cookies on %service_name%{% endtrans %}" hidden>
+            <div class="govuk-cookie-banner__message govuk-width-container">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-two-thirds">
+                        <h2 class="govuk-cookie-banner__heading govuk-heading-m">{% trans with { '%service_name%' : serviceName | trans } %}Cookies on %service_name%{% endtrans %}</h2>
+
+                        <div class="govuk-cookie-banner__content">
+                            <p class="govuk-body">{% trans %}We use some essential cookies to make this service work.{% endtrans %}</p>
+                            <p class="govuk-body">{% trans %}We’d also like to use analytics cookies so we can understand how you use the service and make improvements.{% endtrans %}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="govuk-button-group">
+                    <button value="accept" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+                        {% trans %}Accept analytics cookies{% endtrans %}
+                    </button>
+                    <button value="reject" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
+                        {% trans %}Reject analytics cookies{% endtrans %}
+                    </button>
+                    <a class="govuk-link" href="{{ path('cookies') }}">{% trans %}View cookies{% endtrans %}</a>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

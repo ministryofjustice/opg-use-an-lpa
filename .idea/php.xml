@@ -32,7 +32,6 @@
       <path value="$PROJECT_DIR$/service-front/app/src/Actor/src" />
       <path value="$PROJECT_DIR$/service-front/app/src/Common/src" />
       <path value="$PROJECT_DIR$/service-front/app/src/Viewer/src" />
-      <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/amp" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/byte-stream" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/aws/aws-crt-php" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/aws/aws-sdk-php" />
@@ -487,6 +486,11 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-library" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/spomky-labs/aes-key-wrap" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/web-token/jwt-encryption-algorithm-aeskw" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/carbonphp/carbon-doctrine-types" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-library" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/amp" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

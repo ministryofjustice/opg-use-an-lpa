@@ -3,11 +3,16 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/tests/smoke/tests" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/AppTest" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/BehatTest" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ActorTest" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/CommonTest" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ViewerTest" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/smoke/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/alphagov/notifications-php-client" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/amp" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/amphp/byte-stream" />
@@ -140,7 +145,6 @@
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/object-enumerator" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/recursion-context" />
-      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/resource-operations" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/sebastian/version" />
       <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/slevomat/coding-standard" />
@@ -203,6 +207,101 @@
       <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/web-token/jwt-key-mgmt" />
       <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/web-token/jwt-signature" />
       <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/web-token/jwt-signature-algorithm-rsa" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/amphp/amp" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/amphp/byte-stream" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/behat/behat" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/behat/gherkin" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/behat/mink" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/behat/transliterator" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/dealerdirect/phpcodesniffer-composer-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/dmore/behat-chrome-extension" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/dmore/chrome-mink-driver" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/dnoegel/php-xdg-base-dir" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/doctrine/deprecations" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/doctrine/instantiator" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/felixfbecker/advanced-json-rpc" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/felixfbecker/language-server-protocol" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/fidry/cpu-core-counter" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/fig/http-message-util" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/friends-of-behat/mink-extension" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/myclabs/deep-copy" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/netresearch/jsonmapper" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/nikic/php-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phar-io/manifest" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phar-io/version" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpdocumentor/reflection-common" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpdocumentor/reflection-docblock" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpdocumentor/type-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpstan/phpdoc-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/php-code-coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/php-file-iterator" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/php-invoker" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/php-text-template" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/php-timer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phpunit/phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phrity/net-uri" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/phrity/util-errorhandler" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psalm/plugin-phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psr/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/psr/log" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/cli-parser" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/code-unit" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/code-unit-reverse-lookup" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/comparator" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/complexity" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/diff" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/environment" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/global-state" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/lines-of-code" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/object-enumerator" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/object-reflector" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/recursion-context" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/resource-operations" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/type" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/slevomat/coding-standard" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/spatie/array-to-xml" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/squizlabs/php_codesniffer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/console" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/css-selector" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/dependency-injection" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/event-dispatcher" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/event-dispatcher-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/polyfill-ctype" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/polyfill-intl-grapheme" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/polyfill-intl-normalizer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/polyfill-mbstring" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/polyfill-php80" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/service-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/string" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/translation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/var-exporter" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/textalk/websocket" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/theseer/tokenizer" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/vimeo/psalm" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/webimpress/coding-standard" />
+      <excludeFolder url="file://$MODULE_DIR$/tests/smoke/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/spomky-labs/aes-key-wrap" />
+      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/web-token/jwt-encryption-algorithm-aeskw" />
+      <excludeFolder url="file://$MODULE_DIR$/service-api/app/vendor/web-token/jwt-library" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/amphp/amp" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/carbonphp/carbon-doctrine-types" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/symfony/http-client-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/web-token/jwt-library" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

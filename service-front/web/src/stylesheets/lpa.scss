@@ -21,3 +21,8 @@
 @import 'govuk-list';
 @import 'govuk-accordion';
 @import 'lpa-instructions-and-preferences-images';
+
+// corrects the baseline alignment of the service name in the header bar
+.service-header__heading {
+  padding: govuk-spacing(2) 0 govuk-spacing(4) 0;
+}

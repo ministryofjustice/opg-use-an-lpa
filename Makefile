@@ -136,7 +136,6 @@ build_frontend_assets:
 	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run build"
 .PHONY: build_frontend_assets
 
-
 unit_test_api_app:
 	$(COMPOSE) run --rm api-app /app/vendor/bin/phpunit
 .PHONY: unit_test_api_app

@@ -21,6 +21,7 @@ class GenericGlobalVariableExtension extends AbstractExtension implements Global
     {
         return [
             'application'   => $this->application,
+            'serviceName'   => ($this->application === 'actor' ? 'Use' : 'View') . ' a lasting power of attorney',
             'currentLocale' => strtolower(str_replace('_', '-', Locale::getDefault())),
         ];
     }
