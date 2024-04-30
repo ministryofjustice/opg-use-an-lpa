@@ -21,6 +21,7 @@ use Psr\Http\Message\RequestInterface;
  * @property $lpaStoredCode
  * @property $lpaViewedBy
  * @property $imageCollectionStatus
+ * @property $systemMessageData
  */
 class ViewerContext implements Context
 {
@@ -28,6 +29,8 @@ class ViewerContext implements Context
     use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
+
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
     /**
      * @Then /^a PDF is downloaded$/
@@ -51,7 +54,34 @@ class ViewerContext implements Context
      */
     public function iAccessTheViewerService()
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/home');
+    }
+
+    /**
+     * @Given /^A system message is set$/
+     */
+    public function aSystemMessageIsSet()
+    {
+        $this->systemMessageData = [
+            'view/en' => 'System Message View English',
+            'view/cy' => 'System Message View Welsh',
+        ];
+    }
+
+    /**
+     * @Given /^A system message is not set$/
+     */
+    public function aSystemMessageIsNotSet()
+    {
+        $this->systemMessageData = [];
     }
 
     /**
@@ -238,6 +268,22 @@ class ViewerContext implements Context
         $this->ui->assertPageNotContainsText(
             'Cancelled on'
         );
+    }
+
+    /**
+     * @Then /^I can see the message (.*)$/
+     */
+    public function iCanSeeTheMessage($message): void
+    {
+        $this->ui->assertPageContainsText($message);
+    }
+
+    /**
+     * @Then /^I cannot see the message (.*)$/
+     */
+    public function iCanNotSeeTheMessage($message): void
+    {
+        $this->ui->assertPageNotContainsText($message);
     }
 
     /**
