@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-use-an-lpa/service-admin
 
-go 1.22
+go 1.22.2
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.21.2
