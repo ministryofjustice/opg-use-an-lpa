@@ -42,16 +42,18 @@ func TestNewDynamoConnection(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			config, err := config.LoadDefaultConfig(context.Background(), config.WithRegion(tt.args.region))
 
 			if err != nil {
 				t.Errorf("error setting up test config")
 			}
+
 			got := data.NewDynamoConnection(config, tt.args.endpoint, tt.args.tablePrefix)
+
 			if got.Prefix != tt.args.tablePrefix+"-" {
 				t.Errorf("expected prefix %v got %v", got.Prefix, tt.args.tablePrefix)
 			}
-
 		})
 	}
 }

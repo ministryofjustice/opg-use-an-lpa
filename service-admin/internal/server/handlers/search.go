@@ -227,7 +227,6 @@ func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) int
 				ActivationKey: nil,
 			}
 		} else {
-
 			for _, value := range *activationKey {
 				return &SearchResult{
 					Query:         q,
@@ -242,7 +241,6 @@ func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) int
 		activationKey, err := s.activationKeyService.GetActivationKeyFromCodes(ctx, q)
 		if err == nil {
 			for _, value := range *activationKey {
-
 				used := isUsed(value.Active, value.StatusDetails)
 
 				return &SearchResult{
@@ -253,7 +251,6 @@ func (s *SearchServer) SearchByActivationCode(ctx context.Context, q string) int
 				}
 			}
 		}
-
 	}
 
 	return nil
