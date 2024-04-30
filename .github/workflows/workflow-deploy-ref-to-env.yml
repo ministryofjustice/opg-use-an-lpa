@@ -60,13 +60,13 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@0df48f84094b1c181560c74c366be7aa482f69f9
+        uses: tj-actions/changed-files@5e85e31a0187e8df23b438284aa04f21b55f1510
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@0df48f84094b1c181560c74c366be7aa482f69f9
+        uses: tj-actions/changed-files@5e85e31a0187e8df23b438284aa04f21b55f1510
         with:
           files: |
             terraform/**
