@@ -71,7 +71,7 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@1f0219f06bc83460a00897ce23371e4a3325db85 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@e6e8bf240aacb7cbcffa8e7eec2781b1d8f4375e # pin@v2.0.0
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
