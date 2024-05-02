@@ -42,19 +42,19 @@ jobs:
           fetch-depth: 2
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@5e85e31a0187e8df23b438284aa04f21b55f1510
+        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@5e85e31a0187e8df23b438284aa04f21b55f1510
+        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
         with:
           files: |
             terraform/**
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@5e85e31a0187e8df23b438284aa04f21b55f1510
+        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
         with:
           files: |
             **/*.md
