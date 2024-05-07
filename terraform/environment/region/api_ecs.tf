@@ -495,6 +495,10 @@ locals {
           value = var.lpa_data_store_endpoint
         },
         {
+          name  = "ONE_LOGIN_DISCOVERY_URL",
+          value = local.onelogin_discovery_url
+        },
+        {
           name  = "LOGGING_LEVEL",
           value = tostring(var.logging_level)
         },

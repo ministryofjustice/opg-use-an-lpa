@@ -20,6 +20,7 @@ module "eu_west_1" {
   google_analytics_id_use                   = local.environment.google_analytics_id_use
   google_analytics_id_view                  = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name     = local.environment.gov_uk_onelogin_client_id_secret_name
+  gov_uk_onelogin_discovery_url             = local.environment.gov_uk_onelogin_discovery_url
   iap_images_endpoint                       = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled = local.environment.load_balancer_deletion_protection_enabled
   logging_level                             = local.environment.logging_level
@@ -27,6 +28,9 @@ module "eu_west_1" {
   lpa_codes_endpoint                        = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                  = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                   = local.environment.lpa_data_store_endpoint
+  mock_onelogin_enabled                     = local.environment.mock_onelogin_enabled
+  mock_onelogin_service_container_version   = local.mock_onelogin_version
+  mock_onelogin_service_repository_url      = data.aws_ecr_repository.mock_onelogin.repository_url
   moj_sites                                 = module.allow_list.moj_sites
   notify_key_secret_name                    = local.environment.notify_key_secret_name
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
@@ -100,6 +104,7 @@ module "eu_west_2" {
   google_analytics_id_use                   = local.environment.google_analytics_id_use
   google_analytics_id_view                  = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name     = local.environment.gov_uk_onelogin_client_id_secret_name
+  gov_uk_onelogin_discovery_url             = local.environment.gov_uk_onelogin_discovery_url
   iap_images_endpoint                       = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled = local.environment.load_balancer_deletion_protection_enabled
   logging_level                             = local.environment.logging_level
@@ -107,6 +112,9 @@ module "eu_west_2" {
   lpa_codes_endpoint                        = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                  = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                   = local.environment.lpa_data_store_endpoint
+  mock_onelogin_enabled                     = local.environment.mock_onelogin_enabled
+  mock_onelogin_service_container_version   = local.mock_onelogin_version
+  mock_onelogin_service_repository_url      = data.aws_ecr_repository.mock_onelogin.repository_url
   moj_sites                                 = module.allow_list.moj_sites
   notify_key_secret_name                    = local.environment.notify_key_secret_name
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]

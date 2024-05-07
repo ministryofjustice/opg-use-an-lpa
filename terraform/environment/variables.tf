@@ -50,6 +50,7 @@ variable "environments" {
       google_analytics_id_use                   = string
       google_analytics_id_view                  = string
       gov_uk_onelogin_client_id_secret_name     = string
+      gov_uk_onelogin_discovery_url             = string
       have_a_backup_plan                        = bool
       is_production                             = bool
       log_retention_in_days                     = number
@@ -58,6 +59,7 @@ variable "environments" {
       lpa_data_store_endpoint                   = string
       iap_images_endpoint                       = string
       lpas_collection_endpoint                  = string
+      mock_onelogin_enabled                     = bool
       pagerduty_service_name                    = string
       pagerduty_service_id                      = string
       session_expires_use                       = number

@@ -7,11 +7,12 @@ locals {
   is_active_region = var.regions[data.aws_region.current.name].is_active
 
   # Desired count of the ECS services. Only an active region will have a desired count greater than 0.
-  use_desired_count   = local.is_active_region ? var.autoscaling.use.minimum : 0
-  pdf_desired_count   = local.is_active_region ? var.autoscaling.pdf.minimum : 0
-  view_desired_count  = local.is_active_region ? var.autoscaling.view.minimum : 0
-  api_desired_count   = local.is_active_region ? var.autoscaling.api.minimum : 0
-  admin_desired_count = local.is_active_region ? 1 : 0
+  use_desired_count           = local.is_active_region ? var.autoscaling.use.minimum : 0
+  pdf_desired_count           = local.is_active_region ? var.autoscaling.pdf.minimum : 0
+  view_desired_count          = local.is_active_region ? var.autoscaling.view.minimum : 0
+  api_desired_count           = local.is_active_region ? var.autoscaling.api.minimum : 0
+  admin_desired_count         = local.is_active_region ? 1 : 0
+  mock_onelogin_desired_count = var.environment_name != "production" && var.mock_onelogin_enabled && local.is_active_region ? 1 : 0
 
   # Replace the region in the ARN of the DynamoDB tables with the region of the current stack as the tables are created in the primary region
   # and replicated to the secondary region. This allows use to grant access to the tables in the secondary region for applications running in the secondary region.
@@ -30,7 +31,10 @@ locals {
     admin              = local.is_active_region ? module.admin_use_my_lpa.fqdn : ""
     use                = local.is_active_region ? module.actor_use_my_lpa.fqdn : ""
     viewer             = local.is_active_region ? module.viewer_use_my_lpa.fqdn : ""
+    mock_onelogin      = local.is_active_region ? module.mock_onelogin_use_my_lpa.fqdn : ""
   }
+
+  onelogin_discovery_url = var.environment_name != "production" && var.mock_onelogin_enabled ? "https://${local.route53_fqdns.mock_onelogin}/.well-known/openid-configuration" : var.gov_uk_onelogin_discovery_url
 
   dev_wildcard = var.account_name == "production" ? "" : "*."
 }

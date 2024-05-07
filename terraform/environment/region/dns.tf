@@ -116,3 +116,22 @@ module "admin_use_my_lpa" {
     aws.management = aws.management
   }
 }
+
+module "mock_onelogin_use_my_lpa" {
+  source = "./modules/dns"
+
+  dns_namespace_env          = var.dns_namespace_env
+  is_active_region           = local.is_active_region
+  current_region             = data.aws_region.current.name
+  zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+  loadbalancer               = aws_lb.mock_onelogin
+  service_name               = "mock-onelogin"
+  dns_name                   = "mock-onelogin.lastingpowerofattorney"
+  environment_name           = var.environment_name
+  create_block_email_records = true
+
+  providers = {
+    aws.us-east-1  = aws.us-east-1
+    aws.management = aws.management
+  }
+}
