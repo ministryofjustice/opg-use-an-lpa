@@ -184,12 +184,12 @@ data "aws_iam_policy_document" "mock_onelogin_permissions_role" {
 locals {
   mock_onelogin_app = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${var.mock_onelogin_service_repository_url}:${var.mock_onelogin_service_container_version}",
-      mountPoints = [],
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${var.mock_onelogin_service_repository_url}:${var.mock_onelogin_service_container_version}",
+      mountPoints            = [],
       readonlyRootFilesystem = true
-      name        = "mock_onelogin",
+      name                   = "mock_onelogin",
       portMappings = [
         {
           containerPort = 8080,
