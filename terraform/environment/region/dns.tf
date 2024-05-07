@@ -126,7 +126,7 @@ module "mock_onelogin_use_my_lpa" {
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer               = aws_lb.mock_onelogin
   service_name               = "mock-onelogin"
-  dns_name                   = "mock-onelogin.lastingpowerofattorney"
+  dns_name                   = "mol.lastingpowerofattorney"
   environment_name           = var.environment_name
   create_block_email_records = true
 
