@@ -216,7 +216,7 @@ resource "aws_acm_certificate_validation" "certificate_validation_mock_onelogin"
 }
 
 resource "aws_acm_certificate" "certificate_mock_onelogin" {
-  domain_name       = "${local.dev_wildcard}mock-onelogin.lastingpowerofattorney.opg.service.justice.gov.uk"
+  domain_name       = "${local.dev_wildcard}mol.lastingpowerofattorney.opg.service.justice.gov.uk"
   validation_method = "DNS"
 
   provider = aws.region
