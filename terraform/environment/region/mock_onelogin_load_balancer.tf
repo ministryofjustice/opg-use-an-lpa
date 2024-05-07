@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "mock_onelogin" {
     path    = "/.well-known/openid-configuration"
   }
 
-  depends_on = [aws_lb.admin]
+  depends_on = [aws_lb.mock_onelogin]
 
   provider = aws.region
 }

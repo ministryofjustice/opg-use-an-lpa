@@ -15,6 +15,12 @@ resource "aws_ecs_service" "mock_onelogin" {
     assign_public_ip = false
   }
 
+  load_balancer {
+    target_group_arn = aws_lb_target_group.mock_onelogin.arn
+    container_name   = "mock_onelogin"
+    container_port   = 8080
+  }
+
   service_registries {
     registry_arn = aws_service_discovery_service.mock_onelogin_ecs.arn
   }
