@@ -13,14 +13,14 @@ class CachedSystemMessage implements SystemMessageService
     public function __construct(
         private SystemMessageService $systemMessageService,
         private CacheInterface $cache,
-        private int $ttl = 300 // cache for 5 minutes
+        private int $ttl = 300, // cache for 5 minutes
     ) {
     }
 
     public function getSystemMessages(): array
     {
         $cachedMessages = $this->cache->get(self::$CACHE_KEY);
-        if($cachedMessages !== null) {
+        if ($cachedMessages !== null) {
             return $cachedMessages;
         }
 

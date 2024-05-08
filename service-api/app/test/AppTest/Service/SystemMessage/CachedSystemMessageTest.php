@@ -54,12 +54,13 @@ class CachedSystemMessageTest extends TestCase
     }
 
     #[Test]
-    public function returnsSystemMessages_notCached(): void {
+    public function returnsSystemMessages_notCached(): void
+    {
         $cachedSystemMessageService = new CachedSystemMessage($this->systemMessage, $this->cache);
 
         $this->systemMessage->method('getSystemMessages')->willReturn([
             'use/en' => 'Uncached Use English',
-            'use/cy' => 'Uncached Use Welsh'
+            'use/cy' => 'Uncached Use Welsh',
         ]);
 
         $systemMessages = $cachedSystemMessageService->getSystemMessages();
