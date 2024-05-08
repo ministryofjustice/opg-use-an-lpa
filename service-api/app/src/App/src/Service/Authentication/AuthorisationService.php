@@ -44,7 +44,7 @@ class AuthorisationService
             return $this->authorizationService->getAuthorizationUri($this->getClient(), $params);
         } catch (Throwable $e) {
             throw new AuthorisationServiceException(
-                'JSON error encountered when fetching authorisation uri',
+                'JSON error encountered when fetching authorisation uri (' . $e->getMessage() . ').',
                 500,
                 $e
             );
@@ -82,7 +82,7 @@ class AuthorisationService
             );
         } catch (Throwable $e) {
             throw new AuthorisationServiceException(
-                'Error encountered whilst validating OIDC callback response',
+                'Error encountered whilst validating OIDC callback response (' . $e->getMessage() . ').',
                 500,
                 $e
             );
@@ -108,7 +108,7 @@ class AuthorisationService
             return $endpoint;
         } catch (Throwable $e) {
             throw new AuthorisationServiceException(
-                'JSON error encountered when fetching logout uri',
+                'JSON error encountered when fetching logout uri (' . $e->getMessage() . '),',
                 500,
                 $e
             );
