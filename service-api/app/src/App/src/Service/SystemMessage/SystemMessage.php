@@ -6,7 +6,7 @@ namespace App\Service\SystemMessage;
 
 use Aws\Ssm\SsmClient;
 
-class SystemMessage
+class SystemMessage implements SystemMessageService
 {
     /**
      * @var string[] List of parameter names, without the /system-message/$environment prefix
