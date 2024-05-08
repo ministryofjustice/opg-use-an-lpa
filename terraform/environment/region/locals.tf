@@ -34,7 +34,9 @@ locals {
     mock_onelogin      = local.is_active_region ? module.mock_onelogin_use_my_lpa.fqdn : ""
   }
 
-  onelogin_discovery_url = var.environment_name != "production" && var.mock_onelogin_enabled ? "https://${local.route53_fqdns.mock_onelogin}/.well-known/openid-configuration" : var.gov_uk_onelogin_discovery_url
+  onelogin_discovery_url = var.environment_name != "production" && var.mock_onelogin_enabled ?
+    "http://mock-onelogin.${var.environment_name}.ual.internal.ecs:8080/.well-known/openid-configuration" :
+    var.gov_uk_onelogin_discovery_url
 
   dev_wildcard = var.account_name == "production" ? "" : "*."
 }

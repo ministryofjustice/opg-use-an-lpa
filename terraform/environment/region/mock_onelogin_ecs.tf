@@ -91,9 +91,10 @@ resource "aws_security_group" "mock_onelogin_ecs_service" {
   provider = aws.region
 }
 
+//----------------------------------
 // 8080 in from the ELB
 resource "aws_security_group_rule" "mock_onelogin_ecs_service_ingress" {
-  description              = "Allow Port 8080 ingress from the applciation load balancer"
+  description              = "Allow Port 8080 ingress from the application load balancer"
   type                     = "ingress"
   from_port                = 8080
   to_port                  = 8080
@@ -109,11 +110,10 @@ resource "aws_security_group_rule" "mock_onelogin_ecs_service_ingress" {
 
 //----------------------------------
 // 80 in from API ECS service
-
 resource "aws_security_group_rule" "mock_onelogin_ecs_service_api_ingress" {
-  description              = "Allow Port 80 ingress from the Api service"
+  description              = "Allow Port 8080 ingress from the Api service"
   type                     = "ingress"
-  from_port                = 80
+  from_port                = 0
   to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.mock_onelogin_ecs_service.id
