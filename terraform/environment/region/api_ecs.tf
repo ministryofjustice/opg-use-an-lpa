@@ -265,6 +265,19 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}LpaDataStoreAccess"
+    effect = "Allow"
+    actions = [
+      "execute-api:Invoke",
+    ]
+    resources = [
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/health-check",
+    ]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}IapImagesAccess"
     effect = "Allow"
     actions = [
@@ -476,6 +489,10 @@ locals {
         {
           name  = "IAP_IMAGES_API_ENDPOINT",
           value = var.iap_images_endpoint
+        },
+        {
+          name  = "LPA_DATA_STORE_API_ENDPOINT"
+          value = var.lpa_data_store_endpoint
         },
         {
           name  = "LOGGING_LEVEL",
