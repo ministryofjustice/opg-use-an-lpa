@@ -259,6 +259,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
     effect = "Allow"
     actions = [
       "ssm:GetParameter",
+      "ssm:GetParameters",
     ]
     resources = var.parameter_store_arns
   }
