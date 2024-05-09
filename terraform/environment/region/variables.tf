@@ -140,6 +140,11 @@ variable "lpas_collection_endpoint" {
   type        = string
 }
 
+variable "lpa_data_store_endpoint" {
+  description = "The endpoint to use for LPA Data Store"
+  type        = string
+}
+
 variable "load_balancer_deletion_protection_enabled" {
   description = "Whether or not deletion protection should be enabled for the load balancers."
   type        = bool
