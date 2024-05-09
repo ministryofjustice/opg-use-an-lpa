@@ -26,6 +26,7 @@ module "eu_west_1" {
   log_retention_days                        = local.environment.log_retention_in_days
   lpa_codes_endpoint                        = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                  = local.environment.lpas_collection_endpoint
+  lpa_data_store_endpoint                   = local.environment.lpa_data_store_endpoint
   moj_sites                                 = module.allow_list.moj_sites
   notify_key_secret_name                    = local.environment.notify_key_secret_name
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
@@ -105,6 +106,7 @@ module "eu_west_2" {
   log_retention_days                        = local.environment.log_retention_in_days
   lpa_codes_endpoint                        = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                  = local.environment.lpas_collection_endpoint
+  lpa_data_store_endpoint                   = local.environment.lpa_data_store_endpoint
   moj_sites                                 = module.allow_list.moj_sites
   notify_key_secret_name                    = local.environment.notify_key_secret_name
   parameter_store_arns                      = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
