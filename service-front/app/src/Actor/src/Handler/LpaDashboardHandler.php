@@ -9,6 +9,8 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
+use Common\Service\SystemMessage\SystemMessageService;
+use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
@@ -31,6 +33,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         AuthenticationInterface $authenticator,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
+        private SystemMessageService $systemMessageService
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -42,7 +45,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Exception
+     * @throws Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -67,12 +70,16 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy()));
 
+        $systemMessages = $this->systemMessageService->getMessages();
+
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
             'user'             => $user,
             'lpas'             => $lpas,
             'has_active_codes' => $hasActiveCodes,
             'flash'            => $flash,
             'total_lpas'       => $totalLpas,
+            'en_message'       => $systemMessages['use/en'] ?? null,
+            'cy_message'       => $systemMessages['use/cy'] ?? null,
         ]));
     }
 }
