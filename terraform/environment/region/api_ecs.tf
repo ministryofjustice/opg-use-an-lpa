@@ -307,11 +307,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
 locals {
   api_web = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "web",
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "web",
       portMappings = [
         {
           containerPort = 80,
@@ -353,11 +354,12 @@ locals {
 
   api_aws_otel_collector = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
-      mountPoints = [],
-      name        = "aws-otel-collector",
+      cpu                    = 0,
+      essential              = true,
+      image                  = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "aws-otel-collector",
       command = [
         "--config=/etc/ecs/ecs-default-config.yaml"
       ],
@@ -376,10 +378,11 @@ locals {
 
   api_fpm_stats_export = jsonencode(
     {
-      cpu       = 0,
-      essential = false,
-      image     = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.3",
-      name      = "fpm-stats-export",
+      cpu                    = 0,
+      essential              = false,
+      image                  = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/php-fpm-stats-exporter:v0.1.3",
+      name                   = "fpm-stats-export",
+      readonlyRootFilesystem = true,
       logConfiguration = {
         logDriver = "awslogs",
         options = {
@@ -411,11 +414,12 @@ locals {
 
   api_app = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "app",
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}:${var.container_version}",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "app",
       portMappings = [
         {
           containerPort = 9000,
