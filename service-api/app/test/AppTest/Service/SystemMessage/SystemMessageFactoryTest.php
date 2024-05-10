@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Service\SystemMessage;
+namespace AppTest\Service\SystemMessage;
 
 use App\Service\SystemMessage\SystemMessage;
 use App\Service\SystemMessage\SystemMessageFactory;
