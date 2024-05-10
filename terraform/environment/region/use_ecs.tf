@@ -244,11 +244,12 @@ locals {
 
   actor_aws_otel_collector = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
-      mountPoints = [],
-      name        = "aws-otel-collector",
+      cpu                    = 0,
+      essential              = true,
+      image                  = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "aws-otel-collector",
       command = [
         "--config=/etc/ecs/ecs-default-config.yaml"
       ],
@@ -267,11 +268,12 @@ locals {
 
   actor_app = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "app",
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "app",
       portMappings = [
         {
           containerPort = 9000,

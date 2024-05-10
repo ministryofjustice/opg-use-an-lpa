@@ -217,11 +217,12 @@ locals {
 
   viewer_aws_otel_collector = jsonencode(
     {
-      cpu         = 0,
-      essential   = true,
-      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
-      mountPoints = [],
-      name        = "aws-otel-collector",
+      cpu                    = 0,
+      essential              = true,
+      image                  = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "aws-otel-collector",
       command = [
         "--config=/etc/ecs/ecs-default-config.yaml"
       ],
@@ -240,11 +241,12 @@ locals {
 
   viewer_app = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
-      mountPoints = [],
-      name        = "app",
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "app",
       portMappings = [
         {
           containerPort = 9000,
@@ -271,7 +273,6 @@ locals {
       environment = local.viewer_app_environment_variables
     }
   )
-
 
   viewer_app_environment_variables = concat(
     [

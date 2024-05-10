@@ -307,12 +307,11 @@ data "aws_iam_policy_document" "api_permissions_role" {
 locals {
   api_web = jsonencode(
     {
-      cpu                    = 1,
-      essential              = true,
-      image                  = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
-      mountPoints            = [],
-      readonlyRootFilesystem = true,
-      name                   = "web",
+      cpu         = 1,
+      essential   = true,
+      image       = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}:${var.container_version}",
+      mountPoints = [],
+      name        = "web",
       portMappings = [
         {
           containerPort = 80,
