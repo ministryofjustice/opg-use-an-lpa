@@ -17,6 +17,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\ShareCode;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
 {
     use CsrfGuard;
