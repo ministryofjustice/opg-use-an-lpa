@@ -20,13 +20,13 @@ class CachedSystemMessage implements SystemMessageService
 
     public function getSystemMessages(): array
     {
-        $cachedMessages = $this->cache->get(self::$CACHE_KEY);
+        $cachedMessages = $this->cache->get(self::CACHE_KEY);
         if ($cachedMessages !== null) {
             return $cachedMessages;
         }
 
         $systemMessages = $this->systemMessageService->getSystemMessages();
-        $this->cache->set(self::$CACHE_KEY, $systemMessages, $this->ttl);
+        $this->cache->set(self::CACHE_KEY, $systemMessages, $this->ttl);
 
         return $systemMessages;
     }
