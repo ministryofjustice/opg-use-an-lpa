@@ -8,7 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 
 class CachedSystemMessage implements SystemMessageService
 {
-    public const CACHE_KEY = 'system-messages';
+    public const CACHE_KEY   = 'system-messages';
     public const DEFAULT_TTL = 300;
 
     public function __construct(
