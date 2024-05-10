@@ -50,6 +50,7 @@ variable "environments" {
       google_analytics_id_use                   = string
       google_analytics_id_view                  = string
       gov_uk_onelogin_client_id_secret_name     = string
+      gov_uk_onelogin_public_key_secret_name    = string
       gov_uk_onelogin_discovery_url             = string
       have_a_backup_plan                        = bool
       is_production                             = bool

@@ -174,27 +174,14 @@ resource "aws_iam_role_policy" "mock_onelogin_permissions_role" {
 */
 data "aws_iam_policy_document" "mock_onelogin_permissions_role" {
   statement {
-    sid    = "${local.policy_region_prefix}XrayAccess"
-    effect = "Allow"
-
-    actions = [
-      "xray:PutTraceSegments",
-      "xray:PutTelemetryRecords",
-      "xray:GetSamplingRules",
-      "xray:GetSamplingTargets",
-      "xray:GetSamplingStatisticSummaries",
-    ]
-
-    resources = ["*"]
-  }
-
-  statement {
-    sid    = "${local.policy_region_prefix}CloudWatchMetricsAccess"
+    sid    = "${local.policy_region_prefix}AllowSecretsManagerAccess"
     effect = "Allow"
     actions = [
-      "cloudwatch:PutMetricData",
+      "secretsmanager:GetSecretValue",
     ]
-    resources = ["*"]
+    resources = [
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn,
+    ]
   }
 
   provider = aws.region

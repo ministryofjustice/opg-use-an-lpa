@@ -265,6 +265,19 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}AllowSecretsManagerAccess"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+    resources = [
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.arn,
+    ]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}LpaDataStoreAccess"
     effect = "Allow"
     actions = [

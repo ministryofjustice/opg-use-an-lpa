@@ -115,6 +115,16 @@ variable "gov_uk_onelogin_client_id_secret_name" {
   type        = string
 }
 
+variable "gov_uk_onelogin_identity_public_key_secret_name" {
+  description = "The the name of the secret containing the OneLogin identity public key"
+  type        = string
+}
+
+variable "gov_uk_onelogin_identity_private_key_secret_name" {
+  description = "The the name of the secret containing the OneLogin identity private key"
+  type        = string
+}
+
 variable "gov_uk_onelogin_discovery_url" {
   description = "The discovery url used by the One Login OIDC authentication process."
   type        = string
