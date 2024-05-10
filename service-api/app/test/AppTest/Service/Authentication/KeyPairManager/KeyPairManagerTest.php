@@ -45,8 +45,8 @@ class KeyPairManagerTest extends TestCase
             'OneLoginIdentityKeyPairManager' => [
                 'type'      => OneLoginIdentityKeyPairManager::class,
                 'algorithm' => 'RS256',
-                'public'    => 'gov_uk_onelogin_identity_public_key',
-                'private'   => 'gov_uk_onelogin_identity_private_key',
+                'public'    => 'gov-uk-onelogin-identity-public-key',
+                'private'   => 'gov-uk-onelogin-identity-private-key',
             ],
         ];
     }
