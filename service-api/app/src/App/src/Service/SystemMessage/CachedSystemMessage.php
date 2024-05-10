@@ -9,12 +9,10 @@ use Psr\SimpleCache\CacheInterface;
 class CachedSystemMessage implements SystemMessageService
 {
     public const CACHE_KEY   = 'system-messages';
-    public const DEFAULT_TTL = 300;
 
     public function __construct(
         private SystemMessageService $systemMessageService,
         private CacheInterface $cache,
-        private int $ttl = self::DEFAULT_TTL,
     ) {
     }
 
@@ -26,7 +24,7 @@ class CachedSystemMessage implements SystemMessageService
         }
 
         $systemMessages = $this->systemMessageService->getSystemMessages();
-        $this->cache->set(self::CACHE_KEY, $systemMessages, $this->ttl);
+        $this->cache->set(self::CACHE_KEY, $systemMessages);
 
         return $systemMessages;
     }
