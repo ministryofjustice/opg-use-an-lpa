@@ -278,6 +278,17 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}KMSAccess"
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}LpaDataStoreAccess"
     effect = "Allow"
     actions = [
