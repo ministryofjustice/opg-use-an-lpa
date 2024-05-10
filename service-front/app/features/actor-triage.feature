@@ -49,3 +49,9 @@ Feature: Triage
     And I am on the settings page
     When I click the Use a lasting power of attorney link on the page
     Then I am taken to the dashboard page
+
+  @ui
+    Scenario: The system message is shown if it is set
+      Given An actor system message is set
+      When I am on the triage page
+      Then I can see the system message
