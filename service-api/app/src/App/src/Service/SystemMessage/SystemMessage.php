@@ -44,7 +44,7 @@ class SystemMessage
         $nameToValueMap = [];
 
         foreach ($parameters as $parameter) {
-            $nameToValueMap[$this->stripPrefix($parameter['Name'])] = $parameter['Value'];
+            $nameToValueMap[$this->stripPrefix($parameter['Name'])] = trim($parameter['Value']);
         }
 
         return $nameToValueMap;
