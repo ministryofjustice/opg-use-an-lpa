@@ -10,6 +10,8 @@ use Psr\Container\ContainerInterface;
 
 class CachedSystemMessageDelegatorFactory implements DelegatorFactoryInterface
 {
+    public const MESSAGE_TTL = 300;
+
     public function __invoke(
         ContainerInterface $container,
         $name,
@@ -22,7 +24,7 @@ class CachedSystemMessageDelegatorFactory implements DelegatorFactoryInterface
             /** @var SystemMessageService */
             call_user_func($callback),
             ($cacheFactory)('system-message'),
-            300 // cache for 5 minutes
+            self::MESSAGE_TTL
         );
     }
 }

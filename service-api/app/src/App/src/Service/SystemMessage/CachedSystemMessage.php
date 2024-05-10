@@ -8,12 +8,13 @@ use Psr\SimpleCache\CacheInterface;
 
 class CachedSystemMessage implements SystemMessageService
 {
-    private static string $CACHE_KEY = 'system-messages';
+    public const CACHE_KEY = 'system-messages';
+    public const DEFAULT_TTL = 300;
 
     public function __construct(
         private SystemMessageService $systemMessageService,
         private CacheInterface $cache,
-        private int $ttl = 300, // cache for 5 minutes
+        private int $ttl = self::DEFAULT_TTL,
     ) {
     }
 
