@@ -6,8 +6,8 @@ namespace App\Service\Authentication\KeyPairManager;
 
 class OneLoginIdentityKeyPairManager extends AbstractKeyPairManager
 {
-    public const PUBLIC_KEY  = 'gov_uk_onelogin_identity_public_key';
-    public const PRIVATE_KEY = 'gov_uk_onelogin_identity_private_key';
+    public const PUBLIC_KEY  = 'gov-uk-onelogin-identity-public-key';
+    public const PRIVATE_KEY = 'gov-uk-onelogin-identity-private-key';
 
     public function getKeyPair(): KeyPair
     {

@@ -265,6 +265,30 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}AllowSecretsManagerAccess"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+    resources = [
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.arn,
+    ]
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}KMSAccess"
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}LpaDataStoreAccess"
     effect = "Allow"
     actions = [
@@ -493,6 +517,10 @@ locals {
         {
           name  = "LPA_DATA_STORE_API_ENDPOINT"
           value = var.lpa_data_store_endpoint
+        },
+        {
+          name  = "ONE_LOGIN_DISCOVERY_URL",
+          value = local.onelogin_discovery_url
         },
         {
           name  = "LOGGING_LEVEL",

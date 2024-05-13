@@ -45,3 +45,8 @@ resource "aws_iam_role" "pdf_task_role" {
   name               = "${var.environment_name}-pdf-task-role"
   assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
 }
+
+resource "aws_iam_role" "mock_onelogin_task_role" {
+  name               = "${var.environment_name}-mock-onelogin-task-role"
+  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
+}

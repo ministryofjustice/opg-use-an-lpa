@@ -206,7 +206,6 @@ services:
 
       ONE_LOGIN_CLIENT_ID: "client-id"
       ONE_LOGIN_DISCOVERY_URL: "http://mock-one-login:8080/.well-known/openid-configuration"
-      ONE_LOGIN_IDENTITY_ISSUER: "https://identity.account.gov.uk/" #hardcoded mock-one-login value
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
