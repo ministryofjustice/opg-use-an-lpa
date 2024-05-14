@@ -16,6 +16,12 @@ data "aws_acm_certificate" "certificate_admin" {
   provider = aws.region
 }
 
+data "aws_acm_certificate" "certificate_mock_onelogin" {
+  domain = "${local.dev_wildcard}mol.lastingpowerofattorney.opg.service.justice.gov.uk"
+
+  provider = aws.region
+}
+
 data "aws_acm_certificate" "public_facing_certificate_view" {
   domain = "${local.dev_wildcard}view-lasting-power-of-attorney.service.gov.uk"
 

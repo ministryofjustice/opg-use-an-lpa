@@ -24,7 +24,6 @@ return [
     'one_login'      => [
         'client_id'       => getenv('ONE_LOGIN_CLIENT_ID') ?: null,
         'discovery_url'   => getenv('ONE_LOGIN_DISCOVERY_URL') ?: null,
-        'identity_issuer' => getenv('ONE_LOGIN_IDENTITY_ISSUER') ?: null,
     ],
 
     'aws' => [

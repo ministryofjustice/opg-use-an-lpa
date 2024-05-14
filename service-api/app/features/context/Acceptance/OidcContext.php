@@ -80,7 +80,7 @@ class OidcContext implements Context
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
                 Assert::assertEquals('GetSecretValue', $command->getName());
-                Assert::assertEquals('gov_uk_onelogin_identity_public_key', $command['SecretId']);
+                Assert::assertEquals('gov-uk-onelogin-identity-public-key', $command['SecretId']);
 
                 return new Result(['SecretString' => $this->oneLoginClientPublicKey]);
             }
@@ -90,7 +90,7 @@ class OidcContext implements Context
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
                 Assert::assertEquals('GetSecretValue', $command->getName());
-                Assert::assertEquals('gov_uk_onelogin_identity_private_key', $command['SecretId']);
+                Assert::assertEquals('gov-uk-onelogin-identity-private-key', $command['SecretId']);
 
                 return new Result(['SecretString' => $this->oneLoginClientPrivateKey]);
             }
