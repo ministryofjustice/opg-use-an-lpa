@@ -51,6 +51,7 @@ func WithAuthorisation(next http.Handler, token tokenVerifier) http.Handler {
 		if err != nil {
 			log.Ctx(ctx).Err(err).Msg("failed to validate jwt")
 			w.WriteHeader(http.StatusForbidden)
+
 			return
 		}
 

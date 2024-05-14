@@ -769,6 +769,7 @@ func Test_SearchHandler(t *testing.T) {
 
 			server := NewSearchServer(tt.args.accountService, tt.args.lpaService, ts, &mockActivationKeyService{})
 			reader := strings.NewReader(tt.args.q)
+
 			var req *http.Request
 
 			if tt.args.q != "" {
@@ -776,11 +777,12 @@ func Test_SearchHandler(t *testing.T) {
 			} else {
 				req, _ = http.NewRequest("POST", "/my_url", nil)
 			}
+
 			req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 			w := httptest.NewRecorder()
 
 			server.SearchHandler(w, req)
-
 		})
 	}
 }
@@ -814,11 +816,13 @@ func Test_TemplateErrorPanic(t *testing.T) {
 			&mockActivationKeyService{},
 		)
 		reader := strings.NewReader("query=C-WWFCCH41R123")
+
 		var req *http.Request
 
 		req, _ = http.NewRequest("POST", "/my_url", reader)
 
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 		w := httptest.NewRecorder()
 
 		//recover panic
@@ -827,6 +831,5 @@ func Test_TemplateErrorPanic(t *testing.T) {
 		server.SearchHandler(w, req)
 
 		t.Errorf("did not panic")
-
 	})
 }

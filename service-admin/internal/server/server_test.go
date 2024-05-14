@@ -123,9 +123,10 @@ func Test_withErrorHandling(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := server.WithErrorHandling(tt.args.next, tw)
-			got.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest("GET", "/", nil))
 
+			got := server.WithErrorHandling(tt.args.next, tw)
+
+			got.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest("GET", "/", nil))
 		})
 	}
 }
@@ -231,7 +232,6 @@ func Test_withErrorHandlingTemplateError(t *testing.T) {
 
 			got := server.WithErrorHandling(tt.args.next, tw)
 			assert.HTTPStatusCode(t, got.ServeHTTP, "GET", "/", nil, tt.expectedStatus)
-
 		})
 	}
 }

@@ -214,10 +214,12 @@ func TestOnlineActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 				httpClient:  tt.fields.mockHTTPClient,
 			}
 			gotReturnedKeys, err := aks.GetActivationKeyFromCodes(tt.args.ctx, tt.args.activationKey)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("OnlineActivationKeyService.GetActivationKeyFromCodes() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(gotReturnedKeys, tt.wantReturnedKeys) {
 				t.Errorf("OnlineActivationKeyService.GetActivationKeyFromCodes() = %v, want %v", gotReturnedKeys, tt.wantReturnedKeys)
 			}
@@ -348,12 +350,15 @@ func TestLocalActivationKeyService_GetActivationKeyFromCodes(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			aks := NewLocalActivationKeyService(tt.fields.db)
 			gotReturnedKeys, err := aks.GetActivationKeyFromCodes(tt.args.ctx, tt.args.activationKey)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LocalActivationKeyService.GetActivationKeyFromCodes() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(gotReturnedKeys, tt.wantReturnedKeys) {
 				t.Errorf("LocalActivationKeyService.GetActivationKeyFromCodes() = %v, want %v", gotReturnedKeys, tt.wantReturnedKeys)
 			}

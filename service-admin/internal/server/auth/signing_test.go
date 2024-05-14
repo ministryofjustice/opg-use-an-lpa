@@ -138,6 +138,7 @@ func TestSigningKey_Fetch(t *testing.T) {
 			if !tt.wantErr(t, err, fmt.Sprintf("Fetch(%v, %v)", tt.args.ctx, tt.args.keyID)) {
 				return
 			}
+
 			assert.Equalf(t, tt.want, got, "Fetch(%v, %v)", tt.args.ctx, tt.args.keyID)
 		})
 	}

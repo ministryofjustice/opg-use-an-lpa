@@ -101,6 +101,7 @@ func TestGetActorUserByEmail(t *testing.T) {
 			if tt.wantErr(t, err, fmt.Sprintf("GetActorUserByEmail(%v)", tt.email)) {
 				return
 			}
+
 			assert.EqualValues(t, tt.want, actorUser)
 		})
 	}
@@ -159,6 +160,7 @@ func TestGetEmailByUserID(t *testing.T) {
 			if tt.wantErr(t, err, fmt.Sprintf("GetEmailByUserID(%v)", tt.userID)) {
 				return
 			}
+
 			assert.EqualValues(t, tt.want, actorUser)
 		})
 	}
