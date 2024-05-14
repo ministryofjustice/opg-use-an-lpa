@@ -68,5 +68,12 @@ return [
                 'namespace' => 'oneLogin',
             ],
         ],
+        'system-message' => [
+            'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
+            'options' => [
+                'ttl'       => 300,
+                'namespace' => 'systemMessage',
+            ],
+        ]
     ],
 ];
