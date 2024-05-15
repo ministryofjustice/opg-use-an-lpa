@@ -367,6 +367,24 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I visit the homepage$/
+     */
+    public function iVisitTheHomepage(): void
+    {
+        $this->iDoFollowRedirects();
+
+        $this->ui->visit('/home');
+    }
+
+    /**
+     * @Then /^I am redirected to the LPA dashboard page$/
+     */
+    public function iAmRedirectedToTheDashboardPage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
      * @Given /^I am signed in$/
      */
     public function iAmSignedIn(): void
