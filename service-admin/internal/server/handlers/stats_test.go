@@ -149,11 +149,13 @@ func TestTemplateErrorPanic(t *testing.T) {
 		server := NewStatsServer(ss, ts, &mockTimeProvider{})
 
 		reader := strings.NewReader("")
+
 		var req *http.Request
 
 		req, _ = http.NewRequest("GET", "/my_url", reader)
 
 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
 		w := httptest.NewRecorder()
 
 		//recover panic
@@ -162,6 +164,5 @@ func TestTemplateErrorPanic(t *testing.T) {
 		server.StatsHandler(w, req)
 
 		t.Errorf("did not panic")
-
 	})
 }

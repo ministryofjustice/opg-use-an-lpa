@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"context"
-	"github.com/rs/zerolog/log"
 	"net/http"
+
+	"github.com/rs/zerolog/log"
 )
 
 type SystemMessageService interface {
@@ -80,6 +81,7 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		messages, err := s.systemMessageService.GetSystemMessages(ctx)
 		if err != nil {
 			log.Error().Err(err).Msg(err.Error())
+
 			errorMessage = "Error retrieving system messages"
 		}
 
