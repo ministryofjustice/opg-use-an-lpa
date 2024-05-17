@@ -45,13 +45,13 @@ variable "autoscaling_metric_max_memory_target" {
 variable "autoscaling_metric_min_cpu_target" {
   description = "The target value for the CPU metric."
   type        = number
-  default     = 30
+  default     = 50
 }
 
 variable "autoscaling_metric_min_memory_target" {
   description = "The target value for the memory metric."
   type        = number
-  default     = 30
+  default     = 55
 }
 
 variable "ecs_task_autoscaling_minimum" {
