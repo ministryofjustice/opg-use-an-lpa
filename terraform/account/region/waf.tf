@@ -12,7 +12,7 @@ resource "aws_wafv2_web_acl" "main" {
     priority = 0
 
     override_action {
-      count {}
+      none {}
     }
 
     statement {
@@ -99,6 +99,55 @@ resource "aws_wafv2_web_acl" "main" {
       cloudwatch_metrics_enabled = true
       metric_name                = "AWS-AWSManagedRulesCommonRuleSet"
       sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
+    name     = "RateLimitSessionCheck"
+    priority = 4
+
+    action {
+      count {}
+    }
+
+    visibility_config {
+      sampled_requests_enabled   = true
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSessionCheck"
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 100
+        aggregate_key_type = "CUSTOM_KEYS"
+        scope_down_statement {
+          byte_match_statement {
+            field_to_match {
+              uri_path {}
+            }
+            positional_constraint = "STARTS_WITH"
+            search_string         = "/session-check"
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+
+        custom_key {
+          header {
+            name = "User-Agent"
+            text_transformation {
+              priority = 0
+              type     = "NONE"
+            }
+          }
+        }
+
+        custom_key {
+          ip {}
+        }
+      }
     }
   }
 
