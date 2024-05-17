@@ -371,8 +371,6 @@ class AccountContext implements Context
      */
     public function iVisitTheHomepage(): void
     {
-        $this->iDoFollowRedirects();
-
         $this->ui->visit('/home');
     }
 
