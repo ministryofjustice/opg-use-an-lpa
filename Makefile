@@ -190,7 +190,7 @@ clear_config_cache:
 .PHONY: clear_config_cache
 
 smoke_tests:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml --env-file tests/smoke/.env run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: smoke_tests
 
 run-structurizr:
