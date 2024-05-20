@@ -6,7 +6,10 @@ namespace Test\Context;
 
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
+use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**
@@ -19,23 +22,23 @@ trait BaseContextTrait
     /** @psalm-suppress PropertyNotSetInConstructor */
     protected MinkContext $ui;
 
-    /**
-     * @BeforeScenario
-     */
+    /** @var bool[] */
+    protected array $featureFlags;
+
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         /** @psalm-var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
 
-        $base     = $environment->getContext(BaseContext::class);
-        $this->ui = $base->ui; // MinkContext gathered in BaseContext
+        $base               = $environment->getContext(BaseContext::class);
+        $this->ui           = $base->ui; // MinkContext gathered in BaseContext
+        $this->featureFlags = $base->featureFlags;
     }
 
     /**
      * Checks the response for a particular header being set with a specified value
      *
-     * @param $name
-     * @param $value
      * @throws ExpectationException
      */
     public function assertResponseHeader(string $name, string $value): void
@@ -48,6 +51,8 @@ trait BaseContextTrait
      *
      * @param string $expected
      * @throws ExpectationException
+     * @throws DriverException
+     * @throws UnsupportedDriverActionException
      */
     public function assertExactUrl(string $expected): void
     {
@@ -89,7 +94,9 @@ trait BaseContextTrait
     /**
      * Asserts that the current url was accessed over a https connection
      *
+     * @throws DriverException
      * @throws ExpectationException
+     * @throws UnsupportedDriverActionException
      */
     public function assertHttps(): void
     {
