@@ -29,7 +29,8 @@ class IngressManager:
             self.aws_region = parameters['active_region']
             self.security_groups = [
                 parameters['viewer_load_balancer_security_group_name'],
-                parameters['actor_load_balancer_security_group_name']]
+                parameters['actor_load_balancer_security_group_name'],
+                parameters['mock_onelogin_load_balancer_security_group_name']
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -130,7 +131,7 @@ class IngressManager:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Add or remove your host's IP address to the viewer and actor loadbalancer ingress rules.")
+        description="Add or remove your host's IP address to the viewer, actor and mock OneLogin loadbalancer ingress rules.")
 
     parser.add_argument("config_file_path", type=str,
                         help="Path to config file produced by terraform")

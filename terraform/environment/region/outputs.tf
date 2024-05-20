@@ -28,8 +28,9 @@ output "albs" {
 output "security_group_names" {
   description = "Security group names"
   value = {
-    actor_loadbalancer  = aws_security_group.use_loadbalancer.name
-    viewer_loadbalancer = aws_security_group.viewer_loadbalancer.name
+    actor_loadbalancer         = aws_security_group.use_loadbalancer.name
+    viewer_loadbalancer        = aws_security_group.viewer_loadbalancer.name
+    mock_onelogin_loadbalancer = aws_security_group.mock_onelogin_loadbalancer.name
   }
 }
 
