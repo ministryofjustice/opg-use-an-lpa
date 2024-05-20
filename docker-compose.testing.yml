@@ -1,8 +1,3 @@
-version: "3.8"
-
-volumes:
-  webpack_dist:
-
 services:
 
   zap:
@@ -10,24 +5,6 @@ services:
       - tools
     build:
       context: zap
-
-  smoke-tests:
-    profiles:
-      - testing
-    build:
-      context: .
-      dockerfile: tests/smoke/Dockerfile
-    volumes:
-      - ./tests/smoke:/app
-      - ./tests/features:/app/features
-    environment:
-      BEHAT_VIEWER_URL: http://proxy:9001
-      BEHAT_ACTOR_URL: http://proxy:9002
-      BEHAT_OLD_VIEWER_URL: http://proxy:9001
-      BEHAT_OLD_ACTOR_URL: http://proxy:9002
-      BEHAT_PARAMS: '{"extensions":{"Smoke\\SmokeExtension":{"allow_insecure_https":true}}}'
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
-      XDEBUG_MODE: develop,debug,coverage
 
   lpa-codes-pact-mock:
     profiles:
