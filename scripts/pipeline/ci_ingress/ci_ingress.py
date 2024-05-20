@@ -30,7 +30,7 @@ class IngressManager:
             self.security_groups = [
                 parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name'],
-                parameters['mock_onelogin_load_balancer_security_group_name']
+                parameters['mock_onelogin_load_balancer_security_group_name']]
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
