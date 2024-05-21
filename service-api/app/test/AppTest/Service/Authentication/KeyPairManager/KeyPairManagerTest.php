@@ -6,6 +6,7 @@ namespace AppTest\Service\Authentication\KeyPairManager;
 
 use App\Service\Authentication\KeyPairManager\KeyPair;
 use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
+use App\Service\Authentication\KeyPairManager\LpaDataStoreKeyPairManager;
 use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
@@ -48,6 +49,12 @@ class KeyPairManagerTest extends TestCase
                 'public'    => 'gov-uk-onelogin-identity-public-key',
                 'private'   => 'gov-uk-onelogin-identity-private-key',
             ],
+            'LpaDataStoreKeyPairManager' => [
+                'type'      => LpaDataStoreKeyPairManager::class,
+                'algorithm' => 'RS256',
+                'public'    => 'lpa-data-store-public-key',
+                'private'   => 'lpa-data-store-private-key',
+            ]
         ];
     }
 
