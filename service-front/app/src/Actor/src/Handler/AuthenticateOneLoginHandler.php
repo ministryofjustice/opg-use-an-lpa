@@ -12,10 +12,13 @@ use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
+use Common\Handler\Traits\User;
+use Common\Handler\UserAware;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
+use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -28,24 +31,32 @@ use Locale;
 /**
  * @codeCoverageIgnore
  */
-class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
+class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware, UserAware
 {
     use CsrfGuard;
     use Logger;
     use Session;
+    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
+        AuthenticationInterface $authenticator,
         private OneLoginService $authenticateOneLoginService,
         private ServerUrlHelper $serverUrlHelper,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
+
+        $this->setAuthenticator($authenticator);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        if (!is_null($this->getUser($request))) {
+            return $this->redirectToRoute('lpa.dashboard');
+        }
+
         $form = new OneLoginForm($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
