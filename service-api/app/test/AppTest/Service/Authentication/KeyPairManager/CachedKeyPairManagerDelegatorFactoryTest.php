@@ -35,7 +35,7 @@ class CachedKeyPairManagerDelegatorFactoryTest extends TestCase
 
         $result = $sut(
             $containerInterface->reveal(),
-            'fakeName',
+            'OneLoginIdentityKeyPairManager',
             fn () => $this->prophesize(KeyPairManagerInterface::class)->reveal()
         );
 

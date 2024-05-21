@@ -117,6 +117,9 @@ class ConfigProvider
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
                     Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
                 ],
+                Service\Authentication\KeyPairManager\LpaDataStoreKeyPairManager::class => [
+                    Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
+                ],
                 Service\SystemMessage\SystemMessage::class => [
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class
                 ]

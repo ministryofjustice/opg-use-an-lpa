@@ -10,6 +10,11 @@ use Psr\Container\ContainerInterface;
 
 class CachedKeyPairManagerDelegatorFactory implements DelegatorFactoryInterface
 {
+    private const SERVICE_NAME_TO_CACHE_NAME = [
+        'OneLoginIdentityKeyPairManager' => 'one-login',
+        'LpaDataStoreKeyPairManager'     => 'lpa-data-store'
+    ];
+
     public function __invoke(
         ContainerInterface $container,
         $name,
@@ -19,7 +24,7 @@ class CachedKeyPairManagerDelegatorFactory implements DelegatorFactoryInterface
         $cacheFactory = $container->get(CacheFactory::class);
 
         return new CachedKeyPairManager(
-            ($cacheFactory)('one-login'),
+            ($cacheFactory)(self::SERVICE_NAME_TO_CACHE_NAME[$name]),
             /** @var AbstractKeyPairManager */
             call_user_func($callback),
             3600
