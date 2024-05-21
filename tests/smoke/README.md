@@ -58,6 +58,8 @@ Setting the flag value is a case of editing the `.github/workflows/_run-behat-te
 
 > ### TLDR
 > The smoke test suite needs a fresh, unused (and so uncached) environment to function. Ensure you bring the whole stack down first before bringing it up to run the test suite. You MUST NOT use the environment before running the suite.
+> 
+> Additionally, after you're done with testing you'll need to repeat this process to make the environment good for local usage again.
 
 One Login is an OIDC login provider at it's core and is a service provided by someone else, so we have little control over its workings. Because of this we use a mock service to drive local development and the test suites. 
 
