@@ -57,9 +57,9 @@ services:
       INSTRUCTIONS_AND_PREFERENCES: "true"
 
       # Local only
-      API_SERVICE_URL: http://api-web
-      PDF_SERVICE_URL: http://service-pdf
-      AWS_ENDPOINT_KMS: http://kms:8080
+      API_SERVICE_URL:
+      PDF_SERVICE_URL:
+      AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
@@ -70,9 +70,7 @@ services:
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
     depends_on:
-      - redis
       - api-web
-      - service-pdf
 
   # ---------------------------
   # Actor Front
@@ -118,8 +116,8 @@ services:
       ALLOW_GOV_ONE_LOGIN: "false"
 
       # Local only
-      API_SERVICE_URL: http://api-web
-      AWS_ENDPOINT_KMS: http://kms:8080
+      API_SERVICE_URL:
+      AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
@@ -132,13 +130,14 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       NOTIFY_API_KEY:
     depends_on:
-      - redis
       - api-web
 
   # ---------------------------
   # Front Composer (Shared)
 
   front-composer:
+    profiles:
+      - tools
     image: actor-app
     volumes:
       - ./service-front/app:/app
@@ -189,12 +188,12 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
 
-      SIRIUS_API_ENDPOINT: "http://api-gateway:5000"
-      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
-      IAP_IMAGES_API_ENDPOINT: "http://api-gateway:5000"
+      SIRIUS_API_ENDPOINT:
+      LPA_CODES_API_ENDPOINT:
+      IAP_IMAGES_API_ENDPOINT:
 
       ONE_LOGIN_CLIENT_ID: "client-id"
-      ONE_LOGIN_DISCOVERY_URL: "http://mock-one-login:8080/.well-known/openid-configuration"
+      ONE_LOGIN_DISCOVERY_URL:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
@@ -204,9 +203,9 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"
-      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
-      AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
-      AWS_ENDPOINT_SSM: http://localstack:4566
+      AWS_ENDPOINT_DYNAMODB:
+      AWS_ENDPOINT_SECRETSMANAGER:
+      AWS_ENDPOINT_SSM:
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
       PACT_BROKER_PUBLISH: "false"
@@ -215,21 +214,11 @@ services:
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
       XDEBUG_MODE: develop,debug,coverage
-      #XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
-    depends_on:
-      codes-gateway:
-        condition: service_started
-      dynamodb-local:
-        condition: service_started
-      kms:
-        condition: service_started
-      localstack:
-        condition: service_healthy
-      mock-one-login:
-        condition: service_started
 
   api-composer:
+    profiles:
+      - tools
     image: api-app
     volumes:
       - ./service-api/app:/app
@@ -247,8 +236,6 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/seeding/Dockerfile
-    depends_on:
-      - dynamodb-local
     environment:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
@@ -257,8 +244,8 @@ services:
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
-      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
-      CODES_ENDPOINT: codes-gateway:4343
+      AWS_ENDPOINT_DYNAMODB:
+      CODES_ENDPOINT:
 
   # ---------------------------
   # Lambda to upload stats

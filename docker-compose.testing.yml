@@ -7,8 +7,6 @@ services:
       context: zap
 
   lpa-codes-pact-mock:
-    profiles:
-      - testing
     image: pactfoundation/pact-cli:latest-multi
     ports:
         - 1234:80
@@ -26,8 +24,6 @@ services:
         - lpa-codes
 
   api-gateway-pact-mock:
-    profiles:
-      - testing
     image: pactfoundation/pact-cli:latest-multi
     command:
       - mock-service
@@ -43,8 +39,6 @@ services:
       - api-gateway
 
   iap-images-mock:
-    profiles:
-      - testing
     image: pactfoundation/pact-cli:latest-multi
     command:
       - mock-service
@@ -60,8 +54,6 @@ services:
       - iap-api-gateway
 
   api-app:
-    profiles:
-      - testing
     image: api-app
     depends_on:
       - lpa-codes-pact-mock

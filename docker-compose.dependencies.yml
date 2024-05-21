@@ -2,6 +2,55 @@ version: '3.8'
 
 services:
 
+  # -----
+  # Service overrides for dependency startup ordering
+  viewer-app:
+    environment:
+      API_SERVICE_URL: http://api-web
+      PDF_SERVICE_URL: http://service-pdf
+      AWS_ENDPOINT_KMS: http://kms:8080
+    depends_on:
+      - redis
+      - service-pdf
+
+  actor-app:
+    environment:
+      API_SERVICE_URL: http://api-web
+      AWS_ENDPOINT_KMS: http://kms:8080
+    depends_on:
+      - redis
+
+  api-app:
+    depends_on:
+      codes-gateway:
+        condition: service_started
+      dynamodb-local:
+        condition: service_started
+      kms:
+        condition: service_started
+      localstack:
+        condition: service_healthy
+      mock-one-login:
+        condition: service_started
+        restart: true
+    environment:
+      SIRIUS_API_ENDPOINT: http://api-gateway:5000
+      LPA_CODES_API_ENDPOINT: http://codes-gateway:4343
+      IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
+      ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
+      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
+      AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
+      AWS_ENDPOINT_SSM: http://localstack:4566
+
+  api-seeding:
+    depends_on:
+      - dynamodb-local
+    environment:
+      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
+      CODES_ENDPOINT: codes-gateway:4343
+
+  # -----
+  # Database
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb"
     image: "amazon/dynamodb-local:latest"
