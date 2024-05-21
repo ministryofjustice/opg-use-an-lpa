@@ -11,8 +11,8 @@ use Psr\Container\ContainerInterface;
 class CachedKeyPairManagerDelegatorFactory implements DelegatorFactoryInterface
 {
     private const SERVICE_NAME_TO_CACHE_NAME = [
-        'OneLoginIdentityKeyPairManager' => 'one-login',
-        'LpaDataStoreKeyPairManager'     => 'lpa-data-store'
+        'App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager' => 'one-login',
+        'App\Service\Authentication\KeyPairManager\LpaDataStoreKeyPairManager'     => 'lpa-data-store'
     ];
 
     public function __invoke(
