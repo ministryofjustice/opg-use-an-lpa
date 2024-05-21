@@ -23,6 +23,8 @@ module "eu_west_1" {
   gov_uk_onelogin_identity_public_key_secret_name  = local.environment.gov_uk_onelogin_identity_public_key_secret_name
   gov_uk_onelogin_identity_private_key_secret_name = local.environment.gov_uk_onelogin_identity_private_key_secret_name
   gov_uk_onelogin_discovery_url                    = local.environment.gov_uk_onelogin_discovery_url
+  lpa_data_store_public_key_secret_name            = local.environment.lpa_data_store_public_key_secret_name
+  lpa_data_store_private_key_secret_name           = local.environment.lpa_data_store_public_key_secret_name
   iap_images_endpoint                              = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled        = local.environment.load_balancer_deletion_protection_enabled
   logging_level                                    = local.environment.logging_level
@@ -109,6 +111,8 @@ module "eu_west_2" {
   gov_uk_onelogin_identity_public_key_secret_name  = local.environment.gov_uk_onelogin_identity_public_key_secret_name
   gov_uk_onelogin_identity_private_key_secret_name = local.environment.gov_uk_onelogin_identity_private_key_secret_name
   gov_uk_onelogin_discovery_url                    = local.environment.gov_uk_onelogin_discovery_url
+  lpa_data_store_public_key_secret_name            = local.environment.lpa_data_store_public_key_secret_name
+  lpa_data_store_private_key_secret_name           = local.environment.lpa_data_store_public_key_secret_name
   iap_images_endpoint                              = local.environment.iap_images_endpoint
   load_balancer_deletion_protection_enabled        = local.environment.load_balancer_deletion_protection_enabled
   logging_level                                    = local.environment.logging_level

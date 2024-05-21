@@ -125,6 +125,16 @@ variable "gov_uk_onelogin_identity_private_key_secret_name" {
   type        = string
 }
 
+variable "lpa_data_store_public_key_secret_name" {
+  description = "The the name of the secret containing the LPA data store public key"
+  type        = string
+}
+
+variable "lpa_data_store_private_key_secret_name" {
+  description = "The the name of the secret containing the LPA data store private key"
+  type        = string
+}
+
 variable "gov_uk_onelogin_discovery_url" {
   description = "The discovery url used by the One Login OIDC authentication process."
   type        = string
