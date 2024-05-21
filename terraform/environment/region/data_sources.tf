@@ -140,7 +140,7 @@ data "aws_secretsmanager_secret" "lpa_data_store_public_key" {
   provider = aws.region
 }
 
-data "aws_secretsmanager_secret" "lpa_data_store_private_key {
+data "aws_secretsmanager_secret" "lpa_data_store_private_key" {
   name = var.lpa_data_store_private_key_secret_name
 
   provider = aws.region
