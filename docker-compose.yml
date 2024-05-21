@@ -1,5 +1,5 @@
 volumes:
-  webpack_dist:
+  esbuild:
 
 services:
   # ---------------------------
@@ -27,7 +27,7 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - webpack_dist:/web
+      - esbuild:/web
     environment:
       WEB_DOMAIN: http://localhost:9001
       APP_HOST: viewer-app
@@ -46,7 +46,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
-      - webpack_dist:/app/assets
+      - esbuild:/app/assets
     environment:
       # Always required
       CONTEXT: "viewer"
@@ -82,7 +82,7 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - webpack_dist:/web
+      - esbuild:/web
     environment:
       WEB_DOMAIN: http://localhost:9002
       APP_HOST: actor-app
@@ -101,7 +101,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
-      - webpack_dist:/app/assets
+      - esbuild:/app/assets
     environment:
       # Always required
       CONTEXT: "actor"

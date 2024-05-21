@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
 
   # -----
@@ -60,8 +58,6 @@ services:
 
   # -----
   # Code Generation API development environment
-  # -----
-
   codes-gateway:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
@@ -83,13 +79,11 @@ services:
 
   # ---------------------------
   # Cache service
-
   redis:
     image: redis:7
 
   # ---------------------------
   # AWS KMS mock service
-
   kms:
     image: nsmithuk/local-kms:3
     volumes:
@@ -97,6 +91,14 @@ services:
     environment:
       KMS_REGION: eu-west-1
       KMS_SEED_PATH: /init/kms-seed.yaml
+
+  # ---------------------------
+  # PDF Generator
+  service-pdf:
+    container_name: service-pdf
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:latest
+    ports:
+      - 9004:80
 
   # ---------------------------
   # Sirius gateway mock
