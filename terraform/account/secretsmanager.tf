@@ -50,7 +50,7 @@ resource "aws_secretsmanager_secret" "lpa_data_store_public_key" {
 
 resource "aws_secretsmanager_secret_version" "lpa_data_store_private_key" {
   secret_id     = aws_secretsmanager_secret.lpa_data_store_private_key.id
-  secret_string = tls_private_key.lpa_data_store_pk
+  secret_string = tls_private_key.lpa_data_store_pk.private_key_pem
 }
 
 resource "aws_secretsmanager_secret_version" "lpa_data_store_public_key" {
