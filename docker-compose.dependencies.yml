@@ -89,6 +89,19 @@ services:
     volumes:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
 
+  mock-lpa-data-store:
+    container_name: mock-lpa-data-store
+    image: outofcoffee/imposter:3.31.6
+    command:
+      - "-c"
+      - "/opt/imposter/config"
+      - "-l"
+      - "4012"
+    ports:
+      - "4013:4012"
+    volumes:
+      - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
+
   localstack:
     container_name: localstack
     image: localstack/localstack
