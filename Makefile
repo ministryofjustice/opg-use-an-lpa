@@ -87,7 +87,7 @@ logs:
 
 up_dependencies: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
 	$(ECR_LOGIN)
-	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms mock-one-login localstack
+	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms mock-one-login localstack mock-lpa-data-store
 .PHONY: up_dependencies
 
 up_services:
@@ -101,8 +101,9 @@ update_mock:
 	@echo "Merging Swagger Documents..."
 	./mock-integrations/opg-lpa-data/merge.sh
 	./mock-integrations/image-request-handler/update.sh
+	./mock-integrations/lpa-data-store/update.sh
 	@echo "Restarting data-lpa API..."
-	$(COMPOSE) restart api-gateway mock-data-lpa mock-image-request-handler
+	$(COMPOSE) restart api-gateway mock-data-lpa mock-image-request-handler mock-lpa-data-store
 .PHONY: update_mock
 
 up_mock:

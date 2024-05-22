@@ -98,7 +98,7 @@ services:
       - "-l"
       - "4012"
     ports:
-      - "4013:4012"
+      - "4014:4012"
     volumes:
       - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
 
