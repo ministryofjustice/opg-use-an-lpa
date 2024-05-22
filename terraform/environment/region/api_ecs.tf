@@ -275,7 +275,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
       data.aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.arn,
       data.aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.arn,
       data.aws_secretsmanager_secret.lpa_data_store_public_key.arn,
-      data.aws_secretsmanager_secret.lpa_data_store_private_key.arn
+      data.aws_secretsmanager_secret.lpa_data_store_private_key.arn,
     ]
   }
 
