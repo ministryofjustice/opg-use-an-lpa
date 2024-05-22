@@ -73,6 +73,7 @@ func TestGetLpasByUserID(t *testing.T) {
 			if tt.wantErr(t, err, fmt.Sprintf("GetLpasByUserID(%v)", tt.userID)) {
 				return
 			}
+
 			assert.EqualValues(t, tt.want, lpas)
 		})
 	}
@@ -137,6 +138,7 @@ func TestGetLPAByActivationCode(t *testing.T) {
 			if tt.wantErr(t, err, fmt.Sprintf("GetLPAByActivationCode(%v)", tt.activationCode)) {
 				return
 			}
+
 			assert.EqualValues(t, tt.want, lpas)
 		})
 	}
@@ -222,10 +224,12 @@ func Test_lpaService_GetLPARecordBySiriusID(t *testing.T) {
 
 			l := NewLPAService(dynamodbConnection)
 			gotLpas, err := l.GetLpaRecordBySiriusID(tt.args.ctx, tt.args.lpaNumber)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("lpaService.GetUsersByLPAID() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(gotLpas, tt.wantLpas) {
 				t.Errorf("lpaService.GetUsersByLPAID() = %v, want %v", gotLpas, tt.wantLpas)
 			}

@@ -37,6 +37,9 @@ resource "aws_ecs_service" "api" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      desired_count
+    ]
   }
 
   provider = aws.region
@@ -259,8 +262,46 @@ data "aws_iam_policy_document" "api_permissions_role" {
     effect = "Allow"
     actions = [
       "ssm:GetParameter",
+      "ssm:GetParameters",
     ]
     resources = var.parameter_store_arns
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}AllowSecretsManagerAccess"
+    effect = "Allow"
+    actions = [
+      "secretsmanager:GetSecretValue",
+    ]
+    resources = [
+      data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.arn,
+      data.aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.arn,
+    ]
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}KMSAccess"
+    effect = "Allow"
+
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}LpaDataStoreAccess"
+    effect = "Allow"
+    actions = [
+      "execute-api:Invoke",
+    ]
+    resources = [
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/health-check",
+    ]
   }
 
   statement {
@@ -475,6 +516,14 @@ locals {
         {
           name  = "IAP_IMAGES_API_ENDPOINT",
           value = var.iap_images_endpoint
+        },
+        {
+          name  = "LPA_DATA_STORE_API_ENDPOINT"
+          value = var.lpa_data_store_endpoint
+        },
+        {
+          name  = "ONE_LOGIN_DISCOVERY_URL",
+          value = local.onelogin_discovery_url
         },
         {
           name  = "LOGGING_LEVEL",

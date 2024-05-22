@@ -51,6 +51,13 @@ Feature: Authenticate One Login
     Then I see the LPA dashboard with any LPAs that are in the account
 
   @ui @ff:allow_gov_one_login:true
+  Scenario: I am redirected to the dashboard when I am signed in and visit the homepage
+    Given I have logged in to one login in English
+    When I have an email address that matches a local account
+    When I visit the homepage
+    Then I am redirected to the LPA dashboard page
+
+  @ui @ff:allow_gov_one_login:true
   Scenario: I am redirected to an empty dashboard when local account does not exist
     Given I have logged in to one login in English
     When I have an email address that does not match a local account

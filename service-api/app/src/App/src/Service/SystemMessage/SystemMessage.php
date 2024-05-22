@@ -6,7 +6,7 @@ namespace App\Service\SystemMessage;
 
 use Aws\Ssm\SsmClient;
 
-class SystemMessage
+class SystemMessage implements SystemMessageService
 {
     /**
      * @var string[] List of parameter names, without the /system-message/$environment prefix
@@ -44,7 +44,7 @@ class SystemMessage
         $nameToValueMap = [];
 
         foreach ($parameters as $parameter) {
-            $nameToValueMap[$this->stripPrefix($parameter['Name'])] = $parameter['Value'];
+            $nameToValueMap[$this->stripPrefix($parameter['Name'])] = trim($parameter['Value']);
         }
 
         return $nameToValueMap;

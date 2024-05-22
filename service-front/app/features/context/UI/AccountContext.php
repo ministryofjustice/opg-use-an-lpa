@@ -26,6 +26,7 @@ use PHPUnit\Framework\Assert;
  * @property string email
  * @property string password
  * @property string language
+ * @property array  systemMessages
  */
 class AccountContext implements Context
 {
@@ -48,6 +49,8 @@ class AccountContext implements Context
     private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
     private const ONE_LOGIN_SERVICE_LOGOUT             = 'OneLoginService::logout';
     private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES  = 'SystemMessageService::getMessages';
+
 
 
     /**
@@ -152,6 +155,14 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
         $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+    }
+
+    /**
+     * @Then /^I can see the system message$/
+     */
+    public function iCanSeeTheSystemMessage(): void
+    {
+        $this->ui->assertPageContainsText('Use system message English');
     }
 
     /**
@@ -328,6 +339,14 @@ class AccountContext implements Context
      */
     public function iAmOnTheTriagePage(): void
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessages ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/home');
     }
 
@@ -345,6 +364,22 @@ class AccountContext implements Context
     public function iAmRedirectedToTheOneLoginPage(): void
     {
         $this->ui->assertPageAddress('/home');
+    }
+
+    /**
+     * @When /^I visit the homepage$/
+     */
+    public function iVisitTheHomepage(): void
+    {
+        $this->ui->visit('/home');
+    }
+
+    /**
+     * @Then /^I am redirected to the LPA dashboard page$/
+     */
+    public function iAmRedirectedToTheDashboardPage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -2274,6 +2309,14 @@ class AccountContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 
@@ -2326,5 +2369,15 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->clickLink('Add your first LPA');
+    }
+
+    /**
+     * @When /^An actor system message is set$/
+     */
+    public function aSystemMessageIsSet(): void {
+        $this->systemMessages = [
+            'use/en' => 'Use system message English',
+            'use/cy' => 'Use system message Welsh'
+        ];
     }
 }

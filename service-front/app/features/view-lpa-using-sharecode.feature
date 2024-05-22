@@ -142,3 +142,15 @@ Feature: View an LPA via sharecode
     And I waited too long to enter the share code
     And I give a valid LPA share code when my session is timed out
     Then I have an error message informing me to try again.
+
+  @ui
+  Scenario: As a viewer I am shown the system message if it is set
+    Given A system message is set
+    When I access the viewer service
+    Then I can see the message System Message View English
+
+  @ui
+  Scenario: As a viewer I am not shown the system message if it is not set
+    Given A system message is not set
+    When I access the viewer service
+    Then I cannot see the message System Message View English

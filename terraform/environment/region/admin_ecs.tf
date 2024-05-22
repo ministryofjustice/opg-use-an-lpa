@@ -208,8 +208,10 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     sid    = "${local.policy_region_prefix}AllowSSMParameterAccess"
     effect = "Allow"
     actions = [
+      "ssm:GetParameters",
       "ssm:GetParameter",
       "ssm:PutParameter",
+      "ssm:PutParameters"
     ]
     resources = var.parameter_store_arns
   }

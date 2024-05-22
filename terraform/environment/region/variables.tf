@@ -115,6 +115,21 @@ variable "gov_uk_onelogin_client_id_secret_name" {
   type        = string
 }
 
+variable "gov_uk_onelogin_identity_public_key_secret_name" {
+  description = "The the name of the secret containing the OneLogin identity public key"
+  type        = string
+}
+
+variable "gov_uk_onelogin_identity_private_key_secret_name" {
+  description = "The the name of the secret containing the OneLogin identity private key"
+  type        = string
+}
+
+variable "gov_uk_onelogin_discovery_url" {
+  description = "The discovery url used by the One Login OIDC authentication process."
+  type        = string
+}
+
 variable "iap_images_endpoint" {
   description = "The endpoint to use for IAP images."
   type        = string
@@ -140,10 +155,30 @@ variable "lpas_collection_endpoint" {
   type        = string
 }
 
+variable "lpa_data_store_endpoint" {
+  description = "The endpoint to use for LPA Data Store"
+  type        = string
+}
+
 variable "load_balancer_deletion_protection_enabled" {
   description = "Whether or not deletion protection should be enabled for the load balancers."
   type        = bool
   default     = false
+}
+
+variable "mock_onelogin_enabled" {
+  description = "Whether or not to enable the mock One Login service."
+  type        = bool
+}
+
+variable "mock_onelogin_service_container_version" {
+  description = "Container version for the mock-onelogin service"
+  type        = string
+}
+
+variable "mock_onelogin_service_repository_url" {
+  description = "Repository URL for the mock-onelogin service"
+  type        = string
 }
 
 variable "moj_sites" {

@@ -1431,8 +1431,6 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
-
-
         Assert::assertEquals(AddLpaApiResult::ADD_LPA_SUCCESS, $response->getResponse());
     }
 

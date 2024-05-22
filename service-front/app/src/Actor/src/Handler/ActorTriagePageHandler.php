@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Actor\Handler;
 
 use Actor\Form\Triage;
+use App\Service\SystemMessage\SystemMessage;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\SystemMessage\SystemMessageService;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\ServerUrlHelper;
@@ -31,6 +33,7 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
+        private SystemMessageService $systemMessageService
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -49,8 +52,12 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
             return $this->redirectToRoute('lpa.dashboard');
         }
 
+        $systemMessages = $this->systemMessageService->getMessages();
+
         return new HtmlResponse($this->renderer->render('actor::home-page', [
             'form' => $form->prepare(),
+            'en_message' => $systemMessages['use/en'] ?? null,
+            'cy_message' => $systemMessages['use/cy'] ?? null,
         ]));
     }
 

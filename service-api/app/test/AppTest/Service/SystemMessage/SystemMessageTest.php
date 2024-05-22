@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Service\SystemMessage;
+namespace AppTest\Service\SystemMessage;
 
 use App\Service\SystemMessage\SystemMessage;
 use Aws\Ssm\SsmClient;
 use PHPUnit\Event\NoPreviousThrowableException;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\Exception as PHPUnitException;
 use PHPUnit\Framework\InvalidArgumentException;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
+use PHPUnit\Framework\MockObject\Exception as MockObjectException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -27,8 +26,8 @@ class SystemMessageTest extends TestCase
     private SystemMessage $systemMessage;
 
     /**
+     * @throws MockObjectException
      * @throws NoPreviousThrowableException
-     * @throws Exception
      * @throws InvalidArgumentException
      */
     protected function setUp(): void
@@ -41,9 +40,7 @@ class SystemMessageTest extends TestCase
     }
 
     /**
-     * @return void
-     * @throws ExpectationFailedException
-     * @throws IncompatibleReturnValueException
+     * @throws PHPUnitException
      */
     #[Test]
     public function returnsSystemMessages(): void
@@ -64,6 +61,33 @@ class SystemMessageTest extends TestCase
         $expected = [
             'use/en' => 'English usage message',
             'use/cy' => 'Welsh usage message',
+        ];
+
+        $this->assertEquals($expected, $systemMessages);
+    }
+
+    /**
+     * @throws PHPUnitException
+     */
+    #[Test]
+    public function correctlyHandlesStoredWhitespace(): void
+    {
+        $mockResponse = [
+            'Parameters' => [
+                ['Name' => '/system-message/use/en', 'Value' => ' '],
+                ['Name' => '/system-message/use/cy', 'Value' => ' '],
+            ],
+        ];
+
+        $this->ssmClient->method('__call')
+            ->with($this->identicalTo('getParameters'))
+            ->willReturn($mockResponse);
+
+        $systemMessages = $this->systemMessage->getSystemMessages();
+
+        $expected = [
+            'use/en' => '',
+            'use/cy' => '',
         ];
 
         $this->assertEquals($expected, $systemMessages);

@@ -12,6 +12,8 @@ use Aws\SecretsManager\SecretsManagerClient;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\Cache\RedisAdapterPluginManagerDelegatorFactory;
+use Common\Service\OneLogin\SystemMessageService;
+use Common\Service\OneLogin\SystemMessageServiceFactory;
 use Gettext\Generator\GeneratorInterface;
 use Gettext\Generator\PoGenerator;
 use Gettext\Loader\LoaderInterface;
@@ -105,6 +107,7 @@ class ConfigProvider
                 KmsClient::class            => Service\Aws\KmsFactory::class,
                 SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
                 Client::class               => Service\ApiClient\GuzzleClientFactory::class,
+                SystemMessageService::class => SystemMessageServiceFactory::class,
 
                 // Middleware
                 SessionMiddleware::class                   => SessionMiddlewareFactory::class,
