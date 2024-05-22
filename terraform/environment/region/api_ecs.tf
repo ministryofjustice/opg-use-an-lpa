@@ -37,6 +37,9 @@ resource "aws_ecs_service" "api" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      desired_count
+    ]
   }
 
   provider = aws.region
