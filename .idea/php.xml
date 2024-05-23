@@ -501,7 +501,6 @@
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
-            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
@@ -512,22 +511,20 @@
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
-            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
           </dockerComposeConfigurationPaths>
           <envs />
         </remote_data>
       </interpreter>
-      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so">
+      <interpreter id="629f1e4d-0e9c-4595-aa54-e8d28c3ac0df" name="smoke" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug" debugger_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20230831/xdebug.so">
         <remote_data INTERPRETER_PATH="php" HELPERS_PATH="/opt/.phpstorm_helpers" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="smoke-tests" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
           <type_data command="RUN" />
           <dockerComposeConfigurationPaths>
             <item value="$PROJECT_DIR$/docker-compose.yml" />
             <item value="$PROJECT_DIR$/docker-compose.dependencies.yml" />
-            <item value="$PROJECT_DIR$/docker-compose.testing.yml" />
-            <item value="$PROJECT_DIR$/docker-compose.override.yml" />
+            <item value="$PROJECT_DIR$/tests/smoke/docker-compose.smoke.yml" />
           </dockerComposeConfigurationPaths>
           <envs>
-            <env name="COMPOSE_PROFILES" value="testing" />
+            <env name="COMPOSE_PROFILES" value="smoke" />
           </envs>
         </remote_data>
       </interpreter>
@@ -557,7 +554,7 @@
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.3.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.2">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -708,7 +705,7 @@
         </phpinfo>
       </interpreter>
       <interpreter name="smoke">
-        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.1.28">
+        <phpinfo binary_type="PHP" php_cgi="/usr/local/bin/php-cgi" php_cli="/usr/local/bin/php" path_separator=":" version="8.3.7">
           <additional_php_ini>/usr/local/etc/php/conf.d/docker-php-ext-sodium.ini</additional_php_ini>
           <configuration_file />
           <configuration_options>
@@ -732,7 +729,6 @@
             <extension name="dom" />
             <extension name="fileinfo" />
             <extension name="filter" />
-            <extension name="ftp" />
             <extension name="hash" />
             <extension name="iconv" />
             <extension name="json" />
@@ -743,6 +739,7 @@
             <extension name="pcre" />
             <extension name="pdo_sqlite" />
             <extension name="posix" />
+            <extension name="random" />
             <extension name="readline" />
             <extension name="session" />
             <extension name="sodium" />

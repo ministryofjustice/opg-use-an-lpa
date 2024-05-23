@@ -6,28 +6,31 @@ output "ecs_cluster" {
 output "ecs_services" {
   description = "Objects containing the ECS services"
   value = {
-    actor  = aws_ecs_service.use
-    admin  = aws_ecs_service.admin
-    api    = aws_ecs_service.api
-    pdf    = aws_ecs_service.pdf
-    viewer = aws_ecs_service.viewer
+    actor         = aws_ecs_service.use
+    admin         = aws_ecs_service.admin
+    api           = aws_ecs_service.api
+    pdf           = aws_ecs_service.pdf
+    viewer        = aws_ecs_service.viewer
+    mock_onelogin = aws_ecs_service.mock_onelogin
   }
 }
 
 output "albs" {
   description = "Objects containing the ALBs"
   value = {
-    actor  = aws_lb.use
-    admin  = aws_lb.admin
-    viewer = aws_lb.viewer
+    actor         = aws_lb.use
+    admin         = aws_lb.admin
+    viewer        = aws_lb.viewer
+    mock_onelogin = aws_lb.mock_onelogin
   }
 }
 
 output "security_group_names" {
   description = "Security group names"
   value = {
-    actor_loadbalancer  = aws_security_group.use_loadbalancer.name
-    viewer_loadbalancer = aws_security_group.viewer_loadbalancer.name
+    actor_loadbalancer         = aws_security_group.use_loadbalancer.name
+    viewer_loadbalancer        = aws_security_group.viewer_loadbalancer.name
+    mock_onelogin_loadbalancer = aws_security_group.mock_onelogin_loadbalancer.name
   }
 }
 
@@ -39,5 +42,6 @@ output "route53_fqdns" {
     admin              = local.route53_fqdns.admin
     use                = local.route53_fqdns.use
     viewer             = local.route53_fqdns.viewer
+    mock_onelogin      = local.route53_fqdns.mock_onelogin
   }
 }

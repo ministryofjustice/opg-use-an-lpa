@@ -2,10 +2,18 @@
   <configuration default="false" name="Smoke" type="PhpBehatConfigurationType" singleton="false">
     <BehatRunner configuration_file="$PROJECT_DIR$/tests/smoke/behat.yml" scenario="" scope="Yml" use_alternative_configuration_file="true" />
     <CommandLine>
+      <envFiles>
+        <find>$PROJECT_DIR$/tests/smoke/.env</find>
+      </envFiles>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="smoke" />
       </PhpTestInterpreterSettings>
     </CommandLine>
+    <option name="envFilePaths">
+      <list>
+        <option value="$PROJECT_DIR$/tests/smoke/.env" />
+      </list>
+    </option>
     <method v="2" />
   </configuration>
 </component>
