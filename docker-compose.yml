@@ -1,32 +1,21 @@
-version: "3.8"
-
 volumes:
-  webpack_dist:
+  esbuild:
 
 services:
   # ---------------------------
-  # Webpack Watch for Development
+  # Asset build
 
-  webpack:
-    container_name: webpack
-    image: webpack
+  esbuild:
+    container_name: esbuild
+    image: esbuild
     build:
       context: .
       dockerfile: service-front/web/Dockerfile
     entrypoint: >
       sh -c "npm ci --verbose && npm run build"
     volumes:
-      - ./service-front/web:/web:rw,delegated
-      - webpack_dist:/web/dist
-
-  # ---------------------------
-  # PDF Generator
-
-  service-pdf:
-    container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:latest
-    ports:
-      - 9004:80
+      - ./service-front/web:/web:rw
+      - esbuild:/web/dist
 
   # ---------------------------
   # Viewer Front
@@ -38,14 +27,15 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - webpack_dist:/web
+      - esbuild:/web
     environment:
       WEB_DOMAIN: http://localhost:9001
       APP_HOST: viewer-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
     depends_on:
-      - webpack
+      - esbuild
+      - viewer-app
 
   viewer-app:
     container_name: viewer-app
@@ -56,7 +46,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
-      - webpack_dist:/app/assets
+      - esbuild:/app/assets
     environment:
       # Always required
       CONTEXT: "viewer"
@@ -67,9 +57,9 @@ services:
       INSTRUCTIONS_AND_PREFERENCES: "true"
 
       # Local only
-      API_SERVICE_URL: http://api-web
-      PDF_SERVICE_URL: http://service-pdf
-      AWS_ENDPOINT_KMS: http://kms:8080
+      API_SERVICE_URL:
+      PDF_SERVICE_URL:
+      AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
@@ -80,7 +70,7 @@ services:
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
     depends_on:
-      - redis
+      - api-web
 
   # ---------------------------
   # Actor Front
@@ -92,14 +82,15 @@ services:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
     volumes:
-      - webpack_dist:/web
+      - esbuild:/web
     environment:
       WEB_DOMAIN: http://localhost:9002
       APP_HOST: actor-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
     depends_on:
-      - webpack
+      - esbuild
+      - actor-app
 
   actor-app:
     container_name: actor-app
@@ -110,7 +101,7 @@ services:
       dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
-      - webpack_dist:/app/assets
+      - esbuild:/app/assets
     environment:
       # Always required
       CONTEXT: "actor"
@@ -125,8 +116,8 @@ services:
       ALLOW_GOV_ONE_LOGIN: "false"
 
       # Local only
-      API_SERVICE_URL: http://api-web
-      AWS_ENDPOINT_KMS: http://kms:8080
+      API_SERVICE_URL:
+      AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
@@ -138,11 +129,15 @@ services:
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       NOTIFY_API_KEY:
+    depends_on:
+      - api-web
 
   # ---------------------------
   # Front Composer (Shared)
 
   front-composer:
+    profiles:
+      - tools
     image: actor-app
     volumes:
       - ./service-front/app:/app
@@ -165,8 +160,6 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
-    depends_on:
-      - api-app
     volumes:
       - ./service-api/web/dist:/web
     ports:
@@ -175,6 +168,8 @@ services:
       APP_HOST: api-app
       APP_PORT: 9000
       NGINX_LOG_LEVEL: warn
+    depends_on:
+      - api-app
 
   api-app:
     container_name: api-app
@@ -183,15 +178,8 @@ services:
       target: development
       context: .
       dockerfile: service-api/docker/app/Dockerfile
-    depends_on:
-      dynamodb-local:
-        condition: service_started
-      localstack:
-        condition: service_healthy
     volumes:
       - ./service-api/app:/app
-    networks:
-      - default
     environment:
       DYNAMODB_TABLE_ACTOR_CODES: "ActorCodes"
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
@@ -200,12 +188,12 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
 
-      SIRIUS_API_ENDPOINT: "http://api-gateway:5000"
-      LPA_CODES_API_ENDPOINT: "http://codes-gateway:4343"
-      IAP_IMAGES_API_ENDPOINT: "http://api-gateway:5000"
+      SIRIUS_API_ENDPOINT:
+      LPA_CODES_API_ENDPOINT:
+      IAP_IMAGES_API_ENDPOINT:
 
       ONE_LOGIN_CLIENT_ID: "client-id"
-      ONE_LOGIN_DISCOVERY_URL: "http://mock-one-login:8080/.well-known/openid-configuration"
+      ONE_LOGIN_DISCOVERY_URL:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
@@ -215,9 +203,9 @@ services:
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"
-      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
-      AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
-      AWS_ENDPOINT_SSM: http://localstack:4566
+      AWS_ENDPOINT_DYNAMODB:
+      AWS_ENDPOINT_SECRETSMANAGER:
+      AWS_ENDPOINT_SSM:
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LPA_CODES_STATIC_AUTH_TOKEN: asdf1234567890
       PACT_BROKER_PUBLISH: "false"
@@ -226,10 +214,11 @@ services:
       PHP_IDE_CONFIG: serverName=api-app
       XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
       XDEBUG_MODE: develop,debug,coverage
-      XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
 
   api-composer:
+    profiles:
+      - tools
     image: api-app
     volumes:
       - ./service-api/app:/app
@@ -247,8 +236,6 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/seeding/Dockerfile
-    depends_on:
-      - dynamodb-local
     environment:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
@@ -257,8 +244,8 @@ services:
       DYNAMODB_TABLE_ACTOR_USERS: "ActorUsers"
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
-      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
-      CODES_ENDPOINT: codes-gateway:4343
+      AWS_ENDPOINT_DYNAMODB:
+      CODES_ENDPOINT:
 
   # ---------------------------
   # Lambda to upload stats
@@ -292,3 +279,6 @@ services:
     volumes:
       - ./local-config/proxy/traefik.toml:/etc/traefik/traefik.toml
       - ./local-config/proxy/dynamic.toml:/etc/traefik/dynamic.toml
+    depends_on:
+      - actor-web
+      - viewer-web

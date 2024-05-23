@@ -6,16 +6,22 @@ namespace Test\Context;
 
 use Behat\Behat\Context\Context;
 
-/**
- * @property string userEmail
- * @property string userPassword
- * @property string lpaReference
- * @property string lpaActivationKey
- * @property int[] userDob
- */
 class AccountContext implements Context
 {
     use BaseContextTrait;
+
+    public string $userEmail;
+    public string $userPassword;
+    public string $lpaReference;
+    public string $lpaActivationKey;
+
+    /** @var array{
+     *     'day': int,
+     *     'month': int,
+     *     'year': int
+     * }
+     */
+    public array $userDob;
 
     /**
      * @Given I am a user of the lpa application
@@ -45,7 +51,12 @@ class AccountContext implements Context
      */
     public function iAccessTheLoginForm(): void
     {
-        $this->ui->visit('/login');
+        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
+            $this->ui->visit('/home');
+            $this->ui->pressButton('sign-in-one-login');
+        } else {
+            $this->ui->visit('/login');
+        }
     }
 
     /**
@@ -53,12 +64,16 @@ class AccountContext implements Context
      */
     public function iEnterCorrectCredentials(): void
     {
-        $this->ui->assertPageAddress('/login');
-
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-
-        $this->ui->pressButton('Sign in');
+        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
+            $this->ui->assertPageAddress('/authorize');
+            $this->ui->fillField('email', $this->userEmail);
+            $this->ui->pressButton('Continue');
+        } else {
+            $this->ui->assertPageAddress('/login');
+            $this->ui->fillField('email', $this->userEmail);
+            $this->ui->fillField('password', $this->userPassword);
+            $this->ui->pressButton('Sign in');
+        }
     }
 
     /**
@@ -66,6 +81,10 @@ class AccountContext implements Context
      */
     public function iAmSignedIn(): void
     {
-        $this->ui->assertElementOnPage('nav.signin');
+        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
+            $this->ui->assertElementOnPage('nav.one-login-header__nav');
+        } else {
+            $this->ui->assertElementOnPage('nav.signin');
+        }
     }
 }
