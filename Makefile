@@ -94,7 +94,7 @@ up_services:
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
-	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans webpack service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer proxy
+	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans esbuild service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer proxy
 .PHONY: up_services
 
 update_mock:
@@ -130,11 +130,11 @@ unit_test_actor_app:
 .PHONY: unit_test_actor_app
 
 unit_test_javascript:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run test"
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run test"
 .PHONY: unit_test_actor_app
 
 build_frontend_assets:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm run build"
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run build"
 .PHONY: build_frontend_assets
 
 unit_test_api_app:
@@ -170,7 +170,7 @@ run_front_composer_update:
 .PHONY: run_front_composer_update
 
 run_front_npm_update:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" webpack "npm update"
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm update"
 .PHONY: run_front_npm_update
 
 run_api_composer_update:
@@ -191,7 +191,7 @@ clear_config_cache:
 .PHONY: clear_config_cache
 
 smoke_tests:
-	$(TEST_COMPOSE) run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml --env-file tests/smoke/.env run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: smoke_tests
 
 run-structurizr:
