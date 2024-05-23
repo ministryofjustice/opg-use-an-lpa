@@ -135,13 +135,13 @@ data "aws_secretsmanager_secret" "gov_uk_onelogin_identity_private_key" {
 }
 
 data "aws_secretsmanager_secret" "lpa_data_store_public_key" {
-  name = var.lpa_data_store_public_key_secret_name
+  arn = data.aws_secretsmanager_secret.lpa_data_store_public_key.arn
 
   provider = aws.region
 }
 
 data "aws_secretsmanager_secret" "lpa_data_store_private_key" {
-  name = var.lpa_data_store_private_key_secret_name
+  arn = data.aws_secretsmanager_secret.lpa_data_store_private_key.arn
 
   provider = aws.region
 }
