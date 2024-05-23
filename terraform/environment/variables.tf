@@ -53,8 +53,6 @@ variable "environments" {
       gov_uk_onelogin_identity_public_key_secret_name  = string
       gov_uk_onelogin_identity_private_key_secret_name = string
       gov_uk_onelogin_discovery_url                    = string
-      lpa_data_store_public_key_secret_name            = string
-      lpa_data_store_private_key_secret_name           = string
       have_a_backup_plan                               = bool
       is_production                                    = bool
       log_retention_in_days                            = number
