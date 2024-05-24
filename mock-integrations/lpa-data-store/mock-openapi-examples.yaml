@@ -1,0 +1,10 @@
+paths:
+  /lpas/{uid}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                lpa0138:
+                  value: {"lpaType": "personal-welfare", "channel": "online", "donor": {"uid": "eda719db-8880-4dda-8c5d-bb9ea12c236f", "firstNames": "Feeg", "lastName": "Bundlaaaa", "address": {"line1": "74 Cloob Close", "town": "Mahhhhhhhhhh", "country": "GB"}, "dateOfBirth": "1970-01-24", "email": "nobody@not.a.real.domain", "contactLanguagePreference": "en"}, "attorneys": [{"uid": "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d", "firstNames": "Herman", "lastName": "Seakrest", "address": {"line1": "81 NighOnTimeWeBuiltIt Street", "town": "Mahhhhhhhhhh", "country": "GB"}, "dateOfBirth": "1982-07-24", "status": "active", "channel": "paper"}], "trustCorporations": [{"uid": "1d95993a-ffbb-484c-b2fe-f4cca51801da", "name": "Trust us Corp.", "companyNumber": "666123321", "address": {"line1": "103 Line 1", "town": "Town", "country": "GB"}, "status": "active", "channel": "paper"}], "certificateProvider": {"uid": "6808960d-12cf-47c5-a2bc-3177deb8599c", "firstNames": "Vone", "lastName": "Spust", "address": {"line1": "122111 Zonnington Way", "town": "Mahhhhhhhhhh", "country": "GB"}, "channel": "online", "email": "a@example.com", "phone": "070009000"}, "lifeSustainingTreatmentOption": "option-a", "signedAt": "2024-01-10T23:00:00Z", "certificateProviderNotRelatedConfirmedAt": "2024-01-11T22:00:00Z", "howAttorneysMakeDecisions": "jointly"}

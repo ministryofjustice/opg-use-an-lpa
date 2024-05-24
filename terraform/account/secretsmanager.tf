@@ -79,6 +79,35 @@ resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_client_id" {
   }
 }
 
+resource "aws_secretsmanager_secret" "lpa_data_store_private_key" {
+  name       = "lpa-data-store-private-key"
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
+}
+
+resource "aws_secretsmanager_secret" "lpa_data_store_public_key" {
+  name       = "lpa-data-store-public-key"
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "lpa_data_store_private_key" {
+  secret_id     = aws_secretsmanager_secret.lpa_data_store_private_key.id
+  secret_string = tls_private_key.lpa_data_store_pk.private_key_pem
+}
+
+resource "aws_secretsmanager_secret_version" "lpa_data_store_public_key" {
+  secret_id     = aws_secretsmanager_secret.lpa_data_store_public_key.id
+  secret_string = trimspace(tls_private_key.lpa_data_store_pk.public_key_pem)
+}
 
 resource "aws_secretsmanager_secret" "notify_api_key" {
   name       = "notify-api-key"

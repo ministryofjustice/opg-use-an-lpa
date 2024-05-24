@@ -1,7 +1,54 @@
-version: '3.8'
-
 services:
 
+  # -----
+  # Service overrides for dependency startup ordering
+  viewer-app:
+    environment:
+      API_SERVICE_URL: http://api-web
+      PDF_SERVICE_URL: http://service-pdf
+      AWS_ENDPOINT_KMS: http://kms:8080
+    depends_on:
+      - redis
+      - service-pdf
+
+  actor-app:
+    environment:
+      API_SERVICE_URL: http://api-web
+      AWS_ENDPOINT_KMS: http://kms:8080
+    depends_on:
+      - redis
+
+  api-app:
+    depends_on:
+      codes-gateway:
+        condition: service_started
+      dynamodb-local:
+        condition: service_started
+      kms:
+        condition: service_started
+      localstack:
+        condition: service_healthy
+      mock-one-login:
+        condition: service_started
+        restart: true
+    environment:
+      SIRIUS_API_ENDPOINT: http://api-gateway:5000
+      LPA_CODES_API_ENDPOINT: http://codes-gateway:4343
+      IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
+      ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
+      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
+      AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
+      AWS_ENDPOINT_SSM: http://localstack:4566
+
+  api-seeding:
+    depends_on:
+      - dynamodb-local
+    environment:
+      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
+      CODES_ENDPOINT: codes-gateway:4343
+
+  # -----
+  # Database
   dynamodb-local:
     command: "-jar DynamoDBLocal.jar -sharedDb"
     image: "amazon/dynamodb-local:latest"
@@ -11,8 +58,6 @@ services:
 
   # -----
   # Code Generation API development environment
-  # -----
-
   codes-gateway:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
@@ -34,13 +79,11 @@ services:
 
   # ---------------------------
   # Cache service
-
   redis:
     image: redis:7
 
   # ---------------------------
   # AWS KMS mock service
-
   kms:
     image: nsmithuk/local-kms:3
     volumes:
@@ -48,6 +91,14 @@ services:
     environment:
       KMS_REGION: eu-west-1
       KMS_SEED_PATH: /init/kms-seed.yaml
+
+  # ---------------------------
+  # PDF Generator
+  service-pdf:
+    container_name: service-pdf
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf_service:latest
+    ports:
+      - 9004:80
 
   # ---------------------------
   # Sirius gateway mock
@@ -88,6 +139,19 @@ services:
       - "4012:4012"
     volumes:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
+
+  mock-lpa-data-store:
+    container_name: mock-lpa-data-store
+    image: outofcoffee/imposter:3.31.6
+    command:
+      - "-c"
+      - "/opt/imposter/config"
+      - "-l"
+      - "4012"
+    ports:
+      - "4014:4012"
+    volumes:
+      - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
 
   localstack:
     container_name: localstack

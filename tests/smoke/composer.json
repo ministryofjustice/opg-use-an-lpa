@@ -28,5 +28,13 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "scripts": {
+        "dc": [
+            "Composer\\Config::disableProcessTimeout",
+            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml -f docker-compose.smoke.yml"
+        ],
+        "dc-run": "@dc --env-file .env run --rm smoke-tests",
+        "behat": "@dc-run vendor/bin/behat -vvv"
     }
 }
