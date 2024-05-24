@@ -49,6 +49,16 @@ resource "aws_secretsmanager_secret_version" "gov_uk_onelogin_client_id" {
   }
 }
 
+resource "aws_secretsmanager_secret" "lpa_data_store_private_key" {
+  name       = "lpa-data-store-private-key"
+  kms_key_id = module.secrets_manager_mrk.key_id
+
+  replica {
+    kms_key_id = module.secrets_manager_mrk.key_id
+    region     = "eu-west-2"
+  }
+}
+
 resource "aws_secretsmanager_secret" "lpa_data_store_public_key" {
   name       = "lpa-data-store-public-key"
   kms_key_id = module.secrets_manager_mrk.key_id
