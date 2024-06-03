@@ -100,3 +100,9 @@ Feature: Ask for an activation key
       | 70000000000      | Enter an LPA reference number that is either 7 or 12 numbers long |
       | 7000045          | LPA reference numbers that are 7 numbers long must begin with a 2 or 3  |
       | 500000000526     | LPA reference numbers that are 12 numbers long must begin with a 7 |
+
+  @ui
+  Scenario: As a user I want to cancel entering a reference number and return back to the dashboard
+    Given I am on the request an activation key page
+    When I click the Cancel link
+    Then I am redirected to the LPA dashboard page
