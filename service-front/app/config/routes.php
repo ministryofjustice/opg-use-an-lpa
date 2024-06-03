@@ -104,9 +104,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $container,
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
-            function () {
-                return new \Laminas\Diactoros\Response\RedirectResponse('/home');
-            },
+            fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
             Actor\Handler\LoginPageHandler::class
         )
     ], ['GET', 'POST'], 'login');
@@ -134,25 +132,44 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     );
 
     // User management
-    if (!$feature_flags[$ALLOW_GOV_ONE_LOGIN]) {
-        $app->route(
-            '/reset-password',
-            Actor\Handler\PasswordResetRequestPageHandler::class,
-            ['GET', 'POST'],
-            'password-reset'
-        );
+    $app->route(
+        '/reset-password',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            \Mezzio\Handler\NotFoundHandler::class,
+            Actor\Handler\PasswordResetRequestPageHandler::class
+        ),
+        ['GET', 'POST'],
+        'password-reset'
+    );
 
-        $app->route(
-            '/reset-password/{token}',
-            Actor\Handler\PasswordResetPageHandler::class,
-            ['GET', 'POST'],
-            'password-reset-token'
-        );
 
-        $app->get('/verify-new-email/{token}', [
-            Actor\Handler\CompleteChangeEmailHandler::class,
-        ],        'verify-new-email');
-    }
+    $app->route(
+        '/reset-password/{token}',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            \Mezzio\Handler\NotFoundHandler::class,
+            Actor\Handler\PasswordResetPageHandler::class
+        ),
+        ['GET', 'POST'],
+        'password-reset-token'
+    );
+
+    $app->get(
+        '/verify-new-email/{token}',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            \Mezzio\Handler\NotFoundHandler::class,
+            Actor\Handler\CompleteChangeEmailHandler::class
+        ),
+        'verify-new-email'
+    );
 
     // User deletion
     $app->get('/confirm-delete-account', [
