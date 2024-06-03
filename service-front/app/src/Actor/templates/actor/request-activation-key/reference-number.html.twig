@@ -19,25 +19,9 @@
 
                     <p class="govuk-body">
                         {% trans %}
-                            The LPA reference number (also called 'OPG reference number' or 'Our ref')
-                            is on the first page of the paper LPA and on any letter you get from
-                            the Office of the Public Guardian.
+                            The reference number is in the same letter that has your activation key.
                         {% endtrans %}
                     </p>
-                    <p class="govuk-body">
-                        {% trans %} It will be 12 numbers long and start with a 7. {% endtrans %}
-                    </p>
-
-                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaCategory="Details" data-gaAction="Reference Number" data-gaLabel="My reference number is not 12 numbers long">
-                        <summary class="govuk-details__summary">
-                                    <span class="govuk-details__summary-text">
-                                        {% trans %}My reference number is not 12 numbers long {% endtrans %}
-                                    </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>{% trans %}If an LPA's reference number is not 12 numbers long, you cannot currently add that LPA to the service.{% endtrans %}</p>
-                        </div>
-                    </details>
 
                     {{ govuk_form_open(form) }}
 
@@ -45,6 +29,7 @@
 
                         {{ govuk_form_element(form.get('opg_reference_number'), {
                             'label': 'LPA reference number' | trans,
+                            'hint': 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>' | trans,
                             'attr' : {
                                 'class': 'govuk-input--width-20',
                                 'label_class': 'govuk-label--s'
@@ -53,6 +38,12 @@
                         }) }}
 
                         <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item govuk-button--secondary "
+                           data-module="govuk-button">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
 
                     {{ govuk_form_close() }}
                 </div>
