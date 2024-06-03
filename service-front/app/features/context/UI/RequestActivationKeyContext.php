@@ -10,7 +10,6 @@ use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
@@ -765,6 +764,13 @@ class RequestActivationKeyContext implements Context
      */
     public function myCurrentAddressIsRecordedInTheSiriusTask()
     {
+        $requests = array_values(
+            array_filter(
+                $this->base->mockClientHistoryContainer,
+                fn (array $request) => $request['request']->getUri()->getPath() === '/v1/older-lpa/cleanse',
+            )
+        );
+
         Assert::assertStringContainsString(
             sprintf(
                 'Current postal address: %s, %s, %s\n',
@@ -772,7 +778,7 @@ class RequestActivationKeyContext implements Context
                 $this->lpa->donor->addresses[0]->town,
                 strtoupper($this->lpa->donor->addresses[0]->postcode)
             ),
-            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
+            $requests[0]['request']->getBody()->getContents()
         );
     }
 
@@ -1344,9 +1350,16 @@ class RequestActivationKeyContext implements Context
      */
     public function theAddressGivenOnThePaperLPAIsRecordedInTheSiriusTask()
     {
+        $requests = array_values(
+            array_filter(
+                $this->base->mockClientHistoryContainer,
+                fn (array $request) => $request['request']->getUri()->getPath() === '/v1/older-lpa/cleanse',
+            )
+        );
+
         Assert::assertStringContainsString(
             'Address on LPA: Unit 18, Peacock Avenue, Boggy Bottom, Hertfordshire, DE65 AAA',
-            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
+            $requests[0]['request']->getBody()->getContents()
         );
     }
 
@@ -1355,9 +1368,16 @@ class RequestActivationKeyContext implements Context
      */
     public function itIsRecordedInTheSiriusTaskThatTheUserLivesAbroad()
     {
+        $requests = array_values(
+            array_filter(
+                $this->base->mockClientHistoryContainer,
+                fn (array $request) => $request['request']->getUri()->getPath() === '/v1/older-lpa/cleanse',
+            )
+        );
+
         Assert::assertStringContainsString(
             'Requester is not a UK resident',
-            $this->base->mockClientHistoryContainer[3]['request']->getBody()->getContents()
+            $requests[0]['request']->getBody()->getContents()
         );
     }
 
