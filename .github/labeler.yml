@@ -1,26 +1,26 @@
 documentation:
 - changed-files:
-  - any-glob-to-any-file: docs/**
+  - any-glob-to-any-file: 'docs/**'
 
 terraform:
 - changed-files:
-  - any-glob-to-any-file: terraform/**
+  - any-glob-to-any-file: 'terraform/**'
 
 github-actions:
 - changed-files:
-  - any-glob-to-any-file: .github/workflows/**
+  - any-glob-to-any-file: '.github/workflows/**'
 
 service-admin:
 - changed-files:
-  - any-glob-to-any-file: services-admin/**
+  - any-glob-to-any-file: 'services-admin/**'
 
 service-api:
 - changed-files:
-  - any-glob-to-any-file: services-api/**
+  - any-glob-to-any-file: 'services-api/**'
 
 service-front:
 - changed-files:
-  - any-glob-to-any-file: services-front/**
+  - any-glob-to-any-file: 'services-front/**'
 
 
 docker:
