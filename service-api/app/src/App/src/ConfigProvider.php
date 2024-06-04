@@ -63,7 +63,7 @@ class ConfigProvider
                     => Facile\OpenIDClient\Issuer\IssuerBuilder::class,
 
                 // System messages
-                Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class
+                Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class,
             ],
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
@@ -117,9 +117,12 @@ class ConfigProvider
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
                     Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
                 ],
-                Service\SystemMessage\SystemMessage::class => [
-                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class
-                ]
+                Service\SystemMessage\SystemMessage::class                                  => [
+                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
+                ],
+                Service\Secrets\LpaDataStoreSecretManager::class                            => [
+                    Service\Secrets\CachedSecretManagerDelegatorFactory::class,
+                ],
             ],
         ];
     }
