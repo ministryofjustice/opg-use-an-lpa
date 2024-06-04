@@ -9,9 +9,6 @@
     "Dependencies",
     "Renovate"
   ],
-  "constraints": {
-    "php": "8.1"
-  },
   "packageRules": [
     {
       "description": "Terraform: bundle all updates together",
