@@ -22,19 +22,9 @@
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <p class="govuk-body">{% trans %}Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person.{% endtrans %}</p>
 
-                    <p class="govuk-body">{% trans %}Your activation key:{% endtrans %}</p>
-
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>
-                            {% trans %} can only be used once {% endtrans %}
-                        </li>
-                        <li>
-                            {% trans with {'%link%': path('lpa.add-by-paper-information')} %}
-                            expired one year after the date on the letter you can <a href="%link%" class="govuk-link">request a new key</a>{% endtrans %}
-                        </li>
-                    </ul>
+                    <p class="govuk-body">{% trans %}If you’re named on 2 or more LPAs, you have a different activation key for each LPA.{% endtrans %}</p>
 
                     {{ govuk_form_element(form.get('activation_key'), {
                         'label': 'Your activation key'| trans,

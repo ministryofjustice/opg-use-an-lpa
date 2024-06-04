@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-03T14:40:41+00:00\n"
+"POT-Creation-Date: 2024-06-04T11:11:03+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -269,7 +269,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:41
 #: src/Actor/templates/actor/contact-details.html.twig:40
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
@@ -1525,7 +1525,7 @@ msgstr ""
 msgid "We may also contact you by email on"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
 msgid "Your activation key"
 msgstr ""
 
@@ -1549,7 +1549,7 @@ msgstr ""
 msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:32
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
 msgstr ""
 
