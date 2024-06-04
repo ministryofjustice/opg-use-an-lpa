@@ -74,6 +74,13 @@ return [
                 'ttl'       => 300,
                 'namespace' => 'systemMessage',
             ],
-        ]
+        ],
+        '/App/Service/Secrets/LpaDataStoreSecretManager' => [
+            'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
+            'options' => [
+                'ttl'       => 60,
+                'namespace' => 'lpaDataStoreSecretManager',
+            ],
+        ],
     ],
 ];
