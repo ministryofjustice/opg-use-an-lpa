@@ -19,14 +19,9 @@ class CachedSecretManager implements SecretManagerInterface
     ) {
     }
 
-    public function getSecretName(): string
-    {
-        return $this->secretManager->getSecretName();
-    }
-
     public function getSecret(): string
     {
-        $cacheKey = substr(sha1(self::class . $this->secretManager->getSecretName()), 0, 65);
+        $cacheKey = 'lpa-data-store-secret';
 
         if ($this->cache->has($cacheKey)) {
             return $this->cache->get($cacheKey);

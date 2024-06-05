@@ -19,7 +19,7 @@ class CachedSecretManagerDelegatorFactory implements DelegatorFactoryInterface
         $cacheFactory = $container->get(CacheFactory::class);
 
         return new CachedSecretManager(
-            ($cacheFactory)($name),
+            ($cacheFactory)('lpa-data-store'),
             /** @var SecretManagerInterface */
             call_user_func($callback),
             3600

@@ -7,6 +7,7 @@ namespace App\Service\Secrets;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class LpaDataStoreSecretManager implements SecretManagerInterface
 {
@@ -17,14 +18,13 @@ class LpaDataStoreSecretManager implements SecretManagerInterface
         private SecretsManagerClient $secretsManagerClient,
         private LoggerInterface $logger,
     )
-    {
-    }
+    {}
 
     public function getSecret(): string
     {
         try {
             $response = $this->secretsManagerClient->getSecretValue([
-                'SecretName' => $this->getSecretName(),
+                'SecretName' => self::SECRET_NAME,
             ])->get('SecretString');
 
             if ($response === null) {

@@ -75,7 +75,7 @@ return [
                 'namespace' => 'systemMessage',
             ],
         ],
-        '/App/Service/Secrets/LpaDataStoreSecretManager' => [
+        'lpa-data-store' => [
             'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
             'options' => [
                 'ttl'       => 60,
