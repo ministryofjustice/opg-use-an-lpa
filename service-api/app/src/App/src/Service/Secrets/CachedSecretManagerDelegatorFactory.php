@@ -20,7 +20,7 @@ class CachedSecretManagerDelegatorFactory implements DelegatorFactoryInterface
 
         return new CachedSecretManager(
             ($cacheFactory)($name),
-            /** @var AbstractSecretManager */
+            /** @var SecretManagerInterface */
             call_user_func($callback),
             3600
         );

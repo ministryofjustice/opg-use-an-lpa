@@ -64,6 +64,9 @@ class ConfigProvider
 
                 // System messages
                 Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class,
+
+                // Secrets
+                Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
