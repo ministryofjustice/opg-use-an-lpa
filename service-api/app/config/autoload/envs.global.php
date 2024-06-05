@@ -78,7 +78,7 @@ return [
         'lpa-data-store' => [
             'adapter' => \Laminas\Cache\Storage\Adapter\Apcu::class,
             'options' => [
-                'ttl'       => 60,
+                'ttl'       => 3600,
                 'namespace' => 'lpaDataStoreSecretManager',
             ],
         ],
