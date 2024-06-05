@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-03T09:51:44+00:00\n"
+"POT-Creation-Date: 2024-06-05T09:48:44+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -365,9 +365,9 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:41
 #: src/Actor/templates/actor/contact-details.html.twig:40
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
@@ -378,7 +378,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:56
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:126
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
@@ -695,7 +695,7 @@ msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
@@ -2213,9 +2213,9 @@ msgstr ""
 "ar y cyfrif eto"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:45
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:131
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 msgid "Cancel"
@@ -2330,7 +2330,7 @@ msgstr "Does gen i ddim ffôn neu alla i ddim defnyddio ffôn i dderbyn galwadau
 msgid "We may also contact you by email on"
 msgstr "Mae’n bosib y byddwn hefyd yn cysylltu â chi dros yr e-bost ar"
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
 msgid "Your activation key"
 msgstr "Eich allwedd cadarnhau cyfrif"
 
@@ -2340,33 +2340,17 @@ msgstr "Beth yw eich bysell actifadu?"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
 msgid ""
-"Make sure this is the activation key in the letter we sent you. We will not be "
-"able to find the LPA if you enter an activation key we sent to someone else - "
-"even if it’s for the same LPA."
+"The donor and each of the attorneys will have their own activation key. The "
+"activation key and date of birth must be for the same person."
 msgstr ""
-"Gwnewch yn siŵr mai dyma'r allwedd cadarnhau yn y llythyr a anfonwyd atoch. Ni "
-"fyddwn yn gallu dod o hyd i’r atwrneiaeth arhosol os byddwch yn rhoi allwedd "
-"cadarnhau a anfonwyd at rywun arall – hyd yn oed os yw ar gyfer yr un "
-"atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
-msgid "Your activation key:"
-msgstr "O ran eich allwedd cadarnhau:"
-
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:31
-msgid "can only be used once"
-msgstr "dim ond unwaith gellir ei defnyddio"
-
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
 msgid ""
-"expired one year after the date on the letter you can <a href=\"%link%\" "
-"class=\"govuk-link\">request a new key</a>"
+"If you’re named on 2 or more LPAs, you have a different activation key for "
+"each LPA."
 msgstr ""
-"mae eich allwedd yn dod i ben flwyddyn ar ôl y dyddiad ar y llythyr. Os yw "
-"eich allwedd wedi dod i ben, gallwch <a href=\"%link%\" class=\"govuk-"
-"link\">ofyn am allwedd newydd</a>"
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:32
 msgid ""
 "Activation keys are 13 letters and numbers long and start with a C<br/>For "
 "example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
@@ -2391,34 +2375,16 @@ msgstr "Er enghraifft, 31 03 1980"
 msgid "What is the LPA reference number?"
 msgstr "Beth yw’r Cyfeirnod LPA?"
 
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:24
-msgid "Where to find the reference number"
-msgstr "Cael hyd i’ch cyfeirnod LPA"
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:29
-msgid ""
-"The reference number is printed on the letter that told you the <abbr "
-"title=\"lasting power of attorney\">LPA</abbr> had been registered."
-msgstr ""
-"Gellir gweld cyfeirnod yn y llythyr oedd yn rhoi gwybod i chi fod yr LPA wedi "
-"ei chofrestru."
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:20
+msgid "The reference number is in the same letter that has your activation key."
+msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:48
 msgid ""
-"You can also find the reference number on the <abbr title=\"lasting power of "
-"attorney\">LPA</abbr> or any related letters from the Office of the Public "
-"Guardian."
+"LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
 msgstr ""
-"Gwelir y cyfeirnod hefyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
-"neu unrhyw lythyr cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus."
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:31
-msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
-msgstr "Bydd wedi ei nodi fel ‘cyfeirnod OPG’ neu ‘Ein cyf’ neu ‘Rhif achos’."
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:39
-msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
-msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-0000-0000"
+"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000.<br><br>"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:3
 msgid "We’ve signed you out"
@@ -3458,14 +3424,30 @@ msgid "The donor's details"
 msgstr "Manylion y rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:21
-msgid "The reference number is in the same letter that has your activation key."
-msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
-
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:32
 msgid ""
-"LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
+"The LPA reference number (also called 'OPG reference number' or 'Our ref') is "
+"on the first page of the paper LPA and on any letter you get from the Office "
+"of the Public Guardian."
 msgstr ""
-"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000.<br><br>"
+"Mae’r cyfeirnod LPA (a elwir hefyd yn ‘cyfeirnod OPG’ neu ‘Ein cyf’) ar "
+"dudalen gyntaf yr LPA papur ac wedi’i argraffu ar unrhyw lythyr a gewch gan "
+"Swyddfa’r Gwarcheidwad Cyhoeddus."
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:28
+msgid "It will be 12 numbers long and start with a 7."
+msgstr "Bydd yn 12 rhif ac yn dechrau gyda rhif 7."
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:34
+msgid "My reference number is not 12 numbers long"
+msgstr "Nid yw fy nghyfeirnod yn 12 rhif"
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:38
+msgid ""
+"If an LPA's reference number is not 12 numbers long, you cannot currently add "
+"that LPA to the service."
+msgstr ""
+"Os nad yw cyfeirnod yr atwrneiaeth arhosol yn 12 rhif, ni allwch ei ychwanegu "
+"at y gwasanaeth ar hyn o bryd."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:15
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:13
@@ -6587,26 +6569,54 @@ msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
 #~ msgid ""
-#~ "The LPA reference number (also called 'OPG reference number' or 'Our ref') "
-#~ "is on the first page of the paper LPA and on any letter you get from the "
-#~ "Office of the Public Guardian."
+#~ "Make sure this is the activation key in the letter we sent you. We will not "
+#~ "be able to find the LPA if you enter an activation key we sent to someone "
+#~ "else - even if it’s for the same LPA."
 #~ msgstr ""
-#~ "Mae’r cyfeirnod LPA (a elwir hefyd yn ‘cyfeirnod OPG’ neu ‘Ein cyf’) ar "
-#~ "dudalen gyntaf yr LPA papur ac wedi’i argraffu ar unrhyw lythyr a gewch gan "
-#~ "Swyddfa’r Gwarcheidwad Cyhoeddus."
+#~ "Gwnewch yn siŵr mai dyma'r allwedd cadarnhau yn y llythyr a anfonwyd atoch. "
+#~ "Ni fyddwn yn gallu dod o hyd i’r atwrneiaeth arhosol os byddwch yn rhoi "
+#~ "allwedd cadarnhau a anfonwyd at rywun arall – hyd yn oed os yw ar gyfer yr "
+#~ "un atwrneiaeth arhosol."
 
-#~ msgid "It will be 12 numbers long and start with a 7."
-#~ msgstr "Bydd yn 12 rhif ac yn dechrau gyda rhif 7."
+#~ msgid "Your activation key:"
+#~ msgstr "O ran eich allwedd cadarnhau:"
 
-#~ msgid "My reference number is not 12 numbers long"
-#~ msgstr "Nid yw fy nghyfeirnod yn 12 rhif"
+#~ msgid "can only be used once"
+#~ msgstr "dim ond unwaith gellir ei defnyddio"
 
 #~ msgid ""
-#~ "If an LPA's reference number is not 12 numbers long, you cannot currently "
-#~ "add that LPA to the service."
+#~ "expired one year after the date on the letter you can <a href=\"%link%\" "
+#~ "class=\"govuk-link\">request a new key</a>"
 #~ msgstr ""
-#~ "Os nad yw cyfeirnod yr atwrneiaeth arhosol yn 12 rhif, ni allwch ei "
-#~ "ychwanegu at y gwasanaeth ar hyn o bryd."
+#~ "mae eich allwedd yn dod i ben flwyddyn ar ôl y dyddiad ar y llythyr. Os yw "
+#~ "eich allwedd wedi dod i ben, gallwch <a href=\"%link%\" class=\"govuk-"
+#~ "link\">ofyn am allwedd newydd</a>"
+
+#~ msgid "Where to find the reference number"
+#~ msgstr "Cael hyd i’ch cyfeirnod LPA"
+
+#~ msgid ""
+#~ "The reference number is printed on the letter that told you the <abbr "
+#~ "title=\"lasting power of attorney\">LPA</abbr> had been registered."
+#~ msgstr ""
+#~ "Gellir gweld cyfeirnod yn y llythyr oedd yn rhoi gwybod i chi fod yr LPA "
+#~ "wedi ei chofrestru."
+
+#~ msgid ""
+#~ "You can also find the reference number on the <abbr title=\"lasting power "
+#~ "of attorney\">LPA</abbr> or any related letters from the Office of the "
+#~ "Public Guardian."
+#~ msgstr ""
+#~ "Gwelir y cyfeirnod hefyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</"
+#~ "abbr> neu unrhyw lythyr cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus."
+
+#~ msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
+#~ msgstr "Bydd wedi ei nodi fel ‘cyfeirnod OPG’ neu ‘Ein cyf’ neu ‘Rhif achos’."
+
+#~ msgid ""
+#~ "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
+#~ msgstr ""
+#~ "Mae cyfeirnodau LPA yn cynnwys 12 rhif<br/>Er enghraifft, 7000-0000-0000"
 
 #~ msgid ""
 #~ "You cannot use a download or print out of this <abbr title=\"lasting power "

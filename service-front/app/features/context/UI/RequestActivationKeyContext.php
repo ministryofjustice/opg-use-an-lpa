@@ -1754,5 +1754,4 @@ class RequestActivationKeyContext implements Context
 
         $this->ui->pressButton('Continue');
     }
-
 }

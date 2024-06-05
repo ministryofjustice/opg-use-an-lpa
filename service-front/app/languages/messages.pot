@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-04T11:11:03+00:00\n"
+"POT-Creation-Date: 2024-06-05T09:48:44+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -271,7 +271,7 @@ msgstr ""
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
@@ -282,7 +282,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:56
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:126
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
@@ -526,7 +526,7 @@ msgid "Check your answers"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:31
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr ""
@@ -1429,9 +1429,9 @@ msgid "you will need to request a new activation key if you want to add the LPA 
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:45
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:131
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 msgid "Cancel"
@@ -1534,19 +1534,11 @@ msgid "What is your activation key?"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
-msgid "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA."
+msgid "The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
-msgid "Your activation key:"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:31
-msgid "can only be used once"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
-msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
+msgid "If you’re named on 2 or more LPAs, you have a different activation key for each LPA."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:32
@@ -1569,24 +1561,13 @@ msgstr ""
 msgid "What is the LPA reference number?"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:24
-msgid "Where to find the reference number"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:29
-msgid "The reference number is printed on the letter that told you the <abbr title=\"lasting power of attorney\">LPA</abbr> had been registered."
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:20
+msgid "The reference number is in the same letter that has your activation key."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
-msgid "You can also find the reference number on the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:31
-msgid "It may be marked 'OPG reference number' or 'Our ref' or 'Case number'."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:39
-msgid "LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000"
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:48
+msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:3
@@ -2448,11 +2429,19 @@ msgid "The donor's details"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:21
-msgid "The reference number is in the same letter that has your activation key."
+msgid "The LPA reference number (also called 'OPG reference number' or 'Our ref') is on the first page of the paper LPA and on any letter you get from the Office of the Public Guardian."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:32
-msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:28
+msgid "It will be 12 numbers long and start with a 7."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:34
+msgid "My reference number is not 12 numbers long"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:38
+msgid "If an LPA's reference number is not 12 numbers long, you cannot currently add that LPA to the service."
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:15
