@@ -11,14 +11,13 @@ use RuntimeException;
 
 class LpaDataStoreSecretManager implements SecretManagerInterface
 {
-
     public const SECRET_NAME = 'lpa-data-store-secret';
 
     public function __construct(
         private SecretsManagerClient $secretsManagerClient,
         private LoggerInterface $logger,
-    )
-    {}
+    ) {
+    }
 
     public function getSecret(): string
     {
