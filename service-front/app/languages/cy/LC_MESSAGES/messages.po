@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-05T09:48:44+00:00\n"
+"POT-Creation-Date: 2024-06-05T09:54:28+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -378,7 +378,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:56
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:126
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
@@ -2380,7 +2380,6 @@ msgid "The reference number is in the same letter that has your activation key."
 msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:48
 msgid ""
 "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
 msgstr ""
