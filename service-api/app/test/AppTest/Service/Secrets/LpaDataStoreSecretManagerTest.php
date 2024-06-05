@@ -25,7 +25,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
     public function setUp(): void
     {
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
-        $this->logger = $this->prophesize(LoggerInterface::class);
+        $this->logger               = $this->prophesize(LoggerInterface::class);
     }
 
     #[Test]

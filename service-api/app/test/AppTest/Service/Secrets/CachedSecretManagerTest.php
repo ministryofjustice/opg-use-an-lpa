@@ -15,7 +15,7 @@ class CachedSecretManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    const CACHE_NAME = 'lpa-data-store';
+    private const CACHE_NAME = 'lpa-data-store';
 
     #[Test]
     public function it_can_be_instantiated(): void
