@@ -103,6 +103,6 @@ Feature: Ask for an activation key
 
   @ui
   Scenario: As a user I want to cancel entering a reference number and return back to the dashboard
-    Given I am on the request an activation key page
+    Given I am on the add an LPA reference number page
     When I click the Cancel link
     Then I am redirected to the LPA dashboard page
