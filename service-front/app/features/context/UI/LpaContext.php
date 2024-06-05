@@ -3196,4 +3196,32 @@ class LpaContext implements Context
     {
         $this->systemMessageData = [];
     }
+
+    /**
+     * @Given /^I am on the add an LPA reference number page$/
+     */
+    public function iAmOnTheAddLPAReferenceNumberPage(): void
+    {
+        $this->ui->visit('/lpa/add-by-key/activation-key');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
+        $this->ui->pressButton('Continue');
+
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+
+        $this->ui->pressButton('Continue');
+
+        $this->ui->assertPageAddress('/lpa/add-by-key/lpa-reference-number');
+    }
+
+    /**
+     * @When /^I click the Cancel link$/
+     */
+    public function iClickTheCancelLink(): void
+    {
+        $this->ui->clickLink('Cancel');
+    }
 }

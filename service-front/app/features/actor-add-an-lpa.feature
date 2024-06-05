@@ -159,3 +159,9 @@ Feature: Add an LPA
     When I go to the check lpa page without filling in all the pages
     Then I am redirected to the activation key page
     And My filled answers have been cleared
+
+  @ui
+  Scenario: As a user I want to cancel entering a reference number and return back to the dashboard
+    Given I am on the add an LPA reference number page
+    When I click the Cancel link
+    Then I am redirected to the LPA dashboard page

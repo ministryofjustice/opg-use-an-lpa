@@ -1755,11 +1755,4 @@ class RequestActivationKeyContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I click the Cancel link$/
-     */
-    public function iClickTheCancelLink()
-    {
-        $this->ui->clickLink('Cancel');
-    }
 }
