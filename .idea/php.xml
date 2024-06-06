@@ -606,7 +606,7 @@
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.3.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.2">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -658,7 +658,7 @@
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.3.1">
+            <debugger_info debugger="xdebug" debugger_version="3.3.2">
               <debug_extensions />
             </debugger_info>
           </debuggers>
@@ -878,8 +878,8 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="Psalm">

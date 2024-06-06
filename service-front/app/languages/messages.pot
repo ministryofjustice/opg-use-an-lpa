@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-04-26T13:09:57+00:00\n"
+"POT-Creation-Date: 2024-05-31T10:29:10+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -269,7 +269,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
 #: src/Actor/templates/actor/activate-account-not-found.html.twig:41
 #: src/Actor/templates/actor/contact-details.html.twig:40
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:35
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:44
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
@@ -287,7 +287,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
-#: src/Actor/templates/actor/home-page.html.twig:44
+#: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
 msgid "Continue"
@@ -1524,7 +1524,7 @@ msgstr ""
 msgid "We may also contact you by email on"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:30
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
 msgid "Your activation key"
 msgstr ""
 
@@ -1533,14 +1533,14 @@ msgid "What is your activation key?"
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
-msgid "The donor and each of the attorneys will have their own activation key. The activation key and date of birth must be for the same person."
+msgid "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
-msgid "If you’re named on 2 or more LPAs, you have a different activation key for each LPA."
+msgid "Your activation key:"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:32
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
 msgstr ""
 
@@ -2645,7 +2645,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
-#: src/Common/templates/partials/header/default.html.twig:38
+#: src/Common/templates/partials/header/default.html.twig:41
 msgid "Sign out"
 msgstr ""
 
@@ -2849,23 +2849,23 @@ msgstr ""
 msgid "Sign in or create an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:21
+#: src/Actor/templates/actor/home-page.html.twig:24
 msgid "Do you have a Use a lasting power of attorney account?"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:28
+#: src/Actor/templates/actor/home-page.html.twig:31
 msgid "Yes, I already have an account"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:30
+#: src/Actor/templates/actor/home-page.html.twig:33
 msgid "If you made an LPA online, you will still need to create an account to use this service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:33
+#: src/Actor/templates/actor/home-page.html.twig:36
 msgid "No, this is the first time I’ve used the service"
 msgstr ""
 
-#: src/Actor/templates/actor/home-page.html.twig:42
+#: src/Actor/templates/actor/home-page.html.twig:45
 msgid "If you're named on more than one LPA, you can add all those LPAs to your account."
 msgstr ""
 
@@ -3432,7 +3432,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
-#: src/Common/templates/partials/header/default.html.twig:36
+#: src/Common/templates/partials/header/default.html.twig:39
 msgid "Settings"
 msgstr ""
 
@@ -4041,22 +4041,22 @@ msgid "%service_name% menu"
 msgstr ""
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
-#: src/Common/templates/partials/header/default.html.twig:37
+#: src/Common/templates/partials/header/default.html.twig:40
 msgid "Your LPAs"
 msgstr ""
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
-#: src/Common/templates/partials/header/one-login.html.twig:36
+#: src/Common/templates/partials/header/one-login.html.twig:30
 msgid "Ancillary navigation"
 msgstr ""
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
-#: src/Common/templates/partials/header/default.html.twig:28
+#: src/Common/templates/partials/header/default.html.twig:31
 msgid "Last signed in:"
 msgstr ""
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
-#: src/Common/templates/partials/header/default.html.twig:30
+#: src/Common/templates/partials/header/default.html.twig:33
 msgid "Never"
 msgstr ""
 
@@ -4569,4 +4569,12 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:31
+msgid "can only be used once"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
+msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 msgstr ""
