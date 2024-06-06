@@ -71,7 +71,7 @@ class ConfigProvider
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
-                Service\Secrets\OneLoginIdentityKeyPairManager::class,
+                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
                 Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
