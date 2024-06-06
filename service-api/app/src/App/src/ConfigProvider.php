@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App;
 
 use Aws;
-use Http;
 use Facile;
+use Http;
 use Laminas;
 use Psr;
 
@@ -71,7 +71,8 @@ class ConfigProvider
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
-                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
+                Service\Secrets\OneLoginIdentityKeyPairManager::class,
+                Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
                 // Services
