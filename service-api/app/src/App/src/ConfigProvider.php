@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App;
 
 use Aws;
-use Http;
 use Facile;
+use Http;
 use Laminas;
 use Psr;
 
@@ -63,12 +63,16 @@ class ConfigProvider
                     => Facile\OpenIDClient\Issuer\IssuerBuilder::class,
 
                 // System messages
-                Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class
+                Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class,
+
+                // Secrets
+                Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
+                Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
                 // Services
@@ -117,9 +121,12 @@ class ConfigProvider
                 Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
                     Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
                 ],
-                Service\SystemMessage\SystemMessage::class => [
-                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class
-                ]
+                Service\SystemMessage\SystemMessage::class                                  => [
+                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
+                ],
+                Service\Secrets\LpaDataStoreSecretManager::class                            => [
+                    Service\Secrets\CachedSecretManagerDelegatorFactory::class,
+                ],
             ],
         ];
     }
