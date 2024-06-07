@@ -1,4 +1,4 @@
-@actor @passwordNeedsReset
+@actor @passwordNeedsReset @ff:allow_gov_one_login:false
 Feature: A user of the system is able to login
   As a user of the lpa application
   I can login using my credentials

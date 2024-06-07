@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use Http\Adapter\Guzzle6\Client;
-use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
 use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
-use Laminas\ConfigAggregator\ConfigAggregator;
-use Mezzio\Middleware\ErrorResponseGenerator;
-use Mezzio\Container\ErrorResponseGeneratorFactory;
+use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
-use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
+use Http\Adapter\Guzzle6\Client;
 use Laminas\Cache\Storage\Adapter\Memory;
+use Laminas\ConfigAggregator\ConfigAggregator;
+use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
+use Mezzio\Container\ErrorResponseGeneratorFactory;
+use Mezzio\Middleware\ErrorResponseGenerator;
 
 return [
     ConfigAggregator::ENABLE_CACHE => false,
@@ -37,7 +37,7 @@ return [
         'delete_lpa_feature'                                         => true,
         'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => true,
         'instructions_and_preferences'                               => true,
-        'allow_gov_one_login'                                        => false,
+        'allow_gov_one_login'                                        => true,
     ],
     'notify'                       => [
         'api' => [
@@ -124,6 +124,9 @@ return [
                 'requests_per_interval' => 4,
             ],
         ],
+    ],
+    'twig'                         => [
+        'strict_variables' => true,
     ],
     'whoops'                       => new MergeRemoveKey(),
 ];

@@ -167,6 +167,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I am currently signed in$/
+     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
      * @When /^I sign in$/
      */
     public function iAmCurrentlySignedIn(): void
@@ -1621,25 +1622,30 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request login to my account that was deleted$/
+     * @When /^I attempt to login to my deleted account$/
      */
     public function iRequestLoginToMyAccountThatWasDeleted(): void
     {
-        $this->ui->visit('/login');
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->iHaveLoggedInToOneLogin('English');
+            $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
+        } else {
+            $this->ui->visit('/login');
 
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
+            $this->ui->fillField('email', $this->userEmail);
+            $this->ui->fillField('password', $this->userPassword);
 
-        // API call for authentication
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            )
-        );
+            // API call for authentication
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
 
-        $this->ui->pressButton('Sign in');
+            $this->ui->pressButton('Sign in');
+        }
     }
 
     /**
@@ -2343,7 +2349,7 @@ class AccountContext implements Context
             )
         );
 
-      $this->apiFixtures->append(
+        $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),

@@ -24,6 +24,9 @@ return [
             'Mezzio\WhoopsPageHandler'    => Container\WhoopsPageHandlerFactory::class,
         ],
     ],
+    'twig'         => [
+        'strict_variables' => true,
+    ],
     'whoops'       => [
         'json_exceptions' => [
             'display'    => true,

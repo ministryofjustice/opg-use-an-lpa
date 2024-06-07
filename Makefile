@@ -20,8 +20,7 @@ up:
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
-	$(NOTIFY)
-	$(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
+	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: up
 
 stop:

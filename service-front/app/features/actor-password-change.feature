@@ -1,4 +1,4 @@
-@actor @passwordchange
+@actor @passwordchange @ff:allow_gov_one_login:false
 Feature: Authenticated Account Password Change
   As a user
   I want to update my password to a new value and clear previous value
