@@ -6,26 +6,28 @@ use App\Service\Log\RequestTracingLogProcessorFactory;
 use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
 use BehatTest\GuzzleHttp\TestClientFactory;
+use Elie\PHPDI\Config\ConfigInterface;
 use GuzzleHttp\Client;
 use Laminas\ConfigAggregator\ConfigAggregator;
 
 return [
-    'debug'                        => true,
-    ConfigAggregator::ENABLE_CACHE => false,
-    'dependencies'                 => [
+    'debug'                                  => true,
+    ConfigAggregator::ENABLE_CACHE           => false,
+    ConfigInterface::ENABLE_CACHE_DEFINITION => false,
+    'dependencies'                           => [
         'factories' => [
             Client::class => TestClientFactory::class,
             Sdk::class    => SdkFactory::class,
         ],
     ],
-    'aws'                          => [
+    'aws'                                    => [
         'region'   => getenv('AWS_REGION') ?: 'eu-west-1',
         'version'  => 'latest',
         'DynamoDb' => [
             'endpoint' => 'https://dynamodb',
         ],
     ],
-    'monolog'                      => [
+    'monolog'                                => [
         'handlers'   => [
             'default' => [ // default configuration in normal operation
                 'type'       => 'test',
@@ -46,7 +48,7 @@ return [
             ],
         ],
     ],
-    'repositories'                 => [
+    'repositories'                           => [
         'dynamodb' => [
             'actor-codes-table'     => 'actor-codes',
             'actor-users-table'     => 'actor-users',
@@ -55,22 +57,22 @@ return [
             'user-lpa-actor-map'    => 'user-actor-lpa-map',
         ],
     ],
-    'sirius_api'                   => [
+    'sirius_api'                             => [
         'endpoint' => 'http://api-gateway-pact-mock',
     ],
-    'codes_api'                    => [
+    'codes_api'                              => [
         'endpoint'          => 'http://lpa-codes-pact-mock',
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
-    'iap_images_api'               => [
+    'iap_images_api'                         => [
         'endpoint' => 'http://iap-images-mock',
     ],
-    'one_login'                    => [
+    'one_login'                              => [
         'client_id'       => 'client-id',
         'discovery_url'   => 'http://one-login-mock/.well-known/openid-configuration',
         'identity_issuer' => 'http://identity.one-login-mock/',
     ],
-    'feature_flags'                => [
+    'feature_flags'                          => [
         'allow_gov_one_login' => true,
     ],
 ];
