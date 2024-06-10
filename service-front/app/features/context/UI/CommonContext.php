@@ -7,7 +7,6 @@ namespace BehatTest\Context\UI;
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
-use BehatTest\Context\ContextUtilities;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\ApiClient\Client;
@@ -20,7 +19,6 @@ use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\Definition\Reference;
 use Exception;
-use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
@@ -141,60 +139,6 @@ class CommonContext implements Context
             $this->ui->fillField('usageCookies', 'no');
         }
         $this->ui->pressButton('Save changes');
-    }
-
-    /**
-     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
-     */
-    public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
-    {
-        $this->iAmAbleToLogin();
-
-        $userEmail  = 'test@test.com';
-        $password   = 'pa33w0rd';
-        $userActive = true;
-        $userId     = '123';
-
-        $this->ui->fillField('email', $userEmail);
-        $this->ui->fillField('password', $password);
-
-        if ($userActive) {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'Id'        => $userId,
-                            'Email'     => $userEmail,
-                            'LastLogin' => '2020-01-01',
-                        ]
-                    ),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-
-            // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode([]),
-                    'LpaService::getLpas'
-                )
-            );
-        } else {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_UNAUTHORIZED,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-        }
-
-        $this->ui->pressButton('Sign in');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**

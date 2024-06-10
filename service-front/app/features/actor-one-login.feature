@@ -1,23 +1,23 @@
-@actor @onelogin
+@actor @onelogin @ff:allow_gov_one_login:true
 Feature: Authenticate One Login
   As a user of the application
   I can login using GovUK OneLogin
   So that I am sure my account is secure
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I initiate authentication via one login
     Given I am on the one login page
     When I click the one login button
     Then I am redirected to the redirect page in English
 
-  @ui @ff:allow_gov_one_login:true @welsh
+  @ui @welsh
   Scenario: I initiate authentication via one login in Welsh
     Given I am on the one login page
     And I select the Welsh language
     When I click the one login button
     Then I am redirected to the redirect page in Welsh
 
-  @ui @ff:allow_gov_one_login:true @welsh
+  @ui @welsh
   Scenario Outline: One Login returns a user error
     Given I have logged in to one login in <language>
     When One Login returns a "<error_type>" error
@@ -30,7 +30,7 @@ Feature: Authenticate One Login
     | Welsh    | access_denied           | Mae problem                             |
     | Welsh    | temporarily_unavailable | Mae problem                             |
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario Outline: One Login returns a system error
     Given I have logged in to one login in English
     When One Login returns a "<error_type>" error
@@ -44,32 +44,32 @@ Feature: Authenticate One Login
       | unsupported_response_type |
       | server_error              |
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I am redirected to the dashboard when local account does exist
     Given I have logged in to one login in English
     When I have an email address that matches a local account
     Then I see the LPA dashboard with any LPAs that are in the account
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I am redirected to the dashboard when I am signed in and visit the homepage
     Given I have logged in to one login in English
     When I have an email address that matches a local account
     When I visit the homepage
     Then I am redirected to the LPA dashboard page
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I am redirected to an empty dashboard when local account does not exist
     Given I have logged in to one login in English
     When I have an email address that does not match a local account
     Then I see an empty LPA dashboard
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I am redirected to the dashboard when local account already flagged as one-login
     Given I have logged in to one login in English
     When I have an account whose sub matches a local account
     Then I see the LPA dashboard with any LPAs that are in the account
 
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: I am redirected to the one login page from the login page
     When I access the login page
     Then I am redirected to the one login page

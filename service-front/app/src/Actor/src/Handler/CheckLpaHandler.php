@@ -201,7 +201,8 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         [
                             'form'     => $this->form,
                             'lpa'      => $lpa,
-                            'user'     => $actor,
+                            'user'     => $this->user,
+                            'actor'    => $actor,
                             'userRole' => $actorRole,
                         ]
                     )
