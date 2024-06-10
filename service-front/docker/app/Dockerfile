@@ -9,7 +9,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN set -xe \
   && apk add --update --no-cache icu gettext fcgi \
-  && install-php-extensions apcu redis-^5 intl gettext \
+  && install-php-extensions apcu redis-^5 intl gettext opcache \
   && rm /usr/bin/install-php-extensions
 
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
