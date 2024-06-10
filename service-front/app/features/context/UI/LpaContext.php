@@ -3224,14 +3224,13 @@ class LpaContext implements Context
     {
         $this->ui->clickLink('Cancel');
     }
-    
+
     /**
      * @Given /^I click Back to your LPAs$/
      */
     public function iClickBackToYourLPAsLink(): void
     {
         $this->ui->clickLink('Back to your LPAs');
-        $this->ui->visit('/lpa/dashboard');
     }
 
     /**
