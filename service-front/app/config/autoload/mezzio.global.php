@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Elie\PHPDI\Config\ConfigInterface;
 use Laminas\ConfigAggregator\ConfigAggregator;
 
 return [
@@ -9,7 +10,8 @@ return [
     // directive, to disable configuration caching. Toggling development mode
     // will also disable it by default; clear the configuration cache using
     // `composer clear-config-cache`.
-    ConfigAggregator::ENABLE_CACHE => true,
+    ConfigAggregator::ENABLE_CACHE           => true,
+    ConfigInterface::ENABLE_CACHE_DEFINITION => true,
 
     // Enable debugging; typically used to provide debugging information within templates.
     'debug'  => false,
