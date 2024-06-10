@@ -3,13 +3,11 @@
 declare(strict_types=1);
 
 use Aws\Sdk;
+use BehatTest\Common\Service\ApiClient\TestGuzzleClientFactory;
 use BehatTest\Common\Service\Aws\SdkFactory;
-use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
-use Common\Middleware\ErrorHandling\GoneHandler;
-use Common\Middleware\ErrorHandling\GoneHandlerFactory;
+use Common\Middleware\ErrorHandling\{GoneHandler, GoneHandlerFactory};
 use Common\Service\Log\RequestTracingLogProcessorFactory;
-use Elie\PHPDI\Config\ConfigInterface;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Laminas\Cache\Storage\Adapter\Memory;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
@@ -17,38 +15,38 @@ use Mezzio\Container\ErrorResponseGeneratorFactory;
 use Mezzio\Middleware\ErrorResponseGenerator;
 
 return [
-    ConfigAggregator::ENABLE_CACHE           => false,
-    ConfigInterface::ENABLE_CACHE_DEFINITION => false,
-    'debug'                                  => false,
-    'dependencies'                           => [
+    ConfigAggregator::ENABLE_CACHE => false,
+    'debug'                        => false,
+    'dependencies'                 => [
         'factories' => [
-            Client::class                 => TestClientFactory::class,
+            Client::class                 => TestGuzzleClientFactory::class,
             Sdk::class                    => SdkFactory::class,
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
-            GoneHandler::class            => GoneHandlerFactory::class,
+            GoneHandler::class
+                => GoneHandlerFactory::class,
         ],
     ],
-    'api'                                    => [
+    'api'                          => [
         'uri' => 'http://localhost',
     ],
-    'pdf'                                    => [
+    'pdf'                          => [
         'uri' => 'http://pdf-service',
     ],
-    'aws'                                    => [
+    'aws'                          => [
         //'debug'   => true,
     ],
-    'feature_flags'                          => [
+    'feature_flags'                => [
         'delete_lpa_feature'                                         => true,
         'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => true,
         'instructions_and_preferences'                               => true,
         'allow_gov_one_login'                                        => true,
     ],
-    'notify'                                 => [
+    'notify'                       => [
         'api' => [
             'key' => 'not_a_real_key-22996155-4e04-42d0-8d1a-d1d3998e2149-be30242e-049d-4039-b43e-14aa8a6a76a4',
         ],
     ],
-    'monolog'                                => [
+    'monolog'                      => [
         'handlers'   => [
             'default' => [ // default configuration in normal operation
                 'type'       => 'test',
@@ -69,14 +67,14 @@ return [
             ],
         ],
     ],
-    'session'                                => [
+    'session'                      => [
         'key'           => [
             // KMS alias to use for data key generation.
             'alias' => 'alias/viewer-sessions-cmk-alias',
         ],
         'cookie_secure' => true,
     ],
-    'ratelimits'                             => [
+    'ratelimits'                   => [
         'viewer_code_failure' => [
             'type'    => 'keyed',
             'storage' => [
@@ -129,8 +127,8 @@ return [
             ],
         ],
     ],
-    'twig'                                   => [
+    'twig'                         => [
         'strict_variables' => true,
     ],
-    'whoops'                                 => new MergeRemoveKey(),
+    'whoops'                       => new MergeRemoveKey(),
 ];

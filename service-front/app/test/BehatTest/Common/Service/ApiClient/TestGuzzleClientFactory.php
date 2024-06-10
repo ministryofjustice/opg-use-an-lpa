@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Common\Service\ApiClient;
+namespace BehatTest\Common\Service\ApiClient;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\HandlerStack;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -12,7 +13,7 @@ use RuntimeException;
 /**
  * Builds a Guzzle Client instance configured with appropriate settings
  */
-class GuzzleClientFactory
+class TestGuzzleClientFactory
 {
     public function __invoke(ContainerInterface $container): ClientInterface
     {
@@ -30,6 +31,8 @@ class GuzzleClientFactory
             [
                 'base_url'    => $config['api']['uri'],
                 'http_errors' => false,
+                'timeout'     => 2,
+                'handler'     => $container->get(HandlerStack::class),
             ]
         );
     }

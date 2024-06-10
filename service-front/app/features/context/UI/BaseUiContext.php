@@ -6,8 +6,6 @@ namespace BehatTest\Context\UI;
 
 use Acpr\Behat\Psr\Context\Psr11MinkAwareContext;
 use Acpr\Behat\Psr\Context\RuntimeMinkContext;
-use Amp\Process\Internal\Posix\Handle;
-use App\Service\ApiClient\Client;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -17,16 +15,9 @@ use Common\Service\Pdf\StylesService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Stream;
 use Laminas\Stratigility\Middleware\ErrorHandler;
-use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
-use function DI\get;
 use function random_bytes;
 
 require_once __DIR__ . '/../../../vendor/phpunit/phpunit/src/Framework/Assert/Functions.php';
@@ -48,18 +39,19 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 
         //Create handler stack and push to container
         $mockHandler  = $container->get(MockHandler::class);
-        $handlerStack = HandlerStack::create($mockHandler);
-        $history      = Middleware::history($this->mockClientHistoryContainer);
+        $handlerStack = new HandlerStack($mockHandler);
+        $handlerStack->push(Middleware::prepareBody(), 'prepare_body');
+        $history = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
-        $handlerStack->remove('http_errors');
-        $handlerStack->remove('cookies');
-        $handlerStack->remove('allow_redirects');
         $container->set(HandlerStack::class, $handlerStack);
 
         $this->apiFixtures = $mockHandler;
         $this->awsFixtures = $container->get(AwsMockHandler::class);
 
-        $container->set(StylesService::class, new StylesService('./test/CommonTest/assets/stylesheets/pdf.css'));
+        $container->set(
+            StylesService::class,
+            new StylesService('./test/CommonTest/assets/stylesheets/pdf.css'),
+        );
     }
 
     /**

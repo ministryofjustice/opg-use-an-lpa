@@ -46,6 +46,7 @@
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
         "facile-it/php-openid-client": "^0.3.5",
+        "guzzlehttp/guzzle": "^7.8.1",
         "laminas/laminas-cache": "^3.6",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
         "laminas/laminas-cache-storage-adapter-memory": "^2.1",
@@ -66,8 +67,7 @@
         "mezzio/mezzio-session": "^1.3",
         "mezzio/mezzio-twigrenderer": "^2.3",
         "nesbot/carbon": "^2.56.0",
-        "paragonie/halite": "^5.0",
-        "php-http/guzzle6-adapter": "^2.0"
+        "paragonie/halite": "^5.0"
     },
     "require-dev": {
         "behat/behat": "^3.6",
@@ -132,16 +132,16 @@
         "clear-config-cache": "php bin/clear-config-cache.php",
         "dc": [
             "Composer\\Config::disableProcessTimeout",
-            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml"
+            "docker compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml -f ../../docker-compose.override.yml"
         ],
-        "dc-run": "@dc run --rm actor-app",
+        "dc-run": "@dc run --rm -i actor-app",
         "dc-php": "@dc-run php",
         "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",
         "cs-check": "@dc-php /app/vendor/bin/phpcs",
         "cs-fix": "@dc-php /app/vendor/bin/phpcbf",
         "unit-test": "@dc-php /app/vendor/bin/phpunit --colors=always",
-        "ui-test": "@dc-php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors",
+        "ui-test": "@dc-php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance --colors -vvv",
         "int-test": "@dc-php /app/vendor/bin/behat -p integration --colors",
         "extract": "@dc-php console.php translation:update"
     }

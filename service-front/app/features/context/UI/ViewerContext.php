@@ -29,8 +29,7 @@ class ViewerContext implements Context
     use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
-
-    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
     /**
      * @Then /^a PDF is downloaded$/
@@ -86,11 +85,22 @@ class ViewerContext implements Context
 
     /**
      * @Given /^I am on the enter code page$/
+     * @Given /^I am on the triage page$/
+     * @Then /^I am taken back to the enter code page$/
      */
     public function iAmOnTheEnterCodePage()
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/home');
         $this->ui->assertPageAddress('/home');
+        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
     /**
@@ -99,14 +109,6 @@ class ViewerContext implements Context
     public function iAmOnTheStatsPage()
     {
         $this->ui->visit('/stats');
-    }
-
-    /**
-     * @Given /^I am on the triage page$/
-     */
-    public function iAmOnTheTriagePage()
-    {
-        $this->ui->visit('/home');
     }
 
     /**
@@ -138,15 +140,6 @@ class ViewerContext implements Context
         $this->iGiveAValidLPAShareCode();
         $this->iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect();
         $this->iAmViewingAValidLPA();
-    }
-
-    /**
-     * @Then /^I am taken back to the enter code page$/
-     */
-    public function iAmTakenBackToTheEnterCodePage()
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
     /**
@@ -761,6 +754,14 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/home');
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->lpaShareCode);
         $this->ui->pressButton('Continue');
@@ -874,7 +875,6 @@ class ViewerContext implements Context
      */
     public function iHaveAnErrorMessageInformingMeToTryAgain()
     {
-        $this->iAmTakenBackToTheEnterCodePage();
         $this->ui->assertPageContainsText(
             'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now ' .
                 'refreshed the page - please try to sign in again'
@@ -1047,6 +1047,14 @@ class ViewerContext implements Context
      */
     public function iRequestToViewAnLPAWithAnInvalidAccessCodeOf($accessCode)
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+        
         $this->ui->fillField('lpa_code', $accessCode);
         $this->ui->fillField('donor_surname', 'TestSurname');
         $this->ui->pressButton('Continue');
@@ -1067,6 +1075,14 @@ class ViewerContext implements Context
      */
     public function iRequestToViewAnLPAWithoutEnteringADonorSSurname()
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->fillField('lpa_code', 'ABCD1234EFGH');
         $this->ui->pressButton('Continue');
     }
@@ -1116,6 +1132,15 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Enter another code');
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->clickLink('Enter another code');
     }
 
@@ -1124,8 +1149,16 @@ class ViewerContext implements Context
      */
     public function iWantToSeeAnOptionToCheckAnotherLPA()
     {
-        $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText('I want to check another LPA');
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->clickLink('I want to check another LPA');
         $this->iGiveAValidLPAShareCode();
     }
@@ -1135,6 +1168,14 @@ class ViewerContext implements Context
      */
     public function iWantToSeeAnOptionToReEnterCode()
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->clickLink('Try another access code');
         $this->iGiveAValidLPAShareCode();
     }
