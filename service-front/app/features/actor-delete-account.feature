@@ -1,4 +1,4 @@
-@actor @actorDeleteAccount @ff:allow_gov_one_login:false
+@actor @actorDeleteAccount
 Feature: The user is able to delete their account
   As a user
   I want to be able to delete my account
@@ -28,7 +28,7 @@ Feature: The user is able to delete their account
     Then My account is deleted
     And I am logged out of the service and taken to the deleted account confirmation page
 
-  @ui
+  @ui @ff:allow_gov_one_login:false
   Scenario: As a user I cannot access my account once it has been deleted
     Given I have deleted my account
     When I attempt to login to my deleted account
