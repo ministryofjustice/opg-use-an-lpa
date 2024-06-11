@@ -7,9 +7,9 @@ namespace Common\Service\ApiClient;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Uri;
-use Http\Client\Exception\HttpException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -23,10 +23,13 @@ class Client
      *
      * @param ClientInterface $httpClient
      * @param string $apiBaseUri
-     * @param string|null $token
+     * @param ?string $traceId
      */
-    public function __construct(private ClientInterface $httpClient, private string $apiBaseUri, private string $traceId)
-    {
+    public function __construct(
+        private ClientInterface $httpClient,
+        private string $apiBaseUri,
+        private ?string $traceId,
+    ) {
     }
 
     /**
@@ -62,14 +65,12 @@ class Client
         try {
             $response = $this->httpClient->sendRequest($request);
 
-            switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
-            }
+            return match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK => $this->handleResponse($response),
+                default => throw ApiException::create(null, $response),
+            };
         } catch (ClientExceptionInterface $ex) {
-            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
+            $response = $ex instanceof BadResponseException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http GET request', $response, $ex, 502);
         }
@@ -92,17 +93,17 @@ class Client
         try {
             $response = $this->httpClient->sendRequest($request);
 
-            switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
-            }
+            return match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK,
+                StatusCodeInterface::STATUS_CREATED,
+                StatusCodeInterface::STATUS_ACCEPTED,
+                StatusCodeInterface::STATUS_NO_CONTENT => $this->handleResponse(
+                    $response
+                ),
+                default => throw ApiException::create(null, $response),
+            };
         } catch (ClientExceptionInterface $ex) {
-            $response        = $ex instanceof HttpException ? $ex->getResponse() : null;
+            $response        = $ex instanceof BadResponseException ? $ex->getResponse() : null;
             $responseMessage = $this->getResponseMessage($response, 'Error whilst making http POST request');
             throw ApiException::create($responseMessage, $response, $ex, 502);
         }
@@ -125,17 +126,17 @@ class Client
         try {
             $response = $this->httpClient->sendRequest($request);
 
-            switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
-            }
+            return match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK,
+                StatusCodeInterface::STATUS_CREATED,
+                StatusCodeInterface::STATUS_ACCEPTED,
+                StatusCodeInterface::STATUS_NO_CONTENT => $this->handleResponse(
+                    $response
+                ),
+                default => throw ApiException::create(null, $response),
+            };
         } catch (ClientExceptionInterface $ex) {
-            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
+            $response = $ex instanceof BadResponseException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http PUT request', $response, $ex, 502);
         }
@@ -158,17 +159,17 @@ class Client
         try {
             $response = $this->httpClient->sendRequest($request);
 
-            switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
-            }
+            return match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK,
+                StatusCodeInterface::STATUS_CREATED,
+                StatusCodeInterface::STATUS_ACCEPTED,
+                StatusCodeInterface::STATUS_NO_CONTENT => $this->handleResponse(
+                    $response
+                ),
+                default => throw ApiException::create(null, $response),
+            };
         } catch (ClientExceptionInterface $ex) {
-            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
+            $response = $ex instanceof BadResponseException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http PATCH request', $response, $ex, 502);
         }
@@ -190,17 +191,17 @@ class Client
         try {
             $response = $this->httpClient->sendRequest($request);
 
-            switch ($response->getStatusCode()) {
-                case StatusCodeInterface::STATUS_OK:
-                case StatusCodeInterface::STATUS_CREATED:
-                case StatusCodeInterface::STATUS_ACCEPTED:
-                case StatusCodeInterface::STATUS_NO_CONTENT:
-                    return $this->handleResponse($response);
-                default:
-                    throw ApiException::create(null, $response);
-            }
+            return match ($response->getStatusCode()) {
+                StatusCodeInterface::STATUS_OK,
+                StatusCodeInterface::STATUS_CREATED,
+                StatusCodeInterface::STATUS_ACCEPTED,
+                StatusCodeInterface::STATUS_NO_CONTENT => $this->handleResponse(
+                    $response
+                ),
+                default => throw ApiException::create(null, $response),
+            };
         } catch (ClientExceptionInterface $ex) {
-            $response = $ex instanceof HttpException ? $ex->getResponse() : null;
+            $response = $ex instanceof BadResponseException ? $ex->getResponse() : null;
 
             throw ApiException::create('Error whilst making http DELETE request', $response, $ex, 502);
         }
