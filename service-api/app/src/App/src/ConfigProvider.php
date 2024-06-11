@@ -71,7 +71,7 @@ class ConfigProvider
             'autowires'  => [
                 // these two KeyPairManagers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
-                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
+                Service\Secrets\OneLoginIdentityKeyPairManager::class,
                 Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
@@ -83,6 +83,7 @@ class ConfigProvider
                 Service\ApiClient\Client::class                => Service\ApiClient\ClientFactory::class,
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
                 Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
+                Service\Features\FeatureEnabled::class         => Service\Features\FeatureEnabledFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,
@@ -106,25 +107,21 @@ class ConfigProvider
                 // One Login
                 Service\Authentication\AuthorisationClientManager::class
                     => Service\Authentication\AuthorisationClientManagerFactory::class,
-                Service\Authentication\UserInfoService::class
-                    => Service\Authentication\UserInfoServiceFactory::class,
-
-                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
             ],
             'delegators' => [
-                Laminas\Stratigility\Middleware\ErrorHandler::class                         => [
+                Laminas\Stratigility\Middleware\ErrorHandler::class   => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
-                Laminas\Cache\Storage\AdapterPluginManager::class                           => [
+                Laminas\Cache\Storage\AdapterPluginManager::class     => [
                     Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
                 ],
-                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
-                    Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
+                Service\Secrets\OneLoginIdentityKeyPairManager::class => [
+                    Service\Secrets\CachedKeyPairManagerDelegatorFactory::class,
                 ],
-                Service\SystemMessage\SystemMessage::class                                  => [
+                Service\SystemMessage\SystemMessage::class            => [
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
                 ],
-                Service\Secrets\LpaDataStoreSecretManager::class                            => [
+                Service\Secrets\LpaDataStoreSecretManager::class      => [
                     Service\Secrets\CachedSecretManagerDelegatorFactory::class,
                 ],
             ],

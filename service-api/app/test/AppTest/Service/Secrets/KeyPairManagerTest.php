@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Authentication\KeyPairManager;
+namespace AppTest\Service\Secrets;
 
-use App\Service\Authentication\KeyPairManager\KeyPair;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
-use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
+use App\Service\Secrets\KeyPair;
+use App\Service\Secrets\KeyPairManagerInterface;
+use App\Service\Secrets\OneLoginIdentityKeyPairManager;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
