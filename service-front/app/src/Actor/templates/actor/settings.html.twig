@@ -11,43 +11,72 @@
                 <div class="govuk-grid-column-three-quarters">
                     <h1 class="govuk-heading-xl">{% trans %}Settings{% endtrans %}</h1>
 
-                            <dl class="govuk-summary-list">
+                    {% if feature_enabled("allow_gov_one_login") %}
+                        <div class="govuk-inset-text">
+                            <h2 class="govuk-heading-s">
+                                {% trans %}Your sign-in details{% endtrans %}
+                            </h2>
+                            <p>{% trans %}You use GOV.UK One Login to sign in to the Use a lasting power of attorney service.{% endtrans %}</p>
+                            <p>{% trans %}You can change these details in your GOV.UK One Login:{% endtrans %}</p>
+                            <ul>
+                                <li>{% trans %}e-mail address{% endtrans %}</li>
+                                <li>{% trans %}password{% endtrans %}</li>
+                                <li>{% trans %}how you get security codes to sign in{% endtrans %}</li>
+                            </ul>
+                            <a href="https://home.account.gov.uk/security" target="_blank" class="govuk-link">
+                                {% trans %}Change your sign-in details in your GOV.UK One Login{% endtrans %}
+                            </a>
+                        </div>
 
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        {% trans %}Email address{% endtrans %}
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        {{ user.getDetail('email') }}
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="{{ path('change-email') }}">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> email address</span>{% endtrans %}
-                                        </a>
-                                    </dd>
-                                </div>
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        {% trans %}Password{% endtrans %}
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        ***********
-                                    </dd>
-                                    <dd class="govuk-summary-list__actions">
-                                        <a class="govuk-link" href="change-password">
-                                            {% trans %}Change<span class="govuk-visually-hidden"> password</span>{% endtrans %}
-                                        </a>
-                                    </dd>
-                                </div>
-                            </dl>
+                        <div class="govuk-inset-text govuk-!-margin-top-2">
+                            <h2 class="govuk-heading-s">
+                                {% trans %}Delete your Use a lasting power of attorney account{% endtrans %}
+                            </h2>
+                            <p>
+                                {% trans %}If you no longer use your Use a lasting power of attorney account, you can delete it.{% endtrans %}
+                            </p>
+                            <a href="{{ path('confirm-delete-account') }}" class="govuk-link">
+                                {% trans %}Find out more about deleting your account{% endtrans %}
+                            </a>
+                        </div>
+                    {% else %}
+                        <dl class="govuk-summary-list">
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Email address{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ user.getDetail('email') }}
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" href="{{ path('change-email') }}">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> email address</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Password{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    ***********
+                                </dd>
+                                <dd class="govuk-summary-list__actions">
+                                    <a class="govuk-link" href="change-password">
+                                        {% trans %}Change<span class="govuk-visually-hidden"> password</span>{% endtrans %}
+                                    </a>
+                                </dd>
+                            </div>
+                        </dl>
 
-                    <div class="govuk-inset-text">
-                        <span>{% trans %}Need to update the online <abbr title="lasting power of attorney">LPA</abbr> summary?{% endtrans %}</span><br>
-                        <span>
-                             <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
-                        </span>
-                    </div>
-                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">{% trans %}Delete account{% endtrans %}</a>
+                        <div class="govuk-inset-text">
+                            <span>{% trans %}Need to update the online <abbr title="lasting power of attorney">LPA</abbr> summary?{% endtrans %}</span><br>
+                            <span>
+                                 <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
+                            </span>
+                        </div>
+                        <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">{% trans %}Delete account{% endtrans %}</a>
+                    {% endif %}
                 </div>
             </div>
         </main>
