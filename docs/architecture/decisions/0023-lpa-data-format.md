@@ -44,6 +44,7 @@ Renamed fields
 * Legacy surnName field equivalent to Modernise lastName
 * Legacy dob equivalent to Mdoernise dateOfBirth - format the same (YYYY-MM-DD)
 * Legacy addressLineN becomes lineN in Modernise (within address block)
+* "applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions
 
 Other differences
 ----------------
@@ -52,16 +53,11 @@ Other differences
 
 Trust Corporations
 ----------------------
-Same changes as for People above. Additionally, companyName appears to be renamed companyNumber in Modernise
-  "trustCorporations": [],
-}
-=================================
+Same changes as for People above. Additionally, companyName is renamed name in Modernise. Modernise appears not to have companyNumber, but we don't use that in Use
 
 Other fields (top level in json):
 -------------------------
 * uid same but it is within properties block in Modernise (and M on the front, for Modernise)
-?? Legacy "applicationHasGuidance": false, may not have Modernise equiv  - the field is either there or not
-?? Legacy "applicationHasRestrictions": true, may not have Modernise equiv  - the field is either there or not
 * Legacy "applicationType": "Classic", doesn't have Modernise equivalent but should not be needed
 status same but within properties block in Modernise,  capital Registered or Processing in legacy, lowercase enum registered or processing in Modernise
 statusDate only exists in Legacy, should be able to manage without this for Use?
