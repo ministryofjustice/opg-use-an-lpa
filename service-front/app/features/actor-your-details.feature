@@ -1,4 +1,4 @@
-@actor @onelogin @ff:allow_gov_one_login:false
+@actor @settings
 Feature: Settings dashboard
   As a user
   If I have created an account
@@ -18,4 +18,5 @@ Feature: Settings dashboard
   Scenario: The user can request login details reset
     Given I view my user details
     When I ask for a change of donors or attorneys details
-    Then I am given instructions on how to change donor or attorney details
+    Then Then I am given instructions on how to change donor or attorney details
+
