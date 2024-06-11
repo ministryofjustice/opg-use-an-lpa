@@ -1,4 +1,24 @@
 Legacy versus Modernise data formats
+
+# 1. Record architecture decisions
+
+Date: 2019-02-22
+
+## Status
+
+Accepted
+
+## Context
+
+We need to record the architectural decisions made on this project.
+
+## Decision
+
+We will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).
+
+## Consequences
+
+See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).
 --------------------------------------
 
 Top level Sections
@@ -21,22 +41,21 @@ Same in each
 New fields for Modernise (all persons) not in Legacy
 -------------------------------------------------------
 * town -  we will put this in AddressLine3 where needed
-* phone - (only Attorney and Certificate Provider) we need to add this to the data model
-* channel - maybe be needed in future by Use to deduce whether IaP is image or text
+* channel - maybe be needed in future by Use to deduce whether IaP is image or text - TODO - NOT needed at person level
 
 New fields for Modernise not used in Use An LPA
 --------------------------------------------------
 * contactLanguagePreference - we will ignore because instead we use the Use account's preferences
 * identityCheck
-* signedAt
+* signedAt  ** ???  only needed for donor - move to legacy field
+* phone - (only Attorney ) not use in Use
 
 Present in Legacy but Missing in Modernise
 -----------------------------------------------
 * county -  Modernise just uses lines (1-3) instead 
-* does not have Modernise equivalent
 * address -> type "Primary" doesn't apply, in fact all Legacy addresses are primary
 * companyName (wthin the person block) now appears to be "name"  within Trust Corporation block
-* systemStatus  - boolean
+* systemStatus  - boolean  ** ??  person is active or not - Mdoernise has a field to map to this
 
 Renamed fields
 -----------------
@@ -49,7 +68,7 @@ Renamed fields
 Other differences
 ----------------
 * Legacy allowes multiple addresses.  But multiples not used in practice, so can just use 1st one for Legacy, use the only one for Modernise
-* Legacy has firstName and middleName,  vs Modernise has these merged into 1 as firstNames
+* Legacy has firstName and middleName,  vs Modernise has these merged into 1 as firstNames  -  ?? TODO support BOTH formats, as legacy requires name to be split
 
 Trust Corporations
 ----------------------
@@ -61,15 +80,15 @@ Other fields (top level in json):
 * Legacy "applicationType": "Classic", doesn't have Modernise equivalent but should not be needed
 status same but within properties block in Modernise,  capital Registered or Processing in legacy, lowercase enum registered or processing in Modernise
 statusDate only exists in Legacy, should be able to manage without this for Use?
-* legacy lpaDonorSignatureDate (YYYY-MM-DD) appears to be replaced with signedAt (2024-01-10T23:00:00Z) for Modernise , probably not needed for Use an LPA
+* legacy lpaDonorSignatureDate (YYYY-MM-DD) appears to be replaced with signedAt (2024-01-10T23:00:00Z) for Modernise , IS needed for Use an LPA
 * channel (top-level) - may be needed in future by Use to deduce whether IaP is image or text
 
 Renamed fields
 -----------------
 *  attorneyActDecisions is renamed whenTheLpaCanBeUsed
-* "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly" 
-* "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"
-*  "lifeSustainingTreatment": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"
+* "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   TODO clarify we will go straight to new enum internally
+* "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  TODO mention for PF  menetion value mappings
+*  "lifeSustainingTreatment": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally
 *  withdrawnDate renamed withdrawnAt
 * "registrationDate": "2024-06-04", renamed registrationAt
 
@@ -77,7 +96,6 @@ Renamed fields
 new fields in Modernise
 -------------------------
 "certificateProviderNotRelatedConfirmedAt" -  Not needed for Use
-"channel": "online",  top-level and for all persons individually-- we may need this for Use in future
 
 Present in Legacy but Missing in Modernise
 ----------------------------------------------
@@ -90,3 +108,4 @@ Present in Legacy but Missing in Modernise
 * Legacy "cancellationDate": "2020-03-17", appears not to have an equiv in Modernise - we would need some way of identifying if LPA is cancelled
 * "onlineLpaId": "A15527329531"  not needed in Use as we use uid
 
+new fields - jointlyAndSeverally for some and not others
