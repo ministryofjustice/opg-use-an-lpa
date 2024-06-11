@@ -138,8 +138,8 @@ resource "aws_ecs_task_definition" "use" {
   family                   = "${var.environment_name}-actor"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = 256
+  memory                   = 256
   container_definitions    = "[${local.actor_web}, ${local.actor_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.actor_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.use_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
