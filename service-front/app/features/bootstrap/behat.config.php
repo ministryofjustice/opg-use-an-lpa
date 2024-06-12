@@ -3,13 +3,12 @@
 declare(strict_types=1);
 
 use Aws\Sdk;
+use BehatTest\Common\Service\ApiClient\TestGuzzleClientFactory;
 use BehatTest\Common\Service\Aws\SdkFactory;
-use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
-use Common\Middleware\ErrorHandling\GoneHandler;
-use Common\Middleware\ErrorHandling\GoneHandlerFactory;
+use Common\Middleware\ErrorHandling\{GoneHandler, GoneHandlerFactory};
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use Elie\PHPDI\Config\ConfigInterface;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Laminas\Cache\Storage\Adapter\Memory;
 use Laminas\ConfigAggregator\ConfigAggregator;
 use Laminas\Stdlib\ArrayUtils\MergeRemoveKey;
@@ -22,7 +21,7 @@ return [
     'debug'                                  => false,
     'dependencies'                           => [
         'factories' => [
-            Client::class                 => TestClientFactory::class,
+            Client::class                 => TestGuzzleClientFactory::class,
             Sdk::class                    => SdkFactory::class,
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
             GoneHandler::class            => GoneHandlerFactory::class,
