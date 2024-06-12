@@ -130,7 +130,7 @@ resource "aws_ecs_task_definition" "pdf" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 512
-  memory                   = 512
+  memory                   = 1024
   container_definitions    = "[${local.pdf_app}]"
   task_role_arn            = var.ecs_task_roles.pdf_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn

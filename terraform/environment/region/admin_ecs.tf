@@ -117,8 +117,8 @@ resource "aws_ecs_task_definition" "admin" {
   family                   = "${var.environment_name}-admin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 128
-  memory                   = 128
+  cpu                      = 256
+  memory                   = 512
   container_definitions    = "[${local.admin_app}]"
   task_role_arn            = var.ecs_task_roles.admin_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
