@@ -1,8 +1,6 @@
-Legacy versus Modernise data formats
+# 23.  Legacy versus Modernise data formats and proposed new data format
 
-# 1. Record architecture decisions
-
-Date: 2019-02-22
+Date: 2024-06-11
 
 ## Status
 
@@ -10,16 +8,11 @@ Accepted
 
 ## Context
 
-We need to record the architectural decisions made on this project.
+Use an LPA now needs to support both Legacy LPAs from Sirius and Modernise LPAs from the Data Store. We need to reconcile the two and have a data format that can support both.
 
 ## Decision
+The difference between legacy and Modernise data formats are as follows
 
-We will use Architecture Decision Records, as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions).
-
-## Consequences
-
-See Michael Nygard's article, linked above. For a lightweight ADR toolset, see Nat Pryce's [adr-tools](https://github.com/npryce/adr-tools).
---------------------------------------
 
 Top level Sections
 -------------------
@@ -41,14 +34,14 @@ Same in each
 New fields for Modernise (all persons) not in Legacy
 -------------------------------------------------------
 * town -  we will put this in AddressLine3 where needed
-* channel - maybe be needed in future by Use to deduce whether IaP is image or text - TODO - NOT needed at person level
+* channel - Use doesn't need this at person level, only at top level
 
 New fields for Modernise not used in Use An LPA
 --------------------------------------------------
 * contactLanguagePreference - we will ignore because instead we use the Use account's preferences
 * identityCheck
 * signedAt  ** ???  only needed for donor - move to legacy field
-* phone - (only Attorney ) not use in Use
+* phone - (only Attorney ) not used in Use
 
 Present in Legacy but Missing in Modernise
 -----------------------------------------------
@@ -87,7 +80,7 @@ Renamed fields
 -----------------
 *  attorneyActDecisions is renamed whenTheLpaCanBeUsed
 * "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   TODO clarify we will go straight to new enum internally
-* "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  TODO mention for PF  menetion value mappings
+* "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  , "pfa" is replaced by "property-and-affairs"
 *  "lifeSustainingTreatment": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally
 *  withdrawnDate renamed withdrawnAt
 * "registrationDate": "2024-06-04", renamed registrationAt
@@ -99,7 +92,7 @@ new fields in Modernise
 
 Present in Legacy but Missing in Modernise
 ----------------------------------------------
-* "hasSeveranceWarning": false,   This is yet to be defined in Modernise
+* "hasSeveranceWarning": false,   This is yet to be built in Modernise but will appear in notes field. Use will need to show the contents of this field rather than just a standard warning as done for legacy
 *  "receiptDate": "2014-09-26", no Modernise equivalwnt but unlikely to be needed by Use an LPA
 * "dispatchDate": "2021-10-14", no Modernise equivalwnt but unlikely to be needed by Use an LPA
 * "invalidDate": "2024-06-04", no Modernise equivalwnt but unlikely to be needed by Use an LPA
@@ -109,3 +102,6 @@ Present in Legacy but Missing in Modernise
 * "onlineLpaId": "A15527329531"  not needed in Use as we use uid
 
 new fields - jointlyAndSeverally for some and not others
+
+
+## Consequences
