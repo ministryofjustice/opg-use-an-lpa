@@ -6594,7 +6594,7 @@ msgid ""
 "service."
 msgstr ""
 "Rydych chi’n defnyddio GOV.UK One Login i fewngofnodi i’r gwasanaeth Defnyddio "
-"atwrneiaeth arhosol.."
+"atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/settings.html.twig:21
 msgid "You can change these details in your GOV.UK One Login:"
