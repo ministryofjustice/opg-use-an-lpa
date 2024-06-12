@@ -6610,11 +6610,11 @@ msgstr "cyfrinair"
 
 #: src/Actor/templates/actor/settings.html.twig:25
 msgid "how you get security codes to sign in"
-msgstr ""
+msgstr "sut i gael codau diogelwch i fewngofnodi"
 
 #: src/Actor/templates/actor/settings.html.twig:28
 msgid "Change your sign-in details in your GOV.UK One Login"
-msgstr "Eich manylion mewngofnodi"
+msgstr "Newid eich manylion mewngofnodi yn eich GOV.UK One Login"
 
 #: src/Actor/templates/actor/settings.html.twig:35
 msgid "Delete your Use a lasting power of attorney account"
