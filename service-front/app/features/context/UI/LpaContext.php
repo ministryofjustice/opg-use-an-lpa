@@ -3226,7 +3226,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I click Back to your LPAs$/
+     * @When /^I click Back to your LPAs$/
      */
     public function iClickBackToYourLPAsLink(): void
     {
@@ -3234,7 +3234,7 @@ class LpaContext implements Context
     }
 
     /**
-     * @Given /^I return to the dashboard$/
+     * @When /^I return to the dashboard$/
      */
     public function iReturnToTheDashboard(): void
     {
