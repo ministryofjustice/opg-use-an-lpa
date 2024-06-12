@@ -115,7 +115,7 @@ resource "aws_ecs_task_definition" "viewer" {
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
-  memory                   = 256
+  memory                   = 512
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.viewer_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
