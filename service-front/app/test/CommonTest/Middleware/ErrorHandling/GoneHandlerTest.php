@@ -8,18 +8,23 @@ use Common\Middleware\ErrorHandling\GoneHandler;
 use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class GoneHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testReturnsGoneResponseForGoneUris(): void
+    /**
+     * @test
+     */
+    public function returns_gone_response_for_gone_uris(): void
     {
         $rendererProphecy        = $this->prophesize(TemplateRendererInterface::class);
         $responseProphecy        = $this->prophesize(ResponseInterface::class);
@@ -27,11 +32,10 @@ class GoneHandlerTest extends TestCase
 
         $rendererProphecy->render('error::410')->willReturn('Gone');
 
-        $responseProphecy->getBody()->willReturn(new class {
-            public function write($content)
-            {
-            }
-        });
+        $streamProphecy = $this->prophesize(StreamInterface::class);
+        $streamProphecy->write(Argument::any())->willReturn(0);
+
+        $responseProphecy->getBody()->willReturn($streamProphecy->reveal());
         $responseProphecy->withStatus(StatusCodeInterface::STATUS_GONE)->willReturn($responseProphecy->reveal());
         $responseFactoryProphecy->createResponse()->willReturn($responseProphecy->reveal());
 
@@ -40,13 +44,11 @@ class GoneHandlerTest extends TestCase
             $rendererProphecy->reveal()
         );
 
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()->willReturn('/reset-password');
+
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getUri()->willReturn(new class {
-            public function getPath()
-            {
-                return '/reset-password';
-            }
-        });
+        $requestProphecy->getUri()->willReturn($uriProphecy->reveal());
 
         $handlerProphecy = $this->prophesize(RequestHandlerInterface::class);
 
@@ -56,7 +58,10 @@ class GoneHandlerTest extends TestCase
         $this->assertSame($responseProphecy->reveal(), $response);
     }
 
-    public function testReturnsGoneStatusForSpecifiedRoutes()
+    /**
+     * @test
+     */
+    public function returns_gone_status_for_specified_routes(): void
     {
         $templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $responseProphecy         = $this->prophesize(ResponseInterface::class);
@@ -76,12 +81,10 @@ class GoneHandlerTest extends TestCase
 
         $templateRendererProphecy->render('error::410')->willReturn('Page gone');
 
-        $requestProphecy->getUri()->willReturn(new class {
-            public function getPath()
-            {
-                return '/reset-password';
-            }
-        });
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()->willReturn('/reset-password');
+
+        $requestProphecy->getUri()->willReturn($uriProphecy->reveal());
 
         $responseProphecy->withStatus(StatusCodeInterface::STATUS_GONE)->shouldBeCalledTimes(1);
         $templateRendererProphecy->render('error::410')->shouldBeCalledTimes(1);
@@ -91,7 +94,10 @@ class GoneHandlerTest extends TestCase
         $this->assertSame($responseProphecy->reveal(), $result);
     }
 
-    public function testPassesControlToNextMiddlewareForOtherUris(): void
+    /**
+     * @test
+     */
+    public function passes_control_to_the_next_middleware_for_other_uris(): void
     {
         $rendererProphecy        = $this->prophesize(TemplateRendererInterface::class);
         $responseFactoryProphecy = $this->prophesize(ResponseFactoryInterface::class);
@@ -101,13 +107,11 @@ class GoneHandlerTest extends TestCase
             $rendererProphecy->reveal()
         );
 
+        $uriProphecy = $this->prophesize(UriInterface::class);
+        $uriProphecy->getPath()->willReturn('/some-other-uri');
+
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getUri()->willReturn(new class {
-            public function getPath()
-            {
-                return '/some-other-uri';
-            }
-        });
+        $requestProphecy->getUri()->willReturn($uriProphecy->reveal());
 
         $nextResponseProphecy = $this->prophesize(ResponseInterface::class);
         $handlerProphecy      = $this->prophesize(RequestHandlerInterface::class);
