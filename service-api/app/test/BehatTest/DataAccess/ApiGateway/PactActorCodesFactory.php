@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
@@ -24,7 +24,7 @@ class PactActorCodesFactory
 
         return new ActorCodes(
             new HttpClient(),
-            $container->get(RequestSigner::class),
+            $container->get(RequestSignerFactory::class),
             $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );

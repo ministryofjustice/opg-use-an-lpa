@@ -35,14 +35,18 @@ class RequestSignerTest extends TestCase
     public function it_signs_request_with_a_supplied_static_token(): void
     {
         $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $signatureV4Prophecy->signRequest(
+            Argument::type(RequestInterface::class),
+            Argument::type(CredentialsInterface::class)
+        )->will(fn (array $args) => $args[0]);
 
         $requestProphecy = $this->prophesize(RequestInterface::class);
         $requestProphecy
-            ->withAddedHeader('Authorization', 'test_token')
+            ->withHeader('Authorization', 'test_token')
             ->shouldBeCalled()
             ->willReturn($requestProphecy->reveal());
 
-        $signer = new RequestSigner($signatureV4Prophecy->reveal(), 'test_token');
+        $signer = new RequestSigner($signatureV4Prophecy->reveal(), ['Authorization' => 'test_token']);
 
         $request = $signer->sign($requestProphecy->reveal());
     }

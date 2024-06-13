@@ -10,28 +10,28 @@ use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Service\Log\RequestTracing;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Client\ClientInterface as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 
 class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImagesInterface
 {
-    private string $apiBaseUri;
+    private readonly RequestSigner $requestSigner;
 
     /**
-     * @param HttpClient $httpClient
-     * @param RequestSigner $awsSignature
-     * @param string $apiUrl
-     * @param string $traceId An amazon trace id to pass to subsequent services
+     * @param HttpClient    $httpClient
+     * @param RequestSignerFactory $requestSignerFactory
+     * @param string        $apiBaseUri
+     * @param string        $traceId An amazon trace id to pass to subsequent services
      */
     public function __construct(
-        private HttpClient $httpClient,
-        private RequestSigner $awsSignature,
-        string $apiUrl,
-        private string $traceId,
+        readonly HttpClient $httpClient,
+        readonly RequestSignerFactory $requestSignerFactory,
+        readonly private string $apiBaseUri,
+        readonly private string $traceId,
     ) {
-        $this->apiBaseUri = $apiUrl;
+        $this->requestSigner = ($requestSignerFactory)();
     }
 
     /**
@@ -43,7 +43,7 @@ class InstructionsAndPreferencesImages implements InstructionsAndPreferencesImag
     {
         $url     = sprintf('%s/%s', $this->apiBaseUri, $url);
         $request = new Request('GET', $url, $this->buildHeaders());
-        $request = $this->awsSignature->sign($request);
+        $request = $this->requestSigner->sign($request);
 
         try {
             $response = $this->httpClient->send($request);

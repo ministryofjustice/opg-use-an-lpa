@@ -10,26 +10,27 @@ use App\Service\Log\RequestTracing;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Client\ClientInterface as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\ResponseInterface;
 
 class ActorCodes
 {
-    private string $apiBaseUri;
-
     /**
      * ActorCodes Constructor
      *
      * @param HttpClient $httpClient
-     * @param RequestSigner $awsSignature
-     * @param string $apiUrl
+     * @param RequestSignerFactory $requestSignerFactory
+     * @param string $apiBaseUri
      * @param string $traceId An amazon trace id to pass to subsequent services
      */
-    public function __construct(private HttpClient $httpClient, private RequestSigner $awsSignature, string $apiUrl, private string $traceId)
-    {
-        $this->apiBaseUri = $apiUrl;
+    public function __construct(
+        readonly private HttpClient $httpClient,
+        readonly private RequestSignerFactory $requestSignerFactory,
+        readonly private string $apiBaseUri,
+        readonly private string $traceId,
+    ) {
     }
 
     /**
@@ -92,8 +93,9 @@ class ActorCodes
         $url  = sprintf('%s/%s', $this->apiBaseUri, $url);
         $body = json_encode($body);
 
-        $request = new Request('POST', $url, $this->buildHeaders(), $body);
-        $request = $this->awsSignature->sign($request);
+        $request       = new Request('POST', $url, $this->buildHeaders(), $body);
+        $requestSigner = ($this->requestSignerFactory)(SignatureType::ActorCodes);
+        $request       = $requestSigner->sign($request);
 
         try {
             $response = $this->httpClient->send($request);
@@ -108,6 +110,13 @@ class ActorCodes
         return $response;
     }
 
+    /**
+     * @return array{
+     *     Accept: 'application/json',
+     *     Content-Type: 'application/json',
+     *     x-amzn-trace-id?: string,
+     * }
+     */
     private function buildHeaders(): array
     {
         $headerLines = [

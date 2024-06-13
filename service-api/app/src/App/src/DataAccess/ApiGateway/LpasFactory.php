@@ -24,7 +24,7 @@ class LpasFactory
 
         return new Lpas(
             $container->get(HttpClient::class),
-            new SignatureV4('execute-api', 'eu-west-1'),
+            $container->get(RequestSignerFactory::class),
             $config['sirius_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),

@@ -21,7 +21,7 @@ class ActorCodesFactory
 
         return new ActorCodes(
             $container->get(HttpClient::class),
-            $container->get(RequestSigner::class),
+            $container->get(RequestSignerFactory::class),
             $config['codes_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );

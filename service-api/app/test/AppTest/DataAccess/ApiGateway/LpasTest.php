@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
+use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\ApiException;
-use Aws\Credentials\Credentials;
-use Aws\Signature\SignatureV4;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 
@@ -35,17 +36,34 @@ class LpasTest extends TestCase
     private string $apiUrl;
     private DataSanitiserStrategy|ObjectProphecy $dataSanitiserStrategy;
     private Client|ObjectProphecy $httpClientProphecy;
-    private SignatureV4|ObjectProphecy $signatureV4Prophecy;
+    private LoggerInterface|ObjectProphecy $loggerInterface;
+    private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
+    private RequestSigner|ObjectProphecy $requestSignerProphecy;
     public string $traceId;
 
     public function setup(): void
     {
-        $this->httpClientProphecy    = $this->prophesize(Client::class);
-        $this->signatureV4Prophecy   = $this->prophesize(SignatureV4::class);
-        $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
-        $this->loggerInterface       = $this->prophesize(LoggerInterface::class);
-        $this->apiUrl                = 'http://test';
-        $this->traceId               = '1234-12-12-12-1234';
+        $this->httpClientProphecy           = $this->prophesize(Client::class);
+        $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $this->requestSignerProphecy        = $this->prophesize(RequestSigner::class);
+        $this->dataSanitiserStrategy        = $this->prophesize(DataSanitiserStrategy::class);
+        $this->loggerInterface              = $this->prophesize(LoggerInterface::class);
+        $this->apiUrl                       = 'http://test';
+        $this->traceId                      = '1234-12-12-12-1234';
+
+        $assert = $this;
+        $this->requestSignerProphecy
+            ->sign(Argument::type(RequestInterface::class))
+            ->shouldBeCalled()
+            ->will(function ($args) use ($assert) {
+                // assert the request has trace-id
+                /** @var Request $request */
+                $request = $args[0];
+                $assert->assertEquals($assert->traceId, $request->getHeaderLine('x-amzn-trace-id'));
+
+                return $request;
+            });
+        $this->requestSignerFactoryProphecy->__invoke()->willReturn($this->requestSignerProphecy->reveal());
 
         putenv('AWS_ACCESS_KEY_ID=testkey');
         putenv('AWS_SECRET_ACCESS_KEY=secretkey');
@@ -56,7 +74,7 @@ class LpasTest extends TestCase
     {
         return new Lpas(
             $this->httpClientProphecy->reveal(),
-            $this->signatureV4Prophecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             $this->apiUrl,
             $this->traceId,
             $this->dataSanitiserStrategy->reveal(),
@@ -67,8 +85,6 @@ class LpasTest extends TestCase
     #[Test]
     public function can_get_an_lpa(): void
     {
-        $assert = $this;
-
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(200);
         $responseProphecy->getBody()->willReturn('{ "uId": "7000-0005-5554" }');
@@ -80,19 +96,6 @@ class LpasTest extends TestCase
         $this->dataSanitiserStrategy->sanitise(Argument::any())->will(function ($args) {
             return $args[0];
         });
-        $this->signatureV4Prophecy
-            ->signRequest(
-                Argument::type(Request::class),
-                Argument::type(Credentials::class)
-            )->shouldBeCalled()
-            ->will(function ($args) use ($assert) {
-                // assert the request has trace-id
-                /** @var Request $request */
-                $request = $args[0];
-                $assert->assertEquals($assert->traceId, $request->getHeaderLine('x-amzn-trace-id'));
-
-                return $request;
-            });
 
         $shouldBeAnLPA = $this->getLpas()->get('700000055554');
 
@@ -103,8 +106,6 @@ class LpasTest extends TestCase
     #[Test]
     public function lpa_not_found_gives_null(): void
     {
-        $assert = $this;
-
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(404);
 
@@ -114,19 +115,6 @@ class LpasTest extends TestCase
         $this->dataSanitiserStrategy->sanitise(Argument::any())->will(function ($args) {
             return $args[0];
         });
-        $this->signatureV4Prophecy
-            ->signRequest(
-                Argument::type(Request::class),
-                Argument::type(Credentials::class)
-            )->shouldBeCalled()
-            ->will(function ($args) use ($assert) {
-                // assert the request has trace-id
-                /** @var Request $request */
-                $request = $args[0];
-                $assert->assertEquals($assert->traceId, $request->getHeaderLine('x-amzn-trace-id'));
-
-                return $request;
-            });
 
         $shouldBeNull = $this->getLpas()->get('700000055554');
 
@@ -138,21 +126,6 @@ class LpasTest extends TestCase
     {
         $caseUid  = 700000055554;
         $actorUid = 700000055554;
-
-        $assert = $this;
-        $this->signatureV4Prophecy
-            ->signRequest(
-                Argument::type(Request::class),
-                Argument::type(Credentials::class)
-            )->shouldBeCalled()
-            ->will(function ($args) use ($assert) {
-                // assert the request has trace-id
-                /** @var Request $request */
-                $request = $args[0];
-                $assert->assertEquals($assert->traceId, $request->getHeaderLine('x-amzn-trace-id'));
-
-                return $request;
-            });
 
         /** @var MockObject|Response $dDBMock */
         $responseMock = $this->createMock(Response::class);
@@ -190,15 +163,6 @@ class LpasTest extends TestCase
         $caseUid  = 700000055554;
         $actorUid = 700000055554;
 
-        $this->signatureV4Prophecy
-            ->signRequest(
-                Argument::type(Request::class),
-                Argument::type(Credentials::class)
-            )->shouldBeCalled()
-            ->will(function ($args) {
-                return $args[0];
-            });
-
         $contentsProphecy = $this->prophesize(StreamInterface::class);
         $contentsProphecy
             ->getContents()
@@ -231,15 +195,6 @@ class LpasTest extends TestCase
     {
         $caseUid  = 700000055554;
         $actorUid = 700000055554;
-
-        $this->signatureV4Prophecy
-            ->signRequest(
-                Argument::type(Request::class),
-                Argument::type(Credentials::class)
-            )->shouldBeCalled()
-            ->will(function ($args) {
-                return $args[0];
-            });
 
         $this->httpClientProphecy
             ->send(Argument::type(Request::class))

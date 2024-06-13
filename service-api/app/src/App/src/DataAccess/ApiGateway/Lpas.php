@@ -11,8 +11,6 @@ use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
 use App\Service\Log\RequestTracing;
-use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
-use Aws\Signature\SignatureV4 as AwsSignatureV4;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -20,7 +18,6 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,17 +25,17 @@ use Psr\Log\LoggerInterface;
  */
 class Lpas implements LpasInterface, RequestLetterInterface
 {
-    private string $apiBaseUri;
+    private RequestSigner $requestSigner;
 
     public function __construct(
         private HttpClient $httpClient,
-        private AwsSignatureV4 $awsSignature,
-        string $apiUrl,
+        private RequestSignerFactory $requestSignerFactory,
+        private string $apiBaseUri,
         private string $traceId,
         private DataSanitiserStrategy $sanitiser,
         private LoggerInterface $logger,
     ) {
-        $this->apiBaseUri = $apiUrl;
+        $this->requestSigner = ($this->requestSignerFactory)();
     }
 
     /**
@@ -63,19 +60,15 @@ class Lpas implements LpasInterface, RequestLetterInterface
      */
     public function lookup(array $uids): array
     {
-        $provider    = AwsCredentialProvider::defaultProvider();
-        $credentials = $provider()->wait();
-
         // Builds an array of Requests to send
         // The key for each request is the original uid.
         $requests = array_combine(
             $uids,  // Use as array key
-            array_map(function ($v) use ($credentials) {
-                $url = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
-
+            array_map(function ($v) {
+                $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
                 $request = new Request('GET', $url, $this->buildHeaders());
 
-                return $this->awsSignature->signRequest($request, $credentials);
+                return $this->requestSigner->sign($request);
             }, $uids)
         );
 
@@ -141,7 +134,7 @@ class Lpas implements LpasInterface, RequestLetterInterface
      * @param int|null    $actorId The uId of an actor as found attached to an LPA
      * @param string|null $additionalInfo
      *
-     * @return ResponseInterface
+     * @return void
      */
     public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
@@ -153,16 +146,13 @@ class Lpas implements LpasInterface, RequestLetterInterface
             $payloadContent['actor_uid'] = $actorId;
         }
 
-        $provider    = AwsCredentialProvider::defaultProvider();
-        $credentials = $provider()->wait();
-
         // request payload
         $body = json_encode($payloadContent);
 
         // construct request for API gateway
         $url     = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
         $request = new Request('POST', $url, $this->buildHeaders(), $body);
-        $request = $this->awsSignature->signRequest($request, $credentials);
+        $request = $this->requestSigner->sign($request);
 
         try {
             $response = $this->httpClient->send($request);
@@ -180,9 +170,17 @@ class Lpas implements LpasInterface, RequestLetterInterface
         throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
     }
 
+    /**
+     * @return array{
+     *     Accept: 'application/json',
+     *     Content-Type: 'application/json',
+     *     x-amzn-trace-id?: string,
+     * }
+     */
     private function buildHeaders(): array
     {
         $headerLines = [
+            'Accept'       => 'application/json',
             'Content-Type' => 'application/json',
         ];
 

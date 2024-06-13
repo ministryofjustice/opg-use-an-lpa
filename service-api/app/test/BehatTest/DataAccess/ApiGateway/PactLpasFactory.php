@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace BehatTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
-use Aws\Signature\SignatureV4;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -26,7 +26,7 @@ class PactLpasFactory
 
         return new Lpas(
             new HttpClient(),
-            new SignatureV4('execute-api', $config['aws']['region']),
+            $container->get(RequestSignerFactory::class),
             $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),

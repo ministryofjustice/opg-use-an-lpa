@@ -7,6 +7,7 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory;
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as HttpClient;
@@ -37,9 +38,14 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             ->get(HttpClient::class)
             ->willReturn($this->prophesize(HttpClient::class)->reveal());
 
-        $containerProphecy
-            ->get(RequestSigner::class)
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke()
             ->willReturn($this->prophesize(RequestSigner::class)->reveal());
+
+        $containerProphecy
+            ->get(RequestSignerFactory::class)
+            ->willReturn($requestSignerFactoryProphecy->reveal());
 
         $containerProphecy
             ->get(RequestTracing::TRACE_PARAMETER_NAME)

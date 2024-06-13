@@ -21,7 +21,7 @@ class InstructionsAndPreferencesImagesFactory
 
         return new InstructionsAndPreferencesImages(
             $container->get(HttpClient::class),
-            $container->get(RequestSigner::class),
+            $container->get(RequestSignerFactory::class),
             $config['iap_images_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );

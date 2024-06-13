@@ -6,6 +6,7 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
@@ -55,9 +56,14 @@ class InstructionsAndPreferencesImagesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke()
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new InstructionsAndPreferencesImages(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -86,9 +92,14 @@ class InstructionsAndPreferencesImagesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke()
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new InstructionsAndPreferencesImages(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -127,9 +138,14 @@ class InstructionsAndPreferencesImagesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke()
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new InstructionsAndPreferencesImages(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );

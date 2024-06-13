@@ -6,6 +6,8 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
@@ -54,6 +56,7 @@ class ActorCodesTest extends TestCase
             })
         )->willReturn($responseProphecy->reveal());
 
+
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
             ->sign(Argument::type(RequestInterface::class))
@@ -61,9 +64,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -94,9 +102,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -133,9 +146,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -175,9 +193,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -199,9 +222,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -232,9 +260,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -287,9 +320,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -322,9 +360,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -355,9 +398,14 @@ class ActorCodesTest extends TestCase
                 return $args[0];
             });
 
+        $requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+
         $service = new ActorCodes(
             $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );

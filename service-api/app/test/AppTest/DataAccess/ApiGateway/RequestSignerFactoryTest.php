@@ -6,6 +6,7 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -16,7 +17,22 @@ class RequestSignerFactoryTest extends TestCase
     use ProphecyTrait;
 
     #[Test]
-    public function it_creates_a_static_request_signer(): void
+    public function it_creates_an_request_signer_without_config(): void
+    {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $containerProphecy
+            ->get('config')
+            ->willReturn([]);
+
+        $factory = new RequestSignerFactory($containerProphecy->reveal());
+
+        $signer = $factory();
+
+        $this->assertInstanceOf(RequestSigner::class, $signer);
+    }
+
+    #[Test]
+    public function it_creates_an_actor_codes_configured_signer(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -29,29 +45,16 @@ class RequestSignerFactoryTest extends TestCase
                 ]
             );
 
-        $factory = new RequestSignerFactory();
+        $factory = new RequestSignerFactory($containerProphecy->reveal());
 
-        $signer = $factory($containerProphecy->reveal());
+        $signer = $factory(SignatureType::ActorCodes);
 
         $this->assertInstanceOf(RequestSigner::class, $signer);
     }
 
     #[Test]
-    public function it_creates_an_aws_request_signer_without_config(): void
+    public function it_creates_an_data_store_lpas_configured_signer(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->willReturn(
-                [
-                    'codes_api' => [],
-                ]
-            );
-
-        $factory = new RequestSignerFactory();
-
-        $signer = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(RequestSigner::class, $signer);
+        $this->markTestIncomplete();
     }
 }

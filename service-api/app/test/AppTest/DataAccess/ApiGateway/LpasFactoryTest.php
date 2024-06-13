@@ -6,6 +6,8 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
 use App\DataAccess\ApiGateway\LpasFactory;
+use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
 use Exception;
@@ -27,6 +29,13 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get(GuzzleHttpClient::class)->willReturn(
             $this->prophesize(GuzzleHttpClient::class)->reveal()
+        );
+
+        $requestSignerFactory = $this->prophesize(RequestSignerFactory::class);
+        $requestSignerFactory->__invoke()->willReturn($this->prophesize(RequestSigner::class)->reveal());
+
+        $containerProphecy->get(RequestSignerFactory::class)->willReturn(
+            $requestSignerFactory->reveal()
         );
 
         $containerProphecy->get('config')->willReturn(

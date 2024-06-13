@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BehatTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use DI\NotFoundException;
 use GuzzleHttp\Client as HttpClient;
@@ -33,7 +33,7 @@ class PactInstructionsAndPreferencesImagesFactory
 
         return new InstructionsAndPreferencesImages(
             new HttpClient(),
-            $container->get(RequestSigner::class),
+            $container->get(RequestSignerFactory::class),
             $apiHost,
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
         );

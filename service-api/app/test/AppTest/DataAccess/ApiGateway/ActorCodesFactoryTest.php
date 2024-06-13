@@ -6,7 +6,7 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\ActorCodesFactory;
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as HttpClient;
@@ -38,8 +38,8 @@ class ActorCodesFactoryTest extends TestCase
             ->willReturn($this->prophesize(HttpClient::class)->reveal());
 
         $containerProphecy
-            ->get(RequestSigner::class)
-            ->willReturn($this->prophesize(RequestSigner::class)->reveal());
+            ->get(RequestSignerFactory::class)
+            ->willReturn($this->prophesize(RequestSignerFactory::class)->reveal());
 
         $containerProphecy
             ->get(RequestTracing::TRACE_PARAMETER_NAME)
