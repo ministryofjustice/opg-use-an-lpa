@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-11T09:43:50+00:00\n"
+"POT-Creation-Date: 2024-06-13T10:15:32+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -3441,15 +3441,15 @@ msgstr ""
 msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:86
+#: src/Actor/templates/actor/settings.html.twig:80
 msgid "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary?"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:87
+#: src/Actor/templates/actor/settings.html.twig:82
 msgid "Change a donor or attorney's details"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:91
+#: src/Actor/templates/actor/settings.html.twig:85
 msgid "Delete account"
 msgstr ""
 
@@ -4593,19 +4593,19 @@ msgstr ""
 msgid "how you get security codes to sign in"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:28
+#: src/Actor/templates/actor/settings.html.twig:29
 msgid "Change your sign-in details in your GOV.UK One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:35
+#: src/Actor/templates/actor/settings.html.twig:37
 msgid "Delete your Use a lasting power of attorney account"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:38
+#: src/Actor/templates/actor/settings.html.twig:40
 msgid "If you no longer use your Use a lasting power of attorney account, you can delete it."
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:40
+#: src/Actor/templates/actor/settings.html.twig:43
 msgid "Find out more about deleting your account"
 msgstr ""
 

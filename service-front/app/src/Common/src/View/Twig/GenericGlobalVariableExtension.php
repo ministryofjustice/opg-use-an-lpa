@@ -20,13 +20,12 @@ class GenericGlobalVariableExtension extends AbstractExtension implements Global
 
     public function getGlobals(): array
     {
+        $useServiceName = $this->translator->translate('Use a lasting power of attorney', []);
+        $viewServiceName = $this->translator->translate('View a lasting power of attorney', []);
+
         return [
             'application'   => $this->application,
-            'serviceName'   => $this->translator->translate(
-                ($this->application === 'actor' ? 'Use' : 'View') . ' a lasting power of attorney',
-                [],
-                null
-            ),
+            'serviceName'   => $this->application === 'actor' ? $useServiceName : $viewServiceName,
             'currentLocale' => strtolower(str_replace('_', '-', Locale::getDefault())),
         ];
     }
