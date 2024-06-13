@@ -69,9 +69,9 @@ Same changes as for People above. Additionally, companyName is renamed name in M
 
 Other fields (top level in json):
 -------------------------
-* uid same but it is within properties block in Modernise (and M on the front, for Modernise)
+* uid same but has M on the front, for Modernise
 * Legacy "applicationType": "Classic", doesn't have Modernise equivalent but should not be needed
-status same but within properties block in Modernise,  capital Registered or Processing in legacy, lowercase enum registered or processing in Modernise
+status is at present, the same but within properties block in Modernise,  capital Registered or Processing in legacy, lowercase enum registered or processing in Modernise. This is not yet signed off and may change in Modernise and take the form cannot-register rather than Cannot Register
 statusDate only exists in Legacy, should be able to manage without this for Use?
 * legacy lpaDonorSignatureDate (YYYY-MM-DD) appears to be replaced with signedAt (2024-01-10T23:00:00Z) for Modernise , IS needed for Use an LPA
 * channel (top-level) - may be needed in future by Use to deduce whether IaP is image or text
@@ -98,7 +98,7 @@ Present in Legacy but Missing in Modernise
 * "invalidDate": "2024-06-04", no Modernise equivalwnt but unlikely to be needed by Use an LPA
 * "rejectedDate": null, no Modernise equivalwnt but unlikely to be needed by Use an LPA
 * "lpaIsCleansed": false,  Does not Apply to Modernise
-* Legacy "cancellationDate": "2020-03-17", appears not to have an equiv in Modernise - we would need some way of identifying if LPA is cancelled
+* Legacy "cancellationDate": "2020-03-17", appears not to have an equiv in Modernise - we would will use registrationStatus to identify if a Modernise LPA is cancelled
 * "onlineLpaId": "A15527329531"  not needed in Use as we use uid
 
 new fields - jointlyAndSeverally for some and not others
