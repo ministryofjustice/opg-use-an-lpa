@@ -10,9 +10,7 @@ Accepted
 
 Use an LPA now needs to support both Legacy LPAs from Sirius and Modernise LPAs from the Data Store. We need to reconcile the two and have a data format that can support both.
 
-## Decision
-The difference between legacy and Modernise data formats are as follows
-
+The difference between legacy and Modernise data formats are as follows: 
 
 Top level Sections
 -------------------
@@ -39,9 +37,9 @@ New fields for Modernise (all persons) not in Legacy
 New fields for Modernise not used in Use An LPA
 --------------------------------------------------
 * contactLanguagePreference - we will ignore because instead we use the Use account's preferences
-* identityCheck
-* signedAt  ** ???  only needed for donor - move to legacy field
-* phone - (only Attorney ) not used in Use
+* identityCheck - not used by Use
+* signedAt  ** ???  only needed for donor - move to legacy field TODO
+* phone - (only Attorney ) not used by Use
 
 Present in Legacy but Missing in Modernise
 -----------------------------------------------
@@ -85,7 +83,6 @@ Renamed fields
 *  withdrawnDate renamed withdrawnAt
 * "registrationDate": "2024-06-04", renamed registrationAt
 
-
 new fields in Modernise
 -------------------------
 "certificateProviderNotRelatedConfirmedAt" -  Not needed for Use
@@ -93,15 +90,47 @@ new fields in Modernise
 Present in Legacy but Missing in Modernise
 ----------------------------------------------
 * "hasSeveranceWarning": false,   This is yet to be built in Modernise but will appear in notes field. Use will need to show the contents of this field rather than just a standard warning as done for legacy
-*  "receiptDate": "2014-09-26", no Modernise equivalwnt but unlikely to be needed by Use an LPA
-* "dispatchDate": "2021-10-14", no Modernise equivalwnt but unlikely to be needed by Use an LPA
-* "invalidDate": "2024-06-04", no Modernise equivalwnt but unlikely to be needed by Use an LPA
-* "rejectedDate": null, no Modernise equivalwnt but unlikely to be needed by Use an LPA
+*  "receiptDate": "2014-09-26", no Modernise equivalent but unlikely to be needed by Use an LPA
+* "dispatchDate": "2021-10-14", no Modernise equivalent but unlikely to be needed by Use an LPA
+* "invalidDate": "2024-06-04", no Modernise equivalent but unlikely to be needed by Use an LPA
+* "rejectedDate": null, no Modernise equivalent but unlikely to be needed by Use an LPA
 * "lpaIsCleansed": false,  Does not Apply to Modernise
 * Legacy "cancellationDate": "2020-03-17", appears not to have an equiv in Modernise - we would will use registrationStatus to identify if a Modernise LPA is cancelled
 * "onlineLpaId": "A15527329531"  not needed in Use as we use uid
 
-new fields - jointlyAndSeverally for some and not others
+new fields - jointlyAndSeverally for some and not others TODO
+
+## Decision
+Changes to the data structure will consist of (a) New fields and (b) Existing fields populated from differently named ones
+
+(a) New fields top level
+----------------------
+* channel - populated by channel from Modernise
+
+(b) Existing fields from differently named Top level
+-------------------------------------------------------
+*  attorneyActDecisions will be populated by whenTheLpaCanBeUsed for Modernise LPAs
+* "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   . We will replace the current 4 fields internally, with a new enum similar to how Modernise does it, because this is a better less clumsy way to handle this data
+* "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  , "pfa" is replaced by "property-and-affairs"
+*  TODO "lifeSustainingTreatmentwill be populated by ": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally for Modernise LPAs
+*  withdrawnDate will be populated by withdrawnAt for Modernise LPAs
+* registrationDate will be populated by registrationAt for Modernise LPAs
+
+(a) New fields Person level
+----------
+* new firstNames field is populated by firstNames for Modernise LPAs
+
+(b) Existing fields from differently named Persons level
+-------------------------------------------------------
+* OtherNames will be populated by otherNamesKnownBy for Modernise LPAs
+* surnName will be populated by lastName for Modernise LPAs
+* dob will be populated by dateOfBirth for Modernise LPAs
+* addressLineN will be populated by lineN within address block for Modernise LPAs
+* companyName will be populated by name for Modernise LPAs  (for Trust Corporations only)
+* applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions for Modernise LPAs
+* - boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
+* firstName and middleName continue to be populated from legacy
 
 
 ## Consequences
+Fields have not been renamed to match Modernise fields. We may wish to do this in time when Modernise becomes the default 
