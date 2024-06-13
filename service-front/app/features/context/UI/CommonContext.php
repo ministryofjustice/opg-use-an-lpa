@@ -7,6 +7,7 @@ namespace BehatTest\Context\UI;
 use Actor\Handler\LpaDashboardHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\BaseUiContextTrait;
+use BehatTest\Context\ContextUtilities;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\ApiClient\Client;
@@ -19,6 +20,7 @@ use DI\Definition\AutowireDefinition;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use DI\Definition\Reference;
 use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
@@ -31,13 +33,24 @@ class CommonContext implements Context
 {
     use BaseUiContextTrait;
 
-    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
+    private const USER_SERVICE_AUTHENTICATE           = 'UserService::authenticate';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
     /**
      * @Given I access the service home page
      */
     public function iAccessTheServiceHomepage(): void
     {
+        if ($this->base->container->get('config')['application'] === 'viewer') {
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($this->systemMessageData ?? []),
+                    self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+                )
+            );
+        }
+
         $this->ui->visit($this->sharedState()->basePath . '/home');
     }
 
@@ -428,6 +441,14 @@ class CommonContext implements Context
      */
     public function iClickOnLinkOnTheCookiesPage($link): void
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->assertPageAddress('/cookies');
         $this->ui->clickLink($link);
     }

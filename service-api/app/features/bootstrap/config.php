@@ -5,11 +5,9 @@ declare(strict_types=1);
 use App\Service\Log\RequestTracingLogProcessorFactory;
 use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
-use BehatTest\GuzzleHttp\TestClientFactory as TestGuzzleClientFactory;
-use BehatTest\Http\Adapter\Guzzle6\TestClientFactory;
+use BehatTest\GuzzleHttp\TestClientFactory;
 use Elie\PHPDI\Config\ConfigInterface;
-use GuzzleHttp\Client as GuzzleClient;
-use Http\Adapter\Guzzle6\Client;
+use GuzzleHttp\Client;
 use Laminas\ConfigAggregator\ConfigAggregator;
 
 return [
@@ -18,9 +16,8 @@ return [
     ConfigInterface::ENABLE_CACHE_DEFINITION => false,
     'dependencies'                           => [
         'factories' => [
-            Client::class       => TestClientFactory::class,
-            GuzzleClient::class => TestGuzzleClientFactory::class,
-            Sdk::class          => SdkFactory::class,
+            Client::class => TestClientFactory::class,
+            Sdk::class    => SdkFactory::class,
         ],
     ],
     'aws'                                    => [

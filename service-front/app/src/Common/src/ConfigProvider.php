@@ -9,29 +9,19 @@ use Acpr\I18n\TranslatorInterface;
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
-use Common\Middleware\Session\SessionExpiryMiddleware;
-use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
-use Common\Service\Cache\RedisAdapterPluginManagerDelegatorFactory;
-use Common\Service\SystemMessage\SystemMessageService;
-use Common\Service\SystemMessage\SystemMessageServiceFactory;
-use Gettext\Generator\GeneratorInterface;
-use Gettext\Generator\PoGenerator;
-use Gettext\Loader\LoaderInterface;
-use Gettext\Loader\PoLoader;
-use Http\Adapter\Guzzle6\Client;
+use Common\Middleware\Session\{SessionExpiryMiddleware, SessionExpiryMiddlewareFactory};
+use Common\Service\{Cache\RedisAdapterPluginManagerDelegatorFactory,
+    SystemMessage\SystemMessageService,
+    SystemMessage\SystemMessageServiceFactory};
+use Gettext\Generator\{GeneratorInterface, PoGenerator};
+use Gettext\Loader\{LoaderInterface, PoLoader};
+use GuzzleHttp\Client;
 use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
-use Laminas\Stratigility\Middleware\ErrorHandler;
-use Laminas\Stratigility\MiddlewarePipe;
-use Laminas\Stratigility\MiddlewarePipeInterface;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\Session\PhpSession;
-use Mezzio\Authentication\UserInterface;
-use Mezzio\Authentication\UserRepositoryInterface;
+use Laminas\Stratigility\{Middleware\ErrorHandler, MiddlewarePipe, MiddlewarePipeInterface};
+use Mezzio\Authentication\{AuthenticationInterface, Session\PhpSession, UserInterface, UserRepositoryInterface};
 use Mezzio\Csrf\CsrfGuardFactoryInterface;
-use Mezzio\Session\SessionMiddleware;
-use Mezzio\Session\SessionMiddlewareFactory;
-use Mezzio\Session\SessionPersistenceInterface;
+use Mezzio\Session\{SessionMiddleware, SessionMiddlewareFactory, SessionPersistenceInterface};
 use Psr\Http\Client\ClientInterface;
 
 /**
@@ -78,8 +68,7 @@ class ConfigProvider
 
                 // Auth
                 UserRepositoryInterface::class => Service\User\UserService::class,
-                AuthenticationInterface::class
-                    => PhpSession::class,
+                AuthenticationInterface::class => PhpSession::class,
                 MiddlewarePipeInterface::class => MiddlewarePipe::class,
 
                 // allows value setting on the container at runtime.
@@ -110,13 +99,13 @@ class ConfigProvider
                 SystemMessageService::class => SystemMessageServiceFactory::class,
 
                 // Middleware
-                SessionMiddleware::class                   => SessionMiddlewareFactory::class,
-                SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
-                Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
+                SessionMiddleware::class                    => SessionMiddlewareFactory::class,
+                SessionExpiryMiddleware::class              => SessionExpiryMiddlewareFactory::class,
+                Middleware\I18n\SetLocaleMiddleware::class  => Middleware\I18n\SetLocaleMiddlewareFactory::class,
                 Middleware\ErrorHandling\GoneHandler::class => Middleware\ErrorHandling\GoneHandlerFactory::class,
 
                 // Auth
-                UserInterface::class => Entity\UserFactory::class,
+                UserInterface::class                    => Entity\UserFactory::class,
                 Service\OneLogin\OneLoginService::class => Service\OneLogin\OneLoginServiceFactory::class,
 
                 // Handlers
@@ -156,9 +145,6 @@ class ConfigProvider
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getTwig(): array
     {
         return [
