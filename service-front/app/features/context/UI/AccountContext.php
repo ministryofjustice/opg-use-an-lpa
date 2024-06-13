@@ -178,6 +178,7 @@ class AccountContext implements Context
         } else {
             // do all the steps to sign in
             $this->iAccessTheLoginForm();
+            $this->iAmAUserOfTheLpaApplication();
             $this->iEnterCorrectCredentials();
         }
 
