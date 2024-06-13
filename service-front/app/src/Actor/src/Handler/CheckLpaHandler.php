@@ -272,7 +272,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 'dob'             => $dob,
                 'referenceNumber' => $referenceNumber,
                 'activation_key'  => $activation_key,
-            ]));
+        ]));
     }
 
     /**
