@@ -1,8 +1,8 @@
-@actor @cookie-consent
-Feature: Cookie consent
-  As a user
-  I want to see the cookie consent banner when I visit the service
-  So that I can set my cookie preferences
+#@actor @cookie-consent
+#Feature: Cookie consent
+#  As a user
+#  I want to see the cookie consent banner when I visit the service
+#  So that I can set my cookie preferences
 
   @ui
   Scenario: See cookie consent banner

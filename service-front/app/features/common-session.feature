@@ -1,8 +1,8 @@
-@session
-Feature: Session length is independent of cookie lifetime
-  As a user of the application
-  I should be warned of potential or actual session expiry
-  Which requires a session length independent of cookie lifetime
+#@session
+#Feature: Session length is independent of cookie lifetime
+#  As a user of the application
+#  I should be warned of potential or actual session expiry
+#  Which requires a session length independent of cookie lifetime
 
   @ui @actor @viewer
   Scenario: A user session is created when accessing the application

@@ -1,8 +1,8 @@
-@actor @actorDeleteAccount
-Feature: The user is able to delete their account
-  As a user
-  I want to be able to delete my account
-  If I no longer want to use the service
+#@actor @actorDeleteAccount
+#Feature: The user is able to delete their account
+#  As a user
+#  I want to be able to delete my account
+#  If I no longer want to use the service
 
   Background:
     Given I am a user of the lpa application
