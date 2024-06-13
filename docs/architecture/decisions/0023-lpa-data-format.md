@@ -48,7 +48,6 @@ Present in Legacy but Missing in Modernise
 * county -  Modernise just uses lines (1-3) instead 
 * address -> type "Primary" doesn't apply, in fact all Legacy addresses are primary
 * companyName (wthin the person block) now appears to be "name"  within Trust Corporation block
-* systemStatus  - boolean  ** ??  person is active or not - Mdoernise has a field to map to this
 
 Renamed fields
 -----------------
@@ -57,11 +56,12 @@ Renamed fields
 * Legacy dob equivalent to Mdoernise dateOfBirth - format the same (YYYY-MM-DD)
 * Legacy addressLineN becomes lineN in Modernise (within address block)
 * "applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions
+* systemStatus  - boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
 
 Other differences
 ----------------
 * Legacy allowes multiple addresses.  But multiples not used in practice, so can just use 1st one for Legacy, use the only one for Modernise
-* Legacy has firstName and middleName,  vs Modernise has these merged into 1 as firstNames  -  ?? TODO support BOTH formats, as legacy requires name to be split
+* Legacy has firstName and middleName,  vs Modernise has these merged into 1 as firstNames. We will need to support both formats, as legacy requires name to be split but for Modernise is not straightfoward or desirable to attempt to split the multi-name string they send us
 
 Trust Corporations
 ----------------------
@@ -79,7 +79,7 @@ statusDate only exists in Legacy, should be able to manage without this for Use?
 Renamed fields
 -----------------
 *  attorneyActDecisions is renamed whenTheLpaCanBeUsed
-* "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   TODO clarify we will go straight to new enum internally
+* "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   . We will replace the current 4 fields internally, with a new enum similar to how Modernise does it, because this is a better less clumsy way to handle this data
 * "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  , "pfa" is replaced by "property-and-affairs"
 *  "lifeSustainingTreatment": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally
 *  withdrawnDate renamed withdrawnAt
