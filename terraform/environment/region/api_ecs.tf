@@ -534,7 +534,7 @@ locals {
           value = tostring(var.feature_flags.allow_meris_lpas)
         },
         {
-          name = "SUPPORT_DATASTORE_LPAS",
+          name  = "SUPPORT_DATASTORE_LPAS",
           value = tostring(var.feature_flags.support_datastore_lpas)
         },
         {
