@@ -73,6 +73,6 @@ return [
         'identity_issuer' => 'http://identity.one-login-mock/',
     ],
     'feature_flags'                          => [
-        'allow_gov_one_login' => true,
+        'allow_gov_one_login' => false,
     ],
 ];
