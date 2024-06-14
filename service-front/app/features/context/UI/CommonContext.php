@@ -45,10 +45,9 @@ class CommonContext implements Context
         if (
             $this->base->container->get('config')['application'] === 'viewer'
             || (
-                $this->base->container->get('config')['application'] === 'actor'
-                && !$this->base->container->get(FeatureEnabled::class)('allow_gov_one_login')
+                $this->base->container->get('config')['application'] === 'actor' &&
+                !$this->base->container->get(FeatureEnabled::class)('allow_gov_one_login')
             )
-
         ) {
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
