@@ -12,6 +12,7 @@ use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddlewareFactory;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\EncryptedCookiePersistenceFactory;
@@ -41,7 +42,14 @@ class CommonContext implements Context
      */
     public function iAccessTheServiceHomepage(): void
     {
-        if ($this->base->container->get('config')['application'] === 'viewer') {
+        if (
+            $this->base->container->get('config')['application'] === 'viewer'
+            || (
+                $this->base->container->get('config')['application'] === 'actor'
+                && !$this->base->container->get(FeatureEnabled::class)('allow_gov_one_login')
+            )
+
+        ) {
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
