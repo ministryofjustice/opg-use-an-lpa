@@ -112,7 +112,25 @@ classDiagram
     LPA : +Bool applicationHasRestrictions
     LPA:  +String applicationType
     LPA : +String attorneyActDecisions
-    LPA: Person attorneys
+    LPA: +Person attorneys
+    LPA : +String channel
+    LPA : +String dispatchDate
+    LPA: +Person donor
+    LPA : +Bool hasSeveranceWarning
+    LPA: +String invalidDate
+    LPA: +String lifeSustainingTreatment
+    LPA: +String lpaDonorSignatureDate
+    LPA : +Bool lpaIsCleansed
+    LPA: +String onlineLpaId
+    LPA: +String receiptDate
+    LPA: +String registrationDate
+    LPA: +String rejectedDate
+    LPA: +Person replacementAttorneys
+    LPA: +String status
+    LPA: +String statusDate
+    LPA: +Person trustCorporations 
+    LPA: +String uId
+    LPA: +String withdrawnDate
     Person <|-- Donor
     Person <|-- Attorney
     Person <|-- TrustCorporation
@@ -126,7 +144,7 @@ classDiagram
     class Attorney{
     }
     class TrustCorporation{
-        +String name
+        +String companyName
     }
 end
 ```
