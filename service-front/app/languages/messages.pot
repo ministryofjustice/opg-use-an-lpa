@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-12T10:41:28+00:00\n"
+"POT-Creation-Date: 2024-06-17T13:59:01+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -54,6 +54,7 @@ msgstr ""
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:66
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
+#: src/Actor/templates/actor/lpa-not-found.html.twig:85
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:9
 msgid "Back to your LPAs"
@@ -506,7 +507,6 @@ msgid "You'll find the reference number on the LPA and at the top of any letter 
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:99
-#: src/Actor/templates/actor/lpa-not-found.html.twig:35
 msgid "If you're sure you entered the right information, please call us:"
 msgstr ""
 
@@ -519,7 +519,6 @@ msgid "This could be because the information you entered does not match the info
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
-#: src/Actor/templates/actor/lpa-not-found.html.twig:16
 #: src/Actor/templates/actor/check-your-answers.html.twig:12
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
@@ -527,6 +526,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
+#: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr ""
@@ -540,6 +540,7 @@ msgid "Name"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
+#: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
@@ -600,12 +601,11 @@ msgid "You must do this before you try to ask for an activation key again, so we
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:95
-#: src/Actor/templates/actor/lpa-not-found.html.twig:31
 msgid "What to do if you’re sure you entered the right information"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:110
-#: src/Actor/templates/actor/lpa-not-found.html.twig:41
+#: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 msgid "Try again"
 msgstr ""
@@ -2651,7 +2651,7 @@ msgstr ""
 msgid "We could not find an LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:12
+#: src/Actor/templates/actor/lpa-not-found.html.twig:11
 msgid "We could not find a lasting power of attorney"
 msgstr ""
 
@@ -2683,7 +2683,6 @@ msgstr ""
 msgid "You must then contact us so we can correct the date on our records."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr ""
@@ -3962,14 +3961,17 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:66
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:68
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Textphone: 0115 934 2778 <br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:72
 #: src/Common/templates/partials/contact-details/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr ""
@@ -3978,6 +3980,7 @@ msgstr ""
 msgid "Office of the Public Guardian<br> PO Box 16185<br> Birmingham<br> B2 2WH"
 msgstr ""
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:61
 #: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr ""
@@ -4575,4 +4578,36 @@ msgstr ""
 
 #: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
 msgid "To use a lasting power of attorney online in future, you’ll need to create a new account."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:13
+msgid "This could be because the:"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:17
+msgid "activation key you entered is incorrect"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:21
+msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+msgid "date of birth you entered does not match our records"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:30
+msgid "LPA reference number you entered is incorrect or for a different LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:37
+msgid "Your answers"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:43
+msgid "Activation Key"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:59
+msgid "If you’re sure you entered the correct information, contact us."
 msgstr ""

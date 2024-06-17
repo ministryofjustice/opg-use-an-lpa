@@ -2532,9 +2532,9 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check');
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
-        $this->ui->assertPageContainsText('LPA reference number: 700000000054');
-        $this->ui->assertPageContainsText('Activation key: C-XYUPHWQRECHV');
-        $this->ui->assertPageContainsText('Date of birth: 5 October 1975');
+        $this->ui->assertPageContainsText('LPA reference number 700000000054');
+        $this->ui->assertPageContainsText('Activation key C-XYUPHWQRECHV');
+        $this->ui->assertPageContainsText('Date of birth 5 October 1975');
     }
 
     /**
@@ -3223,5 +3223,21 @@ class LpaContext implements Context
     public function iClickTheCancelLink(): void
     {
         $this->ui->clickLink('Cancel');
+    }
+
+    /**
+     * @When /^I click Back to your LPAs$/
+     */
+    public function iClickBackToYourLPAsLink(): void
+    {
+        $this->ui->clickLink('Back to your LPAs');
+    }
+
+    /**
+     * @When /^I return to the dashboard$/
+     */
+    public function iReturnToTheDashboard(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 }
