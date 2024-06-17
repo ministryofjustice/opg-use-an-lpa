@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-12T10:41:28+00:00\n"
+"POT-Creation-Date: 2024-06-17T13:59:01+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -82,6 +82,7 @@ msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:66
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
+#: src/Actor/templates/actor/lpa-not-found.html.twig:85
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:9
 msgid "Back to your LPAs"
@@ -669,7 +670,6 @@ msgstr ""
 "enwi ar yr atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:99
-#: src/Actor/templates/actor/lpa-not-found.html.twig:35
 msgid "If you're sure you entered the right information, please call us:"
 msgstr "Os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni:"
 
@@ -688,7 +688,6 @@ msgstr ""
 "gennym am yr atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
-#: src/Actor/templates/actor/lpa-not-found.html.twig:16
 #: src/Actor/templates/actor/check-your-answers.html.twig:12
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
@@ -696,6 +695,7 @@ msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
+#: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
@@ -709,6 +709,7 @@ msgid "Name"
 msgstr "Enw"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
+#: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
@@ -799,12 +800,11 @@ msgstr ""
 "mwyn i ni allu postio eich allwedd i’r cyfeiriad cywir."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:95
-#: src/Actor/templates/actor/lpa-not-found.html.twig:31
 msgid "What to do if you’re sure you entered the right information"
 msgstr "Beth i’w wneud os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:110
-#: src/Actor/templates/actor/lpa-not-found.html.twig:41
+#: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
@@ -3754,7 +3754,7 @@ msgstr "Allgofnodi"
 msgid "We could not find an LPA"
 msgstr "Nid oedd modd cael hyd i LPA"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:12
+#: src/Actor/templates/actor/lpa-not-found.html.twig:11
 msgid "We could not find a lasting power of attorney"
 msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol"
 
@@ -3813,7 +3813,6 @@ msgstr ""
 "Rhaid i chi gysylltu â ni wedyn er mwyn i ni allu cywiro’r dyddiad yn ein "
 "cofnodion."
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
@@ -5579,10 +5578,12 @@ msgstr ""
 msgid "The donor"
 msgstr "Y rhoddwr"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:66
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr "Ffonio"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:68
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
@@ -5595,6 +5596,7 @@ msgstr ""
 "        Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:72
 #: src/Common/templates/partials/contact-details/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr "Gwybodaeth am brisiau galwadau"
@@ -5607,6 +5609,7 @@ msgstr ""
 "        Birmingham<br>\n"
 "        B2 2WH"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:61
 #: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr "E-bost"
@@ -6596,6 +6599,46 @@ msgid ""
 msgstr ""
 "I ddefnyddio atwrneiaeth arhosol ar-lein yn y dyfodol, bydd angen i chi greu "
 "cyfrif newydd."
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:13
+msgid "This could be because the:"
+msgstr "Dyma’r rhesymau posibl:"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:17
+msgid "activation key you entered is incorrect"
+msgstr "mae’r allwedd cadarnhau rydych chi wedi’i roi yn anghywir"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:21
+msgid ""
+"activation key has expired or has already been used - you can <a href=\"%link%"
+"\" class=\"govuk-link\">request a new key</a>"
+msgstr ""
+"mae’r allwedd cadarnhau wedi did i ben neu wedi cael ei defnyddio’n barod - "
+"gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am allwedd newydd</a>"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+msgid "date of birth you entered does not match our records"
+msgstr ""
+" dydy’r dyddiad geni rydych chi wedi’i roi ddim yn cyfatb i’n cofnodion ni"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:30
+msgid "LPA reference number you entered is incorrect or for a different LPA"
+msgstr ""
+"mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu "
+"mae’r cyfeirnod yn ymwneud ag atwrneiaeth arhosol wahanol"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:37
+msgid "Your answers"
+msgstr "Eich atebion"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:43
+msgid "Activation Key"
+msgstr "Allwedd cadarnhau"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:59
+msgid "If you’re sure you entered the correct information, contact us."
+msgstr ""
+"Os ydych chi’n siŵr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni."
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"
