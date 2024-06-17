@@ -103,6 +103,25 @@ It looks as though Modernise may at some point support jointlyAndSeverally for s
 ## Decision
 Changes to the data structure will consist of (a) New fields and (b) Existing fields populated from differently named ones
 
+
+```mermaid
+classDiagram
+    note "LPA data structure"
+    Person <|-- Donor
+    Person <|-- Attorney
+    Person <|-- TrustCorporation
+    Person : +String attorneyActDecisions
+    class Donor{
+        +String name
+    }
+    class Attorney{
+    }
+    class TrustCorporation{
+        TrustCoporation : +String name
+    }
+end
+```
+
 (a) New fields top level
 ----------------------
 * channel - populated by channel from Modernise
