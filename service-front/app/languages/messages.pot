@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-06T15:52:27+00:00\n"
+"POT-Creation-Date: 2024-06-12T10:41:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -377,7 +377,7 @@ msgstr ""
 msgid "Your <a class=\"govuk-link\" href=\"{link}\">feedback</a> is important to us - it will help us to improve this service."
 msgstr ""
 
-#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:18
 msgid "Back to GOV.UK"
 msgstr ""
 
@@ -2778,7 +2778,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:251
+#: src/Actor/src/Handler/CheckLpaHandler.php:252
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -3887,6 +3887,7 @@ msgstr[0] ""
 msgid "Also known as"
 msgstr ""
 
+#: src/Actor/templates/actor/check-lpa.html.twig:46
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
 msgid "(Trust corporation)"
 msgstr ""
@@ -4566,4 +4567,12 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid "To use a lasting power of attorney online, you'll need to create a new account."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid "To use a lasting power of attorney online in future, you’ll need to create a new account."
 msgstr ""

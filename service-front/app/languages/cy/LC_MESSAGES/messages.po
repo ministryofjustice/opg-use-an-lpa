@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-06T15:52:27+00:00\n"
+"POT-Creation-Date: 2024-06-12T10:41:28+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -502,7 +502,7 @@ msgstr ""
 "Mae eich <a class=\"govuk-link\" href=\"{link}\">adborth</a> yn bwysig i ni – "
 "bydd yn ein helpu i wella’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:18
 msgid "Back to GOV.UK"
 msgstr "Yn ôl i GOV.UK"
 
@@ -3944,7 +3944,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:251
+#: src/Actor/src/Handler/CheckLpaHandler.php:252
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -5455,6 +5455,7 @@ msgstr[5] "%attorneyOrdinal% atwrnai"
 msgid "Also known as"
 msgstr "A elwir hefyd yn"
 
+#: src/Actor/templates/actor/check-lpa.html.twig:46
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
 msgid "(Trust corporation)"
 msgstr "(Corfforaeth Ymddiriedolaeth)"
@@ -6582,6 +6583,19 @@ msgstr "eiddo a materion ariannol"
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid ""
+"To use a lasting power of attorney online, you'll need to create a new account."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid ""
+"To use a lasting power of attorney online in future, you’ll need to create a "
+"new account."
+msgstr ""
+"I ddefnyddio atwrneiaeth arhosol ar-lein yn y dyfodol, bydd angen i chi greu "
+"cyfrif newydd."
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"

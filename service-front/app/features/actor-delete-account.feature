@@ -34,7 +34,7 @@ Feature: The user is able to delete their account
     When I attempt to login to my deleted account
     Then I am told my credentials are incorrect
 
-  @ui
+  @ui @ff:allow_gov_one_login:true
   Scenario: As a one login user I will get a new account if I delete my existing one
     Given I have deleted my account
     When I attempt to login to my deleted account
