@@ -107,10 +107,13 @@ Changes to the data structure will consist of (a) New fields and (b) Existing fi
 ```mermaid
 classDiagram
     note "LPA data structure"
+    LPA o-- Person
     Person <|-- Donor
     Person <|-- Attorney
     Person <|-- TrustCorporation
     Person : +String attorneyActDecisions
+    class LPA{
+    }
     class Donor{
         +String name
     }
