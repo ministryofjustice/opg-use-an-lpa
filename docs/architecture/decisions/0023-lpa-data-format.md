@@ -38,7 +38,6 @@ New fields for Modernise not used in Use An LPA
 --------------------------------------------------
 * contactLanguagePreference - we will ignore because instead we use the Use account's preferences
 * identityCheck - not used by Use
-* signedAt  ** ???  only needed for donor - move to legacy field TODO
 * phone - (only Attorney ) not used by Use
 
 Present in Legacy but Missing in Modernise
@@ -55,6 +54,7 @@ Renamed fields
 * Legacy addressLineN becomes lineN in Modernise (within address block)
 * "applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions
 * systemStatus  - boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
+* lpaDonorSignatureDate equivalent to signedAt in Modernise
 
 Other differences
 ----------------
@@ -98,7 +98,7 @@ Present in Legacy but Missing in Modernise
 * Legacy "cancellationDate": "2020-03-17", appears not to have an equiv in Modernise - we would will use registrationStatus to identify if a Modernise LPA is cancelled
 * "onlineLpaId": "A15527329531"  not needed in Use as we use uid
 
-new fields - jointlyAndSeverally for some and not others TODO
+It looks as though Modernise may at some point support jointlyAndSeverally for some Attorneys only and not others, but this is yet to be confirmed. 
 
 ## Decision
 Changes to the data structure will consist of (a) New fields and (b) Existing fields populated from differently named ones
@@ -123,13 +123,15 @@ Changes to the data structure will consist of (a) New fields and (b) Existing fi
 (b) Existing fields from differently named Persons level
 -------------------------------------------------------
 * OtherNames will be populated by otherNamesKnownBy for Modernise LPAs
-* surnName will be populated by lastName for Modernise LPAs
+* surName will be populated by lastName for Modernise LPAs
 * dob will be populated by dateOfBirth for Modernise LPAs
 * addressLineN will be populated by lineN within address block for Modernise LPAs
 * companyName will be populated by name for Modernise LPAs  (for Trust Corporations only)
 * applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions for Modernise LPAs
 * - boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
 * firstName and middleName continue to be populated from legacy
+* town -  will be popluated from AddressLine3 where needed
+* lpaDonorSignatureDate will be populated from signedAt  
 
 
 ## Consequences
