@@ -108,19 +108,25 @@ Changes to the data structure will consist of (a) New fields and (b) Existing fi
 classDiagram
     note "LPA data structure"
     LPA o-- Person
+    LPA : +Bool applicationHasGuidance
+    LPA : +Bool applicationHasRestrictions
+    LPA:  +String applicationType
+    LPA : +String attorneyActDecisions
+    LPA: Person attorneys
     Person <|-- Donor
     Person <|-- Attorney
     Person <|-- TrustCorporation
-    Person : +String attorneyActDecisions
     class LPA{
     }
-    class Donor{
+    class Person{
         +String name
+    }
+    class Donor{
     }
     class Attorney{
     }
     class TrustCorporation{
-        TrustCoporation : +String name
+        +String name
     }
 end
 ```
