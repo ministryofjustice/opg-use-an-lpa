@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-17T13:59:01+00:00\n"
+"POT-Creation-Date: 2024-06-17T16:11:43+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4610,4 +4610,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:59
 msgid "If you’re sure you entered the correct information, contact us."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid "If you’ve not used GOV.UK One Login before, you can set up your access on the next page."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:39
+msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
 msgstr ""

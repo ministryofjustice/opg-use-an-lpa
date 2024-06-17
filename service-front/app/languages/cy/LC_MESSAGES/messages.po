@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-17T13:59:01+00:00\n"
+"POT-Creation-Date: 2024-06-17T16:11:43+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3979,14 +3979,14 @@ msgid ""
 "GOV.UK One Login."
 msgstr ""
 "Bydd angen i chi fewngofnodi i’r gwasanaeth Defnyddio atwrneiaeth arhosol drwy "
-"Gov.uk One Login."
+"GOV.UK One Login."
 
 #: src/Actor/templates/actor/one-login.html.twig:28
 msgid ""
 "If you’ve not used Gov.uk One Login before, you can set up your access on the "
 "next page."
 msgstr ""
-"Os nad ydych chi wedi defnyddio Gov.uk One Login o’r blaen, gallwch greu "
+"Os nad ydych chi wedi defnyddio GOV.UK One Login o’r blaen, gallwch greu "
 "cyfrif ar y dudalen nesaf."
 
 #: src/Actor/templates/actor/one-login.html.twig:33
@@ -4008,13 +4008,13 @@ msgid ""
 "previously added will automatically appear."
 msgstr ""
 "Os oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol o 1 Ionawr 2024 "
-"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.Uk One Login, "
+"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.UK One Login, "
 "bydd unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
 "ymddangos yn awtomatig."
 
 #: src/Actor/templates/actor/one-login.html.twig:56
 msgid "with GOV.UK One Login"
-msgstr "gyda Gov.uk One Login"
+msgstr "gyda GOV.UK One Login"
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:24
 msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
@@ -6639,6 +6639,25 @@ msgstr "Allwedd cadarnhau"
 msgid "If you’re sure you entered the correct information, contact us."
 msgstr ""
 "Os ydych chi’n siŵr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni."
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid ""
+"If you’ve not used GOV.UK One Login before, you can set up your access on the "
+"next page."
+msgstr ""
+"Os nad ydych chi wedi defnyddio GOV.UK One Login o’r blaen, gallwch greu "
+"cyfrif ar y dudalen nesaf."
+
+#: src/Actor/templates/actor/one-login.html.twig:39
+msgid ""
+"If you have a Use a lasting power of attorney account from before 1 January "
+"2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve "
+"previously added will automatically appear."
+msgstr ""
+"Os oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol o 1 Ionawr 2024 "
+"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.UK One Login, "
+"bydd unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
+"ymddangos yn awtomatig."
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"
