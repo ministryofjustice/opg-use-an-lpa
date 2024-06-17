@@ -14,10 +14,10 @@ The difference between legacy and Modernise data formats are as follows:
 
 Top level Sections
 -------------------
-There is a donor section for both Legacy and Modernise
-Legacy has attorneys and replacementAttorneys lists,  Modernise has status field for Attorney of which "replacement" is a possible value, we can load Modernise's attorneys marked in this way, into our replacementAttoryneys section
-There is TrustCorporations for both
-Modernise has a schema version number which could in future be used to do different logic with fields if they are different in a later version
+* There is a donor section for both Legacy and Modernise
+* Legacy has attorneys and replacementAttorneys lists,  Modernise has status field for Attorney of which "replacement" is a possible value, we can load Modernise's attorneys marked in this way, into our replacementAttoryneys section
+* There is TrustCorporations for both
+* Modernise has a schema version number which could in future be used to do different logic with fields if they are different in a later version
 
 
 People e:g Donor, Attorneys including Replacement Attorneys  (Use doesn't need to know about Certificate Provider or People to Notify)
@@ -122,24 +122,24 @@ classDiagram
 end
 ```
 
-(a) New fields top level
+(a) New fields at the top level
 ----------------------
 * channel - populated by channel from Modernise
 
-(b) Existing fields from differently named Top level
+(b) Existing fields from differently named one, at the top level
 -------------------------------------------------------
 *  attorneyActDecisions will be populated by whenTheLpaCanBeUsed for Modernise LPAs
 * "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   . We will replace the current 4 fields internally, with a new enum similar to how Modernise does it, because this is a better less clumsy way to handle this data
 * "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  , "pfa" is replaced by "property-and-affairs"
-*  TODO "lifeSustainingTreatmentwill be populated by ": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally for Modernise LPAs
+*  "lifeSustainingTreatmentwill be populated by ": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally for Modernise LPAs
 *  withdrawnDate will be populated by withdrawnAt for Modernise LPAs
 * registrationDate will be populated by registrationAt for Modernise LPAs
 
-(a) New fields Person level
-----------
+(a) New fields at the Person level
+--------------------------------------
 * new firstNames field is populated by firstNames for Modernise LPAs
 
-(b) Existing fields from differently named Persons level
+(b) Existing fields from differently named ones, at the Persons level
 -------------------------------------------------------
 * OtherNames will be populated by otherNamesKnownBy for Modernise LPAs
 * surName will be populated by lastName for Modernise LPAs
@@ -147,7 +147,7 @@ end
 * addressLineN will be populated by lineN within address block for Modernise LPAs
 * companyName will be populated by name for Modernise LPAs  (for Trust Corporations only)
 * applicationHasRestrictions": true, and "applicationHasGuidance": false, in Modernise are covered by hasRestrictionsAndConditions for Modernise LPAs
-* - boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
+* boolean whether person is active or not - is replaced in Modernise by status field on attorneys 
 * firstName and middleName continue to be populated from legacy
 * town -  will be popluated from AddressLine3 where needed
 * lpaDonorSignatureDate will be populated from signedAt  
