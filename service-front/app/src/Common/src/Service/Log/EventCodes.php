@@ -31,11 +31,6 @@ class EventCodes
     public const ACTIVATION_KEY_EXISTS = 'ACTIVATION_KEY_EXISTS';
 
     /**
-     * User activation key has expired
-     */
-    public const ACTIVATION_KEY_EXPIRED = 'ACTIVATION_KEY_EXPIRED';
-
-    /**
      * User does not have an activation key
      */
     public const ACTIVATION_KEY_NOT_EXISTS = 'ACTIVATION_KEY_NOT_EXISTS';

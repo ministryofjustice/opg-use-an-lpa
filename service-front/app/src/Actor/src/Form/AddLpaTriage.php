@@ -22,9 +22,8 @@ class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
             'type'    => 'Radio',
             'options' => [
                 'value_options' => [
-                    'Yes'     => 'Yes',
-                    'No'      => 'No',
-                    'Expired' => 'Expired',
+                    'Yes' => 'Yes',
+                    'No'  => 'No',
                 ],
             ],
         ]);
