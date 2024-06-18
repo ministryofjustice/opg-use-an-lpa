@@ -102,7 +102,6 @@ class ConfigProvider
                 SessionMiddleware::class                    => SessionMiddlewareFactory::class,
                 SessionExpiryMiddleware::class              => SessionExpiryMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class  => Middleware\I18n\SetLocaleMiddlewareFactory::class,
-                Middleware\ErrorHandling\GoneHandler::class => Middleware\ErrorHandling\GoneHandlerFactory::class,
 
                 // Auth
                 UserInterface::class                    => Entity\UserFactory::class,
@@ -111,6 +110,7 @@ class ConfigProvider
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                Handler\GoneHandler::class        => Handler\Factory\GoneHandlerFactory::class,
                 TranslatorInterface::class        => I18n\TranslatorFactory::class,
                 TranslationExtension::class
                     => View\Twig\TranslationExtensionFactory::class,
