@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-18T09:59:23+00:00\n"
+"POT-Creation-Date: 2024-06-18T11:35:44+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6733,6 +6733,22 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:105
 msgid "No, I need to request an activation key"
 msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
+
+#: src/Actor/templates/actor/settings.html.twig:51
+msgid "Deleting your account"
+msgstr "Dileu eich cyfrif"
+
+#: src/Actor/templates/actor/settings.html.twig:52
+msgid ""
+"If you no longer need your Use a lasting power of attorney account, you can "
+"delete it."
+msgstr ""
+"Os nad oes arnoch angen eich cyfrif Defnyddio atwrneiaeth arhosol mwyach, "
+"gallwch ei ddileu."
+
+#: src/Actor/templates/actor/settings.html.twig:54
+msgid "Find out more about deleting your account."
+msgstr "Darganfod mwy am ddileu eich cyfrif."
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"

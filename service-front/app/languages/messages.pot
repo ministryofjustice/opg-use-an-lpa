@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-18T09:59:23+00:00\n"
+"POT-Creation-Date: 2024-06-18T11:35:44+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4668,4 +4668,16 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:105
 msgid "No, I need to request an activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:51
+msgid "Deleting your account"
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:52
+msgid "If you no longer need your Use a lasting power of attorney account, you can delete it."
+msgstr ""
+
+#: src/Actor/templates/actor/settings.html.twig:54
+msgid "Find out more about deleting your account."
 msgstr ""

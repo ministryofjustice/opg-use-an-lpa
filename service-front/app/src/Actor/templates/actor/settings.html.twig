@@ -47,7 +47,11 @@
                              <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
                         </span>
                     </div>
-                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete">{% trans %}Delete account{% endtrans %}</a>
+
+                    <h3 class="govuk-heading-s">{% trans %}Deleting your account{% endtrans %}</h3>
+                    <p class="govuk-body">{% trans %}If you no longer need your Use a lasting power of attorney account, you can delete it.{% endtrans %}</p>
+
+                    <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete govuk-link">{% trans %}Find out more about deleting your account.{% endtrans %}</a>
                 </div>
             </div>
         </main>
