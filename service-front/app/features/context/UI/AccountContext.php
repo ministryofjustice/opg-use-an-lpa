@@ -1774,7 +1774,7 @@ class AccountContext implements Context
     public function iRequestToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/settings');
-        $this->ui->clickLink('Delete account');
+        $this->ui->clickLink('Find out more about deleting your account.');
     }
 
     /**
