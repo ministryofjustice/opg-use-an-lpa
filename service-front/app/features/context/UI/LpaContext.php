@@ -3070,15 +3070,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I say I have an activation key but it has expired$/
-     */
-    public function iSayIHaveAnActivationKeyButItHasExpired(): void
-    {
-        $this->ui->fillField('activation_key_triage', 'Expired');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
      * @When /^I request to view an LPA which has an inactive attorney named (.*)$/
      */
     public function iRequestToViewAnLPAWhichHasAnInactiveAttorney($name): void

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-18T07:56:24+00:00\n"
+"POT-Creation-Date: 2024-06-18T09:59:23+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -284,7 +284,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:126
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:118
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
@@ -1433,7 +1433,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:131
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:123
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 msgid "Cancel"
 msgstr ""
@@ -2066,6 +2066,7 @@ msgid "You cannot ask for a key for:"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:29
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:86
 msgid "enduring powers of attorney (EPAs)"
 msgstr ""
 
@@ -2520,7 +2521,7 @@ msgstr ""
 msgid "Activation keys are 13 letters and numbers long and start with a C.<br> For example: C-AB12 CD34 EF56"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:45
 msgid "Where can I find my activation key?"
 msgstr ""
 
@@ -2532,7 +2533,7 @@ msgstr ""
 msgid "For LPAs registered on or after 17 July 2020"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:71
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:58
 msgid "Your activation key is on the letter we sent you that told you the LPA had been registered."
 msgstr ""
 
@@ -2544,7 +2545,7 @@ msgstr ""
 msgid "For LPAs registered before 17 July 2020"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:84
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:70
 msgid "You have to request an activation key from us."
 msgstr ""
 
@@ -2564,7 +2565,7 @@ msgstr ""
 msgid "You’ll need to show the paper EPA to people or organisations instead."
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:105
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:101
 msgid "Yes, I have an activation key"
 msgstr ""
 
@@ -4623,4 +4624,48 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
 msgid "Where do you currently live?"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:30
+msgid "You need your own unique activation key to add an LPA to your account. <br> Activation keys expire after 12 months."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:35
+msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+msgid "For LPAs registered in the last 12 months"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
+msgid "For LPAs registered more than 12 months ago"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:72
+msgid "If you’ve already requested an activation key, you'll find it on the letter or email we sent you."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:79
+msgid "When activation keys cannot be used"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:83
+msgid "This service cannot be used for:"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:85
+msgid "LPAs with reference numbers fewer than 12 digits and registered before January 2016"
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:88
+msgid "You’ll need to show the paper LPA or EPA to people or organisations instead."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:93
+msgid "If you’ve lost your activation key, its expired, or you’ve not had one before, you can request a new one."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:105
+msgid "No, I need to request an activation key"
 msgstr ""
