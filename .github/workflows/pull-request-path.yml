@@ -288,6 +288,7 @@ jobs:
       - workflow_variables
       - workspace_name
       - update_documentation
+      - run_behat_suite
     steps:
       - name: workflow has ended without issue
         run: |
@@ -298,6 +299,11 @@ jobs:
             echo "${{ needs.workflow_variables.outputs.parsed_branch }} PR environment tested, built and deployed"
             echo "Tag Used: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}"
             echo "URL: https://${{ needs.workspace_name.outputs.name }}.use-lasting-power-of-attorney.service.gov.uk"
+
+            echo "## Test Duration Summary" >> $GITHUB_STEP_SUMMARY
+            echo "| Test Suite | Duration |" >> $GITHUB_STEP_SUMMARY
+            echo "|------------|----------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Behat      | ${{ needs.run_behat_suite.outputs.behat_test_duration }} |" >> $GITHUB_STEP_SUMMARY
           fi
     if: |
       always() &&
