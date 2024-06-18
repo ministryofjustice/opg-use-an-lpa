@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-17T16:11:43+00:00\n"
+"POT-Creation-Date: 2024-06-18T07:56:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -274,7 +274,7 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:40
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:85
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
@@ -1431,6 +1431,7 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:131
 #: src/Actor/templates/actor/check-lpa.html.twig:105
@@ -4618,4 +4619,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/one-login.html.twig:39
 msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+msgid "Where do you currently live?"
 msgstr ""
