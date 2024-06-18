@@ -6,6 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
@@ -25,7 +26,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Looks up LPAs in the Sirius API Gateway.
  */
-class Lpas implements LpasInterface
+class Lpas implements LpasInterface, RequestLetterInterface
 {
     private string $apiBaseUri;
 
