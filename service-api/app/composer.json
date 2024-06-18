@@ -59,7 +59,7 @@
         "mezzio/mezzio-fastroute": "^3.0",
         "mezzio/mezzio-helpers": "^5.0",
         "paragonie/constant_time_encoding": "^2.2",
-        "paragonie/hidden-string": "^1.0",
+        "paragonie/hidden-string": "^2.0",
         "psr/http-client-implementation": "^1.0",
         "psr/clock": "^1.0",
         "ramsey/uuid": "^4.0",
