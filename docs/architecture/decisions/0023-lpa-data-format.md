@@ -138,6 +138,20 @@ classDiagram
     }
     class Person{
         +String name
+        +String addressLine1
+        +String addressLine2
+        +String addressLine3
+        +String country
+        +String county
+        +String postcode
+        +String town
+        +String type
+        +String dob
+        +String email
+        +String firstname
+        +String firstnames
+        +String surName
+        +String otherNames
     }
     class Donor{
     }
