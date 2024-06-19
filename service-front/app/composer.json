@@ -41,7 +41,7 @@
         "ext-json": "*",
         "ext-redis": "*",
         "aws/aws-sdk-php": "^3.208.9",
-        "blazon/psr11-monolog": "^4.0",
+        "blazon/psr11-monolog": "^5.0",
         "cooperaj/better-twig-i18n": "^3.0",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^8.0",
