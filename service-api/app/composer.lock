@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10b2eb80aa39ad9d80a259d92846e008",
+    "content-hash": "7bfb68eba6f6b8b8565d8973a86270f4",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -210,39 +210,39 @@
         },
         {
             "name": "blazon/psr11-monolog",
-            "version": "4.0.1",
+            "version": "5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/blazon/psr11-monolog.git",
-                "reference": "fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3"
+                "reference": "109f7531535a282cdd2d150ef67a0ec9652debf2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/blazon%2Fpsr11-monolog/repository/archive.zip?sha=fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3",
-                "reference": "fcd0d2a31a36574bf99a9ac8f4fae05d1abdada3",
+                "url": "https://gitlab.com/api/v4/projects/blazon%2Fpsr11-monolog/repository/archive.zip?sha=109f7531535a282cdd2d150ef67a0ec9652debf2",
+                "reference": "109f7531535a282cdd2d150ef67a0ec9652debf2",
                 "shasum": ""
             },
             "require": {
-                "monolog/monolog": "^2.2.0",
-                "php": "^7.3|^8.0",
-                "psr/container": "^1.0.0"
+                "monolog/monolog": "^2.3",
+                "php": "^8.0",
+                "psr/container": "^1.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "^3.31",
+                "aws/aws-sdk-php": "^3.185",
                 "doctrine/couchdb": "1.0.0-beta4",
-                "graylog2/gelf-php": "^1.6",
-                "mongodb/mongodb": "^1.1",
-                "php-amqplib/php-amqplib": "2.6.*",
+                "graylog2/gelf-php": "^1.7",
+                "mongodb/mongodb": "^1.9",
+                "php-amqplib/php-amqplib": "^3.0",
                 "php-console/php-console": "^3.1",
-                "phpmd/phpmd": "@stable",
-                "phpstan/phpstan": "^0.12.64",
-                "phpunit/phpunit": "^9.5.2",
+                "phpmd/phpmd": "^2.10",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^9.5",
                 "predis/predis": "^1.1",
-                "ruflin/elastica": "^7.0.0",
-                "squizlabs/php_codesniffer": "^3.5.8",
+                "ruflin/elastica": "^7.1",
+                "squizlabs/php_codesniffer": "^3.6",
                 "swiftmailer/swiftmailer": "^6.2",
-                "symfony/dependency-injection": "^3.3",
-                "vimeo/psalm": "^4.3"
+                "symfony/dependency-injection": "^5.3",
+                "vimeo/psalm": "^4.8"
             },
             "type": "library",
             "autoload": {
@@ -266,7 +266,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/24109988/issues"
             },
-            "time": "2021-02-18T09:07:17+00:00"
+            "time": "2021-07-19T20:36:41+00:00"
         },
         {
             "name": "brick/math",
