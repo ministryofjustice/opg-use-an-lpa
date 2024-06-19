@@ -110,7 +110,6 @@ class ConfigProvider
                 // Handlers
                 Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
-                Handler\GoneHandler::class        => Handler\Factory\GoneHandlerFactory::class,
                 TranslatorInterface::class        => I18n\TranslatorFactory::class,
                 TranslationExtension::class
                     => View\Twig\TranslationExtensionFactory::class,
