@@ -16,7 +16,7 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}Where do you live?{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl" id="postcode_heading">{% trans %}Where do you currently live?{% endtrans %}</h1>
                     <p class="govuk-body">{% trans %}We will send your activation key to you by post.{% endtrans %}</p>
 
                     {{ govuk_form_open(form) }}
@@ -36,8 +36,19 @@
                             },
                         ]}
                     ) }}
-                    
-                    <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+
+                            <button data-prevent-double-click="true" type="submit" class="govuk-button moj-button-menu__item">{% trans %}Continue{% endtrans %}</button>
+
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
 
                     {{ govuk_form_close() }}
                 </div>

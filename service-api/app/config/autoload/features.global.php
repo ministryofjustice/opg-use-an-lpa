@@ -14,5 +14,9 @@ return [
             getenv('INSTRUCTIONS_AND_PREFERENCES'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
+        'support_datastore_lpas' => filter_var(
+            getenv('SUPPORT_DATASTORE_LPAS'),
+            FILTER_VALIDATE_BOOLEAN
+        )
     ],
 ];

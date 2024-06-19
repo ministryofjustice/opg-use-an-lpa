@@ -82,6 +82,7 @@ msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:66
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
+#: src/Actor/templates/actor/lpa-not-found.html.twig:85
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:9
 msgid "Back to your LPAs"
@@ -369,7 +370,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:40
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:85
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
@@ -379,7 +380,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:55
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:126
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:118
 #: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
@@ -502,7 +503,7 @@ msgstr ""
 "Mae eich <a class=\"govuk-link\" href=\"{link}\">adborth</a> yn bwysig i ni – "
 "bydd yn ein helpu i wella’r gwasanaeth hwn."
 
-#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:26
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:18
 msgid "Back to GOV.UK"
 msgstr "Yn ôl i GOV.UK"
 
@@ -669,7 +670,6 @@ msgstr ""
 "enwi ar yr atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:99
-#: src/Actor/templates/actor/lpa-not-found.html.twig:35
 msgid "If you're sure you entered the right information, please call us:"
 msgstr "Os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni:"
 
@@ -688,7 +688,6 @@ msgstr ""
 "gennym am yr atwrneiaeth arhosol."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
-#: src/Actor/templates/actor/lpa-not-found.html.twig:16
 #: src/Actor/templates/actor/check-your-answers.html.twig:12
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
@@ -696,6 +695,7 @@ msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
+#: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
 msgstr "Cyfeirnod LPA"
@@ -709,6 +709,7 @@ msgid "Name"
 msgstr "Enw"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
+#: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
@@ -799,12 +800,11 @@ msgstr ""
 "mwyn i ni allu postio eich allwedd i’r cyfeiriad cywir."
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:95
-#: src/Actor/templates/actor/lpa-not-found.html.twig:31
 msgid "What to do if you’re sure you entered the right information"
 msgstr "Beth i’w wneud os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:110
-#: src/Actor/templates/actor/lpa-not-found.html.twig:41
+#: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
@@ -2215,8 +2215,9 @@ msgstr ""
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:131
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:123
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 msgid "Cancel"
 msgstr "Canslo"
@@ -2957,8 +2958,9 @@ msgid "You cannot ask for a key for:"
 msgstr "Ni allwch ofyn am allwedd ar gyfer:"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:29
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:86
 msgid "enduring powers of attorney (EPAs)"
-msgstr "atwrneiaeth barhaus (EPA)"
+msgstr "Atwrniaethau parhaus (EPA)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:30
 msgid "LPAs registered by the Office of the Public Guardian Scotland"
@@ -3120,7 +3122,7 @@ msgstr "Ble ydych chi’n byw?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
 msgid "We will send your activation key to you by post."
-msgstr "Byddwn yn anfon eich allwedd cadarnhau cyfrif atoch drwy’r post."
+msgstr "Byddwn yn anfon eich allwedd cadarnhau atoch chi yn y post."
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:29
 msgid "I live in the UK"
@@ -3573,9 +3575,9 @@ msgstr ""
 "dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56"
 
 # Translation is OK. Doesn’t need a ‘?’
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:45
 msgid "Where can I find my activation key?"
-msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif?"
+msgstr "Ble alla i ddod o hyd i fy allwedd cadarnhau?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:57
 msgid "Activation keys are sent to donors and attorneys by letter or email."
@@ -3587,13 +3589,13 @@ msgstr ""
 msgid "For LPAs registered on or after 17 July 2020"
 msgstr "Ar gyfer LPAs a gofrestrwyd ar neu ar ôl 17 Gorffennaf 2020"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:71
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:58
 msgid ""
 "Your activation key is on the letter we sent you that told you the LPA had "
 "been registered."
 msgstr ""
-"Mae eich allwedd cadarnhau cyfrif yn y llythyr a anfonwyd atoch yn dweud "
-"wrthych fod yr LPA wedi’i chofrestru."
+"Mae eich allwedd cadarnhau ar y llythyr a anfonwyd atoch a oedd yn dweud "
+"wrthych fod yr atwrneiaeth arhosol wedi cael ei chofrestru."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:72
 msgid ""
@@ -3608,9 +3610,9 @@ msgstr ""
 msgid "For LPAs registered before 17 July 2020"
 msgstr "Ar gyfer LPAs a gofrestrwyd cyn 17 Gorffennaf 2020"
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:84
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:70
 msgid "You have to request an activation key from us."
-msgstr "Mae’n rhaid i chi ofyn am allwedd cadarnhau cyfrif gennym ni."
+msgstr "Rhaid i chi ofyn am allwedd cadarnhau gennym ni."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:86
 msgid ""
@@ -3637,9 +3639,9 @@ msgid "You’ll need to show the paper EPA to people or organisations instead."
 msgstr ""
 "Bydd arnoch angen dangos yr EPA papur i’r bobl neu sefydliadau perthnasol."
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:105
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:101
 msgid "Yes, I have an activation key"
-msgstr "Oes, mae gen i allwedd cadarnhau cyfrif i ychwanegu LPA at y cyfrif"
+msgstr "Oes, mae gen i allwedd cadarnhau"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:109
 msgid "No, I do not have an activation key"
@@ -3754,7 +3756,7 @@ msgstr "Allgofnodi"
 msgid "We could not find an LPA"
 msgstr "Nid oedd modd cael hyd i LPA"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:12
+#: src/Actor/templates/actor/lpa-not-found.html.twig:11
 msgid "We could not find a lasting power of attorney"
 msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol"
 
@@ -3813,7 +3815,6 @@ msgstr ""
 "Rhaid i chi gysylltu â ni wedyn er mwyn i ni allu cywiro’r dyddiad yn ein "
 "cofnodion."
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:24
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
@@ -3980,14 +3981,14 @@ msgid ""
 "GOV.UK One Login."
 msgstr ""
 "Bydd angen i chi fewngofnodi i’r gwasanaeth Defnyddio atwrneiaeth arhosol drwy "
-"Gov.uk One Login."
+"GOV.UK One Login."
 
 #: src/Actor/templates/actor/one-login.html.twig:28
 msgid ""
 "If you’ve not used Gov.uk One Login before, you can set up your access on the "
 "next page."
 msgstr ""
-"Os nad ydych chi wedi defnyddio Gov.uk One Login o’r blaen, gallwch greu "
+"Os nad ydych chi wedi defnyddio GOV.UK One Login o’r blaen, gallwch greu "
 "cyfrif ar y dudalen nesaf."
 
 #: src/Actor/templates/actor/one-login.html.twig:33
@@ -4009,13 +4010,13 @@ msgid ""
 "previously added will automatically appear."
 msgstr ""
 "Os oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol o 1 Ionawr 2024 "
-"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.Uk One Login, "
+"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.UK One Login, "
 "bydd unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
 "ymddangos yn awtomatig."
 
 #: src/Actor/templates/actor/one-login.html.twig:56
 msgid "with GOV.UK One Login"
-msgstr "gyda Gov.uk One Login"
+msgstr "gyda GOV.UK One Login"
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:24
 msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
@@ -5579,10 +5580,12 @@ msgstr ""
 msgid "The donor"
 msgstr "Y rhoddwr"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:66
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
 msgstr "Ffonio"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:68
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid ""
 "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
@@ -5595,6 +5598,7 @@ msgstr ""
 "        Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am "
 "tan 5pm"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:72
 #: src/Common/templates/partials/contact-details/telephone.html.twig:8
 msgid "Find out about call charges"
 msgstr "Gwybodaeth am brisiau galwadau"
@@ -5607,6 +5611,7 @@ msgstr ""
 "        Birmingham<br>\n"
 "        B2 2WH"
 
+#: src/Actor/templates/actor/lpa-not-found.html.twig:61
 #: src/Common/templates/partials/contact-details/email.html.twig:1
 msgid "Email"
 msgstr "E-bost"
@@ -6639,6 +6644,151 @@ msgstr "Manylion eich cyfrif"
 #: src/Actor/templates/actor/settings.html.twig:83
 msgid "Update your LPA summary"
 msgstr "Diweddarwch eich crynodeb LPA"
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid ""
+"To use a lasting power of attorney online, you'll need to create a new account."
+msgstr ""
+
+#: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
+msgid ""
+"To use a lasting power of attorney online in future, you’ll need to create a "
+"new account."
+msgstr ""
+"I ddefnyddio atwrneiaeth arhosol ar-lein yn y dyfodol, bydd angen i chi greu "
+"cyfrif newydd."
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:13
+msgid "This could be because the:"
+msgstr "Dyma’r rhesymau posibl:"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:17
+msgid "activation key you entered is incorrect"
+msgstr "mae’r allwedd cadarnhau rydych chi wedi’i roi yn anghywir"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:21
+msgid ""
+"activation key has expired or has already been used - you can <a href=\"%link%"
+"\" class=\"govuk-link\">request a new key</a>"
+msgstr ""
+"mae’r allwedd cadarnhau wedi did i ben neu wedi cael ei defnyddio’n barod - "
+"gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am allwedd newydd</a>"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:26
+msgid "date of birth you entered does not match our records"
+msgstr ""
+" dydy’r dyddiad geni rydych chi wedi’i roi ddim yn cyfatb i’n cofnodion ni"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:30
+msgid "LPA reference number you entered is incorrect or for a different LPA"
+msgstr ""
+"mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu "
+"mae’r cyfeirnod yn ymwneud ag atwrneiaeth arhosol wahanol"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:37
+msgid "Your answers"
+msgstr "Eich atebion"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:43
+msgid "Activation Key"
+msgstr "Allwedd cadarnhau"
+
+#: src/Actor/templates/actor/lpa-not-found.html.twig:59
+msgid "If you’re sure you entered the correct information, contact us."
+msgstr ""
+"Os ydych chi’n siŵr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni."
+
+#: src/Actor/templates/actor/one-login.html.twig:28
+msgid ""
+"If you’ve not used GOV.UK One Login before, you can set up your access on the "
+"next page."
+msgstr ""
+"Os nad ydych chi wedi defnyddio GOV.UK One Login o’r blaen, gallwch greu "
+"cyfrif ar y dudalen nesaf."
+
+#: src/Actor/templates/actor/one-login.html.twig:39
+msgid ""
+"If you have a Use a lasting power of attorney account from before 1 January "
+"2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve "
+"previously added will automatically appear."
+msgstr ""
+"Os oes gennych chi gyfrif Defnyddio atwrneiaeth arhosol o 1 Ionawr 2024 "
+"ymlaen, a’ch bod yn defnyddio’r un cyfeiriad e-bost ar gyfer GOV.UK One Login, "
+"bydd unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
+"ymddangos yn awtomatig."
+
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:19
+msgid "Where do you currently live?"
+msgstr "Ble ydych chi’n byw ar hyn o bryd?"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:30
+msgid ""
+"You need your own unique activation key to add an LPA to your account. <br> "
+"Activation keys expire after 12 months."
+msgstr ""
+"Mae angen eich allwedd cadarnhau unigryw eich hun arnoch i ychwanegu "
+"atwrneiaeth arhosol at eich cyfrif. <br> Mae allweddi cadarnhau yn dod i ben "
+"ar ôl 12 mis."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:35
+msgid ""
+"Activation keys are 12 letters and numbers long and start with a C, for "
+"example: C-AB12 CD34 EF56."
+msgstr ""
+"Hyd allweddi cadarnhau yw 12 llythyren a rhif ac yn dechrau gydag C, er "
+"enghraifft: C-AB12 CD34 EF56."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
+msgid "For LPAs registered in the last 12 months"
+msgstr "Ar gyfer atwrniaethau arhosol a gofrestrwyd yn y 12 mis diwethaf"
+
+# Haven’t got a translation for this. Welsh provided says ‘If the LPA was registered before 1 Sept’ which will do for now
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
+msgid "For LPAs registered more than 12 months ago"
+msgstr "Ar gyfer atwrniaethau arhosol a gofrestrwyd dros 12 mis yn ôl"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:72
+msgid ""
+"If you’ve already requested an activation key, you'll find it on the letter or "
+"email we sent you."
+msgstr ""
+"Os ydych chi eisoes wedi gofyn am allwedd cadarnhau, mae i’w weld ar y llythyr "
+"neu’r e-bost a anfonwyd atoch."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:79
+msgid "When activation keys cannot be used"
+msgstr "Pan nad oes modd defnyddio allweddi cadarnhau"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:83
+msgid "This service cannot be used for:"
+msgstr "Ni ellir defnyddio’r gwasanaeth hwn ar gyfer:"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:85
+msgid ""
+"LPAs with reference numbers fewer than 12 digits and registered before January "
+"2016"
+msgstr ""
+"Atwrniaethau arhosol gyda chyfeirnodau llai na 12 digid ac wedi’u cofrestru "
+"cyn Ionawr 2016"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:88
+msgid ""
+"You’ll need to show the paper LPA or EPA to people or organisations instead."
+msgstr ""
+"Bydd angen i chi ddangos copi papur o’r atwrneiaeth arhosol neu’r atwrneiaeth "
+"barhaus i bobl neu sefydliadau yn lle hynny."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:93
+msgid ""
+"If you’ve lost your activation key, its expired, or you’ve not had one before, "
+"you can request a new one."
+msgstr ""
+"Os ydych chi wedi colli eich allwedd cadarnhau, neu os nad ydych wedi cael un "
+"o’r blaen, gallwch ofyn am un newydd."
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:105
+msgid "No, I need to request an activation key"
+msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"
