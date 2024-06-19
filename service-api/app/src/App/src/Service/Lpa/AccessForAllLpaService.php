@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use DateInterval;
@@ -20,7 +21,7 @@ class AccessForAllLpaService
 
     public function __construct(
         private ActorCodes $actorCodes,
-        private LpasInterface $lpaRepository,
+        private RequestLetterInterface $requestLetterInterface,
         private UserLpaActorMapInterface $userLpaActorMap,
         private LoggerInterface $logger,
     ) {
@@ -109,7 +110,7 @@ class AccessForAllLpaService
         );
 
         try {
-            $this->lpaRepository->requestLetter($uidInt, $actorUidInt, null);
+            $this->requestLetterInterface->requestLetter($uidInt, $actorUidInt, null);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
@@ -180,7 +181,7 @@ class AccessForAllLpaService
         );
 
         try {
-            $this->lpaRepository->requestLetter($uidInt, null, $additionalInfo);
+            $this->requestLetterInterface->requestLetter($uidInt, null, $additionalInfo);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
