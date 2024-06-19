@@ -572,8 +572,13 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/settings');
 
-        $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
-        $this->ui->clickLink('Change a donor or attorney\'s details');
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->ui->assertPageContainsText('Change your sign-in details in your GOV.UK One Login');
+            $this->ui->clickLink('Change your sign-in details in your GOV.UK One Login');
+        } else {
+            $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
+            $this->ui->clickLink('Change a donor or attorney\'s details');
+        }
     }
 
     /**
@@ -853,7 +858,6 @@ class AccountContext implements Context
      */
     public function iClickTheBackLinkOnThePage($backLink): void
     {
-        $this->ui->assertPageContainsText($backLink);
         $this->ui->clickLink($backLink);
     }
 
@@ -1774,7 +1778,8 @@ class AccountContext implements Context
     public function iRequestToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/settings');
-        $this->ui->clickLink('Delete account');
+
+        $this->ui->clickLink('delete-account-link');
     }
 
     /**

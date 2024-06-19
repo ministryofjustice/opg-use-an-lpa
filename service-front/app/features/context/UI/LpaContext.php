@@ -462,6 +462,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am taken to the GOV.UK settings page$/
+     */
+    public function iAmTakenToTheGovUkSettingsPage(): void
+    {
+        $this->ui->assertPageAddress('https://home.account.gov.uk/security');
+    }
+
+    /**
      * @Then /^I am redirected to the activation key page$/
      */
     public function iAmRedirectedToTheActivationKeyPage()
