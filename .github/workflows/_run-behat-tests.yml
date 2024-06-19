@@ -25,7 +25,9 @@ jobs:
           cache: 'pip'
 
       - name: install chrome
-        uses: browser-actions/setup-chrome@latest # pin@NoVersions
+        uses: browser-actions/setup-chrome@1.7.1 # pin@v1.7.1
+        with:
+          chrome-version: 126
 
       - name: Setup PHP
         uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # pin@v2.21.2
