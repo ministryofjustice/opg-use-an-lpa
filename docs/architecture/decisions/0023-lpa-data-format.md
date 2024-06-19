@@ -152,6 +152,7 @@ classDiagram
         +String firstnames
         +String surName
         +String otherNames
+        +String systemStatus
     }
     class Donor{
     }
