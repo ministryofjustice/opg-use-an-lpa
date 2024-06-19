@@ -54,6 +54,7 @@ class ConfigProvider
                 DataAccess\Repository\ViewerCodesInterface::class     => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
                 DataAccess\Repository\LpasInterface::class            => DataAccess\ApiGateway\Lpas::class,
+                DataAccess\Repository\RequestLetterInterface::class   => DataAccess\ApiGateway\Lpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
 
