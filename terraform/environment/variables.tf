@@ -83,6 +83,7 @@ variable "environments" {
         allow_meris_lpas                                           = bool
         dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
         instructions_and_preferences                               = bool
+        support_datastore_lpas                                     = bool
       })
       dynamodb_tables = object({
         actor_codes = object({

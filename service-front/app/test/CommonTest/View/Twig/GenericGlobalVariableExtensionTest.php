@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use PHPUnit\Framework\TestCase;
 
@@ -14,8 +15,12 @@ class GenericGlobalVariableExtensionTest extends TestCase
     {
         $application = 'actor';
 
-        $extension     = new GenericGlobalVariableExtension($application);
+        $translatorInterface = $this->createMock(TranslatorInterface::class);
+        $translatorInterface->method('translate')->willReturnArgument(0);
+
+        $extension     = new GenericGlobalVariableExtension($application, $translatorInterface);
         $genericConfig = $extension->getGlobals();
+
         $this->assertEquals(3, count($genericConfig));
 
         $expectedConfig = [
@@ -35,7 +40,10 @@ class GenericGlobalVariableExtensionTest extends TestCase
     {
         $application = 'viewer';
 
-        $extension     = new GenericGlobalVariableExtension($application);
+        $translatorInterface = $this->createMock(TranslatorInterface::class);
+        $translatorInterface->method('translate')->willReturnArgument(0);
+
+        $extension     = new GenericGlobalVariableExtension($application, $translatorInterface);
         $genericConfig = $extension->getGlobals();
 
         $this->assertEquals('View a lasting power of attorney', $genericConfig['serviceName']);
