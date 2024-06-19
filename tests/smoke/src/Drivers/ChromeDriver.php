@@ -15,7 +15,7 @@ class ChromeDriver implements Driver
         private string $binPath = '/usr/bin/google-chrome-stable',
         private array $binArguments = [
             '--disable-gpu',
-            '--headless=new',
+            '--headless=old',
             '--remote-debugging-address=0.0.0.0',
             '--disable-extensions',
             '--remote-debugging-port=9222',
