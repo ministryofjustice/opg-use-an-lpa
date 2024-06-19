@@ -7,6 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
@@ -24,8 +25,8 @@ use Psr\Log\LoggerInterface;
 class AccessForAllLpaServiceTest extends TestCase
 {
     use ProphecyTrait;
-
     private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+    private RequestLetterInterface|ObjectProphecy $requestLetterInterfaceProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
     public ActorCodes|ObjectProphecy $actorCodesProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
@@ -46,6 +47,7 @@ class AccessForAllLpaServiceTest extends TestCase
     public function setUp(): void
     {
         $this->lpasInterfaceProphecy   = $this->prophesize(LpasInterface::class);
+        $this->requestLetterInterfaceProphecy   = $this->prophesize(RequestLetterInterface::class);
         $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy      = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
@@ -75,7 +77,7 @@ class AccessForAllLpaServiceTest extends TestCase
     {
         return new AccessForAllLpaService(
             $this->actorCodesProphecy->reveal(),
-            $this->lpasInterfaceProphecy->reveal(),
+            $this->requestLetterInterfaceProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
             $this->loggerProphecy->reveal()
         );
@@ -84,7 +86,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->shouldBeCalled();
 
@@ -111,7 +113,7 @@ class AccessForAllLpaServiceTest extends TestCase
             $this->sixWeekInterval
         )->willReturn($this->lpaActorToken);
 
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
 
@@ -129,7 +131,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter_record_exists(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->shouldBeCalled();
 
@@ -149,7 +151,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter_and_cleanse_record_exists(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->shouldBeCalled();
 
@@ -175,7 +177,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter_without_flag(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null);
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
@@ -194,7 +196,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter_api_call_fails(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
             ->willThrow(ApiException::create('bad api call'));
 
@@ -221,7 +223,7 @@ class AccessForAllLpaServiceTest extends TestCase
     #[Test]
     public function request_access_code_letter_and_cleanse_api_call_fails(): void
     {
-        $this->lpasInterfaceProphecy
+        $this->requestLetterInterfaceProphecy
             ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
             ->willThrow(ApiException::create('bad api call'));
 
