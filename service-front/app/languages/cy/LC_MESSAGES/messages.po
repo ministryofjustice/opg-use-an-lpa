@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-18T09:59:23+00:00\n"
+"POT-Creation-Date: 2024-06-18T13:28:08+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -632,7 +632,7 @@ msgstr "Newid eich cyfrinair"
 
 #: src/Actor/templates/actor/password-reset.html.twig:40
 #: src/Actor/templates/actor/login.html.twig:47
-#: src/Actor/templates/actor/settings.html.twig:31
+#: src/Actor/templates/actor/settings.html.twig:66
 msgid "Password"
 msgstr "Cyfrinair"
 
@@ -2245,7 +2245,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/password-reset-request.html.twig:30
 #: src/Actor/templates/actor/login.html.twig:44
-#: src/Actor/templates/actor/settings.html.twig:18
+#: src/Actor/templates/actor/settings.html.twig:53
 msgid "Email address"
 msgstr "Cyfeiriad e-bost"
 
@@ -4842,15 +4842,15 @@ msgstr ""
 msgid "Settings"
 msgstr "Gosodiadau"
 
-#: src/Actor/templates/actor/settings.html.twig:25
+#: src/Actor/templates/actor/settings.html.twig:60
 msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\">fy nghyfeiriad e-bost</span>"
 
-#: src/Actor/templates/actor/settings.html.twig:38
+#: src/Actor/templates/actor/settings.html.twig:73
 msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> fy nghyfrinair</span>"
 
-#: src/Actor/templates/actor/settings.html.twig:45
+#: src/Actor/templates/actor/settings.html.twig:80
 msgid ""
 "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "summary?"
@@ -4858,11 +4858,11 @@ msgstr ""
 "Ydych chi angen diweddaru’r crynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr> ar-lein?"
 
-#: src/Actor/templates/actor/settings.html.twig:47
+#: src/Actor/templates/actor/settings.html.twig:82
 msgid "Change a donor or attorney's details"
 msgstr "Newid manylion rhoddwr neu atwrnai"
 
-#: src/Actor/templates/actor/settings.html.twig:50
+#: src/Actor/templates/actor/settings.html.twig:85
 msgid "Delete account"
 msgstr "Dileu cyfrif"
 
@@ -6589,6 +6589,62 @@ msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
+#: src/Actor/templates/actor/settings.html.twig:17
+msgid "Your sign-in details"
+msgstr "Eich manylion mewngofnodi"
+
+#: src/Actor/templates/actor/settings.html.twig:20
+msgid ""
+"You use GOV.UK One Login to sign in to the Use a lasting power of attorney "
+"service."
+msgstr ""
+"Rydych chi’n defnyddio GOV.UK One Login i fewngofnodi i’r gwasanaeth Defnyddio "
+"atwrneiaeth arhosol."
+
+#: src/Actor/templates/actor/settings.html.twig:21
+msgid "You can change these details in your GOV.UK One Login:"
+msgstr "Gallwch newid y manylion hyn yn eich GOV.UK One Login:"
+
+#: src/Actor/templates/actor/settings.html.twig:23
+msgid "e-mail address"
+msgstr "cyfeiriad e-bost"
+
+#: src/Actor/templates/actor/settings.html.twig:24
+msgid "password"
+msgstr "cyfrinair"
+
+#: src/Actor/templates/actor/settings.html.twig:25
+msgid "how you get security codes to sign in"
+msgstr "sut i gael codau diogelwch i fewngofnodi"
+
+#: src/Actor/templates/actor/settings.html.twig:29
+msgid "Change your sign-in details in your GOV.UK One Login"
+msgstr "Newid eich manylion mewngofnodi yn eich GOV.UK One Login"
+
+#: src/Actor/templates/actor/settings.html.twig:37
+msgid "Delete your Use a lasting power of attorney account"
+msgstr "Dileu eich cyfrif Defnyddio atwrneiaeth arhosol"
+
+#: src/Actor/templates/actor/settings.html.twig:40
+msgid ""
+"If you no longer use your Use a lasting power of attorney account, you can "
+"delete it."
+msgstr ""
+"Os nad oes arnoch angen eich cyfrif Defnyddio atwrneiaeth arhosol mwyach, "
+"gallwch ei ddileu."
+
+#: src/Actor/templates/actor/settings.html.twig:43
+msgid "Find out more about deleting your account"
+msgstr "Rhagor o wybodaeth am ddileu eich cyfrif"
+
+#: src/Actor/templates/actor/settings.html.twig:47
+msgid "Your account details"
+msgstr "Manylion eich cyfrif"
+
+#: src/Actor/templates/actor/settings.html.twig:83
+msgid "Update your LPA summary"
+msgstr "Diweddarwch eich crynodeb LPA"
+
 #: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
 msgid ""
 "To use a lasting power of attorney online, you'll need to create a new account."
@@ -6768,9 +6824,6 @@ msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
 
 #~ msgid "Use a lasting power of attorney"
 #~ msgstr "Defnyddio atwrneiaeth arhosol"
-
-#~ msgid "Your details"
-#~ msgstr "Eich manylion"
 
 #~ msgctxt "error"
 #~ msgid ""
