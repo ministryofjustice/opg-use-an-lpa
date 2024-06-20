@@ -15,7 +15,7 @@ class ChromeDriver implements Driver
         private string $binPath = '/usr/bin/google-chrome-stable',
         private array $binArguments = [
             '--disable-gpu',
-            '--remote-debugging-address=0.0.0.0',
+            '--headless=new',
             '--disable-extensions',
             '--remote-debugging-port=9222',
             '--disable-setuid-sandbox',
@@ -51,7 +51,7 @@ class ChromeDriver implements Driver
 
         $this->process->waitUntil(
             function (string $type, string $output) {
-                if (!($running = stristr($output, 'DevTools listening on ws://0.0.0.0:9222/devtools/browser/'))) {
+                if (!($running = stristr($output, 'DevTools listening on ws://127.0.0.1:9222/devtools/browser/'))) {
                     echo $output;
                 }
                 return $running;
