@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\Service\Log\RequestTracing;
 use Psr\Container\ContainerInterface;
 use Exception;
@@ -13,7 +14,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 
 class InstructionsAndPreferencesImagesFactory
 {
-    public function __invoke(ContainerInterface $container): InstructionsAndPreferencesImages
+    public function __invoke(ContainerInterface $container): InstructionsAndPreferencesImagesInterface
     {
         $config = $container->get('config');
 
