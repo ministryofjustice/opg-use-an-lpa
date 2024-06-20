@@ -6,33 +6,14 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\Response\ActorCode;
 use App\Exception\ApiException;
-use App\Service\Log\RequestTracing;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Client\ClientInterface as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class ActorCodes
+class ActorCodes extends AbstractApiClient
 {
-    /**
-     * ActorCodes Constructor
-     *
-     * @param HttpClient $httpClient
-     * @param RequestSignerFactory $requestSignerFactory
-     * @param string $apiBaseUri
-     * @param string $traceId An amazon trace id to pass to subsequent services
-     */
-    public function __construct(
-        readonly private HttpClient $httpClient,
-        readonly private RequestSignerFactory $requestSignerFactory,
-        readonly private string $apiBaseUri,
-        readonly private string $traceId,
-    ) {
-    }
-
     /**
      * @param string $code
      * @param string $uid
@@ -58,14 +39,16 @@ class ActorCodes
     }
 
     /**
-     * @param string $code
-     * @throws ApiException
+     * @throws ApiException|Exception
      */
     public function flagCodeAsUsed(string $code): void
     {
         $this->makePostRequest('v1/revoke', ['code' => $code]);
     }
 
+    /**
+     * @throws ApiException
+     */
     public function checkActorHasCode(string $lpaId, string $actorId): ActorCode
     {
         $response = $this->makePostRequest(
@@ -90,17 +73,18 @@ class ActorCodes
      */
     private function makePostRequest(string $url, array $body): ResponseInterface
     {
-        $url  = sprintf('%s/%s', $this->apiBaseUri, $url);
-        $body = json_encode($body);
+        $url = sprintf('%s/%s', $this->apiBaseUri, $url);
 
-        $request       = new Request('POST', $url, $this->buildHeaders(), $body);
-        $requestSigner = ($this->requestSignerFactory)(SignatureType::ActorCodes);
-        $request       = $requestSigner->sign($request);
+        $request = $this->requestFactory->createRequest('POST', $url);
+        $request = $request->withBody($this->streamFactory->createStream(json_encode($body)));
+
+        $request = $this->attachHeaders($request);
+        $request = ($this->requestSignerFactory)(SignatureType::ActorCodes)->sign($request);
 
         try {
-            $response = $this->httpClient->send($request);
-        } catch (GuzzleException $ge) {
-            throw ApiException::create('Error whilst communicating with actor codes service', null, $ge);
+            $response = $this->httpClient->sendRequest($request);
+        } catch (ClientExceptionInterface $ce) {
+            throw ApiException::create('Error whilst communicating with actor codes service', null, $ce);
         }
 
         if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
@@ -108,26 +92,5 @@ class ActorCodes
         }
 
         return $response;
-    }
-
-    /**
-     * @return array{
-     *     Accept: 'application/json',
-     *     Content-Type: 'application/json',
-     *     x-amzn-trace-id?: string,
-     * }
-     */
-    private function buildHeaders(): array
-    {
-        $headerLines = [
-            'Accept'       => 'application/json',
-            'Content-Type' => 'application/json',
-        ];
-
-        if (!empty($this->traceId)) {
-            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
-
-        return $headerLines;
     }
 }

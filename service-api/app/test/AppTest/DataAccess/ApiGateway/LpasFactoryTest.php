@@ -16,6 +16,9 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 class LpasFactoryTest extends TestCase
@@ -26,10 +29,21 @@ class LpasFactoryTest extends TestCase
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        $containerProphecy->get(GuzzleHttpClient::class)->willReturn(
-            $this->prophesize(GuzzleHttpClient::class)->reveal()
-        );
+        $containerProphecy
+            ->get(ClientInterface::class)
+            ->willReturn(
+                $this->prophesize(GuzzleHttpClient::class)->reveal()
+            );
+        $containerProphecy
+            ->get(RequestFactoryInterface::class)
+            ->willReturn(
+                $this->prophesize(RequestFactoryInterface::class)->reveal()
+            );
+        $containerProphecy
+            ->get(StreamFactoryInterface::class)
+            ->willReturn(
+                $this->prophesize(StreamFactoryInterface::class)->reveal()
+            );
 
         $requestSignerFactory = $this->prophesize(RequestSignerFactory::class);
         $requestSignerFactory->__invoke()->willReturn($this->prophesize(RequestSigner::class)->reveal());
@@ -66,7 +80,7 @@ class LpasFactoryTest extends TestCase
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
-        $containerProphecy->get(GuzzleHttpClient::class)->willReturn(
+        $containerProphecy->get(ClientInterface::class)->willReturn(
             $this->prophesize(GuzzleHttpClient::class)->reveal()
         );
 
