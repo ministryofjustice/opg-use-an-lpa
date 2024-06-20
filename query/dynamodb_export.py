@@ -317,6 +317,13 @@ class DynamoDBExporterAndQuerier:
             outputFileName="OrganisationsField",
         )
 
+    def get_emails(self):
+        sql_string = f"SELECT item.email.s from actor_users;"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="UserEmails",
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -350,6 +357,14 @@ def main():
         help="Only run the Athena query, assuming that DynamoDb export and load into Athena has already run",
     )
     parser.add_argument(
+        "--emails",
+        dest="emails_flag",
+        action="store_const",
+        const=True,
+        default=False,
+        help="Run the email query instead of the monthly reports",
+    )
+    parser.add_argument(
         "--start_date", default="", help="Start date in the form YYYY-MM-DD"
     )
     parser.add_argument(
@@ -377,12 +392,15 @@ def main():
         work.check_dynamo_export_status()
         work.create_athena_tables()
 
-    work.get_expired_viewed_access_codes()
-    work.get_expired_unviewed_access_codes()
-    work.get_count_of_viewed_access_codes()
-    work.get_count_of_created_access_codes()
-    work.get_count_of_expired_access_codes()
-    work.get_organisations_field()
+    if args.emails_flag:
+        work.get_emails()
+    else:
+        work.get_expired_viewed_access_codes()
+        work.get_expired_unviewed_access_codes()
+        work.get_count_of_viewed_access_codes()
+        work.get_count_of_created_access_codes()
+        work.get_count_of_expired_access_codes()
+        work.get_organisations_field()
 
 
 if __name__ == "__main__":
