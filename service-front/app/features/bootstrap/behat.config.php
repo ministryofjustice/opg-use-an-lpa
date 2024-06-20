@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Aws\Sdk;
 use BehatTest\Common\Service\ApiClient\TestGuzzleClientFactory;
 use BehatTest\Common\Service\Aws\SdkFactory;
-use Common\Middleware\ErrorHandling\{GoneHandler, GoneHandlerFactory};
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use Elie\PHPDI\Config\ConfigInterface;
 use GuzzleHttp\Client;
@@ -24,7 +23,6 @@ return [
             Client::class                 => TestGuzzleClientFactory::class,
             Sdk::class                    => SdkFactory::class,
             ErrorResponseGenerator::class => ErrorResponseGeneratorFactory::class,
-            GoneHandler::class            => GoneHandlerFactory::class,
         ],
     ],
     'api'                                    => [
