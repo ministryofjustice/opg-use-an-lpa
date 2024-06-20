@@ -7,12 +7,14 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\RequestSigner;
 use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
+use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\RequestInterface;
 
+#[BackupGlobals(true)]
 class RequestSignerTest extends TestCase
 {
     use ProphecyTrait;
@@ -38,7 +40,7 @@ class RequestSignerTest extends TestCase
         $signatureV4Prophecy->signRequest(
             Argument::type(RequestInterface::class),
             Argument::type(CredentialsInterface::class)
-        )->will(fn (array $args) => $args[0]);
+        )->willReturnArgument(0);
 
         $requestProphecy = $this->prophesize(RequestInterface::class);
         $requestProphecy
