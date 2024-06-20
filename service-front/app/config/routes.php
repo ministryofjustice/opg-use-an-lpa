@@ -118,7 +118,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
             Actor\Handler\OneLoginCallbackHandler::class,
-            Mezzio\Handler\NotFoundHandler::class
+            Common\Handler\GoneHandler::class
         )
     ], 'auth-redirect');
 
@@ -138,7 +138,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $container,
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
-            \Mezzio\Handler\NotFoundHandler::class,
+            Common\Handler\GoneHandler::class,
             Actor\Handler\PasswordResetRequestPageHandler::class
         ),
         ['GET', 'POST'],
@@ -152,7 +152,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $container,
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
-            \Mezzio\Handler\NotFoundHandler::class,
+            Common\Handler\GoneHandler::class,
             Actor\Handler\PasswordResetPageHandler::class
         ),
         ['GET', 'POST'],
@@ -165,7 +165,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $container,
             $factory,
             $ALLOW_GOV_ONE_LOGIN,
-            \Mezzio\Handler\NotFoundHandler::class,
+            Common\Handler\GoneHandler::class,
             Actor\Handler\CompleteChangeEmailHandler::class
         ),
         'verify-new-email'
@@ -175,6 +175,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/confirm-delete-account', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ConfirmDeleteAccountHandler::class], 'confirm-delete-account');
+
     $app->get('/delete-account', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeleteAccountHandler::class], 'delete-account');
@@ -184,14 +185,31 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\SettingsHandler::class,
     ], 'settings');
-    $app->route('/change-password', [
-        Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\ChangePasswordHandler::class
-    ], ['GET','POST'], 'change-password');
-    $app->route('/change-email', [
-        Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\RequestChangeEmailHandler::class
-    ], ['GET','POST'], 'change-email');
+
+    $app->route('/change-password',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            Common\Handler\GoneHandler::class,
+            Actor\Handler\ChangePasswordHandler::class
+        ),
+        ['GET','POST'],
+  'change-password'
+    );
+
+    $app->route('/change-email',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            Common\Handler\GoneHandler::class,
+            Actor\Handler\RequestChangeEmailHandler::class
+        ),
+        ['GET','POST'],
+ 'change-email'
+    );
+
     $app->get('/lpa/change-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\ChangeDetailsHandler::class
