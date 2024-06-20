@@ -27,7 +27,7 @@ jobs:
       - name: install chrome
         uses: browser-actions/setup-chrome@db1b524c26f20a8d1a10f7fc385c92387e2d0477 # pin@v1.7.1
         with:
-          chrome-version: 126
+          chrome-version: 124
 
       - name: Setup PHP
         uses: shivammathur/setup-php@fc14643b0a99ee9db10a3c025a33d76544fa3761 # pin@v2.21.2
