@@ -46,7 +46,6 @@ class ChromeDriver implements Driver
                 array_merge([$this->binPath], $this->binArguments)
             )
         );
-        $this->process->setTimeout(120);
         $this->process->start();
 
         $this->process->waitUntil(
