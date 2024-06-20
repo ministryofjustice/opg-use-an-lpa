@@ -7,14 +7,30 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
+use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
+#[BackupGlobals(true)]
 class RequestSignerFactoryTest extends TestCase
 {
     use ProphecyTrait;
+
+    public function setUp(): void
+    {
+        // Keys from the documentation
+        // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
+        putenv('AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE');
+        putenv('AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
+    }
+
+    public function tearDown(): void
+    {
+        putenv('AWS_ACCESS_KEY_ID=');
+        putenv('AWS_SECRET_ACCESS_KEY=');
+    }
 
     #[Test]
     public function it_creates_an_request_signer_without_config(): void

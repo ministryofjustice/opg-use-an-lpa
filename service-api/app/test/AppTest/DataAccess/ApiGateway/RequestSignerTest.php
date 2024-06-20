@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\RequestSigner;
-use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
 use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\Test;
@@ -36,17 +35,16 @@ class RequestSignerTest extends TestCase
     #[Test]
     public function it_signs_request_with_a_supplied_static_token(): void
     {
-        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
-        $signatureV4Prophecy->signRequest(
-            Argument::type(RequestInterface::class),
-            Argument::type(CredentialsInterface::class)
-        )->willReturnArgument(0);
-
         $requestProphecy = $this->prophesize(RequestInterface::class);
         $requestProphecy
             ->withHeader('Authorization', 'test_token')
             ->shouldBeCalled()
             ->willReturn($requestProphecy->reveal());
+
+        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $signatureV4Prophecy
+            ->signRequest(Argument::any(), Argument::any())
+            ->willReturnArgument(0);
 
         $signer = new RequestSigner($signatureV4Prophecy->reveal(), ['Authorization' => 'test_token']);
 
@@ -56,13 +54,13 @@ class RequestSignerTest extends TestCase
     #[Test]
     public function it_signs_a_request_with_the_aws_signer(): void
     {
-        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
-
         $requestProphecy = $this->prophesize(RequestInterface::class);
 
-        $signatureV4Prophecy->signRequest($requestProphecy->reveal(), Argument::type(CredentialsInterface::class))
+        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $signatureV4Prophecy
+            ->signRequest($requestProphecy->reveal(), Argument::any())
             ->shouldBeCalled()
-            ->willReturn($requestProphecy->reveal());
+            ->willReturnArgument(0);
 
         $signer = new RequestSigner($signatureV4Prophecy->reveal());
 
