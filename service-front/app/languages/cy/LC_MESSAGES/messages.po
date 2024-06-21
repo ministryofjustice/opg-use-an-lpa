@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-19T14:19:23+00:00\n"
+"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2945,16 +2945,16 @@ msgstr "Ni allwch ond gofyn am allwedd cadarnhau:"
 msgid "the LPA was registered on or after 1 January 2016"
 msgstr "cofrestrwyd yr atwrneiaeth arhosol ar 1 Ionawr 2016 neu ar ôl hynny"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:21
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr "os ydych yn rhoddwr neu’n atwrnai ar yr LPA (nid yn atwrnai cyfnewid)"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:23
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
 msgstr "gwnaed yr atwrneiaeth arhosol i’w defnyddio yng Nghymru a Lloegr"
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
 msgid "You cannot ask for a key for:"
 msgstr "Ni allwch ofyn am allwedd ar gyfer:"
 
@@ -6764,13 +6764,14 @@ msgstr "Pan nad oes modd defnyddio allweddi cadarnhau"
 msgid "This service cannot be used for:"
 msgstr "Ni ellir defnyddio’r gwasanaeth hwn ar gyfer:"
 
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:85
 msgid ""
 "LPAs with reference numbers fewer than 12 digits and registered before January "
 "2016"
 msgstr ""
-"Atwrniaethau arhosol gyda chyfeirnodau llai na 12 digid ac wedi’u cofrestru "
-"cyn Ionawr 2016"
+"Cyfeirnod yr LPA gyda chyfeirnodau llai na 12 digid ac wedi’u cofrestru cyn "
+"mis Ionawr 2016"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:88
 msgid ""
@@ -6815,6 +6816,10 @@ msgstr ""
 msgid ""
 "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
 msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd,<br>er enghraifft, 7000-0000-0000."
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "Request an activation key"
+msgstr "Gofyn am allwedd cadarnhau"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "

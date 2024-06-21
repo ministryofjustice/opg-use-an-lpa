@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-19T14:19:23+00:00\n"
+"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -2053,16 +2053,16 @@ msgstr ""
 msgid "the LPA was registered on or after 1 January 2016"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:21
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:23
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
 msgid "You cannot ask for a key for:"
 msgstr ""
 
@@ -4703,6 +4703,7 @@ msgstr ""
 msgid "This service cannot be used for:"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:85
 msgid "LPAs with reference numbers fewer than 12 digits and registered before January 2016"
 msgstr ""
@@ -4733,4 +4734,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "Request an activation key"
 msgstr ""
