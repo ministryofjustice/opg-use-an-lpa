@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
+"POT-Creation-Date: 2024-06-24T14:35:13+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3689,7 +3689,7 @@ msgstr ""
 "Os byddwch eisiau defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> "
 "ar-lein ar ôl i chi ddileu eich cyfrif, bydd angen i chi gysylltu â ni."
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:24
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid ""
 "You can still use paper versions of these <abbr title=\"lasting powers of "
 "attorney\">LPAs</abbr> if:"
@@ -3697,14 +3697,14 @@ msgstr ""
 "Gallwch dal ddefnyddio fersiynau papur o’r <abbr title=\"atwrneiaethau "
 "arhosol\">LPAs</abbr> hyn:"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:26
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:24
 msgid ""
 "the <abbr title=\"lasting powers of attorney\">LPAs</abbr> are still valid"
 msgstr ""
 "os yw’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yn dal i fod yn "
 "ddilys"
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:27
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:25
 msgid "you have not been removed as an attorney"
 msgstr "os nad ydych wedi eich disodli fel atwrnai"
 
@@ -6820,6 +6820,26 @@ msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd,<br>er enghraifft, 7000-0000-0000."
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
 msgid "Request an activation key"
 msgstr "Gofyn am allwedd cadarnhau"
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:15
+msgid "What happens if you delete your account"
+msgstr "Beth fydd yn digwydd os byddwch yn dileu eich cyfrif"
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:18
+msgid ""
+"any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will be "
+"permanently removed"
+msgstr ""
+"bydd unrhyw atwrneiaethau arhosol yr ydych wedi’u hychwanegu yn cael eu "
+"dileu’n barhaol"
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:28
+msgid "Return to settings"
+msgstr "Dychwelyd i gosodiadau"
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:31
+msgid "Delete my account"
+msgstr "Dileu fy nghyfrif"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "

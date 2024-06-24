@@ -154,7 +154,7 @@ class AccountContext implements Context
     public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+        $this->ui->assertPageContainsText('What happens if you delete your account');
     }
 
     /**

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
+"POT-Creation-Date: 2024-06-24T14:35:13+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -2602,15 +2602,15 @@ msgstr ""
 msgid "If you want to use the <abbr title=\"lasting power of attorney\">LPA</abbr> online after you've deleted your account, you’ll need to contact us."
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:24
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid "You can still use paper versions of these <abbr title=\"lasting powers of attorney\">LPAs</abbr> if:"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:26
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:24
 msgid "the <abbr title=\"lasting powers of attorney\">LPAs</abbr> are still valid"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-delete-account.html.twig:27
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:25
 msgid "you have not been removed as an attorney"
 msgstr ""
 
@@ -4738,4 +4738,20 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
 msgid "Request an activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:15
+msgid "What happens if you delete your account"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:18
+msgid "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will be permanently removed"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:28
+msgid "Return to settings"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-delete-account.html.twig:31
+msgid "Delete my account"
 msgstr ""
