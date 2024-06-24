@@ -172,7 +172,7 @@ classDiagram
     option-a
     option-b
     }
-    class HowAttorneysMakeDecisions{{
+    class HowAttorneysMakeDecisions{
     <<enumeration>>
     singular
     jointly
