@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Is this the LPA you want to add?{% endtrans %} - {{ parent() }} {% endblock %}
+{% block html_title %}{% trans %}Confirm this is the correct LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -11,7 +11,7 @@
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
 
-            <h1 class="govuk-heading-xl">{% trans %}Is this the LPA you want to add?{% endtrans %}</h1>
+            <h1 class="govuk-heading-xl">{% trans %}Confirm this is the correct LPA{% endtrans %}</h1>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -96,7 +96,7 @@
 
                             <button role="button" data-prevent-double-click="true" type="submit" draggable="false"
                                     class="govuk-button moj-button-menu__item  " data-module="govuk-button">
-                                {% trans %}Continue{% endtrans %}</button>
+                                {% trans %}Confirm{% endtrans %}</button>
                             </button>
 
                             <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"

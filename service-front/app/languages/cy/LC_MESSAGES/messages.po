@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
+"POT-Creation-Date: 2024-06-24T15:38:37+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -381,7 +381,6 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:118
-#: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:90
 #: src/Actor/templates/actor/home-page.html.twig:47
@@ -6820,6 +6819,14 @@ msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd,<br>er enghraifft, 7000-0000-0000."
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
 msgid "Request an activation key"
 msgstr "Gofyn am allwedd cadarnhau"
+
+#: src/Actor/templates/actor/check-lpa.html.twig:14
+msgid "Confirm this is the correct LPA"
+msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
+
+#: src/Actor/templates/actor/check-lpa.html.twig:99
+msgid "Confirm"
+msgstr "Cadarnhau"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "

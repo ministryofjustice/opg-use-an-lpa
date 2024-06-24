@@ -2803,10 +2803,10 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/check');
 
-        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText('Confirm this is the correct LPA');
         $this->ui->assertPageContainsText('Mrs Ian Deputy Deputy');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
