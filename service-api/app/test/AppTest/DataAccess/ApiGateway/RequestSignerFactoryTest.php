@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
+use App\DataAccess\ApiGateway\GenerateJWT;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
+use App\Service\Secrets\LpaDataStoreSecretManager;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
@@ -71,6 +75,31 @@ class RequestSignerFactoryTest extends TestCase
     #[Test]
     public function it_creates_an_data_store_lpas_configured_signer(): void
     {
-        $this->markTestIncomplete();
+        $jwtGenerator = $this->prophesize(GenerateJWT::class);
+        $jwtGenerator
+            ->__invoke(Argument::any(), Argument::any())
+            ->shouldBeCalled()
+            ->will(function ($args) {
+                Assert::assertStringContainsString('urn:opg:poas:use:users:my_user_identifier', $args[1]->getPayload());
+
+                return 'signed_jwt_string';
+            });
+
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $containerProphecy
+            ->get('config')
+            ->willReturn([]);
+        $containerProphecy
+            ->get('LpaDataStoreSecretManager')
+            ->willReturn($this->prophesize(LpaDataStoreSecretManager::class)->reveal());
+        $containerProphecy
+            ->get('GenerateJWT')
+            ->willReturn($jwtGenerator->reveal());
+
+        $factory = new RequestSignerFactory($containerProphecy->reveal());
+
+        $signer = $factory(SignatureType::DataStoreLpas, 'my_user_identifier');
+
+        $this->assertInstanceOf(RequestSigner::class, $signer);
     }
 }
