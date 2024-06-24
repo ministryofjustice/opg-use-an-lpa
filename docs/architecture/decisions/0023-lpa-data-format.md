@@ -108,29 +108,30 @@ Changes to the data structure will consist of (a) New fields and (b) Existing fi
 classDiagram
     note "LPA data structure"
     LPA o-- Person
-    LPA : +Bool applicationHasGuidance
-    LPA : +Bool applicationHasRestrictions
-    LPA:  +String applicationType
-    LPA : +String attorneyActDecisions
+    LPA: +Bool applicationHasGuidance
+    LPA: +Bool applicationHasRestrictions
+    LPA: +String applicationType
+    LPA: +HowAttorneysMakeDecisions attorneyActDecisions
     LPA: +Person attorneys
-    LPA : +String channel
-    LPA : +String dispatchDate
+    LPA: +LpaType caseSubType
+    LPA: +String channel
+    LPA: +DateTimeInterface dispatchDate
     LPA: +Person donor
-    LPA : +Bool hasSeveranceWarning
-    LPA: +String invalidDate
-    LPA: +String lifeSustainingTreatment
-    LPA: +String lpaDonorSignatureDate
-    LPA : +Bool lpaIsCleansed
+    LPA: +Bool hasSeveranceWarning
+    LPA: +DateTimeInterface invalidDate
+    LPA: +LifeSustainingTreatment lifeSustainingTreatment
+    LPA: +DateTimeInterface lpaDonorSignatureDate
+    LPA: +Bool lpaIsCleansed
     LPA: +String onlineLpaId
-    LPA: +String receiptDate
-    LPA: +String registrationDate
-    LPA: +String rejectedDate
+    LPA: +DateTimeInterface receiptDate
+    LPA: +DateTimeInterface registrationDate
+    LPA: +DateTimeInterface rejectedDate
     LPA: +Person replacementAttorneys
     LPA: +String status
-    LPA: +String statusDate
+    LPA: +DateTimeInterface statusDate
     LPA: +Person trustCorporations 
     LPA: +String uId
-    LPA: +String withdrawnDate
+    LPA: +DateTimeInterface withdrawnDate
     Person <|-- Donor
     Person <|-- Attorney
     Person <|-- TrustCorporation
@@ -146,7 +147,7 @@ classDiagram
         +String postcode
         +String town
         +String type
-        +String dob
+        +DateTimeInterface dob
         +String email
         +String firstname
         +String firstnames
@@ -161,6 +162,23 @@ classDiagram
     class TrustCorporation{
         +String companyName
     }
+    class LpaType{
+    <<enumeration>>
+    personal-welfare
+    property-and-affairs
+    }
+    class LifeSustainingTreatment{
+    <<enumeration>>
+    option-a
+    option-b
+    }
+    class HowAttorneysMakeDecisions{{
+    <<enumeration>>
+    singular
+    jointly
+    jointly-and-severally
+    jointly-for-some-severally-for-others
+    }
 end
 ```
 
@@ -173,7 +191,7 @@ end
 *  attorneyActDecisions will be populated by whenTheLpaCanBeUsed for Modernise LPAs
 * "caseAttorneyJointly": true, "caseAttorneyJointlyAndJointlyAndSeverally": false, "caseAttorneyJointlyAndSeverally": false, "caseAttorneySingular": false, are replaced by 1 enum - "howAttorneysMakeDecisions": "jointly"   . We will replace the current 4 fields internally, with a new enum similar to how Modernise does it, because this is a better less clumsy way to handle this data
 * "caseSubtype": "hw", is replaced by "lpaType": "personal-welfare"  , "pfa" is replaced by "property-and-affairs"
-*  "lifeSustainingTreatmentwill be populated by ": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally for Modernise LPAs
+*  "lifeSustainingTreatment will be populated by ": "Option B", renamed to e:g "lifeSustainingTreatmentOption": "option-a"  - make this an enum internally for Modernise LPAs
 *  withdrawnDate will be populated by withdrawnAt for Modernise LPAs
 * registrationDate will be populated by registrationAt for Modernise LPAs
 
