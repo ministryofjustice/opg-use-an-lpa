@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-20T14:44:18+00:00\n"
+"POT-Creation-Date: 2024-06-24T15:10:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -525,7 +525,7 @@ msgid "Check your answers"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
-#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:47
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
@@ -4733,4 +4733,24 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:39
 msgid "some of the details you entered about yourself do not match our records"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "Request an activation key"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
+msgid "Where to find the reference number"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
+msgid "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:30
+msgid "the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case number’"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
 msgstr ""
