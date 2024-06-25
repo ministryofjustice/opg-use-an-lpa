@@ -280,7 +280,7 @@ class RequestActivationKeyContext implements Context
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA to send you an activation key');
+        $this->ui->assertElementContainsText('h1', 'We could not find a lasting power of attorney');
     }
 
     /**
@@ -1297,6 +1297,23 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->clickLink('change-postcode');
     }
+
+    /**
+     * @When /^I request to go back$/
+     */
+    public function iRequestToGoBack()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @When /^I press cancel/
+     */
+    public function iPressCancel()
+    {
+        $this->ui->clickLink('Cancel');
+    }
+
 
     /**
      * @When /^I select that I cannot take calls$/
