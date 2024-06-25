@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-25T09:00:34+00:00\n"
+"POT-Creation-Date: 2024-06-25T11:31:00+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -315,6 +315,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Actor/templates/actor/login.html.twig:8
 #: src/Actor/templates/actor/lpa-removed.html.twig:9
 #: src/Actor/templates/actor/check-lpa.html.twig:9
+#: src/Actor/templates/actor/check-your-answers.html.twig:10
 #: src/Actor/templates/actor/change-lpa-details.html.twig:14
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:8
 #: src/Actor/templates/actor/change-details.html.twig:14
@@ -383,7 +384,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:118
 #: src/Actor/templates/actor/one-login.html.twig:51
-#: src/Actor/templates/actor/check-your-answers.html.twig:90
+#: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
@@ -687,7 +688,7 @@ msgstr ""
 "Gallai hyn fod am nad yw’r wybodaeth a roesoch yn cyfateb i’r wybodaeth sydd "
 "gennym am yr atwrneiaeth arhosol."
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:12
+#: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
@@ -695,12 +696,12 @@ msgstr "Gwiriwch eich atebion"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/lpa-not-found.html.twig:53
-#: src/Actor/templates/actor/check-your-answers.html.twig:17
+#: src/Actor/templates/actor/check-your-answers.html.twig:22
 msgid "LPA reference number"
 msgstr "Cyfeirnod yr LPA"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:54
-#: src/Actor/templates/actor/check-your-answers.html.twig:30
+#: src/Actor/templates/actor/check-your-answers.html.twig:35
 #: src/Common/templates/common/cookies.html.twig:103
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:4
@@ -709,24 +710,24 @@ msgstr "Enw"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:62
 #: src/Actor/templates/actor/lpa-not-found.html.twig:48
-#: src/Actor/templates/actor/check-your-answers.html.twig:43
+#: src/Actor/templates/actor/check-your-answers.html.twig:48
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
 msgid "Date of birth"
 msgstr "Dyddiad geni"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
-#: src/Actor/templates/actor/check-your-answers.html.twig:57
+#: src/Actor/templates/actor/check-your-answers.html.twig:62
 msgid "Postcode"
 msgstr "Cod post"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
-#: src/Actor/templates/actor/check-your-answers.html.twig:71
+#: src/Actor/templates/actor/check-your-answers.html.twig:76
 msgid "Do you live in the UK?"
 msgstr "Ydych chi’n byw yn y DU?"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:83
-#: src/Actor/templates/actor/check-your-answers.html.twig:74
+#: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
@@ -2219,6 +2220,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:123
 #: src/Actor/templates/actor/check-lpa.html.twig:105
+#: src/Actor/templates/actor/check-your-answers.html.twig:99
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -4019,19 +4021,19 @@ msgstr ""
 msgid "with GOV.UK One Login"
 msgstr "gyda GOV.UK One Login"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:24
+#: src/Actor/templates/actor/check-your-answers.html.twig:29
 msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> Cyfeirnod LPA</span>"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:37
+#: src/Actor/templates/actor/check-your-answers.html.twig:42
 msgid "Change<span class=\"govuk-visually-hidden\"> name</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> Enw</span>"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:50
+#: src/Actor/templates/actor/check-your-answers.html.twig:55
 msgid "Change<span class=\"govuk-visually-hidden\"> dob</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> Dyddiad geni</span>"
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:78
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
 msgid "Change<span class=\"govuk-visually-hidden\"> postcode</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> Cod post</span>"
 
@@ -6865,6 +6867,14 @@ msgstr "Dychwelyd i gosodiadau"
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:31
 msgid "Delete my account"
 msgstr "Dileu fy nghyfrif"
+
+#: src/Actor/templates/actor/check-lpa.html.twig:14
+msgid "Confirm this is the correct LPA"
+msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
+
+#: src/Actor/templates/actor/check-lpa.html.twig:99
+msgid "Confirm"
+msgstr "Cadarnhau"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "

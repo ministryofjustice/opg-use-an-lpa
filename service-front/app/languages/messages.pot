@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-25T09:00:34+00:00\n"
+"POT-Creation-Date: 2024-06-25T11:31:00+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -221,6 +221,7 @@ msgstr ""
 #: src/Actor/templates/actor/login.html.twig:8
 #: src/Actor/templates/actor/lpa-removed.html.twig:9
 #: src/Actor/templates/actor/check-lpa.html.twig:9
+#: src/Actor/templates/actor/check-your-answers.html.twig:10
 #: src/Actor/templates/actor/change-lpa-details.html.twig:14
 #: src/Actor/templates/actor/password-reset-not-found.html.twig:8
 #: src/Actor/templates/actor/change-details.html.twig:14
@@ -287,7 +288,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:118
 #: src/Actor/templates/actor/one-login.html.twig:51
-#: src/Actor/templates/actor/check-your-answers.html.twig:90
+#: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
 #: src/Viewer/templates/viewer/enter-code.html.twig:63
@@ -518,7 +519,7 @@ msgstr ""
 msgid "This could be because the information you entered does not match the information we hold about the LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:12
+#: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
 msgstr ""
@@ -526,12 +527,12 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/lpa-not-found.html.twig:53
-#: src/Actor/templates/actor/check-your-answers.html.twig:17
+#: src/Actor/templates/actor/check-your-answers.html.twig:22
 msgid "LPA reference number"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:54
-#: src/Actor/templates/actor/check-your-answers.html.twig:30
+#: src/Actor/templates/actor/check-your-answers.html.twig:35
 #: src/Common/templates/common/cookies.html.twig:103
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:4
@@ -540,24 +541,24 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:62
 #: src/Actor/templates/actor/lpa-not-found.html.twig:48
-#: src/Actor/templates/actor/check-your-answers.html.twig:43
+#: src/Actor/templates/actor/check-your-answers.html.twig:48
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
 msgid "Date of birth"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
-#: src/Actor/templates/actor/check-your-answers.html.twig:57
+#: src/Actor/templates/actor/check-your-answers.html.twig:62
 msgid "Postcode"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
-#: src/Actor/templates/actor/check-your-answers.html.twig:71
+#: src/Actor/templates/actor/check-your-answers.html.twig:76
 msgid "Do you live in the UK?"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:83
-#: src/Actor/templates/actor/check-your-answers.html.twig:74
+#: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
@@ -1435,6 +1436,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:123
 #: src/Actor/templates/actor/check-lpa.html.twig:105
+#: src/Actor/templates/actor/check-your-answers.html.twig:99
 msgid "Cancel"
 msgstr ""
 
@@ -2828,19 +2830,19 @@ msgstr ""
 msgid "with GOV.UK One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:24
+#: src/Actor/templates/actor/check-your-answers.html.twig:29
 msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:37
+#: src/Actor/templates/actor/check-your-answers.html.twig:42
 msgid "Change<span class=\"govuk-visually-hidden\"> name</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:50
+#: src/Actor/templates/actor/check-your-answers.html.twig:55
 msgid "Change<span class=\"govuk-visually-hidden\"> dob</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/check-your-answers.html.twig:78
+#: src/Actor/templates/actor/check-your-answers.html.twig:83
 msgid "Change<span class=\"govuk-visually-hidden\"> postcode</span>"
 msgstr ""
 
@@ -4768,4 +4770,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:31
 msgid "Delete my account"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:14
+msgid "Confirm this is the correct LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:99
+msgid "Confirm"
 msgstr ""
