@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Ask for an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Request an activation key{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -13,12 +13,11 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}Ask for an activation key{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}Request an activation key{% endtrans %}</h1>
 
                     <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}the LPA was registered on or after 1 January 2016{% endtrans %}</li>
                         <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
                         <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
                     </ul>
@@ -26,6 +25,7 @@
                     <p class="govuk-body">{% trans %}You cannot ask for a key for:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}LPAs with reference numbers fewer than 12 digits and registered before January 2016{% endtrans %}</li>
                         <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
                         <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
                     </ul>
