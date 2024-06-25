@@ -2841,7 +2841,7 @@ class LpaContext implements Context
         Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
         Assert::assertNotNull($foundName, 'Actor\'s name was not found on this page');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
