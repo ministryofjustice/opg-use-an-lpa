@@ -1299,6 +1299,23 @@ class RequestActivationKeyContext implements Context
     }
 
     /**
+     * @When /^I request to go back$/
+     */
+    public function iRequestToGoBack()
+    {
+        $this->ui->clickLink('Back');
+    }
+
+    /**
+     * @When /^I press cancel/
+     */
+    public function iPressCancel()
+    {
+        $this->ui->clickLink('Cancel');
+    }
+
+
+    /**
      * @When /^I select that I cannot take calls$/
      */
     public function iSelectThatICannotTakeCalls()

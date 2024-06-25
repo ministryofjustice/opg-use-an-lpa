@@ -109,6 +109,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
                 'user' => $this->user,
                 'form' => $this->form,
                 'data' => $data,
+                'back' => $this->lastPage($this->state($request)),
             ]
         ));
     }
