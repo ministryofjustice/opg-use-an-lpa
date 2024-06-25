@@ -58,7 +58,9 @@ def calculate_step_durations(data, job_name, step_names):
                         step["completed_at"], "%Y-%m-%dT%H:%M:%SZ"
                     )
                     duration_seconds = (end_time - start_time).total_seconds()
-                    if duration_seconds < 60:
+                    if duration_seconds == 0:
+                        continue
+                    elif duration_seconds < 60:
                         duration = f"{duration_seconds:.0f}s"
                     else:
                         minutes, seconds = divmod(duration_seconds, 60)
