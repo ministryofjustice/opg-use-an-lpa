@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-21T10:18:52+00:00\n"
+"POT-Creation-Date: 2024-06-24T15:10:19+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -76,7 +76,7 @@ msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:40
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes.html.twig:9
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:115
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:106
 #: src/Actor/templates/actor/instructions-preferences.html.twig:8
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
@@ -287,6 +287,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:8
 #: src/Actor/templates/actor/create-account.html.twig:8
 #: src/Actor/templates/actor/password-reset.html.twig:8
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:8
 #: src/Actor/templates/actor/password-change.html.twig:8
 #: src/Actor/templates/actor/create-account-success.html.twig:8
 #: src/Actor/templates/actor/change-email.html.twig:8
@@ -645,19 +646,19 @@ msgstr "Newid eich cyfrinair"
 msgid "Cannot find LPA"
 msgstr "Nid oedd modd cael hyd i LPA"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:13
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:17
 msgid "We could not find an LPA with that reference number"
 msgstr "Dydyn ni ddim wedi dod o hyd i LPA gyda’r cyfeirnod yna"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:19
 msgid "LPA reference number:"
 msgstr "Cyfeirnod LPA:"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:17
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:21
 msgid "Check you entered the right LPA reference number"
 msgstr "Gwiriwch eich bod wedi rhoi’r cyfeirnod LPA cywir"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:20
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:24
 msgid ""
 "You'll find the reference number on the LPA and at the top of any letter "
 "you've received from us about the LPA. If you do not have the LPA or have not "
@@ -669,7 +670,7 @@ msgstr ""
 "neu os nad ydych chi wedi cadw unrhyw lythyrau, holwch rywun arall sydd wedi’i "
 "enwi ar yr atwrneiaeth arhosol."
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:99
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:30
 msgid "If you're sure you entered the right information, please call us:"
 msgstr "Os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni:"
 
@@ -687,20 +688,19 @@ msgstr ""
 "Gallai hyn fod am nad yw’r wybodaeth a roesoch yn cyfateb i’r wybodaeth sydd "
 "gennym am yr atwrneiaeth arhosol."
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:33
 #: src/Actor/templates/actor/check-your-answers.html.twig:12
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 msgid "Check your answers"
 msgstr "Gwiriwch eich atebion"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:37
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 msgid "LPA reference number"
-msgstr "Cyfeirnod LPA"
+msgstr "Cyfeirnod yr LPA"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:45
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:54
 #: src/Actor/templates/actor/check-your-answers.html.twig:30
 #: src/Common/templates/common/cookies.html.twig:103
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
@@ -708,7 +708,7 @@ msgstr "Cyfeirnod LPA"
 msgid "Name"
 msgstr "Enw"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:53
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:62
 #: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:43
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
@@ -716,17 +716,17 @@ msgstr "Enw"
 msgid "Date of birth"
 msgstr "Dyddiad geni"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:62
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
 #: src/Actor/templates/actor/check-your-answers.html.twig:57
 msgid "Postcode"
 msgstr "Cod post"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
 #: src/Actor/templates/actor/check-your-answers.html.twig:71
 msgid "Do you live in the UK?"
 msgstr "Ydych chi’n byw yn y DU?"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:74
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:83
 #: src/Actor/templates/actor/check-your-answers.html.twig:74
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
@@ -803,7 +803,7 @@ msgstr ""
 msgid "What to do if you’re sure you entered the right information"
 msgstr "Beth i’w wneud os ydych yn sicr eich bod wedi rhoi’r wybodaeth gywir"
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:110
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:101
 #: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 msgid "Try again"
@@ -3757,9 +3757,10 @@ msgstr "Allgofnodi"
 msgid "We could not find an LPA"
 msgstr "Nid oedd modd cael hyd i LPA"
 
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 msgid "We could not find a lasting power of attorney"
-msgstr "Nid oedd modd cael hyd i atwrneiaeth arhosol"
+msgstr "Dydyn ni ddim yn gallu dod o hyd i atwrneiaeth arhosol (LPA)"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:14
 msgid ""
@@ -6686,6 +6687,7 @@ msgstr ""
 "mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu "
 "mae’r cyfeirnod yn ymwneud ag atwrneiaeth arhosol wahanol"
 
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
 #: src/Actor/templates/actor/lpa-not-found.html.twig:37
 msgid "Your answers"
 msgstr "Eich atebion"
@@ -6694,10 +6696,12 @@ msgstr "Eich atebion"
 msgid "Activation Key"
 msgstr "Allwedd cadarnhau"
 
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:89
 #: src/Actor/templates/actor/lpa-not-found.html.twig:59
 msgid "If you’re sure you entered the correct information, contact us."
 msgstr ""
-"Os ydych chi’n siŵr eich bod wedi rhoi’r wybodaeth gywir, cysylltwch â ni."
+"Os ydych chi’n siŵr bod yr wybodaeth rydych chi wedi’i rhoi yn gywir, "
+"cysylltwch â ni."
 
 #: src/Actor/templates/actor/one-login.html.twig:28
 msgid ""
@@ -6792,34 +6796,56 @@ msgstr ""
 msgid "No, I need to request an activation key"
 msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
 
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:35
+msgid "This could be because:"
+msgstr "Gallai’r rheswm fod oherwydd:"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:38
+msgid "the LPA reference number you entered is incorrect"
+msgstr "mae cyfeirnod yr LPA rydych chi wedi’i roi yn anghywir"
+
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:39
+msgid "some of the details you entered about yourself do not match our records"
+msgstr ""
+"dydy rhai o’r manylion rydych chi wedi’u rhoi ddim yn cyfateb i’n cofnodion"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+#, fuzzy
+#| msgid "Request another activation key"
+msgid "Request an activation key"
+msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
+
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
-msgstr "Ble i ddod o hyd i’r cyfeirnod"
+msgstr "Cael hyd i’ch cyfeirnod LPA"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
+#, fuzzy
+#| msgid ""
+#| "the LPA reference number - you'll find this on the paper LPA and on letters "
+#| "from the Office of the Public Guardian (OPG)"
 msgid ""
 "the reference number is on the first page of the LPA or any related letters "
 "from the Office of the Public Guardian"
 msgstr ""
-"mae’r cyfeirnod ar dudalen gyntaf yr atwrneiaeth arhosol (LPA) neu unrhyw "
-"lythyrau cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus"
+"cyfeirnod yr atwrneiaeth arhosol - fe welwch hwn ar yr atwrneiaeth arhosol "
+"bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:30
 msgid ""
 "the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case "
 "number’"
 msgstr ""
-"efallai bod y cyfeirnod wedi’i nodi hefyd fel ‘cyfeirnod OPG’, ‘Ein cyf’ neu "
-"‘Rhif yr Achos’"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+#, fuzzy
+#| msgid ""
+#| "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
+#| "<br><br>"
 msgid ""
 "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
-msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd,<br>er enghraifft, 7000-0000-0000."
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
-msgid "Request an activation key"
-msgstr "Gofyn am allwedd cadarnhau"
+msgstr ""
+"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000.<br><br>"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "
