@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-18T13:28:08+00:00\n"
+"POT-Creation-Date: 2024-06-25T12:45:26+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2539,7 +2539,7 @@ msgid "there are replacement attorneys"
 msgstr "oes atwrneiod i gymryd eu lle"
 
 #: src/Actor/templates/actor/death-notification.html.twig:54
-#: src/Actor/templates/actor/change-lpa-details.html.twig:40
+#: src/Actor/templates/actor/change-lpa-details.html.twig:41
 #: src/Actor/templates/actor/change-details.html.twig:50
 msgid "How to let us know"
 msgstr "Sut i roi gwybod i ni am newid"
@@ -4078,16 +4078,16 @@ msgstr "Mae’n bwysig bod yr wybodaeth ar y crynodeb o’r LPA yn gywir."
 msgid "information about preferences and instructions is incorrect"
 msgstr "gwybodaeth am ddymuniadau a chyfarwyddiadau yn anghywir"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:30
+#: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid "information about life-sustaining treatment is incorrect"
 msgstr "gwybodaeth am driniaeth cynnal bywyd yn anghywir"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:31
+#: src/Actor/templates/actor/change-lpa-details.html.twig:32
 msgid "the registration date or the date the donor signed the LPA are incorrect"
 msgstr ""
 "y dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:35
 #: src/Actor/templates/actor/change-details.html.twig:41
 msgid ""
 "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> "
@@ -4096,7 +4096,7 @@ msgstr ""
 "Byddwn yn diweddaru’r crynodeb o’r <abbr title=\"atwrneiaethau arhosol\">LPA</"
 "abbr> ar-lein a’n cofnodion."
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:36
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:43
 msgid ""
 "Do not make any changes to the paper <abbr title=\"lasting power of "
@@ -4108,42 +4108,42 @@ msgstr ""
 "                        Os byddwch yn gwneud hyn, yna ni fyddwch yn gallu "
 "defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> mwyach."
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:41
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
 #: src/Actor/templates/actor/change-details.html.twig:51
 msgid "Contact us through any of the ways below."
 msgstr "Cysylltwch â ni drwy unrhyw un o’r ffyrdd isod."
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:42
+#: src/Actor/templates/actor/change-lpa-details.html.twig:43
 #: src/Actor/templates/actor/change-details.html.twig:52
 msgid "When you get in touch, you’ll need to tell us:"
 msgstr "Pan fyddwch yn cysylltu, bydd angen i chi ddweud y canlynol wrthym:"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:44
+#: src/Actor/templates/actor/change-lpa-details.html.twig:45
 #: src/Actor/templates/actor/change-details.html.twig:54
 msgid "the LPA reference number"
 msgstr "cyfeirnod yr awtrneiaeth arhosol"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:45
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/change-details.html.twig:55
 msgid "your name"
 msgstr "eich enw"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:46
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:56
 msgid "your role (ie, whether you are the donor or an attorney)"
 msgstr "eich rôl (p’un ai ydych chi’n rhoddwr neu’n atwrnai)"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:47
+#: src/Actor/templates/actor/change-lpa-details.html.twig:48
 #: src/Actor/templates/actor/change-details.html.twig:57
 msgid "the donor’s name (if you are not the donor)"
 msgstr "enw’r rhoddwr (os nad chi yw’r rhoddwr)"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:49
 #: src/Actor/templates/actor/change-details.html.twig:58
 msgid "the donor’s date of birth"
 msgstr "dyddiad geni’r rhoddwr"
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:49
+#: src/Actor/templates/actor/change-lpa-details.html.twig:50
 #: src/Actor/templates/actor/change-details.html.twig:59
 msgid "the donor’s address and postcode"
 msgstr "cyfeiriad a chod post y rhoddwr"
@@ -6789,6 +6789,15 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:105
 msgid "No, I need to request an activation key"
 msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:29
+msgid "we say you added preferences and instructions when you did not"
+msgstr "rydym yn dweud eich bod wedi ychwanegu dewisiadau pan na wnaethoch hynny"
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:30
+msgid "we say you did not add preferences and instructions when you did"
+msgstr ""
+"rydym yn dweud nad ydych wedi ychwanegu dewisiadau pan rydych wedi gwneud hynny"
 
 #~ msgid "Where to find the reference number"
 #~ msgstr "Cael hyd i’ch cyfeirnod LPA"
