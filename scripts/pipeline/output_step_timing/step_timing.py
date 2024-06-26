@@ -59,11 +59,11 @@ def get_step_durations(data, job_name, step_names):
             duration = calculate_step_duration(step_found)
 
             # Shorten the name to display nicely in table without the bools
-            shortened_job_name = shorten_job_name(job_found)
+            shortened_job_name = shorten_job_name(job_found["name"])
 
             # Append the short job name, step and duration to the list, ready for
             # GitHub step summary
-            durations.append((shortened_job_name, step_found, duration))
+            durations.append((shortened_job_name, step_found["name"], duration))
 
     return durations
 
@@ -118,10 +118,11 @@ def main():
     step_column = []
     duration_column = []
 
+    # Extract the data and insert into lists
     for job_name, step_names in job_step_pairs.items():
-        durations = get_step_durations(jobs_data, job_name, step_names)
-        for full_job_name, step_name, duration in durations:
-            job_column.append(full_job_name)
+        rows = get_step_durations(jobs_data, job_name, step_names)
+        for short_job_name, step_name, duration in rows:
+            job_column.append(short_job_name)
             step_column.append(step_name)
             duration_column.append(duration)
 
