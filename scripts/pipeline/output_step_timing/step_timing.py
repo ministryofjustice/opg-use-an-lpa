@@ -97,37 +97,41 @@ def calculate_step_duration(step):
     return duration
 
 
-# Set up argument parser
-parser = argparse.ArgumentParser(
-    description="Calculate the duration of specific job steps."
-)
-parser.add_argument(
-    "-json", type=str, required=True, help="JSON string of job-step pairs"
-)
+def main():
 
-# Parse arguments
-args = parser.parse_args()
+    # Set up argument parser
+    parser = argparse.ArgumentParser(
+        description="Calculate the duration of specific job steps."
+    )
+    parser.add_argument(
+        "-json", type=str, required=True, help="JSON string of job-step pairs"
+    )
 
-# Calculate the durations for the specified job and step
-job_step_pairs = json.loads(args.json)
+    # Parse arguments
+    args = parser.parse_args()
 
-# Collect outputs
-job_column = []
-step_column = []
-duration_column = []
+    # Calculate the durations for the specified job and step
+    job_step_pairs = json.loads(args.json)
+
+    # Collect outputs
+    job_column = []
+    step_column = []
+    duration_column = []
+
+    for job_name, step_names in job_step_pairs.items():
+        durations = get_step_durations(jobs_data, job_name, step_names)
+        for full_job_name, step_name, duration in durations:
+            job_column.append(full_job_name)
+            step_column.append(step_name)
+            duration_column.append(duration)
+
+    # Write outputs to $GITHUB_OUTPUT
+    if github_output:
+        with open(github_output, "a") as output_file:
+            output_file.write(f"jobs={json.dumps(job_column)}\n")
+            output_file.write(f"steps={json.dumps(step_column)}\n")
+            output_file.write(f"durations={json.dumps(duration_column)}\n")
 
 
-for job_name, step_names in job_step_pairs.items():
-    durations = get_step_durations(jobs_data, job_name, step_names)
-    for full_job_name, step_name, duration in durations:
-        job_column.append(full_job_name)
-        step_column.append(step_name)
-        duration_column.append(duration)
-
-
-# Write outputs to $GITHUB_OUTPUT
-if github_output:
-    with open(github_output, "a") as output_file:
-        output_file.write(f"jobs={json.dumps(job_column)}\n")
-        output_file.write(f"steps={json.dumps(step_column)}\n")
-        output_file.write(f"durations={json.dumps(duration_column)}\n")
+if __name__ == "__main__":
+    main()
