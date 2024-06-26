@@ -1,8 +1,8 @@
 import json
 import argparse
 import os
-import requests
 from datetime import datetime
+import requests
 
 # Get environment variables
 run_id = os.getenv("GITHUB_RUN_ID")
@@ -44,32 +44,57 @@ def shorten_job_name(job_name):
     return short_name
 
 
-def calculate_step_durations(data, job_name, step_names):
+def get_step_durations(data, job_name, step_names):
     """Check if the steps exist and return the step durations"""
     durations = []
-    for job in data["jobs"]:
-        if job["name"] == job_name or job["name"].startswith(job_name):
-            for step in job["steps"]:
-                if step["name"] in step_names:
-                    start_time = datetime.strptime(
-                        step["started_at"], "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    end_time = datetime.strptime(
-                        step["completed_at"], "%Y-%m-%dT%H:%M:%SZ"
-                    )
-                    duration_seconds = (end_time - start_time).total_seconds()
-                    if duration_seconds == 0:
-                        continue
-                    elif duration_seconds < 60:
-                        duration = f"{duration_seconds:.0f}s"
-                    else:
-                        minutes, seconds = divmod(duration_seconds, 60)
-                        duration = f"{int(minutes)}:{int(seconds):02d}s"
 
-                    shortened_name = shorten_job_name(job["name"])
+    # Check if job name exists in the data
+    job_found = search_for_job(data["jobs"], job_name)
 
-                    durations.append((shortened_name, step["name"], duration))
+    if job_found:
+        # Check if the step name exists in the job
+        step_found = search_for_steps(job_found, step_names)
+
+        if step_found:
+            duration = calculate_step_duration(step_found)
+
+            # Shorten the name to display nicely in table without the bools
+            shortened_job_name = shorten_job_name(job_found)
+
+            # Append the short job name, step and duration to the list, ready for
+            # GitHub step summary
+            durations.append((shortened_job_name, step_found, duration))
+
     return durations
+
+
+def search_for_job(data, job_name):
+    for job in data:
+        if job["name"] == job_name or job["name"].startswith(job_name):
+            return job
+
+
+def search_for_steps(job, step_names):
+    for step in job["steps"]:
+        if step["name"] in step_names:
+            return step
+
+
+def calculate_step_duration(step):
+    start_time = datetime.strptime(step["started_at"], "%Y-%m-%dT%H:%M:%SZ")
+    end_time = datetime.strptime(step["completed_at"], "%Y-%m-%dT%H:%M:%SZ")
+    duration_seconds = (end_time - start_time).total_seconds()
+
+    if duration_seconds == 0:
+        return None
+    elif duration_seconds < 60:
+        duration = f"{duration_seconds:.0f}s"
+    else:
+        # Display the time in minutes:seconds where appropriate
+        minutes, seconds = divmod(duration_seconds, 60)
+        duration = f"{int(minutes)}:{int(seconds):02d}s"
+
+    return duration
 
 
 # Set up argument parser
@@ -91,12 +116,14 @@ job_column = []
 step_column = []
 duration_column = []
 
+
 for job_name, step_names in job_step_pairs.items():
-    durations = calculate_step_durations(jobs_data, job_name, step_names)
+    durations = get_step_durations(jobs_data, job_name, step_names)
     for full_job_name, step_name, duration in durations:
         job_column.append(full_job_name)
         step_column.append(step_name)
         duration_column.append(duration)
+
 
 # Write outputs to $GITHUB_OUTPUT
 if github_output:
