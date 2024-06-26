@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
+use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\Service\Log\RequestTracing;
-use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerInterface;
 use Exception;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class InstructionsAndPreferencesImagesFactory
 {
-    public function __invoke(ContainerInterface $container): InstructionsAndPreferencesImages
+    public function __invoke(ContainerInterface $container): InstructionsAndPreferencesImagesInterface
     {
         $config = $container->get('config');
 
@@ -20,8 +23,10 @@ class InstructionsAndPreferencesImagesFactory
         }
 
         return new InstructionsAndPreferencesImages(
-            $container->get(HttpClient::class),
-            $container->get(RequestSigner::class),
+            $container->get(ClientInterface::class),
+            $container->get(RequestFactoryInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(RequestSignerFactory::class),
             $config['iap_images_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME)
         );

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Authentication\KeyPairManager;
+namespace App\Service\Secrets;
 
 use App\Service\Cache\CacheFactory;
 use Laminas\ServiceManager\Factory\DelegatorFactoryInterface;
