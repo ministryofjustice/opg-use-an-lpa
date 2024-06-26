@@ -6,16 +6,18 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -23,6 +25,22 @@ use Psr\Http\Message\StreamInterface;
 class ActorCodesTest extends TestCase
 {
     use ProphecyTrait;
+    use PSR17PropheciesTrait;
+
+    private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
+
+    public function setUp(): void
+    {
+        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
+        $requestSignerProphecy
+            ->sign(Argument::any())
+            ->willReturn($this->prophesize(RequestInterface::class)->reveal());
+
+        $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $this->requestSignerFactoryProphecy
+            ->__invoke(SignatureType::ActorCodes)
+            ->willReturn($requestSignerProphecy->reveal());
+    }
 
     #[Test]
     public function it_validates_a_correct_code(): void
@@ -38,34 +56,19 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn(json_encode($testData));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) use ($testData) {
-                $this->assertEquals('POST', $request->getMethod());
-                $this->assertEquals('localhost/v1/validate', $request->getUri());
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
 
-                $body = (string) $request->getBody();
-                $this->assertJson($body);
-                $decodedBody = json_decode($body, true);
-                $this->assertIsArray($decodedBody);
-                $this->assertEquals($testData, $decodedBody);
-
-                return true;
-            })
-        )->willReturn($responseProphecy->reveal());
-
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
@@ -83,22 +86,26 @@ class ActorCodesTest extends TestCase
             'code' => 'test-code',
         ];
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willThrow($this->prophesize(GuzzleException::class)->reveal());
+        $this->generatePSR17Prophecies(
+            $this->prophesize(ResponseInterface::class)->reveal(),
+            'test-trace-id',
+            $testData
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy->sendRequest(Argument::any())
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -122,22 +129,23 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willReturn($responseProphecy->reveal());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            $testData,
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -152,34 +160,23 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn('');
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) {
-                $this->assertEquals('POST', $request->getMethod());
-                $this->assertEquals('localhost/v1/revoke', $request->getUri());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            ['code' => 'code'],
+        );
 
-                $body = (string) $request->getBody();
-                $this->assertJson($body);
-                $decodedBody = json_decode($body, true);
-                $this->assertIsArray($decodedBody);
-                $this->assertEquals('code', $decodedBody['code']);
-
-                return true;
-            })
-        )->willReturn($responseProphecy->reveal());
-
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/revoke'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $service->flagCodeAsUsed('code');
@@ -188,22 +185,26 @@ class ActorCodesTest extends TestCase
     #[Test]
     public function it_handles_a_client_exception_when_flagging_a_code_as_used(): void
     {
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willThrow($this->prophesize(GuzzleException::class)->reveal());
+        $this->generatePSR17Prophecies(
+            $this->prophesize(ResponseInterface::class)->reveal(),
+            'test-trace-id',
+            ['code' => 'code'],
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/revoke'))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy->sendRequest(Argument::any())
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -221,22 +222,23 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willReturn($responseProphecy->reveal());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            ['code' => 'code'],
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/revoke'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -264,34 +266,23 @@ class ActorCodesTest extends TestCase
             );
         $responseProphecy->getHeaderLine('Date')->willReturn('2021-01-26T11:59:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) use ($testData) {
-                $this->assertEquals('POST', $request->getMethod());
-                $this->assertEquals('localhost/v1/exists', $request->getUri());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            $testData,
+        );
 
-                $body = (string) $request->getBody();
-                $this->assertJson($body);
-                $decodedBody = json_decode($body, true);
-                $this->assertIsArray($decodedBody);
-                $this->assertEquals($testData, $decodedBody);
-
-                return true;
-            })
-        )->willReturn($responseProphecy->reveal());
-
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/exists'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $actorCode = $service->checkActorHasCode($testData['lpa'], $testData['actor']);
@@ -303,30 +294,34 @@ class ActorCodesTest extends TestCase
     public static function codeExistsResponse(): array
     {
         return [
-            [null],
-            ['2021-01-01'],
+            'code does not exist' => [null],
+            'code exists'         => ['2021-01-01'],
         ];
     }
 
     #[Test]
     public function it_handles_a_client_exception_when_checking_if_a_code_exists_for_an_actor(): void
     {
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willThrow($this->prophesize(GuzzleException::class)->reveal());
+        $this->generatePSR17Prophecies(
+            $this->prophesize(ResponseInterface::class)->reveal(),
+            'test-trace-id',
+            ['lpa' => 'test-lpa-id', 'actor' => 'test-actor-id'],
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/exists'))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy->sendRequest(Argument::any())
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
@@ -344,22 +339,23 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willReturn($responseProphecy->reveal());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            ['lpa' => 'test-lpa-id', 'actor' => 'test-actor-id'],
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/exists'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new ActorCodes(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
-            'test-trace-id'
+            'test-trace-id',
         );
 
         $this->expectException(ApiException::class);
