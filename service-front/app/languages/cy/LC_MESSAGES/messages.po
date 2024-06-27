@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-26T13:17:46+00:00\n"
+"POT-Creation-Date: 2024-06-27T08:34:15+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6890,6 +6890,14 @@ msgstr ""
 "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr Atwrneiaeth Arhosol hon. Bydd "
 "angen i chi ddangos yr Atwrneiaeth Arhosol bapur i unrhyw un sydd angen ei "
 "gweld."
+
+#: src/Actor/templates/actor/check-lpa.html.twig:14
+msgid "Confirm this is the correct LPA"
+msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
+
+#: src/Actor/templates/actor/check-lpa.html.twig:99
+msgid "Confirm"
+msgstr "Cadarnhau"
 
 #~ msgid ""
 #~ "The reference number is printed on the letter that told you the <abbr "
