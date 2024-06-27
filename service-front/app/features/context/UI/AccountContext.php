@@ -154,7 +154,7 @@ class AccountContext implements Context
     public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+        $this->ui->assertPageContainsText('What happens if you delete your account');
     }
 
     /**
@@ -940,7 +940,7 @@ class AccountContext implements Context
             )
         );
 
-        $this->ui->clickLink('Yes, continue deleting my account');
+        $this->ui->clickLink('Delete my account');
     }
 
     /**
@@ -1796,7 +1796,7 @@ class AccountContext implements Context
     public function iRequestToReturnToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->clickLink('No, return to my details');
+        $this->ui->clickLink('Return to settings');
     }
 
     /**

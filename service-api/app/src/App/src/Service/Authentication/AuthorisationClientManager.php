@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
+use App\Service\JWT\JWKFactory;
+use App\Service\Secrets\KeyPairManagerInterface;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\ClientInterface;
