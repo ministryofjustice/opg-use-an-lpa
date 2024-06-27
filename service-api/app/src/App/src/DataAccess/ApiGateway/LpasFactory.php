@@ -6,9 +6,11 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
-use Aws\Signature\SignatureV4;
-use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Exception;
 
@@ -22,9 +24,19 @@ class LpasFactory
             throw new Exception('Sirius API Gateway endpoint is not set');
         }
 
+        $httpClient = $container->get(ClientInterface::class);
+
+        if (! $httpClient instanceof Client) {
+            throw new Exception(
+                Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+            );
+        }
+
         return new Lpas(
-            $container->get(HttpClient::class),
-            new SignatureV4('execute-api', 'eu-west-1'),
+            $httpClient,
+            $container->get(RequestFactoryInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(RequestSignerFactory::class),
             $config['sirius_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-25T11:31:00+00:00\n"
+"POT-Creation-Date: 2024-06-26T13:17:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -3912,7 +3912,7 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:56
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:55
 msgid ""
 "We cannot show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            Until we can fix this problem, if you need to see these you’ll need to ask the person who\n"
@@ -3920,14 +3920,14 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:65
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:64
 msgid ""
 "A scanned image of the donor’s preferences will appear here soon.\n"
 "        The first time may take up to 10 minutes.\n"
 "        You do not need to stay on the page or refresh it whilst you wait."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:72
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:71
 msgid ""
 "A scanned image of the donor’s preferences will appear here soon. The first time may\n"
 "        take up to 10 minutes. Please refresh this page."
@@ -3941,7 +3941,7 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:87
 msgid ""
 "We cannot show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            Until we can fix this problem, if you need to see these you’ll need to ask the person who\n"
@@ -3949,13 +3949,13 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:97
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:95
 msgid ""
 "A scanned image of the donor’s instructions will appear here soon. The first time may\n"
 "        take up to 10 minutes. Please refresh this page."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:105
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:103
 msgid ""
 "A scanned image of the donor’s instructions will appear here soon.\n"
 "        The first time may take up to 10 minutes.\n"
@@ -4772,10 +4772,16 @@ msgstr ""
 msgid "Delete my account"
 msgstr ""
 
-#: src/Actor/templates/actor/check-lpa.html.twig:14
-msgid "Confirm this is the correct LPA"
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:48
+msgid ""
+"We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> \n"
+"            to anyone who needs to see them."
 msgstr ""
 
-#: src/Actor/templates/actor/check-lpa.html.twig:99
-msgid "Confirm"
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:80
+msgid ""
+"We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> \n"
+"            to anyone who needs to see them."
 msgstr ""

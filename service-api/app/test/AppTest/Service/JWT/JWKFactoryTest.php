@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Authentication;
+namespace AppTest\Service\JWT;
 
-use App\Service\Authentication\JWKFactory;
-use App\Service\Authentication\KeyPairManager\KeyPair;
-use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
+use App\Service\JWT\JWKFactory;
+use App\Service\Secrets\KeyPair;
+use App\Service\Secrets\OneLoginIdentityKeyPairManager;
+use App\Service\Secrets\Secret;
+use App\Service\Secrets\SecretManagerInterface;
 use InvalidArgumentException;
 use Jose\Component\Core\JWK;
 use ParagonIE\HiddenString\HiddenString;
@@ -51,13 +53,30 @@ class JWKFactoryTest extends TestCase
     }
 
     #[Test]
-    public function can_create_jwk(): void
+    public function can_create_an_async_keypair_jwk(): void
     {
-        $JWK = (new JWKFactory())($this->keyPairManager->reveal());
-        self::assertInstanceOf(JWK::class, $JWK);
-        self::assertTrue($JWK->has('alg'));
-        self::assertTrue($JWK->has('use'));
-        self::assertEquals('RS256', $JWK->get('alg'));
-        self::assertEquals('sig', $JWK->get('use'));
+        $jwk = (new JWKFactory())($this->keyPairManager->reveal());
+        self::assertInstanceOf(JWK::class, $jwk);
+        self::assertTrue($jwk->has('alg'));
+        self::assertTrue($jwk->has('use'));
+        self::assertEquals('RS256', $jwk->get('alg'));
+        self::assertEquals('sig', $jwk->get('use'));
+    }
+
+    #[Test]
+    public function can_create_a_shared_secret_jwk(): void
+    {
+        $secret        = new Secret(new HiddenString('test_secret'));
+        $secretManager = $this->prophesize(SecretManagerInterface::class);
+        $secretManager->getSecret()->willReturn($secret);
+        $secretManager->getAlgorithm()->willReturn('HS256');
+
+        $jwk = (new JWKFactory())($secretManager->reveal());
+        self::assertInstanceOf(JWK::class, $jwk);
+        self::assertTrue($jwk->has('alg'));
+        self::assertTrue($jwk->has('use'));
+        self::assertEquals('HS256', $jwk->get('alg'));
+        self::assertEquals('sig', $jwk->get('use'));
+        self::assertEquals('dGVzdF9zZWNyZXQ', $jwk->get('k')); // Base64UrlEncoded 'test_secret'
     }
 }
