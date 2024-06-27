@@ -287,7 +287,6 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:118
-#: src/Actor/templates/actor/check-lpa.html.twig:99
 #: src/Actor/templates/actor/one-login.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
@@ -3913,7 +3912,7 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:56
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:55
 msgid ""
 "We cannot show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            Until we can fix this problem, if you need to see these you’ll need to ask the person who\n"
@@ -3921,14 +3920,14 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:65
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:64
 msgid ""
 "A scanned image of the donor’s preferences will appear here soon.\n"
 "        The first time may take up to 10 minutes.\n"
 "        You do not need to stay on the page or refresh it whilst you wait."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:72
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:71
 msgid ""
 "A scanned image of the donor’s preferences will appear here soon. The first time may\n"
 "        take up to 10 minutes. Please refresh this page."
@@ -3942,7 +3941,7 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:89
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:87
 msgid ""
 "We cannot show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            Until we can fix this problem, if you need to see these you’ll need to ask the person who\n"
@@ -3950,13 +3949,13 @@ msgid ""
 "            You do not need to contact us. We are aware of this issue."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:97
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:95
 msgid ""
 "A scanned image of the donor’s instructions will appear here soon. The first time may\n"
 "        take up to 10 minutes. Please refresh this page."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:105
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:103
 msgid ""
 "A scanned image of the donor’s instructions will appear here soon.\n"
 "        The first time may take up to 10 minutes.\n"
@@ -4779,4 +4778,26 @@ msgstr ""
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:30
 msgid "we say you did not add preferences and instructions when you did"
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:48
+msgid ""
+"We are unable to show the preferences for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> \n"
+"            to anyone who needs to see them."
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:80
+msgid ""
+"We are unable to show the instructions for this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr> \n"
+"            to anyone who needs to see them."
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:14
+msgid "Confirm this is the correct LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/check-lpa.html.twig:99
+msgid "Confirm"
 msgstr ""
