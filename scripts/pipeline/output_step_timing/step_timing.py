@@ -49,35 +49,44 @@ def get_step_durations(data, job_name, step_names):
     durations = []
 
     # Check if job name exists in the data
-    job_found = search_for_job(data["jobs"], job_name)
+    jobs_found = search_for_jobs(data["jobs"], job_name)
 
-    if job_found:
+    for job in jobs_found:
         # Check if the step name exists in the job
-        step_found = search_for_steps(job_found, step_names)
+        steps_found = search_for_steps(job, step_names)
 
-        if step_found:
-            duration = calculate_step_duration(step_found)
+        for step in steps_found:
+            # If the step exists, calculate its duration and append
+            # the job, step and duration to the durations list
+            duration = calculate_step_duration(step)
 
             # Shorten the name to display nicely in table without the bools
-            shortened_job_name = shorten_job_name(job_found["name"])
+            shortened_job_name = shorten_job_name(job["name"])
 
             # Append the short job name, step and duration to the list, ready for
             # GitHub step summary
-            durations.append((shortened_job_name, step_found["name"], duration))
+            durations.append((shortened_job_name, step["name"], duration))
 
     return durations
 
 
-def search_for_job(data, job_name):
+def search_for_jobs(data, job_name):
+    """Search for the jobs in the data"""
+    jobs_found = []
     for job in data:
+        # Use startswith to allow us to search for the matrix jobs
         if job["name"] == job_name or job["name"].startswith(job_name):
-            return job
+            jobs_found.append(job)
+    return jobs_found
 
 
 def search_for_steps(job, step_names):
+    """Search for the steps in the job"""
+    steps_found = []
     for step in job["steps"]:
         if step["name"] in step_names:
-            return step
+            steps_found.append(step)
+    return steps_found
 
 
 def calculate_step_duration(step):
@@ -122,6 +131,8 @@ def main():
     for job_name, step_names in job_step_pairs.items():
         rows = get_step_durations(jobs_data, job_name, step_names)
         for short_job_name, step_name, duration in rows:
+            if duration == None:
+                continue
             job_column.append(short_job_name)
             step_column.append(step_name)
             duration_column.append(duration)
