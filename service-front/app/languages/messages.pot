@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-06-27T08:34:15+00:00\n"
+"POT-Creation-Date: 2024-06-27T09:06:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -1678,7 +1678,7 @@ msgid "there are replacement attorneys"
 msgstr ""
 
 #: src/Actor/templates/actor/death-notification.html.twig:54
-#: src/Actor/templates/actor/change-lpa-details.html.twig:40
+#: src/Actor/templates/actor/change-lpa-details.html.twig:41
 #: src/Actor/templates/actor/change-details.html.twig:50
 msgid "How to let us know"
 msgstr ""
@@ -2882,60 +2882,60 @@ msgstr ""
 msgid "information about preferences and instructions is incorrect"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:30
+#: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid "information about life-sustaining treatment is incorrect"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:31
+#: src/Actor/templates/actor/change-lpa-details.html.twig:32
 msgid "the registration date or the date the donor signed the LPA are incorrect"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:34
+#: src/Actor/templates/actor/change-lpa-details.html.twig:35
 #: src/Actor/templates/actor/change-details.html.twig:41
 msgid "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:36
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:43
 msgid "Do not make any changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> yourself. If you do, you’ll no longer be able to use the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:41
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
 #: src/Actor/templates/actor/change-details.html.twig:51
 msgid "Contact us through any of the ways below."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:42
+#: src/Actor/templates/actor/change-lpa-details.html.twig:43
 #: src/Actor/templates/actor/change-details.html.twig:52
 msgid "When you get in touch, you’ll need to tell us:"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:44
+#: src/Actor/templates/actor/change-lpa-details.html.twig:45
 #: src/Actor/templates/actor/change-details.html.twig:54
 msgid "the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:45
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/change-details.html.twig:55
 msgid "your name"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:46
+#: src/Actor/templates/actor/change-lpa-details.html.twig:47
 #: src/Actor/templates/actor/change-details.html.twig:56
 msgid "your role (ie, whether you are the donor or an attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:47
+#: src/Actor/templates/actor/change-lpa-details.html.twig:48
 #: src/Actor/templates/actor/change-details.html.twig:57
 msgid "the donor’s name (if you are not the donor)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:49
 #: src/Actor/templates/actor/change-details.html.twig:58
 msgid "the donor’s date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:49
+#: src/Actor/templates/actor/change-lpa-details.html.twig:50
 #: src/Actor/templates/actor/change-details.html.twig:59
 msgid "the donor’s address and postcode"
 msgstr ""
@@ -4770,6 +4770,14 @@ msgstr ""
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:31
 msgid "Delete my account"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:29
+msgid "we say you added preferences and instructions when you did not"
+msgstr ""
+
+#: src/Actor/templates/actor/change-lpa-details.html.twig:30
+msgid "we say you did not add preferences and instructions when you did"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:48
