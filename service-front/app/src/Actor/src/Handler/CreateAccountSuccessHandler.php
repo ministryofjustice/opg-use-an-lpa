@@ -33,7 +33,6 @@ class CreateAccountSuccessHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -44,11 +43,15 @@ class CreateAccountSuccessHandler extends AbstractHandler
          *              If this changes in future such that the token is regenerated then
          *              this handler must be changed to receive a POST request.
          */
+
+        // Start the session
+        session_start();
+
         $params = $request->getQueryParams();
 
-        /** @var string $emailAddress */
-        $emailAddress = $params['email'] ?? null;
-        $resend       = (isset($params['resend']) && $params['resend'] === 'true');
+        // Retrieve email from session
+        $emailAddress = $_SESSION['email'] ?? null;
+        $resend = (isset($request->getQueryParams()['resend']) && $request->getQueryParams()['resend'] === 'true');
 
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');
@@ -67,15 +70,13 @@ class CreateAccountSuccessHandler extends AbstractHandler
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
                     $test = $this->notifyService->sendEmailToUser(
-                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
-                        $emailAddress,
+                                            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                                            $emailAddress,
                         activateAccountUrl: $activateAccountUrl
                     );
 
                     //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes
-                    return $this->redirectToRoute('create-account-success', [], [
-                        'email' => $emailAddress,
-                    ]);
+                    return $this->redirectToRoute('create-account-success');
                 }
             } catch (ApiException) {
                 //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
