@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Secrets;
 
-use App\Service\Secrets\SecretManagerInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -19,7 +18,7 @@ class CachedSecretManager implements SecretManagerInterface
     ) {
     }
 
-    public function getSecret(): string
+    public function getSecret(): Secret
     {
         $cacheKey = 'lpa-data-store';
 
@@ -31,5 +30,10 @@ class CachedSecretManager implements SecretManagerInterface
         $this->cache->set($cacheKey, $secret, $this->ttl);
 
         return $secret;
+    }
+
+    public function getAlgorithm(): string
+    {
+        return $this->secretManager->getAlgorithm();
     }
 }

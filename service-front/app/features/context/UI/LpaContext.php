@@ -2803,10 +2803,10 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/check');
 
-        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText('Confirm this is the correct LPA');
         $this->ui->assertPageContainsText('Mrs Ian Deputy Deputy');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
@@ -2841,7 +2841,7 @@ class LpaContext implements Context
         Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
         Assert::assertNotNull($foundName, 'Actor\'s name was not found on this page');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
@@ -2875,7 +2875,7 @@ class LpaContext implements Context
         Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
         Assert::assertNotNull($foundName, 'Company name was not found on this page');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
