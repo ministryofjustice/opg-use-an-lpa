@@ -23,9 +23,10 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @codeCoverageIgnore
  */
-class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
+class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware, SessionAware
 {
     use CsrfGuard;
+    use Session;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -39,6 +40,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+
         $form = new CreateAccount($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
@@ -80,12 +82,13 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                         throw $ex;
                     }
                 }
+                // Store email in session
+                $session = $this->getSession($request, 'session');
+                $session->set('email', $emailAddress);
 
                 // Redirect to the success screen with the email address so that we can utilise the
                 // resend activation token functionality
-                return $this->redirectToRoute('create-account-success', [], [
-                    'email' => $emailAddress,
-                ]);
+                return $this->redirectToRoute('create-account-success');
             }
         }
 

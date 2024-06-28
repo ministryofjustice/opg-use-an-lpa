@@ -8,6 +8,8 @@ use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Session;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
@@ -18,8 +20,10 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @codeCoverageIgnore
  */
-class CreateAccountSuccessHandler extends AbstractHandler
+class CreateAccountSuccessHandler extends AbstractHandler implements SessionAware
 {
+    use Session;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -33,7 +37,6 @@ class CreateAccountSuccessHandler extends AbstractHandler
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -44,11 +47,13 @@ class CreateAccountSuccessHandler extends AbstractHandler
          *              If this changes in future such that the token is regenerated then
          *              this handler must be changed to receive a POST request.
          */
+
         $params = $request->getQueryParams();
 
-        /** @var string $emailAddress */
-        $emailAddress = $params['email'] ?? null;
-        $resend       = (isset($params['resend']) && $params['resend'] === 'true');
+        // Retrieve email from session
+        $session = $this->getSession($request, 'session');
+        $emailAddress = $session->get('email');
+        $resend = (isset($params['resend']) && $params['resend'] === 'true');
 
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');
@@ -66,16 +71,14 @@ class CreateAccountSuccessHandler extends AbstractHandler
 
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
-                    $test = $this->notifyService->sendEmailToUser(
-                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
-                        $emailAddress,
+                    $this->notifyService->sendEmailToUser(
+                                            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                                            $emailAddress,
                         activateAccountUrl: $activateAccountUrl
                     );
 
                     //  Redirect back to this page without the resend flag - do this to guard against repeated page refreshes
-                    return $this->redirectToRoute('create-account-success', [], [
-                        'email' => $emailAddress,
-                    ]);
+                    return $this->redirectToRoute('create-account-success');
                 }
             } catch (ApiException) {
                 //  Ignore any API exception (e.g. user not found) and let the redirect below manage the request
