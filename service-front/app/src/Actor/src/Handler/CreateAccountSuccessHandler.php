@@ -37,7 +37,6 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws \Http\Client\Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
