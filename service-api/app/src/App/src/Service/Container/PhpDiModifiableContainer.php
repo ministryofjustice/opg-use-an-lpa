@@ -29,7 +29,7 @@ class PhpDiModifiableContainer implements ModifiableContainerInterface
     /**
      * @inheritDoc
      */
-    public function setValue(string $name, string $value): void
+    public function setValue(string $name, string|array $value): void
     {
         $this->container->set($name, $value);
     }
