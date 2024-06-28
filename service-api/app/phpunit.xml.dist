@@ -7,8 +7,11 @@
     </report>
   </coverage>
   <testsuites>
-    <testsuite name="App\\Tests">
-      <directory>./test</directory>
+    <testsuite name="unit">
+      <directory>./test/AppTest</directory>
+    </testsuite>
+    <testsuite name="functional">
+      <directory>./test/FunctionalTest</directory>
     </testsuite>
   </testsuites>
   <logging>
