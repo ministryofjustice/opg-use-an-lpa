@@ -4,30 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\ApiClient;
 
-use App\Service\Log\RequestTracing;
+use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
-use Exception;
 
 class ClientFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): ClientInterface
     {
-        $config = $container->get('config');
-
-        if (! array_key_exists('sirius_api', $config)) {
-            throw new Exception('Sirius API configuration not present');
-        }
-
-        if (! array_key_exists('aws', $config)) {
-            throw new Exception('AWS configuration not present');
-        }
-
-        return new Client(
-            $container->get(ClientInterface::class),
-            $config['sirius_api']['endpoint'],
-            $config['aws']['region'],
-            $container->get(RequestTracing::TRACE_PARAMETER_NAME)
-        );
+        return new Client();
     }
 }

@@ -10,35 +10,45 @@ use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
-use App\Service\Log\RequestTracing;
-use Aws\Credentials\CredentialProvider as AwsCredentialProvider;
-use Aws\Signature\SignatureV4 as AwsSignatureV4;
-use DateTime;
+use DateTimeImmutable;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Psr\Http\Client\ClientExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
  */
-class Lpas implements LpasInterface, RequestLetterInterface
+class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
 {
-    private string $apiBaseUri;
+    /** @psalm-var Client */
+    protected readonly ClientInterface $httpClient;
 
     public function __construct(
-        private HttpClient $httpClient,
-        private AwsSignatureV4 $awsSignature,
-        string $apiUrl,
-        private string $traceId,
-        private DataSanitiserStrategy $sanitiser,
-        private LoggerInterface $logger,
+        Client $httpClient,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        RequestSignerFactory $requestSignerFactory,
+        string $apiBaseUri,
+        string $traceId,
+        private readonly DataSanitiserStrategy $sanitiser,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->apiBaseUri = $apiUrl;
+        parent::__construct(
+            $httpClient,
+            $requestFactory,
+            $streamFactory,
+            $requestSignerFactory,
+            $apiBaseUri,
+            $traceId,
+        );
     }
 
     /**
@@ -55,47 +65,47 @@ class Lpas implements LpasInterface, RequestLetterInterface
     }
 
     /**
-     * Looks up the all the LPA uids in the passed array.
+     * Looks up all the LPA UIDs in the passed-in array.
      *
      * @param array $uids
-     * @return array
+     * @return Response\LpaInterface[]
      * @throws Exception
      */
     public function lookup(array $uids): array
     {
-        $provider    = AwsCredentialProvider::defaultProvider();
-        $credentials = $provider()->wait();
-
         // Builds an array of Requests to send
         // The key for each request is the original uid.
+        $signer   = ($this->requestSignerFactory)();
         $requests = array_combine(
             $uids,  // Use as array key
-            array_map(function ($v) use ($credentials) {
-                $url = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
+            array_map(function ($v) use ($signer) {
+                $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
+                $request = $this->requestFactory->createRequest('GET', $url);
+                $request = $this->attachHeaders($request);
 
-                $request = new Request('GET', $url, $this->buildHeaders());
-
-                return $this->awsSignature->signRequest($request, $credentials);
+                return $signer->sign($request);
             }, $uids)
         );
 
-        //---
-
-        // Responses from the pool
+        /**
+         * Responses from the pool
+         * @var ResponseInterface[] $results
+         */
         $results = [];
 
-        $pool = new Pool($this->httpClient, $requests, [
-            'concurrency' => 50,
-            'options'     => [
-                'http_errors' => false,
-            ],
-            'fulfilled'   => function ($response, $id) use (&$results) {
-                $results[$id] = $response;
-            },
-            'rejected'    => function ($reason, $id) {
-                // Log?
-            },
-        ]);
+        $pool = new Pool(
+            $this->httpClient,
+            $requests,
+            [
+                'concurrency' => 50,
+                'fulfilled'   => function (GuzzleResponse $response, int $id) use (&$results) {
+                    $results[$id] = $response;
+                },
+                'rejected'    => function ($reason, $id) {
+                    // Log?
+                },
+            ]
+        );
 
         // Initiate transfers and create a promise
         $promise = $pool->promise();
@@ -111,8 +121,8 @@ class Lpas implements LpasInterface, RequestLetterInterface
                 case 200:
                     # TODO: We can some more error checking around this.
                     $results[$uid] = new Response\Lpa(
-                        $this->sanitiser->sanitise(json_decode((string)$result->getBody(), true)),
-                        new DateTime($result->getHeaderLine('Date'))
+                        $this->sanitiser->sanitise(json_decode($result->getBody()->getContents(), true)),
+                        new DateTimeImmutable($result->getHeaderLine('Date'))
                     );
                     break;
                 default:
@@ -128,6 +138,7 @@ class Lpas implements LpasInterface, RequestLetterInterface
             }
         }
 
+        /** @var Response\LpaInterface[] */
         return $results;
     }
 
@@ -141,7 +152,8 @@ class Lpas implements LpasInterface, RequestLetterInterface
      * @param int|null    $actorId The uId of an actor as found attached to an LPA
      * @param string|null $additionalInfo
      *
-     * @return ResponseInterface
+     * @return void
+     * @throws ApiException
      */
     public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
@@ -153,21 +165,17 @@ class Lpas implements LpasInterface, RequestLetterInterface
             $payloadContent['actor_uid'] = $actorId;
         }
 
-        $provider    = AwsCredentialProvider::defaultProvider();
-        $credentials = $provider()->wait();
-
-        // request payload
-        $body = json_encode($payloadContent);
-
         // construct request for API gateway
         $url     = $this->apiBaseUri . '/v1/use-an-lpa/lpas/requestCode';
-        $request = new Request('POST', $url, $this->buildHeaders(), $body);
-        $request = $this->awsSignature->signRequest($request, $credentials);
+        $request = $this->requestFactory->createRequest('POST', $url);
+        $request = $request->withBody($this->streamFactory->createStream(json_encode($payloadContent)));
+        $request = $this->attachHeaders($request);
+        $request = ($this->requestSignerFactory)()->sign($request);
 
         try {
-            $response = $this->httpClient->send($request);
-        } catch (GuzzleException $ge) {
-            throw ApiException::create('Error whilst communicating with api gateway', null, $ge);
+            $response = $this->httpClient->sendRequest($request);
+        } catch (ClientExceptionInterface $ce) {
+            throw ApiException::create('Error whilst communicating with api gateway', null, $ce);
         }
 
         $statusCode = $response->getStatusCode();
@@ -178,18 +186,5 @@ class Lpas implements LpasInterface, RequestLetterInterface
             return;
         }
         throw ApiException::create('Letter request not successfully precessed by api gateway', $response);
-    }
-
-    private function buildHeaders(): array
-    {
-        $headerLines = [
-            'Content-Type' => 'application/json',
-        ];
-
-        if (!empty($this->traceId)) {
-            $headerLines[RequestTracing::TRACE_HEADER_NAME] = $this->traceId;
-        }
-
-        return $headerLines;
     }
 }

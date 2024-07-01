@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\Log;
+namespace AppTest\Service\Log;
 
 use App\Service\Log\LogStderrListener;
 use Exception;

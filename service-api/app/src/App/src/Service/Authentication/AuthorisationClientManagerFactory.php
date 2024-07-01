@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Authentication;
 
-use App\Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager;
 use App\Service\Cache\CacheFactory;
+use App\Service\JWT\JWKFactory;
+use App\Service\Secrets\OneLoginIdentityKeyPairManager;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface as PsrClientInterface;
 use RuntimeException;
