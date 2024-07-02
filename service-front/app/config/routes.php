@@ -373,6 +373,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $defaultNotFoundPage
         )
     ], ['GET', 'POST'], 'lpa.remove-lpa');
+
+    $app->get('/login-notification', [
+        Common\Middleware\Authentication\AuthenticationMiddleware::class,
+        Actor\Handler\LoginNotificationHandler::class
+    ], 'login-notification');
 };
 
 return match (getenv('CONTEXT')) {
