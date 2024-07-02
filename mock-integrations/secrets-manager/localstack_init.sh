@@ -9,3 +9,8 @@ awslocal secretsmanager create-secret --name gov-uk-onelogin-identity-private-ke
     --region "eu-west-1" \
     --description "Local development private key" \
     --secret-string file:///private_key.pem
+
+awslocal secretsmanager create-secret --name lpa-data-store-secret \
+    --region "eu-west-1" \
+    --description "Local development lpa store secret" \
+    --secret-string "A shared secret string"

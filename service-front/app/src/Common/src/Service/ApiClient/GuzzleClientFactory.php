@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\ApiClient;
 
-use Http\Adapter\Guzzle6\Client as GuzzleClient;
+use GuzzleHttp\Client as GuzzleClient;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
@@ -26,7 +26,7 @@ class GuzzleClientFactory
             throw new RuntimeException('Missing API configuration: uri');
         }
 
-        return GuzzleClient::createWithConfig(
+        return new GuzzleClient(
             [
                 'base_url'    => $config['api']['uri'],
                 'http_errors' => false,

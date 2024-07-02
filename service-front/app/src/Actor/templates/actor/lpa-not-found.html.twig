@@ -5,41 +5,87 @@
 {% block content %}
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper" id="main-content" role="main">
-
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
                     <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}We could not find a lasting power of attorney with the information you entered.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}This could be because the:{% endtrans %}</p>
 
-                    <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
-                    <div class="govuk-details">
-                        <p class="govuk-body">{% trans %}Activation key:{% endtrans %} <strong>C-{{ activation_key }}</strong></p>
-                        <p class="govuk-body">{% trans %}Make sure this is the activation key in the letter we sent to you. The donor and each of their attorneys have their own activation key. If you’re using someone else’s activation key, we will not find the LPA.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans with {'%link%': path('lpa.add-by-paper-information')}%}Your activation key expires one year after the date on the letter. If your key has expired, you can <a href="%link%" class="govuk-link">ask for a new activation key</a>.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}Date of birth:{% endtrans %} <strong>{{ lpa_date(dob) }}</strong></p>
-                        <p class="govuk-body">{% trans %}The date of birth must be for the person the activation key was sent to. For example, if you’re an attorney, you must enter the activation key we sent to you and use your date of birth. If your date of birth is wrong on the LPA, use the date that appears on the paper LPA. If you do not have the LPA, check with the person who does.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}You must then contact us so we can correct the date on our records.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}<abbr title="lasting power of attorney">LPA</abbr> reference number{% endtrans %}: <strong>{{ referenceNumber }}</strong></p>
-                        <p class="govuk-body">{% trans %}If you’re named on more than one LPA, you may have entered the reference number for a different LPA. The letter with the activation key will also have the matching LPA reference number on it.{% endtrans %}</p>
-                    </div>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>
+                            {% trans %}activation key you entered is incorrect{% endtrans %}
+                        </li>
 
-                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Right Information" data-gaLabel="What to do if you're sure you entered the right information">
-                        <summary class="govuk-details__summary">
-                            <span class="govuk-details__summary-text">
-                                {% trans %}What to do if you’re sure you entered the right information{% endtrans %}
-                            </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <p>{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
-                            {{ include('@partials/contact-details/telephone.html.twig', {title: false} ) }}
+                        <li>
+                            {% trans with {'%link%': path('lpa.add-by-paper-information')} %}
+                                activation key has expired or has already been used - you can <a href="%link%" class="govuk-link">request a new key</a>{% endtrans %}
+                        </li>
+
+                        <li>
+                            {% trans %}date of birth you entered does not match our records{% endtrans %}
+                        </li>
+
+                        <li>
+                            {% trans %}LPA reference number you entered is incorrect or for a different LPA{% endtrans %}
+                        </li>
+                    </ul>
+
+                    <table class="govuk-table">
+                        <caption class="govuk-table__caption">
+                            <h3 class="govuk-heading-m govuk-!-margin-bottom-2 govuk-!-margin-top-4">
+                                {% trans %}Your answers{% endtrans %}
+                            </h3>
+                        </caption>
+
+                        <tbody class="govuk-table__body ">
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">{% trans %}Activation Key{% endtrans %}</th>
+                                <td class="govuk-table__cell">C-{{ activation_key }}</td>
+                            </tr>
+
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">{% trans %}Date of birth{% endtrans %}</th>
+                                <td class="govuk-table__cell">{{ lpa_date(dob) }}</td>
+                            </tr>
+
+                            <tr class="govuk-table__row">
+                                <th scope="row" class="govuk-table__header">{% trans %}LPA reference number{% endtrans %}</th>
+                                <td class="govuk-table__cell">{{ referenceNumber }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="govuk-body">{% trans %}If you’re sure you entered the correct information, contact us.{% endtrans %}</p>
+
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-4">{% trans %}Email{% endtrans %}</h3>
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="mailto:customerservice@publicguardian.gov.uk">customerservice@publicguardian.gov.uk</a>
+                    </p>
+
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0 govuk-!-margin-top-4">{% trans %}Telephone{% endtrans %}</h3>
+                    <p class="govuk-body">
+                        {% trans %}Telephone: <a class="govuk-link" href="tel:03004560300">0300 456 0300</a><br>
+                            Textphone: 0115 934 2778 <br>
+                            Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm{% endtrans %}
+                        <br>
+                        <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
+                    </p>
+
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+
+                            <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button moj-button-menu__item">
+                                {% trans %}Try again{% endtrans %}
+                            </a>
+
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Back to your LPAs{% endtrans %}
+                            </a>
                         </div>
-                    </details>
-
-                    <a href="{{ path('lpa.add') }}" role="button" draggable="false" class="govuk-button">
-                        {% trans %}Try again{% endtrans %}
-                    </a>
+                    </div>
 
                 </div>
             </div>

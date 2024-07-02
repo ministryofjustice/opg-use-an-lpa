@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\Email;
+namespace AppTest\Service\Email;
 
 use Alphagov\Notifications\Client as NotifyClient;
 use App\Service\Email\EmailClient;

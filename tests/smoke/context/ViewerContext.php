@@ -6,14 +6,13 @@ namespace Test\Context;
 
 use Behat\Behat\Context\Context;
 
-/**
- * @property string $shareCode
- * @property string $donorSurname
- * @psalm-property string $organisation
- */
 class ViewerContext implements Context
 {
     use BaseContextTrait;
+
+    public string $shareCode;
+    public string $donorSurname;
+    public string $organisation;
 
     /**
      * @Given I have been given access to an LPA via share code

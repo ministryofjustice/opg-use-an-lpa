@@ -8,14 +8,17 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\AfterStep;
+use Behat\Hook\BeforeScenario;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Behat\Testwork\Suite\Exception\SuiteConfigurationException;
 use DMore\ChromeDriver\ChromeDriver;
-use Twig\Environment;
 
 class BaseContext implements Context
 {
+    use FeatureFlagContextTrait;
+
     /** @var string The domain/url of the service under test */
     public string $baseUrl = 'http://localhost';
 
@@ -27,10 +30,7 @@ class BaseContext implements Context
      */
     public MinkContext $ui;
 
-    /**
-     * @BeforeScenario
-     * @param BeforeScenarioScope $scope
-     */
+    #[BeforeScenario]
     public function setupBaseUrl(BeforeScenarioScope $scope): void
     {
         $this->baseUrl = match ($scope->getSuite()->getName()) {
@@ -52,10 +52,7 @@ class BaseContext implements Context
         }
     }
 
-    /**
-     * @BeforeScenario
-     * @param BeforeScenarioScope $scope
-     */
+    #[BeforeScenario]
     public function setupOldBaseUrl(BeforeScenarioScope $scope): void
     {
         $this->oldBaseUrl = match ($scope->getSuite()->getName()) {
@@ -78,10 +75,7 @@ class BaseContext implements Context
         }
     }
 
-    /**
-     * @BeforeScenario
-     * @param BeforeScenarioScope $scope
-     */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         /** @psalm-var InitializedContextEnvironment $environment */
@@ -91,10 +85,8 @@ class BaseContext implements Context
 
     /**
      * Take screenshot when step fails.
-     *
-     * @AfterStep
-     * @param AfterStepScope $scope
      */
+    #[AfterStep]
     public function takeScreenshotAfterFailedStep(AfterStepScope $scope): void
     {
         if (! $scope->getTestResult()->isPassed()) {

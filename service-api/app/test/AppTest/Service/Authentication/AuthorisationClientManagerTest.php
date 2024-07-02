@@ -6,9 +6,9 @@ namespace AppTest\Service\Authentication;
 
 use App\Service\Authentication\AuthorisationClientManager;
 use App\Service\Authentication\IssuerBuilder;
-use App\Service\Authentication\JWKFactory;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
+use App\Service\JWT\JWKFactory;
+use App\Service\Secrets\KeyPairManagerInterface;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Jose\Component\Core\JWK;
 use PHPUnit\Framework\Attributes\CoversClass;

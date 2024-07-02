@@ -30,12 +30,10 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
 
         //Create handler stack and push to container
         $mockHandler  = $container->get(MockHandler::class);
-        $handlerStack = HandlerStack::create($mockHandler);
-        $history      = Middleware::history($this->mockClientHistoryContainer);
+        $handlerStack = new HandlerStack($mockHandler);
+        $handlerStack->push(Middleware::prepareBody(), 'prepare_body');
+        $history = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
-        $handlerStack->remove('http_errors');
-        $handlerStack->remove('cookies');
-        $handlerStack->remove('allow_redirects');
         $container->set(HandlerStack::class, $handlerStack);
 
         $this->apiFixtures = $mockHandler;

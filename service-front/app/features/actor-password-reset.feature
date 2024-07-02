@@ -1,4 +1,4 @@
-@actor @password
+@actor @password @ff:allow_gov_one_login:false
 Feature: Password Reset
   As a user
   If I have forgotten my password

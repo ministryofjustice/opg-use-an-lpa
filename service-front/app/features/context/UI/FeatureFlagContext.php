@@ -29,7 +29,7 @@ class FeatureFlagContext implements Context
     public function setFeatureFlag(BeforeScenarioScope $scope)
     {
         $this->gatherContexts($scope);
-        $tags = $scope->getScenario()->getTags();
+        $tags = array_merge($scope->getScenario()->getTags(), $scope->getFeature()->getTags());
         foreach ($tags as $tag) {
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);

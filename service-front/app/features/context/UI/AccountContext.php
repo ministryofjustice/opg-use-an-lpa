@@ -154,7 +154,7 @@ class AccountContext implements Context
     public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->assertPageContainsText('Are you sure you want to delete your account?');
+        $this->ui->assertPageContainsText('What happens if you delete your account');
     }
 
     /**
@@ -167,6 +167,7 @@ class AccountContext implements Context
 
     /**
      * @Given /^I am currently signed in$/
+     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
      * @When /^I sign in$/
      */
     public function iAmCurrentlySignedIn(): void
@@ -367,6 +368,22 @@ class AccountContext implements Context
     }
 
     /**
+     * @When /^I visit the homepage$/
+     */
+    public function iVisitTheHomepage(): void
+    {
+        $this->ui->visit('/home');
+    }
+
+    /**
+     * @Then /^I am redirected to the LPA dashboard page$/
+     */
+    public function iAmRedirectedToTheDashboardPage(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
      * @Given /^I am signed in$/
      */
     public function iAmSignedIn(): void
@@ -555,8 +572,13 @@ class AccountContext implements Context
     {
         $this->ui->assertPageAddress('/settings');
 
-        $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
-        $this->ui->clickLink('Change a donor or attorney\'s details');
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->ui->assertPageContainsText('Change your sign-in details in your GOV.UK One Login');
+            $this->ui->clickLink('Change your sign-in details in your GOV.UK One Login');
+        } else {
+            $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
+            $this->ui->clickLink('Change a donor or attorney\'s details');
+        }
     }
 
     /**
@@ -836,7 +858,6 @@ class AccountContext implements Context
      */
     public function iClickTheBackLinkOnThePage($backLink): void
     {
-        $this->ui->assertPageContainsText($backLink);
         $this->ui->clickLink($backLink);
     }
 
@@ -919,7 +940,7 @@ class AccountContext implements Context
             )
         );
 
-        $this->ui->clickLink('Yes, continue deleting my account');
+        $this->ui->clickLink('Delete my account');
     }
 
     /**
@@ -1605,25 +1626,30 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request login to my account that was deleted$/
+     * @When /^I attempt to login to my deleted account$/
      */
     public function iRequestLoginToMyAccountThatWasDeleted(): void
     {
-        $this->ui->visit('/login');
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->iHaveLoggedInToOneLogin('English');
+            $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
+        } else {
+            $this->ui->visit('/login');
 
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
+            $this->ui->fillField('email', $this->userEmail);
+            $this->ui->fillField('password', $this->userPassword);
 
-        // API call for authentication
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            )
-        );
+            // API call for authentication
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_FORBIDDEN,
+                    json_encode([]),
+                    self::USER_SERVICE_AUTHENTICATE
+                )
+            );
 
-        $this->ui->pressButton('Sign in');
+            $this->ui->pressButton('Sign in');
+        }
     }
 
     /**
@@ -1752,7 +1778,8 @@ class AccountContext implements Context
     public function iRequestToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/settings');
-        $this->ui->clickLink('Delete account');
+
+        $this->ui->clickLink('delete-account-link');
     }
 
     /**
@@ -1769,7 +1796,7 @@ class AccountContext implements Context
     public function iRequestToReturnToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
-        $this->ui->clickLink('No, return to my details');
+        $this->ui->clickLink('Return to settings');
     }
 
     /**
@@ -2327,7 +2354,7 @@ class AccountContext implements Context
             )
         );
 
-      $this->apiFixtures->append(
+        $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode([]),

@@ -1,7 +1,7 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM php:8.1.25-fpm-alpine3.18 AS php-base
+FROM php:8.1.29-fpm-alpine3.20 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
@@ -9,7 +9,7 @@ COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr
 
 RUN set -xe \
   && apk add --update --no-cache icu gettext fcgi \
-  && install-php-extensions apcu redis-^5 intl gettext \
+  && install-php-extensions apcu redis-^5 intl gettext opcache \
   && rm /usr/bin/install-php-extensions
 
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/

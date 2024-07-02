@@ -38,6 +38,9 @@ resource "aws_ecs_service" "viewer" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      desired_count
+    ]
   }
 
   provider = aws.region
@@ -111,8 +114,8 @@ resource "aws_ecs_task_definition" "viewer" {
   family                   = "${var.environment_name}-viewer"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 512
-  memory                   = 1024
+  cpu                      = 256
+  memory                   = 512
   container_definitions    = "[${local.viewer_web}, ${local.viewer_app} ${var.feature_flags.deploy_opentelemetry_sidecar ? ", ${local.viewer_aws_otel_collector}" : ""}]"
   task_role_arn            = var.ecs_task_roles.viewer_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn

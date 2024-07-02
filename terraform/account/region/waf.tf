@@ -107,7 +107,7 @@ resource "aws_wafv2_web_acl" "main" {
     priority = 4
 
     action {
-      count {}
+      block {}
     }
 
     visibility_config {

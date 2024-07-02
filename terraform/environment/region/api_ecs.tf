@@ -37,6 +37,9 @@ resource "aws_ecs_service" "api" {
 
   lifecycle {
     create_before_destroy = true
+    ignore_changes = [
+      desired_count
+    ]
   }
 
   provider = aws.region
@@ -529,6 +532,10 @@ locals {
         {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(var.feature_flags.allow_meris_lpas)
+        },
+        {
+          name  = "SUPPORT_DATASTORE_LPAS",
+          value = tostring(var.feature_flags.support_datastore_lpas)
         },
         {
           name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",

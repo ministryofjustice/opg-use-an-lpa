@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository\Response;
 
-use DateTime;
+use DateTimeInterface;
 
 interface LpaInterface
 {
@@ -19,5 +19,5 @@ interface LpaInterface
      * In normal circumstance this will be within the last few minutes, but could be longer if Sirius is experiencing
      * a problem. It's our responsibility to check this and decide how to act accordingly.
      */
-    public function getLookupTime(): ?DateTime;
+    public function getLookupTime(): ?DateTimeInterface;
 }

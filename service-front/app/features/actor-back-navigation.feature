@@ -4,7 +4,7 @@ Feature: Back navigation
   I want the back function to take me to an appropriate page for where I am in the journey
   So that I can easily navigate the service
 
-  @ui
+  @ui @ff:allow_gov_one_login:false
   Scenario: Check back function on reset password page
     Given I access the login form
     And I have forgotten my password
@@ -12,7 +12,7 @@ Feature: Back navigation
     When I click the Back link on the page
     Then I should be taken to the <login> page
 
-  @ui
+  @ui @ff:allow_gov_one_login:false
   Scenario: Check back function on change password page
     Given I am a user of the lpa application
     And I am currently signed in

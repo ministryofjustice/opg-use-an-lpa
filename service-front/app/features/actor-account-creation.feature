@@ -1,4 +1,4 @@
-@actor @accountcreation
+@actor @accountcreation @ff:allow_gov_one_login:false
 Feature: Account creation
   As a new user
   I want to create an account
@@ -45,8 +45,6 @@ Feature: Account creation
       |invalid_email    | Password1 |   1   | Enter an email address in the correct format, like name@example.com |
       |test@EXAMPLE.com | Password1 |       | You must accept the terms of use to create an account               |
       |test@ Example.com| Password1 |   1   | Enter an email address in the correct format, like name@example.com |
-
-
 
   @ui @integration
   Scenario Outline: As a new user I want to set a secure password when creating an account

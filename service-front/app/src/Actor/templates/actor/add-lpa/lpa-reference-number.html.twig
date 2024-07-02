@@ -16,33 +16,29 @@
             <div class="govuk-grid-column-two-thirds">
                 <h1 class="govuk-heading-xl" id="ref_number_heading">{% trans %}What is the LPA reference number?{% endtrans %}</h1>
 
-                {{ govuk_form_open(form) }}
+                <p class="govuk-body">
+                    {% trans %}
+                        The reference number is in the same letter that has your activation key.
+                    {% endtrans %}
+                </p>
 
-                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Reference Number" data-gaLabel="Where to find the reference number">
-                        <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    {% trans %}Where to find the reference number{% endtrans %}
-                                </span>
-                        </summary>
-                        <div class="govuk-details__text">
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>{% trans %}The reference number is printed on the letter that told you the <abbr title="lasting power of attorney">LPA</abbr> had been registered.{% endtrans %}</li>
-                                <li>{% trans %}You can also find the reference number on the <abbr title="lasting power of attorney">LPA</abbr> or any related letters from the Office of the Public Guardian.{% endtrans %}</li>
-                                <li>{% trans %}It may be marked 'OPG reference number' or 'Our ref' or 'Case number'.{% endtrans %}</li>
-                            </ul>
-                        </div>
-                    </details>
+                {{ govuk_form_open(form) }}
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_element(form.get('reference_number'), {
-                        'hint': 'LPA reference numbers are 12 numbers long<br/>For example, 7000-0000-0000'| trans,
+                        'hint': 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>'| trans,
                         'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
                         'aria_labelledby': 'ref_number_heading'
                     }) }}
 
                     <button data-prevent-double-click="true" type="submit" class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
 
+                    <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                       class="govuk-button moj-button-menu__item govuk-button--secondary "
+                       data-module="govuk-button">
+                        {% trans %}Cancel{% endtrans %}
+                    </a>
                 {{ govuk_form_close() }}
 
             </div>

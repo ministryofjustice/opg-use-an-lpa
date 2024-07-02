@@ -1,5 +1,4 @@
 @actor @actorAbroad
-
 Feature: User does not live in the UK so cannot supply a UK postcode
 
   Background:

@@ -70,6 +70,7 @@ module "eu_west_1" {
     "allow_meris_lpas"                                           = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar"                               = local.environment.deploy_opentelemetry_sidecar
     "delete_lpa_feature"                                         = local.environment.application_flags.delete_lpa_feature
+    "support_datastore_lpas"                                     = local.environment.application_flags.support_datastore_lpas
   }
 
   providers = {
@@ -156,6 +157,7 @@ module "eu_west_2" {
     "allow_meris_lpas"                                           = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar"                               = local.environment.deploy_opentelemetry_sidecar
     "delete_lpa_feature"                                         = local.environment.application_flags.delete_lpa_feature
+    "support_datastore_lpas"                                     = local.environment.application_flags.support_datastore_lpas
   }
 
   providers = {

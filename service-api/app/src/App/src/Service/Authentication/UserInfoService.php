@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Authentication;
 
 use App\Exception\AuthorisationServiceException;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
-use App\Service\Authentication\Token\OutOfBandCoreIdentityVerifierBuilder;
 use Facile\OpenIDClient\Service\Builder\UserInfoServiceBuilder as FacileUserInfoServiceBuilder;
 use Facile\OpenIDClient\Service\UserInfoService as FacileUserInfoService;
 use Facile\OpenIDClient\Token\TokenSetInterface;

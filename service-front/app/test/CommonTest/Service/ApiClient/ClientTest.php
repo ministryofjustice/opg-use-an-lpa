@@ -8,7 +8,7 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
-use Http\Client\Exception\HttpException;
+use GuzzleHttp\Exception\BadResponseException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -99,7 +99,7 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_get_request()
     {
-        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy = $this->prophesize(BadResponseException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
@@ -167,7 +167,7 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_post_request()
     {
-        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy = $this->prophesize(BadResponseException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
@@ -235,7 +235,7 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_put_request()
     {
-        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy = $this->prophesize(BadResponseException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
@@ -303,7 +303,7 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_patch_request()
     {
-        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy = $this->prophesize(BadResponseException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(
@@ -371,7 +371,7 @@ class ClientTest extends TestCase
     /** @test */
     public function client_throws_error_with_delete_request()
     {
-        $exceptionProphecy = $this->prophesize(HttpException::class);
+        $exceptionProphecy = $this->prophesize(BadResponseException::class);
         $exceptionProphecy->getResponse()
             ->willReturn(
                 $this->setupResponse(

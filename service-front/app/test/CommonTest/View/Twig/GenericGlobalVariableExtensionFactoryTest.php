@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use Common\View\Twig\GenericGlobalVariableExtensionFactory;
 use PHPUnit\Framework\TestCase;
@@ -28,12 +29,19 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
                     'application' => 'actor',
                 ]
             );
+
         $httpClientProphecy = $this->prophesize(ClientInterface::class);
+
+        $translationProphecy = $this->prophesize(TranslatorInterface::class);
 
         $containerProphecy->get(ClientInterface::class)
             ->willReturn($httpClientProphecy->reveal());
 
+        $containerProphecy->get(TranslatorInterface::class)
+            ->willReturn($translationProphecy->reveal());
+
         $factory       = new GenericGlobalVariableExtensionFactory();
+
         $genericConfig = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(GenericGlobalVariableExtension::class, $genericConfig);
@@ -45,7 +53,13 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
     public function throws_exception_when_missing_configuration()
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
+
+        $translationProphecy = $this->prophesize(TranslatorInterface::class);
+
         $containerProphecy->get('config')->willReturn([]);
+
+        $containerProphecy->get(TranslatorInterface::class)
+            ->willReturn($translationProphecy->reveal());
 
         $factory = new GenericGlobalVariableExtensionFactory();
 

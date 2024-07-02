@@ -159,3 +159,11 @@ Feature: Add an LPA
     When I go to the check lpa page without filling in all the pages
     Then I am redirected to the activation key page
     And My filled answers have been cleared
+
+  @ui
+  Scenario: The user cannot add an LPA to their account so returns to the dashboard
+    Given I am on the add an LPA page
+    When I request to add an LPA that does not exist
+    Then The LPA is not found
+    And I click Back to your LPAs
+    And I return to the dashboard

@@ -48,6 +48,7 @@ Feature: Cookie consent
   @ui
   Scenario: Check user is taken to cookies page after setting cookies
     Given I have seen the Use a lasting power of attorney cookie banner
+    And I am a user of the lpa application
     And I chose to ignore setting cookies and I am on the dashboard page
     When I set my cookie preferences
     Then I am taken to the actor cookies page
@@ -55,6 +56,7 @@ Feature: Cookie consent
   @ui
   Scenario: Check user is referred back to the relevant page after setting cookies
     Given I have seen the Use a lasting power of attorney cookie banner
+    And I am a user of the lpa application
     And I chose to ignore setting cookies and I am on the dashboard page
     And I set my cookie preferences
     And I am taken to the actor cookies page

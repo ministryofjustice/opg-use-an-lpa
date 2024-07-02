@@ -1,4 +1,4 @@
-@actor @changeEmail
+@actor @changeEmail @ff:allow_gov_one_login:false
 Feature: Change email
   As a user
   I want to be able to change my account email address

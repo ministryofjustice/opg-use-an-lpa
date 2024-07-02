@@ -4,6 +4,10 @@
 
 {% block content %}
     <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.check-answers') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
@@ -27,10 +31,15 @@
                         {{ include('@partials/contact-details/telephone.html.twig') }}
 
                     {% else %}
-                        <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA to send you an activation key{% endtrans %}</h1>
-                        <p class="govuk-body">{% trans %}This could be because the information you entered does not match the information we hold about the LPA.{% endtrans %}</p>
+                        <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
+                        <p class="govuk-body">{% trans %}This could be because:{% endtrans %}</p>
 
-                        <h2 class="govuk-heading-l">{% trans %}Check your answers{% endtrans %}</h2>
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>{% trans %}the LPA reference number you entered is incorrect{% endtrans %}</li>
+                            <li>{% trans %}some of the details you entered about yourself do not match our records{% endtrans %}</li>
+                        </ul>
+
+                        <h3 class="govuk-heading-m">{% trans %}Your answers{% endtrans %}</h3>
                         <dl class="govuk-summary-list govuk-summary-list">
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
@@ -77,29 +86,11 @@
                             {% endif %}
                         </dl>
 
-                        <h2 class="govuk-heading-l">{% trans %}Did you give us the right LPA reference number?{% endtrans %}</h2>
-                        <p class="govuk-body">{% trans %}You’ll find the reference number on the LPA and at the top of any letter you’ve received from us about the LPA. If you do not have the LPA or have not kept any letters, check with someone else named on the LPA.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}If you're named on more than one LPA, make sure you’ve entered the reference number for the right LPA.{% endtrans %}</p>
+                        <p class="govuk-body">{% trans %}If you’re sure you entered the correct information, contact us.{% endtrans %}</p>
 
-                        <h2 class="govuk-heading-l">{% trans %}Do we have your correct name and date of birth on our records?{% endtrans %}</h2>
-                        <p class="govuk-body">{% trans %}If you've changed your name and not told us, or if your name or date of birth are wrong on the paper LPA, try to ask for a key again using your details as they appear on the LPA. If you do not have the LPA, check with the person who does.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}You must then contact us so we can update your details on our records.{% endtrans %}</p>
+                        {{ include('@partials/contact-details/email.html.twig') }}
 
-                        <h2 class="govuk-heading-l">{% trans %}Is your address correct on our records?{% endtrans %}</h2>
-                        <p class="govuk-body">{% trans %}If there's a mistake in your address on the LPA, or you've moved and not told us, let us know your correct address.{% endtrans %}</p>
-                        <p class="govuk-body">{% trans %}You must do this before you try to ask for an activation key again, so we can post your key to the right address.{% endtrans %}</p>
-
-                        <details class="govuk-details" data-module="govuk-details">
-                            <summary class="govuk-details__summary" role="button">
-                        <span class="govuk-details__summary-text">
-                          {% trans %}What to do if you’re sure you entered the right information{% endtrans %}
-                        </span>
-                            </summary>
-                            <div class="govuk-details__text">
-                                <p class="govuk-body">{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
-                                {{ include('@partials/contact-details/telephone.html.twig') }}
-                            </div>
-                        </details>
+                        {{ include('@partials/contact-details/telephone.html.twig') }}
                     {% endif %}
 
                     <div class="moj-button-menu">

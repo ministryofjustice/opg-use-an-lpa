@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository\Response;
 
-use DateTime;
+use DateTimeInterface;
 
 final class Lpa implements LpaInterface
 {
@@ -18,9 +18,9 @@ final class Lpa implements LpaInterface
     /**
      * The datetime that the data was looked up in Sirius main database.
      */
-    private DateTime $lookupTime;
+    private DateTimeInterface $lookupTime;
 
-    public function __construct(?array $data, ?DateTime $lookupTime)
+    public function __construct(?array $data, ?DateTimeInterface $lookupTime)
     {
         $this->data       = $data;
         $this->lookupTime = $lookupTime;
@@ -31,7 +31,7 @@ final class Lpa implements LpaInterface
         return $this->data;
     }
 
-    public function getLookupTime(): ?DateTime
+    public function getLookupTime(): ?DateTimeInterface
     {
         return $this->lookupTime;
     }

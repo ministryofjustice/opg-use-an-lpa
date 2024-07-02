@@ -33,13 +33,24 @@ class CommonContext implements Context
 {
     use BaseUiContextTrait;
 
-    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
+    private const USER_SERVICE_AUTHENTICATE           = 'UserService::authenticate';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
     /**
      * @Given I access the service home page
      */
     public function iAccessTheServiceHomepage(): void
     {
+        if ($this->base->container->get('config')['application'] === 'viewer') {
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($this->systemMessageData ?? []),
+                    self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+                )
+            );
+        }
+
         $this->ui->visit($this->sharedState()->basePath . '/home');
     }
 
@@ -141,60 +152,6 @@ class CommonContext implements Context
             $this->ui->fillField('usageCookies', 'no');
         }
         $this->ui->pressButton('Save changes');
-    }
-
-    /**
-     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
-     */
-    public function iChoseToIgnoreSettingCookiesAndIAmOnTheDashboardPage()
-    {
-        $this->iAmAbleToLogin();
-
-        $userEmail  = 'test@test.com';
-        $password   = 'pa33w0rd';
-        $userActive = true;
-        $userId     = '123';
-
-        $this->ui->fillField('email', $userEmail);
-        $this->ui->fillField('password', $password);
-
-        if ($userActive) {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'Id'        => $userId,
-                            'Email'     => $userEmail,
-                            'LastLogin' => '2020-01-01',
-                        ]
-                    ),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-
-            // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode([]),
-                    'LpaService::getLpas'
-                )
-            );
-        } else {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_UNAUTHORIZED,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-        }
-
-        $this->ui->pressButton('Sign in');
-        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
     /**
@@ -484,6 +441,14 @@ class CommonContext implements Context
      */
     public function iClickOnLinkOnTheCookiesPage($link): void
     {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->assertPageAddress('/cookies');
         $this->ui->clickLink($link);
     }

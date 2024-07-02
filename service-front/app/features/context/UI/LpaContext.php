@@ -462,6 +462,14 @@ class LpaContext implements Context
     }
 
     /**
+     * @Then /^I am taken to the GOV.UK settings page$/
+     */
+    public function iAmTakenToTheGovUkSettingsPage(): void
+    {
+        $this->ui->assertPageAddress('https://home.account.gov.uk/security');
+    }
+
+    /**
      * @Then /^I am redirected to the activation key page$/
      */
     public function iAmRedirectedToTheActivationKeyPage()
@@ -2532,9 +2540,9 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/check');
         $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
-        $this->ui->assertPageContainsText('LPA reference number: 700000000054');
-        $this->ui->assertPageContainsText('Activation key: C-XYUPHWQRECHV');
-        $this->ui->assertPageContainsText('Date of birth: 5 October 1975');
+        $this->ui->assertPageContainsText('LPA reference number 700000000054');
+        $this->ui->assertPageContainsText('Activation key C-XYUPHWQRECHV');
+        $this->ui->assertPageContainsText('Date of birth 5 October 1975');
     }
 
     /**
@@ -2795,10 +2803,10 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/check');
 
-        $this->ui->assertPageContainsText('Is this the LPA you want to add?');
+        $this->ui->assertPageContainsText('Confirm this is the correct LPA');
         $this->ui->assertPageContainsText('Mrs Ian Deputy Deputy');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
@@ -2833,7 +2841,7 @@ class LpaContext implements Context
         Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
         Assert::assertNotNull($foundName, 'Actor\'s name was not found on this page');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
@@ -2867,7 +2875,7 @@ class LpaContext implements Context
         Assert::assertNotNull($foundRole, 'Your role on this LPA not found on this page');
         Assert::assertNotNull($foundName, 'Company name was not found on this page');
 
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Confirm');
     }
 
     /**
@@ -3070,15 +3078,6 @@ class LpaContext implements Context
     }
 
     /**
-     * @When /^I say I have an activation key but it has expired$/
-     */
-    public function iSayIHaveAnActivationKeyButItHasExpired(): void
-    {
-        $this->ui->fillField('activation_key_triage', 'Expired');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
      * @When /^I request to view an LPA which has an inactive attorney named (.*)$/
      */
     public function iRequestToViewAnLPAWhichHasAnInactiveAttorney($name): void
@@ -3195,5 +3194,49 @@ class LpaContext implements Context
     public function aSystemMessageIsNotSet(): void
     {
         $this->systemMessageData = [];
+    }
+
+    /**
+     * @Given /^I am on the add an LPA reference number page$/
+     */
+    public function iAmOnTheAddLPAReferenceNumberPage(): void
+    {
+        $this->ui->visit('/lpa/add-by-key/activation-key');
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        $this->ui->fillField('activation_key', 'T3STPA22C0D3');
+        $this->ui->pressButton('Continue');
+
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+
+        $this->ui->pressButton('Continue');
+
+        $this->ui->assertPageAddress('/lpa/add-by-key/lpa-reference-number');
+    }
+
+    /**
+     * @When /^I click the Cancel link$/
+     */
+    public function iClickTheCancelLink(): void
+    {
+        $this->ui->clickLink('Cancel');
+    }
+
+    /**
+     * @When /^I click Back to your LPAs$/
+     */
+    public function iClickBackToYourLPAsLink(): void
+    {
+        $this->ui->clickLink('Back to your LPAs');
+    }
+
+    /**
+     * @When /^I return to the dashboard$/
+     */
+    public function iReturnToTheDashboard(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
     }
 }

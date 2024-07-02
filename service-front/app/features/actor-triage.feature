@@ -1,4 +1,4 @@
-@actor @triageEntry
+@actor @triageEntry @ff:allow_gov_one_login:false
 Feature: Triage
   As a new user
   I want to create an account

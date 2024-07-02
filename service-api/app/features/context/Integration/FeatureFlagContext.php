@@ -17,7 +17,7 @@ class FeatureFlagContext extends BaseIntegrationContext
      */
     public function setFeatureFlag(BeforeScenarioScope $scope)
     {
-        $tags = $scope->getScenario()->getTags();
+        $tags = array_merge($scope->getScenario()->getTags(), $scope->getFeature()->getTags());
         foreach ($tags as $tag) {
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);
@@ -32,7 +32,7 @@ class FeatureFlagContext extends BaseIntegrationContext
                 }
 
                 $container = $scope->getEnvironment()->getContext(LpaContext::class)->container;
-                $config = $container->get('config');
+                $config    = $container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
                 $container->set('config', $config);
                 $container->set(

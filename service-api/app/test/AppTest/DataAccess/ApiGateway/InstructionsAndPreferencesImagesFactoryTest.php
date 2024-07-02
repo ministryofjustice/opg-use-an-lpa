@@ -6,14 +6,16 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory;
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use Exception;
-use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class InstructionsAndPreferencesImagesFactoryTest extends TestCase
 {
@@ -34,12 +36,20 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
             );
 
         $containerProphecy
-            ->get(HttpClient::class)
-            ->willReturn($this->prophesize(HttpClient::class)->reveal());
+            ->get(ClientInterface::class)
+            ->willReturn($this->prophesize(ClientInterface::class)->reveal());
 
         $containerProphecy
-            ->get(RequestSigner::class)
-            ->willReturn($this->prophesize(RequestSigner::class)->reveal());
+            ->get(RequestFactoryInterface::class)
+            ->willReturn($this->prophesize(RequestFactoryInterface::class)->reveal());
+
+        $containerProphecy
+            ->get(StreamFactoryInterface::class)
+            ->willReturn($this->prophesize(StreamFactoryInterface::class)->reveal());
+
+        $containerProphecy
+            ->get(RequestSignerFactory::class)
+            ->willReturn($this->prophesize(RequestSignerFactory::class)->reveal());
 
         $containerProphecy
             ->get(RequestTracing::TRACE_PARAMETER_NAME)

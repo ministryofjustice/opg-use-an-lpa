@@ -28,18 +28,12 @@
 
                             <p class="govuk-body">
                                 {% trans %}
-                                    You need an activation key to add an LPA to your account. Activation keys expire after 12 months.
+                                    You need your own unique activation key to add an LPA to your account. <br> Activation keys expire after 12 months.
                                 {% endtrans %}
                             </p>
                             <p class="govuk-body">
                                 {% trans %}
-                                    The donor and all attorneys will each need their own unique activation key.
-                                {% endtrans %}
-                            </p>
-                            <p class="govuk-body">
-                                {% trans %}
-                                    Activation keys are 13 letters and numbers long and start with a C.<br>
-                                    For example: C-AB12 CD34 EF56
+                                    Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56.
                                 {% endtrans %}
                             </p>
 
@@ -53,51 +47,53 @@
                                 </summary>
 
                                 <div class="govuk-details__text">
-                                    <p>
-                                        {% trans %}
-                                            Activation keys are sent to donors and attorneys by letter or email.
-                                        {% endtrans %}
-                                    </p>
-                                </div>
-                                <div class="govuk-details__text">
                                     <h3 class="govuk-heading-s">
                                         {% trans %}
-                                            For LPAs registered on or after 17 July 2020
+                                            For LPAs registered in the last 12 months
                                         {% endtrans %}
                                     </h3>
                                 </div>
 
                                 <div class="govuk-details__text">
                                     <p>{% trans %}Your activation key is on the letter we sent you that told you the LPA had been registered.{% endtrans %}</p>
-                                    <p>{% trans %}If you’ve lost the letter, or the activation key has expired, you can request a new one below.{% endtrans %}</p>
                                 </div>
 
                                 <div class="govuk-details__text">
                                     <h3 class="govuk-heading-s">
                                         {% trans %}
-                                            For LPAs registered before 17 July 2020
+                                            For LPAs registered more than 12 months ago
                                         {% endtrans %}
                                     </h3>
                                 </div>
 
                                 <div class="govuk-details__text">
-                                    <p>{% trans %}You have to request an activation key from us. {% endtrans %}</p>
+                                    <p>{% trans %}You have to request an activation key from us.{% endtrans %}</p>
                                     <p>
                                         {% trans %}
-                                            If you’ve already requested an activation key, you'll find it on the letter or email we sent you. If you’ve lost it, or it’s expired, you can request a new one below.
+                                            If you’ve already requested an activation key, you'll find it on the letter or email we sent you.
                                         {% endtrans %}
                                     </p>
                                 </div>
                                 <div class="govuk-details__text">
                                     <h3 class="govuk-heading-s">
                                         {% trans %}
-                                            For enduring powers of attorney (EPAs)
+                                            When activation keys cannot be used
                                         {% endtrans %}
                                     </h3>
-                                    <p>{% trans %}The Use a lasting power of attorney service cannot be used for EPAs. {% endtrans %}</p>
-                                    <p>{% trans %}You’ll need to show the paper EPA to people or organisations instead. {% endtrans %}</p>
+                                    <p>{% trans %}This service cannot be used for:{% endtrans %}</p>
+                                    <ul class="govuk-list govuk-list--bullet">
+                                        <li>{% trans %}LPAs with reference numbers fewer than 12 digits and registered before January 2016{% endtrans %}</li>
+                                        <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
+                                    </ul>
+                                    <p>{% trans %}You’ll need to show the paper LPA or EPA to people or organisations instead.{% endtrans %}</p>
                                 </div>
                             </details>
+
+                            <p class="govuk-body">
+                                {% trans %}
+                                    If you’ve lost your activation key, its expired, or you’ve not had one before, you can request a new one.
+                                {% endtrans %}
+                            </p>
 
                             {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
                                 [
@@ -106,12 +102,8 @@
                                         'value': 'Yes'
                                     },
                                     {
-                                        'label': 'No, I do not have an activation key'| trans,
+                                        'label': 'No, I need to request an activation key'| trans,
                                         'value': 'No'
-                                    },
-                                    {
-                                        'label': 'I have an activation key but it has expired'| trans,
-                                        'value': 'Expired'
                                     }
                                 ]}
                             ) }}

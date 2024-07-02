@@ -10,12 +10,11 @@ use DMore\ChromeDriver\ChromeDriver;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
-/**
- * @property array responseJson The json returned from a previous step
- */
 class CommonContext implements Context
 {
     use BaseContextTrait;
+
+    public array $responseJson;
 
     /**
      * @Given I access the service homepage

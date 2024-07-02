@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\RequestSigner;
-use Aws\Credentials\CredentialsInterface;
 use Aws\Signature\SignatureV4;
+use PHPUnit\Framework\Attributes\BackupGlobals;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\RequestInterface;
 
+#[BackupGlobals(true)]
 class RequestSignerTest extends TestCase
 {
     use ProphecyTrait;
@@ -34,15 +35,18 @@ class RequestSignerTest extends TestCase
     #[Test]
     public function it_signs_request_with_a_supplied_static_token(): void
     {
-        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
-
         $requestProphecy = $this->prophesize(RequestInterface::class);
         $requestProphecy
-            ->withAddedHeader('Authorization', 'test_token')
+            ->withHeader('Authorization', 'test_token')
             ->shouldBeCalled()
             ->willReturn($requestProphecy->reveal());
 
-        $signer = new RequestSigner($signatureV4Prophecy->reveal(), 'test_token');
+        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $signatureV4Prophecy
+            ->signRequest(Argument::any(), Argument::any())
+            ->willReturnArgument(0);
+
+        $signer = new RequestSigner($signatureV4Prophecy->reveal(), ['Authorization' => 'test_token']);
 
         $request = $signer->sign($requestProphecy->reveal());
     }
@@ -50,13 +54,13 @@ class RequestSignerTest extends TestCase
     #[Test]
     public function it_signs_a_request_with_the_aws_signer(): void
     {
-        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
-
         $requestProphecy = $this->prophesize(RequestInterface::class);
 
-        $signatureV4Prophecy->signRequest($requestProphecy->reveal(), Argument::type(CredentialsInterface::class))
+        $signatureV4Prophecy = $this->prophesize(SignatureV4::class);
+        $signatureV4Prophecy
+            ->signRequest($requestProphecy->reveal(), Argument::any())
             ->shouldBeCalled()
-            ->willReturn($requestProphecy->reveal());
+            ->willReturnArgument(0);
 
         $signer = new RequestSigner($signatureV4Prophecy->reveal());
 

@@ -36,3 +36,16 @@ Feature: Check your answers before requesting an activation key
     When I request to go back and change my postcode
     Then I am taken back to the postcode page where I can see my answers and change them
     Then I press continue and I am taken back to the check answers page
+
+  @ui
+  Scenario: The user can go back and change their entered postcode
+    Given I have requested an activation key with valid details
+    When I request to go back
+    Then I am taken back to the postcode page where I can see my answers and change them
+    Then I press continue and I am taken back to the check answers page
+
+  @ui
+  Scenario: The user can go back and change their entered postcode
+    Given I have requested an activation key with valid details
+    When I press cancel
+    Then I am taken back to the dashboard page

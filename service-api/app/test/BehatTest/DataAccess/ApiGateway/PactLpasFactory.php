@@ -5,29 +5,50 @@ declare(strict_types=1);
 namespace BehatTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Lpas;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use App\DataAccess\Repository\LpasInterface;
 use App\Service\Log\RequestTracing;
-use Aws\Signature\SignatureV4;
-use GuzzleHttp\Client as HttpClient;
+use DI\NotFoundException;
+use Exception;
+use GuzzleHttp\Client;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
 class PactLpasFactory
 {
-    public function __invoke(ContainerInterface $container)
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws Exception
+     */
+    public function __invoke(ContainerInterface $container): LpasInterface
     {
         $config = $container->get('config');
 
         if (!isset($config['sirius_api']['endpoint'])) {
-            throw new \Exception('Sirius API Gateway endpoint is not set');
+            throw new NotFoundException('Sirius API Gateway endpoint is not set');
         }
 
-        $apiHost = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);
+        $httpClient = $container->get(ClientInterface::class);
+
+        if (! $httpClient instanceof Client) {
+            throw new Exception(
+                Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+            );
+        }
 
         return new Lpas(
-            new HttpClient(),
-            new SignatureV4('execute-api', $config['aws']['region']),
-            $apiHost,
+            $httpClient,
+            $container->get(RequestFactoryInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(RequestSignerFactory::class),
+            parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST),
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),
             $container->get(LoggerInterface::class)
