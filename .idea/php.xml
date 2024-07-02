@@ -212,7 +212,6 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/web-token/jwt-encryption" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/facile-it/php-openid-client" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/facile-it/php-jose-verifier" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/guzzle6-adapter" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/comparator" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/code-unit" />
@@ -362,10 +361,8 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/amphp/process" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/error-handler" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/filesystem" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php73" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-intl-idn" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/daverandom/libdns" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/event-dispatcher" />
@@ -388,9 +385,7 @@
       <path value="$PROJECT_DIR$/service-api/app/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/ramsey/uuid" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/type" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/promise" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/diff" />
-      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/httplug" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/lines-of-code" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/fidry/cpu-core-counter" />
       <path value="$PROJECT_DIR$/service-api/app/vendor/spatie/array-to-xml" />
@@ -878,8 +873,9 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
-      <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="Psalm">
