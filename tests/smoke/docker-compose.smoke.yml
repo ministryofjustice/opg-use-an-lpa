@@ -11,6 +11,7 @@ services:
       - ./tests/features:/app/features
     depends_on:
       - mock-one-login
+      - proxy
     environment:
       BEHAT_VIEWER_URL: http://proxy:9001
       BEHAT_ACTOR_URL: http://proxy:9002
