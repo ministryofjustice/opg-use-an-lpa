@@ -16,7 +16,7 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 TEST_COMPOSE := $(TEST_COMPOSE) -f docker-compose.override.yml
 endif
 
-up: | $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
+up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
@@ -82,7 +82,7 @@ seed:
 	$(COMPOSE) up -d api-seeding
 .PHONY: seed
 
-unit_test: | unit_test_viewer_app unit_test_actor_app unit_test_javascript unit_test_api_app
+unit_test: unit_test_viewer_app unit_test_actor_app unit_test_javascript unit_test_api_app
 .PHONY: unit_test
 
 unit_test_viewer_app:
@@ -110,11 +110,13 @@ enable_development_mode:
 	$(COMPOSE) run --rm api-composer development-enable
 .PHONY: enable_development_mode
 
-development_mode: | enable_development_mode clear_config_cache
+development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
 
-install: | run_front_composer run_api_composer
-.PHONY: install
+composer_install:
+	$(COMPOSE) run --rm front-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm api-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+.PHONY: composer_install
 
 run_front_composer:
 	$(COMPOSE) run --rm front-composer $(filter-out $@,$(MAKECMDGOALS))
