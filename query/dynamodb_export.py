@@ -18,19 +18,17 @@ class DynamoDBExporterAndQuerier:
         self.tables = {
             "Stats": None,
             "ActorCodes": None,
-            "ActorUsers": None,
             "ViewerCodes": None,
             "ViewerActivity": None,
             "UserLpaActorMap": None,
         }
 
         self.table_ddl_files = {
-            "tables/stats.ddl": "Stats",
-            "tables/actor_codes.ddl": "ActorCodes",
-            "tables/actor_users.ddl": "ActorUsers",
-            "tables/viewer_codes.ddl": "ViewerCodes",
-            "tables/viewer_activity.ddl": "ViewerActivity",
-            "tables/user_lpa_actor_map.ddl": "UserLpaActorMap",
+            "stats.ddl": "Stats",
+            "actor_codes.ddl": "ActorCodes",
+            "viewer_codes.ddl": "ViewerCodes",
+            "viewer_activity.ddl": "ViewerActivity",
+            "user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
         self.environment_details = self.set_environment_details(environment)
@@ -49,6 +47,10 @@ class DynamoDBExporterAndQuerier:
         self.export_bucket_name = "use-a-lpa-dynamodb-exports-{}".format(
             self.environment_details["account_name"]
         )
+
+    def load_users_table(self):
+        self.tables["ActorUsers"] = None
+        self.table_ddl_files["actor_users.ddl"] = "ActorUsers"
 
     def set_date_range(self, start, end):
         self.start_date = start
@@ -209,7 +211,7 @@ class DynamoDBExporterAndQuerier:
 
         for table_ddl in self.table_ddl_files.keys():
             exported_s3_location = self.tables[self.table_ddl_files[table_ddl]]
-            self.create_athena_table(table_ddl, exported_s3_location)
+            self.create_athena_table(f"tables/{table_ddl}", exported_s3_location)
 
     def create_athena_table(self, table_ddl, s3_location):
         with open(table_ddl) as ddl:
@@ -373,6 +375,10 @@ def main():
 
     args = parser.parse_args()
     work = DynamoDBExporterAndQuerier(args.environment)
+
+    # only load actor_users if emails are specified
+    if args.emails_flag:
+        work.load_users_table()
 
     if args.start_date and args.end_date:
         work.set_date_range(args.start_date, args.end_date)
