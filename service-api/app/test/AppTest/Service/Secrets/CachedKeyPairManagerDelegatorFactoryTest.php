@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Authentication\KeyPairManager;
+namespace AppTest\Service\Secrets;
 
-use App\Service\Authentication\KeyPairManager\CachedKeyPairManager;
-use App\Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
+use App\Service\Secrets\CachedKeyPairManager;
+use App\Service\Secrets\CachedKeyPairManagerDelegatorFactory;
+use App\Service\Secrets\KeyPairManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

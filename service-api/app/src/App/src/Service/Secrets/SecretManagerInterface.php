@@ -6,5 +6,7 @@ namespace App\Service\Secrets;
 
 interface SecretManagerInterface
 {
-    public function getSecret(): string;
+    public function getSecret(): Secret;
+
+    public function getAlgorithm(): string;
 }

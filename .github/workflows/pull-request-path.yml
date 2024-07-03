@@ -295,7 +295,39 @@ jobs:
       - workflow_variables
       - workspace_name
       - update_documentation
+      - docker_build_scan_push
     steps:
+      - uses: actions/checkout@v4
+
+      - name: Calculate Step Duration
+        id: calculate_durations
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python ./scripts/pipeline/output_step_timing/step_timing.py -json '{
+            "test node dependencies / unit-test": ["run tests with jest"],
+            "build, test, scan and push / docker_build_scan_push": ["docker unit tests", "docker integration and acceptance tests"],
+            "run behat tests against environment / build-web": ["run behat test suite"]
+          }'
+
+      - name: Create a table with job durations and set as output
+        id: create_table
+        run: |
+          {
+            echo ${{ needs.docker_build_scan_push.outputs.matrix_job_names }}
+            echo "| Job | Step | Duration |"
+            echo "| --- | --- | --- |"
+            jobs=$(echo '${{ steps.calculate_durations.outputs.jobs }}' | jq -r '.[]')
+            steps=$(echo '${{ steps.calculate_durations.outputs.steps }}' | jq -r '.[]')
+            durations=$(echo '${{ steps.calculate_durations.outputs.durations }}' | jq -r '.[]')
+            for i in $(seq 0 $(($(echo "$jobs" | wc -l) - 1))); do
+              job=$(echo "$jobs" | sed -n "$((i+1))p")
+              step=$(echo "$steps" | sed -n "$((i+1))p")
+              duration=$(echo "$durations" | sed -n "$((i+1))p")
+              echo "| $job | $step | $duration |"
+            done
+          } >> $GITHUB_STEP_SUMMARY
+
       - name: workflow has ended without issue
         run: |
           if [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]

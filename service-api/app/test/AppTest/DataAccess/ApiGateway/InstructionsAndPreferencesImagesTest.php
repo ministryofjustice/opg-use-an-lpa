@@ -6,15 +6,16 @@ namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\GuzzleException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -22,6 +23,22 @@ use Psr\Http\Message\StreamInterface;
 class InstructionsAndPreferencesImagesTest extends TestCase
 {
     use ProphecyTrait;
+    use PSR17PropheciesTrait;
+
+    private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
+
+    public function setUp(): void
+    {
+        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
+        $requestSignerProphecy
+            ->sign(Argument::any())
+            ->willReturn($this->prophesize(RequestInterface::class)->reveal());
+
+        $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $this->requestSignerFactoryProphecy
+            ->__invoke()
+            ->willReturn($requestSignerProphecy->reveal());
+    }
 
     #[Test]
     public function it_gets_instructions_and_preferences_images(): void
@@ -38,26 +55,17 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
         $responseProphecy->getBody()->willReturn(json_encode($testData));
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) {
-                $this->assertEquals('GET', $request->getMethod());
-                $this->assertEquals('localhost/v1/image-request/700000000001', $request->getUri());
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
 
-                return true;
-            })
-        )->willReturn($responseProphecy->reveal());
-
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('GET', Argument::containingString('localhost/v1/image-request/700000000001'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new InstructionsAndPreferencesImages(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -75,20 +83,24 @@ class InstructionsAndPreferencesImagesTest extends TestCase
     #[Test]
     public function it_handles_a_client_exception_when_getting_instructions_and_preferences_images(): void
     {
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willThrow($this->prophesize(GuzzleException::class)->reveal());
+        $this->generatePSR17Prophecies(
+            $this->prophesize(ResponseInterface::class)->reveal(),
+            'test-trace-id',
+            []
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('GET', Argument::containingString('localhost/v1/image-request/700000000001'))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy->sendRequest(Argument::any())
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
 
         $service = new InstructionsAndPreferencesImages(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );
@@ -116,20 +128,21 @@ class InstructionsAndPreferencesImagesTest extends TestCase
         $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        $httpClientProphecy = $this->prophesize(HttpClient::class);
-        $httpClientProphecy->send(Argument::type(RequestInterface::class))
-            ->willReturn($responseProphecy->reveal());
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            $testData,
+        );
 
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('GET', Argument::containingString('localhost/v1/image-request/700000000001'))
+            ->willReturn($this->requestProphecy->reveal());
 
         $service = new InstructionsAndPreferencesImages(
-            $httpClientProphecy->reveal(),
-            $requestSignerProphecy->reveal(),
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
             'test-trace-id'
         );

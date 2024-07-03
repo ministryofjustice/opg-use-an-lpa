@@ -26,10 +26,15 @@ on:
         required: false
         default: 'all'
         type: string
+    outputs:
+      matrix_job_names:
+        value: ${{ jobs.docker_build_scan_push.outputs.matrix_job_names }}
 
 jobs:
   docker_build_scan_push:
     runs-on: ubuntu-latest
+    outputs:
+      matrix_job_names: ${{ steps.output_names.outputs.MATRIX_JOB_NAMES }}
     strategy:
       fail-fast: false
       matrix:
@@ -287,3 +292,9 @@ jobs:
         if: |
           inputs.push_to_ecr == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
+      - name: Output matrix job name
+        id: output_names
+        run: |
+          touch matrix_job_names.txt
+          JOB_NAME="${{ matrix.svc_prefix }},${{ matrix.svc_suffix }},${{ matrix.build_development_docker }},${{ matrix.run_unit_tests }},${{ matrix.run_integration_tests }},${{ matrix.artifact_to_dl }}"

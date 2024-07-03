@@ -7,8 +7,8 @@ use Aws\Sdk;
 use BehatTest\Common\Service\Aws\SdkFactory;
 use BehatTest\GuzzleHttp\TestClientFactory;
 use Elie\PHPDI\Config\ConfigInterface;
-use GuzzleHttp\Client;
 use Laminas\ConfigAggregator\ConfigAggregator;
+use Psr\Http\Client\ClientInterface;
 
 return [
     'debug'                                  => true,
@@ -16,8 +16,8 @@ return [
     ConfigInterface::ENABLE_CACHE_DEFINITION => false,
     'dependencies'                           => [
         'factories' => [
-            Client::class => TestClientFactory::class,
-            Sdk::class    => SdkFactory::class,
+            ClientInterface::class => TestClientFactory::class,
+            Sdk::class             => SdkFactory::class,
         ],
     ],
     'aws'                                    => [

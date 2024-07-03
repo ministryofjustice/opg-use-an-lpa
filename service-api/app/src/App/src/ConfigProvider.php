@@ -39,8 +39,12 @@ class ConfigProvider
     {
         return [
             'aliases'    => [
-                Psr\Http\Client\ClientInterface::class => GuzzleHttp\Client::class,
-                Psr\Clock\ClockInterface::class        => Service\InternalClock::class,
+                // PSR20
+                Psr\Clock\ClockInterface::class => Service\InternalClock::class,
+
+                // PSR17
+                Psr\Http\Message\RequestFactoryInterface::class => GuzzleHttp\Psr7\HttpFactory::class,
+                Psr\Http\Message\StreamFactoryInterface::class  => GuzzleHttp\Psr7\HttpFactory::class,
 
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
@@ -69,20 +73,23 @@ class ConfigProvider
                 Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'autowires'  => [
-                // these two KeyPairManagers need explicitly autowiring so that they're recognised
+                // these two Managers need explicitly autowiring so that they're recognised
                 // when setup in the delegators section. This is a PHP-DI specific configuration
-                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class,
+                Service\Secrets\OneLoginIdentityKeyPairManager::class,
                 Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
+                // PSR18
+                Psr\Http\Client\ClientInterface::class => Service\ApiClient\ClientFactory::class,
+
                 // Services
                 Aws\Sdk::class                                 => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class             => Service\Aws\DynamoDbClientFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
                 Aws\Ssm\SsmClient::class                       => Service\Aws\SSMClientFactory::class,
-                Service\ApiClient\Client::class                => Service\ApiClient\ClientFactory::class,
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
                 Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
+                Service\Features\FeatureEnabled::class         => Service\Features\FeatureEnabledFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,
@@ -97,8 +104,7 @@ class ConfigProvider
                 // Code Validation
                 Service\ActorCodes\CodeValidationStrategyInterface::class
                     => Service\ActorCodes\CodeValidationStrategyFactory::class,
-                DataAccess\ApiGateway\ActorCodes::class    => DataAccess\ApiGateway\ActorCodesFactory::class,
-                DataAccess\ApiGateway\RequestSigner::class => DataAccess\ApiGateway\RequestSignerFactory::class,
+                DataAccess\ApiGateway\ActorCodes::class => DataAccess\ApiGateway\ActorCodesFactory::class,
 
                 // Handlers
                 Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
@@ -106,26 +112,22 @@ class ConfigProvider
                 // One Login
                 Service\Authentication\AuthorisationClientManager::class
                     => Service\Authentication\AuthorisationClientManagerFactory::class,
-                Service\Authentication\UserInfoService::class
-                    => Service\Authentication\UserInfoServiceFactory::class,
-
-                Service\Features\FeatureEnabled::class => Service\Features\FeatureEnabledFactory::class,
             ],
             'delegators' => [
-                Laminas\Stratigility\Middleware\ErrorHandler::class                         => [
+                Laminas\Stratigility\Middleware\ErrorHandler::class   => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
-                Laminas\Cache\Storage\AdapterPluginManager::class                           => [
+                Laminas\Cache\Storage\AdapterPluginManager::class     => [
                     Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
                 ],
-                Service\Authentication\KeyPairManager\OneLoginIdentityKeyPairManager::class => [
-                    Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory::class,
-                ],
-                Service\SystemMessage\SystemMessage::class                                  => [
-                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
-                ],
-                Service\Secrets\LpaDataStoreSecretManager::class                            => [
+                Service\Secrets\LpaDataStoreSecretManager::class      => [
                     Service\Secrets\CachedSecretManagerDelegatorFactory::class,
+                ],
+                Service\Secrets\OneLoginIdentityKeyPairManager::class => [
+                    Service\Secrets\CachedKeyPairManagerDelegatorFactory::class,
+                ],
+                Service\SystemMessage\SystemMessage::class            => [
+                    Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
                 ],
             ],
         ];

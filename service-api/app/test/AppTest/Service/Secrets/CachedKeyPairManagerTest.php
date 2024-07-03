@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Authentication\KeyPairManager;
+namespace AppTest\Service\Secrets;
 
-use App\Service\Authentication\KeyPairManager\CachedKeyPairManager;
-use App\Service\Authentication\KeyPairManager\KeyPair;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
+use App\Service\Secrets\CachedKeyPairManager;
+use App\Service\Secrets\KeyPair;
+use App\Service\Secrets\KeyPairManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

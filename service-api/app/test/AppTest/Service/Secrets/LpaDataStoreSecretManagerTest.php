@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Secrets;
 
 use App\Service\Secrets\LpaDataStoreSecretManager;
+use App\Service\Secrets\Secret;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
@@ -29,7 +30,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
     }
 
     #[Test]
-    public function gets_key_pair(): void
+    public function gets_secret(): void
     {
         $mockSecretKey = 'my-secret-key';
 
@@ -48,11 +49,12 @@ class LpaDataStoreSecretManagerTest extends TestCase
             $this->logger->reveal()
         );
 
-        $this->assertEquals($mockSecretKey, $lpaDataStoreSecretManager->getSecret());
+        $this->assertInstanceOf(Secret::class, $lpaDataStoreSecretManager->getSecret());
+        $this->assertEquals($mockSecretKey, $lpaDataStoreSecretManager->getSecret()->secret);
     }
 
     #[Test]
-    public function gets_key_pair_when_null(): void
+    public function gets_secret_when_null(): void
     {
         $mockSecretKey = null;
 
@@ -78,7 +80,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
     }
 
     #[Test]
-    public function gets_key_pair_when_aws_has_error(): void
+    public function throws_exception_when_aws_has_error(): void
     {
         $this->secretsManagerClient->getSecretValue(
             [
@@ -95,5 +97,18 @@ class LpaDataStoreSecretManagerTest extends TestCase
         $this->expectException(SecretsManagerException::class);
 
         $lpaDataStoreSecretManager->getSecret();
+    }
+
+    #[Test]
+    public function has_the_correct_algorithm(): void
+    {
+        $lpaDataStoreSecretManager = new LpaDataStoreSecretManager(
+            $this->secretsManagerClient->reveal(),
+            $this->logger->reveal()
+        );
+
+        $alg = $lpaDataStoreSecretManager->getAlgorithm();
+
+        $this->assertEquals('HS256', $alg);
     }
 }
