@@ -4,6 +4,7 @@
     <toRun name="API Integration" type="PhpBehatConfigurationType" />
     <toRun name="Front Integration" type="PhpBehatConfigurationType" />
     <toRun name="Front UI" type="PhpBehatConfigurationType" />
+    <toRun name="Front JS" type="JavaScriptTestRunnerJest" />
     <toRun name="API" type="PHPUnitRunConfigurationType" />
     <toRun name="Front" type="PHPUnitRunConfigurationType" />
     <method v="2" />
