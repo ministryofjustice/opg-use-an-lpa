@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-03T15:02:47+00:00\n"
+"POT-Creation-Date: 2024-07-04T14:33:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4909,4 +4909,8 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:22
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:24
 msgid "From 13 August 2024 you will only be able to sign in to your account using GOV.​UK One Login."
+msgstr ""
+
+#: src/Actor/templates/actor/login-notification.html.twig:29
+msgid "You can set up your GOV.​UK One Login now or wait until you sign in for the first time on or after 13 August 2024 –"
 msgstr ""
