@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Smoke" type="PhpBehatConfigurationType" singleton="false">
+  <configuration default="false" name="Smoke" type="PhpBehatConfigurationType" singleton="true">
     <BehatRunner configuration_file="$PROJECT_DIR$/tests/smoke/behat.yml" scenario="" scope="Yml" use_alternative_configuration_file="true" />
     <CommandLine>
       <envFiles>
