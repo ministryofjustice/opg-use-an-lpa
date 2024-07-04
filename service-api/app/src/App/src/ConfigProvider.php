@@ -71,6 +71,9 @@ class ConfigProvider
 
                 // Secrets
                 Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
+
+                // Services
+                Service\Lpa\LpaManagerInterface::class => Service\Lpa\LpaService::class,
             ],
             'autowires'  => [
                 // these two Managers need explicitly autowiring so that they're recognised
