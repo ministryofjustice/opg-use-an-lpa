@@ -1,4 +1,4 @@
-import { CrossServiceHeader } from './vendor/service-header.js';
+import { CrossServiceHeader } from 'govuk-one-login-service-header/dist/scripts/service-header.js';
 
 const initGovUKHeader = ($selector) => {
     if ($selector) {
