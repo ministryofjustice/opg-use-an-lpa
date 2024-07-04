@@ -33,8 +33,8 @@ class CheckLpaCleansedTest extends TestCase
     public function checkLpaCleansed(): CheckLpaCleansed
     {
         return new CheckLpaCleansed(
-            $this->loggerProphecy->reveal(),
             $this->lpaServiceProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
         );
     }
 

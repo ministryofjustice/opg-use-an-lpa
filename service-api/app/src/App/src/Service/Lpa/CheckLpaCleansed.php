@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
 use DateTimeImmutable;
+use Exception;
 use Psr\Log\LoggerInterface;
 
 class CheckLpaCleansed
@@ -14,7 +15,7 @@ class CheckLpaCleansed
 
     private DateTimeImmutable $earliestDate;
 
-    public function __construct(private LoggerInterface $logger, private LpaService $lpaService)
+    public function __construct(private LpaManagerInterface $lpaManager, private LoggerInterface $logger)
     {
         $this->earliestDate = new DateTimeImmutable(self::EARLIEST_REG_DATE);
     }
@@ -26,7 +27,7 @@ class CheckLpaCleansed
      */
     public function __invoke(string $userId, array $actorDetailsMatch): void
     {
-        $lpa = $this->lpaService->getByUid((string) $actorDetailsMatch['lpa-id'])->getData();
+        $lpa = $this->lpaManager->getByUid((string) $actorDetailsMatch['lpa-id'])->getData();
 
         if (
             !$lpa['lpaIsCleansed'] &&
