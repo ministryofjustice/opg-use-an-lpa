@@ -15,7 +15,7 @@ repos:
         args:
          - --args=--recursive
   - repo: https://github.com/awslabs/git-secrets
-    rev: master
+    rev: 5357e18bc27b42a827b6780564ea873a72ca1f01
     hooks:
       - id: git-secrets
   - repo: local
