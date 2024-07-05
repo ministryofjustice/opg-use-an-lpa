@@ -10,14 +10,13 @@ use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AccessForAllLpaService;
 use App\Service\Lpa\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
-use App\Service\Lpa\LpaService;
 use App\Service\Lpa\RemoveLpa;
+use App\Service\Lpa\SiriusLpaManager;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
@@ -66,7 +65,7 @@ class LpaContext extends BaseIntegrationContext
     private string $codesApiPactProvider;
     private string $iapImagesApiPactProvider;
     private RemoveLpa $deleteLpa;
-    private LpaService $lpaService;
+    private SiriusLpaManager $lpaService;
 
     /**
      * @Given I have previously requested the addition of a paper LPA to my account
@@ -2511,7 +2510,7 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-        $this->lpaService  = $this->container->get(LpaService::class);
+        $this->lpaService  = $this->container->get(SiriusLpaManager::class);
         $this->deleteLpa   = $this->container->get(RemoveLpa::class);
 
         $config                         = $this->container->get('config');

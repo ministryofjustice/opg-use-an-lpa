@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\Handler\LpaSearchHandler;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusLpaManager;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -32,7 +32,7 @@ class LpaSearchHandlerTest extends TestCase
             'attorneys' => [],
         ];
 
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $lpaServiceProphecy = $this->prophesize(SiriusLpaManager::class);
         $lpaServiceProphecy->search($params['code'], $params['uid'], $params['dob'])
             ->willReturn($expectedData);
 
@@ -61,7 +61,7 @@ class LpaSearchHandlerTest extends TestCase
     public function testHandleMissingParams(): void
     {
         $this->markTestSkipped('must be revisited.');
-        $lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $lpaServiceProphecy = $this->prophesize(SiriusLpaManager::class);
 
         //  Set up the handler
         $handler = new LpaSearchHandler($lpaServiceProphecy->reveal());

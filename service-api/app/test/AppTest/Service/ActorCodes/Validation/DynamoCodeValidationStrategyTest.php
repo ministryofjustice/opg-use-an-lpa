@@ -9,8 +9,8 @@ use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\DynamoCodeValidationStrategy;
-use App\Service\Lpa\LpaService;
 use App\Service\Lpa\ResolveActor;
+use App\Service\Lpa\SiriusLpaManager;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
@@ -25,13 +25,13 @@ class DynamoCodeValidationStrategyTest extends TestCase
 
     private ActorCodesInterface|ObjectProphecy $actorCodeRepositoryProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private SiriusLpaManager|ObjectProphecy $lpaServiceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function initDependencies(): void
     {
         $this->actorCodeRepositoryProphecy = $this->prophesize(ActorCodesInterface::class);
-        $this->lpaServiceProphecy          = $this->prophesize(LpaService::class);
+        $this->lpaServiceProphecy          = $this->prophesize(SiriusLpaManager::class);
         $this->loggerProphecy              = $this->prophesize(LoggerInterface::class);
         $this->resolveActorProphecy        = $this->prophesize(ResolveActor::class);
     }
