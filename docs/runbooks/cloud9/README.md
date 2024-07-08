@@ -5,11 +5,20 @@
 ### Starting a Cloud 9 Instance
 
 Log into the AWS Console
-Ensure you are in the Ireland(eu-west-1) region
-Switch to the appropriate role, in the appropriate account
-Search for the Cloud 9 Service in the list of Services
-Once on the Cloud 9 Dashboard select "Create Environment"
-Create the environment leaving all the default values, name it whatever you like
+Ensure you are in the correct region. Normally this will be eu-west-1 (Ireland)
+Switch to the appropriate role, in the appropriate account for the environment you are working on
+Search for the Cloud9 Service in the list of AWS Services and select it
+Once on the Cloud9 Dashboard select "Create Environment"
+Name the cloud9 instance whatever you like, but prefixed with the associated ticket number
+eg UML-1234-my-work-cloud9-instance
+optionally give a description
+Leave all defaults for environment type, instance type and platform.
+Adjust the Cost-saving setting to suit your needs, basing this on how long you will need the instance.
+under the Network settings (advanced) drop tab:
+Change Connection to Secure Shell (SSH)
+Leave the Network (VPC) dropdown as is.
+select a public facing Subnet from the dropdown. Note these are usually the shorter named groups.
+Failure to do this will mean your instance cannot be accessed and will fail to deploy
 
 ### Once Connected
 
