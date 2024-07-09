@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\ViewerCodes;
 
-use Exception;
 use App\DataAccess\Repository\{KeyCollisionException,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
@@ -31,9 +30,9 @@ class ViewerCodeService
      * @param string $token
      * @param string $userId
      * @param string $organisation
+     *
      * @psalm-return ViewerCode
      * @return array|null
-     * @throws Exception
      */
     public function addCode(string $token, string $userId, string $organisation): ?array
     {
