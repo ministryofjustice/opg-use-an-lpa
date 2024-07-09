@@ -74,8 +74,8 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
                     $activateAccountUrl = $this->serverUrlHelper->generate($activateAccountPath);
 
                     $this->notifyService->sendEmailToUser(
-                                            NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
-                                            $emailAddress,
+                        NotifyService::ACTIVATE_ACCOUNT_TEMPLATE,
+                        $emailAddress,
                         activateAccountUrl: $activateAccountUrl
                     );
 

@@ -101,9 +101,4 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware, Se
             'form' => $form,
         ]));
     }
-
-    public function getSession(ServerRequestInterface $request, string $name): ?SessionInterface
-    {
-        return $request->getAttribute($name);
-    }
 }
