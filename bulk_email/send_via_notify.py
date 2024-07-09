@@ -1,4 +1,5 @@
 import os
+from time import sleep
 from notifications_python_client.notifications import NotificationsAPIClient
 from notifications_python_client.errors import HTTPError
 import argparse
@@ -44,6 +45,10 @@ def main():
                     email_address = line_terminated.rstrip('\n')
                     print(email_address)
                     send_msg(email_address, succeeded_file, failed_file)
+                    # sleep in order not to exceed rate limit
+                    # 0.02 would hit the max rate limit of 3000 per min but not allow any other messages at the same time
+                    # so we are using 0.03, which limits us to 2000 per min
+                    sleep(0.03)
     
 if __name__ == "__main__":
     main()
