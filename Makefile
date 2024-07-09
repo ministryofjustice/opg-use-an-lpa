@@ -16,7 +16,7 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 TEST_COMPOSE := $(TEST_COMPOSE) -f docker-compose.override.yml
 endif
 
-up:
+up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
@@ -41,20 +41,13 @@ pull:
 	$(COMPOSE) pull
 .PHONY: pull
 
-# Starts the application and seeds initial data.
-up_all: | up_dependencies up_mock up_services up_functions seed
-.PHONY: up_all
-
-restart_all: | down_all up_all
-.PHONY: restart_all
-
 build:
 	$(COMPOSE) build $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: build
 
-build_all:
-	$(MAKE) build
-.PHONY: build_all
+build_frontend_assets:
+	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run build"
+.PHONY: build_frontend_assets
 
 rebuild:
 	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
@@ -64,17 +57,9 @@ down:
 	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: down
 
-down_all:
-	$(COMPOSE) down
-.PHONY: down_all
-
 destroy:
 	$(COMPOSE) down -v --rmi all --remove-orphans
 .PHONY: destroy
-
-destroy_all:
-	$(COMPOSE) down -v --rmi all --remove-orphans
-.PHONY: destroy_all
 
 ps:
 	$(COMPOSE) ps
@@ -83,18 +68,6 @@ ps:
 logs:
 	$(COMPOSE) logs -t -f $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: logs
-
-up_dependencies: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
-	$(ECR_LOGIN)
-	$(COMPOSE) up -d --remove-orphans dynamodb-local codes-gateway redis kms mock-one-login localstack mock-lpa-data-store
-.PHONY: up_dependencies
-
-up_services:
-	@echo "Logging into ECR..."
-	$(ECR_LOGIN)
-	@echo "Getting Notify API Key..."
-	$(NOTIFY) && $(COMPOSE) up -d --remove-orphans esbuild service-pdf viewer-web viewer-app actor-web actor-app front-composer api-web api-app api-composer proxy
-.PHONY: up_services
 
 update_mock:
 	@echo "Merging Swagger Documents..."
@@ -105,20 +78,12 @@ update_mock:
 	$(COMPOSE) restart api-gateway mock-data-lpa mock-image-request-handler mock-lpa-data-store
 .PHONY: update_mock
 
-up_mock:
-	$(COMPOSE) up -d --remove-orphans api-gateway
-.PHONY: up_mock
-
-up_functions:
-	$(COMPOSE) up -d --remove-orphans upload-stats-lambda
-.PHONY: up_functions
-
 seed:
 	$(COMPOSE) up -d api-seeding
 .PHONY: seed
 
-unit_test_all: | unit_test_viewer_app unit_test_actor_app unit_test_javascript unit_test_api_app
-.PHONY: unit_test_all
+unit_test: unit_test_viewer_app unit_test_actor_app unit_test_javascript unit_test_api_app
+.PHONY: unit_test
 
 unit_test_viewer_app:
 	$(COMPOSE) run --rm viewer-app /app/vendor/bin/phpunit
@@ -132,21 +97,26 @@ unit_test_javascript:
 	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run test"
 .PHONY: unit_test_actor_app
 
-build_frontend_assets:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run build"
-.PHONY: build_frontend_assets
-
 unit_test_api_app:
-	$(COMPOSE) run --rm api-app /app/vendor/bin/phpunit
+	$(COMPOSE) run --rm api-app /app/vendor/bin/phpunit --testsuite unit
 .PHONY: unit_test_api_app
+
+smoke_tests:
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml --env-file tests/smoke/.env run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: smoke_tests
 
 enable_development_mode:
 	$(COMPOSE) run --rm front-composer development-enable
 	$(COMPOSE) run --rm api-composer development-enable
 .PHONY: enable_development_mode
 
-development_mode: | enable_development_mode clear_config_cache
+development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
+
+composer_install:
+	$(COMPOSE) run --rm front-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm api-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+.PHONY: composer_install
 
 run_front_composer:
 	$(COMPOSE) run --rm front-composer $(filter-out $@,$(MAKECMDGOALS))
@@ -155,14 +125,6 @@ run_front_composer:
 run_api_composer:
 	$(COMPOSE) run --rm api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
-
-run_front_composer_install:
-	$(COMPOSE) run --rm front-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
-.PHONY: run_front_composer_install
-
-run_api_composer_install:
-	$(COMPOSE) run --rm api-composer install --prefer-dist --no-suggest --no-interaction --no-scripts --optimize-autoloader
-.PHONY: run_api_composer_install
 
 run_front_composer_update:
 	$(COMPOSE) run --rm front-composer update
@@ -177,21 +139,21 @@ run_api_composer_update:
 .PHONY: run_api_composer_update
 
 run_smoke_composer_update:
-	$(TEST_COMPOSE) run --rm smoke-tests composer update
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer update
 .PHONY: run_smoke_composer_update
 
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
 .PHONY: run_update
+
+cleanup_pact_containers:
+	docker rm -f opg-use-an-lpa-api-gateway-pact-mock-1 opg-use-an-lpa-lpa-codes-pact-mock-1 opg-use-an-lpa-iap-images-mock-1
+.PHONY: cleanup_pact_containers
 
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
-
-smoke_tests:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml --env-file tests/smoke/.env run --rm smoke-tests vendor/bin/behat $(filter-out $@,$(MAKECMDGOALS))
-.PHONY: smoke_tests
 
 run-structurizr:
 	docker pull structurizr/lite
