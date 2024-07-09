@@ -24,6 +24,8 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
 {
     use Session;
 
+    public const SESSION_EMAIL_KEY = CreateAccountHandler::SESSION_EMAIL_KEY;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -52,7 +54,7 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
 
         // Retrieve email from session
         $session = $this->getSession($request, 'session');
-        $emailAddress = $session->get('email');
+        $emailAddress = $session->get(self::SESSION_EMAIL_KEY);
         $resend = (isset($params['resend']) && $params['resend'] === 'true');
 
         if (is_null($emailAddress)) {
