@@ -9,13 +9,18 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\GoneException;
 use RuntimeException;
 
+/**
+ * @psalm-type Lpa = array{
+ *     uId: string,
+ * }
+ */
 interface LpaManagerInterface
 {
     /**
      * Get an LPA using the ID value
      *
-     * @param string $uid    Unique ID of LPA to fetch
-     * @return ?LpaInterface A processed LPA data transfer object
+     * @param string $uid        Unique ID of LPA to fetch
+     * @return LpaInterface|null A processed LPA data transfer object
      */
     public function getByUid(string $uid): ?LpaInterface;
 
@@ -24,7 +29,17 @@ interface LpaManagerInterface
      *
      * @param string $token  UserLpaActorToken that map an LPA to a user account
      * @param string $userId The user account ID that must correlate to the $token
-     * @return ?array        A structure that contains processed LPA data and metadata
+     * @psalm-return array{
+     *     user-lpa-actor-token: string,
+     *     date: string,
+     *     lpa: Lpa,
+     *     activationKeyDueDate: ?string,
+     *     actor: array{
+     *         type: string,
+     *         details: string,
+     *     }
+     * }|null A structure that contains processed LPA data and metadata
+     * @return array|null
      */
     public function getByUserLpaActorToken(string $token, string $userId): ?array;
 
