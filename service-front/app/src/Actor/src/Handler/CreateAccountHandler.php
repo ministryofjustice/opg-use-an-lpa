@@ -8,13 +8,16 @@ use Actor\Form\CreateAccount;
 use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
+use Common\Handler\Traits\Session;
 use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Http\Message\ResponseInterface;
@@ -23,9 +26,12 @@ use Psr\Http\Message\ServerRequestInterface;
 /**
  * @codeCoverageIgnore
  */
-class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
+class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware, SessionAware
 {
     use CsrfGuard;
+    use Session;
+
+    public const SESSION_EMAIL_KEY = 'create_account_email';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -39,6 +45,7 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+
         $form = new CreateAccount($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
@@ -80,12 +87,13 @@ class CreateAccountHandler extends AbstractHandler implements CsrfGuardAware
                         throw $ex;
                     }
                 }
+                // Store email in session
+                $session = $this->getSession($request, 'session');
+                $session->set(self::SESSION_EMAIL_KEY, $emailAddress);
 
                 // Redirect to the success screen with the email address so that we can utilise the
                 // resend activation token functionality
-                return $this->redirectToRoute('create-account-success', [], [
-                    'email' => $emailAddress,
-                ]);
+                return $this->redirectToRoute('create-account-success');
             }
         }
 
