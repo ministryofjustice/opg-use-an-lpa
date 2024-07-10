@@ -104,7 +104,12 @@ class AccountContext implements Context
             $this->ui->getSession()->getStatusCode() === StatusCodeInterface::STATUS_UNAUTHORIZED
             && $this->ui->getSession()->getResponseHeader('www-authenticate') !== null
         ) {
-            $this->ui->getSession()->setBasicAuth('integration-user', 'winter2021');
+            $credentials           = getenv('ONE_LOGIN_CREDENTIALS')
+                ? getenv('ONE_LOGIN_CREDENTIALS')
+                : throw new Exception('ONE_LOGIN_CREDENTIALS is needed for testing against One Login');
+            [$username, $password] = explode(':', $credentials, 2);
+
+            $this->ui->getSession()->setBasicAuth($username, $password);
             $this->ui->getSession()->reload();
             $this->ui->assertPageAddress('/sign-in-or-create');
 
