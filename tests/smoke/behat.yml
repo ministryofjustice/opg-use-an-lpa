@@ -12,7 +12,16 @@ default:
       sessions:
         default:
           chrome:
+            # If you start a chrome instance like this
+            # /Applications/Google Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-address=0.0.0.0 \
+            #     --remote-debugging-port=9222 --ignore-certificate-errors --disable-extensions \
+            #     --window-size="1920,1080" --no-startup-window --no-first-run
+            #
+            # You can set your API url to something like this and see the tests running in a Chrome window
+            #api_url: http://host.docker.internal:9222
+            # Normally you'd use the dockerised headless chrome
             api_url: "http://localhost:9222"
+
             # Set the optimal Socket Timeout to avoid client-server connection problems in behat scripts.
             socket_timeout: 15
 
