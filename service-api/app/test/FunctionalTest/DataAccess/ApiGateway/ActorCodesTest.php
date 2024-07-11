@@ -32,8 +32,8 @@ class ActorCodesTest extends AbstractFunctionalTestCase
         $mockServer = new MockServerConfig();
         $mockServer->setHost('lpa-codes-pact-mock');
         $mockServer->setPort(80);
-        $mockServer->setConsumer('use_a_lasting_power_of_attorney');
-        $mockServer->setProvider('lpa-codes');
+        $mockServer->setConsumer('use-an-lpa');
+        $mockServer->setProvider('data-lpa-codes');
         $mockServer->setPactDir('/tmp/pacts');
         $mockServer->setPactFileWriteMode('merge');
 
@@ -42,6 +42,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
     public function tearDown(): void
     {
+        // ensure the pact contracts are checked and the contracts file is written out
         $this->builder->finalize();
     }
 
