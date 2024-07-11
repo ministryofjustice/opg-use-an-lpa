@@ -13,7 +13,7 @@ services:
       - mock-one-login
       - proxy
     environment:
-      # It's possible to drive the tests against the User Research environment (and it's configured One Login service)
+      # It's possible to drive the tests against the User Research environment (and its configured One Login service)
       #BEHAT_ACTOR_URL: https://ur.use-lasting-power-of-attorney.service.gov.uk
       #BEHAT_OLD_ACTOR_URL: https://ur.use-lasting-power-of-attorney.service.gov.uk
       #BEHAT_VIEWER_URL: https://ur.view-lasting-power-of-attorney.service.gov.uk

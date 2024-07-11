@@ -74,6 +74,7 @@ jobs:
       - name: run behat test suite
         env:
           ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+          ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
