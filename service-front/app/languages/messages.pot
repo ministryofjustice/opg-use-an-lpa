@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-11T11:37:16+00:00\n"
+"POT-Creation-Date: 2024-07-12T09:42:58+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4802,6 +4802,6 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:58
-msgid "If you have any problems signing in to this service, you can <a href=\"%link%\" class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
+#: src/Actor/templates/actor/one-login.html.twig:59
+msgid "If you have any problems signing in to this service, you can <a href=https://signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=en class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-07-11T11:37:16+00:00\n"
+"POT-Creation-Date: 2024-07-12T09:42:58+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6896,14 +6896,20 @@ msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
 msgid "Confirm"
 msgstr "Cadarnhau"
 
-#: src/Actor/templates/actor/one-login.html.twig:58
+#: src/Actor/templates/actor/one-login.html.twig:59
 msgid ""
-"If you have any problems signing in to this service, you can <a href=\"%link%"
-"\" class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
+"If you have any problems signing in to this service, you can <a href=https://"
+"signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=en class=\"govuk-"
+"link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""
 "Os ydych yn cael unrhyw broblemau wrth fewngofnodi i’r gwasanaeth hwn, gallwch "
-"<a href=\"%link%\" class=\"govuk-link\">gysylltu â thîm One Login GOV.UK</a> i "
-"gael gymorth."
+"<a href=https://signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=cy "
+"class=“govuk-link”>gysylltu â thîm One Login GOV.UK</a> i gael gymorth."
+
+#, fuzzy
+#~| msgid "Get help"
+#~ msgid "to get help."
+#~ msgstr "Cael help"
 
 #~ msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 #~ msgstr "Cyfeirnod <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>:"

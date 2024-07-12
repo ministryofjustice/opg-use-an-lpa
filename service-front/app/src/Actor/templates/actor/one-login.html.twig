@@ -55,7 +55,14 @@
                     </button>
                     <p class="govuk-body-s">{% trans %}with GOV.UK One Login{% endtrans %}</p>
                     <br>
-                    <p class="govuk-body-s">{% trans with {'%link%': 'https://signin.account.gov.uk/contact-us?supportType=PUBLIC'} %}If you have any problems signing in to this service, you can <a href="%link%" class="govuk-link">contact the GOV.UK One Login team</a> to get help.{% endtrans %}</p>
+                    <p class="govuk-body-s">
+                        {% trans %}
+                            If you have any problems signing in to this service, you can
+                            <a href=https://signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=en class="govuk-link">contact the GOV.UK One Login team</a>
+                            to get help.
+                        {% endtrans %}
+                    </p>
+
                 </div>
                 {{ govuk_form_close() }}
             </div>
