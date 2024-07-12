@@ -203,6 +203,15 @@ class CommonContext implements Context
         $this->responseJson = $this->assertJsonResponse();
     }
 
+    #[Then('the service is declared healthy')]
+    public function theServiceIsDeclaredHealthy(): void
+    {
+        $this->responseJson = $this->assertJsonResponse();
+
+        $this->itContainsAKeyValuePair('overall_healthy');
+        Assert::assertTrue($this->responseJson['overall_healthy']);
+    }
+
     #[Then('it contains a :key key\/value pair')]
     public function itContainsAKeyValuePair(string $key): void
     {
