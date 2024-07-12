@@ -25,10 +25,12 @@ class RequestSigner
 
     public function sign(RequestInterface $request): RequestInterface
     {
+        $request = $this->signer->signRequest($request, $this->credentials);
+
         foreach ($this->headers as $header => $value) {
             $request = $request->withHeader($header, $value);
         }
 
-        return $this->signer->signRequest($request, $this->credentials);
+        return $request;
     }
 }
