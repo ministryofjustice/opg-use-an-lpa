@@ -23,7 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description="Get list of user emails.")
     parser.add_argument(
         "--table",
-        default="2685uml3304-ActorUsers",
+        default="demo-ActorUsers",
         help="The table containing the email addresses",
     )
     args = parser.parse_args()
