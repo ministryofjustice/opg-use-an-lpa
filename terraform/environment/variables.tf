@@ -81,7 +81,6 @@ variable "environments" {
         use_older_lpa_journey                                      = bool
         delete_lpa_feature                                         = bool
         allow_meris_lpas                                           = bool
-        dont_send_lpas_registered_after_sep_2019_to_cleansing_team = bool
         instructions_and_preferences                               = bool
         support_datastore_lpas                                     = bool
       })

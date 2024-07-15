@@ -9,13 +9,6 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @ui @integration @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
-  Scenario: The user cannot add an old LPA which does not have a registered status
-    Given I am on the add an older LPA page
-    When I provide details of an LPA that is not registered
-    And I confirm the details I provided are correct
-    Then I am informed that an LPA could not be found with this reference number
-
   @ui @integration
   Scenario: The user can add an older LPA to their account
     Given I am on the add an older LPA page
@@ -129,14 +122,7 @@ Feature: Add an older LPA
     When I enter both a telephone number and select that I cannot take calls
     Then I am told that I must enter a phone number or select that I cannot take calls
 
-  @ui @integration @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:false
-  Scenario: The user cannot add an old LPA to their account as the LPA reference number could not be found
-    Given I am on the add an older LPA page
-    When I provide an LPA number that does not exist
-    And I confirm the details I provided are correct
-    Then I am informed that an LPA could not be found with this reference number
-
-  @ui @ff:dont_send_lpas_registered_after_sep_2019_to_cleansing_team:true
+  @ui
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given I am on the add an older LPA page
     And I provide details of LPA registered after 1st September 2019 where do not match a valid paper document
