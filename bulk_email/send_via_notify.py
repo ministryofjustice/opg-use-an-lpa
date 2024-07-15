@@ -11,11 +11,11 @@ if not notify_api_key:
 
 notifications_client = NotificationsAPIClient(notify_api_key)
 
-def send_msg(email_address, succeeded_file, failed_file):
+def send_msg(email_address, template_id, succeeded_file, failed_file):
     try:
         response = notifications_client.send_email_notification(
             email_address=email_address,
-            template_id='5c19af5c-a49c-4284-8758-9e67394b1a0c',
+            template_id=template_id,
             personalisation={
               "EmailAddress": email_address,
             }
@@ -35,8 +35,14 @@ def main():
         default="default",
         help="The file containing the email addresses to send to",
     )
+    parser.add_argument(
+        "--template",
+        default='5c19af5c-a49c-4284-8758-9e67394b1a0c',
+        help="The notify template to send",
+    )
     args = parser.parse_args()
     filename = args.file
+    template = args.template
 
     with open(filename + '_succeeded', 'w') as succeeded_file:
         with open(filename + '_failed', 'w') as failed_file:
@@ -44,7 +50,7 @@ def main():
                 for line_terminated in f:
                     email_address = line_terminated.rstrip('\n')
                     print(email_address)
-                    send_msg(email_address, succeeded_file, failed_file)
+                    send_msg(email_address, template, succeeded_file, failed_file)
                     # sleep in order not to exceed rate limit
                     # 0.02 would hit the max rate limit of 3000 per min but not allow any other messages at the same time
                     # so we are using 0.03, which limits us to 2000 per min
