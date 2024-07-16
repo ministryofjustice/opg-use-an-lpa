@@ -19,9 +19,6 @@ class ViewerCodes implements ViewerCodesInterface
     {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(string $code): ?array
     {
         $result = $this->client->getItem([
@@ -38,9 +35,6 @@ class ViewerCodes implements ViewerCodesInterface
         return !empty($codeData) ? $codeData : null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getCodesByLpaId(string $siriusUid): array
     {
         $marshaler = new Marshaler();
@@ -64,7 +58,8 @@ class ViewerCodes implements ViewerCodesInterface
     }
 
     /**
-     * @inheritDoc
+     * @throws KeyCollisionException
+     * @throws DynamoDbException
      */
     public function add(
         string $code,
@@ -73,7 +68,7 @@ class ViewerCodes implements ViewerCodesInterface
         DateTime $expires,
         string $organisation,
         ?int $actorId,
-    ) {
+    ): void {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
@@ -100,9 +95,6 @@ class ViewerCodes implements ViewerCodesInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function cancel(string $code, DateTime $cancelledDate): bool
     {
         //  Update the item by cancelling the code and setting cancelled date
@@ -124,9 +116,6 @@ class ViewerCodes implements ViewerCodesInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function removeActorAssociation(string $code, int $codeOwner): bool
     {
         // Update the item by removing association with userlpactor and setting the code owner

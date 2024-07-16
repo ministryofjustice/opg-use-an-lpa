@@ -12,15 +12,15 @@ github-actions:
 
 service-admin:
 - changed-files:
-  - any-glob-to-any-file: 'services-admin/**'
+  - any-glob-to-any-file: 'service-admin/**'
 
 service-api:
 - changed-files:
-  - any-glob-to-any-file: 'services-api/**'
+  - any-glob-to-any-file: 'service-api/**'
 
 service-front:
 - changed-files:
-  - any-glob-to-any-file: 'services-front/**'
+  - any-glob-to-any-file: 'service-front/**'
 
 
 docker:

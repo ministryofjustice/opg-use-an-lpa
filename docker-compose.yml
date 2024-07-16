@@ -7,7 +7,6 @@ services:
 
   esbuild:
     container_name: esbuild
-    image: esbuild
     build:
       context: .
       dockerfile: service-front/web/Dockerfile
@@ -22,7 +21,6 @@ services:
 
   viewer-web:
     container_name: viewer-web
-    image: front-web
     build:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
@@ -39,7 +37,6 @@ services:
 
   viewer-app:
     container_name: viewer-app
-    image: viewer-app
     build:
       target: development
       context: .
@@ -77,7 +74,6 @@ services:
 
   actor-web:
     container_name: actor-web
-    image: front-web
     build:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
@@ -94,7 +90,6 @@ services:
 
   actor-app:
     container_name: actor-app
-    image: actor-app
     build:
       target: development
       context: .
@@ -139,7 +134,10 @@ services:
   front-composer:
     profiles:
       - tools
-    image: actor-app
+    build:
+      target: development
+      context: .
+      dockerfile: service-front/docker/app/Dockerfile
     volumes:
       - ./service-front/app:/app
     entrypoint:
@@ -157,7 +155,6 @@ services:
 
   api-web:
     container_name: api-web
-    image: api-web
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
@@ -174,7 +171,6 @@ services:
 
   api-app:
     container_name: api-app
-    image: api-app
     build:
       target: development
       context: .
@@ -221,7 +217,10 @@ services:
   api-composer:
     profiles:
       - tools
-    image: api-app
+    build:
+      target: development
+      context: .
+      dockerfile: service-api/docker/app/Dockerfile
     volumes:
       - ./service-api/app:/app
     entrypoint:
@@ -254,7 +253,6 @@ services:
 
   upload-stats-lambda:
     container_name: upload-statistics
-    image: upload-statistics
     build:
       context: ./lambda-functions/upload-statistics
       dockerfile: Dockerfile

@@ -110,7 +110,8 @@
         "psr-4": {
             "AppTest\\": "test/AppTest/",
             "BehatTest\\": "test/BehatTest/",
-            "BehatTest\\Context\\": "features/context/"
+            "BehatTest\\Context\\": "features/context/",
+            "FunctionalTest\\": "test/FunctionalTest/"
         }
     },
     "scripts": {
@@ -133,7 +134,7 @@
         ],
         "dc-run": "@dc run --rm api-app",
         "dc-php": "@dc-run php",
-        "dc-php-debug": "@dc-php -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so",
+        "dc-php-debug": "@dc-run php -dxdebug.start_with_request=yes -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",
         "cs-check": "@dc-php /app/vendor/bin/phpcs",
         "cs-fix": "@dc-php /app/vendor/bin/phpcbf",

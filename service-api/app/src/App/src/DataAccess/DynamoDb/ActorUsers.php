@@ -13,9 +13,6 @@ use ParagonIE\HiddenString\HiddenString;
 
 use function password_hash;
 
-/**
- * @psalm-import-type ActorUser from ActorUsersInterface
- */
 class ActorUsers implements ActorUsersInterface
 {
     use DynamoHydrateTrait;
@@ -26,9 +23,6 @@ class ActorUsers implements ActorUsersInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function add(
         string $id,
         string $email,
@@ -55,9 +49,6 @@ class ActorUsers implements ActorUsersInterface
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function get(string $id): array
     {
         $result = $this->client->getItem(
@@ -80,9 +71,6 @@ class ActorUsers implements ActorUsersInterface
         return $userData;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByEmail(string $email): array
     {
         $marshaler = new Marshaler();
@@ -109,9 +97,6 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByIdentity(string $identity): array
     {
         $marshaler = new Marshaler();
@@ -141,9 +126,6 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getUserByNewEmail(string $newEmail): array
     {
         $marshaler = new Marshaler();
@@ -164,9 +146,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getDataCollection($result);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIdByPasswordResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -193,9 +172,6 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData)['Id'];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getIdByEmailResetToken(string $resetToken): string
     {
         $marshaler = new Marshaler();
@@ -222,9 +198,6 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData)['Id'];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function activate(string $activationToken): array
     {
         $marshaler = new Marshaler();
@@ -268,9 +241,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->get($id);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function migrateToOAuth(string $id, string $identity): array
     {
         $marshaler = new Marshaler();
@@ -307,9 +277,6 @@ class ActorUsers implements ActorUsersInterface
         return $user;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function exists(string $email): bool
     {
         try {
@@ -321,9 +288,6 @@ class ActorUsers implements ActorUsersInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resetPassword(string $id, HiddenString $password): bool
     {
         //  Update the item by setting the password and removing the reset token/expiry
@@ -348,9 +312,6 @@ class ActorUsers implements ActorUsersInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function recordSuccessfulLogin(string $id, string $loginTime): void
     {
         $this->client->updateItem(
@@ -371,9 +332,6 @@ class ActorUsers implements ActorUsersInterface
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array
     {
         $userData = $this->getByEmail($email);
@@ -403,9 +361,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
     {
         $user = $this->client->updateItem(
@@ -435,9 +390,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function changeEmail(string $id, string $token, string $newEmail): bool
     {
         //  Update the item by setting the new email and removing the reset token/expiry
@@ -461,9 +413,6 @@ class ActorUsers implements ActorUsersInterface
         return true;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function delete(string $accountId): array
     {
         $user = $this->client->deleteItem(
@@ -487,9 +436,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($user);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array
     {
         //  Update the item by setting the password and restarting the Expiry TTL
@@ -516,9 +462,6 @@ class ActorUsers implements ActorUsersInterface
         return $this->getData($result);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function rehashPassword(string $id, HiddenString $password): bool
     {
         //  Update the item by setting the password

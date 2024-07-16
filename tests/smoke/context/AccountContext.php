@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Context\Context;
+use Exception;
+use Fig\Http\Message\StatusCodeInterface;
+use OTPHP\TOTP;
 
 class AccountContext implements Context
 {
@@ -65,8 +68,25 @@ class AccountContext implements Context
     public function iEnterCorrectCredentials(): void
     {
         if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            $this->ui->assertPageAddress('/authorize');
-            $this->ui->fillField('email', $this->userEmail);
+            if ($this->detectOneLoginImplementation() === OneLoginImplementation::Mock) {
+                $this->ui->assertPageAddress('/authorize');
+                $this->ui->fillField('email', $this->userEmail);
+            } else {
+                $this->ui->pressButton('sign-in-button');
+
+                $this->ui->fillField('email', $this->userEmail);
+                $this->ui->pressButton('Continue');
+
+                $this->ui->fillField('password', $this->userPassword);
+                $this->ui->pressButton('Continue');
+
+                $secret = getenv('ONE_LOGIN_OTP_SECRET')
+                    ? getenv('ONE_LOGIN_OTP_SECRET')
+                    : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
+
+                $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
+            }
+
             $this->ui->pressButton('Continue');
         } else {
             $this->ui->assertPageAddress('/login');
@@ -74,6 +94,29 @@ class AccountContext implements Context
             $this->ui->fillField('password', $this->userPassword);
             $this->ui->pressButton('Sign in');
         }
+    }
+
+    private function detectOneLoginImplementation(): OneLoginImplementation
+    {
+        // the one login integration environment will have given us a basic auth dialog to fill.
+        // the driver we're using doesn't give us great tools to work with that, so we'll just brute force it
+        if (
+            $this->ui->getSession()->getStatusCode() === StatusCodeInterface::STATUS_UNAUTHORIZED
+            && $this->ui->getSession()->getResponseHeader('www-authenticate') !== null
+        ) {
+            $credentials           = getenv('ONE_LOGIN_CREDENTIALS')
+                ? getenv('ONE_LOGIN_CREDENTIALS')
+                : throw new Exception('ONE_LOGIN_CREDENTIALS is needed for testing against One Login');
+            [$username, $password] = explode(':', $credentials, 2);
+
+            $this->ui->getSession()->setBasicAuth($username, $password);
+            $this->ui->getSession()->reload();
+            $this->ui->assertPageAddress('/sign-in-or-create');
+
+            return OneLoginImplementation::Integration;
+        }
+
+        return OneLoginImplementation::Mock;
     }
 
     /**
