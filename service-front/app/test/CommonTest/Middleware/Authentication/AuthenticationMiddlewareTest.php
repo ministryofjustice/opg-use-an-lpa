@@ -30,7 +30,7 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $container = $this->createMock(ContainerInterface::class);
 
-        $container->get('config')->willReturn(
+        $container->method('get')->willReturn(
             [
                 'feature_flags' => [
                     'allow_gov_one_login' => false
@@ -68,10 +68,10 @@ class AuthenticationMiddlewareTest extends TestCase
         $response  = $this->createMock(ResponseInterface::class);
         $container = $this->createMock(ContainerInterface::class);
 
-        $container->get('config')->willReturn(
+        $container->method('get')->willReturn(
             [
                 'feature_flags' => [
-                    'allow_gov_one_login' => false
+                    'allow_gov_one_login' => true
                 ],
             ]
         );
@@ -89,6 +89,7 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $sut = new AuthenticationMiddleware($container, $pipe, $credentialAuthenticationMiddleware, $forcedPasswordResetMiddleware);
 
-        $response = $sut->process($request, $handler);
+        $result = $sut->process($request, $handler);
+        $this->assertSame($response, $result);
     }
 }
