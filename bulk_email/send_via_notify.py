@@ -22,7 +22,6 @@ def send_msg(email_address, template_id, succeeded_file, failed_file):
               "EmailAddress": email_address,
             }
         )
-        #print(response)
         elapsed = timeit.default_timer() - start_time
         print(f"Sending to {email_address} succeeded , time {elapsed}\n")
         succeeded_file.write(f"{email_address}\n")
@@ -40,7 +39,6 @@ def main():
     )
     parser.add_argument(
         "--template",
-        #default='b2b701f0-65d0-4ce7-a7da-c73e70747cbd',
         help="The notify template to send",
         required=True,
     )
