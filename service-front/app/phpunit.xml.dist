@@ -14,7 +14,7 @@
     </report>
   </coverage>
   <testsuites>
-    <testsuite name="App\\Tests">
+    <testsuite name="unit">
       <directory>./test</directory>
     </testsuite>
   </testsuites>

@@ -9,19 +9,21 @@ services:
   lpa-codes-pact-mock:
     image: pactfoundation/pact-cli:latest-multi
     ports:
-        - 1234:80
+      - 1234:80
     command:
-        - mock-service
-        - -p
-        - "80"
-        - --host
-        - "0.0.0.0"
-        - --pact-dir
-        - /tmp/pacts
-        - --consumer
-        - use_a_lasting_power_of_attorney
-        - --provider
-        - lpa-codes
+      - mock-service
+      - -p
+      - "80"
+      - --host
+      - "0.0.0.0"
+      - --pact-dir
+      - /tmp/pacts
+      - --consumer
+      - use_a_lasting_power_of_attorney
+      - --provider
+      - lpa-codes
+    volumes:
+      - ./service-api/app/test/pacts:/tmp/pacts
 
   api-gateway-pact-mock:
     image: pactfoundation/pact-cli:latest-multi
@@ -37,6 +39,8 @@ services:
       - use_a_lasting_power_of_attorney
       - --provider
       - api-gateway
+    volumes:
+      - ./service-api/app/test/pacts:/tmp/pacts
 
   iap-images-mock:
     image: pactfoundation/pact-cli:latest-multi
@@ -52,6 +56,8 @@ services:
       - use_a_lasting_power_of_attorney
       - --provider
       - iap-api-gateway
+    volumes:
+      - ./service-api/app/test/pacts:/tmp/pacts
 
   api-app:
     image: api-app
