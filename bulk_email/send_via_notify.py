@@ -3,6 +3,7 @@ from time import sleep
 from notifications_python_client.notifications import NotificationsAPIClient
 from notifications_python_client.errors import HTTPError
 import argparse
+import timeit
 
 notify_api_key = str(os.getenv('NOTIFY_API_KEY', ''))
 if not notify_api_key:
@@ -12,6 +13,7 @@ if not notify_api_key:
 notifications_client = NotificationsAPIClient(notify_api_key)
 
 def send_msg(email_address, template_id, succeeded_file, failed_file):
+    start_time = timeit.default_timer()
     try:
         response = notifications_client.send_email_notification(
             email_address=email_address,
@@ -21,7 +23,8 @@ def send_msg(email_address, template_id, succeeded_file, failed_file):
             }
         )
         #print(response)
-        print(f"Sending to {email_address} succeeded \n")
+        elapsed = timeit.default_timer() - start_time
+        print(f"Sending to {email_address} succeeded , time {elapsed}\n")
         succeeded_file.write(f"{email_address}\n")
     except HTTPError as e:
         print(f"Sending to {email_address} failed \n")
@@ -32,13 +35,14 @@ def main():
     parser = argparse.ArgumentParser(description="Send bulk emails via Notify.")
     parser.add_argument(
         "--file",
-        default="default",
         help="The file containing the email addresses to send to",
+        required=True,
     )
     parser.add_argument(
         "--template",
-        default='5c19af5c-a49c-4284-8758-9e67394b1a0c',
+        #default='b2b701f0-65d0-4ce7-a7da-c73e70747cbd',
         help="The notify template to send",
+        required=True,
     )
     args = parser.parse_args()
     filename = args.file
@@ -52,9 +56,9 @@ def main():
                     print(email_address)
                     send_msg(email_address, template, succeeded_file, failed_file)
                     # sleep in order not to exceed rate limit
-                    # 0.02 would hit the max rate limit of 3000 per min but not allow any other messages at the same time
-                    # so we are using 0.03, which limits us to 2000 per min
-                    sleep(0.03)
+                    # we were using 0.03, which limits us to 2000 per min not including time to call api
+                    # this is now commented as the api round-trip time alone keeps us within the rate limit
+                    #sleep(0.03)
     
 if __name__ == "__main__":
     main()
