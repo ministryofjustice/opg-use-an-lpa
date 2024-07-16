@@ -7,7 +7,23 @@ namespace App\DataAccess\Repository;
 /**
  * Interface for recording activity around the Viewer Code.
  *
- * Interface ViewerCodeActivityInterface
+ * @psalm-import-type ViewerCode from ViewerCodesInterface
+ * @psalm-type ViewerCodeActivity = array{
+ *     ViewerCode: string,
+ *     ViewedBy: string,
+ *     Viewed: string,
+ * }
+ * @psalm-type ViewerCodeWithActivity = array{
+ *     ViewerCode: string,
+ *     Added: string,
+ *     Expires: string,
+ *     Organisation: string,
+ *     SiriusUid: string,
+ *     UserLpaActor: string,
+ *     CreatedBy?: int,
+ *     Cancelled?: string,
+ *     Viewed: ViewerCodeActivity|false,
+ * }
  */
 interface ViewerCodeActivityInterface
 {
@@ -24,6 +40,8 @@ interface ViewerCodeActivityInterface
      * Checks activity status of all viewer codes for a specific lpa
      *
      * @param array $viewerCodes
+     * @psalm-param ViewerCode[] $viewerCodes
+     * @psalm-return ViewerCodeWithActivity[]
      * @return array
      */
     public function getStatusesForViewerCodes(array $viewerCodes): array;

@@ -7,13 +7,28 @@ namespace App\DataAccess\Repository;
 use App\Exception\NotFoundException;
 use DateTime;
 
+/**
+ * Interface for Data relating to Viewer Codes
+ *
+ * @psalm-type ViewerCode = array{
+ *     ViewerCode: string,
+ *     Added: string,
+ *     Expires: string,
+ *     Organisation: string,
+ *     SiriusUid: string,
+ *     UserLpaActor: string,
+ *     CreatedBy?: int,
+ *     Cancelled?: string,
+ * }
+ */
 interface ViewerCodesInterface
 {
     /**
      * Get a viewer code from the database
      *
      * @param string $code
-     * @return array
+     * @psalm-return ViewerCode|null
+     * @return array|null
      */
     public function get(string $code): ?array;
 
@@ -21,6 +36,7 @@ interface ViewerCodesInterface
      * Gets a list of viewer codes for a given LPA
      *
      * @param string $siriusUid
+     * @psalm-return ViewerCode[]
      * @return array
      */
     public function getCodesByLpaId(string $siriusUid): array;
@@ -35,7 +51,8 @@ interface ViewerCodesInterface
      * @param string   $siriusUid
      * @param DateTime $expires
      * @param string   $organisation
-     * @return mixed
+     * @param int|null $actorId
+     * @return void
      */
     public function add(
         string $code,
@@ -44,7 +61,7 @@ interface ViewerCodesInterface
         DateTime $expires,
         string $organisation,
         ?int $actorId,
-    );
+    ): void;
 
     /**
      * Cancels a code in the database.
@@ -59,6 +76,7 @@ interface ViewerCodesInterface
      * update a viewer code from the database
      *
      * @param string $code
+     * @param int    $codeOwner
      * @return bool
      */
     public function removeActorAssociation(string $code, int $codeOwner): bool;

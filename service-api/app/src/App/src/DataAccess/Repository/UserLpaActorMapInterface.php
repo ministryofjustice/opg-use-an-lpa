@@ -10,7 +10,16 @@ use DateInterval;
 /**
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
- * Interface UserLpaActorMapInterface
+ * @psalm-type UserLpaActorMap = array{
+ *     UserId: string,
+ *     SiriusUid: string,
+ *     Added: string,
+ *     ActorId?: int,
+ *     ActivationCode?: string,
+ *     ActivateBy?: int,
+ *     DueBy?: string,
+ *     ActivatedOn?: string,
+ * }
  */
 interface UserLpaActorMapInterface
 {
@@ -41,6 +50,7 @@ interface UserLpaActorMapInterface
      * Returns the LPA relation record for the given token.
      *
      * @param string $lpaActorToken
+     * @psalm-return UserLpaActorMap|null
      * @return ?array
      */
     public function get(string $lpaActorToken): ?array;
@@ -49,6 +59,7 @@ interface UserLpaActorMapInterface
      * Returns LPA relation records for the given user_id.
      *
      * @param string $userId
+     * @psalm-return UserLpaActorMap[]|null
      * @return ?array
      */
     public function getByUserId(string $userId): ?array;

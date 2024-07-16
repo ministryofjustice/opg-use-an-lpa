@@ -9,8 +9,10 @@ use Common\Exception\ApiException;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
+use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
+use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
@@ -29,11 +31,14 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware
+class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware, SessionAware
 {
     use CsrfGuard;
     use Logger;
     use User;
+    use Session;
+
+    public const SESSION_EMAIL_KEY = CreateAccountHandler::SESSION_EMAIL_KEY;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -92,9 +97,10 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
                     $formValues   = $form->getData();
                     $emailAddress = $formValues['email'];
 
-                    return $this->redirectToRoute('create-account-success', [], [
-                       'email' => $emailAddress,
-                    ]);
+                    $this->getSession($request, 'session')
+                         ->set(self::SESSION_EMAIL_KEY, $emailAddress);
+
+                    return $this->redirectToRoute('create-account-success');
                 }
             }
         }

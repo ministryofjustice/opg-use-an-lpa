@@ -13,6 +13,9 @@ use DateTime;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @psalm-import-type ViewerCode from ViewerCodesInterface
+ */
 class ViewerCodeService
 {
     public function __construct(
@@ -23,6 +26,14 @@ class ViewerCodeService
     ) {
     }
 
+    /**
+     * @param string $token
+     * @param string $userId
+     * @param string $organisation
+     *
+     * @psalm-return ViewerCode
+     * @return array|null
+     */
     public function addCode(string $token, string $userId, string $organisation): ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
@@ -67,6 +78,12 @@ class ViewerCodeService
         ];
     }
 
+    /**
+     * @param string $token
+     * @param string $userId
+     * @psalm-return ViewerCode[]
+     * @return array|null
+     */
     public function getCodes(string $token, string $userId): ?array
     {
         $map = $this->userLpaActorMapRepository->get($token);
@@ -113,6 +130,10 @@ class ViewerCodeService
         );
     }
 
+    /**
+     * @param array $codes
+     * @return array
+     */
     private function populateCodeStatuses(array $codes): array
     {
         $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($codes);
