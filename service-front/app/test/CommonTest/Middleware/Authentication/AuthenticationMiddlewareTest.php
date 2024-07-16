@@ -30,16 +30,18 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $container = $this->createMock(ContainerInterface::class);
 
-        $container->method('get')->willReturnMap([
-                                                     [MiddlewarePipeInterface::class, $pipe],
-                                                     [CredentialAuthenticationMiddleware::class, $credentialAuthenticationMiddleware],
-                                                     [ForcedPasswordResetMiddleware::class, $forcedPasswordResetMiddleware],
-                                                     ['config', [
-                                                         'feature_flags' => [
-                                                             'allow_gov_one_login' => false
-                                                         ],
-                                                     ]],
-                                                 ]);
+        $container->method('get')->willReturnMap(
+            [
+                 [MiddlewarePipeInterface::class, $pipe],
+                 [CredentialAuthenticationMiddleware::class, $credentialAuthenticationMiddleware],
+                 [ForcedPasswordResetMiddleware::class, $forcedPasswordResetMiddleware],
+                 ['config', [
+                     'feature_flags' => [
+                         'allow_gov_one_login' => false
+                     ],
+                 ]],
+             ]
+         );
 
         $pipe->expects($this->once())
             ->method('process')
