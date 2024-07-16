@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-04T14:33:35+00:00\n"
+"POT-Creation-Date: 2024-07-16T11:55:45+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4913,4 +4913,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/login-notification.html.twig:29
 msgid "You can set up your GOV.​UK One Login now or wait until you sign in for the first time on or after 13 August 2024 –"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:59
+msgid "If you have any problems signing in to this service, you can <a href=https://home.account.gov.uk/contact-gov-uk-one-login?lng=en class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""
