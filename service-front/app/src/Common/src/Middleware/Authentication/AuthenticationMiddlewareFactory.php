@@ -8,19 +8,10 @@ use Common\Middleware\Authentication\AuthenticationMiddleware;
 use Common\Middleware\Authentication\CredentialAuthenticationMiddleware;
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Laminas\Stratigility\MiddlewarePipeInterface;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class AuthenticationMiddlewareFactory
 {
-    /**
-     * @param ContainerInterface $container
-     *
-     * @return AuthenticationMiddleware
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function __invoke(ContainerInterface $container): AuthenticationMiddleware
     {
         $pipe                               = $container->get(MiddlewarePipeInterface::class);
@@ -28,7 +19,7 @@ class AuthenticationMiddlewareFactory
         $forcedPasswordResetMiddleware      = $container->get(ForcedPasswordResetMiddleware::class);
 
         $feature_flags = $container->get('config')['feature_flags'];
-        $middlewares = [$credentialAuthenticationMiddleware];
+        $middlewares   = [$credentialAuthenticationMiddleware];
 
         if (!($feature_flags['allow_gov_one_login'] ?? false)) {
             $middlewares[] = $forcedPasswordResetMiddleware;
@@ -37,3 +28,4 @@ class AuthenticationMiddlewareFactory
         return new AuthenticationMiddleware($pipe, ...$middlewares);
     }
 }
+
