@@ -9,6 +9,7 @@ use Common\Middleware\Authentication\CredentialAuthenticationMiddleware;
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Laminas\Stratigility\MiddlewarePipeInterface;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,6 +28,16 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $response = $this->createMock(ResponseInterface::class);
 
+        $container = $this->createMock(ContainerInterface::class);
+
+        $container->get('config')->willReturn(
+            [
+                'feature_flags' => [
+                    'allow_gov_one_login' => false
+                ],
+            ]
+        );
+
         $pipe->expects($this->once())
             ->method('process')
             ->with($request, $handler)
@@ -39,7 +50,44 @@ class AuthenticationMiddlewareTest extends TestCase
                 [$forcedPasswordResetMiddleware],
             );
 
-        $sut = new AuthenticationMiddleware($pipe, $credentialAuthenticationMiddleware, $forcedPasswordResetMiddleware);
+        $sut = new AuthenticationMiddleware($container, $pipe, $credentialAuthenticationMiddleware, $forcedPasswordResetMiddleware);
+
+        $response = $sut->process($request, $handler);
+    }
+
+    /** @test */
+    public function it_excludes_forced_password_reset_when_gov_one_login_enabled(): void
+    {
+        $pipe                               = $this->createMock(MiddlewarePipeInterface::class);
+        $credentialAuthenticationMiddleware = $this->createMock(CredentialAuthenticationMiddleware::class);
+        $forcedPasswordResetMiddleware      = $this->createMock(ForcedPasswordResetMiddleware::class);
+
+        $request = $this->createMock(ServerRequestInterface::class);
+        $handler = $this->createMock(RequestHandlerInterface::class);
+
+        $response  = $this->createMock(ResponseInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+
+        $container->get('config')->willReturn(
+            [
+                'feature_flags' => [
+                    'allow_gov_one_login' => false
+                ],
+            ]
+        );
+
+        $pipe->expects($this->once())
+            ->method('process')
+            ->with($request, $handler)
+            ->willReturn($response);
+
+        $pipe->expects($this->exactly(1))
+            ->method('pipe')
+            ->with(
+                $credentialAuthenticationMiddleware
+              );
+
+        $sut = new AuthenticationMiddleware($container, $pipe, $credentialAuthenticationMiddleware, $forcedPasswordResetMiddleware);
 
         $response = $sut->process($request, $handler);
     }
