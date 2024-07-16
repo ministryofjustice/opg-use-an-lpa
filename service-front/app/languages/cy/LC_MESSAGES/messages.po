@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-07-12T09:42:58+00:00\n"
+"POT-Creation-Date: 2024-07-04T14:33:35+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -98,7 +98,7 @@ msgstr "Ailosod eich cyfrinair"
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:87
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Actor/src/Handler/RemoveLpaHandler.php:91
@@ -111,7 +111,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:68
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:87
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Actor/src/Handler/RemoveLpaHandler.php:90
@@ -298,6 +298,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:8
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:8
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
+#: src/Actor/templates/actor/login-notification.html.twig:9
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:8
 #: src/Actor/templates/actor/force-password-reset-page.html.twig:9
 #: src/Actor/templates/actor/contact-details.html.twig:8
@@ -3468,12 +3469,12 @@ msgstr ""
 "Os nad yw cyfeirnod yr atwrneiaeth arhosol yn 12 rhif, ni allwch ei ychwanegu "
 "at y gwasanaeth ar hyn o bryd."
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:13
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:15
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "Your lasting powers of attorney"
 msgstr "Eich atwrneiaethau arhosol"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:21
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid ""
 "Any lasting power of attorney (LPA) you add to your account will appear on "
 "this page."
@@ -3482,8 +3483,8 @@ msgstr ""
 "cyfrif yn ymddangos ar y dudalen hon."
 
 # Some translated content missing
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:21
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:23
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
 msgid ""
 "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" "
 "class=\"govuk-link\">the role of an attorney</a> and how to support the donor "
@@ -3493,18 +3494,18 @@ msgstr ""
 "Canfod mwy am <a href=\"https://www.gov.uk/atwrneiaeth-arhosol\" class=\"govuk-"
 "link\">rôl atwrnai</a>."
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:26
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:28
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:45
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:47
 msgid "What can I do with this service?"
 msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:30
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:32
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:49
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:51
 msgid "Use this service to:"
 msgstr "Defnyddiwch y gwasanaeth hwn i:"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:32
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:51
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:53
 msgid ""
 "give organisations access to an online summary of an <abbr title=\"lasting "
 "power of attorney\">LPA</abbr> by making a secure access code"
@@ -3512,8 +3513,8 @@ msgstr ""
 "roi mynediad i sefydliadau at grynodeb ar-lein o <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> drwy greu cod diogel"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:33
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:35
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:52
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:54
 msgid ""
 "keep track of the organisations that have online access to an <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>"
@@ -3521,7 +3522,7 @@ msgstr ""
 "cadw golwg ar y sefydliadau sydd â mynediad ar-lein at <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:55
 msgid ""
 "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, "
 "including a scanned image of the instructions and preferences if there are any"
@@ -3529,19 +3530,19 @@ msgstr ""
 "gweld crynodeb o <abbr title=\"lasting power of attorney\">LPA</abbr>, gan "
 "gynnwys delwedd wedi’i sganio o’r cyfarwyddiadau a’r dewisiadau os oes rhai"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:35
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:37
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:54
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:56
 msgid ""
 "ask for an activation key if you have not been given one - or it has expired"
 msgstr ""
 "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi "
 "dod i ben"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:62
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:55
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:74
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
@@ -4704,10 +4705,12 @@ msgstr ""
 "Os mae arnoch angen defnyddio eich atwrneiaeth arhosol yn ystod y cyfnod hwn "
 "gallwch dal ddefnyddio’r copi papur o’r LPA."
 
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:16
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:18
 #: src/Actor/templates/actor/partials/service-message.html.twig:16
 #: src/Viewer/templates/viewer/partials/service-message.html.twig:16
 msgid "Important"
-msgstr ""
+msgstr "Pwysig"
 
 #: src/Actor/templates/actor/change-details.html.twig:3
 msgid "Let us know if a donor or attorney’s details change"
@@ -4869,7 +4872,7 @@ msgstr "Newid manylion rhoddwr neu atwrnai"
 msgid "Delete account"
 msgstr "Dileu cyfrif"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:19
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
 msgid ""
 "Any lasting power of attorney (LPA) you add to your account will show on this "
 "page."
@@ -4877,11 +4880,11 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:53
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:60
 msgid "Add your first LPA"
 msgstr "Ychwanegu eich LPA cyntaf"
 
@@ -6896,20 +6899,198 @@ msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
 msgid "Confirm"
 msgstr "Cadarnhau"
 
-#: src/Actor/templates/actor/one-login.html.twig:59
-msgid ""
-"If you have any problems signing in to this service, you can <a href=https://"
-"signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=en class=\"govuk-"
-"link\">contact the GOV.UK One Login team</a> to get help."
+#: src/Actor/templates/actor/login-notification.html.twig:15
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:20
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:22
+msgid "We are changing the way you sign in to Use a lasting power of attorney"
 msgstr ""
-"Os ydych yn cael unrhyw broblemau wrth fewngofnodi i’r gwasanaeth hwn, gallwch "
-"<a href=https://signin.account.gov.uk/contact-us?supportType=PUBLIC&lng=cy "
-"class=“govuk-link”>gysylltu â thîm One Login GOV.UK</a> i gael gymorth."
+"Rydym yn newid y ffordd rydych chi’n mewngofnodi i Defnyddio atwrneiaeth "
+"arhosol"
 
-#, fuzzy
-#~| msgid "Get help"
-#~ msgid "to get help."
-#~ msgstr "Cael help"
+#: src/Actor/templates/actor/login-notification.html.twig:21
+msgid ""
+"From 12th August 2024 you’ll only be able to sign in to Use a lasting power of "
+"attorney using GOV.​UK One Login."
+msgstr ""
+"O 12 Awst 2024 ymlaen, dim ond drwy ddefnyddio manylion mewngofnodi  GOV.UK "
+"One Login y byddwch chi’n gallu mewngofnodi i Defnyddio atwrneiaeth arhosol."
+
+#: src/Actor/templates/actor/login-notification.html.twig:23
+msgid "You will not be able to access your LPAs any other way."
+msgstr ""
+"Ni fyddwch yn gallu cael mynediad at eich atwrneiaeth arhosol mewn unrhyw "
+"ffordd arall."
+
+#: src/Actor/templates/actor/login-notification.html.twig:25
+msgid "What is GOV.​UK One Login?"
+msgstr "Beth yw GOV.UK One Login?"
+
+#: src/Actor/templates/actor/login-notification.html.twig:27
+msgid ""
+"GOV.​UK One Login is the new way to sign in to central government services, "
+"using the same email address and password. It does not work with all "
+"government services yet."
+msgstr ""
+"GOV.UK One Login yw’r ffordd newydd o fewngofnodi i wasanaethau canolog y "
+"llywodraeth, gan ddefnyddio’r un cyfeiriad e-bost a chyfrinair. Nid yw’n "
+"gweithio gyda holl wasanaethau’r llywodraeth eto."
+
+#: src/Actor/templates/actor/login-notification.html.twig:29
+msgid ""
+"You can set up your GOV.​UK One Login now or wait until you sign in for the "
+"first time on or after 12 Awst 2024 –"
+msgstr ""
+"Gallwch sefydlu eich GOV.​UK One Login nawr neu aros nes i chi fewngofnodi am y "
+"tro cyntaf ar neu ar ôl 12 Awst 2024 –"
+
+#: src/Actor/templates/actor/login-notification.html.twig:31
+msgid ""
+"Use a lasting power of attorney will not appear in GOV.​UK One Login’s list of "
+"available services until 12 August 2024."
+msgstr ""
+"Ni fydd Defnyddio atwrneiaeth arhosol yn ymddangos ar restr GOV.UK One Login "
+"o’r gwasanaethau sydd ar gael, tan 12 Awst 2024."
+
+#: src/Actor/templates/actor/login-notification.html.twig:33
+msgid ""
+"Will there be other changes to the Use a lasting power of attorney service?"
+msgstr "A fydd newidiadau eraill i’r gwasanaeth Defnyddio atwrneiaeth arhosol?"
+
+#: src/Actor/templates/actor/login-notification.html.twig:35
+msgid ""
+"No - when you start signing in to your account using GOV.​UK One Login, you’ll "
+"be able to use the service in the same way as before."
+msgstr ""
+"Na - pan fyddwch chi’n dechrau mewngofnodi i’ch cyfrif gan ddefnyddio manylion "
+"mewngofnodi GOV.UK One Login, byddwch chi’n gallu defnyddio’r gwasanaeth yn yr "
+"un ffordd ag o’r blaen."
+
+#: src/Actor/templates/actor/login-notification.html.twig:37
+msgid ""
+"However, to keep any LPAs you already have in your account, make sure the "
+"email address you use for this service is what you’d like to use for GOV.​UK "
+"One Login."
+msgstr ""
+"Fodd bynnag, i gadw unrhyw atwrneiaeth arhosol sydd gennych chi’n barod yn "
+"eich cyfrif, gwnewch yn siŵr mai’r cyfeiriad e-bost rydych chi’n ei ddefnyddio "
+"ar gyfer y gwasanaeth hwn yw’r un y byddwch chi am ei ddefnyddio ar gyfer GOV."
+"UK One Login."
+
+#: src/Actor/templates/actor/login-notification.html.twig:40
+msgid ""
+"At the moment, when you sign in to Use a lasting power of attorney, you use"
+msgstr ""
+"Ar hyn o bryd, pan fyddwch yn mewngofnodi i Defnyddio atwrneiaeth arhosol, "
+"rydych yn defnyddio"
+
+#: src/Actor/templates/actor/login-notification.html.twig:43
+msgid "If you want to change your Use a lasting power of attorney email address."
+msgstr ""
+"Os ydych chi am newid eich cyfeiriad e-bost ar gyfer Defnyddio atwrneiaeth "
+"arhosol."
+
+#: src/Actor/templates/actor/login-notification.html.twig:46
+msgid ""
+"You have until midday of 9 August 2024 to make any changes to your Use a "
+"lasting power of attorney email address. You can do this in the"
+msgstr ""
+"Mae gennych tan 9 Awst ar 12 Gorffennaf 2024 i wneud unrhyw newidiadau i’ch "
+"cyfeiriad e-bost ar gyfer Defnyddio atwrneiaeth arhosol. Gallwch wneud hyn yn "
+"yr adran "
+
+#: src/Actor/templates/actor/login-notification.html.twig:47
+msgid "‘Settings’"
+msgstr "‘Gosodiadau’"
+
+#: src/Actor/templates/actor/login-notification.html.twig:48
+msgid "section of your account."
+msgstr "yn eich cyfrif."
+
+#: src/Actor/templates/actor/login-notification.html.twig:55
+msgid ""
+"If you use a different email for GOV.UK One Login, any LPAs added before 12 "
+"August 2024 will no longer appear in your account. You’ll need to request new "
+"activation keys for each LPA to add them again."
+msgstr ""
+"Os ydych chi’n defnyddio cyfeiriad e-bost gwahanol ar gyfer GOV.UK One Login, "
+"ni fydd unrhyw atwrneiaeth arhosol a ychwanegwyd cyn 12 Awst 2024 yn ymddangos "
+"yn eich cyfrif mwyach. Bydd angen i chi ofyn am allweddi cadarnhau cyfrif "
+"newydd ar gyfer pob atwrneiaeth arhosol er mwyn eu hychwanegu eto."
+
+#: src/Actor/templates/actor/login-notification.html.twig:66
+msgid "Back to 'Your LPAs’"
+msgstr "Yn ôl i’ch ‘Atwrniaethau Arhosol"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:22
+msgid ""
+"From 12 August 2024 you will only be able to sign in to your account using GOV.​"
+"UK One Login."
+msgstr ""
+"O 12 Awst 2024 dim ond drwy ddefnyddio GOV.UK One Login y byddwch yn gallu "
+"mewngofnodi i’ch cyfrif."
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:23
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "Read about this change"
+msgstr " Darllenwch am y newid hwn"
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:23
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:25
+msgid "and how to get ready for it."
+msgstr "a sut i baratoi ar ei gyfer."
+
+#: src/Actor/templates/actor/login-notification.html.twig:21
+msgid ""
+"From 13th August 2024 you’ll only be able to sign in to Use a lasting power of "
+"attorney using GOV.​UK One Login."
+msgstr ""
+"O 13 Awst 2024 ymlaen, dim ond drwy ddefnyddio manylion mewngofnodi GOV.UK One "
+"Login y byddwch chi’n gallu mewngofnodi i Defnyddio atwrneiaeth arhosol."
+
+#: src/Actor/templates/actor/login-notification.html.twig:29
+msgid ""
+"You can set up your GOV.​UK One Login now or wait until you sign in for the "
+"first time on or after 13 Awst 2024 –"
+msgstr ""
+"Gallwch sefydlu eich GOV.​UK One Login nawr neu aros nes i chi fewngofnodi am y "
+"tro cyntaf ar neu ar ôl 13 Awst 2024 –"
+
+#: src/Actor/templates/actor/login-notification.html.twig:31
+msgid ""
+"Use a lasting power of attorney will not appear in GOV.​UK One Login’s list of "
+"available services until 13 August 2024."
+msgstr ""
+"Ni fydd Defnyddio atwrneiaeth arhosol yn ymddangos ar restr GOV.UK One Login "
+"o’r gwasanaethau sydd ar gael, tan 13 Awst 2024."
+
+#: src/Actor/templates/actor/login-notification.html.twig:55
+msgid ""
+"If you use a different email for GOV.UK One Login, any LPAs added before 13 "
+"August 2024 will no longer appear in your account. You’ll need to request new "
+"activation keys for each LPA to add them again."
+msgstr ""
+"Os ydych chi’n defnyddio cyfeiriad e-bost gwahanol ar gyfer GOV.UK One Login, "
+"ni fydd unrhyw atwrneiaeth arhosol a ychwanegwyd cyn 13 Awst 2024 yn ymddangos "
+"yn eich cyfrif mwyach. Bydd angen i chi ofyn am allweddi cadarnhau cyfrif "
+"newydd ar gyfer pob atwrneiaeth arhosol er mwyn eu hychwanegu eto."
+
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:22
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
+msgid ""
+"From 13 August 2024 you will only be able to sign in to your account using GOV.​"
+"UK One Login."
+msgstr ""
+"O 13 Awst 2024 dim ond drwy ddefnyddio GOV.UK One Login y byddwch yn gallu "
+"mewngofnodi i’ch cyfrif."
+
+#: src/Actor/templates/actor/login-notification.html.twig:29
+msgid ""
+"You can set up your GOV.​UK One Login now or wait until you sign in for the "
+"first time on or after 13 August 2024 –"
+msgstr ""
+"Gallwch sefydlu eich GOV.​UK One Login nawr neu aros nes i chi fewngofnodi am y "
+"tro cyntaf ar neu ar ôl 13 Awst 2024 –"
 
 #~ msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number:"
 #~ msgstr "Cyfeirnod <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>:"

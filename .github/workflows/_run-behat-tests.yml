@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@c541c155eee45413f5b09a52248675b1a2575231 # pin@v2.21.2
+        uses: shivammathur/setup-php@15b611248c3d140461e97b2eb10de461ca9ec5a3 # pin@v2.21.2
         with:
           php-version: 8.3
 
@@ -72,6 +72,9 @@ jobs:
           fi
 
       - name: run behat test suite
+        env:
+          ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+          ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
