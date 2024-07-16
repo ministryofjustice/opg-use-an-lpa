@@ -14,17 +14,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 class AuthenticationMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        ContainerInterface $container,
         private MiddlewarePipeInterface $pipe,
-        CredentialAuthenticationMiddleware $authenticationMiddleware,
-        ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware,
+        MiddlewareInterface ...$middlewares
     ) {
-        $feature_flags = $container->get('config')['feature_flags'];
-
-        $this->pipe->pipe($authenticationMiddleware);
-
-        if (!($feature_flags['allow_gov_one_login'] ?? false)) {
-            $this->pipe->pipe($forcedPasswordResetMiddleware);
+        foreach ($middlewares as $middleware) {
+            $this->pipe->pipe($middleware);
         }
     }
 
