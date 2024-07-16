@@ -28,4 +28,3 @@ class AuthenticationMiddlewareFactory
         return new AuthenticationMiddleware($pipe, ...$middlewares);
     }
 }
-
