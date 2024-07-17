@@ -871,6 +871,7 @@
   </component>
   <component name="PhpUnit">
     <phpunit_settings>
+      <phpunit_by_interpreter interpreter_id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>

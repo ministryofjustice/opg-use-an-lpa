@@ -1,0 +1,72 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We are changing the way you sign in to Use a lasting power of attorney{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">
+                {% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}We are changing the way you sign in to Use a lasting power of attorney{% endtrans %}</h1>
+                </div>
+            </div>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <p class="govuk-body">{% trans %}From 13th August 2024 you’ll only be able to sign in to Use a lasting power of attorney using GOV.​UK One Login.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}You will not be able to access your LPAs any other way.{% endtrans %}</p>
+
+                    <h2 class="govuk-heading-s">{% trans %}What is GOV.​UK One Login?{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}GOV.​UK One Login is the new way to sign in to central government services, using the same email address and password. It does not work with all government services yet.{% endtrans %}</p>
+
+                    <p class="govuk-body">{% trans %}You can set up your GOV.​UK One Login now or wait until you sign in for the first time on or after 13 August 2024 –{% endtrans %} <a href="https://home.account.gov.uk/" class="govuk-link">https://home.account.gov.uk/</a>.</p>
+
+                    <p class="govuk-body">{% trans %}Use a lasting power of attorney will not appear in GOV.​UK One Login’s list of available services until 13 August 2024.{% endtrans %}</p>
+                    
+                    <h2 class="govuk-heading-s">{% trans %}Will there be other changes to the Use a lasting power of attorney service?{% endtrans %}</h2>
+
+                    <p class="govuk-body">{% trans %}No - when you start signing in to your account using GOV.​UK One Login, you’ll be able to use the service in the same way as before.{% endtrans %}</p>
+                    
+                    <p class="govuk-body">{% trans %}However, to keep any LPAs you already have in your account, make sure the email address you use for this service is what you’d like to use for GOV.​UK One Login.{% endtrans %}</p>
+                    
+                    <div class="govuk-inset-text">
+                        {% trans %}At the moment, when you sign in to Use a lasting power of attorney, you use{% endtrans %} '{{ user.getDetail('email') }}'.
+                    </div>
+
+                    <h2 class="govuk-heading-s">{% trans %}If you want to change your Use a lasting power of attorney email address.{% endtrans %}</h2>
+
+                    <p class="govuk-body">
+                        {% trans %}You have until midday of 9 August 2024 to make any changes to your Use a lasting power of attorney email address. You can do this in the{% endtrans %}
+                        <a href="{{ path('settings') }}" class="govuk-link">{% trans %}‘Settings’{% endtrans %}</a>
+                        {% trans %}section of your account.{% endtrans %}
+                    </p>
+                    
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                          <span class="govuk-visually-hidden">Warning</span>
+                          {% trans %}If you use a different email for GOV.UK One Login, any LPAs added before 13 August 2024 will no longer appear in your account. You’ll need to request new activation keys for each LPA to add them again.{% endtrans %}
+                        </strong>
+                      </div>
+                </div>
+            </div>
+
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                    <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                        class="govuk-button moj-button-menu__item govuk-button--secondary"
+                        data-module="govuk-button">
+                        {% trans %}Back to 'Your LPAs’{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

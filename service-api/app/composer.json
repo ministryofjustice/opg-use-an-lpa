@@ -110,7 +110,8 @@
         "psr-4": {
             "AppTest\\": "test/AppTest/",
             "BehatTest\\": "test/BehatTest/",
-            "BehatTest\\Context\\": "features/context/"
+            "BehatTest\\Context\\": "features/context/",
+            "FunctionalTest\\": "test/FunctionalTest/"
         }
     },
     "scripts": {
