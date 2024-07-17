@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Middleware\Authentication;
 
 use Laminas\Stratigility\MiddlewarePipeInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -12,16 +13,13 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class AuthenticationMiddleware implements MiddlewareInterface
 {
-    private MiddlewarePipeInterface $pipe;
-
     public function __construct(
-        MiddlewarePipeInterface $middlewarePipe,
-        CredentialAuthenticationMiddleware $authenticationMiddleware,
-        ForcedPasswordResetMiddleware $forcedPasswordResetMiddleware,
+        private MiddlewarePipeInterface $pipe,
+        MiddlewareInterface ...$middlewares
     ) {
-        $this->pipe = $middlewarePipe;
-        $this->pipe->pipe($authenticationMiddleware);
-        $this->pipe->pipe($forcedPasswordResetMiddleware);
+        foreach ($middlewares as $middleware) {
+            $this->pipe->pipe($middleware);
+        }
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
