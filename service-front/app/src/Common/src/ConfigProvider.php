@@ -9,6 +9,8 @@ use Acpr\I18n\TranslatorInterface;
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
+use Common\Middleware\Authentication\AuthenticationMiddleware;
+use Common\Middleware\Authentication\AuthenticationMiddlewareFactory;
 use Common\Middleware\Session\{SessionExpiryMiddleware, SessionExpiryMiddlewareFactory};
 use Common\Service\{Cache\RedisAdapterPluginManagerDelegatorFactory,
     SystemMessage\SystemMessageService,
@@ -102,6 +104,7 @@ class ConfigProvider
                 SessionMiddleware::class                    => SessionMiddlewareFactory::class,
                 SessionExpiryMiddleware::class              => SessionExpiryMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class  => Middleware\I18n\SetLocaleMiddlewareFactory::class,
+                AuthenticationMiddleware::class             => AuthenticationMiddlewareFactory::class,
 
                 // Auth
                 UserInterface::class                    => Entity\UserFactory::class,
