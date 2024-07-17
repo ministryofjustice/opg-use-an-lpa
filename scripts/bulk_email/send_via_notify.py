@@ -51,7 +51,6 @@ def main():
             with open(args.file) as f:
                 for line_terminated in f:
                     email_address = line_terminated.rstrip('\n')
-                    print(email_address)
                     send_msg(email_address, template, succeeded_file, failed_file)
                     # sleep in order not to exceed rate limit
                     # we were using 0.03, which limits us to 2000 per min not including time to call api
