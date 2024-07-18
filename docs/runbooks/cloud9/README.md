@@ -17,7 +17,8 @@ Adjust the Cost-saving setting to suit your needs, basing this on how long you w
 under the Network settings (advanced) drop tab:
 Change Connection to Secure Shell (SSH)
 Leave the Network (VPC) dropdown as is.
-select a public facing Subnet from the dropdown. Note these are usually the shorter named groups.
+Select a public facing Subnet from the dropdown. Note these are usually the shorter named groups.
+In the subnet dropdown there should be a subet in each of eu-west-1a, eu-west-1b, eu-west-1c. Any of these is OK to select.
 Failure to do this will mean your instance cannot be accessed and will fail to deploy
 
 ### Once Connected
