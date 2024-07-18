@@ -23,7 +23,8 @@ def send_msg(email_address, template_id, succeeded_file, failed_file):
             }
         )
         elapsed = timeit.default_timer() - start_time
-        print(f"Sending to {email_address} succeeded , time {elapsed}\n")
+        # line below commented to avoid printing a lot of output. Uncomment this if you need to know how the performance is
+        #print(f"Sending to {email_address} succeeded , time {elapsed}\n")
         succeeded_file.write(f"{email_address}\n")
     except HTTPError as e:
         print(f"Sending to {email_address} failed \n")
