@@ -16,10 +16,6 @@ return [
             getenv('ALLOW_MERIS_LPAS'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
-        'dont_send_lpas_registered_after_sep_2019_to_cleansing_team' => filter_var(
-            getenv('DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM'),
-            FILTER_VALIDATE_BOOLEAN
-        ) ?: false,
         'instructions_and_preferences'                               => filter_var(
             getenv('INSTRUCTIONS_AND_PREFERENCES'),
             FILTER_VALIDATE_BOOLEAN
