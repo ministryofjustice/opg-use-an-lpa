@@ -131,3 +131,18 @@ resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
 
   provider = aws.region
 }
+
+resource "aws_cloudwatch_log_metric_filter" "onelogin_authentication_success" {
+  name           = "${var.environment_name}_onelogin_authentication_success"
+  pattern        = "{ $.message = \"Authentication successful for account with Id*\" }"
+  log_group_name = aws_cloudwatch_log_group.application_logs.name
+
+  metric_transformation {
+    name          = "onelogin_authentication_success"
+    namespace     = "${var.environment_name}_onelogin_events"
+    value         = "1"
+    default_value = "0"
+  }
+
+  provider = aws.region
+}

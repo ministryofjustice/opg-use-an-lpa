@@ -1,0 +1,63 @@
+${jsonencode(
+    {
+    "widgets": [
+        {
+            "height": 3,
+            "width": 24,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "sparkline": false,
+                "view": "singleValue",
+                "metrics": [
+                    [ "${environment}_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
+                    [ ".", "auth_onelogin_account_migrated_event", { "label": "Accounts Migrated" } ],
+                    [ { "expression": "((m1 * 1000) / 750000) * 100", "label": "Migrated Accounts Percentage", "id": "e1", "stat": "Sum" } ],
+                    [ { "expression": "750000 - m1", "label": "Remaining Migrations", "id": "e2", "stat": "Sum" } ],
+                    [ "ur_events", "auth_onelogin_account_migrated_event", { "id": "m1", "visible": false } ]
+                ],
+                "region": "${region}",
+                "period": 2592000,
+                "stat": "Sum",
+                "title": "One Login Account Events"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 3,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "sparkline": false,
+                "view": "singleValue",
+                "metrics": [
+                    [ "${environment}_events", "onelogin_authentication_success". { "label": "Successful Logins" } ]
+                ],
+                "region": "${region}",
+                "period": 2592000,
+                "stat": "Sum",
+                "title": "One Login Auth Events"
+            }
+        },
+        {
+            "height": 3,
+            "width": 24,
+            "y": 6,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "account_created_event", { "label": "account created" } ]
+                ],
+                "view": "singleValue",
+                "region": "${region}",
+                "stat": "Sum",
+                "period": 2592000,
+                "title": "Account Events"
+            }
+        },
+    ]
+}
+)}
