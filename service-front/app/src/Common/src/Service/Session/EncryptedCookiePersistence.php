@@ -21,8 +21,6 @@ use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
-use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
