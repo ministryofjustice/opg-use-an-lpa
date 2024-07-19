@@ -18,7 +18,7 @@ locals {
 
 resource "aws_cloudwatch_dashboard" "onelogin" {
   count          = var.create_onelogin_dashboard ? 1 : 0
-  dashboard_name = "${var.environment_name}-${data.aws_region.current.name}-dashboard"
+  dashboard_name = "${var.environment_name}-${data.aws_region.current.name}-onelogin-dashboard"
   dashboard_body = templatefile("${path.module}/templates/cw_dashboard_onelogin.tftpl", {
     region      = data.aws_region.current.name,
     environment = var.environment_name

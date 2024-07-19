@@ -133,6 +133,7 @@ resource "aws_cloudwatch_log_metric_filter" "api_5xx_errors" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "onelogin_authentication_success" {
+  count          = var.create_onelogin_dashboard ? 1 : 0
   name           = "${var.environment_name}_onelogin_authentication_success"
   pattern        = "{ $.message = \"Authentication successful for account with Id*\" }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
