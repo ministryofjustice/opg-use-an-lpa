@@ -538,10 +538,6 @@ locals {
           value = tostring(var.feature_flags.support_datastore_lpas)
         },
         {
-          name  = "DONT_SEND_LPAS_REGISTERED_AFTER_SEP_2019_TO_CLEANSING_TEAM",
-          value = tostring(var.feature_flags.dont_send_lpas_registered_after_sep_2019_to_cleansing_team)
-        },
-        {
           name  = "INSTRUCTIONS_AND_PREFERENCES",
           value = tostring(var.feature_flags.instructions_and_preferences)
         },

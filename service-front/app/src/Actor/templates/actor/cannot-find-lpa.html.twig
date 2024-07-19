@@ -11,87 +11,66 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
+                    <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
+                    <p class="govuk-body">{% trans %}This could be because:{% endtrans %}</p>
 
-                    {% if not (feature_enabled('dont_send_lpas_registered_after_sep_2019_to_cleansing_team')) %}
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}the LPA reference number you entered is incorrect{% endtrans %}</li>
+                        <li>{% trans %}some of the details you entered about yourself do not match our records{% endtrans %}</li>
+                    </ul>
 
-                        <h1 class="govuk-heading-xl">{% trans %}We could not find an LPA with that reference number{% endtrans %}</h1>
-
-                        <p class="govuk-body-l">{% trans %}LPA reference number: {% endtrans %} {{ lpa_reference_number }} </p>
-
-                        <h2 class="govuk-heading-m">{% trans %}Check you entered the right LPA reference number{% endtrans %}</h2>
-
-                        <p class="govuk-body">
-                            {% trans %}
-                                You'll find the reference number on the LPA and at the top of any letter you've received from us about the LPA.
-                                If you do not have the LPA or have not kept any letters, check with someone else named on the LPA.
-                            {% endtrans %}
-                        </p>
-
-                        <p class="govuk-body">{% trans %}If you're sure you entered the right information, please call us:{% endtrans %}</p>
-                        {{ include('@partials/contact-details/telephone.html.twig') }}
-
-                    {% else %}
-                        <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
-                        <p class="govuk-body">{% trans %}This could be because:{% endtrans %}</p>
-
-                        <ul class="govuk-list govuk-list--bullet">
-                            <li>{% trans %}the LPA reference number you entered is incorrect{% endtrans %}</li>
-                            <li>{% trans %}some of the details you entered about yourself do not match our records{% endtrans %}</li>
-                        </ul>
-
-                        <h3 class="govuk-heading-m">{% trans %}Your answers{% endtrans %}</h3>
-                        <dl class="govuk-summary-list govuk-summary-list">
+                    <h3 class="govuk-heading-m">{% trans %}Your answers{% endtrans %}</h3>
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}LPA reference number{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpa_reference_number }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ first_name ~ ' ' ~  last_name }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Date of birth{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ code_date(dob) }}
+                            </dd>
+                        </div>
+                        {% if live_in_uk == 'Yes' %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}LPA reference number{% endtrans %}
+                                    {% trans %}Postcode{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{ lpa_reference_number }}
+                                    {{ postcode }}
                                 </dd>
                             </div>
+                        {% else %}
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
-                                    {% trans %}Name{% endtrans %}
+                                    {% trans %}Do you live in the UK?{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {{ first_name ~ ' ' ~  last_name }}
+                                    {% trans %}No{% endtrans %}
                                 </dd>
                             </div>
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    {% trans %}Date of birth{% endtrans %}
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    {{ code_date(dob) }}
-                                </dd>
-                            </div>
-                            {% if live_in_uk == 'Yes' %}
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        {% trans %}Postcode{% endtrans %}
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        {{ postcode }}
-                                    </dd>
-                                </div>
-                            {% else %}
-                                <div class="govuk-summary-list__row">
-                                    <dt class="govuk-summary-list__key">
-                                        {% trans %}Do you live in the UK?{% endtrans %}
-                                    </dt>
-                                    <dd class="govuk-summary-list__value">
-                                        {% trans %}No{% endtrans %}
-                                    </dd>
-                                </div>
-                            {% endif %}
-                        </dl>
+                        {% endif %}
+                    </dl>
 
-                        <p class="govuk-body">{% trans %}If you’re sure you entered the correct information, contact us.{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}If you’re sure you entered the correct information, contact us.{% endtrans %}</p>
 
-                        {{ include('@partials/contact-details/email.html.twig') }}
+                    {{ include('@partials/contact-details/email.html.twig') }}
 
-                        {{ include('@partials/contact-details/telephone.html.twig') }}
-                    {% endif %}
+                    {{ include('@partials/contact-details/telephone.html.twig') }}
 
                     <div class="moj-button-menu">
                         <div class="moj-button-menu__wrapper">
