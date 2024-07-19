@@ -21,8 +21,6 @@ use Dflydev\FigCookies\FigRequestCookies;
 use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\Modifier\SameSite;
 use Dflydev\FigCookies\SetCookie;
-use Fig\Http\Message\StatusCodeInterface;
-use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
 use Mezzio\Session\SessionCookiePersistenceInterface;
 use Mezzio\Session\SessionInterface;
@@ -100,13 +98,10 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         // Encode to string
         $sessionData = $this->encrypter->encodeCookieValue($session->toArray());
 
-        // Chromium based browsers do not work with a 'strict' SameSite values when redirecting from a
-        // third-party request. In this one situation it's ok to use a 'lax' value.
-        $sameSite =
-            $session->has(UserInterface::class)
-            && $response->getStatusCode() !== StatusCodeInterface::STATUS_FOUND
-                ? SameSite::strict()
-                : SameSite::lax();
+        // In an OIDC world SameSite needs to be set to 'None' or strange things happen around the entrypoint
+        // to the site, most notably you get logged out for no discernible reason. This is something that
+        // many of the big OIDC providers advise.
+        $sameSite = Samesite::none();
 
         $sessionCookie = SetCookie::create($this->cookieName)
             ->withValue($sessionData)
