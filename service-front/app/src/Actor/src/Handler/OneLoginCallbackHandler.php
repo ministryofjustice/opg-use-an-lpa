@@ -80,6 +80,7 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
             'roles'    => $user->getRoles(),
             'details'  => $user->getDetails(),
         ]);
+        $session->unset(OneLoginService::OIDC_AUTH_INTERFACE);
         $session->regenerate();
 
         return $this->redirectToRoute(
