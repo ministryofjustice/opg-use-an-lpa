@@ -3561,8 +3561,8 @@ msgid ""
 "attorney</a> and how they support donors <a href=\"%link2_en%\" class=\"govuk-"
 "link\">to make decisions.</a>"
 msgstr ""
-"Darganfyddwch am <a href=%link1_cy% class=“govuk-link”>rôl atwrnai</a> a sut "
-"maent yn cefnogi rhoddwyr <a href=%link2_cy% class=“govuk-link”>wneud "
+"Darganfyddwch am <a href=%link1_cy% class=\"govuk-link\">rôl atwrnai</a> a sut "
+"maent yn cefnogi rhoddwyr <a href=%link2_cy% class=\"govuk-link\">wneud "
 "penderfyniadau</a>."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:55
@@ -4069,7 +4069,7 @@ msgid ""
 msgstr ""
 "Os ydych yn cael unrhyw broblemau wrth fewngofnodi i’r gwasanaeth hwn, gallwch "
 "<a href=https://home.account.gov.uk/contact-gov-uk-one-login?lng=cy "
-"class=“govuk-link”>gysylltu â thîm One Login GOV.UK</a> i gael gymorth."
+"class=\"govuk-link\">gysylltu â thîm One Login GOV.UK</a> i gael gymorth."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
@@ -4987,8 +4987,8 @@ msgid ""
 "<a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" "
 "class=\"govuk-link\">to make decisions</a>."
 msgstr ""
-"Darganfyddwch am <a href=%link1_cy% class=“govuk-link”>rôl atwrnai</a> a sut "
-"maent yn cefnogi rhoddwyr <a href=%link2_cy% class=“govuk-link”>wneud "
+"Darganfyddwch am <a href=%link1_cy% class=\"govuk-link\">rôl atwrnai</a> a sut "
+"maent yn cefnogi rhoddwyr <a href=%link2_cy% class=\"govuk-link\">wneud "
 "penderfyniadau</a>."
 
 #: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:53
@@ -7062,8 +7062,8 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 #~ "attorney</a> and how they support donors <a href=\"%link2%\" class=\"govuk-"
 #~ "link\">to make decisions</a>."
 #~ msgstr ""
-#~ "Darganfyddwch am <a href=“%link1%” class=“govuk-link”>rôl atwrnai</a> a sut "
-#~ "maent yn cefnogi rhoddwyr <a href=“%link2%” class=“govuk-link”>wneud "
+#~ "Darganfyddwch am <a href=\"%link1%\" class=\"govuk-link\">rôl atwrnai</a> a sut "
+#~ "maent yn cefnogi rhoddwyr <a href=\"%link2%\" class=\"govuk-link\">wneud "
 #~ "penderfyniadau</a>."
 
 # Some translated content missing
@@ -7072,8 +7072,8 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 #~ "attorney</a> and how they support donors <a href=\"%link2%\" class=\"govuk-"
 #~ "link\">to make decisions.</a>."
 #~ msgstr ""
-#~ "Darganfyddwch am <a href=“%link1_cy%” class=“govuk-link”>rôl atwrnai</a> a "
-#~ "sut maent yn cefnogi rhoddwyr <a href=“%link2_cy%” class=“govuk-link”>wneud "
+#~ "Darganfyddwch am <a href=\"%link1_cy%\" class=\"govuk-link\">rôl atwrnai</a> a "
+#~ "sut maent yn cefnogi rhoddwyr <a href=\"%link2_cy%\" class=\"govuk-link\">wneud "
 #~ "penderfyniadau</a>."
 
 # Some translated content missing
@@ -7082,8 +7082,8 @@ msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 #~ "attorney</a> and how they support donors <a href=\"%link2_en%\" "
 #~ "class=\"govuk-link\">to make decisions.</a>."
 #~ msgstr ""
-#~ "Darganfyddwch am <a href=%link1_cy% class=“govuk-link”>rôl atwrnai</a> a "
-#~ "sut maent yn cefnogi rhoddwyr <a href=%link2_cy% class=“govuk-link”>wneud "
+#~ "Darganfyddwch am <a href=%link1_cy% class=\"govuk-link\">rôl atwrnai</a> a "
+#~ "sut maent yn cefnogi rhoddwyr <a href=%link2_cy% class=\"govuk-link\">wneud "
 #~ "penderfyniadau</a>."
 
 #, fuzzy
