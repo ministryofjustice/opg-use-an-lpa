@@ -55,15 +55,11 @@
                     </p>
 
                     <div class="govuk-inset-text">
-                        {% trans with {
-                            '%link_en%': 'https://use-lasting-power-of-attorney.service.gov.uk/terms-of-use',
-                            '%link_cy%': 'https://use-lasting-power-of-attorney.service.gov.uk/cy/terms-of-use'
-                        } %}
-                            By continuing, you are agreeing to the
-                            <a href="%link_en%" class="govuk-link">terms of the Use a lasting power of attorney service.</a>
-                        {% endtrans %}
-
+                        {{ 'By continuing, you are agreeing to the <a href="%link_en%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of the Use a lasting power of attorney service</a>.' | trans({
+                            '%link_en%': 'https://use-lasting-power-of-attorney.service.gov.uk/terms-of-use'
+                        }) }}
                     </div>
+
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
