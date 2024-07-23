@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-23T09:44:18+00:00\n"
+"POT-Creation-Date: 2024-07-23T13:37:03+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -288,7 +288,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:118
-#: src/Actor/templates/actor/one-login.html.twig:51
+#: src/Actor/templates/actor/one-login.html.twig:75
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:72
@@ -2854,35 +2854,35 @@ msgstr ""
 msgid "One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:15
+#: src/Actor/templates/actor/one-login.html.twig:33
 msgid "Sign in to this service"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:17
+#: src/Actor/templates/actor/one-login.html.twig:23
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:23
+#: src/Actor/templates/actor/one-login.html.twig:36
 msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:28
+#: src/Actor/templates/actor/one-login.html.twig:41
 msgid "If you’ve not used GOV.UK One Login before, you can set up your access on the next page."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:33
+#: src/Actor/templates/actor/one-login.html.twig:46
 msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:37
+#: src/Actor/templates/actor/one-login.html.twig:50
 msgid "What if I’ve used this service before?"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:39
+#: src/Actor/templates/actor/one-login.html.twig:52
 msgid "If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:56
+#: src/Actor/templates/actor/one-login.html.twig:81
 msgid "with GOV.UK One Login"
 msgstr ""
 
@@ -4684,4 +4684,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:111
 msgid "Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:58
+msgid "By continuing, you are agreeing to the <a href=\"%link_en%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:84
+msgid "If you have any problems signing in to this service, you can <a href=\"https://home.account.gov.uk/contact-gov-uk-one-login?lng=en\" class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""
