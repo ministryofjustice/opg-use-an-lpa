@@ -481,6 +481,69 @@
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/http-client-contracts" />
       <path value="$PROJECT_DIR$/service-front/app/vendor/amphp/amp" />
+      <path value="$PROJECT_DIR$/service-api/app/src/App" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/php-http/guzzle6-adapter" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/guzzle6-adapter" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-di/phpdoc-reader" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-php72" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/symfony/polyfill-intl-idn" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/alphagov/notifications-php-client" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/container-interop/container-interop" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/doctrine/inflector" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/firebase/php-jwt" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/contracts" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/illuminate/support" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/jshayes/fake-requests" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/opis/closure" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/phpunit/php-token-stream" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/symfony/polyfill-php81" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-composer-autoloading" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/laminas/laminas-zendframework-bridge" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/wshafer/psr11-monolog" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/glob" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/stella-maris/clock" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/openlss/lib-array2xml" />
+      <path value="$PROJECT_DIR$/service-front/app/vendor/webmozart/path-util" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/openlss/lib-array2xml" />
+      <path value="$PROJECT_DIR$/service-api/app/vendor/webmozart/path-util" />
+      <path value="$PROJECT_DIR$/vendor/friends-of-behat/mink-extension" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation" />
+      <path value="$PROJECT_DIR$/vendor/symfony/translation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/config" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/behat/transliterator" />
+      <path value="$PROJECT_DIR$/vendor/behat/mink" />
+      <path value="$PROJECT_DIR$/vendor/drevops/behat-screenshot" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
+      <path value="$PROJECT_DIR$/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/vendor/psr/log" />
+      <path value="$PROJECT_DIR$/vendor/behat/gherkin" />
+      <path value="$PROJECT_DIR$/vendor/behat/behat" />
+      <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
+      <path value="$PROJECT_DIR$/vendor/symfony/dependency-injection" />
+      <path value="$PROJECT_DIR$/vendor/symfony/console" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-grapheme" />
+      <path value="$PROJECT_DIR$/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/service-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/vendor/symfony/var-exporter" />
+      <path value="$PROJECT_DIR$/vendor/symfony/finder" />
+      <path value="$PROJECT_DIR$/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/vendor/symfony/string" />
+      <path value="$PROJECT_DIR$/vendor/symfony/filesystem" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
+      <path value="$PROJECT_DIR$/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/vendor/symfony/event-dispatcher-contracts" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -872,8 +935,8 @@
   <component name="PhpUnit">
     <phpunit_settings>
       <phpunit_by_interpreter interpreter_id="a252f9af-85e6-4a7b-b4d0-a73204db31c6" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
-      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
       <phpunit_by_interpreter interpreter_id="d0145a1b-f903-43c7-8428-a985293fe8b9" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
+      <phpunit_by_interpreter interpreter_id="f727a88f-8a28-4df0-87a2-12a139ed8d31" custom_loader_path="/app/vendor/autoload.php" phpunit_phar_path="" />
     </phpunit_settings>
   </component>
   <component name="Psalm">

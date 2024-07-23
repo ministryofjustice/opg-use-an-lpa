@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-18T14:23:30+00:00\n"
+"POT-Creation-Date: 2024-07-23T09:44:18+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -48,7 +48,7 @@ msgstr ""
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:40
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes.html.twig:9
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:106
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:85
 #: src/Actor/templates/actor/instructions-preferences.html.twig:8
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
@@ -165,23 +165,23 @@ msgstr ""
 msgid "Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:112
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:122
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:119
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:129
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:127
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:137
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:134
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:144
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:143
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:153
 msgid "Give another organisation access"
 msgstr ""
 
@@ -504,36 +504,36 @@ msgstr ""
 msgid "If you're sure you entered the right information, please call us:"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 msgid "We could not find a lasting power of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:35
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
 msgid "This could be because:"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:38
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:18
 msgid "the LPA reference number you entered is incorrect"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:39
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:19
 msgid "some of the details you entered about yourself do not match our records"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:37
 msgid "Your answers"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:46
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:26
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/lpa-not-found.html.twig:53
 #: src/Actor/templates/actor/check-your-answers.html.twig:22
 msgid "LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:54
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:34
 #: src/Actor/templates/actor/check-your-answers.html.twig:35
 #: src/Common/templates/common/cookies.html.twig:103
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
@@ -541,7 +541,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:62
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:42
 #: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:48
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
@@ -549,29 +549,29 @@ msgstr ""
 msgid "Date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:71
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:51
 #: src/Actor/templates/actor/check-your-answers.html.twig:62
 msgid "Postcode"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:60
 #: src/Actor/templates/actor/check-your-answers.html.twig:76
 msgid "Do you live in the UK?"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:83
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:89
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:69
 #: src/Actor/templates/actor/lpa-not-found.html.twig:59
 msgid "If you’re sure you entered the correct information, contact us."
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:101
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
 #: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 msgid "Try again"
@@ -2525,26 +2525,27 @@ msgid "Any lasting power of attorney (LPA) you add to your account will appear o
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
 msgid "Find out about <a href=\"%link1_en%\" class=\"govuk-link\">the role of attorney</a> and how they support donors <a href=\"%link2_en%\" class=\"govuk-link\">to make decisions.</a>"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:55
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:45
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:53
 msgid "What can I do with this service?"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:59
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:49
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:57
 msgid "Use this service to:"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:61
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:51
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:59
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:62
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:52
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:60
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
@@ -2553,7 +2554,7 @@ msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, inc
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:64
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:54
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:62
 msgid "ask for an activation key if you have not been given one - or it has expired"
 msgstr ""
 
@@ -3568,11 +3569,11 @@ msgstr ""
 msgid "Find out about <a href=\"https://www.gov.uk/lasting-power-attorney-duties\" class=\"govuk-link\">the role of an attorney</a> and how to support the donor <a href=\"https://www.gov.uk/make-decisions-for-someone/making-decisions\" class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:53
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:61
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:60
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:68
 msgid "Add your first LPA"
 msgstr ""
 
@@ -4663,4 +4664,24 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
+msgid "Give %organisation% this access code. They should go to <a href=\"%link_en%\" class=\"govuk-link\">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>. %organisation% may still ask to see the paper LPA."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:95
+msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:99
+msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:103
+msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-show-viewercode.html.twig:111
+msgid "Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
 msgstr ""
