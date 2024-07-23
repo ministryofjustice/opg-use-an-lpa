@@ -4069,7 +4069,7 @@ msgid ""
 "link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""
 "Os ydych yn cael unrhyw broblemau wrth fewngofnodi i’r gwasanaeth hwn, gallwch "
-"<a href=“https://home.account.gov.uk/contact-gov-uk-one-login?lng=cy” "
+"<a href=https://home.account.gov.uk/contact-gov-uk-one-login?lng=cy "
 "class=\"govuk-link\">gysylltu â thîm One Login GOV.UK</a> i gael gymorth."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
