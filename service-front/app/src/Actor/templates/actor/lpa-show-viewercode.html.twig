@@ -76,11 +76,16 @@
                     <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What to do next{% endtrans %}</h2>
 
                     <p class="govuk-body">
-                        {% trans with {'%organisation%': organisation, '%link%': 'https://www.gov.uk/view-lpa'} %}
+                        {% trans with {
+                            '%organisation%': organisation,
+                            '%link_en%': 'https://www.gov.uk/view-lpa',
+                            '%link_cy%': 'https://www.gov.uk/gweld-atwrneiaeth-arhosol'
+                        } %}
                             Give %organisation% this access code. They should go to
-                            <a href="%link%" class="govuk-link">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the
+                            <a href="%link_en%" class="govuk-link">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the
                             <abbr title="lasting power of attorney">LPA</abbr>. %organisation% may still ask to see the paper LPA.
                         {% endtrans %}
+
                     </p>
 
                     {% if feature_enabled('instructions_and_preferences') %}
