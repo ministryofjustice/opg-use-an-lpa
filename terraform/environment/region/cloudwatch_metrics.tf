@@ -49,6 +49,8 @@ locals {
     "event_code.ACTIVATION_KEY_REQUEST_REPLACEMENT_ATTORNEY",
     "event_code.AUTH_ONELOGIN_ACCOUNT_MIGRATED",
     "event_code.AUTH_ONELOGIN_ACCOUNT_CREATED",
+    "event_code.AUTH_ONELOGIN_ERROR",
+    "event_code.AUTH_ONELOGIN_NOT_AVAILABLE",
   ]
 }
 
