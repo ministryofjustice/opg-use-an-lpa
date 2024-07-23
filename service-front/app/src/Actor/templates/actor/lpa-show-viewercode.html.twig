@@ -75,23 +75,33 @@
 
                     <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What to do next{% endtrans %}</h2>
 
-                    <p class="govuk-body">{% trans with {'%organisation%': organisation} %}Give %organisation% this access code. They should go to www.gov.uk/view-lpa to enter the access code and see a summary of the
-                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}</p>
+                    <p class="govuk-body">
+                        {% trans with {
+                            '%organisation%': organisation,
+                            '%link_en%': 'https://www.gov.uk/view-lpa',
+                            '%link_cy%': 'https://www.gov.uk/gweld-atwrneiaeth-arhosol'
+                        } %}
+                            Give %organisation% this access code. They should go to
+                            <a href="%link_en%" class="govuk-link">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the
+                            <abbr title="lasting power of attorney">LPA</abbr>. %organisation% may still ask to see the paper LPA.
+                        {% endtrans %}
+
+                    </p>
 
                     {% if feature_enabled('instructions_and_preferences') %}
                         {% if not is_donor_signature_date_too_old(lpa) %}
                             <p class="govuk-body">
                                 {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
                                     {% trans %}
-                                        Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                        Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly.
                                     {% endtrans %}
                                 {% elseif lpa.applicationHasGuidance %}
                                     {% trans %}
-                                        Scanned copies of the donor’s preferences will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                        Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly.
                                     {% endtrans %}
                                 {% elseif lpa.applicationHasRestrictions %}
                                     {% trans %}
-                                        Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                        Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly.
                                     {% endtrans %}
                                 {% endif %}
                             </p>
@@ -99,7 +109,7 @@
                             {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
                                 <p class="govuk-body">
                                     {% trans %}
-                                        Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.
+                                        Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly.
                                     {% endtrans %}
                                 </p>
                             {% endif %}

@@ -58,6 +58,7 @@
                             </div>
                         </details>
 
+                        <p class="govuk-body">{% trans %}This service cannot be used for enduring powers of attorney.{% endtrans %}</p>
                         <p class="govuk-body">{% trans with {'%link%': path('terms-of-use')} %}By continuing you agree to our <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>.{% endtrans %}</p>
 
                         <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
