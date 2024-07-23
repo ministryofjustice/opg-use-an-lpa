@@ -13,15 +13,19 @@
 
                 <div class="govuk-grid-column-two-thirds">
                     <div class="moj-banner" role="region" aria-label="information">
-                        <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
+                        <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
                             <path d="M13.7,18.5h-2.4v-2.4h2.4V18.5z M12.5,13.7c-0.7,0-1.2-0.5-1.2-1.2V7.7c0-0.7,0.5-1.2,1.2-1.2s1.2,0.5,1.2,1.2v4.8
-                        C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z" />
+                                C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.4,12-12S19.1,0.5,12.5,0.5z" />
                         </svg>
                         <div class="moj-banner__message">
                             <h2 class="govuk-body">
-                                {% trans with {'%link%': 'https://www.gov.uk/power-of-attorney/make-lasting-power'} %}
+                                {% trans with {
+                                    '%link_en%': 'https://www.gov.uk/power-of-attorney/make-lasting-power',
+                                    '%link_cy%': 'https://www.gov.uk/power-of-attorney/make-lasting-power-cy'
+                                } %}
                                     To make an LPA online, or to continue to make an LPA you’ve started, go to the
-                                    <a href="%link%" class="govuk-link">Make a lasting power of attorney service.</a>
+                                    <a href="%link_en%" class="govuk-link">Make a lasting power of attorney service.</a>
                                 {% endtrans %}
                             </h2>
                         </div>
@@ -52,10 +56,14 @@
                     </p>
 
                     <div class="govuk-inset-text">
-                        {% trans with {'%link%': 'https://use-lasting-power-of-attorney.service.gov.uk/terms-of-use'} %}
+                        {% trans with {
+                            '%link_en%': 'https://use-lasting-power-of-attorney.service.gov.uk/terms-of-use',
+                            '%link_cy%': 'https://use-lasting-power-of-attorney.service.gov.uk/terms-of-use-cy'
+                        } %}
                             By continuing, you are agreeing to the
-                            <a href="%link%" class="govuk-link">terms of the Use a lasting power of attorney service.</a>
+                            <a href="%link_en%" class="govuk-link">terms of the Use a lasting power of attorney service.</a>
                         {% endtrans %}
+
                     </div>
                 </div>
 
@@ -66,7 +74,8 @@
                             type="submit"
                             class="govuk-button govuk-button--start govuk-!-margin-bottom-1" aria-label="Continue with GOV.UK One Login">
                         {% trans %}Continue{% endtrans %}
-                        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+                             viewBox="0 0 33 40" aria-hidden="true" focusable="false">
                             <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
                         </svg>
                     </button>
