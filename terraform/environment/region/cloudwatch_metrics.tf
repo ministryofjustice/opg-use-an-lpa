@@ -147,3 +147,18 @@ resource "aws_cloudwatch_log_metric_filter" "onelogin_authentication_success" {
 
   provider = aws.region
 }
+
+resource "aws_cloudwatch_log_metric_filter" "login_attempt_success" {
+  name           = "${var.environment_name}_login_attempt_success"
+  pattern        = "{ ($.message = \"PATCH /v1/auth HTTP/1.1\" || $.request = \"PATCH /v1/auth HTTP/1.1\") && $.status = \"200\" }"
+  log_group_name = aws_cloudwatch_log_group.application_logs.name
+
+  metric_transformation {
+    name          = "login_attempt_success"
+    namespace     = "${var.environment_name}_events"
+    value         = "1"
+    default_value = "0"
+  }
+
+  provider = aws.region
+}
