@@ -10,6 +10,7 @@ use Common\Handler\LoggerAware;
 use Common\Handler\SessionAware;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
+use Common\Service\Log\EventCodes;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Mezzio\Authentication\UserInterface;
@@ -53,11 +54,18 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
         if (array_key_exists('error', $authParams)) {
             $error = $authParams['error'];
             $error === 'temporarily_unavailable' ?
-                $this->logger->warning('User attempted One Login but it is unavailable') :
+                $this->logger->warning(
+                    'User attempted One Login but it is unavailable',
+                    ['event_code' => EventCodes::AUTH_ONELOGIN_NOT_AVAILABLE]
+                ) :
                 $this->logger->notice(
                     'User attempted One Login but received an {error} error',
-                    ['error' => $error]
+                    [
+                        'error'      => $error,
+                        'event_code' => EventCodes::AUTH_ONELOGIN_ERROR,
+                    ]
                 );
+
             return match ($error) {
                 'access_denied', 'temporarily_unavailable' => $this->redirectToRoute(
                     'home',
@@ -65,7 +73,10 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
                     ['error' => $error],
                     $ui_locale === 'cy' ? $ui_locale : null
                 ),
-                default => throw new RuntimeException('Error returned from OneLogin', 500)
+                default => throw new RuntimeException(
+                    '"' . $error . '" error returned from OneLogin authentication attempt',
+                    500
+                )
             };
         }
 

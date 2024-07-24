@@ -81,6 +81,16 @@ class EventCodes
     public const ADD_LPA_SUCCESS = 'ADD_LPA_SUCCESS';
 
     /**
+     * GOVUK One Login is returning that an error has occurred
+     */
+    public const AUTH_ONELOGIN_ERROR = 'AUTH_ONELOGIN_ERROR';
+
+    /**
+     * GOVUK One Login is returning that it is unavailable
+     */
+    public const AUTH_ONELOGIN_NOT_AVAILABLE = 'AUTH_ONELOGIN_NOT_AVAILABLE';
+
+    /**
      * Lpa summary has been downloaded
      */
     public const DOWNLOAD_SUMMARY = 'DOWNLOAD_SUMMARY';
