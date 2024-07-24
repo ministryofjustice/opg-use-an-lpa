@@ -4038,7 +4038,7 @@ msgid ""
 "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-"
 "link\">terms of the Use a lasting power of attorney service.</a>"
 msgstr ""
-"Trwy barhau, rydych yn cytuno i <a href=%link% class=\"govuk-link\"> delerau’r "
+"Trwy barhau, rydych yn cytuno i <a href=\"%link%\" class=\"govuk-link\"> delerau’r "
 "gwasanaeth Defnyddio atwrneiaeth arhosol.</a>"
 
 #: src/Actor/templates/actor/one-login.html.twig:80
