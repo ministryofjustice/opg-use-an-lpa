@@ -45,6 +45,7 @@ func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages m
 
 	for messageKey, messageValue := range messages {
 		if messageValue != "" {
+			log.Info().Msgf("Updating parameter %s with value %s", messageKey, messageValue)
 			_, err := s.ssmConn.Client.PutParameter(ctx, &ssm.PutParameterInput{
 				Name:      aws.String(s.ssmConn.prefixedParameterName(messageKey)),
 				Value:     aws.String(messageValue),
@@ -52,9 +53,11 @@ func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages m
 				Overwrite: aws.Bool(true),
 			})
 			if err != nil {
+				log.Error().Err(err).Msgf("Error writing parameter: %s", messageKey)
 				return false, fmt.Errorf("error writing parameter: %w", err)
 			}
 		} else {
+			log.Info().Msgf("Deleting parameter %s", messageKey)
 			_, err := s.ssmConn.Client.DeleteParameter(ctx, &ssm.DeleteParameterInput{
 				Name: aws.String(s.ssmConn.prefixedParameterName(messageKey)),
 			})
