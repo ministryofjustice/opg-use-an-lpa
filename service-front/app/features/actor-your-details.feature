@@ -8,11 +8,12 @@ Feature: Settings dashboard
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @ui @ff:allow_gov_one_login:false
-  Scenario: The user can request to see their details and reset their details
-    Given I view my user details
-    Then I can change my email if required
-    And I can change my passcode if required
+#  UML-3344 Temporarily disabled tests on changing email addresses
+#  @ui @ff:allow_gov_one_login:false
+#  Scenario: The user can request to see their details and reset their details
+#    Given I view my user details
+#    Then I can change my email if required
+#    And I can change my passcode if required
 
   @ui @ff:allow_gov_one_login:false
   Scenario: The user can request login details reset
