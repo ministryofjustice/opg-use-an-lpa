@@ -165,7 +165,7 @@ resource "aws_cloudwatch_log_metric_filter" "login_attempt_success" {
 
 resource "aws_cloudwatch_log_metric_filter" "application_error_count" {
   name           = "${var.environment_name}_application_error_count"
-  pattern        = "{ ($.service_name = \"web\") && ($.status != 2* && $.status != 3* && $.status != 404) && $.status != null }"
+  pattern        = "{ $.service_name = \"front\" && ($.status != 2* && $.status != 3* && $.status != 404) }"
   log_group_name = aws_cloudwatch_log_group.application_logs.name
 
   metric_transformation {
