@@ -197,7 +197,7 @@ msgid ""
 "%organisation% may still ask to see the paper LPA."
 msgstr ""
 "Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i <a href=%link_cy% "
-"class=“govuk-link”>www.gov.uk/gweld-atwrneiaeth-arhosol</a> i roi’r cod "
+"class=\"govuk-link\">www.gov.uk/gweld-atwrneiaeth-arhosol</a> i roi’r cod "
 "mynediad a gweld crynodeb o’r atwrneiaeth. Efallai y bydd %organisation% yn "
 "dal i ofyn am weld yr LPA bapur."
 
