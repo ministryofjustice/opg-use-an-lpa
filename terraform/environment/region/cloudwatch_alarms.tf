@@ -92,7 +92,7 @@ resource "aws_cloudwatch_metric_alarm" "onelogin_reported_unavailable" {
   evaluation_periods  = 2
   datapoints_to_alarm = 2
   statistic           = "Sum"
-  threshold           = 5
+  threshold           = 1
   namespace           = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.AUTH_ONELOGIN_NOT_AVAILABLE"].metric_transformation[0].namespace
   treat_missing_data  = "notBreaching"
 
