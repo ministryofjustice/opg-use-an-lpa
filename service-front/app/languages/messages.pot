@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-07-24T14:15:51+00:00\n"
+"POT-Creation-Date: 2024-07-24T16:06:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -470,7 +470,7 @@ msgid "Change your password"
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:47
-#: src/Actor/templates/actor/settings.html.twig:90
+#: src/Actor/templates/actor/settings.html.twig:85
 #: src/Actor/templates/actor/password-reset.html.twig:40
 msgid "Password"
 msgstr ""
@@ -1405,7 +1405,7 @@ msgid "Enter your email address below. If there's an account associated with the
 msgstr ""
 
 #: src/Actor/templates/actor/login.html.twig:44
-#: src/Actor/templates/actor/settings.html.twig:77
+#: src/Actor/templates/actor/settings.html.twig:72
 #: src/Actor/templates/actor/password-reset-request.html.twig:30
 msgid "Email address"
 msgstr ""
@@ -3529,19 +3529,19 @@ msgstr ""
 msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:97
+#: src/Actor/templates/actor/settings.html.twig:92
 msgid "Change<span class=\"govuk-visually-hidden\"> password</span>"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:104
+#: src/Actor/templates/actor/settings.html.twig:99
 msgid "Need to update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary?"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:106
+#: src/Actor/templates/actor/settings.html.twig:101
 msgid "Change a donor or attorney's details"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:109
+#: src/Actor/templates/actor/settings.html.twig:104
 msgid "Delete account"
 msgstr ""
 
@@ -4646,14 +4646,14 @@ msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:57
+#: src/Actor/templates/actor/settings.html.twig:56
 msgid "You are not able to change your email address"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:60
-msgid "This is because, on 19 August 2024, we are changing the way you sign in to the Use a lasting power of attorney service."
+#: src/Actor/templates/actor/settings.html.twig:62
+msgid "Find out more about this change"
 msgstr ""
 
-#: src/Actor/templates/actor/settings.html.twig:63
-msgid "Find out more about this change"
+#: src/Actor/templates/actor/settings.html.twig:59
+msgid "This is because, on 13 August 2024, we are changing the way you sign in to the Use a lasting power of attorney service."
 msgstr ""
