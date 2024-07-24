@@ -8,19 +8,19 @@ ${jsonencode(
             "x": 0,
             "type": "metric",
             "properties": {
-                "sparkline": false,
-                "view": "singleValue",
                 "metrics": [
-                    [ "${environment}_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
+                    [ "ur_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
                     [ ".", "auth_onelogin_account_migrated_event", { "label": "Accounts Migrated" } ],
-                    [ { "expression": "(m1 / 800000) * 100", "label": "Migrated Accounts Percentage", "id": "e1", "stat": "Sum" } ],
-                    [ { "expression": "800000 - m1", "label": "Remaining Migrations", "id": "e2", "stat": "Sum" } ],
-                    [ "${environment}_events", "auth_onelogin_account_migrated_event", { "id": "m1", "visible": false } ]
+                    [ { "expression": "(m1 / 800000) * 100", "id": "e1", "label": "Migrated Accounts Percentage", "stat": "Sum" } ],
+                    [ { "expression": "800000 - m1", "id": "e2", "label": "Remaining Migrations", "stat": "Sum" } ],
+                    [ "ur_events", "auth_onelogin_account_migrated_event", { "id": "m1", "visible": false } ]
                 ],
-                "region": "${region}",
                 "period": 2592000,
+                "region": "eu-west-1",
+                "sparkline": false,
                 "stat": "Sum",
-                "title": "One Login Account Events"
+                "title": "One Login Account Events",
+                "view": "singleValue"
             }
         },
         {
@@ -30,18 +30,18 @@ ${jsonencode(
             "x": 0,
             "type": "metric",
             "properties": {
-                "sparkline": true,
-                "view": "singleValue",
                 "metrics": [
-                    [ "${environment}_onelogin_events", "onelogin_authentication_success", { "id": "m1", "label": "Successful Logins" } ],
+                    [ "ur_onelogin_events", "onelogin_authentication_success", { "id": "m1", "label": "Successful Logins" } ],
                     [ { "expression": "(m1 / 3400) * 100", "label": "Compared to historical daily logins (%)" } ]
                 ],
-                "region": "${region}",
                 "period": 60,
+                "region": "eu-west-1",
+                "setPeriodToTimeRange": true,
+                "sparkline": true,
                 "start": "-P1D",
                 "stat": "Sum",
                 "title": "One Login Auth Events",
-                "setPeriodToTimeRange": true
+                "view": "singleValue"
             }
         },
         {
@@ -52,13 +52,13 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "${environment}_events", "account_created_event", { "label": "account created" } ]
+                    [ "ur_events", "account_created_event", { "label": "account created" } ]
                 ],
-                "view": "singleValue",
-                "region": "${region}",
-                "stat": "Sum",
                 "period": 2592000,
-                "title": "Account Events"
+                "region": "eu-west-1",
+                "stat": "Sum",
+                "title": "Account Events",
+                "view": "singleValue"
             }
         },
         {
@@ -68,19 +68,70 @@ ${jsonencode(
             "x": 0,
             "type": "metric",
             "properties": {
-                "sparkline": true,
-                "view": "singleValue",
                 "metrics": [
-                    [ "${environment}_events", "account_created_event", { "label": "placeholder" } ]
+                    [ "ur_events", "application_error_count", { "label": "Application Error Count Today", "region": "eu-west-1" } ]
                 ],
-                "region": "${region}",
                 "period": 60,
-                "start": "-P1D",
+                "region": "eu-west-1",
+                "setPeriodToTimeRange": true,
+                "sparkline": true,
+                "start": "-PT24H",
                 "stat": "Sum",
-                "title": "Daily Application Errors",
-                "setPeriodToTimeRange": true
+                "title": "Daily Application Errors Today",
+                "view": "singleValue",
+                "end": "P0D"
+            }
+        },
+        {
+            "height": 6,
+            "width": 6,
+            "y": 16,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ur_events", "application_error_count" ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "eu-west-1",
+                "start": "-PT168H",
+                "end": "P0D",
+                "yAxis": {
+                    "left": {
+                        "label": "Errors"
+                    },
+                    "right": {
+                        "showUnits": true,
+                        "label": "Time"
+                    }
+                },
+                "stat": "Sum",
+                "period": 300,
+                "title": "Errors for the past week"
+            }
+        },
+        {
+            "height": 3,
+            "width": 6,
+            "y": 16,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "ur_events", "application_error_count", { "label": "Application Error Count Yestday", "region": "eu-west-1" } ]
+                ],
+                "sparkline": false,
+                "view": "singleValue",
+                "region": "eu-west-1",
+                "setPeriodToTimeRange": true,
+                "trend": false,
+                "title": "Application Error Count Yestday",
+                "stat": "Sum",
+                "start": "P0D",
+                "end": "-P1D",
+                "period": 300
             }
         }
     ]
-}
-)}
+})}
