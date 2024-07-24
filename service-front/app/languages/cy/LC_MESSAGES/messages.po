@@ -6046,10 +6046,8 @@ msgstr ""
 "mynediad LPA ar gyfer eich sefydliad."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:61
-#, fuzzy
-#| msgid "This service cannot be used for:"
 msgid "This service cannot be used for enduring powers of attorney."
-msgstr "Ni ellir defnyddio’r gwasanaeth hwn ar gyfer:"
+msgstr "Ni ellir defnyddio’r gwasanaeth hwn ar gyfer atwrniaethau parhaus."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:62
 msgid ""
