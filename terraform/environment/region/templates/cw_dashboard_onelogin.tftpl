@@ -2,6 +2,29 @@ ${jsonencode(
     {
     "widgets": [
         {
+            "height": 3,
+            "width": 9,
+            "y": 0,
+            "x": 15,
+            "type": "metric",
+            "properties": {
+                "end": "P0D",
+                "metrics": [
+                    [ "AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", "${use_health_check}", { "label": "Use Frontend", "region": "us-east-1" } ],
+                    [ "AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", "${viewer_health_check}", { "label": "Viewer Frontend", "region": "us-east-1" } ]
+                ],
+                "period": 60,
+                "region": "eu-west-1",
+                "setPeriodToTimeRange": true,
+                "singleValueFullPrecision": false,
+                "stacked": false,
+                "start": "-P28D",
+                "stat": "Average",
+                "title": "Website Availability",
+                "view": "singleValue"
+            }
+        },
+        {
             "height": 4,
             "width": 24,
             "y": 0,

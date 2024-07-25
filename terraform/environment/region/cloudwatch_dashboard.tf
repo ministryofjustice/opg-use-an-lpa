@@ -20,8 +20,10 @@ resource "aws_cloudwatch_dashboard" "onelogin" {
   count          = var.create_onelogin_dashboard ? 1 : 0
   dashboard_name = "${var.environment_name}-${data.aws_region.current.name}-onelogin-dashboard"
   dashboard_body = templatefile("${path.module}/templates/cw_dashboard_onelogin.tftpl", {
-    region      = data.aws_region.current.name,
-    environment = var.environment_name
+    region              = data.aws_region.current.name,
+    environment         = var.environment_name,
+    use_health_check    = module.actor_use_my_lpa.health_check_id
+    viewer_health_check = module.viewer_use_my_lpa.health_check_id
   })
 
   provider = aws.region
