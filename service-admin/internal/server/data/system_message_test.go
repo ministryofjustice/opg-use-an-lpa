@@ -82,6 +82,7 @@ func TestPutSystemMessages(t *testing.T) {
 		}
 
 		t.Errorf("Unexpected message value given for %s: got '%s'", *params.Name, *params.Value)
+
 		return nil, nil
 	}
 
