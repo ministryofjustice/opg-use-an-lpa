@@ -48,11 +48,13 @@ func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages m
 			deleted = true
 			messageValue = " "
 		}
+
 		_, err := s.ssmConn.Client.PutParameter(ctx, &ssm.PutParameterInput{
 			Name:      aws.String(s.ssmConn.prefixedParameterName(messageKey)),
 			Value:     aws.String(messageValue),
 			Type:      types.ParameterTypeString,
 			Overwrite: aws.Bool(true)})
+
 		if err != nil {
 			return false, fmt.Errorf("error writing parameter: %w", err)
 		}
