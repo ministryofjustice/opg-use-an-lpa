@@ -24,6 +24,7 @@ resource "aws_cloudwatch_dashboard" "onelogin" {
     environment         = var.environment_name,
     use_health_check    = module.actor_use_my_lpa.health_check_id
     viewer_health_check = module.viewer_use_my_lpa.health_check_id
+    ecs_cluster         = aws_ecs_cluster.use_an_lpa.name
   })
 
   provider = aws.region
