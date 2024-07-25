@@ -22,8 +22,8 @@ resource "aws_cloudwatch_dashboard" "onelogin" {
   dashboard_body = templatefile("${path.module}/templates/cw_dashboard_onelogin.tftpl", {
     region              = data.aws_region.current.name,
     environment         = var.environment_name,
-    use_health_check    = module.actor_use_my_lpa.health_check_id
-    viewer_health_check = module.viewer_use_my_lpa.health_check_id
+    use_health_check    = module.actor_use_my_lpa.health_check_id,
+    viewer_health_check = module.viewer_use_my_lpa.health_check_id,
     ecs_cluster         = aws_ecs_cluster.use_an_lpa.name
   })
 
