@@ -69,7 +69,7 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count", { "label": "Application Error Count Today", "region": "eu-west-1" } ]
+                    [ "ur_events", "application_error_count", { "label": "Application Error Count Last 24H", "region": "eu-west-1" } ]
                 ],
                 "period": 60,
                 "region": "eu-west-1",
@@ -77,7 +77,7 @@ ${jsonencode(
                 "sparkline": true,
                 "start": "-PT24H",
                 "stat": "Sum",
-                "title": "Daily Application Errors Today",
+                "title": "Daily Application Errors Last 24H",
                 "view": "singleValue",
                 "end": "P0D"
             }
@@ -90,7 +90,7 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count" ]
+                    [ "ur_events", "application_error_count" { "label": "Application Error Count Last Week", "region": "eu-west-1" }  ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
@@ -119,16 +119,16 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count", { "label": "Application Error Count Yestday", "region": "eu-west-1" } ]
+                    [ "ur_events", "application_error_count", { "label": "Application Error Count For Time Periord 48 Hours ago to 24 Hours ago", "region": "eu-west-1" } ]
                 ],
                 "sparkline": false,
                 "view": "singleValue",
                 "region": "eu-west-1",
                 "setPeriodToTimeRange": true,
                 "trend": false,
-                "title": "Application Error Count Yestday",
+                "title": "Application Error Count For Time Periord 48 Hours ago to 24 Hours ago",
                 "stat": "Sum",
-                "start": "P0D",
+                "start": "-P2D",
                 "end": "-P1D",
                 "period": 300
             }
