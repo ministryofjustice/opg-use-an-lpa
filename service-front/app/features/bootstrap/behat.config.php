@@ -37,7 +37,7 @@ return [
     'feature_flags'                          => [
         'delete_lpa_feature'                                         => true,
         'instructions_and_preferences'                               => true,
-        'allow_gov_one_login'                                        => false,
+        'allow_gov_one_login'                                        => true,
     ],
     'notify'                                 => [
         'api' => [
