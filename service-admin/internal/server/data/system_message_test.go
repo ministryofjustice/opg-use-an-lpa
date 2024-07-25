@@ -8,15 +8,14 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/data"
 	"github.com/stretchr/testify/assert"
+	"strings"
 	"testing"
 )
 
 type mockSSMClient struct {
-	PutParameterFunc         func(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error)
-	PutParameterCallCount    int
-	GetParameterFunc         func(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error)
-	DeleteParameterFunc      func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error)
-	DeleteParameterCallCount int
+	PutParameterFunc      func(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error)
+	PutParameterCallCount int
+	GetParameterFunc      func(ctx context.Context, params *ssm.GetParameterInput, optFns ...func(*ssm.Options)) (*ssm.GetParameterOutput, error)
 }
 
 func (m *mockSSMClient) PutParameter(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
@@ -36,18 +35,10 @@ func (m *mockSSMClient) GetParameter(ctx context.Context, params *ssm.GetParamet
 	return nil, nil
 }
 
-func (m *mockSSMClient) DeleteParameter(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
-	m.DeleteParameterCallCount++
-	if m.DeleteParameterFunc != nil {
-		return m.DeleteParameterFunc(ctx, params, optFns...)
-	}
-
-	return &ssm.DeleteParameterOutput{}, nil
-}
-
 func TestPutSystemMessages(t *testing.T) {
 	t.Parallel()
 
+	// Test for adding messages
 	initialMessages := map[string]string{
 		"/system-message/use/en":  "use hello world en",
 		"/system-message/use/cy":  "use helo byd",
@@ -57,19 +48,17 @@ func TestPutSystemMessages(t *testing.T) {
 
 	mockClient := &mockSSMClient{
 		PutParameterFunc: func(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
-			if value, exists := initialMessages[*params.Name]; exists {
-				if value != *params.Value && *params.Value != "" {
-					t.Errorf("Unexpected message value given for %s", *params.Name)
-				}
-			} else {
+			expectedValue, exists := initialMessages[*params.Name]
+			if !exists {
 				t.Errorf("Unexpected message key used: %s", *params.Name)
+				return nil, nil
 			}
-			if params.Overwrite == nil && *params.Value != "" {
+			if strings.TrimSpace(*params.Value) != strings.TrimSpace(expectedValue) {
+				t.Errorf("Unexpected message value given for %s: got '%s', want '%s'", *params.Name, *params.Value, expectedValue)
+			}
+			if params.Overwrite == nil || !*params.Overwrite {
 				t.Errorf("Expecting Overwrite option to be set for %s", *params.Name)
 			}
-			return nil, nil
-		},
-		DeleteParameterFunc: func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
 			return nil, nil
 		},
 	}
@@ -82,18 +71,23 @@ func TestPutSystemMessages(t *testing.T) {
 	assert.Equal(t, 4, mockClient.PutParameterCallCount, "Expected PutParameter to be called 4 times for adding")
 
 	mockClient.PutParameterCallCount = 0
-	mockClient.DeleteParameterCallCount = 0
 
 	messagesToDelete := map[string]string{
 		"/system-message/use/en": "",
 	}
 
-	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
+	mockClient.PutParameterFunc = func(ctx context.Context, params *ssm.PutParameterInput, optFns ...func(*ssm.Options)) (*ssm.PutParameterOutput, error) {
+		if *params.Value == " " {
+			return nil, nil
+		}
+		t.Errorf("Unexpected message value given for %s: got '%s'", *params.Name, *params.Value)
+		return nil, nil
+	}
 
+	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
 	assert.NoError(t, err)
-	assert.True(t, deleted, "Expected at least one message to be deleted")
-	assert.Equal(t, 0, mockClient.PutParameterCallCount, "Expected PutParameter to be called once for deleting")
-	assert.Equal(t, 1, mockClient.DeleteParameterCallCount, "Expected DeleteParameter to be called once for deleting")
+	assert.True(t, deleted, "Expected at least one message to be marked as deleted")
+	assert.Equal(t, 1, mockClient.PutParameterCallCount, "Expected PutParameter to be called once for setting empty value")
 }
 
 func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
@@ -116,50 +110,6 @@ func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
 	deleted, err := service.PutSystemMessages(context.Background(), messages)
 	assert.Error(t, err, "Should have reported error")
 	assert.False(t, deleted)
-}
-
-func TestPutSystemMessages_DeletionFailureHandling_NoParameter(t *testing.T) {
-	t.Parallel()
-
-	mockClient := &mockSSMClient{
-		DeleteParameterFunc: func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
-			return nil, &types.ParameterNotFound{}
-		},
-	}
-
-	ssmConn := data.NewSSMConnection(mockClient, "")
-	service := data.NewSystemMessageService(*ssmConn)
-
-	messagesToDelete := map[string]string{
-		"/system-message/use/en": "",
-	}
-
-	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
-
-	assert.NoError(t, err)
-	assert.False(t, deleted, "No messages should be deleted")
-}
-
-func TestPutSystemMessages_DeletionFailureHandling_SSM_Error(t *testing.T) {
-	t.Parallel()
-
-	mockClient := &mockSSMClient{
-		DeleteParameterFunc: func(ctx context.Context, params *ssm.DeleteParameterInput, optFns ...func(*ssm.Options)) (*ssm.DeleteParameterOutput, error) {
-			return nil, fmt.Errorf("any other type of error")
-		},
-	}
-
-	ssmConn := data.NewSSMConnection(mockClient, "")
-	service := data.NewSystemMessageService(*ssmConn)
-
-	messagesToDelete := map[string]string{
-		"/system-message/use/en": "",
-	}
-
-	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
-
-	assert.Error(t, err)
-	assert.False(t, deleted, "No messages should be deleted")
 }
 
 func TestGetSystemMessages(t *testing.T) {
@@ -197,7 +147,6 @@ func TestGetSystemMessages_ErrorHandling_FailedToRetrieve(t *testing.T) {
 	predefinedValues := map[string]string{
 		"/system-message/use/en": "use hello world en",
 		"/system-message/use/cy": "use helo byd",
-		// No view messages set
 	}
 
 	mockClient := &mockSSMClient{
