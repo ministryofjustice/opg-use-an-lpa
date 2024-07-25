@@ -40,13 +40,16 @@ func (s *SystemMessageService) GetSystemMessages(ctx context.Context) (map[strin
 	return messages, nil
 }
 
-func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (bool, error) {
-	deleted := false
+func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (updated bool, deleted bool, err error) {
+	updated = false
+	deleted = false
 
 	for messageKey, messageValue := range messages {
 		if messageValue == "" {
 			deleted = true
 			messageValue = " "
+		} else {
+			updated = true
 		}
 
 		_, err := s.ssmConn.Client.PutParameter(ctx, &ssm.PutParameterInput{
@@ -56,9 +59,9 @@ func (s *SystemMessageService) PutSystemMessages(ctx context.Context, messages m
 			Overwrite: aws.Bool(true)})
 
 		if err != nil {
-			return false, fmt.Errorf("error writing parameter: %w", err)
+			return false, false, fmt.Errorf("error writing parameter: %w", err)
 		}
 	}
 
-	return deleted, nil
+	return updated, deleted, nil
 }

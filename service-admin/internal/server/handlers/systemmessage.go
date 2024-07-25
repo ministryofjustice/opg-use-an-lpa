@@ -9,7 +9,7 @@ import (
 
 type SystemMessageService interface {
 	GetSystemMessages(ctx context.Context) (systemMessages map[string]string, err error)
-	PutSystemMessages(ctx context.Context, messages map[string]string) (deleted bool, err error)
+	PutSystemMessages(ctx context.Context, messages map[string]string) (updated bool, deleted bool, err error)
 }
 
 type SystemMessageServer struct {
@@ -62,17 +62,19 @@ func (s *SystemMessageServer) SystemMessageHandler(w http.ResponseWriter, r *htt
 		}
 
 		if errorMessage == "" {
-			deleted, err := s.systemMessageService.PutSystemMessages(ctx, messages)
+			updated, deleted, err := s.systemMessageService.PutSystemMessages(ctx, messages)
 			if err != nil {
 				log.Error().Err(err).Msg("failed to update system messages")
 
 				errorMessage = "Error updating system messages"
-			} else if deleted {
-				successMessage := "System message has been removed"
-				templateData.SuccessMessage = &successMessage
 			} else {
-				successMessage := "System message has been updated"
-				templateData.SuccessMessage = &successMessage
+				if deleted && !updated {
+					successMessage := "System message has been removed"
+					templateData.SuccessMessage = &successMessage
+				} else if updated {
+					successMessage := "System message has been updated"
+					templateData.SuccessMessage = &successMessage
+				}
 			}
 		}
 
