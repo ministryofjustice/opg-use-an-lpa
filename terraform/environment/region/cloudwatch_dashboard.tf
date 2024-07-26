@@ -24,9 +24,9 @@ resource "aws_cloudwatch_dashboard" "onelogin" {
     environment         = var.environment_name,
     region              = data.aws_region.current.name,
     use_health_check    = module.actor_use_my_lpa.health_check_id,
-    use_alb_arn         = local.use_alb_arn
+    use_alb_arn         = local.use_alb_arn,
     viewer_health_check = module.viewer_use_my_lpa.health_check_id,
-    viewer_alb_arn      = local.viewer_alb_arn,
+    viewer_alb_arn      = local.viewer_alb_arn
   })
 
   provider = aws.region

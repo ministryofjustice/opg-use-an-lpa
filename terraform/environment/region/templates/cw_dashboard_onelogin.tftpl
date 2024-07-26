@@ -206,8 +206,8 @@ ${jsonencode(
                     "position": "bottom"
                 },
                 "metrics": [
-                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", ${use_alb_arn}, { "id": "m1", "label": "Use Request Count" } ],
-                    [ "...", ${viewer_alb_arn}, { "id": "m2", "label": "Viewer Request Count" } ]
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${use_alb_arn}", { "id": "m1", "label": "Use Request Count" } ],
+                    [ "...", "${viewer_alb_arn}," { "id": "m2", "label": "Viewer Request Count" } ]
                 ],
                 "period": 60,
                 "region": "eu-west-1",
