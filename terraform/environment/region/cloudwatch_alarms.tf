@@ -81,6 +81,24 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   provider = aws.region
 }
 
+resource "aws_cloudwatch_metric_alarm" "onelogin_reported_unavailable" {
+  actions_enabled     = true
+  alarm_name          = "${var.environment_name}_onelogin_reported_unavailable"
+  alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  alarm_description   = "Triggers when GOV.UK One Login logs that the service is unavailable"
+  metric_name         = "auth_onelogin_not_available_event"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  period              = 60
+  evaluation_periods  = 2
+  datapoints_to_alarm = 2
+  statistic           = "Sum"
+  threshold           = 1
+  namespace           = aws_cloudwatch_log_metric_filter.log_event_code_metrics["event_code.AUTH_ONELOGIN_NOT_AVAILABLE"].metric_transformation[0].namespace
+  treat_missing_data  = "notBreaching"
+
+  provider = aws.region
+}
+
 resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
   alarm_name          = "${var.environment_name}_ActorDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
@@ -118,6 +136,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
 
   provider = aws.region
 }
+
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   alarm_name          = "${var.environment_name}_AdminDDoSDetected"
