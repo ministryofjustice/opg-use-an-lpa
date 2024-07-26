@@ -2,7 +2,7 @@ ${jsonencode(
     {
     "widgets": [
         {
-            "height": 5,
+            "height": 4,
             "width": 24,
             "y": 0,
             "x": 0,
@@ -192,6 +192,30 @@ ${jsonencode(
                 "stat": "Average",
                 "title": "Website Availability",
                 "view": "singleValue"
+            }
+        },
+        {
+            "height": 5,
+            "width": 14,
+            "y": 15,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "end": "P0D",
+                "legend": {
+                    "position": "bottom"
+                },
+                "metrics": [
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", ${use_alb_arn}, { "id": "m1", "label": "Use Request Count" } ],
+                    [ "...", ${viewer_alb_arn}, { "id": "m2", "label": "Viewer Request Count" } ]
+                ],
+                "period": 60,
+                "region": "eu-west-1",
+                "stacked": false,
+                "start": "-PT3H",
+                "stat": "Sum",
+                "title": "ALB Requests per minute",
+                "view": "timeSeries"
             }
         }
     ]
