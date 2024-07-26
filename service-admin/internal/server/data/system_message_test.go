@@ -66,12 +66,15 @@ func TestPutSystemMessages(t *testing.T) {
 	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
-	_, err := service.PutSystemMessages(context.Background(), initialMessages)
+	updated, deleted, err := service.PutSystemMessages(context.Background(), initialMessages)
 	assert.NoError(t, err)
+	assert.True(t, updated, "Expected at least one message to be marked as updated")
+	assert.False(t, deleted, "Expected no messages to be marked as deleted")
 	assert.Equal(t, 4, mockClient.PutParameterCallCount, "Expected PutParameter to be called 4 times for adding")
 
 	mockClient.PutParameterCallCount = 0
 
+	// Test for deleting a message
 	messagesToDelete := map[string]string{
 		"/system-message/use/en": "",
 	}
@@ -86,8 +89,9 @@ func TestPutSystemMessages(t *testing.T) {
 		return nil, nil
 	}
 
-	deleted, err := service.PutSystemMessages(context.Background(), messagesToDelete)
+	updated, deleted, err = service.PutSystemMessages(context.Background(), messagesToDelete)
 	assert.NoError(t, err)
+	assert.False(t, updated, "Expected no messages to be marked as updated")
 	assert.True(t, deleted, "Expected at least one message to be marked as deleted")
 	assert.Equal(t, 1, mockClient.PutParameterCallCount, "Expected PutParameter to be called once for setting empty value")
 }
@@ -109,9 +113,10 @@ func TestPutSystemMessages_ErrorHandling_ErrorWritingParameter(t *testing.T) {
 	ssmConn := data.NewSSMConnection(mockClient, "")
 	service := data.NewSystemMessageService(*ssmConn)
 
-	deleted, err := service.PutSystemMessages(context.Background(), messages)
+	updated, deleted, err := service.PutSystemMessages(context.Background(), messages)
 	assert.Error(t, err, "Should have reported error")
-	assert.False(t, deleted)
+	assert.False(t, updated, "Expected no messages to be marked as updated")
+	assert.False(t, deleted, "Expected no messages to be marked as deleted")
 }
 
 func TestGetSystemMessages(t *testing.T) {

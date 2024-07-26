@@ -14,14 +14,14 @@ import (
 
 type mockSystemMessageService struct {
 	getMessagesFunc func(ctx context.Context) (map[string]string, error)
-	putMessagesFunc func(ctx context.Context, messages map[string]string) (bool, error)
+	putMessagesFunc func(ctx context.Context, messages map[string]string) (bool, bool, error)
 }
 
 func (m *mockSystemMessageService) GetSystemMessages(ctx context.Context) (map[string]string, error) {
 	return m.getMessagesFunc(ctx)
 }
 
-func (m *mockSystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (bool, error) {
+func (m *mockSystemMessageService) PutSystemMessages(ctx context.Context, messages map[string]string) (bool, bool, error) {
 	return m.putMessagesFunc(ctx, messages)
 }
 
@@ -31,10 +31,10 @@ func Test_RenderTemplateLoadsFromParameterStore(t *testing.T) {
 	mockSysMsgService := &mockSystemMessageService{
 		getMessagesFunc: func(ctx context.Context) (map[string]string, error) {
 			return map[string]string{
-				"use-eng":  "use hello world en",
-				"use-cy":   "use helo byd",
-				"view-eng": "view hello world",
-				"view-cy":  "view helo byd",
+				"/system-message/use/en":  "use hello world en",
+				"/system-message/use/cy":  "use helo byd",
+				"/system-message/view/en": "view hello world",
+				"/system-message/view/cy": "view helo byd",
 			}, nil
 		},
 	}
@@ -70,9 +70,9 @@ func Test_SaveButtonSavesToParameterStore(t *testing.T) {
 	form.Add("use-eng", "Updated message")
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			assert.Equal(t, "Updated message", messages["use-eng"])
-			return false, nil
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			assert.Equal(t, "Updated message", messages["/system-message/use/en"])
+			return true, false, nil
 		},
 	}
 
@@ -101,8 +101,8 @@ func Test_SystemMessageHandler_PutSystemMessagesError(t *testing.T) {
 	t.Parallel()
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			return false, fmt.Errorf("update error")
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			return false, false, fmt.Errorf("update error")
 		},
 	}
 
@@ -124,17 +124,23 @@ func Test_SystemMessageHandler_PutSystemMessagesError(t *testing.T) {
 
 	assert.Equal(t, 400, rr.Code, "Handler did not return the expected error status when PutSystemMessages returns an error")
 }
+
 func Test_SystemMessageHandler_PutSystemMessagesDeleted(t *testing.T) {
 	t.Parallel()
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			return true, nil
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			return false, true, nil
 		},
 	}
 
+	var capturedTemplateData *handlers.SystemMessageData
+
 	mockTemplateService := &mockTemplateWriterService{
 		RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, templateName string, data interface{}) error {
+			if td, ok := data.(handlers.SystemMessageData); ok {
+				capturedTemplateData = &td
+			}
 			return nil
 		},
 	}
@@ -142,7 +148,8 @@ func Test_SystemMessageHandler_PutSystemMessagesDeleted(t *testing.T) {
 	server := handlers.NewSystemMessageServer(mockSysMsgService, mockTemplateService)
 
 	form := url.Values{}
-	form.Add("use-eng", "Some message")
+	form.Add("use-eng", "") // simulate deletion
+	form.Add("use-cy", "")  // simulate deletion
 	req, err := http.NewRequest("POST", "/some-url", strings.NewReader(form.Encode()))
 	assert.NoError(t, err)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -152,18 +159,27 @@ func Test_SystemMessageHandler_PutSystemMessagesDeleted(t *testing.T) {
 	handler.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code, "Handler did not return OK status when message was deleted")
+	assert.NotNil(t, capturedTemplateData, "Template data was not set")
+	assert.NotNil(t, capturedTemplateData.SuccessMessage, "Expected success message not to be nil")
+	assert.Equal(t, "System message has been removed", *capturedTemplateData.SuccessMessage)
 }
+
 func Test_SystemMessageHandler_PutSystemMessagesUpdated(t *testing.T) {
 	t.Parallel()
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			return false, nil
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			return true, false, nil
 		},
 	}
 
+	var capturedTemplateData *handlers.SystemMessageData
+
 	mockTemplateService := &mockTemplateWriterService{
 		RenderTemplateFunc: func(w http.ResponseWriter, ctx context.Context, templateName string, data interface{}) error {
+			if td, ok := data.(handlers.SystemMessageData); ok {
+				capturedTemplateData = &td
+			}
 			return nil
 		},
 	}
@@ -172,6 +188,7 @@ func Test_SystemMessageHandler_PutSystemMessagesUpdated(t *testing.T) {
 
 	form := url.Values{}
 	form.Add("use-eng", "Updated message")
+	form.Add("use-cy", "Welsh message")
 	req, err := http.NewRequest("POST", "/some-url", strings.NewReader(form.Encode()))
 	assert.NoError(t, err)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -181,6 +198,9 @@ func Test_SystemMessageHandler_PutSystemMessagesUpdated(t *testing.T) {
 	handler.ServeHTTP(rr, req)
 
 	assert.Equal(t, http.StatusOK, rr.Code, "Handler did not return OK status on successful message update")
+	assert.NotNil(t, capturedTemplateData, "Template data was not set")
+	assert.NotNil(t, capturedTemplateData.SuccessMessage, "Expected success message not to be nil")
+	assert.Equal(t, "System message has been updated", *capturedTemplateData.SuccessMessage)
 }
 
 func Test_SystemMessageHandlerParseFormError(t *testing.T) {
@@ -275,8 +295,8 @@ func Test_SystemMessageHandler_PostRequest_ValidationError(t *testing.T) {
 	var capturedTemplateData *handlers.SystemMessageData
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			return false, nil
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			return false, false, nil
 		},
 	}
 	mockTemplateService := &mockTemplateWriterService{
@@ -313,8 +333,8 @@ func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
 	var capturedTemplateData *handlers.SystemMessageData
 
 	mockSysMsgService := &mockSystemMessageService{
-		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, error) {
-			return false, nil
+		putMessagesFunc: func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+			return true, false, nil
 		},
 	}
 	mockTemplateService := &mockTemplateWriterService{
@@ -344,8 +364,8 @@ func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
 	assert.NotNil(t, capturedTemplateData.SuccessMessage)
 	assert.Equal(t, *capturedTemplateData.SuccessMessage, "System message has been updated")
 
-	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, error) {
-		return false, fmt.Errorf("mock failure")
+	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+		return false, false, fmt.Errorf("mock failure")
 	}
 
 	handler.ServeHTTP(rr, req)
@@ -353,8 +373,8 @@ func Test_SystemMessageHandler_PostRequest_NoValidationErrors(t *testing.T) {
 	assert.NotNil(t, capturedTemplateData.ErrorMessage)
 	assert.Equal(t, *capturedTemplateData.ErrorMessage, "Error updating system messages")
 
-	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, error) {
-		return true, nil
+	mockSysMsgService.putMessagesFunc = func(ctx context.Context, messages map[string]string) (bool, bool, error) {
+		return false, true, nil
 	}
 
 	handler.ServeHTTP(rr, req)
