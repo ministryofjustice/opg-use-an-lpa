@@ -59,6 +59,12 @@ variable "create_dashboard" {
   default     = false
 }
 
+variable "create_onelogin_dashboard" {
+  description = "Whether or not to create the One Login CloudWatch dashboard."
+  type        = bool
+  default     = false
+}
+
 variable "dns_namespace_env" {
   description = "The environment to use for the DNS namespace."
   type        = string

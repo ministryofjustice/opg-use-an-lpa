@@ -1,0 +1,221 @@
+${jsonencode(
+    {
+    "widgets": [
+        {
+            "height": 4,
+            "width": 24,
+            "y": 0,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_onelogin_events", "onelogin_authentication_success", { "id": "m1", "label": "Successful Logins" } ],
+                    [ { "expression": "(m1 / 3400) * 100", "label": "Compared to historical daily logins (%)" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "setPeriodToTimeRange": true,
+                "sparkline": true,
+                "start": "-P1D",
+                "stat": "Sum",
+                "title": "One Login Auth Events",
+                "view": "singleValue"
+            }
+        },
+        {
+            "height": 5,
+            "width": 6,
+            "y": 5,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "application_error_count", { "label": "Application Error Count Last Week", "region": "eu-west-1" }  ]
+                ],
+                "view": "timeSeries",
+                "stacked": false,
+                "region": "${region}",
+                "start": "-PT168H",
+                "end": "P0D",
+                "yAxis": {
+                    "left": {
+                        "label": "Errors"
+                    },
+                    "right": {
+                        "showUnits": true,
+                        "label": "Time"
+                    }
+                },
+                "stat": "Sum",
+                "period": 300,
+                "title": "Errors for the past week"
+            }
+        },
+        {
+            "height": 5,
+            "width": 4,
+            "y": 5,
+            "x": 6,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "application_error_count", { "label": "App Errors" } ]
+                ],
+                "sparkline": false,
+                "view": "singleValue",
+                "region": "${region}",
+                "setPeriodToTimeRange": true,
+                "trend": false,
+                "title": "Error Count Over 48H",
+                "stat": "Sum",
+                "start": "-P2D",
+                "period": 300
+            }
+        },
+        {
+            "height": 5,
+            "width": 4,
+            "y": 5,
+            "x": 10,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "application_error_count", { "label": "App Errors" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "setPeriodToTimeRange": true,
+                "sparkline": true,
+                "start": "-PT24H",
+                "stat": "Sum",
+                "title": "Error Count Over 24H",
+                "view": "singleValue",
+                "end": "P0D"
+            }
+        },
+        {
+            "height": 5,
+            "width": 10,
+            "y": 5,
+            "x": 14,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "${environment}_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
+                    [ ".", "auth_onelogin_account_migrated_event", { "id": "m1", "label": "Accounts Migrated" } ],
+                    [ { "expression": "(m1 / 800000) * 100", "id": "e1", "label": "Migrated Accounts Percentage (%)", "stat": "Sum" } ],
+                    [ { "expression": "800000 - m1", "id": "e2", "label": "Remaining Migrations", "stat": "Sum" } ],
+                ],
+                "period": 2592000,
+                "region": "${region}",
+                "sparkline": false,
+                "liveData": true,
+                "stat": "Sum",
+                "title": "One Login Account Events",
+                "view": "singleValue"
+            }
+        },
+        {
+            "height": 5,
+            "width": 14,
+            "y": 10,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "metrics": [
+                    [ "AWS/ECS", "CPUUtilization", "ServiceName", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor CPU" } ],
+                    [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin CPU" } ],
+                    [ ".", ".", ".", "api-service", ".", ".", { "label": "API CPU" } ],
+                    [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer CPU" } ],
+                    [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF CPU" } ],
+                    [ ".", "MemoryUtilization", ".", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor Memory", "yAxis": "right" } ],
+                    [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin Memory", "yAxis": "right" } ],
+                    [ ".", ".", ".", "api-service", ".", ".", { "label": "API Memory", "yAxis": "right" } ],
+                    [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer Memory", "yAxis": "right" } ],
+                    [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF Memory", "yAxis": "right" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "stacked": false,
+                "stat": "Average",
+                "title": "ECS CPU & Memory Utilisation",
+                "view": "timeSeries"
+            }
+        },
+        {
+            "height": 5,
+            "width": 10,
+            "y": 10,
+            "x": 14,
+            "type": "metric",
+            "properties": {
+                "end": "P0D",
+                "legend": {
+                    "position": "bottom"
+                },
+                "metrics": [
+                    [ "ECS/ContainerInsights", "RunningTaskCount", "ServiceName", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor" } ],
+                    [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin" } ],
+                    [ ".", ".", ".", "api-service", ".", ".", { "label": "API" } ],
+                    [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer" } ],
+                    [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "setPeriodToTimeRange": true,
+                "stacked": false,
+                "start": "-PT3H",
+                "stat": "Average",
+                "title": "Average Running Task Count",
+                "view": "singleValue"
+            }
+        },
+        {
+            "height": 5,
+            "width": 10,
+            "y": 15,
+            "x": 14,
+            "type": "metric",
+            "properties": {
+                "end": "P0D",
+                "metrics": [
+                    [ "AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", "${use_health_check}", { "label": "Use Frontend", "region": "us-east-1" } ],
+                    [ "...", "${viewer_health_check}", { "label": "Viewer Frontend", "region": "us-east-1" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "setPeriodToTimeRange": true,
+                "singleValueFullPrecision": false,
+                "stacked": false,
+                "start": "-P28D",
+                "stat": "Average",
+                "title": "Website Availability",
+                "view": "singleValue"
+            }
+        },
+        {
+            "height": 5,
+            "width": 14,
+            "y": 15,
+            "x": 0,
+            "type": "metric",
+            "properties": {
+                "end": "P0D",
+                "legend": {
+                    "position": "bottom"
+                },
+                "metrics": [
+                    [ "AWS/ApplicationELB", "RequestCount", "LoadBalancer", "${use_alb_arn}", { "id": "m1", "label": "Use Request Count" } ],
+                    [ "...", "${viewer_alb_arn}", { "id": "m2", "label": "Viewer Request Count" } ]
+                ],
+                "period": 60,
+                "region": "${region}",
+                "stacked": false,
+                "start": "-PT3H",
+                "stat": "Sum",
+                "title": "ALB Requests per minute",
+                "view": "timeSeries"
+            }
+        }
+    ]
+})}
