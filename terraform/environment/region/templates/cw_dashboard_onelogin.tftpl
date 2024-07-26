@@ -9,11 +9,11 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_onelogin_events", "onelogin_authentication_success", { "id": "m1", "label": "Successful Logins" } ],
+                    [ "${environment}_onelogin_events", "onelogin_authentication_success", { "id": "m1", "label": "Successful Logins" } ],
                     [ { "expression": "(m1 / 3400) * 100", "label": "Compared to historical daily logins (%)" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "setPeriodToTimeRange": true,
                 "sparkline": true,
                 "start": "-P1D",
@@ -30,11 +30,11 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count", { "label": "Application Error Count Last Week", "region": "eu-west-1" }  ]
+                    [ "${environment}_events", "application_error_count", { "label": "Application Error Count Last Week", "region": "eu-west-1" }  ]
                 ],
                 "view": "timeSeries",
                 "stacked": false,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "start": "-PT168H",
                 "end": "P0D",
                 "yAxis": {
@@ -59,17 +59,16 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count", { "label": "Application Error Count For Time Periord 48 Hours ago to 24 Hours ago", "region": "eu-west-1" } ]
+                    [ "${environment}_events", "application_error_count", { "label": "App Errors" } ]
                 ],
                 "sparkline": false,
                 "view": "singleValue",
-                "region": "eu-west-1",
+                "region": "${region}",
                 "setPeriodToTimeRange": true,
                 "trend": false,
-                "title": "Application Error Count For Time Periord 48 Hours ago to 24 Hours ago",
+                "title": "Application Error Count Over 48H",
                 "stat": "Sum",
                 "start": "-P2D",
-                "end": "-P1D",
                 "period": 300
             }
         },
@@ -81,15 +80,15 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "application_error_count", { "label": "Application Error Count Last 24H", "region": "eu-west-1" } ]
+                    [ "${environment}_events", "application_error_count", { "label": "App Errors" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "setPeriodToTimeRange": true,
                 "sparkline": true,
                 "start": "-PT24H",
                 "stat": "Sum",
-                "title": "Daily Application Errors Last 24H",
+                "title": "Application Error Count Over 24H",
                 "view": "singleValue",
                 "end": "P0D"
             }
@@ -102,15 +101,15 @@ ${jsonencode(
             "type": "metric",
             "properties": {
                 "metrics": [
-                    [ "ur_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
-                    [ ".", "auth_onelogin_account_migrated_event", { "label": "Accounts Migrated" } ],
-                    [ { "expression": "(m1 / 800000) * 100", "id": "e1", "label": "Migrated Accounts Percentage", "stat": "Sum" } ],
+                    [ "${environment}_events", "auth_onelogin_account_created_event", { "label": "Accounts Created" } ],
+                    [ ".", "auth_onelogin_account_migrated_event", { "id": "m1", "label": "Accounts Migrated" } ],
+                    [ { "expression": "(m1 / 800000) * 100", "id": "e1", "label": "Migrated Accounts Percentage (%)", "stat": "Sum" } ],
                     [ { "expression": "800000 - m1", "id": "e2", "label": "Remaining Migrations", "stat": "Sum" } ],
-                    [ "ur_events", "auth_onelogin_account_migrated_event", { "id": "m1", "visible": false } ]
                 ],
                 "period": 2592000,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "sparkline": false,
+                "liveData": true,
                 "stat": "Sum",
                 "title": "One Login Account Events",
                 "view": "singleValue"
@@ -125,18 +124,18 @@ ${jsonencode(
             "properties": {
                 "metrics": [
                     [ "AWS/ECS", "CPUUtilization", "ServiceName", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor CPU" } ],
-                    [ ".", ".", ".", "admin-service", "ClusterName", ".", { "label": "Admin CPU" } ],
+                    [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin CPU" } ],
                     [ ".", ".", ".", "api-service", ".", ".", { "label": "API CPU" } ],
                     [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer CPU" } ],
                     [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF CPU" } ],
-                    [ ".", "MemoryUtilization", "ServiceName", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor Memory", "yAxis": "right" } ],
+                    [ ".", "MemoryUtilization", ".", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor Memory", "yAxis": "right" } ],
                     [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin Memory", "yAxis": "right" } ],
                     [ ".", ".", ".", "api-service", ".", ".", { "label": "API Memory", "yAxis": "right" } ],
                     [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer Memory", "yAxis": "right" } ],
                     [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF Memory", "yAxis": "right" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "stacked": false,
                 "stat": "Average",
                 "title": "ECS CPU & Memory Utilisation",
@@ -155,14 +154,14 @@ ${jsonencode(
                     "position": "bottom"
                 },
                 "metrics": [
-                    [ "ECS/ContainerInsights", "RunningTaskCount", "ServiceName", "actor-service", "ClusterName", "ur-use-an-lpa", { "label": "Actor" } ],
-                    [ ".", ".", ".", "admin-service", "ClusterName", ".", { "label": "Admin" } ],
-                    [ ".", ".", ".", "api-service", "ClusterName", ".", { "label": "API" } ],
-                    [ ".", ".", ".", "viewer-service", "ClusterName", ".", { "label": "Viewer" } ],
-                    [ ".", ".", ".", "pdf-service", "ClusterName", ".", { "label": "PDF" } ]
+                    [ "ECS/ContainerInsights", "RunningTaskCount", "ServiceName", "actor-service", "ClusterName", "${ecs_cluster}", { "label": "Actor" } ],
+                    [ ".", ".", ".", "admin-service", ".", ".", { "label": "Admin" } ],
+                    [ ".", ".", ".", "api-service", ".", ".", { "label": "API" } ],
+                    [ ".", ".", ".", "viewer-service", ".", ".", { "label": "Viewer" } ],
+                    [ ".", ".", ".", "pdf-service", ".", ".", { "label": "PDF" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "setPeriodToTimeRange": true,
                 "stacked": false,
                 "start": "-PT3H",
@@ -181,10 +180,10 @@ ${jsonencode(
                 "end": "P0D",
                 "metrics": [
                     [ "AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", "${use_health_check}", { "label": "Use Frontend", "region": "us-east-1" } ],
-                    [ "AWS/Route53", "HealthCheckPercentageHealthy", "HealthCheckId", "${viewer_health_check}", { "label": "Viewer Frontend", "region": "us-east-1" } ]
+                    [ "...", "${viewer_health_check}", { "label": "Viewer Frontend", "region": "us-east-1" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "setPeriodToTimeRange": true,
                 "singleValueFullPrecision": false,
                 "stacked": false,
@@ -210,7 +209,7 @@ ${jsonencode(
                     [ "...", "${viewer_alb_arn}", { "id": "m2", "label": "Viewer Request Count" } ]
                 ],
                 "period": 60,
-                "region": "eu-west-1",
+                "region": "${region}",
                 "stacked": false,
                 "start": "-PT3H",
                 "stat": "Sum",
