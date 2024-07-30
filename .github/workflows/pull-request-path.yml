@@ -31,10 +31,11 @@ jobs:
 
   output_workspace_name:
     name: output workspace name
+    needs:
+      - workspace_name
     steps:
       - name: output workspace
-        run: |
-          echo "${{ needs.workspace_name.outputs.name }}"
+        run: echo "${{ needs.workspace_name.outputs.name }}"
 
   cleanup_pr_workspaces:
     name: cleanup pr workspaces
