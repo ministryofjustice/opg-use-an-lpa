@@ -108,9 +108,9 @@
       "matchManagers": ["composer"],
       "matchPackageNames": ["aws/aws-sdk-php"],
       "schedule": [
-        "after 6am and before 9am on Monday"
+        "after 6am and before 9am every weekday"
       ],
-      "limit": 2,
+      "limit": 1,
       "automerge": false
     },
     {
