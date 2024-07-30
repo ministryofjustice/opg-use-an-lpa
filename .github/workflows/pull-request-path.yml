@@ -29,11 +29,6 @@ jobs:
   workspace_name:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
 
-  remove_workspace_from_dynamo_test:
-    name: remove workspace from dynamo test
-    run: |
-      echo "The workspace name to remove is ${{ needs.workspace_name.outputs.name }}"
-
   cleanup_pr_workspaces:
     name: cleanup pr workspaces
     uses: ./.github/workflows/scheduled-workspace-cleanup.yml
