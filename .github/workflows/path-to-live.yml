@@ -25,6 +25,9 @@ permissions:
   statuses: none
 
 jobs:
+  workspace_name:
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
+
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
@@ -230,6 +233,27 @@ jobs:
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: always()
+
+  remove_workspace_from_dynamodb:
+    name: remove workspace from dynamodb
+    runs-on: ubuntu-latest
+    needs:
+      - code_coverage
+      - slack_notify
+      - production_health_check
+      - workflow_variables
+    steps:
+      -run: |
+        python ../../scripts/pipeline/workspace_cleanup/remove_workspace_from_dynamo.py --workspace_name "${{ needs.workspace_name.outputs.name }}"
+
+  cleanup_pr_workspaces:
+    name: cleanup pr workspaces
+    meeds:
+      - remove_workspace_from_dynamodb
+    uses: ./.github/workflows/scheduled-workspace-cleanup.yml
+    secrets: inherit
+    if: |
+      always()
 
   # Required end of workflow job
   end_of_workflow:
