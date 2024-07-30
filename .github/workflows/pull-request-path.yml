@@ -8,6 +8,8 @@ defaults:
     shell: bash
 
 on:
+  push:
+    - UML-3450-PR-Test
   pull_request:
     branches:
       - main
