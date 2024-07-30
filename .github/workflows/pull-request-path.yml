@@ -9,7 +9,8 @@ defaults:
 
 on:
   push:
-    - UML-3450-PR-Test
+    branches: 
+      - UML-3450-PR-Test
   pull_request:
     branches:
       - main
