@@ -29,13 +29,13 @@ jobs:
   workspace_name:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
 
-  output_workspace_name:
-    name: output workspace name
-    needs:
-      - workspace_name
-    steps:
-      - name: output workspace
-        run: echo "${{ needs.workspace_name.outputs.name }}"
+    workspace_name_output:
+      name: workspace name output
+      runs-on: ubuntu-latest
+      needs:
+        - workspace_name
+      steps:
+        - run: echo {{ needs.workspace_name.outputs.name }}
 
   cleanup_pr_workspaces:
     name: cleanup pr workspaces
