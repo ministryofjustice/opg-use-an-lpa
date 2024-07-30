@@ -69,7 +69,7 @@
       "labels": ["Dependencies", "Renovate", "Docker"],
       "groupName": "Docker Updates",
       "matchUpdateTypes": ["minor", "patch"],
-      "matchManagers": ["dockerfile", "docker-compose", "composer"],
+      "matchManagers": ["dockerfile", "docker-compose"],
       "automerge": false
     },
     {
