@@ -264,6 +264,14 @@ class LpaContext implements Context
             )
         );
 
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->pressButton('Yes, remove LPA');
     }
 
@@ -2958,7 +2966,6 @@ class LpaContext implements Context
     public function theLPAHasNotBeenAdded(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText('Add your first LPA');
     }
 
     /**

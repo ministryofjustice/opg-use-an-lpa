@@ -61,7 +61,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             return $hasCodes || array_shift($lpa)->activeCodeCount > 0;
         }, false);
 
-        $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy()));
+        $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy())) ?? 0;
 
         $systemMessages = $this->systemMessageService->getMessages();
 
