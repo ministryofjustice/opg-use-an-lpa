@@ -35,7 +35,7 @@ jobs:
     needs:
       - workspace_name
     steps:
-      - run: echo {{ needs.workspace_name.outputs.name }}
+      - run: echo "${{ needs.workspace_name.outputs.name }}"
 
   cleanup_pr_workspaces:
     name: cleanup pr workspaces
