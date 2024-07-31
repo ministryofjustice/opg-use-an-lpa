@@ -8,4 +8,5 @@ enum OneLoginImplementation
 {
     case Mock;
     case Integration;
+    case Production;
 }
