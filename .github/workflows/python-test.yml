@@ -28,7 +28,7 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
       # setup s3 creds
-      - name: "Configure AWS credentials for S3 access"
+      - name: "Configure creds for dynamodb access"
         id: configure_aws_creds_s3
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -36,6 +36,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: "eu-west-1"
           role-session-name: testing_python_remove_from_dynamo_script
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: 3.11.5
+      - name: Install requirements
+        run: |
+          pip install -r ./scripts/pipeline/requirements.txt
       - name: "Remove from workspace"
         env:
           workspace: "UML-Test-Workflow"
