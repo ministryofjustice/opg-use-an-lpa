@@ -68,23 +68,28 @@ class AccountContext implements Context
     public function iEnterCorrectCredentials(): void
     {
         if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            if ($this->detectOneLoginImplementation() === OneLoginImplementation::Mock) {
-                $this->ui->assertPageAddress('/authorize');
-                $this->ui->fillField('email', $this->userEmail);
-            } else {
-                $this->ui->pressButton('sign-in-button');
+            switch ($this->detectOneLoginImplementation()) {
+                case OneLoginImplementation::Mock:
+                    $this->ui->assertPageAddress('/authorize');
+                    $this->ui->fillField('email', $this->userEmail);
+                    break;
+                case OneLoginImplementation::Integration:
+                case OneLoginImplementation::Production:
+                    $this->ui->pressButton('sign-in-button');
 
-                $this->ui->fillField('email', $this->userEmail);
-                $this->ui->pressButton('Continue');
+                    $this->ui->fillField('email', $this->userEmail);
+                    $this->ui->pressButton('Continue');
 
-                $this->ui->fillField('password', $this->userPassword);
-                $this->ui->pressButton('Continue');
+                    $this->ui->fillField('password', $this->userPassword);
+                    $this->ui->pressButton('Continue');
 
-                $secret = getenv('ONE_LOGIN_OTP_SECRET')
-                    ? getenv('ONE_LOGIN_OTP_SECRET')
-                    : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
+                    // Generate a 2fa secret just before use.
+                    // There is a non-zero chance it will be incorrect if generated at the end of its 30-second window
+                    $secret = getenv('ONE_LOGIN_OTP_SECRET')
+                        ? getenv('ONE_LOGIN_OTP_SECRET')
+                        : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
 
-                $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
+                    $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
             }
 
             $this->ui->pressButton('Continue');
@@ -114,6 +119,11 @@ class AccountContext implements Context
             $this->ui->assertPageAddress('/sign-in-or-create');
 
             return OneLoginImplementation::Integration;
+        }
+
+        if ($this->ui->getSession()->getPage()->hasButton('create-account-link')) {
+            $this->ui->assertPageAddress('/sign-in-or-create');
+            return OneLoginImplementation::Production;
         }
 
         return OneLoginImplementation::Mock;
