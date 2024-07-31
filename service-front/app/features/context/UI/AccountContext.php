@@ -1719,7 +1719,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Save new email address');
 
         //Test for request change email
-        $request = $this->base->mockClientHistoryContainer[2]['request'];
+        $request = $this->base->mockClientHistoryContainer[3]['request'];
         $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
