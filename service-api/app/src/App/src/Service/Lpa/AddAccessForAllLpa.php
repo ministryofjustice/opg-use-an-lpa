@@ -16,19 +16,19 @@ use App\Service\Features\FeatureEnabled;
 class AddAccessForAllLpa
 {
     /**
+     * @codeCoverageIgnore
      * @param FindActorInLpa                      $findActorInLpa
-     * @param LpaService                          $lpaService
+     * @param LpaManagerInterface                 $lpaManager
      * @param LpaAlreadyAdded                     $lpaAlreadyAdded
      * @param AccessForAllLpaService              $accessForAllLpaService
      * @param ValidateAccessForAllLpaRequirements $validateAccessForAllLpaRequirements
      * @param RestrictSendingLpaForCleansing      $restrictSendingLpaForCleansing
      * @param LoggerInterface                     $logger
      * @param FeatureEnabled                      $featureEnabled
-     * @codeCoverageIgnore
      */
     public function __construct(
         private FindActorInLpa $findActorInLpa,
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private LpaAlreadyAdded $lpaAlreadyAdded,
         private AccessForAllLpaService $accessForAllLpaService,
         private ValidateAccessForAllLpaRequirements $validateAccessForAllLpaRequirements,
@@ -136,7 +136,7 @@ class AddAccessForAllLpa
      */
     private function fetchLPAData(int $referenceNumber): ?array
     {
-        $lpa = $this->lpaService->getByUid((string) $referenceNumber);
+        $lpa = $this->lpaManager->getByUid((string) $referenceNumber);
         if ($lpa === null) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',

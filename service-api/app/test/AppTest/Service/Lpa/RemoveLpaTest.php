@@ -248,10 +248,10 @@ class RemoveLpaTest extends TestCase
     private function deleteLpa(): RemoveLpa
     {
         return new RemoveLpa(
-            $this->loggerProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
+            $this->lpaServiceProphecy->reveal(),
             $this->viewerCodesInterfaceProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal()
+            $this->loggerProphecy->reveal()
         );
     }
 }

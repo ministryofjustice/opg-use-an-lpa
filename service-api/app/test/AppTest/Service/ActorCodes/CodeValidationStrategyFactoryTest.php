@@ -7,7 +7,7 @@ namespace AppTest\Service\ActorCodes;
 use App\DataAccess\ApiGateway\ActorCodes as ActorCodesApi;
 use App\Service\ActorCodes\CodeValidationStrategyFactory;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -29,8 +29,8 @@ class CodeValidationStrategyFactoryTest extends TestCase
             ->willReturn($this->prophesize(ActorCodesApi::class)->reveal());
 
         $container
-            ->get(LpaService::class)
-            ->willReturn($this->prophesize(LpaService::class)->reveal());
+            ->get(LpaManagerInterface::class)
+            ->willReturn($this->prophesize(LpaManagerInterface::class)->reveal());
 
         $container
             ->get(LoggerInterface::class)

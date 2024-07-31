@@ -10,7 +10,7 @@ use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 use DateTime;
 use Exception;
@@ -26,13 +26,13 @@ class CodesApiValidationStrategyTest extends TestCase
 
     private ActorCodes|ObjectProphecy $actorCodeApiProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
     public function initDependencies(): void
     {
         $this->actorCodeApiProphecy = $this->prophesize(ActorCodes::class);
-        $this->lpaServiceProphecy   = $this->prophesize(LpaService::class);
+        $this->lpaManagerProphecy   = $this->prophesize(LpaManagerInterface::class);
         $this->loggerProphecy       = $this->prophesize(LoggerInterface::class);
         $this->resolveActorProphecy = $this->prophesize(ResolveActor::class);
     }
@@ -41,7 +41,7 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         return new CodesApiValidationStrategy(
             $this->actorCodeApiProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaManagerProphecy->reveal(),
             $this->loggerProphecy->reveal(),
             $this->resolveActorProphecy->reveal()
         );
@@ -70,7 +70,7 @@ class CodesApiValidationStrategyTest extends TestCase
             new DateTime('now')
         );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid('lpa-uid')
             ->willReturn($lpa);
 
@@ -153,7 +153,7 @@ class CodesApiValidationStrategyTest extends TestCase
             ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
             ->willReturn($actor);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid('lpa-uid')
             ->shouldBeCalled()
             ->willReturn(null);
@@ -187,7 +187,7 @@ class CodesApiValidationStrategyTest extends TestCase
             new DateTime('now')
         );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid('lpa-uid')
             ->shouldBeCalled()
             ->willReturn($lpa);
@@ -225,7 +225,7 @@ class CodesApiValidationStrategyTest extends TestCase
             new DateTime('now')
         );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid('lpa-uid')
             ->shouldBeCalled()
             ->willReturn($lpa);
@@ -335,7 +335,7 @@ class CodesApiValidationStrategyTest extends TestCase
             new DateTime('now')
         );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid('lpa-uid')
             ->shouldBeCalled()
             ->willReturn($lpa);

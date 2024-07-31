@@ -12,7 +12,7 @@ use App\Service\Lpa\AccessForAllLpaService;
 use App\Service\Lpa\AddAccessForAllLpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\LpaAlreadyAdded;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
@@ -30,7 +30,7 @@ class AddAccessForAllLpaTest extends TestCase
     use ProphecyTrait;
 
     private FindActorInLpa|ObjectProphecy $findActorInLpaProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
     private LpaAlreadyAdded|ObjectProphecy $lpaAlreadyAddedProphecy;
     private AccessForAllLpaService|ObjectProphecy $accessForAllLpaServiceProphecy;
     private ValidateAccessForAllLpaRequirements|ObjectProphecy $validateAccessForAllLpaRequirementsProphecy;
@@ -54,7 +54,7 @@ class AddAccessForAllLpaTest extends TestCase
     public function setUp(): void
     {
         $this->findActorInLpaProphecy                      = $this->prophesize(FindActorInLpa::class);
-        $this->lpaServiceProphecy                          = $this->prophesize(LpaService::class);
+        $this->lpaManagerProphecy                          = $this->prophesize(LpaManagerInterface::class);
         $this->lpaAlreadyAddedProphecy                     = $this->prophesize(LpaAlreadyAdded::class);
         $this->accessForAllLpaServiceProphecy              = $this->prophesize(AccessForAllLpaService::class);
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -102,7 +102,7 @@ class AddAccessForAllLpaTest extends TestCase
     {
         return new AddAccessForAllLpa(
             $this->findActorInLpaProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaManagerProphecy->reveal(),
             $this->lpaAlreadyAddedProphecy->reveal(),
             $this->accessForAllLpaServiceProphecy->reveal(),
             $this->validateAccessForAllLpaRequirementsProphecy->reveal(),
@@ -119,7 +119,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -197,7 +197,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -260,7 +260,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -283,7 +283,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn(null);
 
@@ -311,7 +311,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($invalidLpa);
 
@@ -343,7 +343,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($invalidLpa);
 
@@ -375,7 +375,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -403,7 +403,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -440,7 +440,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 
@@ -533,7 +533,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUid((string) $this->lpaUid)
             ->willReturn($this->lpa);
 

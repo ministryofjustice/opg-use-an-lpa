@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Lpa\LpaAlreadyAdded;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\LpaService;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,7 +20,7 @@ class LpaAlreadyAddedTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private LpaService|ObjectProphecy $lpaManagerProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     private string $userId;
@@ -28,7 +29,7 @@ class LpaAlreadyAddedTest extends TestCase
 
     public function setUp(): void
     {
-        $this->lpaServiceProphecy      = $this->prophesize(LpaService::class);
+        $this->lpaManagerProphecy      = $this->prophesize(LpaManagerInterface::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
 
         $this->userId            = '12345';
@@ -39,7 +40,7 @@ class LpaAlreadyAddedTest extends TestCase
     private function getLpaAlreadyAddedService(): LpaAlreadyAdded
     {
         return new LpaAlreadyAdded(
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaManagerProphecy->reveal(),
             $this->userLpaActorMapProphecy->reveal(),
         );
     }
@@ -70,7 +71,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ]
             );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
                 [
@@ -121,7 +122,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ]
             );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn([]);
 
@@ -143,7 +144,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ]
             );
 
-        $this->lpaServiceProphecy
+        $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
                 [

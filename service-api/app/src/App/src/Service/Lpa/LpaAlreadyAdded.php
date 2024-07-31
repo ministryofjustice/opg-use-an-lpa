@@ -10,11 +10,11 @@ class LpaAlreadyAdded
 {
     /**
      * @codeCoverageIgnore
-     * @param LpaService               $lpaService
+     * @param LpaManagerInterface      $lpaManager
      * @param UserLpaActorMapInterface $userLpaActorMapRepository
      */
     public function __construct(
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
     ) {
     }
@@ -44,7 +44,7 @@ class LpaAlreadyAdded
      */
     private function populateLpaRecord(array $record, string $userId): ?array
     {
-        $lpa = $this->lpaService->getByUserLpaActorToken($record['Id'], $userId);
+        $lpa = $this->lpaManager->getByUserLpaActorToken($record['Id'], $userId);
 
         if (empty($lpa)) {
             return null;

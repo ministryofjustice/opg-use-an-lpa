@@ -6,7 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RemoveLpa;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -20,7 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class LpasResourceHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private RemoveLpa $removeLpa,
     ) {
     }
@@ -53,7 +53,7 @@ class LpasResourceHandler implements RequestHandlerInterface
             throw new BadRequestException("'user-lpa-actor-token' missing.");
         }
 
-        $result = $this->lpaService->getByUserLpaActorToken(
+        $result = $this->lpaManager->getByUserLpaActorToken(
             $request->getAttribute('user-lpa-actor-token'),
             $request->getAttribute('actor-id'),
         );

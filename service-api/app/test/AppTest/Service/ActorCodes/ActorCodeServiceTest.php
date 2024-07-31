@@ -10,7 +10,7 @@ use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
@@ -26,7 +26,7 @@ class ActorCodeServiceTest extends TestCase
     use ProphecyTrait;
 
     private CodeValidationStrategyInterface|ObjectProphecy $codeValidatorProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
     private string $testActorUid;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
@@ -35,7 +35,7 @@ class ActorCodeServiceTest extends TestCase
     public function setUp(): void
     {
         $this->codeValidatorProphecy            = $this->prophesize(CodeValidationStrategyInterface::class);
-        $this->lpaServiceProphecy               = $this->prophesize(LpaService::class);
+        $this->lpaManagerProphecy               = $this->prophesize(LpaManagerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
         $this->resolveActorProphecy             = $this->prophesize(ResolveActor::class);
@@ -194,7 +194,7 @@ class ActorCodeServiceTest extends TestCase
         return new ActorCodeService(
             $this->codeValidatorProphecy->reveal(),
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->lpaServiceProphecy->reveal(),
+            $this->lpaManagerProphecy->reveal(),
             $this->resolveActorProphecy->reveal()
         );
     }
@@ -223,7 +223,7 @@ class ActorCodeServiceTest extends TestCase
             ->willReturn($this->testActorUid)
             ->shouldBeCalled();
 
-        $this->lpaServiceProphecy->getByUid($testUid)->willReturn(
+        $this->lpaManagerProphecy->getByUid($testUid)->willReturn(
             new Lpa($mockLpa, new DateTime())
         )->shouldBeCalled();
 
