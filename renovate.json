@@ -107,10 +107,7 @@
       "matchUpdateTypes": ["minor", "patch"],
       "matchManagers": ["composer"],
       "matchPackageNames": ["aws/aws-sdk-php"],
-      "schedule": [
-        "after 6am and before 9am every weekday"
-      ],
-      "limit": 1,
+      "extends": ["schedule:monthly"],
       "automerge": false
     },
     {
@@ -158,8 +155,7 @@
         "Renovate"
     ],
     "prCreation": "immediate",
-    "rangeStrategy": "pin",
-    "prPriority": 1
+    "rangeStrategy": "pin"
   },
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 1,
@@ -175,7 +171,6 @@
     "rangeStrategy": "pin",
     "commitMessagePrefix": "[SECURITY]",
     "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
-    "prCreation": "immediate",
-    "prPriority": 5
+    "prCreation": "immediate"
   }
 }
