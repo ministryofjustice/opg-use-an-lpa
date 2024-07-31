@@ -237,14 +237,32 @@ jobs:
   remove_workspace_from_dynamodb:
     name: remove workspace from dynamodb
     runs-on: ubuntu-latest
-    needs:
-      - code_coverage
-      - slack_notify
-      - production_health_check
-      - workflow_variables
     steps:
-      - run: |
-        python ../../scripts/pipeline/workspace_cleanup/remove_workspace_from_dynamo.py --workspace_name "${{ needs.workspace_name.outputs.name }}"
+      # checkout repo
+      - name: "Checkout"
+        id: checkout
+        uses: actions/checkout@v4
+      # setup s3 creds
+      - name: "Configure creds for dynamodb access"
+        id: configure_aws_creds_s3
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: "eu-west-1"
+          role-session-name: testing_python_remove_from_dynamo_script
+      - name: Set up Python
+        uses: actions/setup-python@v5.1.0
+        with:
+          python-version: 3.11.5
+      - name: Install requirements
+        run: |
+          pip install -r ./scripts/pipeline/requirements.txt
+      - name: "Remove from workspace"
+        env:
+          workspace: "UML-Test-Workflow"
+        run: |
+          python ./scripts/pipeline/workspace_cleanup/remove_workspace_from_dynamo.py --workspace_name "${{ env.workspace }}"
 
   cleanup_pr_workspaces:
     name: cleanup pr workspaces
