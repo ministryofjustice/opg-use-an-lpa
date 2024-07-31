@@ -1,6 +1,7 @@
 import argparse
 import boto3
 import boto3.session
+import os
 
 class RemoveWorkspaceProtection:
     def __init__(self) -> None:
@@ -14,7 +15,10 @@ class RemoveWorkspaceProtection:
         )
 
     def set_iam_role_session(self):
-        role_arn = f'arn:aws:iam::{self.aws_account_id}:role/operator'
+        if os.getenv('CI'):
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/opg-use-an-lpa-ci'
+        else:
+            role_arn = f'arn:aws:iam::{self.aws_account_id}:role/operator'
 
         sts = boto3.client(
             'sts',
