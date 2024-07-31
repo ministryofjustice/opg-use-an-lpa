@@ -243,7 +243,7 @@ jobs:
       - production_health_check
       - workflow_variables
     steps:
-      -run: |
+      - run: |
         python ../../scripts/pipeline/workspace_cleanup/remove_workspace_from_dynamo.py --workspace_name "${{ needs.workspace_name.outputs.name }}"
 
   cleanup_pr_workspaces:
