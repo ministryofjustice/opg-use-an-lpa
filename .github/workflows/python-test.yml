@@ -1,0 +1,43 @@
+name: "[Workflow] Test"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  actions: read
+  contents: write
+  id-token: none
+  pull-requests: read
+  security-events: write
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+jobs:
+  remove_workspace_from_dynamodb:
+    name: remove workspace from dynamodb
+    runs-on: ubuntu-latest
+    steps:
+      # checkout repo
+      - name: "Checkout"
+        id: checkout
+        uses: actions/checkout@v4
+      # setup s3 creds
+      - name: "Configure AWS credentials for S3 access"
+        id: configure_aws_creds_s3
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: "eu-west-1"
+          role-session-name: testing_python_remove_from_dynamo_script
+      - name: "Remove from workspace"
+        env:
+          workspace: "UML-Test-Workflow"
+        run: |
+          python ./scripts/pipeline/workspace_cleanup/remove_workspace_from_dynamo.py --workspace_name "${{ env.workspace }}"
