@@ -1,4 +1,4 @@
-resource "aws_cloudwatch_log_data_protection_policy" "production_application_logs" {
+resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
 
   log_group_name = "${var.environment_name}_application_logs"
 
