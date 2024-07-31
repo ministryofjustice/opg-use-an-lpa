@@ -63,7 +63,7 @@ def main():
     parser = argparse.ArgumentParser(
     description='Recieve Workspace Name')
     parser.add_argument('--workspace_name',
-                        help='The root part of the ECR repository path, for example online-lpa',
+                        help='The name of the workspace item to remove from dynamodb',
                         required=True, 
                         type=str)
 
