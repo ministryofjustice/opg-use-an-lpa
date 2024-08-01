@@ -8,8 +8,8 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
-use App\Service\Lpa\LpaService;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Exception;
@@ -18,15 +18,12 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
 {
     public function __construct(
         private ActorCodes $actorCodesApi,
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private LoggerInterface $logger,
         private ResolveActor $resolveActor,
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function validateCode(string $code, string $uid, string $dob): string
     {
         try {
@@ -63,9 +60,6 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         throw new ActorCodeValidationException('Actor code has not been validated by the codes service.');
     }
 
-    /**
-     * @inheritDoc
-     */
     public function flagCodeAsUsed(string $code): void
     {
         try {
@@ -99,7 +93,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
      */
     private function verifyAgainstLpa(string $uid, string $actorUid, string $dob): bool
     {
-        $lpa = $this->lpaService->getByUid($uid);
+        $lpa = $this->lpaManager->getByUid($uid);
 
         if ($lpa === null) {
             $this->logger->error(

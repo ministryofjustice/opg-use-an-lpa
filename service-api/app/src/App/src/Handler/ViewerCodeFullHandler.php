@@ -6,7 +6,7 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -19,7 +19,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ViewerCodeFullHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
     ) {
     }
 
@@ -36,7 +36,7 @@ class ViewerCodeFullHandler implements RequestHandlerInterface
             throw new BadRequestException("'code', 'name' and 'organisation' are required fields.");
         }
 
-        $data = $this->lpaService->getByViewerCode($params['code'], $params['name'], $params['organisation']);
+        $data = $this->lpaManager->getByViewerCode($params['code'], $params['name'], $params['organisation']);
 
         if (is_null($data)) {
             throw new NotFoundException();

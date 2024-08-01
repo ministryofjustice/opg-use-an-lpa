@@ -6,7 +6,7 @@ namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 
 class ActorCodeService
@@ -14,7 +14,7 @@ class ActorCodeService
     public function __construct(
         private CodeValidationStrategyInterface $codeValidator,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private ResolveActor $resolveActor,
     ) {
     }
@@ -43,7 +43,7 @@ class ActorCodeService
         try {
             $actorUid = $this->codeValidator->validateCode($code, $uid, $dob);
 
-            $lpa = $this->lpaService->getByUid($uid);
+            $lpa = $this->lpaManager->getByUid($uid);
 
             $actor = ($this->resolveActor)($lpa->getData(), (int) $actorUid);
 
