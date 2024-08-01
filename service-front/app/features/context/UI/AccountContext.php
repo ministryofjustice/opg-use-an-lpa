@@ -1118,6 +1118,15 @@ class AccountContext implements Context
                     self::LPA_SERVICE_GET_LPAS
                 )
             );
+
+            // Dashboard page checks system messages
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($this->systemMessageData ?? []),
+                    self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+                )
+            );
         } else {
             // API call for authentication
             $this->apiFixtures->append(
@@ -1710,7 +1719,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Save new email address');
 
         //Test for request change email
-        $request = $this->base->mockClientHistoryContainer[2]['request'];
+        $request = $this->base->mockClientHistoryContainer[3]['request'];
         $params  = json_decode($request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
@@ -2361,6 +2370,15 @@ class AccountContext implements Context
                 self::LPA_SERVICE_GET_LPAS
             )
         );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessages ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 
