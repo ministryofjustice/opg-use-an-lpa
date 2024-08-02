@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataAccess\Repository;
 
 use App\DataAccess\ApiGateway\SiriusLpas;
@@ -23,7 +25,7 @@ class ModerniseLpasFactory
 
         $httpClient = $container->get(ClientInterface::class);
 
-        if (! $httpClient instanceof Client) {
+        if (!$httpClient instanceof Client) {
             throw new Exception(
                 SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
             );
@@ -37,6 +39,5 @@ class ModerniseLpasFactory
             $config['lpa_data_store_api']['endpoint'],
             $container->get(DataSanitiserStrategy::class)
         );
-}
-
+    }
 }

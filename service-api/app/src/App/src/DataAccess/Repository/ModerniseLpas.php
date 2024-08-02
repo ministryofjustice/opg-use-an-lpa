@@ -17,7 +17,7 @@ class ModerniseLpas implements LpasInterface
         private string $traceId,
         private DataSanitiserStrategy $sanitiser,
         private string $endpoint,
-    ){
+    ) {
     }
 
     private function attachHeaders(RequestInterface $request): RequestInterface
@@ -31,7 +31,7 @@ class ModerniseLpas implements LpasInterface
 
     public function get(string $uid): ?LpaInterface
     {
-        $url = $this->endpoint . "/lpa/$uid";  // Update this to the correct endpoint for modernise LPAs
+        $url = $this->endpoint . '/lpa/$uid';  // Update this to the correct endpoint for modernise LPAs
 
         $request = $this->client->createRequest('GET', $url);
         $request = $this->attachHeaders($request);

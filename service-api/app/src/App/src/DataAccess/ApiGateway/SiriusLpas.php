@@ -6,7 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
-use App\DataAccess\Repository\RequestLetterInterface;
+use App\DataAccess.Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
@@ -55,6 +55,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up an LPA based on its Sirius uid.
      *
      * @param string $uid
+     *
      * @return Response\LpaInterface|null
      * @throws Exception
      */
@@ -68,6 +69,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up all the LPA UIDs in the passed-in array.
      *
      * @param array $uids
+     *
      * @return Response\LpaInterface[]
      * @throws Exception
      */
