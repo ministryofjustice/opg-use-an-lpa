@@ -16,7 +16,7 @@ class ModerniseLpas implements LpasInterface
         private Client $client,
         private string $traceId,
         private DataSanitiserStrategy $sanitiser,
-        private string $endpoint
+        private string $endpoint,
     ) {
     }
 
@@ -31,13 +31,13 @@ class ModerniseLpas implements LpasInterface
 
     public function get(string $uid): ?LpaInterface
     {
-        $url = $this->endpoint . '/lpa/' . $uid;  // Update this to the correct endpoint for modernise LPAs
+        $url = $this->endpoint . '/lpa/$uid';  // Update this to the correct endpoint for modernise LPAs
 
         $request = $this->client->createRequest('GET', $url);
         $request = $this->attachHeaders($request);
 
         $response = $this->client->sendRequest($request);
-        $data = $this->sanitiser->sanitise(json_decode($response->getBody()->getContents(), true));
+        $data     = $this->sanitiser->sanitise(json_decode($response->getBody()->getContents(), true));
 
         return new Response\Lpa($data, new DateTimeImmutable($response->getHeaderLine('Date')));
     }
