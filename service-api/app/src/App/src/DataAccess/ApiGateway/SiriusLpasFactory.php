@@ -14,7 +14,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Exception;
 
-class LpasFactory
+class SiriusLpasFactory
 {
     public function __invoke(ContainerInterface $container)
     {
@@ -28,11 +28,11 @@ class LpasFactory
 
         if (! $httpClient instanceof Client) {
             throw new Exception(
-                Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+                SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
             );
         }
 
-        return new Lpas(
+        return new SiriusLpas(
             $httpClient,
             $container->get(RequestFactoryInterface::class),
             $container->get(StreamFactoryInterface::class),
