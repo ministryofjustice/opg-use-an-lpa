@@ -6,7 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
-use App\DataAccess.Repository\RequestLetterInterface;
+use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
@@ -55,10 +55,10 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up an LPA based on its Sirius uid.
      *
      * @param string $uid
-     *
      * @return Response\LpaInterface|null
      * @throws Exception
      */
+
     public function get(string $uid): ?Response\LpaInterface
     {
         $result = $this->lookup([$uid]);
@@ -69,10 +69,10 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up all the LPA UIDs in the passed-in array.
      *
      * @param array $uids
-     *
      * @return Response\LpaInterface[]
      * @throws Exception
      */
+
     public function lookup(array $uids): array
     {
         // Builds an array of Requests to send
@@ -93,6 +93,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
          * Responses from the pool
          * @var ResponseInterface[] $results
          */
+
         $results = [];
 
         $pool = new Pool(
@@ -157,6 +158,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * @return void
      * @throws ApiException
      */
+
     public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
         $payloadContent = ['case_uid' => $caseId];
