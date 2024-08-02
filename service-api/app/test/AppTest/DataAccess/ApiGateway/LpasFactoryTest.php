@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\Lpas;
-use App\DataAccess\ApiGateway\LpasFactory;
+use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\ApiGateway\SiriusLpasFactory;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
@@ -70,9 +70,9 @@ class LpasFactoryTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 
-        $factory = new LpasFactory();
+        $factory = new SiriusLpasFactory();
         $repo    = $factory($containerProphecy->reveal());
-        $this->assertInstanceOf(Lpas::class, $repo);
+        $this->assertInstanceOf(SiriusLpas::class, $repo);
     }
 
     #[Test]
@@ -86,7 +86,7 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn([]);
 
-        $factory = new LpasFactory();
+        $factory = new SiriusLpasFactory();
 
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Sirius API Gateway endpoint is not set');
@@ -111,10 +111,10 @@ class LpasFactoryTest extends TestCase
             ]
         );
 
-        $factory = new LpasFactory();
+        $factory = new SiriusLpasFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class);
+        $this->expectExceptionMessage(SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class);
 
         $factory($containerProphecy->reveal());
     }

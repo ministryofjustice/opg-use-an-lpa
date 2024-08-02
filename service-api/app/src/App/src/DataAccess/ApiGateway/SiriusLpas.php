@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Looks up LPAs in the Sirius API Gateway.
  */
-class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
+class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
 {
     /** @psalm-var Client */
     protected readonly ClientInterface $httpClient;
