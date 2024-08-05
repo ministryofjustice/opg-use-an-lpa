@@ -32,7 +32,9 @@ class AccountContext implements Context
     public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userEmail    = 'opg-use-an-lpa+test-user@digital.justice.gov.uk';
-        $this->userPassword = 'umlTest1';
+        $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
+            ? getenv('ONE_LOGIN_USER_PASSWORD')
+            : 'umlTest1';
     }
 
     /**
