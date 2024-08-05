@@ -32,9 +32,7 @@ class AccountContext implements Context
     public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userEmail    = 'opg-use-an-lpa+test-user@digital.justice.gov.uk';
-        $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
-            ? getenv('ONE_LOGIN_USER_PASSWORD')
-            : 'umlTest1';
+        $this->userPassword = 'umlTest1';
     }
 
     /**
@@ -81,6 +79,10 @@ class AccountContext implements Context
 
                     $this->ui->fillField('email', $this->userEmail);
                     $this->ui->pressButton('Continue');
+
+                    $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
+                        ? getenv('ONE_LOGIN_USER_PASSWORD')
+                        : throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
 
                     $this->ui->fillField('password', $this->userPassword);
                     $this->ui->pressButton('Continue');
