@@ -80,6 +80,10 @@ class AccountContext implements Context
                     $this->ui->fillField('email', $this->userEmail);
                     $this->ui->pressButton('Continue');
 
+                    $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
+                        ? getenv('ONE_LOGIN_USER_PASSWORD')
+                        : throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
+
                     $this->ui->fillField('password', $this->userPassword);
                     $this->ui->pressButton('Continue');
 
