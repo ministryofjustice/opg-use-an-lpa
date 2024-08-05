@@ -21,6 +21,7 @@ type ActorUser struct {
 	ActivationToken string
 	ExpiresTTL      int
 	LastLogin       string
+	Identity        string
 
 	LPAs []*LPA
 }
