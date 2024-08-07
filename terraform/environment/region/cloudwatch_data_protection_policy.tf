@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
     Name    = "data_protection_${var.environment_name}_application_logs"
     Version = "2021-06-01"
 
-        "Statement" : [
+    "Statement" : [
       {
         "Sid" : "audit-policy",
         "DataIdentifier" : [
