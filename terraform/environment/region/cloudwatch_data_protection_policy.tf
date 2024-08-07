@@ -6,39 +6,29 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
     Name    = "data_protection_${var.environment_name}_application_logs"
     Version = "2021-06-01"
 
-    "Statement": [
-    {
-      "Sid": "audit-policy",
-      "DataIdentifier": [
-        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
-        "HTTPGetEmailAddress"
-      ],
-      "Operation": {
-        "Audit": {
-          "FindingsDestination": {}
-        }
-      }
-    },
-    {
-      "Sid": "redact-policy",
-      "DataIdentifier": [
-        "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
-        "HTTPGetEmailAddress"
-      ],
-      "Operation": {
-        "Deidentify": {
-          "MaskConfig": {}
-        }
-      }
-    }
-  ],
-  "Configuration": {
-    "CustomDataIdentifier": [
+    "Statement" : [
       {
-        "Name": "HTTPGetEmailAddress",
-        "Regex": "\\/create-account-success\\?email=[\\w-\\.]+%40([\\w-]+\\.)+[\\w-]{2,4}&resend=true"
+        "Sid" : "audit-policy",
+        "DataIdentifier" : [
+          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+        ],
+        "Operation" : {
+          "Audit" : {
+            "FindingsDestination" : {}
+          }
+        }
+      },
+      {
+        "Sid" : "redact-policy",
+        "DataIdentifier" : [
+          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+        ],
+        "Operation" : {
+          "Deidentify" : {
+            "MaskConfig" : {}
+          }
+        }
       }
     ]
-  }
   })
 }
