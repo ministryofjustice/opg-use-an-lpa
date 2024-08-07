@@ -6,11 +6,12 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
     Name    = "data_protection_${var.environment_name}_application_logs"
     Version = "2021-06-01"
 
-    "Statement" : [
+        "Statement" : [
       {
         "Sid" : "audit-policy",
         "DataIdentifier" : [
-          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+          "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+          "HTTPGetEmailAddress"
         ],
         "Operation" : {
           "Audit" : {
@@ -21,7 +22,8 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
       {
         "Sid" : "redact-policy",
         "DataIdentifier" : [
-          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
+          "arn:aws:dataprotection::aws:data-identifier/EmailAddress",
+          "HTTPGetEmailAddress"
         ],
         "Operation" : {
           "Deidentify" : {
@@ -29,6 +31,14 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
           }
         }
       }
-    ]
+    ],
+    "Configuration" : {
+      "CustomDataIdentifier" : [
+        {
+          "Name" : "HTTPGetEmailAddress",
+          "Regex" : "\\/create-account-success\\?email=[\\w-\\.]+%40([\\w-]+\\.)+[\\w-]{2,4}&resend=true"
+        }
+      ]
+    }
   })
 }
