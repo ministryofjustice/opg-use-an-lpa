@@ -7,7 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusLpaManager;
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -22,12 +22,12 @@ class CheckLpaCleansedTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private SiriusLpaManager|ObjectProphecy $lpaServiceProphecy;
 
     public function setUp(): void
     {
         $this->loggerProphecy     = $this->prophesize(LoggerInterface::class);
-        $this->lpaServiceProphecy = $this->prophesize(LpaService::class);
+        $this->lpaServiceProphecy = $this->prophesize(SiriusLpaManager::class);
     }
 
     public function checkLpaCleansed(): CheckLpaCleansed
