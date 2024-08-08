@@ -4,48 +4,78 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\Service\Log\RequestTracing;
+use App\DataAccess\ApiGateway\AbstractApiClient;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
 use DateTimeImmutable;
 use GuzzleHttp\Client;
 use App\DataAccess\Repository\Response\LpaInterface;
-use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
-class ModerniseLpas implements LpasInterface
+class ModerniseLpas extends AbstractApiClient implements LpasInterface
 {
     public function __construct(
-        private Client $client,
-        private string $traceId,
-        private DataSanitiserStrategy $sanitiser,
-        private string $endpoint,
+        Client $httpClient,
+        RequestFactoryInterface $requestFactory,
+        StreamFactoryInterface $streamFactory,
+        RequestSignerFactory $requestSignerFactory,
+        string $apiBaseUri,
+        string $traceId,
+        private readonly DataSanitiserStrategy $sanitiser,
     ) {
+       parent::__construct(
+            $httpClient,
+            $requestFactory,
+            $streamFactory,
+            $requestSignerFactory,
+            $apiBaseUri,
+            $traceId,
+        );
     }
 
-    private function attachHeaders(RequestInterface $request): RequestInterface
-    {
-        if (!empty($this->traceId)) {
-            $request = $request->withHeader(RequestTracing::TRACE_HEADER_NAME, $this->traceId);
-        }
-
-        return $request;
-    }
-
+    /**
+     * Looks up a Modernise LPA based on its uid.
+     *
+     * @param string $uid
+     *
+     * @return LpaInterface|null
+     * @throws Exception
+     */
     public function get(string $uid): ?LpaInterface
     {
-        $url = $this->endpoint . '/lpa/$uid';  // Update this to the correct endpoint for modernise LPAs
+        $url = $this->apiBaseUri . "/lpa/$uid";  // Update this to the correct endpoint for modernise LPAs
 
-        $request = $this->client->createRequest('GET', $url);
-        $request = $this->attachHeaders($request);
+        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
 
-        $response = $this->client->sendRequest($request);
-        $data     = $this->sanitiser->sanitise(json_decode($response->getBody()->getContents(), true));
+        $request = $this->requestFactory->createRequest('GET', $url);
+        $request = $signer->sign($this->attachHeaders($request));
+
+        $response = $this->httpClient->sendRequest($request);
+
+        $data = $this->sanitiser->sanitise(json_decode($response->getBody()->getContents(), true));
 
         return new Response\Lpa($data, new DateTimeImmutable($response->getHeaderLine('Date')));
     }
 
     public function lookup(array $uids): array
     {
-        // TODO
+        $url = $this->apiBaseUri . "/lpas";
 
-        return [];
+        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
+
+        $request = $this->requestFactory->createRequest('POST', $url)
+                        ->withBody($this->streamFactory->createStream(json_encode([ 'uids' => $uids ])));
+
+        $request = $signer->sign($this->attachHeaders($request));
+
+        $response = $this->httpClient->sendRequest($request);
+
+        $data = $this->sanitiser->sanitise(json_decode($response->getBody()->getContents(), true)['lpas']);
+
+        return array_map(
+            fn ($lpaData) => new Response\Lpa($lpaData, new DateTimeImmutable($response->getHeaderLine('Date'))),
+            $data
+        );
     }
 }
