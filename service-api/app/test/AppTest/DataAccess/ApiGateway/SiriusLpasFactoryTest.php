@@ -21,7 +21,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 
-class LpasFactoryTest extends TestCase
+class SiriusLpasFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
