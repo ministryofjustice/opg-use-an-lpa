@@ -11,7 +11,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
-use App\DataAccess\Repository\ModerniseLpas;
+use App\DataAccess\Repository\DataStoreLpas;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\ApiGateway\SiriusLpas;
@@ -29,7 +29,7 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use \AppTest\DataAccess\ApiGateway\PSR17PropheciesTrait;
 
-class ModerniseLpasTest extends TestCase
+class DataStoreLpasTest extends TestCase
 {
     use ProphecyTrait;
     use PSR17PropheciesTrait;
@@ -78,7 +78,7 @@ class ModerniseLpasTest extends TestCase
             ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
 
-        $moderniseLpas = new ModerniseLpas(
+        $moderniseLpas = new DataStoreLpas(
             $this->guzzleClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
@@ -134,7 +134,7 @@ class ModerniseLpasTest extends TestCase
             ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
 
-        $moderniseLpas = new ModerniseLpas(
+        $moderniseLpas = new DataStoreLpas(
             $this->guzzleClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),

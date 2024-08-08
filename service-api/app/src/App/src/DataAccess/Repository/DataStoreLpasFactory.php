@@ -14,9 +14,9 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class ModerniseLpasFactory
+class DataStoreLpasFactory
 {
-    public function __invoke(ContainerInterface $container): ModerniseLpas
+    public function __invoke(ContainerInterface $container): DataStoreLpas
     {
         $config = $container->get('config');
 
@@ -28,11 +28,11 @@ class ModerniseLpasFactory
 
         if (!$httpClient instanceof Client) {
             throw new Exception(
-                ModerniseLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+                DataStoreLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
             );
         }
 
-        return new ModerniseLpas(
+        return new DataStoreLpas(
             $httpClient,
             $container->get(RequestFactoryInterface::class),
             $container->get(StreamFactoryInterface::class),
