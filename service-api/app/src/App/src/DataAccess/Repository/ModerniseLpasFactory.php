@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
 
 class ModerniseLpasFactory
 {
@@ -27,17 +28,18 @@ class ModerniseLpasFactory
 
         if (!$httpClient instanceof Client) {
             throw new Exception(
-                SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+                ModerniseLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
             );
         }
 
-        $trace_id = $container->get(RequestTracing::TRACE_PARAMETER_NAME);
-
         return new ModerniseLpas(
             $httpClient,
-            $trace_id,
+            $container->get(RequestFactoryInterface::class),
+            $container->get(StreamFactoryInterface::class),
+            $container->get(RequestSignerFactory::class),
             $config['lpa_data_store_api']['endpoint'],
-            $container->get(DataSanitiserStrategy::class)
+            $container->get(RequestTracing::TRACE_PARAMETER_NAME),
+            $container->get(DataSanitiserStrategy::class),
         );
     }
 }
