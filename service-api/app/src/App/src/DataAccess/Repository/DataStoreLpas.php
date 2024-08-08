@@ -13,7 +13,7 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-class ModerniseLpas extends AbstractApiClient implements LpasInterface
+class DataStoreLpas extends AbstractApiClient implements LpasInterface
 {
     public function __construct(
         Client $httpClient,
