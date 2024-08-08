@@ -36,7 +36,7 @@ resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
       "CustomDataIdentifier" : [
         {
           "Name" : "HTTPGetEmailAddress",
-          "Regex" : "/create-account-success?email=[a-zA-Z0-9._-]+%40[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}&resend=true"
+          "Regex" : "/create-account-success?email=[a-zA-z0-9_+-]+%40[a-zA-z0-9]+.[a-zA-Z]{2,4}&resend=true"
         }
       ]
     }
