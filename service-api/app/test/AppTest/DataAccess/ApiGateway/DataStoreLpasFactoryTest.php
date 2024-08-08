@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\Repository;
 
+use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\DataStoreLpas;
 use App\DataAccess\Repository\DataStoreLpasFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
@@ -23,6 +24,7 @@ class DataStoreLpasFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
+    #[Test]
     public function can_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -69,9 +71,10 @@ class DataStoreLpasFactoryTest extends TestCase
 
         $factory = new DataStoreLpasFactory();
         $repo = $factory($containerProphecy->reveal());
+
         $this->assertInstanceOf(DataStoreLpas::class, $repo);
     }
-
+    #[Test]
     public function cannot_instantiate(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -89,7 +92,7 @@ class DataStoreLpasFactoryTest extends TestCase
 
         $factory($containerProphecy->reveal());
     }
-
+    #[Test]
     public function cannot_instantiate_a_non_guzzle_client(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

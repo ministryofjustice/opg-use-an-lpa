@@ -46,7 +46,7 @@ class DataStoreLpasTest extends TestCase
         $this->sanitiserProphecy = $this->prophesize(DataSanitiserStrategy::class);
         $this->guzzleClientProphecy = $this->prophesize(GuzzleClient::class);
     }
-
+    #[Test]
     public function testCanGetAnLpa(): void
     {
         $uid = '700000055554';
@@ -93,7 +93,7 @@ class DataStoreLpasTest extends TestCase
         $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
         $this->assertEquals($uid, $shouldBeAnLPA->getData()['uId']);
     }
-
+    #[Test]
     public function testCanLookupLpas(): void
     {
         $uids = ['700000055554', '700000055555'];
