@@ -26,7 +26,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Looks up LPAs in the Sirius API Gateway.
  */
-class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
+class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLetterInterface
 {
     /** @psalm-var Client */
     protected readonly ClientInterface $httpClient;
@@ -58,6 +58,7 @@ class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInte
      * @return Response\LpaInterface|null
      * @throws Exception
      */
+
     public function get(string $uid): ?Response\LpaInterface
     {
         $result = $this->lookup([$uid]);
@@ -71,6 +72,7 @@ class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInte
      * @return Response\LpaInterface[]
      * @throws Exception
      */
+
     public function lookup(array $uids): array
     {
         // Builds an array of Requests to send
@@ -91,6 +93,7 @@ class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInte
          * Responses from the pool
          * @var ResponseInterface[] $results
          */
+
         $results = [];
 
         $pool = new Pool(
@@ -155,6 +158,7 @@ class Lpas extends AbstractApiClient implements LpasInterface, RequestLetterInte
      * @return void
      * @throws ApiException
      */
+
     public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
         $payloadContent = ['case_uid' => $caseId];

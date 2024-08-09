@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\ApiGateway;
+namespace AppTest\DataAccess\Repository;
 
-use App\DataAccess\ApiGateway\Lpas;
-use App\DataAccess\ApiGateway\LpasFactory;
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\Repository\DataSanitiserStrategy;
+use App\DataAccess\Repository\DataStoreLpas;
+use App\DataAccess\Repository\DataStoreLpasFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
@@ -19,9 +19,8 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Psr\Log\LoggerInterface;
 
-class LpasFactoryTest extends TestCase
+class DataStoreLpasFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -46,7 +45,7 @@ class LpasFactoryTest extends TestCase
             );
 
         $requestSignerFactory = $this->prophesize(RequestSignerFactory::class);
-        $requestSignerFactory->__invoke()->willReturn($this->prophesize(RequestSigner::class)->reveal());
+        $requestSignerFactory->__invoke()->willReturn($this->prophesize(RequestSignerFactory::class)->reveal());
 
         $containerProphecy->get(RequestSignerFactory::class)->willReturn(
             $requestSignerFactory->reveal()
@@ -54,7 +53,7 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn(
             [
-                'sirius_api' => [
+                'lpa_data_store_api' => [
                     'endpoint' => 'http://test',
                 ],
             ]
@@ -66,15 +65,15 @@ class LpasFactoryTest extends TestCase
             $this->prophesize(SiriusLpaSanitiser::class)->reveal()
         );
 
-        $containerProphecy->get(LoggerInterface::class)->willReturn(
-            $this->prophesize(LoggerInterface::class)->reveal()
+        $containerProphecy->get(DataSanitiserStrategy::class)->willReturn(
+            $this->prophesize(DataSanitiserStrategy::class)->reveal()
         );
 
-        $factory = new LpasFactory();
-        $repo    = $factory($containerProphecy->reveal());
-        $this->assertInstanceOf(Lpas::class, $repo);
-    }
+        $factory = new DataStoreLpasFactory();
+        $repo = $factory($containerProphecy->reveal());
 
+        $this->assertInstanceOf(DataStoreLpas::class, $repo);
+    }
     #[Test]
     public function cannot_instantiate(): void
     {
@@ -86,14 +85,13 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn([]);
 
-        $factory = new LpasFactory();
+        $factory = new DataStoreLpasFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Sirius API Gateway endpoint is not set');
+        $this->expectExceptionMessage('LPA data store API endpoint is not set');
 
         $factory($containerProphecy->reveal());
     }
-
     #[Test]
     public function cannot_instantiate_a_non_guzzle_client(): void
     {
@@ -105,16 +103,18 @@ class LpasFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn(
             [
-                'sirius_api' => [
+                'lpa_data_store_api' => [
                     'endpoint' => 'http://test',
                 ],
             ]
         );
 
-        $factory = new LpasFactory();
+        $factory = new DataStoreLpasFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage(Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class);
+        $this->expectExceptionMessage(
+            DataStoreLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+        );
 
         $factory($containerProphecy->reveal());
     }

@@ -82,7 +82,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
-        // Lpas::requestLetter
+        // SiriusLpas::requestLetter
         $this->pactPostInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/requestCode',
@@ -110,7 +110,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade(): void
     {
-        // Lpas::requestLetter
+        // SiriusLpas::requestLetter
         $this->pactPostInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/requestCode',
@@ -3036,7 +3036,7 @@ class LpaContext extends BaseIntegrationContext
             'queuedForCleansing' => true,
         ];
 
-        // Lpas::requestLetter
+        // SiriusLpas::requestLetter
         $this->pactPostInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/requestCode',
