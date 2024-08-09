@@ -58,4 +58,9 @@ class EventCodes
      * A one login authentication transaction resulted in a new local account being created.
      */
     public const AUTH_ONELOGIN_ACCOUNT_CREATED = 'AUTH_ONELOGIN_ACCOUNT_CREATED';
+
+    /**
+     * A one login authentication transaction resulted in a local account being recovered during an email change.
+     */
+    public const AUTH_ONELOGIN_ACCOUNT_RECOVERED = 'AUTH_ONELOGIN_ACCOUNT_RECOVERED';
 }
