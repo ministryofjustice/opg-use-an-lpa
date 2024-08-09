@@ -48,7 +48,7 @@
         "facile-it/php-openid-client": "^0.3.5",
         "guzzlehttp/guzzle": "^7.8.1",
         "laminas/laminas-cache": "^3.6",
-        "laminas/laminas-cache-storage-adapter-apcu": "^2.2",
+        "laminas/laminas-cache-storage-adapter-apcu": "^3.0",
         "laminas/laminas-cache-storage-adapter-memory": "^2.1",
         "laminas/laminas-cache-storage-adapter-redis": "^2.3",
         "laminas/laminas-component-installer": "^2.1.1",
