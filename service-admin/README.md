@@ -18,6 +18,10 @@ Run the proxy using the instructions in [the README](./proxy/README.md).
 
 ### Goland
 
+Verify that "Go Modules integration" has been enabled in the GoLand IDE settings :
+```shell
+GoLand > Settings > Go > Go Modules > Enable Go Module Integrations
+```
 Run both the "JWT Proxy" and the "Admin Service" inside your IDE
 
 ### Manual
