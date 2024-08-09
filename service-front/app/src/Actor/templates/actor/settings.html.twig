@@ -46,6 +46,25 @@
                             </div>
                         </div>
                     {% else %}
+
+                    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                        <div class="govuk-notification-banner__content">
+                            <div class="govuk-warning-text">
+                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                                <div class="govuk-warning-text__text">
+                                    <span class="govuk-visually-hidden">Warning</span>
+                                    <strong>{% trans %}You are not able to change your email address{% endtrans %}</strong>
+                                    <br><br>
+                                    <p class="govuk-body">
+                                        {% trans %} This is because, on 13 August 2024, we are changing the way you sign in to the Use a lasting power of attorney service.{% endtrans %}
+                                    </p>
+
+                                    <a href="{{ path('login-notification') }}" class="govuk-link">{% trans %}Find out more about this change{% endtrans %}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                         <dl class="govuk-summary-list">
 
                             <div class="govuk-summary-list__row">
@@ -54,11 +73,6 @@
                                 </dt>
                                 <dd class="govuk-summary-list__value">
                                     {{ user.getDetail('email') }}
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" href="{{ path('change-email') }}">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> email address</span>{% endtrans %}
-                                    </a>
                                 </dd>
                             </div>
                             <div class="govuk-summary-list__row">

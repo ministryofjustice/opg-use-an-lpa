@@ -1729,26 +1729,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I request to change my email to an invalid email$/
-     */
-    public function iRequestToChangeMyEmailToAnInvalidEmail(): void
-    {
-        $this->ui->fillField('new_email_address', 'invalidEmail.com');
-        $this->ui->fillField('current_password', $this->userPassword);
-        $this->ui->pressButton('Save new email address');
-    }
-
-    /**
-     * @When /^I request to change my email to the same email of my account currently$/
-     */
-    public function iRequestToChangeMyEmailToTheSameEmailOfMyAccountCurrently(): void
-    {
-        $this->ui->fillField('new_email_address', $this->userEmail);
-        $this->ui->fillField('current_password', $this->userPassword);
-        $this->ui->pressButton('Save new email address');
-    }
-
-    /**
      * @When /^I request to change my email with an incorrect password$/
      */
     public function iRequestToChangeMyEmailWithAnIncorrectPassword(): void
@@ -1909,24 +1889,6 @@ class AccountContext implements Context
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect(): void
     {
         $this->ui->assertPageContainsText('The password you entered is incorrect');
-    }
-
-    /**
-     * @Then /^I should be told that I could not change my email because the email is invalid$/
-     */
-    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsInvalid(): void
-    {
-        $this->ui->assertPageContainsText('Enter an email address in the correct format, like name@example.com');
-    }
-
-    /**
-     * @Then /^I should be told that I could not change my email because the email is the same as my current email$/
-     */
-    public function iShouldBeToldThatICouldNotChangeMyEmailBecauseTheEmailIsTheSameAsMyCurrentEmail(): void
-    {
-        $this->ui->assertPageContainsText(
-            'The new email address you entered is the same as your current email address. They must be different.'
-        );
     }
 
     /**
