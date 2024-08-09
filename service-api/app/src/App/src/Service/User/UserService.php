@@ -94,7 +94,7 @@ class UserService
         $id = $this->generateUniqueId();
 
         // If a password is not supplied, make a random one.
-        $password = $data['password'] ?? new HiddenString(($this->byteGenerator)(32));
+        $password = $data['password'] ?? new HiddenString(bin2hex(($this->byteGenerator)(32)));
 
         //  An unactivated user account can only exist for 24 hours before it is deleted
         $activationToken = $this->getLinkToken();

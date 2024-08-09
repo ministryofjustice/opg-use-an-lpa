@@ -8,17 +8,16 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
-use DateTime;
 use Exception;
 use Psr\Log\LoggerInterface;
 
 class RemoveLpa
 {
     public function __construct(
-        private LoggerInterface $logger,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private LpaManagerInterface $lpaManager,
         private ViewerCodesInterface $viewerCodesRepository,
-        private LpaService $lpaService,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -79,7 +78,7 @@ class RemoveLpa
 
         // get the LPA to display the donor name and lpa type in the flash message
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
-        $lpaRemovedData = $this->lpaService->getByUid($userActorLpa['SiriusUid'])->getData();
+        $lpaRemovedData = $this->lpaManager->getByUid($userActorLpa['SiriusUid'])->getData();
 
         $deletedData = $this->userLpaActorMapRepository->delete($token);
 

@@ -7,7 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaAlreadyAdded;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\AccessForAllLpaService;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 class RequestCleanseHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private LpaService $lpaService,
+        private LpaManagerInterface $lpaManager,
         private AccessForAllLpaService $accessForAllLpaService,
         private LpaAlreadyAdded $lpaAlreadyAdded,
         private LoggerInterface $logger,
@@ -46,7 +46,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
-        $lpa     = $this->lpaService->getByUid((string) $requestData['reference_number']);
+        $lpa     = $this->lpaManager->getByUid((string) $requestData['reference_number']);
         $lpaData = $lpa->getData();
 
         $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);

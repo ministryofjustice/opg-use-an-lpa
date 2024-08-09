@@ -75,6 +75,7 @@ jobs:
         env:
           ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
           ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
+          ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
         run: |
           viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .viewer_fqdn | xargs)
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
