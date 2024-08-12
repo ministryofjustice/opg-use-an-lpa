@@ -51,6 +51,7 @@ locals {
     "event_code.AUTH_ONELOGIN_ACCOUNT_CREATED",
     "event_code.AUTH_ONELOGIN_ERROR",
     "event_code.AUTH_ONELOGIN_NOT_AVAILABLE",
+    "event_code.AUTH_ONELOGIN_MISSING_SESSION"
   ]
 }
 
