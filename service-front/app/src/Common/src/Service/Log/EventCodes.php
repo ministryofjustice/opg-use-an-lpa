@@ -91,6 +91,11 @@ class EventCodes
     public const AUTH_ONELOGIN_NOT_AVAILABLE = 'AUTH_ONELOGIN_NOT_AVAILABLE';
 
     /**
+     * GOVUK One login returned successfully but our session is missing
+     */
+    public const AUTH_ONELOGIN_MISSING_SESSION = 'AUTH_ONELOGIN_MISSING_SESSION';
+
+    /**
      * Lpa summary has been downloaded
      */
     public const DOWNLOAD_SUMMARY = 'DOWNLOAD_SUMMARY';
