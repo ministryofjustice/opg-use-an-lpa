@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\Repository;
+namespace AppTest\DataAccess\ApiGateway;
 
 use GuzzleHttp\Client as GuzzleClient;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,6 @@ use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\Argument;
-use \AppTest\DataAccess\ApiGateway\PSR17PropheciesTrait;
 
 class DataStoreLpasTest extends TestCase
 {

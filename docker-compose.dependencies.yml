@@ -39,7 +39,7 @@ services:
       AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
-      LPA_DATA_STORE_URL: http://mock-lpa-data-store:4012
+      LPA_DATA_STORE_ENDPOINT: http://mock-lpa-data-store:4012
 
   api-seeding:
     depends_on:
