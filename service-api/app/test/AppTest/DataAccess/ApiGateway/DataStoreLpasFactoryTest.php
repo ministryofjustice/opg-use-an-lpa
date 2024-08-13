@@ -74,6 +74,7 @@ class DataStoreLpasFactoryTest extends TestCase
 
         $this->assertInstanceOf(DataStoreLpas::class, $repo);
     }
+    
     #[Test]
     public function cannot_instantiate(): void
     {
