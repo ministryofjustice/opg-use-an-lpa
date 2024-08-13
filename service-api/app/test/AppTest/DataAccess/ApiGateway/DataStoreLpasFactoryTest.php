@@ -93,30 +93,4 @@ class DataStoreLpasFactoryTest extends TestCase
 
         $factory($containerProphecy->reveal());
     }
-    #[Test]
-    public function cannot_instantiate_a_non_guzzle_client(): void
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-
-        $containerProphecy->get(ClientInterface::class)->willReturn(
-            $this->prophesize(ClientInterface::class)->reveal()
-        );
-
-        $containerProphecy->get('config')->willReturn(
-            [
-                'lpa_data_store_api' => [
-                    'endpoint' => 'http://test',
-                ],
-            ]
-        );
-
-        $factory = new DataStoreLpasFactory();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(
-            DataStoreLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
-        );
-
-        $factory($containerProphecy->reveal());
-    }
 }

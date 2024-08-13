@@ -1,32 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
+namespace AppTest\DataAccess\Repository;
+
 use GuzzleHttp\Client as GuzzleClient;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use GuzzleHttp\Promise\FulfilledPromise;
-use GuzzleHttp\Client;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\DataStoreLpas;
-use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
-use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\Repository\DataSanitiserStrategy;
-use App\Exception\ApiException;
-use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Prophecy\Argument;
-use Psr\Log\LoggerInterface;
-use Psr\Http\Message\RequestFactoryInterface;
-use Psr\Http\Message\StreamFactoryInterface;
 use \AppTest\DataAccess\ApiGateway\PSR17PropheciesTrait;
 
 class DataStoreLpasTest extends TestCase
