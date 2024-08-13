@@ -13,7 +13,7 @@ return [
     ],
 
     'lpa_data_store_api' => [
-        'endpoint' => getenv('LPA_DATA_STORE_API_URL') ?: null,
+        'endpoint' => getenv('LPA_DATA_STORE_ENDPOINT') ?: null,
     ],
 
     'codes_api' => [
