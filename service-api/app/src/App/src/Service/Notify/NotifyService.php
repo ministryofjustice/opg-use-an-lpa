@@ -6,6 +6,7 @@ namespace App\Service\Notify;
 
 use App\Exception\BadRequestException;
 use App\Service\Email\EmailClient;
+use App\Service\Log\Output\Email;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
@@ -47,11 +48,17 @@ class NotifyService
                     }
                 }
 
-                $this->logger->notice('Sending {template} email to user', ['template' => $emailTemplate]);
+                $this->logger->info(
+                    'Sending {template} email to user with email {email}',
+                    [
+                        'template' => $emailTemplate,
+                        'email'    => new Email($requestData['recipient']),
+                    ],
+                );
 
                 $method->invokeArgs($this->emailClient, $requestData);
 
-                $this->logger->info('Email sent to user');
+                $this->logger->debug('Email sent to user');
             }
         }
         return true;
