@@ -26,12 +26,6 @@ class DataStoreLpasFactory
 
         $httpClient = $container->get(ClientInterface::class);
 
-        if (!$httpClient instanceof Client) {
-            throw new Exception(
-                DataStoreLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
-            );
-        }
-
         return new DataStoreLpas(
             $httpClient,
             $container->get(RequestFactoryInterface::class),
