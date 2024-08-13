@@ -46,6 +46,7 @@ class DataStoreLpasTest extends TestCase
         $this->sanitiserProphecy = $this->prophesize(DataSanitiserStrategy::class);
         $this->guzzleClientProphecy = $this->prophesize(GuzzleClient::class);
     }
+    
     #[Test]
     public function testCanGetAnLpa(): void
     {
