@@ -22,15 +22,15 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         RequestSignerFactory $requestSignerFactory,
         string $apiBaseUri,
         string $traceId,
-        private readonly DataSanitiserStrategy $sanitiser,
+        private readonly DataSanitiserStrategy $sanitiser
     ) {
-       parent::__construct(
+        parent::__construct(
             $httpClient,
             $requestFactory,
             $streamFactory,
             $requestSignerFactory,
             $apiBaseUri,
-            $traceId,
+            $traceId
         );
     }
 
@@ -58,6 +58,14 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         return new Response\Lpa($data, new DateTimeImmutable($response->getHeaderLine('Date')));
     }
 
+    /**
+     * Looks up multiple LPAs based on an array of uids.
+     *
+     * @param array $uids
+     *
+     * @return array
+     * @throws Exception
+     */
     public function lookup(array $uids): array
     {
         $url = $this->apiBaseUri . "/lpas";
@@ -65,7 +73,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
 
         $request = $this->requestFactory->createRequest('POST', $url)
-                        ->withBody($this->streamFactory->createStream(json_encode([ 'uids' => $uids ])));
+            ->withBody($this->streamFactory->createStream(json_encode(['uids' => $uids])));
 
         $request = $signer->sign($this->attachHeaders($request));
 

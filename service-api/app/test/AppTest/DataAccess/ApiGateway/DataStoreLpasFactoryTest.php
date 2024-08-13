@@ -70,11 +70,10 @@ class DataStoreLpasFactoryTest extends TestCase
         );
 
         $factory = new DataStoreLpasFactory();
-        $repo = $factory($containerProphecy->reveal());
+        $repo    = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(DataStoreLpas::class, $repo);
     }
-    
     #[Test]
     public function cannot_instantiate(): void
     {
