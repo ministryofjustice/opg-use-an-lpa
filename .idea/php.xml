@@ -8,7 +8,7 @@
   </component>
   <component name="PHPCodeSnifferOptionsConfiguration">
     <option name="codingStandard" value="Custom" />
-    <option name="customRuleset" value="/app/phpcs.xml.dist" />
+    <option name="customRuleset" value="$PROJECT_DIR$/service-api/app/phpcs.xml.dist" />
     <option name="showSniffs" value="true" />
     <option name="transferred" value="true" />
   </component>
