@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\DataAccess\Repository;
+namespace App\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\Service\Log\RequestTracing;
 use Exception;
-use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -24,16 +21,13 @@ class DataStoreLpasFactory
             throw new Exception('LPA data store API endpoint is not set');
         }
 
-        $httpClient = $container->get(ClientInterface::class);
-
         return new DataStoreLpas(
-            $httpClient,
+            $container->get(ClientInterface::class),
             $container->get(RequestFactoryInterface::class),
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             $config['lpa_data_store_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
-            $container->get(DataSanitiserStrategy::class),
         );
     }
 }

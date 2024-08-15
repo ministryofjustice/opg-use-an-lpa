@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\Repository;
 
-use App\DataAccess\Repository\DataSanitiserStrategy;
-use App\DataAccess\Repository\DataStoreLpas;
-use App\DataAccess\Repository\DataStoreLpasFactory;
+use App\DataAccess\ApiGateway\DataStoreLpas;
+use App\DataAccess\ApiGateway\DataStoreLpasFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;

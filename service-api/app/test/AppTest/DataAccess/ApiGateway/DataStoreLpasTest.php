@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
+use App\DataAccess\ApiGateway\DataStoreLpas;
+use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
+use App\DataAccess\Repository\DataSanitiserStrategy;
+use App\DataAccess\Repository\Response\LpaInterface;
 use GuzzleHttp\Client as GuzzleClient;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\DataAccess\ApiGateway\SignatureType;
-use App\DataAccess\Repository\DataStoreLpas;
-use App\DataAccess\Repository\Response\LpaInterface;
-use App\DataAccess\ApiGateway\RequestSigner;
-use App\DataAccess\Repository\DataSanitiserStrategy;
-use PHPUnit\Framework\Attributes\Test;
-use Prophecy\Argument;
 
 class DataStoreLpasTest extends TestCase
 {
@@ -37,7 +37,7 @@ class DataStoreLpasTest extends TestCase
         $this->sanitiserProphecy = $this->prophesize(DataSanitiserStrategy::class);
         $this->guzzleClientProphecy = $this->prophesize(GuzzleClient::class);
     }
-    
+
     #[Test]
     public function testCanGetAnLpa(): void
     {
