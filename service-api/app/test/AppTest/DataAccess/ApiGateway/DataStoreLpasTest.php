@@ -9,11 +9,13 @@ use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\LpaInterface;
+use App\Exception\ApiException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -145,5 +147,93 @@ class DataStoreLpasTest extends TestCase
             $this->assertInstanceOf(LpaInterface::class, $lpa);
             $this->assertContains($lpa->getData()['uid'], $uids);
         }
+    }
+
+    #[Test]
+    public function it_deals_with_a_client_error(): void
+    {
+        $uid        = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri = 'http://localhost';
+        $traceId    = 'test-trace-id';
+
+        $responseBodyProphecy = $this->prophesize(StreamInterface::class);
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uid' => $uid]));
+
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+
+        $this->requestFactoryProphecy
+            ->createRequest('GET', $apiBaseUri . '/lpa/' . $uid)
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->requestSignerFactoryProphecy
+            ->__invoke(SignatureType::DataStoreLpas)
+            ->willReturn($this->requestSignerProphecy->reveal());
+
+        $this->requestSignerProphecy
+            ->sign(Argument::type(RequestInterface::class))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy
+            ->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
+
+        $moderniseLpas = new DataStoreLpas(
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
+            $apiBaseUri,
+            $traceId,
+        );
+
+        $this->expectException(ApiException::class);
+
+        $shouldBeAnLPA = $moderniseLpas->get($uid);
+    }
+
+    #[Test]
+    public function it_deals_with_a_client_error_for_multiple_lpa_fetches(): void
+    {
+        $uids       = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP'];
+        $apiBaseUri = 'http://localhost';
+        $traceId    = 'test-trace-id';
+
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
+
+        $this->httpClientProphecy->sendRequest(Argument::type(RequestInterface::class))
+            ->willReturn($responseProphecy->reveal());
+
+        $this->requestFactoryProphecy->createRequest('POST', $apiBaseUri . '/lpas')
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->streamFactoryProphecy->createStream(json_encode(['uids' => $uids]))
+            ->willReturn($this->prophesize(StreamInterface::class)->reveal());
+
+        $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas)
+            ->willReturn($this->requestSignerProphecy->reveal());
+
+        $this->requestSignerProphecy->sign(Argument::type(RequestInterface::class))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $this->httpClientProphecy
+            ->sendRequest(Argument::type(RequestInterface::class))
+            ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
+
+        $moderniseLpas = new DataStoreLpas(
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
+            $apiBaseUri,
+            $traceId,
+        );
+
+        $this->expectException(ApiException::class);
+
+        $lpas = $moderniseLpas->lookup($uids);
     }
 }
