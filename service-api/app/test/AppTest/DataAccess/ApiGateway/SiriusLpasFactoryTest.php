@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\SiriusLpas;
-use App\DataAccess\ApiGateway\SiriusLpasFactory;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\ApiGateway\SiriusLpasFactory;
 use App\Service\Log\RequestTracing;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
@@ -114,7 +114,9 @@ class SiriusLpasFactoryTest extends TestCase
         $factory = new SiriusLpasFactory();
 
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage(SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class);
+        $this->expectExceptionMessage(
+            SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+        );
 
         $factory($containerProphecy->reveal());
     }

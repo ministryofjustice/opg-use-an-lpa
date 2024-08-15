@@ -7,7 +7,8 @@ namespace App\DataAccess\ApiGateway;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;
-use App\DataAccess\Repository\Response;
+use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
 use DateTimeImmutable;
@@ -16,12 +17,15 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 /**
  * Looks up LPAs in the Sirius API Gateway.
@@ -55,11 +59,13 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up an LPA based on its Sirius uid.
      *
      * @param string $uid
-     * @return Response\LpaInterface|null
+     * @return LpaInterface|null
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
      * @throws Exception
      */
-
-    public function get(string $uid): ?Response\LpaInterface
+    public function get(string $uid): ?LpaInterface
     {
         $result = $this->lookup([$uid]);
         return !empty($result) ? current($result) : null;
@@ -69,10 +75,12 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * Looks up all the LPA UIDs in the passed-in array.
      *
      * @param array $uids
-     * @return Response\LpaInterface[]
+     * @return LpaInterface[]
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
      * @throws Exception
      */
-
     public function lookup(array $uids): array
     {
         // Builds an array of Requests to send
@@ -89,11 +97,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
             }, $uids)
         );
 
-        /**
-         * Responses from the pool
-         * @var ResponseInterface[] $results
-         */
-
+        /** @var ResponseInterface[] $results */
         $results = [];
 
         $pool = new Pool(
@@ -123,7 +127,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
             switch ($statusCode) {
                 case 200:
                     # TODO: We can some more error checking around this.
-                    $results[$uid] = new Response\Lpa(
+                    $results[$uid] = new Lpa(
                         $this->sanitiser->sanitise(json_decode($result->getBody()->getContents(), true)),
                         new DateTimeImmutable($result->getHeaderLine('Date'))
                     );
@@ -141,7 +145,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
             }
         }
 
-        /** @var Response\LpaInterface[] */
+        /** @var LpaInterface[] */
         return $results;
     }
 
@@ -154,11 +158,11 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
      * @param int         $caseId  The Sirius uId of an LPA
      * @param int|null    $actorId The uId of an actor as found attached to an LPA
      * @param string|null $additionalInfo
-     *
      * @return void
      * @throws ApiException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-
     public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
     {
         $payloadContent = ['case_uid' => $caseId];
