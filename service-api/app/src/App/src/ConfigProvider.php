@@ -57,8 +57,8 @@ class ConfigProvider
                     => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class     => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class            => DataAccess\ApiGateway\Lpas::class,
-                DataAccess\Repository\RequestLetterInterface::class   => DataAccess\ApiGateway\Lpas::class,
+                DataAccess\Repository\LpasInterface::class            => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\RequestLetterInterface::class   => DataAccess\ApiGateway\SiriusLpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
 
@@ -100,7 +100,7 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class        => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
-                DataAccess\ApiGateway\Lpas::class             => DataAccess\ApiGateway\LpasFactory::class,
+                DataAccess\ApiGateway\SiriusLpas::class             => DataAccess\ApiGateway\SiriusLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
 

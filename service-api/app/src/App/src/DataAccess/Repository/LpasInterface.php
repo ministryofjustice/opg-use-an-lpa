@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\DataAccess\Repository;
 
 use App\DataAccess\Repository\Response\LpaInterface;
-use Psr\Http\Message\ResponseInterface;
 
 interface LpasInterface
 {
