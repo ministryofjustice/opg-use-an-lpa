@@ -251,9 +251,9 @@ components:
           items:
             $ref: "#/components/schemas/Lpa"
     Lpa:
-      $ref: "../schemas/2024-10/lpa.json"
+      $ref: "https://data-dictionary.opg.service.justice.gov.uk/schema/lpa/2024-10/lpa.json"
     DonorDetails:
-      $ref: "../schemas/2024-10/donor-details.json"
+      $ref: "https://data-dictionary.opg.service.justice.gov.uk/schema/lpa/2024-10/donor-details.json"
     Update:
       type: object
       required:
@@ -266,8 +266,13 @@ components:
             - ATTORNEY_SIGN
             - TRUST_CORPORATION_SIGN
             - PERFECT
+            - STATUTORY_WAITING_PERIOD
             - REGISTER
             - CERTIFICATE_PROVIDER_OPT_OUT
+            - DONOR_CONFIRM_IDENTITY
+            - CERTIFICATE_PROVIDER_CONFIRM_IDENTITY
+            - DONOR_WITHDRAW_LPA
+            - ATTORNEY_OPT_OUT
         changes:
           type: array
           items:

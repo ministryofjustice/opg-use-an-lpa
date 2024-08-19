@@ -148,9 +148,9 @@ services:
       - "-c"
       - "/opt/imposter/config"
       - "-l"
-      - "4012"
+      - "4014"
     ports:
-      - "4014:4012"
+      - "4014:4014"
     volumes:
       - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
 
