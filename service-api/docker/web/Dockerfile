@@ -1,3 +1,12 @@
+FROM golang:1.23-alpine AS confd_builder
+
+RUN apk add --no-cache make git && \
+    cd / && \
+    git clone https://github.com/kelseyhightower/confd.git build && \
+    cd build && \
+    git checkout 919444eb && \
+    make build
+
 FROM nginxinc/nginx-unprivileged:stable-alpine
 USER root
 
@@ -5,15 +14,8 @@ RUN apk upgrade && \
   apk update curl
 
 # Add Confd to configure nginx on start
-ENV CONFD_VERSION="0.16.0"
-
-RUN wget -q -O /usr/local/bin/confd "https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64" \
-  && chmod +x /usr/local/bin/confd
-
-# Add Waitforit to wait on app starting
-ENV WAITFORIT_VERSION="v2.4.1"
-RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
-  && chmod +x /usr/local/bin/waitforit
+COPY --from=confd_builder /build/bin/confd /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
 
 COPY service-api/docker/web/etc /etc
 
