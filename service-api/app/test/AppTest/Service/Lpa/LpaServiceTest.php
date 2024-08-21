@@ -11,7 +11,12 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, LpaService, ResolveActor};
+use App\Service\Lpa\{GetAttorneyStatus,
+    GetTrustCorporationStatus,
+    IsValidLpa,
+    LpaDataFormatter,
+    LpaService,
+    ResolveActor};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -38,6 +43,7 @@ class LpaServiceTest extends TestCase
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
 
     public function setUp(): void
     {
@@ -52,6 +58,7 @@ class LpaServiceTest extends TestCase
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
+        $this->lpaDataFormatter                    = $this->prophesize(LpaDataFormatter::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 
@@ -68,6 +75,7 @@ class LpaServiceTest extends TestCase
             $this->isValidLpaProphecy->reveal(),
             $this->getTrustCorporationStatusProphecy->reveal(),
             $this->featureEnabledProphecy->reveal(),
+            $this->lpaDataFormatter->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
@@ -1129,5 +1137,140 @@ class LpaServiceTest extends TestCase
         $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
 
         $this->assertEmpty($result);
+    }
+
+    #[Test]
+    public function can_get_transformed_data_store_lpa_by_id(): void
+    {
+        $lpaResponse = [
+                'lpaType' => 'personal-welfare',
+                'channel' => 'online',
+                'donor'   => [
+                    'uid' => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
+                        'firstNames' => 'Feeg',
+                        'lastName' => 'Bundlaaaa',
+                        'address' => [
+                            'line1' => '74 Cloob Close',
+                            'town' => 'Mahhhhhhhhhh',
+                            'country' => 'GB',
+                        ],
+                        'dateOfBirth' => '1970-01-24',
+                        'email' => 'nobody@not.a.real.domain',
+                        'contactLanguagePreference' => 'en',
+                    ],
+                'attorneys' => [
+                    [
+                        'uid' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                        'firstNames' => 'Herman',
+                        'lastName' => 'Seakrest',
+                        'address' => [
+                            'line1' => '81 NighOnTimeWeBuiltIt Street',
+                            'town' => 'Mahhhhhhhhhh',
+                            'country' => 'GB',
+                        ],
+                        'dateOfBirth' => '1982-07-24',
+                        'status' => 'active',
+                        'channel' => 'paper',
+                    ],
+                ],
+                'trustCorporations' => [
+                    [
+                        'uid' => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+                        'name' => 'Trust us Corp.',
+                        'companyNumber' => '666123321',
+                        'address' => [
+                            'line1' => '103 Line 1',
+                            'town' => 'Town',
+                            'country' => 'GB',
+                        ],
+                        'status' => 'active',
+                        'channel' => 'paper',
+                    ],
+                ],
+                'certificateProvider' => [
+                    'uid' => '6808960d-12cf-47c5-a2bc-3177deb8599c',
+                    'firstNames' => 'Vone',
+                    'lastName' => 'Spust',
+                    'address' => [
+                        'line1' => '122111 Zonnington Way',
+                        'town' => 'Mahhhhhhhhhh',
+                        'country' => 'GB',
+                    ],
+                    'channel' => 'online',
+                    'email' => 'a@example.com',
+                    'phone' => '070009000',
+                ],
+                'lifeSustainingTreatmentOption' => 'option-a',
+                'signedAt' => '2024-01-10T23:00:00Z',
+                'certificateProviderNotRelatedConfirmedAt' => '2024-01-11T22:00:00Z',
+                'howAttorneysMakeDecisions' => 'jointly',
+            ];
+
+        $expectedLpaResponse = [
+            'attorneyActDecisions' => [
+                'name' => 'JOINTLY',
+                'value' => 'jointly',
+            ],
+            'attorneys' => [
+                [
+                    'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
+                    'country' => 'GB',
+                    'town' => 'Mahhhhhhhhh',
+                    'dob' => [
+                        'date' => '1982-07-24 00:00:00.000000',
+                        'timezone_type' => 3,
+                        'timezone' => 'UTC',
+                    ],
+                    'firstNames' => 'Herman',
+                    'surName' => 'Seakrest',
+                    'systemStatus' => 'active',
+                ],
+            ],
+            'caseSubtype' => [
+                'name' => 'PERSONAL_WELFARE',
+                'value' => 'personal-welfare',
+            ],
+            'channel' => 'online',
+            'donor' => [
+                'addressLine1' => '74 Cloop Close',
+                'country' => 'GB',
+                'town' => 'Mahhhhhhhhh',
+                'dob' => [
+                    'date' => '1970-01-24 00:00:00.000000',
+                    'timezone_type' => 3,
+                    'timezone' => 'UTC',
+                ],
+                'email' => 'nobody@not_a_real_domain',
+                'firstNames' => 'Feeg',
+                'surName' => 'Bundlaaaa',
+            ],
+            'lifeSustainingTreatment' => [
+                'name' => 'OPTION_A',
+                'value' => 'option-a',
+            ],
+            'lpaDonorSignatureDate' => [
+                'date' => '2021-01-10 23:00:00.000000',
+                'timezone_type' => 2,
+                'timezone' => 'Z',
+            ],
+            'trustCorporations' => [
+                [
+                    'name' => 'Trust us Corp.',
+                    'addressLine1' => '103 Line 1',
+                    'country' => 'GB',
+                    'town' => 'Town',
+                    'systemStatus' => 'active',
+                    'companyName' => 'Trust us Corp.',
+                ],
+            ],
+        ];
+
+        $this->lpaDataFormatter->__invoke(
+            $lpaResponse
+        )->willReturn($expectedLpaResponse);
+
+        $actualLpaResponse = ($this->lpaDataFormatter->reveal())($lpaResponse);
+
+        $this->assertEquals($expectedLpaResponse, $actualLpaResponse);
     }
 }
