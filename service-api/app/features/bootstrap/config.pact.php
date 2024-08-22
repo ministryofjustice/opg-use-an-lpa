@@ -9,7 +9,7 @@ return [
                 => BehatTest\DataAccess\ApiGateway\PactActorCodesFactory::class,
             App\DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
                 => BehatTest\DataAccess\ApiGateway\PactInstructionsAndPreferencesImagesFactory::class,
-            App\DataAccess\ApiGateway\Lpas::class
+            App\DataAccess\ApiGateway\SiriusLpas::class
                 => BehatTest\DataAccess\ApiGateway\PactLpasFactory::class,
         ],
     ],

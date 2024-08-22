@@ -81,7 +81,7 @@ class ViewerContext implements Context
             )
         );
 
-        // Lpas::get
+        // SiriusLpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiPost(
@@ -141,7 +141,7 @@ class ViewerContext implements Context
             )
         );
 
-        // Lpas::get
+        // SiriusLpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
@@ -205,7 +205,7 @@ class ViewerContext implements Context
             )
         );
 
-        // Lpas::get
+        // SiriusLpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // ViewerCodeActivity::recordSuccessfulLookupActivity

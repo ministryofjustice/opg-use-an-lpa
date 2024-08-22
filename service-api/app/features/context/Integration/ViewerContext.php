@@ -121,7 +121,7 @@ class ViewerContext extends BaseIntegrationContext
             )
         );
 
-        // Lpas::get
+        // SiriusLpas::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
@@ -165,7 +165,7 @@ class ViewerContext extends BaseIntegrationContext
             )
         );
 
-        // Lpas::get
+        // SiriusLpas::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
             '/v1/use-an-lpa/lpas/' . $this->lpa->uId,

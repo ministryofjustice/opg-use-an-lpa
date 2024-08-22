@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\Lpas;
+use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\DataAccess\Repository\LpasInterface;
@@ -39,11 +39,11 @@ class PactLpasFactory
 
         if (! $httpClient instanceof Client) {
             throw new Exception(
-                Lpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
+                SiriusLpas::class . ' requires a Guzzle implementation of ' . ClientInterface::class
             );
         }
 
-        return new Lpas(
+        return new SiriusLpas(
             $httpClient,
             $container->get(RequestFactoryInterface::class),
             $container->get(StreamFactoryInterface::class),

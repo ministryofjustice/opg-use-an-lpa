@@ -39,6 +39,7 @@ services:
       AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
+      LPA_DATA_STORE_ENDPOINT: http://mock-lpa-data-store:4012
 
   api-seeding:
     depends_on:
@@ -147,9 +148,9 @@ services:
       - "-c"
       - "/opt/imposter/config"
       - "-l"
-      - "4012"
+      - "4014"
     ports:
-      - "4014:4012"
+      - "4014:4014"
     volumes:
       - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
 

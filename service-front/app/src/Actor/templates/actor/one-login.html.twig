@@ -8,10 +8,11 @@
     <div class="govuk-width-container">
         <main class="govuk-main-wrapper" id="main-content" role="main" aria-label="Main content">
             <div class="govuk-grid-row">
-                {{ govuk_error_summary(form) }}
-                {{ govuk_form_open(form) }}
-
                 <div class="govuk-grid-column-two-thirds">
+                    {{ govuk_error_summary(form) }}
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
                     <div class="moj-banner" role="region" aria-label="information">
                         <svg class="moj-banner__icon" fill="currentColor" role="presentation" focusable="false"
                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25" height="25" width="25">
@@ -50,7 +51,7 @@
                     <h2 class="govuk-heading-l">{% trans %}What if I’ve used this service before?{% endtrans %}</h2>
                     <p class="govuk-body">
                         {% trans %}
-                            If you have a Use a lasting power of attorney account from before 1 January 2024 and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear.
+                            If you have a Use a lasting power of attorney account from before 13 August 2024, and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear.
                         {% endtrans %}
                     </p>
 
@@ -63,9 +64,7 @@
                         {% endtrans %}
 
                     </div>
-                </div>
 
-                <div class="govuk-grid-column-two-thirds">
                     <button
                             data-prevent-double-click="true"
                             name="sign-in-one-login"
@@ -86,9 +85,9 @@
                             to get help.
                         {% endtrans %}
                     </p>
-                </div>
 
-                {{ govuk_form_close() }}
+                    {{ govuk_form_close() }}
+                </div>
             </div>
         </main>
     </div>

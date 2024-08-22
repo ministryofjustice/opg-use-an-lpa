@@ -9,12 +9,6 @@ Feature: Settings dashboard
     And I am currently signed in
 
   @ui @ff:allow_gov_one_login:false
-  Scenario: The user can request to see their details and reset their details
-    Given I view my user details
-    Then I can change my email if required
-    And I can change my passcode if required
-
-  @ui @ff:allow_gov_one_login:false
   Scenario: The user can request login details reset
     Given I view my user details
     When I ask for a change of donors or attorneys details

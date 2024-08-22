@@ -37,6 +37,7 @@ func TestGetActorUserByEmail(t *testing.T) {
 	tests := []struct {
 		name      string
 		email     string
+		identity  string
 		queryFunc func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 		want      *ActorUser
 		wantErr   assert.ErrorAssertionFunc
@@ -78,6 +79,44 @@ func TestGetActorUserByEmail(t *testing.T) {
 			},
 			want:    nil,
 			wantErr: assert.Error,
+		},
+		{
+			name:     "user has onelogin account",
+			email:    "test@example.com",
+			identity: "test",
+			queryFunc: func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
+				return &dynamodb.QueryOutput{
+					Count: 1,
+					Items: []map[string]types.AttributeValue{
+						{
+							"Identity": &types.AttributeValueMemberS{Value: "test"},
+						},
+					},
+				}, nil
+			},
+			want: &ActorUser{
+				Identity: "Yes",
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name:     "user does not have onelogin account",
+			email:    "test@example.com",
+			identity: "",
+			queryFunc: func(ctx context.Context, params *dynamodb.QueryInput, optFns ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error) {
+				return &dynamodb.QueryOutput{
+					Count: 1,
+					Items: []map[string]types.AttributeValue{
+						{
+							"Identity": &types.AttributeValueMemberS{Value: ""},
+						},
+					},
+				}, nil
+			},
+			want: &ActorUser{
+				Identity: "No",
+			},
+			wantErr: assert.NoError,
 		},
 	}
 

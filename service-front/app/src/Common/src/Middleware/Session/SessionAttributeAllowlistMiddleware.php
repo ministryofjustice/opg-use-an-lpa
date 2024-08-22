@@ -52,10 +52,10 @@ class SessionAttributeAllowlistMiddleware implements MiddlewareInterface
 
         if ($session?->has(SessionExpiryMiddleware::SESSION_EXPIRED_KEY)) {
             // TODO: UML-1449 logs incorrect time value as seconds should equal time() - TIME_KEY + Session Length
-            $this->logger->info(
+            $this->logger->debug(
                 'User session expired approx {seconds} seconds ago',
                 [
-                    'seconds' => time() - $session->get(SessionExpiryMiddleware::SESSION_TIME_KEY),
+                    'seconds' => time() - $session->get(SessionExpiryMiddleware::SESSION_TIME_KEY) + 1200,
                 ]
             );
 
