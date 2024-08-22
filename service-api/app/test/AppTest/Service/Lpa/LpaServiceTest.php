@@ -75,7 +75,6 @@ class LpaServiceTest extends TestCase
             $this->isValidLpaProphecy->reveal(),
             $this->getTrustCorporationStatusProphecy->reveal(),
             $this->featureEnabledProphecy->reveal(),
-            $this->lpaDataFormatter->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
