@@ -11,7 +11,7 @@ use EventSauce\ObjectHydrator\PropertyCaster;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class ExtractTownFromDataStore implements PropertyCaster
 {
-    public function cast(mixed $value, ObjectMapper $mapper): ?string
+    public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
         if (is_array($value) && isset($value['town'])) {
             return $value['town'];
