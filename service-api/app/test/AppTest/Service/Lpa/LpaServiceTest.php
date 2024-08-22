@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\Casters\CastSingleDonor;
+use EventSauce\ObjectHydrator\ObjectMapper;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -44,6 +46,7 @@ class LpaServiceTest extends TestCase
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
     private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
+    private ObjectMapper|ObjectProphecy $hydrator;
 
     public function setUp(): void
     {
@@ -60,6 +63,7 @@ class LpaServiceTest extends TestCase
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->lpaDataFormatter                    = $this->prophesize(LpaDataFormatter::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
+        $this->hydrator                            = $this->prophesize(ObjectMapper::class);
     }
 
     private function getLpaService(): LpaService
@@ -1271,5 +1275,43 @@ class LpaServiceTest extends TestCase
         $actualLpaResponse = ($this->lpaDataFormatter->reveal())($lpaResponse);
 
         $this->assertEquals($expectedLpaResponse, $actualLpaResponse);
+    }
+
+    #[Test]
+    public function can_cast_single_donor(): void
+    {
+        $donor = [
+            'uid' => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
+            'firstNames' => 'Feeg',
+            'lastName' => 'Bundlaaaa',
+            'address' => [
+                'line1' => '74 Cloob Close',
+                'town' => 'Mahhhhhhhhhh',
+                'country' => 'GB',
+            ],
+            'dateOfBirth' => '1970-01-24',
+            'email' => 'nobody@not.a.real.domain',
+            'contactLanguagePreference' => 'en',
+        ];
+
+        $expectedResult = [
+            'addressLine1' => '74 Cloop Close',
+            'country' => 'GB',
+            'town' => 'Mahhhhhhhhh',
+            'dob' => [
+                'date' => '1970-01-24 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone' => 'UTC',
+            ],
+            'email' => 'nobody@not_a_real_domain',
+            'firstNames' => 'Feeg',
+            'surName' => 'Bundlaaaa',
+        ];
+
+        $castSingleDonor = new CastSingleDonor();
+
+        $result = $castSingleDonor->cast($donor, $this->hydrator);
+
+        $this->assertEquals($expectedResult, $result);
     }
 }
