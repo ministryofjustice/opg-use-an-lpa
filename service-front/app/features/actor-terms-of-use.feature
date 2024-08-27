@@ -4,9 +4,15 @@ Feature: View terms of use from create account page
   I want to check the terms of use
   So that I can be be sure of my rights and responsibilities for using the service
 
-  @ui
+  @ui @ff:allow_gov_one_login:false
   Scenario: The user can access the terms of use from the create account page
     Given I am on the create account page
+    When I request to see the actor terms of use
+    Then I can see the actor terms of use
+
+  @ui @ff:allow_gov_one_login:true
+  Scenario: The user can access the terms of use from the one login page
+    Given I am on the one login page
     When I request to see the actor terms of use
     Then I can see the actor terms of use
 
