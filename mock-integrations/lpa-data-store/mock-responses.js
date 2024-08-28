@@ -1,10 +1,7 @@
 var lpa = "lpa" + context.request.pathParams.uid.slice(-4);
 
 switch (lpa) {
-    case 'lpa0138':
-    case 'lpa6361':
-    case 'lpa7237':
-    case 'lpa0252':
+    case 'lpa4UX3':
         respond().withExampleName(lpa);
         break;
 
@@ -15,4 +12,3 @@ switch (lpa) {
             .usingDefaultBehaviour();
         break;
 }
-

@@ -12,6 +12,10 @@ return [
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
 
+    'lpa_data_store_api' => [
+        'endpoint' => getenv('LPA_DATA_STORE_ENDPOINT') ?: null,
+    ],
+
     'codes_api' => [
         'endpoint' => getenv('LPA_CODES_API_ENDPOINT') ?: null,
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,

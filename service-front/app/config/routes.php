@@ -94,9 +94,40 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     // User creation
-    $app->route('/create-account', Actor\Handler\CreateAccountHandler::class, ['GET', 'POST'], 'create-account');
-    $app->get('/create-account-success', Actor\Handler\CreateAccountSuccessHandler::class, 'create-account-success');
-    $app->get('/activate-account/{token}', Actor\Handler\ActivateAccountHandler::class, 'activate-account');
+    $app->route(
+        '/create-account',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            Common\Handler\GoneHandler::class,
+            Actor\Handler\CreateAccountHandler::class,
+        ),
+        ['GET', 'POST'],
+        'create-account'
+    );
+    $app->get(
+        '/create-account-success',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            Common\Handler\GoneHandler::class,
+            Actor\Handler\CreateAccountSuccessHandler::class,
+        ),
+        'create-account-success'
+    );
+    $app->get(
+        '/activate-account/{token}',
+        new ConditionalRoutingMiddleware(
+            $container,
+            $factory,
+            $ALLOW_GOV_ONE_LOGIN,
+            fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
+            Actor\Handler\ActivateAccountHandler::class,
+        ),
+        'activate-account'
+    );
 
     // User auth
     $app->route('/login', [

@@ -1801,7 +1801,11 @@ class AccountContext implements Context
      */
     public function iRequestToSeeTheActorTermsOfUse(): void
     {
-        $this->ui->clickLink('terms of use');
+        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
+            $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
+        } else {
+            $this->ui->clickLink('terms of use');
+        }
     }
 
     /**

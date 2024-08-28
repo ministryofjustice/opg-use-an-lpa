@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\Lpas;
+use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\DataSanitiserStrategy;
@@ -25,7 +25,7 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 
-class LpasTest extends TestCase
+class SiriusLpasTest extends TestCase
 {
     use ProphecyTrait;
     use PSR17PropheciesTrait;
@@ -52,9 +52,9 @@ class LpasTest extends TestCase
             ->willReturn($requestSignerProphecy->reveal());
     }
 
-    private function getLpas(): Lpas
+    private function getLpas(): SiriusLpas
     {
-        return new Lpas(
+        return new SiriusLpas(
             $this->guzzleClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
