@@ -242,6 +242,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $this->logger->notice(
                         'Account with Id {id} added LPA of type {lpaType} to their account',
                         [
+                            'id'         => $this->identity,
                             'event_code' => $lpaType === 'health and welfare'
                                 ? EventCodes::ADDED_LPA_TYPE_HW
                                 : EventCodes::ADDED_LPA_TYPE_PFA,
