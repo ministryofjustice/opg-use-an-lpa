@@ -37,7 +37,7 @@ class DataStoreDonor extends DataStorePerson
         #[MapFrom('firstNames')]
         ?string $firstnames,
         #[MapFrom('lastName')]
-        ?string $surName,
+        ?string $surname,
         ?string $otherNames,
         #[MapFrom('status')]
         ?string $systemStatus,
@@ -56,7 +56,7 @@ class DataStoreDonor extends DataStorePerson
             $email,
             $firstname,
             $firstnames,
-            $surName,
+            $surname,
             $otherNames,
             $systemStatus
         );

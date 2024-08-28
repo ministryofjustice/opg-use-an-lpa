@@ -34,7 +34,7 @@ class DataStoreTrustCorporations extends DataStorePerson
         ?string $email,
         ?string $firstname,
         ?string $firstnames,
-        ?string $surName,
+        ?string $surname,
         ?string $otherNames,
         #[MapFrom('status')]
         ?string $systemStatus,
@@ -53,7 +53,7 @@ class DataStoreTrustCorporations extends DataStorePerson
             $email,
             $firstname,
             $firstnames,
-            $surName,
+            $surname,
             $otherNames,
             $systemStatus
         );

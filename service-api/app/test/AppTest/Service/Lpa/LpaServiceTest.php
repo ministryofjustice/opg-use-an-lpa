@@ -5,7 +5,17 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Entity\Casters\CastSingleDonor;
+use App\Entity\Casters\CastToCaseSubtype;
+use App\Entity\Casters\CastToLifeSustainingTreatment;
+use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
+use App\Entity\Casters\DateToStringSerializer;
+use App\Entity\Casters\ExtractAddressLine1FromDataStore;
+use App\Entity\Casters\ExtractCountryFromDataStore;
+use App\Entity\Casters\ExtractTownFromDataStore;
+use App\Entity\DataStore\DataStoreDonor;
+use App\Entity\Person;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use Laminas\Hydrator\HydratorInterface;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -1145,6 +1155,25 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function can_get_transformed_data_store_lpa_by_id(): void
     {
+        $donorObj = new Person(
+            'Feeg Bundlaaaa',
+            '74 Cloop Close',
+            '',
+            '',
+            'GB',
+            'Town',
+            '',
+            'Mahhhhhhhhh',
+            '',
+            new \DateTimeImmutable('1970-01-24'),
+            'nobody@not_a_real_domain',
+            'Feeg',
+            '',
+            'Bundlaaaa',
+            '',
+            ''
+        );
+
         $lpaResponse = [
                 'lpaType' => 'personal-welfare',
                 'channel' => 'online',
@@ -1280,6 +1309,7 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function can_cast_single_donor(): void
     {
+
         $donor = [
             'uid' => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             'firstNames' => 'Feeg',
@@ -1294,24 +1324,157 @@ class LpaServiceTest extends TestCase
             'contactLanguagePreference' => 'en',
         ];
 
-        $expectedResult = [
-            'addressLine1' => '74 Cloop Close',
-            'country' => 'GB',
-            'town' => 'Mahhhhhhhhh',
-            'dob' => [
-                'date' => '1970-01-24 00:00:00.000000',
-                'timezone_type' => 3,
-                'timezone' => 'UTC',
-            ],
-            'email' => 'nobody@not_a_real_domain',
-            'firstNames' => 'Feeg',
-            'surName' => 'Bundlaaaa',
-        ];
+        $datastoreDonor = new DataStoreDonor(
+            null,
+            null,
+            '74 Cloop Close',
+            null,
+            null,
+            'GB',
+            null,
+            null,
+            'Mahhhhhhhhh',
+            null,
+            new \DateTimeImmutable('1970-01-24 00:00:00.000000'),
+            'nobody@not_a_real_domain',
+            null,
+            'Feeg',
+            'Bundlaaaa',
+            null,
+            null,
+        );
 
         $castSingleDonor = new CastSingleDonor();
 
-        $result = $castSingleDonor->cast($donor, $this->hydrator);
+        $mockHydrator = $this->createMock(ObjectMapper::class);
 
-        $this->assertEquals($expectedResult, $result);
+        $result = $castSingleDonor->cast($donor, $mockHydrator);
+    print_r($datastoreDonor);
+    print_r($result);
+        $this->assertEquals($datastoreDonor, $result);
+    }
+
+    #[Test]
+    public function can_cast_case_subtype(): void
+    {
+        $caseSubType = 'personal-welfare';
+
+        $expectedCaseSubType = 'hw';
+
+        $castToSingleSubType = new CastToCaseSubtype();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $castToSingleSubType->cast($caseSubType, $mockHydrator);
+
+        $this->assertEquals($expectedCaseSubType, $result);
+    }
+
+    #[Test]
+    public function can_cast_life_sustaining_treatment(): void
+    {
+        $lifeSustainingTreatment = 'option-a';
+
+        $expectedLifeSustainingTreatment = 'option-a';
+
+        $castToLifeSustainingTreatment = new CastToLifeSustainingTreatment();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $castToLifeSustainingTreatment->cast($lifeSustainingTreatment, $mockHydrator);
+
+        $this->assertEquals($expectedLifeSustainingTreatment, $result);
+    }
+
+    #[Test]
+    public function can_when_lpa_can_be_used(): void
+    {
+        $whenTheLpaCanBeUsed = 'singular';
+
+        $expectedWhenTheLpaCanBeUsed = 'singular';
+
+        $castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $castToWhenTheLpaCanBeUsed->cast($whenTheLpaCanBeUsed, $mockHydrator);
+
+        $this->assertEquals($expectedWhenTheLpaCanBeUsed, $result);
+    }
+
+    #[Test]
+    public function can_date_to_string_serialised(): void
+    {
+        $date = new \DateTimeImmutable('22-12-1997');
+
+        $expecteDate = '22-12-1997 00:00:00';
+
+        $castDateToStringSerialize = new DateToStringSerializer();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $castDateToStringSerialize->serialize($date, $mockHydrator);
+
+        $this->assertEquals($expecteDate, $result);
+    }
+
+    #[Test]
+    public function can_extract_town_from_datastore(): void
+    {
+        $address = [
+            'line1' => '74 Cloob Close',
+            'town' => 'Mahhhhhhhhhh',
+            'country' => 'GB',
+        ];
+
+        $expectedTown = 'Mahhhhhhhhhh';
+
+        $extractTownFromDataStore = new ExtractTownFromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractTownFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals($expectedTown, $result);
+    }
+
+    #[Test]
+    public function can_extract_country_from_datastore(): void
+    {
+        $address = [
+            'line1' => '74 Cloob Close',
+            'town' => 'Mahhhhhhhhhh',
+            'country' => 'GB',
+        ];
+
+        $expectedCountry = 'GB';
+
+        $extractCountryFromDataStore = new ExtractCountryFromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractCountryFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals($expectedCountry, $result);
+    }
+
+    #[Test]
+    public function can_extract_address_one_from_datastore(): void
+    {
+        $address = [
+            'line1' => '74 Cloob Close',
+            'town' => 'Mahhhhhhhhhh',
+            'country' => 'GB',
+        ];
+
+        $expectedAddressOne = '74 Cloob Close';
+
+        $extractAddressOneFromDataStore = new ExtractAddressLine1FromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractAddressOneFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals($expectedAddressOne, $result);
     }
 }
