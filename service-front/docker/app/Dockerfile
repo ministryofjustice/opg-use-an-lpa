@@ -40,7 +40,7 @@ COPY --from=dependency /app/vendor /app/vendor
 #
 # Install development dependencies and tools into production image
 #
-FROM app as development
+FROM app AS development
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
 
@@ -59,7 +59,7 @@ CMD ([[ -z "${ENABLE_XDEBUG}" ]] || docker-php-ext-enable xdebug) \
 #
 # For safety reasons have the production image be the output
 #
-FROM app as production
+FROM app AS production
 COPY scripts/docker_hardening/harden.sh /harden.sh
 RUN /harden.sh && rm /harden.sh
 USER www-data

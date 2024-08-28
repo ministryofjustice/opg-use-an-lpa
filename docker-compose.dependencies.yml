@@ -176,3 +176,4 @@ services:
       INTERNAL_URL: http://mock-one-login:8080
       REDIRECT_URL: https://localhost:9042/home/login
       CLIENT_ID: client-id
+      TEMPLATE_SUB: 1
