@@ -23,7 +23,7 @@ Feature: The application supports Welsh as a language
     And I request to view the content in english
     Then I should be on the home page of the service
 
-  @ui @welsh
+  @ui @welsh @ff:allow_gov_one_login:false
   Scenario: Users can expect to receive notification emails in the language they are viewing
     Given I prefix a url with the welsh language code
       And I am not a user of the lpa application
