@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Entity\DataStore;
 
 use App\Entity\Casters\ExtractAddressLine1FromDataStore;
 use App\Entity\Casters\ExtractCountryFromDataStore;
 use App\Entity\Casters\ExtractTownFromDataStore;
-use DateTimeInterface;
+use App\Entity\Person;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class Donor extends Person
+class DataStorePerson extends Person
 {
     public function __construct(
-        #[MapFrom('name')]
-        public readonly ?string $companyName,
         ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromDataStore]
@@ -31,13 +30,14 @@ class Donor extends Person
         ?string $town,
         ?string $type,
         #[MapFrom('dateOfBirth')]
-        ?DateTimeInterface $dob,
+        ?DateTimeImmutable $dob,
         ?string $email,
+        #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
         #[MapFrom('lastName')]
-        ?string $surName,
+        ?string $surname,
         ?string $otherNames,
         #[MapFrom('status')]
         ?string $systemStatus,
@@ -56,9 +56,9 @@ class Donor extends Person
             $email,
             $firstname,
             $firstnames,
-            $surName,
+            $surname,
             $otherNames,
-            $systemStatus
+            $systemStatus,
         );
     }
 }

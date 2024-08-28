@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Entity\DataStore;
 
 use App\Entity\Casters\ExtractAddressLine1FromDataStore;
 use App\Entity\Casters\ExtractCountryFromDataStore;
@@ -10,7 +10,7 @@ use App\Entity\Casters\ExtractTownFromDataStore;
 use DateTimeInterface;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class TrustCorporations extends Person
+class DataStoreDonor extends DataStorePerson
 {
     public function __construct(
         #[MapFrom('name')]
@@ -30,10 +30,13 @@ class TrustCorporations extends Person
         #[ExtractTownFromDataStore]
         ?string $town,
         ?string $type,
+        #[MapFrom('dateOfBirth')]
         ?DateTimeInterface $dob,
         ?string $email,
         ?string $firstname,
+        #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[MapFrom('lastName')]
         ?string $surName,
         ?string $otherNames,
         #[MapFrom('status')]

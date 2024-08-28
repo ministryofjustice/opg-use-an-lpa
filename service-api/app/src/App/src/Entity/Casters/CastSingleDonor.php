@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity\Casters;
 
-use App\Entity\Donor;
+use App\Entity\DataStore\DataStoreDonor;
 use Attribute;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
+use EventSauce\ObjectHydrator\UnableToHydrateObject;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class CastSingleDonor implements PropertyCaster
 {
+    /**
+     * @throws UnableToHydrateObject
+     */
     public function cast(mixed $value, ObjectMapper $hydrator): mixed
     {
-        return $hydrator->hydrateObject(Donor::class, $value);
+        return $hydrator->hydrateObject(DataStoreDonor::class, $value);
     }
 }
