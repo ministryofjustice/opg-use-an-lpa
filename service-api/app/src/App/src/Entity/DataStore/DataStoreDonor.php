@@ -7,7 +7,7 @@ namespace App\Entity\DataStore;
 use App\Entity\Casters\ExtractAddressLine1FromDataStore;
 use App\Entity\Casters\ExtractCountryFromDataStore;
 use App\Entity\Casters\ExtractTownFromDataStore;
-use DateTimeInterface;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
 class DataStoreDonor extends DataStorePerson
@@ -31,7 +31,7 @@ class DataStoreDonor extends DataStorePerson
         ?string $town,
         ?string $type,
         #[MapFrom('dateOfBirth')]
-        ?DateTimeInterface $dob,
+        ?DateTimeImmutable $dob,
         ?string $email,
         ?string $firstname,
         #[MapFrom('firstNames')]

@@ -14,7 +14,10 @@ use App\Entity\Casters\ExtractCountryFromDataStore;
 use App\Entity\Casters\ExtractTownFromDataStore;
 use App\Entity\DataStore\DataStoreDonor;
 use App\Entity\Person;
+use EventSauce\ObjectHydrator\DefinitionProvider;
+use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use Laminas\Hydrator\HydratorInterface;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
@@ -1309,34 +1312,34 @@ class LpaServiceTest extends TestCase
     #[Test]
     public function can_cast_single_donor(): void
     {
-
         $donor = [
-            'uid' => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
+            'uId' => '700000000971',
             'firstNames' => 'Feeg',
+            'surname' => 'Gilson',
             'lastName' => 'Bundlaaaa',
+            'email' => 'nobody@not.a.real.domain',
+            'middlenames' => 'Suzanne',
+            'dateOfBirth' => '1970-01-24',
             'address' => [
                 'line1' => '74 Cloob Close',
                 'town' => 'Mahhhhhhhhhh',
                 'country' => 'GB',
             ],
-            'dateOfBirth' => '1970-01-24',
-            'email' => 'nobody@not.a.real.domain',
-            'contactLanguagePreference' => 'en',
         ];
 
-        $datastoreDonor = new DataStoreDonor(
+        $expectedDatastoreDonor = new DataStoreDonor(
             null,
             null,
-            '74 Cloop Close',
+            '74 Cloob Close',
             null,
             null,
             'GB',
             null,
             null,
-            'Mahhhhhhhhh',
+            'Mahhhhhhhhhh',
             null,
             new \DateTimeImmutable('1970-01-24 00:00:00.000000'),
-            'nobody@not_a_real_domain',
+            'nobody@not.a.real.domain',
             null,
             'Feeg',
             'Bundlaaaa',
@@ -1346,12 +1349,14 @@ class LpaServiceTest extends TestCase
 
         $castSingleDonor = new CastSingleDonor();
 
-        $mockHydrator = $this->createMock(ObjectMapper::class);
+        $mapper = new ObjectMapperUsingReflection(
+            new DefinitionProvider(
+                keyFormatter: new KeyFormatterWithoutConversion(),
+            ),
+        );
 
-        $result = $castSingleDonor->cast($donor, $mockHydrator);
-    print_r($datastoreDonor);
-    print_r($result);
-        $this->assertEquals($datastoreDonor, $result);
+        $result = $castSingleDonor->cast($donor, $mapper);
+        $this->assertEquals($expectedDatastoreDonor, $result);
     }
 
     #[Test]
@@ -1422,8 +1427,8 @@ class LpaServiceTest extends TestCase
     public function can_extract_town_from_datastore(): void
     {
         $address = [
-            'line1' => '74 Cloob Close',
-            'town' => 'Mahhhhhhhhhh',
+            'line1'   => '74 Cloob Close',
+            'town'    => 'Mahhhhhhhhhh',
             'country' => 'GB',
         ];
 
@@ -1442,8 +1447,8 @@ class LpaServiceTest extends TestCase
     public function can_extract_country_from_datastore(): void
     {
         $address = [
-            'line1' => '74 Cloob Close',
-            'town' => 'Mahhhhhhhhhh',
+            'line1'   => '74 Cloob Close',
+            'town'    => 'Mahhhhhhhhhh',
             'country' => 'GB',
         ];
 
@@ -1462,8 +1467,8 @@ class LpaServiceTest extends TestCase
     public function can_extract_address_one_from_datastore(): void
     {
         $address = [
-            'line1' => '74 Cloob Close',
-            'town' => 'Mahhhhhhhhhh',
+            'line1'   => '74 Cloob Close',
+            'town'    => 'Mahhhhhhhhhh',
             'country' => 'GB',
         ];
 

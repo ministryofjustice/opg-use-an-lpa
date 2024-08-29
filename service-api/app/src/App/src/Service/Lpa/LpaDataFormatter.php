@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Entity\Casters\DateSerializer;
 use App\Entity\Casters\DateToStringSerializer;
 use App\Entity\DataStore\DataStoreLpa;
 use DateTimeInterface;
