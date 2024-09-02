@@ -4,21 +4,23 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Entity\Casters\CastSingleDonor;
-use App\Entity\Casters\CastToCaseSubtype;
-use App\Entity\Casters\CastToLifeSustainingTreatment;
-use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
-use App\Entity\Casters\DateToStringSerializer;
-use App\Entity\Casters\ExtractAddressLine1FromDataStore;
-use App\Entity\Casters\ExtractCountryFromDataStore;
-use App\Entity\Casters\ExtractTownFromDataStore;
+use App\Entity\Casters\{
+    CastSingleDonor,
+    CastToCaseSubtype,
+    CastToLifeSustainingTreatment,
+    CastToWhenTheLpaCanBeUsed,
+    DateToStringSerializer,
+    ExtractAddressLine1FromDataStore,
+    ExtractCountryFromDataStore,
+    ExtractTownFromDataStore,
+};
 use App\Entity\DataStore\DataStoreDonor;
 use App\Entity\Person;
+use App\Entity\DataStore\DataStoreLpa;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
-use Laminas\Hydrator\HydratorInterface;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -58,7 +60,7 @@ class LpaServiceTest extends TestCase
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
+    private LpaDataFormatter $lpaDataFormatter;
     private ObjectMapper|ObjectProphecy $hydrator;
 
     public function setUp(): void
@@ -74,9 +76,9 @@ class LpaServiceTest extends TestCase
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
-        $this->lpaDataFormatter                    = $this->prophesize(LpaDataFormatter::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
         $this->hydrator                            = $this->prophesize(ObjectMapper::class);
+        $this->lpaDataFormatter                    = new LpaDataFormatter();
     }
 
     private function getLpaService(): LpaService
@@ -1156,44 +1158,33 @@ class LpaServiceTest extends TestCase
     }
 
     #[Test]
-    public function can_get_transformed_data_store_lpa_by_id(): void
+    public function can_serialise_datastore_lpa_to_modernise_format(): void
     {
-        $donorObj = new Person(
-            'Feeg Bundlaaaa',
-            '74 Cloop Close',
-            '',
-            '',
-            'GB',
-            'Town',
-            '',
-            'Mahhhhhhhhh',
-            '',
-            new \DateTimeImmutable('1970-01-24'),
-            'nobody@not_a_real_domain',
-            'Feeg',
-            '',
-            'Bundlaaaa',
-            '',
-            ''
-        );
-
-        $lpaResponse = [
+        $lpa = [
+                'uid' => 'M-789Q-P4DF-4UX3',
+                'status' => 'registered',
+                'registrationDate' => '2024-01-12',
+                'updatedAt' => '2024-01-12',
                 'lpaType' => 'personal-welfare',
                 'channel' => 'online',
-                'donor'   => [
+                'donor' => [
                     'uid' => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
-                        'firstNames' => 'Feeg',
-                        'lastName' => 'Bundlaaaa',
-                        'address' => [
-                            'line1' => '74 Cloob Close',
-                            'town' => 'Mahhhhhhhhhh',
-                            'country' => 'GB',
-                        ],
-                        'dateOfBirth' => '1970-01-24',
-                        'email' => 'nobody@not.a.real.domain',
-                        'contactLanguagePreference' => 'en',
+                    'firstNames' => 'Feeg',
+                    'lastName' => 'Bundlaaaa',
+                    'address' => [
+                        'line1' => '74 Cloob Close',
+                        'town' => 'Mahhhhhhhhhh',
+                        'country' => 'GB',
                     ],
-                'attorneys' => [
+                    'email' => 'nobody@not.a.real.domain',
+                    'dateOfBirth' => '1970-01-24',
+                    'contactLanguagePreference' => 'en',
+                    'identityCheck' => [
+                        'checkedAt' => '2024-01-10',
+                        'type' => 'one-login',
+                    ]
+                ],
+                'attorneys'=> [
                     [
                         'uid' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
                         'firstNames' => 'Herman',
@@ -1203,110 +1194,142 @@ class LpaServiceTest extends TestCase
                             'town' => 'Mahhhhhhhhhh',
                             'country' => 'GB',
                         ],
-                        'dateOfBirth' => '1982-07-24',
                         'status' => 'active',
                         'channel' => 'paper',
+                        'signedAt' => '2024-01-10',
                     ],
                 ],
-                'trustCorporations' => [
+                'trustCorporations'=> [
                     [
-                        'uid' => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
-                        'name' => 'Trust us Corp.',
-                        'companyNumber' => '666123321',
-                        'address' => [
-                            'line1' => '103 Line 1',
-                            'town' => 'Town',
-                            'country' => 'GB',
-                        ],
-                        'status' => 'active',
-                        'channel' => 'paper',
+                    'uid'=> '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+                    'name'=> 'Trust us Corp.',
+                    'companyNumber'=> '666123321',
+                    'address'=> [
+                        'line1'=> '103 Line 1',
+                        'town'=> 'Town',
+                        'country'=> 'GB',
+                    ],
+                    'status'=> 'active',
+                    'channel'=> 'paper',
+                    'signedAt'=> '2024-01-10',
                     ],
                 ],
-                'certificateProvider' => [
+                'certificateProvider'=> [
                     'uid' => '6808960d-12cf-47c5-a2bc-3177deb8599c',
                     'firstNames' => 'Vone',
                     'lastName' => 'Spust',
                     'address' => [
-                        'line1' => '122111 Zonnington Way',
+                        'line1'=> '122111 Zonnington Way',
                         'town' => 'Mahhhhhhhhhh',
                         'country' => 'GB',
                     ],
                     'channel' => 'online',
                     'email' => 'a@example.com',
                     'phone' => '070009000',
+                    'signedAt' => '2024-01-10',
+                    'identityCheck' => [
+                        'checkedAt' => '2024-01-10',
+                        'type' => 'one-login',
+                    ],
                 ],
-                'lifeSustainingTreatmentOption' => 'option-a',
-                'signedAt' => '2024-01-10T23:00:00Z',
-                'certificateProviderNotRelatedConfirmedAt' => '2024-01-11T22:00:00Z',
-                'howAttorneysMakeDecisions' => 'jointly',
+                'lifeSustainingTreatmentOption'=> 'option-a',
+                'signedAt'=> '2024-01-10',
+                'howAttorneysMakeDecisions'=> 'jointly',
+                'whenTheLpaCanBeUsed'=> 'when-capacity-lost',
+                'applicationHasGuidance'=> false,
+                'applicationHasRestrictions'=> false,
+                'applicationType'=> null,
             ];
 
-        $expectedLpaResponse = [
-            'attorneyActDecisions' => [
-                'name' => 'JOINTLY',
-                'value' => 'jointly',
-            ],
-            'attorneys' => [
+        $expectedLpa =  [
+            "applicationHasGuidance" => false,
+            "applicationHasRestrictions" => false,
+            "applicationType" => null,
+            "attorneyActDecisions" => "jointly",
+            "attorneys" => [
                 [
-                    'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
-                    'country' => 'GB',
-                    'town' => 'Mahhhhhhhhh',
-                    'dob' => [
-                        'date' => '1982-07-24 00:00:00.000000',
-                        'timezone_type' => 3,
-                        'timezone' => 'UTC',
-                    ],
-                    'firstNames' => 'Herman',
-                    'surName' => 'Seakrest',
-                    'systemStatus' => 'active',
+                    "name" => null,
+                    "addressLine1" => "81 NighOnTimeWeBuiltIt Street",
+                    "addressLine2" => null,
+                    "addressLine3" => null,
+                    "country" => "GB",
+                    "county" => null,
+                    "postcode" => null,
+                    "town" => "Mahhhhhhhhhh",
+                    "type" => null,
+                    "dob" => null,
+                    "email" => null,
+                    "firstname" => null,
+                    "firstnames" => "Herman",
+                    "surname" => "Seakrest",
+                    "otherNames" => null,
+                    "systemStatus" => "active",
                 ],
             ],
-            'caseSubtype' => [
-                'name' => 'PERSONAL_WELFARE',
-                'value' => 'personal-welfare',
+            "caseSubtype" => "hw",
+            "channel" => "online",
+            "dispatchDate" => null,
+            "donor" => [
+                "name" => null,
+                "addressLine1" => "74 Cloob Close",
+                "addressLine2" => null,
+                "addressLine3" => null,
+                "country" => "GB",
+                "county" => null,
+                "postcode" => null,
+                "town" => "Mahhhhhhhhhh",
+                "type" => null,
+                "dob" => "24-01-1970 00:00:00",
+                "email" => "nobody@not.a.real.domain",
+                "firstname" => null,
+                "firstnames" => "Feeg",
+                "surname" => "Bundlaaaa",
+                "otherNames" => null,
+                "systemStatus" => null,
             ],
-            'channel' => 'online',
-            'donor' => [
-                'addressLine1' => '74 Cloop Close',
-                'country' => 'GB',
-                'town' => 'Mahhhhhhhhh',
-                'dob' => [
-                    'date' => '1970-01-24 00:00:00.000000',
-                    'timezone_type' => 3,
-                    'timezone' => 'UTC',
-                ],
-                'email' => 'nobody@not_a_real_domain',
-                'firstNames' => 'Feeg',
-                'surName' => 'Bundlaaaa',
-            ],
-            'lifeSustainingTreatment' => [
-                'name' => 'OPTION_A',
-                'value' => 'option-a',
-            ],
-            'lpaDonorSignatureDate' => [
-                'date' => '2021-01-10 23:00:00.000000',
-                'timezone_type' => 2,
-                'timezone' => 'Z',
-            ],
-            'trustCorporations' => [
+            "hasSeveranceWarning" => null,
+            "invalidDate" => null,
+            "lifeSustainingTreatment" => "option-a",
+            "lpaDonorSignatureDate" => "10-01-2024 00:00:00",
+            "lpaIsCleansed" => null,
+            "onlineLpaId" => null,
+            "receiptDate" => null,
+            "registrationDate" => "12-01-2024 00:00:00",
+            "rejectedDate" => null,
+            "replacementAttorneys" => null,
+            "status" => "registered",
+            "statusDate" => null,
+            "trustCorporations" => [
                 [
-                    'name' => 'Trust us Corp.',
-                    'addressLine1' => '103 Line 1',
-                    'country' => 'GB',
-                    'town' => 'Town',
-                    'systemStatus' => 'active',
-                    'companyName' => 'Trust us Corp.',
+                    "name" => "Trust us Corp.",
+                    "addressLine1" => "103 Line 1",
+                    "addressLine2" => null,
+                    "addressLine3" => null,
+                    "country" => "GB",
+                    "county" => null,
+                    "postcode" => null,
+                    "town" => "Town",
+                    "type" => null,
+                    "dob" => null,
+                    "email" => null,
+                    "firstname" => null,
+                    "firstnames" => null,
+                    "surname" => null,
+                    "otherNames" => null,
+                    "systemStatus" => "active",
+                    "companyName" => "Trust us Corp.",
                 ],
             ],
+            "uId" => null,
+            "withdrawnDate" => null,
         ];
 
-        $this->lpaDataFormatter->__invoke(
-            $lpaResponse
-        )->willReturn($expectedLpaResponse);
+        $newLpa = ($this->lpaDataFormatter)($lpa);
 
-        $actualLpaResponse = ($this->lpaDataFormatter->reveal())($lpaResponse);
+        $jsonLpa = json_encode($newLpa);
+        $expectedJsonLpa = json_encode($expectedLpa);
 
-        $this->assertEquals($expectedLpaResponse, $actualLpaResponse);
+        $this->assertEquals($expectedJsonLpa, $jsonLpa);
     }
 
     #[Test]
@@ -1328,7 +1351,6 @@ class LpaServiceTest extends TestCase
         ];
 
         $expectedDatastoreDonor = new DataStoreDonor(
-            null,
             null,
             '74 Cloob Close',
             null,
@@ -1444,6 +1466,24 @@ class LpaServiceTest extends TestCase
     }
 
     #[Test]
+    public function cannot_extract_town_from_datastore(): void
+    {
+        $address = [
+            'line1'   => '74 Cloob Close',
+            'town'    => '',
+            'country' => 'GB',
+        ];
+
+        $extractTownFromDataStore = new ExtractTownFromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractTownFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals(null, $result);
+    }
+
+    #[Test]
     public function can_extract_country_from_datastore(): void
     {
         $address = [
@@ -1464,6 +1504,24 @@ class LpaServiceTest extends TestCase
     }
 
     #[Test]
+    public function cannot_extract_country_from_datastore(): void
+    {
+        $address = [
+            'line1'   => '74 Cloob Close',
+            'town'    => 'Mahhhhhhhhhh',
+            'country' => '',
+        ];
+
+        $extractCountryFromDataStore = new ExtractCountryFromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractCountryFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals(null, $result);
+    }
+
+    #[Test]
     public function can_extract_address_one_from_datastore(): void
     {
         $address = [
@@ -1481,5 +1539,23 @@ class LpaServiceTest extends TestCase
         $result = $extractAddressOneFromDataStore->cast($address, $mockHydrator);
 
         $this->assertEquals($expectedAddressOne, $result);
+    }
+
+    #[Test]
+    public function cannot_extract_address_one_from_datastore(): void
+    {
+        $address = [
+            'line1'   => '',
+            'town'    => 'Mahhhhhhhhhh',
+            'country' => 'GB',
+        ];
+
+        $extractAddressOneFromDataStore = new ExtractAddressLine1FromDataStore();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $extractAddressOneFromDataStore->cast($address, $mockHydrator);
+
+        $this->assertEquals(null, $result);
     }
 }

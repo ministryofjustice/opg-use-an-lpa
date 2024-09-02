@@ -13,8 +13,6 @@ use EventSauce\ObjectHydrator\MapFrom;
 class DataStoreDonor extends DataStorePerson
 {
     public function __construct(
-        #[MapFrom('name')]
-        public readonly ?string $companyName,
         ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromDataStore]
