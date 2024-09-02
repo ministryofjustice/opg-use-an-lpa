@@ -9,7 +9,7 @@ use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class ExtractTownFromDataStore implements PropertyCaster
+class ExtractTownFromLpaStore implements PropertyCaster
 {
     public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {

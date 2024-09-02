@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Entity\Casters\DateToStringSerializer;
-use App\Entity\DataStore\DataStoreLpa;
+use App\Entity\LpaStore\LpaStore;
 use DateTimeInterface;
 use EventSauce\ObjectHydrator\DefaultSerializerRepository;
 use EventSauce\ObjectHydrator\DefinitionProvider;
@@ -49,7 +49,7 @@ class LpaDataFormatter
         );
 
         $lpaObject = $mapper->hydrateObject(
-            DataStoreLpa::class,
+            LpaStore::class,
             $lpa
         );
 

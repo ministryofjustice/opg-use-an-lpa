@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Casters;
 
-use App\Entity\DataStore\DataStoreDonor;
+use App\Entity\LpaStore\LpaStoreDonor;
 use Attribute;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
@@ -18,6 +18,6 @@ class CastSingleDonor implements PropertyCaster
      */
     public function cast(mixed $value, ObjectMapper $hydrator): mixed
     {
-        return $hydrator->hydrateObject(DataStoreDonor::class, $value);
+        return $hydrator->hydrateObject(LpaStoreDonor::class, $value);
     }
 }

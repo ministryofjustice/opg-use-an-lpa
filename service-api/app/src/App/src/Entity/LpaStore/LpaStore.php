@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\DataStore;
+namespace App\Entity\LpaStore;
 
 use App\Entity\Casters\CastSingleDonor;
 use App\Entity\Casters\CastToCaseSubtype;
@@ -16,7 +16,7 @@ use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 
-class DataStoreLpa extends Lpa
+class LpaStore extends Lpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -25,7 +25,7 @@ class DataStoreLpa extends Lpa
         #[MapFrom('howAttorneysMakeDecisions')]
         #[CastToWhenTheLpaCanBeUsed]
         ?HowAttorneysMakeDecisions $attorneyActDecisions,
-        #[CastListToType(DataStoreAttorney::class)]
+        #[CastListToType(LpaStoreAttorney::class)]
         ?array $attorneys,
         #[MapFrom('lpaType')]
         #[CastToCaseSubtype]
@@ -49,7 +49,7 @@ class DataStoreLpa extends Lpa
         ?array $replacementAttorneys,
         ?string $status,
         ?DateTimeImmutable $statusDate,
-        #[CastListToType(DataStoreTrustCorporations::class)]
+        #[CastListToType(LpaStoreTrustCorporations::class)]
         ?array $trustCorporations,
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,

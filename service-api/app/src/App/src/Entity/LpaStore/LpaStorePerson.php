@@ -2,35 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\DataStore;
+namespace App\Entity\LpaStore;
 
-use App\Entity\Casters\ExtractAddressLine1FromDataStore;
-use App\Entity\Casters\ExtractCountryFromDataStore;
-use App\Entity\Casters\ExtractTownFromDataStore;
+use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
+use App\Entity\Casters\ExtractCountryFromLpaStore;
+use App\Entity\Casters\ExtractTownFromLpaStore;
+use App\Entity\Person;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class DataStoreDonor extends DataStorePerson
+class LpaStorePerson extends Person
 {
     public function __construct(
         ?string $name,
         #[MapFrom('address')]
-        #[ExtractAddressLine1FromDataStore]
+        #[ExtractAddressLine1FromLpaStore]
         ?string $addressLine1,
         ?string $addressLine2,
         ?string $addressLine3,
         #[MapFrom('address')]
-        #[ExtractCountryFromDataStore]
+        #[ExtractCountryFromLpaStore]
         ?string $country,
         ?string $county,
         ?string $postcode,
         #[MapFrom('address')]
-        #[ExtractTownFromDataStore]
+        #[ExtractTownFromLpaStore]
         ?string $town,
         ?string $type,
         #[MapFrom('dateOfBirth')]
         ?DateTimeImmutable $dob,
         ?string $email,
+        #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
@@ -56,7 +58,7 @@ class DataStoreDonor extends DataStorePerson
             $firstnames,
             $surname,
             $otherNames,
-            $systemStatus
+            $systemStatus,
         );
     }
 }

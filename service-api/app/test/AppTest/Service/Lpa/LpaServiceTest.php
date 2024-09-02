@@ -10,11 +10,11 @@ use App\Entity\Casters\{
     CastToLifeSustainingTreatment,
     CastToWhenTheLpaCanBeUsed,
     DateToStringSerializer,
-    ExtractAddressLine1FromDataStore,
-    ExtractCountryFromDataStore,
-    ExtractTownFromDataStore,
+    ExtractAddressLine1FromLpaStore,
+    ExtractCountryFromLpaStore,
+    ExtractTownFromLpaStore,
 };
-use App\Entity\DataStore\DataStoreDonor;
+use App\Entity\LpaStore\LpaStoreDonor;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
@@ -1348,7 +1348,7 @@ class LpaServiceTest extends TestCase
             ],
         ];
 
-        $expectedDatastoreDonor = new DataStoreDonor(
+        $expectedDatastoreDonor = new LpaStoreDonor(
             null,
             '74 Cloob Close',
             null,
@@ -1470,7 +1470,7 @@ class LpaServiceTest extends TestCase
 
         $expectedTown = 'Mahhhhhhhhhh';
 
-        $extractTownFromDataStore = new ExtractTownFromDataStore();
+        $extractTownFromDataStore = new ExtractTownFromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 
@@ -1484,11 +1484,10 @@ class LpaServiceTest extends TestCase
     {
         $address = [
             'line1'   => '74 Cloob Close',
-            'town'    => null,
             'country' => 'GB',
         ];
 
-        $extractTownFromDataStore = new ExtractTownFromDataStore();
+        $extractTownFromDataStore = new ExtractTownFromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 
@@ -1508,7 +1507,7 @@ class LpaServiceTest extends TestCase
 
         $expectedCountry = 'GB';
 
-        $extractCountryFromDataStore = new ExtractCountryFromDataStore();
+        $extractCountryFromDataStore = new ExtractCountryFromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 
@@ -1523,10 +1522,9 @@ class LpaServiceTest extends TestCase
         $address = [
             'line1'   => '74 Cloob Close',
             'town'    => 'Mahhhhhhhhhh',
-            'country' => null,
         ];
 
-        $extractCountryFromDataStore = new ExtractCountryFromDataStore();
+        $extractCountryFromDataStore = new ExtractCountryFromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 
@@ -1546,7 +1544,7 @@ class LpaServiceTest extends TestCase
 
         $expectedAddressOne = '74 Cloob Close';
 
-        $extractAddressOneFromDataStore = new ExtractAddressLine1FromDataStore();
+        $extractAddressOneFromDataStore = new ExtractAddressLine1FromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 
@@ -1559,12 +1557,11 @@ class LpaServiceTest extends TestCase
     public function cannot_extract_address_one_from_datastore(): void
     {
         $address = [
-            'line1'   => null,
             'town'    => 'Mahhhhhhhhhh',
             'country' => 'GB',
         ];
 
-        $extractAddressOneFromDataStore = new ExtractAddressLine1FromDataStore();
+        $extractAddressOneFromDataStore = new ExtractAddressLine1FromLpaStore();
 
         $mockHydrator = $this->createMock(ObjectMapper::class);
 

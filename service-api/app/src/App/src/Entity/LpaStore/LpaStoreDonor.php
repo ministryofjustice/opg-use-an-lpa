@@ -2,38 +2,39 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\DataStore;
+namespace App\Entity\LpaStore;
 
-use App\Entity\Casters\ExtractAddressLine1FromDataStore;
-use App\Entity\Casters\ExtractCountryFromDataStore;
-use App\Entity\Casters\ExtractTownFromDataStore;
-use DateTimeInterface;
+use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
+use App\Entity\Casters\ExtractCountryFromLpaStore;
+use App\Entity\Casters\ExtractTownFromLpaStore;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class DataStoreTrustCorporations extends DataStorePerson
+class LpaStoreDonor extends LpaStorePerson
 {
     public function __construct(
-        #[MapFrom('name')]
-        public readonly ?string $companyName,
         ?string $name,
         #[MapFrom('address')]
-        #[ExtractAddressLine1FromDataStore]
+        #[ExtractAddressLine1FromLpaStore]
         ?string $addressLine1,
         ?string $addressLine2,
         ?string $addressLine3,
         #[MapFrom('address')]
-        #[ExtractCountryFromDataStore]
+        #[ExtractCountryFromLpaStore]
         ?string $country,
         ?string $county,
         ?string $postcode,
         #[MapFrom('address')]
-        #[ExtractTownFromDataStore]
+        #[ExtractTownFromLpaStore]
         ?string $town,
         ?string $type,
-        ?DateTimeInterface $dob,
+        #[MapFrom('dateOfBirth')]
+        ?DateTimeImmutable $dob,
         ?string $email,
         ?string $firstname,
+        #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[MapFrom('lastName')]
         ?string $surname,
         ?string $otherNames,
         #[MapFrom('status')]
