@@ -24,6 +24,7 @@ comment:
   layout: "reach, diff, flags, files"
   behavior: default
   require_changes: true
+  show_carryforward_flags: true
 
 # New root YAML section = `flags:`
 # This is where you would define every flag from your
