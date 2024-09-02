@@ -15,8 +15,6 @@ use App\Entity\Casters\{
     ExtractTownFromDataStore,
 };
 use App\Entity\DataStore\DataStoreDonor;
-use App\Entity\Person;
-use App\Entity\DataStore\DataStoreLpa;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
@@ -1446,6 +1444,22 @@ class LpaServiceTest extends TestCase
     }
 
     #[Test]
+    public function cannot_convert_date_to_string(): void
+    {
+        $date = '22-12-1997';
+
+        $expecteDate = '22-12-1997';
+
+        $castDateToStringSerialize = new DateToStringSerializer();
+
+        $mockHydrator = $this->createMock(ObjectMapper::class);
+
+        $result = $castDateToStringSerialize->serialize($date, $mockHydrator);
+
+        $this->assertEquals($expecteDate, $result);
+    }
+
+    #[Test]
     public function can_extract_town_from_datastore(): void
     {
         $address = [
@@ -1470,7 +1484,7 @@ class LpaServiceTest extends TestCase
     {
         $address = [
             'line1'   => '74 Cloob Close',
-            'town'    => '',
+            'town'    => null,
             'country' => 'GB',
         ];
 
@@ -1509,7 +1523,7 @@ class LpaServiceTest extends TestCase
         $address = [
             'line1'   => '74 Cloob Close',
             'town'    => 'Mahhhhhhhhhh',
-            'country' => '',
+            'country' => null,
         ];
 
         $extractCountryFromDataStore = new ExtractCountryFromDataStore();
@@ -1545,7 +1559,7 @@ class LpaServiceTest extends TestCase
     public function cannot_extract_address_one_from_datastore(): void
     {
         $address = [
-            'line1'   => '',
+            'line1'   => null,
             'town'    => 'Mahhhhhhhhhh',
             'country' => 'GB',
         ];
