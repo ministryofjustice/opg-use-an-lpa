@@ -1,6 +1,6 @@
 ---
 plugin: "openapi"
-specFile: "mock-openapi.yaml"
+specFile: "mock-openapi.yml"
 
 response:
   scriptFile: "mock-responses.js"
