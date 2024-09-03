@@ -7,10 +7,11 @@ namespace App\Entity\LpaStore;
 use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
+use App\Entity\Person;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class LpaStoreDonor extends LpaStorePerson
+class LpaStoreDonor extends Person
 {
     public function __construct(
         ?string $name,
