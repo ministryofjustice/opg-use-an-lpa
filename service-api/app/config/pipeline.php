@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
+use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
+use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
 use Mezzio\MiddlewareFactory;
-use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
-use Laminas\Stratigility\Middleware\ErrorHandler;
+use Psr\Container\ContainerInterface;
 
 /**
  * Setup middleware pipeline:
@@ -74,6 +74,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - etc.
     $app->pipe('/v1/actor-codes', App\Middleware\UserIdentificationMiddleware::class);
     $app->pipe('/v1/lpas', App\Middleware\UserIdentificationMiddleware::class);
+    $app->pipe('/v2/lpas', App\Middleware\UserIdentificationMiddleware::class);
     $app->pipe('/v1/older-lpa', App\Middleware\UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
