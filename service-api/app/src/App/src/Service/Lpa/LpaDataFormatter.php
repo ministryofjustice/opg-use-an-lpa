@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Entity\Casters\DateToStringSerializer;
 use App\Entity\LpaStore\LpaStore;
+use App\Entity\Sirius\SiriusLpa;
 use DateTimeInterface;
 use EventSauce\ObjectHydrator\DefaultSerializerRepository;
 use EventSauce\ObjectHydrator\DefinitionProvider;
@@ -49,7 +50,7 @@ class LpaDataFormatter
         );
 
         $lpaObject = $mapper->hydrateObject(
-            LpaStore::class,
+            SiriusLpa::class,
             $lpa
         );
 
