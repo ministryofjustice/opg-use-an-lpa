@@ -7,7 +7,7 @@ namespace App\Entity\LpaStore;
 use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
-use DateTimeInterface;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
 class LpaStoreTrustCorporations extends LpaStorePerson
@@ -30,7 +30,7 @@ class LpaStoreTrustCorporations extends LpaStorePerson
         #[ExtractTownFromLpaStore]
         ?string $town,
         ?string $type,
-        ?DateTimeInterface $dob,
+        ?DateTimeImmutable $dob,
         ?string $email,
         ?string $firstname,
         ?string $firstnames,

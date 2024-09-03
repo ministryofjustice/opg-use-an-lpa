@@ -1277,7 +1277,7 @@ class LpaServiceTest extends TestCase
                 "postcode" => null,
                 "town" => "Mahhhhhhhhhh",
                 "type" => null,
-                "dob" => "24-01-1970 00:00:00",
+                "dob" => "1970-01-24T00:00:00+00:00",
                 "email" => "nobody@not.a.real.domain",
                 "firstname" => null,
                 "firstnames" => "Feeg",
@@ -1288,11 +1288,11 @@ class LpaServiceTest extends TestCase
             "hasSeveranceWarning" => null,
             "invalidDate" => null,
             "lifeSustainingTreatment" => "option-a",
-            "lpaDonorSignatureDate" => "10-01-2024 00:00:00",
+            "lpaDonorSignatureDate" => "2024-01-10T00:00:00+00:00",
             "lpaIsCleansed" => null,
             "onlineLpaId" => null,
             "receiptDate" => null,
-            "registrationDate" => "12-01-2024 00:00:00",
+            "registrationDate" => "2024-01-12T00:00:00+00:00",
             "rejectedDate" => null,
             "replacementAttorneys" => null,
             "status" => "registered",
@@ -1326,7 +1326,7 @@ class LpaServiceTest extends TestCase
 
         $jsonLpa = json_encode($newLpa);
         $expectedJsonLpa = json_encode($expectedLpa);
-
+    print_r($jsonLpa);
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
     }
 
@@ -1432,7 +1432,7 @@ class LpaServiceTest extends TestCase
     {
         $date = new \DateTimeImmutable('22-12-1997');
 
-        $expecteDate = '22-12-1997 00:00:00';
+        $expecteDate = '1997-12-22T00:00:00+00:00';
 
         $castDateToStringSerialize = new DateToStringSerializer();
 
