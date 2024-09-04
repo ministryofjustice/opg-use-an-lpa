@@ -9,7 +9,7 @@ use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\ResolveActor;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusLpaManager;
 use Psr\Log\LoggerInterface;
 use Exception;
 
@@ -17,7 +17,7 @@ class DynamoCodeValidationStrategy implements CodeValidationStrategyInterface
 {
     public function __construct(
         private ActorCodesInterface $actorCodesRepository,
-        private LpaService $lpaService,
+        private SiriusLpaManager $lpaService,
         private LoggerInterface $logger,
         private ResolveActor $resolveActor,
     ) {
