@@ -66,9 +66,16 @@ jobs:
           role-duration-seconds: 900
           role-session-name: OPGLPADestroyEphemeralEnvironment
 
+      - name: set pagerduty token
+        run: |
+          export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
+            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+          echo "::add-mask::$TF_VAR_pagerduty_token"
+          echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
+
       - name: Run workspace cleanup
         working-directory: ./terraform/environment
         env:
-          TF_VAR_pagerduty_token: ${{ secrets.PAGERDUTY_TOKEN }}
+          TF_VAR_pagerduty_token: ${{ env.TF_VAR_pagerduty_token }}
         run: |
           ../../scripts/pipeline/workspace_cleanup/destroy_workspace.sh ${{ needs.workspace_name.outputs.name }}
