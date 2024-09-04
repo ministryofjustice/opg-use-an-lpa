@@ -8,7 +8,7 @@ use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\Exception\GoneException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusLpaManager;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use BehatTest\Context\SetupEnv;
@@ -34,7 +34,7 @@ class ViewerContext extends BaseIntegrationContext
     private string $apiGatewayPactProvider;
     private string $iapImagesPactProvider;
     private AwsMockHandler $awsFixtures;
-    private LpaService $lpaService;
+    private SiriusLpaManager $lpaService;
 
     /**
      * @Given I access the viewer service
@@ -279,7 +279,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
 
-        $this->lpaService = $this->lpaService = $this->container->get(LpaService::class);
+        $this->lpaService = $this->lpaService = $this->container->get(SiriusLpaManager::class);
 
         $config                       = $this->container->get('config');
         $this->apiGatewayPactProvider = parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST);

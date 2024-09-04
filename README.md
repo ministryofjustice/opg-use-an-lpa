@@ -29,19 +29,19 @@ A Makefile is maintained that aliases the most useful docker-compose commands.
 To build the service and it's dependencies
 
 ```shell
-make build_all
+make build
 ```
 
 To start the service and its dependencies
 
 ```shell
-make up_all # start ual and all dependencies then run seeding of local data
+make up # start ual and all dependencies then run seeding of local data
 ```
 
 To stop the service and its dependencies (ordering is important so that the networks are removed last)
 
 ```shell
-make down_all # bring down everything including the lpa endpoint
+make down # bring down everything including the lpa endpoint
 ```
 
 There are other make file targets for common operations such as
@@ -63,7 +63,7 @@ make rebuild [container name]
 To bring up the local environment
 
 ```shell
-make up_all
+make up
 ```
 
 If you plan on developing the application i:e in most cases, you should also enable development mode.
