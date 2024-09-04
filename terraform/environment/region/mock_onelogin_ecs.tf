@@ -233,6 +233,10 @@ locals {
         {
           name  = "REDIRECT_URL",
           value = "https://${local.route53_fqdns.public_facing_use}/home/login"
+        },
+        {
+          name  = "TEMPLATE_SUB",
+          value = "1"
         }
       ]
   })
