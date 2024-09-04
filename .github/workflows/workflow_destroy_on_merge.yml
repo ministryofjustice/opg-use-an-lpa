@@ -42,16 +42,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
 
-      - name: Set Terraform version
-        working-directory: ./terraform/${{ matrix.folder }}
+      - name: Get terraform version
         id: set-terraform-version
-        run: |
-          TF_VERSION=$(cat .terraform-version)
-          echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
-
-      - uses: hashicorp/setup-terraform@7f4493e15578a47490e79892b308bf23dee56c45 # pin@v2.0.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
         with:
-          terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
+          terraform_directory: "./terraform/environment"
+
+      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # tag=v2.0.3
+        with:
+          terraform_version: ${{ steps.set-terraform-version.outputs.version }}
+          terraform_wrapper: false
 
       - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
         with:
