@@ -20,14 +20,21 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - closed
+    paths:
+      - "service-*/**"
+      - "terraform/**"
+      - "scripts/**"
+      - ".github/workflows/**"
 
 jobs:
   workspace_name:
     uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@bd6ac6106a4adda64cecefa3632fb64ab0ddab4b # v1.36.0
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
 
   cleanup_workspace:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     needs:
       - workspace_name
