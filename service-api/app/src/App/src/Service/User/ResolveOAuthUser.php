@@ -24,6 +24,7 @@ class ResolveOAuthUser
     public function __construct(
         private ActorUsersInterface $usersRepository,
         private UserService $userService,
+        private RecoverAccount $recoverAccount,
         private ClockInterface $clock,
         private LoggerInterface $logger,
     ) {
@@ -81,21 +82,9 @@ class ResolveOAuthUser
                 ]
             );
 
+            // user has updated their email at OIDC
             if ($user['Email'] !== $email) {
-                // update the held email
-                $this->usersRepository->changeEmail($user['Id'], '', $email);
-
-                $logEmail      = $email;
-                $user['Email'] = $email;
-
-                $this->logger->info(
-                    'Update of email address for OIDC identity {identity} required',
-                    [
-                        'identity'  => $identity,
-                        'old_email' => new Email($logEmail),
-                        'new_email' => new Email($email),
-                    ]
-                );
+                $user = $this->userUpdate($user, $email);
             }
         } catch (NotFoundException) {
             return null;
@@ -135,6 +124,7 @@ class ResolveOAuthUser
      * @param string $email
      * @return array
      * @throws ConflictException|CreationException|NotFoundException
+     * @psalm-return ActorUser
      */
     public function addNewUser(string $identity, string $email): array
     {
@@ -162,5 +152,44 @@ class ResolveOAuthUser
         } catch (DateTimeException | RandomException $e) {
             throw new CreationException('Low level PHP error occurred whilst attempting to add user', [], $e);
         }
+    }
+
+    /**
+     * @param array $user
+     * @psalm-param ActorUser $user
+     * @param string $email
+     * @return array
+     * @psalm-return ActorUser
+     */
+    private function userUpdate(array $user, string $email): array
+    {
+        return ($this->recoverAccount)($user, $email) ?? $this->updateEmail($user, $email);
+    }
+
+    /**
+     * @param array $user
+     * @psalm-param ActorUser $user
+     * @param string $email
+     * @return array
+     * @psalm-return ActorUser
+     */
+    private function updateEmail(array $user, string $email): array
+    {
+        // update the held email
+        $this->usersRepository->changeEmail($user['Id'], '', $email);
+
+        $logEmail      = $email;
+        $user['Email'] = $email;
+
+        $this->logger->info(
+            'Update of email address for OIDC identity {identity} required',
+            [
+                'identity'  => $user['Identity'],
+                'old_email' => new Email($logEmail),
+                'new_email' => new Email($email),
+            ]
+        );
+
+        return $user;
     }
 }
