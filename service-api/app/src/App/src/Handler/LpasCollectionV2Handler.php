@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\CombinedLpaManager;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -17,7 +17,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class LpasCollectionV2Handler implements RequestHandlerInterface
 {
     public function __construct(
-        private LpaService $lpaService,
+        private readonly CombinedLpaManager $lpaManager,
     ) {
     }
 
@@ -28,6 +28,10 @@ class LpasCollectionV2Handler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return new JsonResponse([]);
+        $user = $request->getAttribute('actor-id');
+
+        $result = $this->lpaManager->getAllForUser($user);
+
+        return new JsonResponse($result);
     }
 }
