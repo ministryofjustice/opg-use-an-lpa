@@ -96,7 +96,8 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
     {
         $url = sprintf('%s/lpas', $this->apiBaseUri);
 
-        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
+        // TODO this identifier needs to come from somewhere
+        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas, "UniqueUserIdentifier");
 
         $request = $this->requestFactory
             ->createRequest('POST', $url)
@@ -127,7 +128,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
                     json_decode(
                         $response->getBody()->getContents(),
                         true
-                    )['lpas']
+                    )['lpas'],
                 ),
             default => throw ApiException::create(
                 'LPA data store returned non-ok response',
