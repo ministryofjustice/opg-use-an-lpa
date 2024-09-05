@@ -51,6 +51,7 @@ class LpaStore extends Lpa
         ?DateTimeImmutable $statusDate,
         #[CastListToType(LpaStoreTrustCorporations::class)]
         ?array $trustCorporations,
+        #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
     ) {

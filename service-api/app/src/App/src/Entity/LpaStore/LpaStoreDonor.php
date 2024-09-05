@@ -14,6 +14,8 @@ use EventSauce\ObjectHydrator\MapFrom;
 class LpaStoreDonor extends Person
 {
     public function __construct(
+        #[MapFrom('uid')]
+        ?string $uId,
         ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
@@ -42,6 +44,7 @@ class LpaStoreDonor extends Person
         ?string $systemStatus,
     ) {
         parent::__construct(
+            $uId,
             $name,
             $addressLine1,
             $addressLine2,

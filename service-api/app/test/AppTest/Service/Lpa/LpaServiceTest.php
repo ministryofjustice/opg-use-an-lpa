@@ -4,21 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Entity\Casters\{
-    CastSingleDonor,
-    CastToCaseSubtype,
-    CastToLifeSustainingTreatment,
-    CastToWhenTheLpaCanBeUsed,
-    DateToStringSerializer,
-    ExtractAddressLine1FromLpaStore,
-    ExtractCountryFromLpaStore,
-    ExtractTownFromLpaStore,
-};
-use App\Entity\LpaStore\LpaStoreDonor;
-use EventSauce\ObjectHydrator\DefinitionProvider;
-use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
-use EventSauce\ObjectHydrator\ObjectMapper;
-use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -26,12 +11,7 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{GetAttorneyStatus,
-    GetTrustCorporationStatus,
-    IsValidLpa,
-    LpaDataFormatter,
-    LpaService,
-    ResolveActor};
+use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, ResolveActor, SiriusLpaManager};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -58,8 +38,6 @@ class LpaServiceTest extends TestCase
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaDataFormatter $lpaDataFormatter;
-    private ObjectMapper|ObjectProphecy $hydrator;
 
     public function setUp(): void
     {
@@ -75,13 +53,11 @@ class LpaServiceTest extends TestCase
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
-        $this->hydrator                            = $this->prophesize(ObjectMapper::class);
-        $this->lpaDataFormatter                    = new LpaDataFormatter();
     }
 
-    private function getLpaService(): LpaService
+    private function getLpaService(): SiriusLpaManager
     {
-        return new LpaService(
+        return new SiriusLpaManager(
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->viewerCodesInterfaceProphecy->reveal(),

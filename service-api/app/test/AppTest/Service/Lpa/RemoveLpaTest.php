@@ -9,8 +9,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\LpaService;
 use App\Service\Lpa\RemoveLpa;
+use App\Service\Lpa\SiriusLpaManager;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -25,7 +25,7 @@ class RemoveLpaTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private LpaService|ObjectProphecy $lpaServiceProphecy;
+    private SiriusLpaManager|ObjectProphecy $lpaServiceProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
 
@@ -42,7 +42,7 @@ class RemoveLpaTest extends TestCase
         $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->viewerCodesInterfaceProphecy     = $this->prophesize(ViewerCodesInterface::class);
-        $this->lpaServiceProphecy               = $this->prophesize(LpaService::class);
+        $this->lpaServiceProphecy               = $this->prophesize(SiriusLpaManager::class);
 
         $this->lpaUid        = '700000055554';
         $this->actorLpaToken = '2345Token0123';

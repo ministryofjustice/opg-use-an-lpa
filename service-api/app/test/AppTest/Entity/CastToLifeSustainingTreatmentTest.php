@@ -31,5 +31,4 @@ class CastToLifeSustainingTreatmentTest extends TestCase
 
         $this->assertEquals($expectedLifeSustainingTreatment, $result);
     }
-
 }

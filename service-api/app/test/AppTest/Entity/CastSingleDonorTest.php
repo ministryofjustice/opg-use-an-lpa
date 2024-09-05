@@ -28,7 +28,7 @@ class CastSingleDonorTest extends TestCase
     public function can_cast_single_donor(): void
     {
         $donor = [
-            'uId'         => '700000000971',
+            'uid'         => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             'firstNames'  => 'Feeg',
             'surname'     => 'Gilson',
             'lastName'    => 'Bundlaaaa',
@@ -43,6 +43,7 @@ class CastSingleDonorTest extends TestCase
         ];
 
         $expectedDatastoreDonor = new LpaStoreDonor(
+            'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             null,
             '74 Cloob Close',
             null,

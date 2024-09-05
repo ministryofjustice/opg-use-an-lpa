@@ -16,6 +16,8 @@ class LpaStoreTrustCorporations extends Person
     public function __construct(
         #[MapFrom('name')]
         public readonly ?string $companyName,
+        #[MapFrom('uid')]
+        ?string $uId,
         ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
@@ -31,6 +33,7 @@ class LpaStoreTrustCorporations extends Person
         #[ExtractTownFromLpaStore]
         ?string $town,
         ?string $type,
+        #[MapFrom('dateOfBirth')]
         ?DateTimeImmutable $dob,
         ?string $email,
         ?string $firstname,
@@ -41,6 +44,7 @@ class LpaStoreTrustCorporations extends Person
         ?string $systemStatus,
     ) {
         parent::__construct(
+            $uId,
             $name,
             $addressLine1,
             $addressLine2,
