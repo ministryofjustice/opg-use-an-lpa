@@ -11,6 +11,7 @@ use DateInterval;
  * Represents access to mappings between a User Account, an LPA, and the associated Actor on the LPA.
  *
  * @psalm-type UserLpaActorMap = array{
+ *     Id: string,
  *     UserId: string,
  *     SiriusUid: string,
  *     Added: string,

@@ -11,11 +11,7 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{GetAttorneyStatus,
-    GetTrustCorporationStatus,
-    IsValidLpa,
-    LpaService,
-    ResolveActor};
+use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, ResolveActor, SiriusLpaManager};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -59,9 +55,9 @@ class LpaServiceTest extends TestCase
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 
-    private function getLpaService(): LpaService
+    private function getLpaService(): SiriusLpaManager
     {
-        return new LpaService(
+        return new SiriusLpaManager(
             $this->userLpaActorMapInterfaceProphecy->reveal(),
             $this->lpasInterfaceProphecy->reveal(),
             $this->viewerCodesInterfaceProphecy->reveal(),

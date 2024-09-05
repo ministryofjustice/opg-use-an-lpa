@@ -17,7 +17,7 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 
-class LpaService implements LpaManagerInterface
+class SiriusLpaManager implements LpaManagerInterface
 {
     private const ACTIVE_ATTORNEY   = 0;
     private const INACTIVE_ATTORNEY = 2;

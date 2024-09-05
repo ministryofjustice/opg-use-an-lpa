@@ -130,7 +130,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: outofcoffee/imposter:3.40.0
+    image: outofcoffee/imposter:4.0.3
     command:
       - "-c"
       - "/opt/imposter/config"

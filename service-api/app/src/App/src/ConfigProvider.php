@@ -71,9 +71,6 @@ class ConfigProvider
 
                 // Secrets
                 Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
-
-                // Services
-                Service\Lpa\LpaManagerInterface::class => Service\Lpa\LpaService::class,
             ],
             'autowires'  => [
                 // these two Managers need explicitly autowiring so that they're recognised
@@ -93,6 +90,7 @@ class ConfigProvider
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
                 Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
                 Service\Features\FeatureEnabled::class         => Service\Features\FeatureEnabledFactory::class,
+                Service\Lpa\LpaManagerInterface::class         => Service\Lpa\LpaManagerFactory::class,
 
                 // Data Access
                 DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,

@@ -7,7 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Lpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusLpaManager;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,7 +20,7 @@ class LpaAlreadyAddedTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LpaService|ObjectProphecy $lpaManagerProphecy;
+    private SiriusLpaManager|ObjectProphecy $lpaManagerProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     private string $userId;
