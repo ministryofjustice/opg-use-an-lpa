@@ -8,12 +8,14 @@ use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
 use App\Entity\Person;
-use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\MapFrom;
 
 class LpaStoreAttorney extends Person
 {
     public function __construct(
+        #[MapFrom('uid')]
+        ?string $uId,
         ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
@@ -43,6 +45,7 @@ class LpaStoreAttorney extends Person
         ?string $systemStatus,
     ) {
         parent::__construct(
+            $uId,
             $name,
             $addressLine1,
             $addressLine2,

@@ -9,6 +9,7 @@ use DateTimeImmutable;
 class Person
 {
     public function __construct(
+        public readonly ?string $uId,
         public readonly ?string $name,
         public readonly ?string $addressLine1,
         public readonly ?string $addressLine2,
