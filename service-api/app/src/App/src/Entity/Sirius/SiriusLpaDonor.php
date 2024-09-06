@@ -4,43 +4,63 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
-use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
-use App\Entity\Casters\ExtractCountryFromLpaStore;
-use App\Entity\Casters\ExtractTownFromLpaStore;
+use App\Entity\Person;
+use App\Entity\Sirius\Casters\{
+    ExtractAddressLine1FromSiriusLpa,
+    ExtractAddressLine2FromSiriusLpa,
+    ExtractAddressLine3FromSiriusLpa,
+    ExtractCountryFromSiriusLpa,
+    ExtractCountyFromSiriusLpa,
+    ExtractPostcodeFromSiriusLpa,
+    ExtractTownFromSiriusLpa,
+    ExtractTypeFromSiriusLpa,
+};
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
-class SiriusLpaDonor extends SiriusLpaPerson
+class SiriusLpaDonor extends Person
 {
     public function __construct(
+        ?string $uId,
         ?string $name,
-        #[MapFrom('address')]
-        #[ExtractAddressLine1FromLpaStore]
+        #[MapFrom('addresses')]
+        #[ExtractAddressLine1FromSiriusLpa]
         ?string $addressLine1,
+        #[MapFrom('addresses')]
+        #[ExtractAddressLine2FromSiriusLpa]
         ?string $addressLine2,
+        #[MapFrom('addresses')]
+        #[ExtractAddressLine3FromSiriusLpa]
         ?string $addressLine3,
-        #[MapFrom('address')]
-        #[ExtractCountryFromLpaStore]
+        #[MapFrom('addresses')]
+        #[ExtractCountryFromSiriusLpa]
         ?string $country,
+        #[MapFrom('addresses')]
+        #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[MapFrom('addresses')]
+        #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
-        #[MapFrom('address')]
-        #[ExtractTownFromLpaStore]
+        #[MapFrom('addresses')]
+        #[ExtractTownFromSiriusLpa]
         ?string $town,
+        #[MapFrom('addresses')]
+        #[ExtractTypeFromSiriusLpa]
         ?string $type,
-        #[MapFrom('dateOfBirth')]
         ?DateTimeImmutable $dob,
         ?string $email,
+        #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
-        #[MapFrom('lastName')]
         ?string $surname,
         ?string $otherNames,
-        #[MapFrom('status')]
+        #[CastToType('string')]
         ?string $systemStatus,
     ) {
         parent::__construct(
+            $uId,
             $name,
             $addressLine1,
             $addressLine2,

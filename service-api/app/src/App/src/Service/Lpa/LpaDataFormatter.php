@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStore;
+use App\Entity\Sirius\SiriusLpa;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
@@ -13,29 +14,47 @@ use EventSauce\ObjectHydrator\UnableToSerializeObject;
 
 class LpaDataFormatter
 {
+    private ObjectMapperUsingReflection $mapper;
+
     public function __construct()
     {
+        $this->mapper = new ObjectMapperUsingReflection(
+            new DefinitionProvider(
+                keyFormatter: new KeyFormatterWithoutConversion(),
+            ),
+        );
+    }
+
+    /**
+     * @throws UnableToSerializeObject
+     * @throws UnableToHydrateObject
+     */
+    public function __invoke(array $lpa)
+    {
+        $lpaObject = $this->hydrateObject($lpa);
+
+        return $this->mapper->serializeObject(
+            $lpaObject
+        );
     }
 
     /**
      * @throws UnableToHydrateObject
-     * @throws UnableToSerializeObject
      */
-    public function __invoke(array $lpa)
+    public function hydrateObject(array $lpa)
     {
-        $mapper = new ObjectMapperUsingReflection(
-            new DefinitionProvider(
-                keyFormatter:                new KeyFormatterWithoutConversion(),
-            ),
-        );
-
-        $lpaObject = $mapper->hydrateObject(
-            LpaStore::class,
+        $className = $this->getHydrationClass($lpa);
+        print_r($className);
+        return $this->mapper->hydrateObject(
+            $className,
             $lpa
         );
+    }
 
-        return $mapper->serializeObject(
-            $lpaObject
-        );
+    private function getHydrationClass(array $lpa): string
+    {
+        return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')
+            ? SiriusLpa::class
+            : LpaStore::class;
     }
 }

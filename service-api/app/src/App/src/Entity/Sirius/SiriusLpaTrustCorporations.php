@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
-use App\Entity\Sirius\Casters\ExtractAddressLine1FromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractAddressLine2FromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractAddressLine3FromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractCountryFromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractCountyFromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractPostcodeFromSiriusLpa;
-use App\Entity\Sirius\Casters\ExtractTownFromSiriusLpa;
 use App\Entity\Person;
-use DateTimeImmutable;
+use App\Entity\Sirius\Casters\{
+    ExtractAddressLine1FromSiriusLpa,
+    ExtractAddressLine2FromSiriusLpa,
+    ExtractAddressLine3FromSiriusLpa,
+    ExtractCountryFromSiriusLpa,
+    ExtractCountyFromSiriusLpa,
+    ExtractPostcodeFromSiriusLpa,
+    ExtractTownFromSiriusLpa,
+    ExtractTypeFromSiriusLpa,
+};
 use EventSauce\ObjectHydrator\MapFrom;
-use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
+use DateTimeImmutable;
 
-class SiriusLpaPerson extends Person
+class SiriusLpaTrustCorporations extends Person
 {
     public function __construct(
+        ?string $uId,
         ?string $name,
         #[MapFrom('addresses')]
         #[ExtractAddressLine1FromSiriusLpa]
@@ -41,21 +45,22 @@ class SiriusLpaPerson extends Person
         #[MapFrom('addresses')]
         #[ExtractTownFromSiriusLpa]
         ?string $town,
+        #[MapFrom('addresses')]
+        #[ExtractTypeFromSiriusLpa]
         ?string $type,
-        #[CastToDateTimeImmutable('!d-m-Y')]
         ?DateTimeImmutable $dob,
         ?string $email,
         #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
-        #[MapFrom('lastName')]
         ?string $surname,
         ?string $otherNames,
-        #[MapFrom('status')]
+        #[CastToType('string')]
         ?string $systemStatus,
     ) {
         parent::__construct(
+            $uId,
             $name,
             $addressLine1,
             $addressLine2,
@@ -71,7 +76,7 @@ class SiriusLpaPerson extends Person
             $firstnames,
             $surname,
             $otherNames,
-            $systemStatus,
+            $systemStatus
         );
     }
 }

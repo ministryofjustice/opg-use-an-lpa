@@ -13,7 +13,6 @@ class ExtractTownFromSiriusLpa implements PropertyCaster
 {
     public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
-        return '123';
         if (is_array($value) && isset($value[0]['town'])) {
             return $value[0]['town'];
         }

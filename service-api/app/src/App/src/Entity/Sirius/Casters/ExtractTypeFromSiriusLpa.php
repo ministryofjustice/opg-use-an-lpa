@@ -9,12 +9,12 @@ use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class ExtractPostcodeFromSiriusLpa implements PropertyCaster
+class ExtractTypeFromSiriusLpa implements PropertyCaster
 {
     public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
-        if (is_array($value) && isset($value[0]['postcode'])) {
-            return $value[0]['postcode'];
+        if (is_array($value) && isset($value[0]['type'])) {
+            return $value[0]['type'];
         }
 
         return null;
