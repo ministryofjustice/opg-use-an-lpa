@@ -98,12 +98,10 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'receiptDate'                => '2014-09-26 00:00:00.000000+0000',
             'registrationDate'           => '2019-10-10 00:00:00.000000+0000',
             'rejectedDate'               => null,
-            'replacementAttorneys'       => [
-            ],
+            'replacementAttorneys'       => [],
             'status'                     => 'Registered',
             'statusDate'                 => null,
-            'trustCorporations'          => [
-            ],
+            'trustCorporations'          => [],
             'uId'                        => '700000000047',
             'withdrawnDate'              => null,
         ];

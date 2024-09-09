@@ -44,7 +44,7 @@ class LpaDataFormatter
     public function hydrateObject(array $lpa)
     {
         $className = $this->getHydrationClass($lpa);
-        print_r($className);
+
         return $this->mapper->hydrateObject(
             $className,
             $lpa
@@ -54,7 +54,7 @@ class LpaDataFormatter
     private function getHydrationClass(array $lpa): string
     {
         return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')
-            ? SiriusLpa::class
-            : LpaStore::class;
+            ? LpaStore::class
+            : SiriusLpa::class;
     }
 }
