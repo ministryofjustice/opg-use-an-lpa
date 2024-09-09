@@ -258,6 +258,12 @@ jobs:
           skip-dirs: /app/vendor
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
+      - name: Upload Trivy report as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: 'trivy-results.sarif'
+          path: 'trivy-results.sarif'
+
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@v3
