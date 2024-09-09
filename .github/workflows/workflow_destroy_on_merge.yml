@@ -42,7 +42,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
 
-      - name: Get terraform version
+      - name: Set terraform version
         id: set-terraform-version
         uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v2.7.3
         with:
@@ -57,14 +57,15 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@50ac8dd1e1b10d09dac7b8727528b91bed831ac0 # v3.0.2
+      - name: configure AWS credentials for getting pagerduty token
+        uses: aws-actions/configure-aws-credentials@a78e788c51463a506fbaaec784bab37f73afb4e8 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: arn:aws:iam::367815980639:role/opg-use-an-lpa-ci
           aws-region: eu-west-1
-          role-duration-seconds: 900
-          role-session-name: OPGLPADestroyEphemeralEnvironment
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPADevAssumeGithubAction
 
       - name: set pagerduty token
         run: |
@@ -72,6 +73,15 @@ jobs:
             pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
           echo "::add-mask::$TF_VAR_pagerduty_token"
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@a78e788c51463a506fbaaec784bab37f73afb4e8 # pin@v1.7.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGUseAnLPATerraformGithubAction
 
       - name: Run workspace cleanup
         working-directory: ./terraform/environment
