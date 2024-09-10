@@ -22,8 +22,6 @@ use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 class SiriusLpaAttorney extends Person
 {
     public function __construct(
-        ?string $uId,
-        ?string $name,
         #[MapFrom('addresses')]
         #[ExtractAddressLine1FromSiriusLpa]
         ?string $addressLine1,
@@ -39,44 +37,46 @@ class SiriusLpaAttorney extends Person
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
-        #[MapFrom('addresses')]
-        #[ExtractPostcodeFromSiriusLpa]
-        ?string $postcode,
-        #[MapFrom('addresses')]
-        #[ExtractTownFromSiriusLpa]
-        ?string $town,
-        #[MapFrom('addresses')]
-        #[ExtractTypeFromSiriusLpa]
-        ?string $type,
         ?DateTimeImmutable $dob,
         ?string $email,
         #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
-        ?string $surname,
+        ?string $name,
         ?string $otherNames,
+        #[MapFrom('addresses')]
+        #[ExtractPostcodeFromSiriusLpa]
+        ?string $postcode,
+        ?string $surname,
         #[CastToType('string')]
         ?string $systemStatus,
+        #[MapFrom('addresses')]
+        #[ExtractTownFromSiriusLpa]
+        ?string $town,
+        #[MapFrom('addresses')]
+        #[ExtractTypeFromSiriusLpa]
+        ?string $type,
+        ?string $uId,
     ) {
         parent::__construct(
-            $uId,
-            $name,
             $addressLine1,
             $addressLine2,
             $addressLine3,
             $country,
             $county,
-            $postcode,
-            $town,
-            $type,
             $dob,
             $email,
             $firstname,
             $firstnames,
-            $surname,
+            $name,
             $otherNames,
-            $systemStatus
+            $postcode,
+            $surname,
+            $systemStatus,
+            $town,
+            $type,
+            $uId,
         );
     }
 }

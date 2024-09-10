@@ -52,23 +52,23 @@ class CanCastSiriusDonorTest extends TestCase
         ];
 
         $expectedSiriusDonor = new SiriusLpaDonor(
-            '700000000799',
-            null,
             '81 Front Street',
             'LACEBY',
             'Street 3',
             'GB',
             'London',
-            'DN37 5SH',
-            'Town',
-            'Primary',
             new DateTimeImmutable('1948-11-01 00:00:00.000000'),
             'RachelSanderson@opgtest.com',
             'Rachel',
             null,
+            null,
+            null,
+            'DN37 5SH',
             'Sanderson',
             null,
-            null,
+            'Town',
+            'Primary',
+            '700000000799'
         );
 
         $mapper = new ObjectMapperUsingReflection(
