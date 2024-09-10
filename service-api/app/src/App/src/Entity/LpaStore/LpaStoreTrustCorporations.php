@@ -14,7 +14,6 @@ use EventSauce\ObjectHydrator\MapFrom;
 class LpaStoreTrustCorporations extends Person
 {
     public function __construct(
-
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
         ?string $addressLine1,
