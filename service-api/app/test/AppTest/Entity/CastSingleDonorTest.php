@@ -43,23 +43,23 @@ class CastSingleDonorTest extends TestCase
         ];
 
         $expectedDatastoreDonor = new LpaStoreDonor(
-            'eda719db-8880-4dda-8c5d-bb9ea12c236f',
-            null,
             '74 Cloob Close',
             null,
             null,
             'GB',
             null,
-            null,
-            'Mahhhhhhhhhh',
-            null,
             new DateTimeImmutable('1970-01-24 00:00:00.000000'),
             'nobody@not.a.real.domain',
             null,
             'Feeg',
+            null,
+            null,
+            null,
             'Bundlaaaa',
             null,
+            'Mahhhhhhhhhh',
             null,
+            'eda719db-8880-4dda-8c5d-bb9ea12c236f',
         );
 
         $mapper = new ObjectMapperUsingReflection(

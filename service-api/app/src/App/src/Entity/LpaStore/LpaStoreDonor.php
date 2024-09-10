@@ -14,9 +14,6 @@ use EventSauce\ObjectHydrator\MapFrom;
 class LpaStoreDonor extends Person
 {
     public function __construct(
-        #[MapFrom('uid')]
-        ?string $uId,
-        ?string $name,
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
         ?string $addressLine1,
@@ -26,41 +23,44 @@ class LpaStoreDonor extends Person
         #[ExtractCountryFromLpaStore]
         ?string $country,
         ?string $county,
-        ?string $postcode,
-        #[MapFrom('address')]
-        #[ExtractTownFromLpaStore]
-        ?string $town,
-        ?string $type,
         #[MapFrom('dateOfBirth')]
         ?DateTimeImmutable $dob,
         ?string $email,
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        ?string $name,
+        ?string $otherNames,
+        ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
-        ?string $otherNames,
         #[MapFrom('status')]
         ?string $systemStatus,
+        #[MapFrom('address')]
+        #[ExtractTownFromLpaStore]
+        ?string $town,
+        ?string $type,
+        #[MapFrom('uid')]
+        ?string $uId,
     ) {
         parent::__construct(
-            $uId,
-            $name,
             $addressLine1,
             $addressLine2,
             $addressLine3,
             $country,
             $county,
-            $postcode,
-            $town,
-            $type,
             $dob,
             $email,
             $firstname,
             $firstnames,
-            $surname,
+            $name,
             $otherNames,
-            $systemStatus
+            $postcode,
+            $surname,
+            $systemStatus,
+            $town,
+            $type,
+            $uId,
         );
     }
 }
