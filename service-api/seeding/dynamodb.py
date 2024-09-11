@@ -87,6 +87,18 @@ viewerCodes = [
     },
 ]
 
+for i in range(33):
+    viewerCodes.append(
+    {
+            'ViewerCode': f"P9H8A6MLD3{str(i+20)}",
+            'SiriusUid': "700000000138",
+            'Expires': nextWeek.isoformat(),
+            'Added': "2019-01-01T12:34:56.123456Z",
+            'Organisation': "Test Organisation",
+            'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
+            'Comment': 'Seeded data: Valid viewer code'
+    })
+
 for i in viewerCodes:
     try:
         viewerCodesTable.put_item(
