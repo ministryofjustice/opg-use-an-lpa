@@ -1,3 +1,5 @@
+import argparse
+import os
 import requests
 
 
@@ -98,7 +100,13 @@ class CodeScanReport:
 
 
 def main():
-    print(f"Stating script")
+    parser = argparse.ArgumentParser(
+    description='Check Trivy code scan alerts.')
+    parser.add_argument('--slack_webhook',
+                        default=os.getenv('SLACK_WEBHOOK'),
+                        help='Webhook to use, determines what channel to post to')
+
+    args = parser.parse_args()
 
     github_token = ''
     repo = 'ministryofjustice/opg-use-an-lpa'
