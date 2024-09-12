@@ -1,7 +1,7 @@
 import requests
 
 
-class CodeSanReport:
+class CodeScanReport:
     def __init__(self, repo, github_token) -> None:
         self.url = f'https://api.github.com/repos/{repo}/code-scanning/alerts'
 
@@ -103,7 +103,7 @@ def main():
     github_token = ''
     repo = 'ministryofjustice/opg-use-an-lpa'
 
-    vulnrability_report = CodeSanReport(repo, github_token)
+    vulnrability_report = CodeScanReport(repo, github_token)
 
     overall_report, critical_alert_report, high_alert_report = vulnrability_report.generate_report()
 
