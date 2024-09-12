@@ -17,6 +17,7 @@ class CodeScanReport:
             'page': 1
         }
 
+
     def _get_all_alerts(self) -> list:
         """Function that gets all alerts from the code scanning api in GitHub"""
         all_alerts = []
