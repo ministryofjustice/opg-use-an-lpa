@@ -109,7 +109,7 @@ def main():
 
     args = parser.parse_args()
 
-    github_token = ''
+    github_token = os.getenv('GITHUB_TOKEN')
     repo = 'ministryofjustice/opg-use-an-lpa'
 
     vulnrability_report = CodeScanReport(repo, github_token)
