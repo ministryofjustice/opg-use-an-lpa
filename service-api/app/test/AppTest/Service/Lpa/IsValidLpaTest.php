@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\IsValidLpa;
+use App\Service\Lpa\IsValid\IsValidLpa;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -42,7 +42,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver($lpa);
+        $result   = $resolver->validate((object) $lpa);
         $this->assertTrue($result);
     }
 
@@ -58,7 +58,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver($lpa);
+        $result   = $resolver->validate((object) $lpa);
         $this->assertTrue($result);
     }
 
@@ -74,7 +74,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver($lpa);
+        $result   = $resolver->validate((object) $lpa);
         $this->assertFalse($result);
     }
 }

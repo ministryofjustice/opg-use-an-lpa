@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Service\Features\FeatureEnabled;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
     Response\Lpa,
@@ -13,6 +12,8 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
+use App\Service\Features\FeatureEnabled;
+use App\Service\Lpa\IsValid\IsValidLpa;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -110,7 +111,7 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
-        if (($this->isValidLpa)($lpaData)) {
+        if ($this->isValidLpa->validate((object)$lpaData)) {
             return $result;
         }
 
@@ -245,7 +246,7 @@ class SiriusLpaManager implements LpaManagerInterface
             unset($lpaData['original_attorneys']);
 
             //Extract and return only LPA's where status is Registered or Cancelled
-            if (($this->isValidLpa)($lpaData)) {
+            if ($this->isValidLpa->validate((object)$lpaData)) {
                 $result[$item['Id']] = [
                     'user-lpa-actor-token' => $item['Id'],
                     'date'                 => $lpa->getLookupTime()->format('c'),

@@ -11,7 +11,11 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, ResolveActor, SiriusLpaManager};
+use App\Service\Lpa\{App\Service\Lpa\IsValid\IsValidLpa,
+    GetAttorneyStatus,
+    GetTrustCorporationStatus,
+    ResolveActor,
+    SiriusLpaManager};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,7 +38,7 @@ class LpaServiceTest extends TestCase
     private ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
-    private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
+    private \App\Service\Lpa\IsValid\IsValidLpa|ObjectProphecy $isValidLpaProphecy;
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
@@ -49,7 +53,7 @@ class LpaServiceTest extends TestCase
             $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
         $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
-        $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
+        $this->isValidLpaProphecy                  = $this->prophesize(\App\Service\Lpa\IsValid\IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
