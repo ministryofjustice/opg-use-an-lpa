@@ -73,7 +73,7 @@ class SiriusLpaManager implements LpaManagerInterface
             );
         }
 
-        return new Lpa($lpaData, $lpa->getLookupTime());
+        return $lpa;
     }
 
     public function getByUserLpaActorToken(string $token, string $userId): ?array
@@ -103,10 +103,8 @@ class SiriusLpaManager implements LpaManagerInterface
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
         if (isset($map['ActorId'])) {
-            $actor = ($this->resolveActor)($lpaData, (int) $map['ActorId']);
-
-            // If an active attorney is not found then we should not return an lpa
-            $result['actor'] = $actor;
+            // If an active attorney is not found then this is null
+            $result['actor'] = ($this->resolveActor)($lpaData, (string) $map['ActorId']);
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
@@ -239,7 +237,7 @@ class SiriusLpaManager implements LpaManagerInterface
             }
 
             $lpaData = $lpa->getData();
-            $actor   = ($this->resolveActor)($lpaData, (int) $item['ActorId']);
+            $actor   = ($this->resolveActor)($lpaData, (string) $item['ActorId']);
 
             $added = $item['Added']->format('Y-m-d H:i:s');
             unset($lpaData['original_attorneys']);
@@ -255,6 +253,7 @@ class SiriusLpaManager implements LpaManagerInterface
                 ];
             }
         }
+
         return $result;
     }
 }
