@@ -52,7 +52,7 @@
         "facile-it/php-openid-client": "^0.3.5",
         "guzzlehttp/guzzle": "^7.8.1",
         "guzzlehttp/psr7": "^2.6.2",
-        "laminas/laminas-cache": "^3.11",
+        "laminas/laminas-cache": "^4.0",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.4",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-diactoros": "^3.0",
