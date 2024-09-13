@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
-use App\Entity\Sirius\Casters\{
-    ExtractAddressLine1FromSiriusLpa,
+use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
     ExtractCountryFromSiriusLpa,
@@ -14,7 +13,7 @@ use App\Entity\Sirius\Casters\{
     ExtractPostcodeFromSiriusLpa,
     ExtractTownFromSiriusLpa,
     ExtractTypeFromSiriusLpa,
-};
+    LinkedDonorCaster};
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
@@ -43,6 +42,9 @@ class SiriusLpaDonor extends Person
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[MapFrom('linked')]
+        #[LinkedDonorCaster]
+        public readonly ?array $linkedDonors,
         ?string $name,
         ?string $otherNames,
         #[MapFrom('addresses')]

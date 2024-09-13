@@ -71,6 +71,12 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'channel'                    => null,
             'dispatchDate'               => null,
             'donor'                      => [
+                'linked'       => [
+                    [
+                        'id'  => 7,
+                        'uId' => '700000000799',
+                    ],
+                ],
                 'addressLine1' => '81 Front Street',
                 'addressLine2' => 'LACEBY',
                 'addressLine3' => '',
