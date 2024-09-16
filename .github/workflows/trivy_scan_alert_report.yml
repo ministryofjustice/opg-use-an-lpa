@@ -29,4 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.DEV_SLACK_WEB_HOOK }}
         run: |
-          run: python ./scripts/pipeline/generate_trivy_report/code_scan_report.py
+          python ./scripts/pipeline/generate_trivy_report/code_scan_report.py
