@@ -132,7 +132,6 @@ def main():
     overall_report, critical_alert_report, high_alert_report = vulnrability_report.generate_report()
 
     slack_report = f"""
-
 """
 
     print(f"{overall_report}")
