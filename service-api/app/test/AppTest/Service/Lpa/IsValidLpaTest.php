@@ -42,7 +42,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver->validate((object) $lpa);
+        $result   = $resolver->validate($lpa);
         $this->assertTrue($result);
     }
 
@@ -58,7 +58,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver->validate((object) $lpa);
+        $result   = $resolver->validate($lpa);
         $this->assertTrue($result);
     }
 
@@ -74,7 +74,7 @@ class IsValidLpaTest extends TestCase
         ];
 
         $resolver = $this->isValidLpaResolver();
-        $result   = $resolver->validate((object) $lpa);
+        $result   = $resolver->validate($lpa);
         $this->assertFalse($result);
     }
 }

@@ -8,8 +8,6 @@ use Psr\Log\LoggerInterface;
 
 class IsValidLpa implements LpaValidationInterface
 {
-    use StatusValidationTrait;
-
     public function __construct(
         private LoggerInterface $logger,
     ) {
@@ -24,9 +22,12 @@ class IsValidLpa implements LpaValidationInterface
      *
      * @return bool True if status is Registered or Cancelled
      */
-    public function validate(object $lpa): bool
+    public function validate(array|object|null $lpa): bool
     {
-        if (!$this->isRegisteredOrCancelled($lpa->status)) {
+        if (
+            !(strtolower($lpa['status']) === LpaStatus::REGISTERED->value ||
+                strtolower($lpa['status']) === LpaStatus::CANCELLED->value )
+        ) {
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [
