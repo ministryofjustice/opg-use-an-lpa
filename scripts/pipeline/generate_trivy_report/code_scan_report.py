@@ -124,6 +124,12 @@ def main():
     if high_alert_report != '':
         print(f"{high_alert_report}")
 
+    slack_report = f"""
+    {overall_report}\n
+    {critical_alert_report}\n
+    {high_alert_report}\n
+"""
+
 
 if __name__ == "__main__":
     main()
