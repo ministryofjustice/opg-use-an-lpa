@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import requests
 
@@ -99,6 +100,20 @@ class CodeScanReport:
 
         return overall_report, critical_alert_report, high_alert_report
 
+    def post_to_slack(slack_webhook, report):
+        """Function to post vulnrability report to slack"""
+        post_data = json.dumps({'text': report})
+        response = requests.post(
+            slack_webhook, data=post_data,
+            headers={'Content-Type': 'application/json'}
+        )
+        if response.status_code != 200:
+            raise ValueError(
+                f'Request to slack returned an error {response.status_code},'
+                f'the response is:\n'
+                f'{response.text}'
+            )
+
 
 def main():
     parser = argparse.ArgumentParser(
@@ -129,6 +144,11 @@ def main():
     {critical_alert_report}\n
     {high_alert_report}\n
 """
+
+    vulnrability_report.post_to_slack(
+            args.slack_webhook,
+            slack_report,
+        )
 
 
 if __name__ == "__main__":
