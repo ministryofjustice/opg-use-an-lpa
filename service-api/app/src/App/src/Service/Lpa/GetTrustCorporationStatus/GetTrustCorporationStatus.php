@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\GetTrustCorporationStatus;
 
 use Psr\Log\LoggerInterface;
 
 class GetTrustCorporationStatus
 {
-    public const ACTIVE_TC   = 0;
-    public const GHOST_TC    = 1;
-    public const INACTIVE_TC = 2;
-
     public function __construct(private LoggerInterface $logger)
     {
     }
@@ -23,14 +19,14 @@ class GetTrustCorporationStatus
                 'Looked up attorney {id} but company name not found',
                 ['id' => $trustCorporation['uId']]
             );
-            return self::GHOST_TC;
+            return TrustCorporationStatuses::GHOST_TC->value;
         }
 
         if (!$trustCorporation['systemStatus']) {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation['uId']]);
-            return self::INACTIVE_TC;
+            return TrustCorporationStatuses::INACTIVE_TC->value;
         }
 
-        return self::ACTIVE_TC;
+        return TrustCorporationStatuses::ACTIVE_TC->value;
     }
 }
