@@ -4,7 +4,10 @@ defaults:
   run:
     shell: bash
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - uml-3248-trivy-report
 
 jobs:
   trivy_scan_alert_report:
