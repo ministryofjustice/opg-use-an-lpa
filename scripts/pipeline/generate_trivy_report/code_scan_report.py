@@ -100,7 +100,7 @@ class CodeScanReport:
 
         return overall_report, critical_alert_report, high_alert_report
 
-    def post_to_slack(slack_webhook, report):
+    def post_to_slack(self, slack_webhook, report):
         """Function to post vulnrability report to slack"""
         post_data = json.dumps({'text': report})
         response = requests.post(
@@ -139,11 +139,11 @@ def main():
     if high_alert_report != '':
         print(f"{high_alert_report}")
 
-    slack_report = (f"""
+    slack_report = f"""
     {overall_report}\n
     {critical_alert_report}\n
     {high_alert_report}\n
-""")
+"""
 
     vulnrability_report.post_to_slack(
             args.slack_webhook,
