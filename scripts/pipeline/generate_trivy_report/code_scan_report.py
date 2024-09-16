@@ -75,27 +75,27 @@ class CodeScanReport:
 
         overall_report = (
             f"{'-' * 100}\n"
-            f"HIGH ALERTS [{len(high_alerts)}]\n"
-            f"CRITICAL ALERTS [{len(critical_alerts)}]\n"
+            f"*HIGH ALERTS*: [{len(high_alerts)}]\n"
+            f"*CRITICAL ALERTS*: [{len(critical_alerts)}]\n"
             f"{'-' * 100}\n"
         )
 
         critical_alert_report = ''
         for alert in critical_alerts:
                 critical_alert_report += f"{'-' * 100}\n"
-                critical_alert_report += f"URL: {alert['html_url']}\n"
-                critical_alert_report += f"CVE: {alert['rule']['id']}\n"
-                critical_alert_report += f"Created at: {alert['created_at']}\n"
-                critical_alert_report += f"Severity: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
+                critical_alert_report += f"*URL*: {alert['html_url']}\n"
+                critical_alert_report += f"*CVE*: {alert['rule']['id']}\n"
+                critical_alert_report += f"*Created at*: {alert['created_at']}\n"
+                critical_alert_report += f"*Severity*: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
                 critical_alert_report += f"{'-' * 100}\n"
 
         high_alert_report = ''
         for alert in high_alerts:
                 high_alert_report += f"{'-' * 100}\n"
-                high_alert_report += f"URL: {alert['html_url']}\n"
-                high_alert_report += f"CVE: {alert['rule']['id']}\n"
-                high_alert_report += f"Created at: {alert['created_at']}\n"
-                high_alert_report += f"Severity: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
+                high_alert_report += f"*URL*: {alert['html_url']}\n"
+                high_alert_report += f"*CVE*: {alert['rule']['id']}\n"
+                high_alert_report += f"*Created at*: {alert['created_at']}\n"
+                high_alert_report += f"*Severity*: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
                 high_alert_report += f"{'-' * 100}\n"
 
         return overall_report, critical_alert_report, high_alert_report
@@ -131,24 +131,25 @@ def main():
 
     overall_report, critical_alert_report, high_alert_report = vulnrability_report.generate_report()
 
+    slack_report = f"""
+
+"""
+
     print(f"{overall_report}")
+    slack_report += f"{overall_report}\n"
 
     if critical_alert_report != '':
         print(f"{critical_alert_report}")
+        slack_report += f"{critical_alert_report}\n"
 
     if high_alert_report != '':
         print(f"{high_alert_report}")
+        slack_report += f"{high_alert_report}\n"
 
-    slack_report = f"""
-    {overall_report}\n
-    {critical_alert_report}\n
-    {high_alert_report}\n
-"""
-
-    vulnrability_report.post_to_slack(
-            args.slack_webhook,
-            slack_report,
-        )
+    # vulnrability_report.post_to_slack(
+    #         args.slack_webhook,
+    #         slack_report,
+    #     )
 
 
 if __name__ == "__main__":
