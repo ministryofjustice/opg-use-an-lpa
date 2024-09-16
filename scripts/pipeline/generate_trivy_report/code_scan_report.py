@@ -86,7 +86,7 @@ class CodeScanReport:
                 critical_alert_report += f"*URL*: {alert['html_url']}\n"
                 critical_alert_report += f"*CVE*: {alert['rule']['id']}\n"
                 critical_alert_report += f"*Created at*: {alert['created_at']}\n"
-                critical_alert_report += f"*Severity*: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
+                critical_alert_report += f"*Severity*: {alert['rule']['tags'][0]}\n"
                 critical_alert_report += f"{'-' * 100}\n"
 
         high_alert_report = ''
@@ -95,7 +95,7 @@ class CodeScanReport:
                 high_alert_report += f"*URL*: {alert['html_url']}\n"
                 high_alert_report += f"*CVE*: {alert['rule']['id']}\n"
                 high_alert_report += f"*Created at*: {alert['created_at']}\n"
-                high_alert_report += f"*Severity*: \033[1;33;40m{alert['rule']['tags'][0]}\033[1;0;40m\n"
+                high_alert_report += f"*Severity*: {alert['rule']['tags'][0]}\n"
                 high_alert_report += f"{'-' * 100}\n"
 
         return overall_report, critical_alert_report, high_alert_report
