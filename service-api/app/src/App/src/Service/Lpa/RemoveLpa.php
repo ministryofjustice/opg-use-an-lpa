@@ -94,7 +94,7 @@ class RemoveLpa
             throw new ApiException('Incorrect LPA data deleted from users account');
         }
 
-        return $lpaRemovedData;
+        return $lpaRemovedData->toArray();
     }
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array

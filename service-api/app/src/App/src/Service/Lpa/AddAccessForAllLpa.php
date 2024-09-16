@@ -147,7 +147,7 @@ class AddAccessForAllLpa
             throw new NotFoundException('LPA not found');
         }
 
-        return $lpa->getData();
+        return $lpa->getData()->toArray();
     }
 
     private function flattenActorData(array $resolvedActor, array $lpaData, ?string $lpaActorToken): array
