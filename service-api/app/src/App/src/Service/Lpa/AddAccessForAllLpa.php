@@ -147,7 +147,10 @@ class AddAccessForAllLpa
             throw new NotFoundException('LPA not found');
         }
 
-        return $lpa->getData()->toArray();
+        // TODO UML-3606 this will always be an object at this time but we need to make it check for existing
+        //      tests to pass
+        $data = $lpa->getData();
+        return $data instanceof SiriusLpa ? $data->toArray() : $data;
     }
 
     private function flattenActorData(array $resolvedActor, array $lpaData, ?string $lpaActorToken): array
