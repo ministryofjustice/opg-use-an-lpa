@@ -145,10 +145,10 @@ def main():
         print(f"{high_alert_report}")
         slack_report += f"{high_alert_report}\n"
 
-    vulnrability_report.post_to_slack(
-            args.slack_webhook,
-            slack_report,
-        )
+    # vulnrability_report.post_to_slack(
+    #         args.slack_webhook,
+    #         slack_report,
+    #     )
 
 
 if __name__ == "__main__":
