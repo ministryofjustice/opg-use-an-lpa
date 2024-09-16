@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus;
 use Psr\Log\LoggerInterface;
 
 class FindActorInLpa

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\GetAttorneyStatus;
 
 use Psr\Log\LoggerInterface;
 

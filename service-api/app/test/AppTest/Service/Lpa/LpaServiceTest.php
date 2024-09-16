@@ -11,7 +11,11 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{GetAttorneyStatus, GetTrustCorporationStatus, IsValidLpa, ResolveActor, SiriusLpaManager};
+use App\Service\Lpa\{App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus,
+    GetTrustCorporationStatus,
+    IsValidLpa,
+    ResolveActor,
+    SiriusLpaManager};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -33,7 +37,7 @@ class LpaServiceTest extends TestCase
     private InstructionsAndPreferencesImagesInterface|ObjectProphecy $iapRepositoryProphecy;
     private ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
-    private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
+    private \App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
@@ -48,7 +52,8 @@ class LpaServiceTest extends TestCase
         $this->iapRepositoryProphecy               =
             $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
-        $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
+        $this->getAttorneyStatusProphecy           = $this->prophesize(
+            \App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
