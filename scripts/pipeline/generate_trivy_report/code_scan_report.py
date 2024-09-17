@@ -3,15 +3,6 @@ import json
 import os
 import requests
 
-class BuildKitFormatter:
-    def header(self) -> str:
-        return '{"blocks": [{"type": "header","text": {"type": "plain_text","text": "Trivy Vulnrability Scan Report","emoji": true}},{"type": "divider"},'
-
-
-    def close_message(self) -> str:
-        return ']}'
-
-
 class CodeScanReport:
     def __init__(self, repo, github_token) -> None:
         self.url = f'https://api.github.com/repos/{repo}/code-scanning/alerts'
@@ -144,21 +135,16 @@ def main():
     slack_report = f"""
 """
 
-    # print(f"{overall_report}")
-    # slack_report += f"{overall_report}\n"
+    print(f"{overall_report}")
+    slack_report += f"{overall_report}\n"
 
-    # if critical_alert_report != '':
-    #     # print(f"{critical_alert_report}")
-    #     # slack_report += f"{critical_alert_report}\n"
+    if critical_alert_report != '':
+        print(f"{critical_alert_report}")
+        slack_report += f"{critical_alert_report}\n"
 
-    # if high_alert_report != '':
-    #     # print(f"{high_alert_report}")
-    #     # slack_report += f"{high_alert_report}\n"
-
-    formater = BuildKitFormatter()
-
-    slack_report += formater.header()
-    slack_report += formater.close_message()
+    if high_alert_report != '':
+        print(f"{high_alert_report}")
+        slack_report += f"{high_alert_report}\n"
 
 
     vulnrability_report.post_to_slack(
