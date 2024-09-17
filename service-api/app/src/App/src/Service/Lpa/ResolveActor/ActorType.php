@@ -6,7 +6,7 @@ namespace App\Service\Lpa\ResolveActor;
 
 enum ActorType: string
 {
-    case ATTORNEY          = 'attorney';
+    case ATTORNEY          = 'primary-attorney';
     case DONOR             = 'donor';
     case TRUST_CORPORATION = 'trust-corporation';
 }
