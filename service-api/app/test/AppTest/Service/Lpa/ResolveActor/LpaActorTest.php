@@ -22,7 +22,7 @@ class LpaActorTest extends TestCase
             ActorType::ATTORNEY,
         );
 
-        $jsonString = '{"details":{"firstName":"John","lastName":"Doe"},"type":"attorney"}';
+        $jsonString = '{"details":{"firstName":"John","lastName":"Doe"},"type":"primary-attorney"}';
         $this->assertJsonStringEqualsJsonString($jsonString, json_encode($sut));
     }
 }
