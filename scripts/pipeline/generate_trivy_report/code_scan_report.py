@@ -3,6 +3,14 @@ import json
 import os
 import requests
 
+class BuildKitFormatter:
+    def header(self) -> str:
+        return '{"blocks": [{"type": "header","text": {"type": "plain_text","text": "Trivy Vulnrability Scan Report","emoji": true}},{"type": "divider"},'
+
+
+    def close_message(self) -> str:
+        return ']}'
+
 
 class CodeScanReport:
     def __init__(self, repo, github_token) -> None:
@@ -104,7 +112,7 @@ class CodeScanReport:
 
     def post_to_slack(self, slack_webhook, report):
         """Function to post vulnrability report to slack"""
-        post_data = json.dumps({'text': report})
+        post_data = {'text': report}
         response = requests.post(
             slack_webhook, data=post_data,
             headers={'Content-Type': 'application/json'}
@@ -136,21 +144,27 @@ def main():
     slack_report = f"""
 """
 
-    print(f"{overall_report}")
-    slack_report += f"{overall_report}\n"
+    # print(f"{overall_report}")
+    # slack_report += f"{overall_report}\n"
 
-    if critical_alert_report != '':
-        print(f"{critical_alert_report}")
-        slack_report += f"{critical_alert_report}\n"
+    # if critical_alert_report != '':
+    #     # print(f"{critical_alert_report}")
+    #     # slack_report += f"{critical_alert_report}\n"
 
-    if high_alert_report != '':
-        print(f"{high_alert_report}")
-        slack_report += f"{high_alert_report}\n"
+    # if high_alert_report != '':
+    #     # print(f"{high_alert_report}")
+    #     # slack_report += f"{high_alert_report}\n"
 
-    # vulnrability_report.post_to_slack(
-    #         args.slack_webhook,
-    #         slack_report,
-    #     )
+    formater = BuildKitFormatter()
+
+    slack_report += formater.header()
+    slack_report += formater.close_message()
+
+
+    vulnrability_report.post_to_slack(
+            args.slack_webhook,
+            slack_report,
+        )
 
 
 if __name__ == "__main__":
