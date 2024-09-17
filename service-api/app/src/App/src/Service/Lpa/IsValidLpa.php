@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa\IsValid;
+namespace App\Service\Lpa;
 
+use App\Service\Lpa\IsValid\isValidInterface;
+use App\Service\Lpa\IsValid\LpaStatus;
 use Psr\Log\LoggerInterface;
 
-class IsValidLpa implements LpaValidationInterface
+class IsValidLpa
 {
     public function __construct(
         private LoggerInterface $logger,
@@ -18,21 +20,24 @@ class IsValidLpa implements LpaValidationInterface
      *
      * This function is used by codes to check the validity of a LPA and its details to be displayed to user.
      *
-     * @param object $lpa An LPA data structure
+     * @param isValidInterface $lpa An LPA data structure
      *
      * @return bool True if status is Registered or Cancelled
      */
-    public function validate(array|object|null $lpa): bool
+    public function __invoke(isValidInterface $lpa): bool
     {
+        $status = $lpa->getStatus();
+        $uid    = $lpa->getUid();
+
         if (
-            !(strtolower($lpa['status']) === LpaStatus::REGISTERED->value ||
-                strtolower($lpa['status']) === LpaStatus::CANCELLED->value )
+            !(strtolower($status) === LpaStatus::REGISTERED->value ||
+                strtolower($status) === LpaStatus::CANCELLED->value )
         ) {
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [
-                    'status' => $lpa->status,
-                    'lpaUid' => $lpa->uId,
+                    'status' => $status,
+                    'lpaUid' => $uid,
                 ]
             );
 
