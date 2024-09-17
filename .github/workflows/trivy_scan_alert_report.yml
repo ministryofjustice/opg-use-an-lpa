@@ -5,9 +5,8 @@ defaults:
     shell: bash
 
 on:
-  push:
-    branches:
-      - uml-3248-trivy-report
+  schedule:
+    - cron: 0 10 * * 1-5
 
 jobs:
   trivy_scan_alert_report:
