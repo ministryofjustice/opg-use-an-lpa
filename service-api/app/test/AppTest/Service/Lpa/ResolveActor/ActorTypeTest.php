@@ -14,7 +14,7 @@ class ActorTypeTest extends TestCase
     public function it_has_expected_values(): void
     {
         $this->assertEquals('primary-attorney', ActorType::ATTORNEY->value);
-        $this->assertEquals('trust-corportation', ActorType::TRUST_CORPORATION->value);
+        $this->assertEquals('trust-corporation', ActorType::TRUST_CORPORATION->value);
         $this->assertEquals('donor', ActorType::DONOR->value);
     }
 }
