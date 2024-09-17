@@ -11,6 +11,7 @@ use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\ApiException;
 use App\Service\Log\EventCodes;
+use App\Service\Lpa\SiriusLpa;
 use DateTimeImmutable;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -128,7 +129,14 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
                 case 200:
                     # TODO: We can some more error checking around this.
                     $results[$uid] = new Lpa(
-                        $this->sanitiser->sanitise(json_decode($result->getBody()->getContents(), true)),
+                        new SiriusLpa(
+                            $this->sanitiser->sanitise(
+                                json_decode(
+                                    $result->getBody()->getContents(),
+                                    true
+                                ),
+                            ),
+                        ),
                         new DateTimeImmutable($result->getHeaderLine('Date'))
                     );
                     break;

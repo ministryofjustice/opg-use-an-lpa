@@ -21,13 +21,14 @@ class IsValidLpa
      *
      * This function is used by codes to check the validity of a LPA and its details to be displayed to user.
      *
-     * @param array $lpa An LPA data structure
-     * @param string $actorId The actors Database ID or Sirius UId to search for within the $lpa data structure
-     * @return ?bool True if status is Registered or Cancelled
+     * @param array|SiriusLpa $lpa An LPA data structure
+     * @return bool True if status is Registered or Cancelled
      */
-    public function __invoke(array $lpa): ?bool
+    public function __invoke(array|SiriusLpa $lpa): bool
     {
-        if (!(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)) {
+        if (
+            !(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)
+        ) {
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [

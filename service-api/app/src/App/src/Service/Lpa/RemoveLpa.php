@@ -94,7 +94,9 @@ class RemoveLpa
             throw new ApiException('Incorrect LPA data deleted from users account');
         }
 
-        return $lpaRemovedData;
+        // TODO UML-3606 this will always be an object at this time but we need to make it check for existing
+        //      tests to pass
+        return $lpaRemovedData instanceof SiriusLpa ? $lpaRemovedData->toArray() : $lpaRemovedData;
     }
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
