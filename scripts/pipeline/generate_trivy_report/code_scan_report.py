@@ -112,7 +112,7 @@ class CodeScanReport:
 
     def post_to_slack(self, slack_webhook, report):
         """Function to post vulnrability report to slack"""
-        post_data = {'text': report}
+        post_data = json.dumps({'text': report})
         response = requests.post(
             slack_webhook, data=post_data,
             headers={'Content-Type': 'application/json'}
