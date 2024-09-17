@@ -27,6 +27,6 @@ jobs:
       - name: send report to slack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK: ${{ secrets.DEV_SLACK_WEB_HOOK }}
+          SLACK_WEBHOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
         run: |
           python ./scripts/pipeline/generate_trivy_report/code_scan_report.py
