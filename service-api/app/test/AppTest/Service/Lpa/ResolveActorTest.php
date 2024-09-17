@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus;
+use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\ResolveActor;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;

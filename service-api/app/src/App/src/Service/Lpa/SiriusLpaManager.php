@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Features\FeatureEnabled;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
     Response\Lpa,
@@ -12,8 +13,6 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
-use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;

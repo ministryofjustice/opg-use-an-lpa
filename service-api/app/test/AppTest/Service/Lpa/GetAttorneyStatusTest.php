@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatus;
+use App\Service\Lpa\GetAttorneyStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
