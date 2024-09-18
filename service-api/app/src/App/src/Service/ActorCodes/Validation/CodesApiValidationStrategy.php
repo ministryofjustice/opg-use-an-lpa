@@ -105,7 +105,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             throw new ActorCodeValidationException('LPA not found');
         }
 
-        $actor = ($this->resolveActor)($lpa->getData(), (int) $actorUid);
+        $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
 
         if ($actor === null) {
             $this->logger->error(
@@ -119,8 +119,8 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         }
 
         if (
-            ($actor['type'] !== 'trust-corporation' && $dob !== $actor['details']['dob']) ||
-            ($actor['type'] === 'trust-corporation' && $dob !== $lpa->getData()['donor']['dob'])
+            ($actor->actorType !== ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $actor->actor['dob']) ||
+            ($actor->actorType === ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $lpa->getData()['donor']['dob'])
         ) {
             $this->logger->error(
                 'Provided dob {dob} did not match the expected when validating actor code',

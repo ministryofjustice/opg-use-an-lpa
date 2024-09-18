@@ -235,6 +235,8 @@ services:
     build:
       context: .
       dockerfile: service-api/docker/seeding/Dockerfile
+    volumes:
+      - ./service-api/seeding:/app/seeding
     environment:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"

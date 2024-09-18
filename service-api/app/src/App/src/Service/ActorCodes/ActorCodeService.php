@@ -45,7 +45,7 @@ class ActorCodeService
 
             $lpa = $this->lpaManager->getByUid($uid);
 
-            $actor = ($this->resolveActor)($lpa->getData(), (int) $actorUid);
+            $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
 
             $lpaData = $lpa->getData();
             unset($lpaData['original_attorneys']);
@@ -91,12 +91,12 @@ class ActorCodeService
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
-            $id = $this->activateRecord($idToLpaMap[$lpaId], $details['actor']['details']['uId'], $code);
+            $id = $this->activateRecord($idToLpaMap[$lpaId], $details['actor']->actor['uId'], $code);
         } else {
             $id = $this->userLpaActorMapRepository->create(
                 $userId,
                 $lpaId,
-                (string)$details['actor']['details']['uId'],
+                (string) $details['actor']->actor['uId'],
                 null,
                 null,
                 $code

@@ -12,6 +12,10 @@ use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
+use App\Service\Lpa\ResolveActor\ActorType;
+use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Service\Lpa\SiriusLpa;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -207,18 +211,20 @@ class ActorCodeServiceTest extends TestCase
         $testActorId        = 1;
         $this->testActorUid = '123456789012';
 
-        $mockLpa = [
-            'uId' => $testUid,
-        ];
+        $mockLpa = new SiriusLpa(
+            [
+                'uId' => $testUid,
+            ],
+        );
 
-        $mockActor = [
-            'details' => [
+        $mockActor = new LpaActor(
+            [
                 'dob' => $testDob,
                 'id'  => $testActorId,
                 'uId' => $this->testActorUid,
             ],
-        ];
-
+            ActorType::ATTORNEY,
+        );
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
             ->willReturn($this->testActorUid)
             ->shouldBeCalled();
@@ -228,7 +234,7 @@ class ActorCodeServiceTest extends TestCase
         )->shouldBeCalled();
 
         $this->resolveActorProphecy
-            ->__invoke(Argument::type('array'), Argument::type('int'))
+            ->__invoke(Argument::type(HasActorInterface::class), Argument::type('string'))
             ->willReturn($mockActor)
             ->shouldBeCalled();
 
