@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use Psr\Log\LoggerInterface;
+use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class FindActorInLpa
 {
@@ -46,7 +47,7 @@ class FindActorInLpa
 
     private function checkForAttorneyMatch(array $attorney, array $matchData, string $lpaId): array
     {
-        if (($this->getAttorneyStatus)($attorney) !== GetAttorneyStatus::ACTIVE_ATTORNEY) {
+        if (($this->getAttorneyStatus)($attorney) !== AttorneyStatus::ACTIVE_ATTORNEY) {
             $this->logger->info(
                 'Actor {id} status is not active for LPA {uId}',
                 [

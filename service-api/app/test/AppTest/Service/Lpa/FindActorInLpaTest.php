@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
+use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -112,7 +113,7 @@ class FindActorInLpaTest extends TestCase
                     ],
                     'systemStatus' => false, // inactive attorney
                 ]
-            )->willReturn(2);
+            )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
@@ -128,7 +129,7 @@ class FindActorInLpaTest extends TestCase
                     ],
                     'systemStatus' => true,
                 ]
-            )->willReturn(1);
+            )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
@@ -147,7 +148,7 @@ class FindActorInLpaTest extends TestCase
                     ],
                     'systemStatus' => true,
                 ]
-            )->willReturn(0);
+            )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(
@@ -163,7 +164,7 @@ class FindActorInLpaTest extends TestCase
                     ],
                     'systemStatus' => true,
                 ]
-            )->willReturn(0); // active attorney
+            )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
