@@ -794,7 +794,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']->actor['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -941,7 +941,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['lpa']['uId'], $this->lpa->uId);
-        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']['details']['uId'], $this->lpaUid);
+        Assert::assertEquals($lpa[$this->userLpaActorToken]['actor']->actor['uId'], $this->lpaUid);
 
         //ViewerCodeService:getShareCodes
 
@@ -1025,7 +1025,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
 
         // Get the share codes
 
@@ -1149,7 +1149,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
 
         // Get the share codes
 
@@ -1277,7 +1277,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
 
         // Get the share codes
 
@@ -1404,7 +1404,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
 
         // Get the share codes
 
@@ -1488,7 +1488,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
         Assert::assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
         Assert::assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
-        Assert::assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']['details']['uId']);
+        Assert::assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']->actor['uId']);
     }
 
     /**

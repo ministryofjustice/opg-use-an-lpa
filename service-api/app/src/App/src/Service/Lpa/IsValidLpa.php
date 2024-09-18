@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Service\Lpa\IsValid\isValidInterface;
-use App\Service\Lpa\IsValid\LpaStatus;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpa
 {
+    private const LPA_REGISTERED = 'registered';
+    private const LPA_CANCELLED  = 'cancelled';
+
     public function __construct(
         private LoggerInterface $logger,
     ) {
@@ -20,30 +21,23 @@ class IsValidLpa
      *
      * This function is used by codes to check the validity of a LPA and its details to be displayed to user.
      *
-     * @param isValidInterface $lpa An LPA data structure
-     *
+     * @param array|SiriusLpa $lpa An LPA data structure
      * @return bool True if status is Registered or Cancelled
      */
-    public function __invoke(isValidInterface $lpa): bool
+    public function __invoke(array|SiriusLpa $lpa): bool
     {
-        $status = $lpa->getStatus();
-        $uid    = $lpa->getUid();
-
         if (
-            !(strtolower($status) === LpaStatus::REGISTERED->value ||
-                strtolower($status) === LpaStatus::CANCELLED->value )
+            !(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)
         ) {
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [
-                    'status' => $status,
-                    'lpaUid' => $uid,
+                    'status' => $lpa['status'],
+                    'lpaUid' => $lpa['uId'],
                 ]
             );
-
             return false;
         }
-
         return true;
     }
 }
