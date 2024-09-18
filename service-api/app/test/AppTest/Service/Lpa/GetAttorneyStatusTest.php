@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
+use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -31,7 +32,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(0, ($status)($attorney));
+        $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -43,7 +44,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(1, ($status)($attorney));
+        $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -55,6 +56,6 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(2, ($status)($attorney));
+        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
 }

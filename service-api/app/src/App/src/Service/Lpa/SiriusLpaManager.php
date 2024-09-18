@@ -16,11 +16,10 @@ use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class SiriusLpaManager implements LpaManagerInterface
 {
-    private const ACTIVE_ATTORNEY   = 0;
-    private const INACTIVE_ATTORNEY = 2;
     private const ACTIVE_TC         = 0;
 
     public function __construct(
@@ -51,7 +50,7 @@ class SiriusLpaManager implements LpaManagerInterface
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['activeAttorneys']    = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)($attorney) === self::ACTIVE_ATTORNEY;
+                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::ACTIVE_ATTORNEY;
                 })
             );
         }
@@ -60,7 +59,7 @@ class SiriusLpaManager implements LpaManagerInterface
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['inactiveAttorneys']  = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)($attorney) === self::INACTIVE_ATTORNEY;
+                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::INACTIVE_ATTORNEY;
                 })
             );
         }

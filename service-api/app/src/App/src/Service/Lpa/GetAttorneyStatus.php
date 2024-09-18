@@ -5,29 +5,26 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use Psr\Log\LoggerInterface;
+use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class GetAttorneyStatus
 {
-    public const ACTIVE_ATTORNEY   = 0;
-    public const GHOST_ATTORNEY    = 1;
-    public const INACTIVE_ATTORNEY = 2;
-
     public function __construct(private LoggerInterface $logger)
     {
     }
 
-    public function __invoke(array $attorney): int
+    public function __invoke(array $attorney): AttorneyStatus
     {
         if (empty($attorney['firstname']) && empty($attorney['surname'])) {
             $this->logger->debug('Looked up attorney {id} but is a ghost', ['id' => $attorney['uId']]);
-            return self::GHOST_ATTORNEY;
+            return AttorneyStatus::GHOST_ATTORNEY;
         }
 
         if (!$attorney['systemStatus']) {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $attorney['uId']]);
-            return self::INACTIVE_ATTORNEY;
+            return AttorneyStatus::INACTIVE_ATTORNEY;
         }
 
-        return self::ACTIVE_ATTORNEY;
+        return AttorneyStatus::ACTIVE_ATTORNEY;
     }
 }
