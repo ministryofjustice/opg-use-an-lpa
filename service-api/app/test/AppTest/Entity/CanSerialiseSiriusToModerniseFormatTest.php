@@ -18,7 +18,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
     }
 
     #[Test]
-    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    public function can_serialise_sirius_lpa_to_modernise_format(): void
     {
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
