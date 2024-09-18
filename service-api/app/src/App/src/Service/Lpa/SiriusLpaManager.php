@@ -13,7 +13,6 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatus;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;

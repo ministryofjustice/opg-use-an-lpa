@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa\GetTrustCorporationStatus;
+namespace App\Service\Lpa;
 
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
 use Psr\Log\LoggerInterface;
 
 class GetTrustCorporationStatus
@@ -12,9 +14,10 @@ class GetTrustCorporationStatus
     {
     }
 
-    public function __invoke(array $trustCorporation): int
+    public function __invoke(TrustCorporationStatusInterface $trustCorporation): int
     {
-        if (empty($trustCorporation['companyName'])) {
+
+        if (empty($trustCorporation->getCompanyName())) {
             $this->logger->debug(
                 'Looked up attorney {id} but company name not found',
                 ['id' => $trustCorporation['uId']]
@@ -22,8 +25,8 @@ class GetTrustCorporationStatus
             return TrustCorporationStatuses::GHOST_TC->value;
         }
 
-        if (!$trustCorporation['systemStatus']) {
-            $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation['uId']]);
+        if (!$trustCorporation->getSystemStatus()) {
+            $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation->getUid()]);
             return TrustCorporationStatuses::INACTIVE_TC->value;
         }
 

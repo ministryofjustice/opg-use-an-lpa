@@ -39,7 +39,7 @@ class LpaServiceTest extends TestCase
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
-    private \App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
+    private \App\Service\Lpa\GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatusProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
@@ -55,7 +55,7 @@ class LpaServiceTest extends TestCase
         $this->getAttorneyStatusProphecy           = $this->prophesize(GetAttorneyStatus::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->getTrustCorporationStatusProphecy   = $this->prophesize(
-            \App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatus::class);
+            \App\Service\Lpa\GetTrustCorporationStatus::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }

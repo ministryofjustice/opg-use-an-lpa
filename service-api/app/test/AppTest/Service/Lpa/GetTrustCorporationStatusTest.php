@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatus;
+use App\Service\Lpa\GetTrustCorporationStatus;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
