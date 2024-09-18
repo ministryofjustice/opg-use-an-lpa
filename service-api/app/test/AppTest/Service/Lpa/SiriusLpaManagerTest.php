@@ -12,6 +12,7 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
+    GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
@@ -143,23 +144,23 @@ class SiriusLpaManagerTest extends TestCase
 
         $this->getAttorneyStatusProphecy
             ->__invoke(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true])
-            ->willReturn(0);
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false])
-            ->willReturn(2);
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(['id' => 3, 'firstname' => 'A', 'systemStatus' => true])
-            ->willReturn(0);
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(['id' => 4, 'surname' => 'B', 'systemStatus' => true])
-            ->willReturn(0);
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke(['id' => 5, 'systemStatus' => true])
-            ->willReturn(1);
+            ->willReturn(AttorneyStatus::GHOST_ATTORNEY);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true])
@@ -248,7 +249,7 @@ class SiriusLpaManagerTest extends TestCase
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(0);
+        ])->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -341,14 +342,14 @@ class SiriusLpaManagerTest extends TestCase
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(0);
+        ])->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy->__invoke([
             'id'           => 2,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => false,
-        ])->willReturn(2);
+        ])->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         return $t;
     }
