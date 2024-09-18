@@ -49,6 +49,12 @@ class CanCastSiriusDonorTest extends TestCase
                     'type'         => 'Primary',
                 ],
             ],
+            'linked'       => [
+                [
+                    'id'  => 7,
+                    'uId' => '700000000799',
+                ],
+            ],
         ];
 
         $expectedSiriusDonor = new SiriusLpaDonor(
@@ -61,7 +67,12 @@ class CanCastSiriusDonorTest extends TestCase
             'RachelSanderson@opgtest.com',
             'Rachel',
             null,
-            null,
+            [
+                [
+                    'id'  => 7,
+                    'uId' => '700000000799',
+                ],
+            ],
             null,
             null,
             'DN37 5SH',
@@ -69,7 +80,7 @@ class CanCastSiriusDonorTest extends TestCase
             null,
             'Town',
             'Primary',
-            '700000000799'
+            '700000000799',
         );
 
         $mapper = new ObjectMapperUsingReflection(
