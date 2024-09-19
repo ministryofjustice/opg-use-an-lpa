@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use ArrayAccess;
@@ -23,16 +24,39 @@ class SiriusLpa implements HasActorInterface, ArrayAccess, IteratorAggregate, Js
     {
     }
 
+    // TODO iterate over attorneys array, and return array of correspodiong SiriusPersons
     private function getAttorneys(): array
     {
         return $this->lpa['attorneys'];
     }
 
+   // TODO needs to return a SiriusPerson
     private function getDonor(): array
     {
         return $this->lpa['donor'];
     }
 
+    public function getFirstname(): string
+    {
+        return $this->lpa['firstname'];
+    }
+
+    public function getSurname(): string
+    {
+        return $this->lpa['surname'];
+    }
+
+    public function getUid(): string
+    {
+        return $this->lpa['uId'];
+    }
+
+    public function getSystemStatus(): string
+    {
+        return $this->lpa['systemStatus'];
+    }
+
+    // TODO iterate over trustcorporations array, and return array of correspodiong SiriusPersons
     private function getTrustCorporations(): array
     {
         return $this->lpa['trustCorporations'];

@@ -20,7 +20,11 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(array $lpa, array $matchData): ?array
+    // TODO make this take aaray or SiriusLPA, and return array or SiriusPerson and a role
+
+    // need SiriusPerson class and at later point SiriusAddress, with associated
+    // testing , run test twice one with array once with object
+    public function __invoke(array|SiriusLpa $lpa, array $matchData): ?array
     {
         $actor = null;
         $role  = null;
