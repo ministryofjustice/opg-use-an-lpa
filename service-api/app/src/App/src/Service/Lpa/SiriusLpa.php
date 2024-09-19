@@ -24,26 +24,20 @@ class SiriusLpa implements HasActorInterface, ArrayAccess, IteratorAggregate, Js
     {
     }
 
-    // TODO iterate over attorneys array, and return array of correspodiong SiriusPersons
     private function getAttorneys(): array
     {
-        return $this->lpa['attorneys'];
+        $attorneys = [];
+        $index = 0;
+        foreach ($this->lpa['attorneys'] as $attorney) {
+            $attorneys[$index] = new SiriusPerson($attorney);
+            $index++;
+        }
+        return $attorneys;
     }
 
-   // TODO needs to return a SiriusPerson
-    private function getDonor(): array
+    private function getDonor(): SiriusPerson
     {
-        return $this->lpa['donor'];
-    }
-
-    public function getFirstname(): string
-    {
-        return $this->lpa['firstname'];
-    }
-
-    public function getSurname(): string
-    {
-        return $this->lpa['surname'];
+        return new SiriusPerson($this->lpa['donor']);
     }
 
     public function getUid(): string
@@ -56,10 +50,15 @@ class SiriusLpa implements HasActorInterface, ArrayAccess, IteratorAggregate, Js
         return $this->lpa['systemStatus'];
     }
 
-    // TODO iterate over trustcorporations array, and return array of correspodiong SiriusPersons
     private function getTrustCorporations(): array
     {
-        return $this->lpa['trustCorporations'];
+        $trustCorporations = [];
+        $index = 0;
+        foreach ($this->lpa['trustCorporations'] as $trustCorporation) {
+            $trustCorporations[$index] = new SiriusPerson($trustCorporation);
+            $index++;
+        }
+        return $trustCorporations;
     }
 
     public function offsetExists(mixed $offset): bool
