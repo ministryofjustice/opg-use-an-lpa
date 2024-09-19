@@ -22,8 +22,6 @@ class AddLpa
      * @param array  $data
      * @param string $userId
      * @return array
-     *
-     *
      */
     public function validateAddLpaData(array $data, string $userId): array
     {
