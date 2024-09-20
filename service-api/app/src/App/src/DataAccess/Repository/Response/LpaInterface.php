@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository\Response;
 
+use App\Entity\Lpa as CombinedFormatLpa;
 use App\Service\Lpa\SiriusLpa;
 use DateTimeInterface;
 
@@ -12,7 +13,7 @@ interface LpaInterface
     /**
      * Returns the data the makes up the LPA.
      */
-    public function getData(): array|SiriusLpa|null;
+    public function getData(): array|SiriusLpa|CombinedFormatLpa|null;
 
     /**
      * Returns the Date & Time that the data was looked up in Sirius main database.
