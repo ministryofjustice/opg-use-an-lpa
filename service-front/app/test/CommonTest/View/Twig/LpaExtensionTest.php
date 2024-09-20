@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -15,7 +17,7 @@ use Twig\TwigFunction;
 
 class LpaExtensionTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $extension = new LpaExtension();
@@ -48,10 +50,8 @@ class LpaExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @dataProvider addressDataProvider
-     */
+    #[DataProvider('addressDataProvider')]
+    #[Test]
     public function it_concatenates_an_address_array_into_a_comma_separated_string($addressLines, $expected): void
     {
         $extension = new LpaExtension();
@@ -87,7 +87,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $addressString);
     }
 
-    public function addressDataProvider()
+    public static function addressDataProvider()
     {
         return [
             [
@@ -147,11 +147,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider nameDataProvider
-     */
-    public function it_concatenates_name_parts_into_a_single_string($nameLines, $expected)
+    #[DataProvider('nameDataProvider')]
+    #[Test]
+    public function it_concatenates_name_parts_into_a_single_string($nameLines, $expected): void
     {
         $extension = new LpaExtension();
 
@@ -174,7 +172,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $name);
     }
 
-    public function nameDataProvider()
+    public static function nameDataProvider()
     {
         return [
             [
@@ -209,11 +207,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider lpaDateDataProvider
-     */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $locale, $expected)
+    #[DataProvider('lpaDateDataProvider')]
+    #[Test]
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $locale, $expected): void
     {
         $extension = new LpaExtension();
 
@@ -229,7 +225,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $dateString);
     }
 
-    public function lpaDateDataProvider()
+    public static function lpaDateDataProvider()
     {
         return [
             [
@@ -260,11 +256,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider codeDateDataProvider
-     */
-    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $locale, $expected)
+    #[DataProvider('codeDateDataProvider')]
+    #[Test]
+    public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $locale, $expected): void
     {
         $extension = new LpaExtension();
 
@@ -280,7 +274,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $dateString);
     }
 
-    public function codeDateDataProvider()
+    public static function codeDateDataProvider()
     {
         return [
             [
@@ -306,11 +300,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider cancelledDateProvider
-     */
-    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected)
+    #[DataProvider('cancelledDateProvider')]
+    #[Test]
+    public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected): void
     {
 
         $extension = new LpaExtension();
@@ -320,7 +312,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $status);
     }
 
-    public function cancelledDateProvider()
+    public static function cancelledDateProvider()
     {
         $shareCodeWithCancelledStatus    = [
             'SiriusUid'    => '1234',
@@ -351,11 +343,9 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider expiryDateProvider
-     */
-    public function it_checks_if_a_code_has_expired($expiryDate, $expected)
+    #[DataProvider('expiryDateProvider')]
+    #[Test]
+    public function it_checks_if_a_code_has_expired($expiryDate, $expected): void
     {
 
         $extension = new LpaExtension();
@@ -365,7 +355,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $status);
     }
 
-    public function expiryDateProvider()
+    public static function expiryDateProvider()
     {
         $future     = (new DateTime('+1 week'))->format('Y-m-d');
         $past       = (new DateTime('-1 week'))->format('Y-m-d');
@@ -395,8 +385,8 @@ class LpaExtensionTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive()
+    #[Test]
+    public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive(): void
     {
         $extension = new LpaExtension();
 
@@ -407,8 +397,8 @@ class LpaExtensionTest extends TestCase
         $this->assertGreaterThan(0, $days);
     }
 
-    /** @test */
-    public function it_returns_an_empty_string_if_expiry_date_is_null()
+    #[Test]
+    public function it_returns_an_empty_string_if_expiry_date_is_null(): void
     {
         $extension = new LpaExtension();
 
@@ -417,8 +407,8 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('', $days);
     }
 
-    /** @test */
-    public function it_returns_an_hyphenated_viewer_code()
+    #[Test]
+    public function it_returns_an_hyphenated_viewer_code(): void
     {
         $extension = new LpaExtension();
 
@@ -427,8 +417,8 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
     }
 
-     /** @test */
-    public function it_checks_if_an_LPA_is_cancelled()
+     #[Test]
+    public function it_checks_if_an_LPA_is_cancelled(): void
     {
         $extension = new LpaExtension();
         $lpa       = new Lpa();
@@ -440,8 +430,8 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(true, $status);
     }
 
-    /** @test */
-    public function it_checks_if_an_LPA_is_not_cancelled()
+    #[Test]
+    public function it_checks_if_an_LPA_is_not_cancelled(): void
     {
         $extension = new LpaExtension();
         $lpa       = new Lpa();
@@ -452,8 +442,8 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(false, $status);
     }
 
-    /** @test */
-    public function it_checks_if_an_LPA_is_revoked()
+    #[Test]
+    public function it_checks_if_an_LPA_is_revoked(): void
     {
         $extension = new LpaExtension();
         $lpa       = new Lpa();
@@ -464,8 +454,8 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals(true, $status);
     }
 
-    /** @test */
-    public function it_returns_donor_name_from_donor_nameDob_string()
+    #[Test]
+    public function it_returns_donor_name_from_donor_nameDob_string(): void
     {
         $extension = new LpaExtension();
 
@@ -475,7 +465,7 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals('Harry Potter', $donorName);
     }
 
-    /** @test */
+    #[Test]
     public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
     {
         $extension = new LpaExtension();

@@ -4,23 +4,17 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity\InstructionsAndPreferences;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\InstructionsAndPreferences\SignedUrl;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Common\Entity\InstructionsAndPreferences\Images
- */
+#[CoversClass(Images::class)]
 class ImagesTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::getInstructionsImageUrls
-     * @covers ::getPreferencesImageUrls
-     * @covers ::getImageRegex
-     * @covers ::getImageUrls
-     */
+    #[Test]
     public function it_returns_requested_images(): void
     {
         $data = [
@@ -45,12 +39,7 @@ class ImagesTest extends TestCase
         $this->assertEquals('http://preferences-image-url', $signedUrls[0]->url);
     }
 
-    /**
-     * @test
-     * @covers ::getInstructionsImageUrls
-     * @covers ::getImageRegex
-     * @covers ::getImageUrls
-     */
+    #[Test]
     public function it_ignores_types_it_does_not_recognise(): void
     {
         $data = [
@@ -77,10 +66,7 @@ class ImagesTest extends TestCase
         $this->assertEquals('http://instructions-image-url', $signedUrls[0]->url);
     }
 
-    /**
-     * @test
-     * @covers ::jsonSerialize
-     */
+    #[Test]
     public function it_implements_jsonserializable_correctly(): void
     {
         $data = [

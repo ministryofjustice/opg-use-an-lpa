@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Pdf\PdfResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -13,8 +14,8 @@ class PdfResponseTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_is_a_custom_response_that_sets_pdf_headers()
+    #[Test]
+    public function it_is_a_custom_response_that_sets_pdf_headers(): void
     {
         $streamProphecy = $this->prophesize(StreamInterface::class);
 

@@ -34,7 +34,7 @@ class ChangeDetailsHandlerTest extends TestCase
         $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
     }
 
-    public function test_change_details_page_will_render_with_valid_actor_token()
+    public function test_change_details_page_will_render_with_valid_actor_token(): void
     {
         $handler = new ChangeDetailsHandler(
             $this->templateRendererProphecy->reveal(),

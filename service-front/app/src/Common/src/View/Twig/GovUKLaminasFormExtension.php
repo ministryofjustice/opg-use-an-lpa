@@ -39,9 +39,6 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Date::class => 'form_fieldset_date',
     ];
 
-    /**
-     * @return array
-     */
     public function getFunctions(): array
     {
         return [

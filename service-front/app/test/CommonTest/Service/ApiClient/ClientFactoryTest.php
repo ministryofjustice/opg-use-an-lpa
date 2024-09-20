@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\ApiClient;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Service\ApiClient\Client;
 use Common\Service\ApiClient\ClientFactory;
 use Common\Service\Log\RequestTracing;
@@ -13,17 +16,12 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use RuntimeException;
 
-/**
- * @coversDefaultClass \Common\Service\ApiClient\ClientFactory
- */
+#[CoversClass(ClientFactory::class)]
 class ClientFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_creates_an_apiclient(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -52,11 +50,10 @@ class ClientFactoryTest extends TestCase
     }
 
     /**
-     * @test
-     * @covers ::__invoke
-     * @dataProvider badConfigurationData
      * @param array $configuration Bad configuration data for factory
      */
+    #[DataProvider('badConfigurationData')]
+    #[Test]
     public function it_throws_a_configuration_exception_when_missing(array $configuration): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -71,7 +68,7 @@ class ClientFactoryTest extends TestCase
         $client = $factory($containerProphecy->reveal());
     }
 
-    public function badConfigurationData(): array
+    public static function badConfigurationData(): array
     {
         return [
             [

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\User;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -14,7 +15,7 @@ class UserTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_can_be_constructed(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -22,7 +23,7 @@ class UserTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_valid_user_details(): void
     {
         $date = new DateTimeImmutable();
@@ -42,7 +43,7 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('IdToken', $user->getDetails());
     }
 
-    /** @test */
+    #[Test]
     public function needs_reset_is_false_when_not_supplied(): void
     {
         $date = new DateTimeImmutable();
@@ -56,7 +57,7 @@ class UserTest extends TestCase
         $this->assertFalse($user->getDetail('NeedsReset'));
     }
 
-    /** @test */
+    #[Test]
     public function subject_and_idtoken_are_absent_when_not_supplied(): void
     {
         $date = new DateTimeImmutable();
@@ -71,7 +72,7 @@ class UserTest extends TestCase
         $this->assertArrayNotHasKey('IdToken', $user->getDetails());
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_expected_roles(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -80,7 +81,7 @@ class UserTest extends TestCase
         $this->assertCount(0, $user->getRoles());
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_a_valid_lastLogin_time(): void
     {
         // this is needed to ensure our datetime is truncated at 0 microseconds
@@ -97,7 +98,7 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_a_valid_lastLogin_time_when_constructed_from_DateTime_array(): void
     {
         $date = new DateTimeImmutable();
@@ -119,7 +120,7 @@ class UserTest extends TestCase
         $this->assertEquals($date, $user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_a_default_detail_when_provided_and_necessary(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -127,7 +128,7 @@ class UserTest extends TestCase
         $this->assertEquals('Never', $user->getDetail('LastLogin', 'Never'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_a_null_when_property_not_found(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -135,7 +136,7 @@ class UserTest extends TestCase
         $this->assertNull($user->getDetail('TestProperty'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_a_null_lastLogin_when_none_provided(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -143,7 +144,7 @@ class UserTest extends TestCase
         $this->assertNull($user->getDetail('LastLogin'));
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_correct_identity(): void
     {
         $user = new User('test', [], ['Email' => 'test@email.com']);
@@ -151,7 +152,7 @@ class UserTest extends TestCase
         $this->assertEquals('test', $user->getIdentity());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_be_serialised(): void
     {
         $date = new DateTimeImmutable();

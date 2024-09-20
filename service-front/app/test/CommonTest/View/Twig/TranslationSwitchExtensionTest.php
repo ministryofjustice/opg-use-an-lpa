@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\View\Twig\TranslationSwitchExtension;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Router\RouteResult;
@@ -15,7 +16,7 @@ class TranslationSwitchExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $urlHelper = $this->prophesize(UrlHelper::class);
@@ -42,7 +43,7 @@ class TranslationSwitchExtensionTest extends TestCase
         }
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_the_current_route_name(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);
@@ -63,7 +64,7 @@ class TranslationSwitchExtensionTest extends TestCase
         $this->assertEquals('lpa.add', $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_null_when_route_not_found(): void
     {
         $urlHelper   = $this->prophesize(UrlHelper::class);

@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Features;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-/**
- * @coversDefaultClass \Common\Service\Features\FeatureEnabled
- */
+#[CoversClass(FeatureEnabled::class)]
 class FeatureEnabledTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_correctly_returns_feature_value_from_configuration(): void
     {
         $flags = [
@@ -30,10 +27,7 @@ class FeatureEnabledTest extends TestCase
         $this->assertTrue($enabled);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_throws_an_exception_when_not_finding_a_feature_value(): void
     {
         $flags = [
@@ -46,10 +40,7 @@ class FeatureEnabledTest extends TestCase
         $enabled = $sut('other_feature_name');
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_throws_an_exception_when_not_finding_badly_configured_feature_value(): void
     {
         $flags = [

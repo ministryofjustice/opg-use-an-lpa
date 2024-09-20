@@ -14,7 +14,6 @@ use UnexpectedValueException;
 
 class ConditionalRoutingMiddleware implements MiddlewareInterface
 {
-
     /**
      * @param ContainerInterface         $container It is necessary to pass the container so we can resolve the feature flag
      * @param ContainerInterface         $middlewareContainer

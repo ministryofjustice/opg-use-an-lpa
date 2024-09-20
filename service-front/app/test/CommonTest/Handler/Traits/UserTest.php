@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler\Traits;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\Traits\User;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -16,8 +17,8 @@ class UserTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function can_get_user_from_request_pipeline()
+    #[Test]
+    public function can_get_user_from_request_pipeline(): void
     {
         $userInterfaceProphecy = $this->prophesize(UserInterface::class);
 
@@ -36,8 +37,8 @@ class UserTest extends TestCase
         $this->assertInstanceOf(UserInterface::class, $user);
     }
 
-    /** @test */
-    public function gets_null_when_user_is_not_logged_in()
+    #[Test]
+    public function gets_null_when_user_is_not_logged_in(): void
     {
         $authenticationProhphecy = $this->prophesize(AuthenticationInterface::class);
         $authenticationProhphecy->authenticate(Argument::type(ServerRequestInterface::class))

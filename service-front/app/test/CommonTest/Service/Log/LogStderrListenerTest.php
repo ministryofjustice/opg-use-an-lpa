@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Log;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Log\LogStderrListener;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -13,19 +15,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \Common\Service\Log\LogStderrListener
- */
+#[CoversClass(LogStderrListener::class)]
 class LogStderrListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::__invoke
-     */
-    public function creates_and_pushes_test_message_without_trace()
+    #[Test]
+    public function creates_and_pushes_test_message_without_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
@@ -59,12 +55,8 @@ class LogStderrListenerTest extends TestCase
         $logStderrListener($exception, $requestProphecy->reveal(), $responseProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::__invoke
-     */
-    public function creates_and_pushes_test_message_with_trace()
+    #[Test]
+    public function creates_and_pushes_test_message_with_trace(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(

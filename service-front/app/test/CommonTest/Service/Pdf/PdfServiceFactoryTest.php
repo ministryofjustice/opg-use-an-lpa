@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Pdf\PdfService;
 use Common\Service\Pdf\PdfServiceFactory;
@@ -21,8 +22,8 @@ class PdfServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_creates_a_configured_pdf_service()
+    #[Test]
+    public function it_creates_a_configured_pdf_service(): void
     {
         $config = [
             'pdf' => [
@@ -57,8 +58,8 @@ class PdfServiceFactoryTest extends TestCase
         $this->assertInstanceOf(PdfService::class, $pdfService);
     }
 
-    /** @test */
-    public function it_needs_a_configuration_array_and_fails_if_not_there()
+    #[Test]
+    public function it_needs_a_configuration_array_and_fails_if_not_there(): void
     {
         $config = [];
 
@@ -74,8 +75,8 @@ class PdfServiceFactoryTest extends TestCase
         );
     }
 
-    /** @test */
-    public function it_needs_a_configuration_value_and_fails_if_not_there()
+    #[Test]
+    public function it_needs_a_configuration_value_and_fails_if_not_there(): void
     {
         $config = [
             'pdf' => [],

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use PHPUnit\Framework\TestCase;
 
 class GenericGlobalVariableExtensionTest extends TestCase
 {
-    /** @test */
-    public function sets_some_global_variables()
+    #[Test]
+    public function sets_some_global_variables(): void
     {
         $application = 'actor';
 
@@ -35,8 +36,8 @@ class GenericGlobalVariableExtensionTest extends TestCase
         $this->assertEquals($expectedConfig['currentLocale'], $genericConfig['currentLocale']);
     }
 
-    /** @test */
-    public function sets_the_right_app_name()
+    #[Test]
+    public function sets_the_right_app_name(): void
     {
         $application = 'viewer';
 

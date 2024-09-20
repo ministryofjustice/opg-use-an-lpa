@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session\Encryption;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Session\Encryption\KmsEncryptedCookie;
 use Common\Service\Session\KeyManager\Key;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
@@ -17,7 +18,7 @@ class KmsEncryptedCookieTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_can_be_instantiated(): void
     {
         $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
@@ -28,7 +29,7 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertInstanceOf(KmsEncryptedCookie::class, $sut);
     }
 
-    /** @test */
+    #[Test]
     public function it_encodes_a_session_array(): void
     {
         $data = [
@@ -53,7 +54,7 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals('1.ZW5jcnlwdGVkU3RyaW5n', $encoded);
     }
 
-    /** @test */
+    #[Test]
     public function it_encodes_an_empty_array_of_data_to_a_blank_string(): void
     {
         $data = [];
@@ -68,7 +69,7 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals('', $cookieValue);
     }
 
-    /** @test */
+    #[Test]
     public function it_decodes_a_string_into_session_data(): void
     {
         $data = [
@@ -92,7 +93,7 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals($data, $decoded);
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_an_exception_when_key_id_not_matched_and_returns_new_session(): void
     {
         $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
@@ -107,7 +108,7 @@ class KmsEncryptedCookieTest extends TestCase
         $this->assertEquals([], $decoded);
     }
 
-    /** @test */
+    #[Test]
     public function it_decodes_an_empty_string_into_an_empty_array(): void
     {
         $data = [];

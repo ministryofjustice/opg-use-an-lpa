@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response\Parse;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\LpaMatch;
@@ -60,10 +62,10 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @throws Exception
      */
-    public function it_creates_a_lpa_match_actor_details_dto_from_array_data()
+    #[Test]
+    public function it_creates_a_lpa_match_actor_details_dto_from_array_data(): void
     {
         $this->lpaFactory
             ->createCaseActorFromData($this->response['donor'])
@@ -82,10 +84,11 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $this->assertNotNull($result->getAttorney());
     }
 
-    /** @test
+    /**
      * @throws Exception
      */
-    public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields()
+    #[Test]
+    public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields(): void
     {
         $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
@@ -113,8 +116,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $this->assertNotNull($result->getAttorney());
     }
 
-    /** @test */
-    public function it_will_fail_if_lpa_match_actor_donor_firstname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_lpa_match_actor_donor_firstname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -135,8 +138,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_lpa_match_actor_donor_middlenames_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_lpa_match_actor_donor_middlenames_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -157,8 +160,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_lpa_match_actor_donor_surname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_lpa_match_actor_donor_surname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -179,11 +182,9 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /**
-     * @dataProvider lpaMatchActorDetailsDataProvider
-     * @test
-     */
-    public function it_will_fail_if_lpa_match_actor_uId_or_lpa_type_is_not_set(array $data)
+    #[DataProvider('lpaMatchActorDetailsDataProvider')]
+    #[Test]
+    public function it_will_fail_if_lpa_match_actor_uId_or_lpa_type_is_not_set(array $data): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -195,7 +196,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         ($sut)($data);
     }
 
-    public function lpaMatchActorDetailsDataProvider(): array
+    public static function lpaMatchActorDetailsDataProvider(): array
     {
         return [
             [

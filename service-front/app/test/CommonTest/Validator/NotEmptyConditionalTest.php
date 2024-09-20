@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Validator\NotEmptyConditional;
 use Mezzio\Exception\RuntimeException;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,7 @@ class NotEmptyConditionalTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function isValidWhenDependantIsExpectedValue(): void
     {
         $isValid = $this->validator->isValid(
@@ -35,7 +36,7 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function isValidWhenNotEmpty(): void
     {
         $isValid = $this->validator->isValid(
@@ -48,7 +49,7 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function notValidWhenEmptyAndNoDependant(): void
     {
         $isValid = $this->validator->isValid(
@@ -61,7 +62,7 @@ class NotEmptyConditionalTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function noMessageWhenDependantValueIsNull(): void
     {
         $isValid = $this->validator->isValid(
@@ -76,7 +77,7 @@ class NotEmptyConditionalTest extends TestCase
         self::assertEmpty($this->validator->getMessages());
     }
 
-    /** @test */
+    #[Test]
     public function errorWhenNoDependantConfigured(): void
     {
         $this->validator = new NotEmptyConditional([]);

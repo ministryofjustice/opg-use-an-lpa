@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Validator\OptionSelectedValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +17,7 @@ class OptionSelectedValidatorTest extends TestCase
         $this->validator = new OptionSelectedValidator();
     }
 
-    /** @test */
+    #[Test]
     public function isValidWhenOnlyTelephoneNumberPresent(): void
     {
         $isValid = $this->validator->isValid(
@@ -28,7 +29,7 @@ class OptionSelectedValidatorTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function isValidWhenOnlyNoPhoneCheckboxPresent(): void
     {
         $isValid = $this->validator->isValid(
@@ -41,7 +42,7 @@ class OptionSelectedValidatorTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function isNotValidWhenNeitherValuesArePresent(): void
     {
         $isValid = $this->validator->isValid([]);
@@ -57,7 +58,7 @@ class OptionSelectedValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    /** @test */
+    #[Test]
     public function isNotValidWhenBothValuesArePresent(): void
     {
         $isValid = $this->validator->isValid(

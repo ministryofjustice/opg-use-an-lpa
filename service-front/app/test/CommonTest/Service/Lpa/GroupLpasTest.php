@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\GroupLpas;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\GroupLpas
- */
+#[CoversClass(GroupLpas::class)]
 class GroupLpasTest extends LpaFixtureTestCase
 {
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_groups_lpas_by_donor(): void
     {
         $lpas = $this->lpaFixtureData();

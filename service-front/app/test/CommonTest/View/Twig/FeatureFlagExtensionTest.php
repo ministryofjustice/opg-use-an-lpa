@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Service\Features\FeatureEnabled;
 use Common\View\Twig\FeatureFlagExtension;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Twig\TwigFunction;
 
-/**
- * @coversDefaultClass \Common\View\Twig\FeatureFlagExtension
- */
+#[CoversClass(FeatureFlagExtension::class)]
 class FeatureFlagExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::getFunctions
-     */
+    #[Test]
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $extension = new FeatureFlagExtension(
@@ -47,13 +45,8 @@ class FeatureFlagExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @covers ::featureEnabled
-     * @dataProvider configuredFeatures
-     * @param string $featureName
-     * @param bool   $enabled
-     */
+    #[DataProvider('configuredFeatures')]
+    #[Test]
     public function it_returns_the_features_configured_status(string $featureName, bool $enabled): void
     {
         $service = $this->prophesize(FeatureEnabled::class);
@@ -71,7 +64,7 @@ class FeatureFlagExtensionTest extends TestCase
     /**
      * @return array<array<mixed>>
      */
-    public function configuredFeatures(): array
+    public static function configuredFeatures(): array
     {
         return [
             'feature enabled'

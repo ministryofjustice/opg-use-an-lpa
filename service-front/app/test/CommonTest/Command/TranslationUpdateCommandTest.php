@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Command;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Command\TranslationUpdateCommand;
 use Common\Service\I18n\CatalogueExtractor;
 use Common\Service\I18n\CatalogueLoader;
@@ -21,7 +22,7 @@ class TranslationUpdateCommandTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_can_be_executed(): void
     {
         $vfs = vfsStream::setup(

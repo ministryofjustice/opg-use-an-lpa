@@ -15,7 +15,7 @@ class HealthcheckHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testItCreatesAHealthcheckHandler()
+    public function testItCreatesAHealthcheckHandler(): void
     {
         $factory = new HealthcheckHandlerFactory();
 

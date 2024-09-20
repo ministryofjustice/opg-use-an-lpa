@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
@@ -17,7 +19,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 /**
- * @coversDefaultClass \Common\Service\Lpa\ParseLpaData
  * @property array     lpaData
  * @property string    actorToken
  * @property string    lpaId
@@ -26,6 +27,7 @@ use Prophecy\Prophecy\ObjectProphecy;
  * @property CaseActor actor
  * @property Images    iapImages
  */
+#[CoversClass(ParseLpaData::class)]
 class ParseLpaDataTest extends TestCase
 {
     use ProphecyTrait;
@@ -74,10 +76,9 @@ class ParseLpaDataTest extends TestCase
     }
 
     /**
-     * @test
-     * @covers ::__invoke
      * @throws Exception
      */
+    #[Test]
     public function it_correctly_parses_an_lpa_api_response(): void
     {
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($this->lpa);

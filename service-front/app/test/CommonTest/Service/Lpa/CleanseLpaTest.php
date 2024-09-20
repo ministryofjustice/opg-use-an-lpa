@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Lpa\AccessForAllApiResult;
@@ -39,9 +40,7 @@ class CleanseLpaTest extends TestCase
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function submit_cleanse_request_successfully(): void
     {
         $this->apiClientProphecy
@@ -59,9 +58,7 @@ class CleanseLpaTest extends TestCase
         self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function submit_cleanse_request_successfully_with_actorId(): void
     {
         $this->apiClientProphecy
@@ -80,9 +77,7 @@ class CleanseLpaTest extends TestCase
         self::assertEquals(new AccessForAllApiResult(AccessForAllResult::SUCCESS, []), $response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function submit_cleanse_request_with_api_failure(): void
     {
         $this->apiClientProphecy

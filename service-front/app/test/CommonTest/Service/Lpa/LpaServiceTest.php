@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\Lpa;
 use Common\Exception\ApiException;
@@ -50,8 +51,8 @@ class LpaServiceTest extends TestCase
         );
     }
 
-    /** @test */
-    public function it_gets_a_list_of_lpas_for_a_user()
+    #[Test]
+    public function it_gets_a_list_of_lpas_for_a_user(): void
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
@@ -85,8 +86,8 @@ class LpaServiceTest extends TestCase
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
     }
 
-    /** @test */
-    public function it_gets_a_list_of_sorted_lpas_for_a_user()
+    #[Test]
+    public function it_gets_a_list_of_sorted_lpas_for_a_user(): void
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
@@ -123,8 +124,8 @@ class LpaServiceTest extends TestCase
         $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
     }
 
-    /** @test */
-    public function it_gets_an_lpa_by_passcode_and_surname_for_summary()
+    #[Test]
+    public function it_gets_an_lpa_by_passcode_and_surname_for_summary(): void
     {
         $lpaData = [
             'lpa' => [],
@@ -148,8 +149,8 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
-    public function it_gets_an_lpa_by_passcode_and_surname_for_full()
+    #[Test]
+    public function it_gets_an_lpa_by_passcode_and_surname_for_full(): void
     {
         $lpaData = [
             'lpa' => [],
@@ -174,8 +175,8 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
-    public function it_finds_a_cancelled_share_code_by_passcode_and_surname()
+    #[Test]
+    public function it_finds_a_cancelled_share_code_by_passcode_and_surname(): void
     {
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
@@ -190,8 +191,8 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
-    public function it_finds_an_expired_share_code_by_passcode_and_surname()
+    #[Test]
+    public function it_finds_an_expired_share_code_by_passcode_and_surname(): void
     {
 
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
@@ -206,8 +207,8 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
-    public function lpa_not_found_by_passcode_and_surname()
+    #[Test]
+    public function lpa_not_found_by_passcode_and_surname(): void
     {
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
@@ -220,8 +221,8 @@ class LpaServiceTest extends TestCase
         $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
     }
 
-    /** @test */
-    public function it_gets_an_Lpa_by_Id()
+    #[Test]
+    public function it_gets_an_Lpa_by_Id(): void
     {
         $token = '01234567-01234-01234-01234-012345678901';
 
@@ -249,8 +250,8 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
-    /** @test */
-    public function an_invalid_Lpa_id_throws_exception()
+    #[Test]
+    public function an_invalid_Lpa_id_throws_exception(): void
     {
         $token = '01234567-01234-01234-01234-012345678901';
         $lpaId = '98765432-01234-01234-01234-012345678901';
