@@ -196,7 +196,7 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActiveForUser($this->userId);
 
         Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -789,7 +789,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActiveForUser($this->userId);
 
         Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -936,7 +936,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActiveForUser($this->userId);
 
         Assert::assertArrayHasKey($this->userLpaActorToken, $lpa);
         Assert::assertEquals($lpa[$this->userLpaActorToken]['user-lpa-actor-token'], $this->userLpaActorToken);
@@ -2267,7 +2267,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAHasNotBeenAdded(): void
     {
-        $lpas = $this->lpaService->getAllForUser($this->userId);
+        $lpas = $this->lpaService->getAllActiveForUser($this->userId);
 
         Assert::assertEmpty($lpas);
     }
@@ -2560,7 +2560,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActiveForUser($this->userId);
 
         Assert::assertEmpty($lpa);
     }
@@ -2651,7 +2651,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $lpa = $this->lpaService->getAllForUser($this->userId);
+        $lpa = $this->lpaService->getAllActiveForUser($this->userId);
 
         assertEquals(1, sizeof($lpa));
     }
