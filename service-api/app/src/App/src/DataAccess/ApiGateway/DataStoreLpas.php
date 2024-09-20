@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
+use App\Service\Lpa\LpaDataFormatter;
 use App\DataAccess\Repository\{LpasInterface, Response, Response\LpaInterface};
 use DateTimeImmutable;
 use Exception;
@@ -21,6 +22,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         RequestFactoryInterface $requestFactory,
         StreamFactoryInterface $streamFactory,
         RequestSignerFactory $requestSignerFactory,
+        private LpaDataFormatter $lpaDataFormatter,
         string $apiBaseUri,
         string $traceId,
     ) {
@@ -67,9 +69,11 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         return match ($response->getStatusCode()) {
             StatusCodeInterface::STATUS_OK =>
                 new Response\Lpa(
-                    json_decode(
-                        $response->getBody()->getContents(),
-                        true
+                    ($this->lpaDataFormatter)(
+                        json_decode(
+                            $response->getBody()->getContents(),
+                            true,
+                        ),
                     ),
                     new DateTimeImmutable($response->getHeaderLine('Date'))
                 ),
@@ -97,7 +101,10 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         $url = sprintf('%s/lpas', $this->apiBaseUri);
 
         // TODO this identifier needs to come from somewhere
-        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas, "UniqueUserIdentifier");
+        $signer = ($this->requestSignerFactory)(
+            SignatureType::DataStoreLpas,
+            'UniqueUserIdentifier'
+        );
 
         $request = $this->requestFactory
             ->createRequest('POST', $url)
@@ -122,7 +129,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
             StatusCodeInterface::STATUS_OK =>
                 array_map(
                     fn ($lpaData) => new Response\Lpa(
-                        $lpaData,
+                        ($this->lpaDataFormatter)($lpaData),
                         new DateTimeImmutable($response->getHeaderLine('Date'))
                     ),
                     json_decode(
