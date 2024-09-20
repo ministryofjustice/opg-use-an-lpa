@@ -8,6 +8,7 @@ use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Exception\ApiException;
 use App\Service\Lpa\Combined\ResolveLpaTypes;
 
 /**
@@ -20,21 +21,22 @@ class CombinedLpaManager implements LpaManagerInterface
         private readonly ResolveLpaTypes $resolveLpaTypes,
         private readonly SiriusLpas $siriusLpas,
         private readonly DataStoreLpas $dataStoreLpas,
-        private readonly SiriusLpaManager $siriusLpaManager,
+        private ResolveActor $resolveActor,
+        private IsValidLpa $isValidLpa,
     ) {
     }
 
     public function getByUid(string $uid): ?LpaInterface
     {
-        return $this->siriusLpaManager->getByUid($uid);
+        throw new ApiException('Not implemented');
     }
 
     public function getByUserLpaActorToken(string $token, string $userId): ?array
     {
-        return $this->siriusLpaManager->getByUserLpaActorToken($token, $userId);
+        throw new ApiException('Not implemented');
     }
 
-    public function getAllForUser(string $userId): array
+    public function getAllActiveForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -46,7 +48,7 @@ class CombinedLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getAllLpasAndRequestsForUser(string $userId): array
+    public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -56,7 +58,7 @@ class CombinedLpaManager implements LpaManagerInterface
 
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
     {
-        return $this->siriusLpaManager->getByViewerCode($viewerCode, $donorSurname, $organisation);
+        throw new ApiException('Not implemented');
     }
 
     /**
@@ -80,11 +82,11 @@ class CombinedLpaManager implements LpaManagerInterface
 
         $keyedDataStoreLpas = [];
         array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
-            $keyedDataStoreLpas[$item->getData()['uid']] = $item;
+            $keyedDataStoreLpas[$item->getData()->uId] = $item;
         });
 
         // unusual combination operation in order to preserve potential numeric keys
-        $lpas = $siriusLpas + $dataStoreLpas;
+        $lpas = $keyedDataStoreLpas + $siriusLpas;
 
         $result = [];
 
@@ -103,9 +105,7 @@ class CombinedLpaManager implements LpaManagerInterface
 
             $lpaData = $lpa->getData();
 
-            // TODO load lpaData into object hydrator
-            // TODO combined resolveActor that uses object
-            $actor = ($this->resolveActor)($lpaData, (int) $item['ActorId']);
+            $actor = ($this->resolveActor)($lpaData, (string) $item['ActorId']);
 
             //Extract and return only LPA's where status is Registered or Cancelled
             if (($this->isValidLpa)($lpaData)) {
