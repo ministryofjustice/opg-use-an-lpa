@@ -71,6 +71,9 @@ class ConfigProvider
 
                 // Secrets
                 Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
+
+                // Services
+                Service\Lpa\LpaManagerInterface::class => Service\Lpa\LpaService::class,
             ],
             'autowires'  => [
                 // these two Managers need explicitly autowiring so that they're recognised
@@ -98,7 +101,8 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class        => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
-                DataAccess\ApiGateway\SiriusLpas::class             => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\ApiGateway\SiriusLpas::class       => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\ApiGateway\DataStoreLpas::class    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
 

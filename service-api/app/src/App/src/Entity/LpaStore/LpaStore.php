@@ -12,12 +12,16 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\ResolveActor\LpaStoreHasActorTrait;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 
-class LpaStore extends Lpa
+class LpaStore extends Lpa implements HasActorInterface
 {
+    use LpaStoreHasActorTrait;
+
     public function __construct(
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,

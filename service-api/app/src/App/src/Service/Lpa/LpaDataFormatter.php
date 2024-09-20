@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Entity\Lpa;
 use App\Entity\LpaStore\LpaStore;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
-use EventSauce\ObjectHydrator\UnableToSerializeObject;
 
 class LpaDataFormatter
 {
@@ -19,23 +19,18 @@ class LpaDataFormatter
 
     /**
      * @throws UnableToHydrateObject
-     * @throws UnableToSerializeObject
      */
-    public function __invoke(array $lpa)
+    public function __invoke(array $lpa): Lpa
     {
         $mapper = new ObjectMapperUsingReflection(
             new DefinitionProvider(
-                keyFormatter:                new KeyFormatterWithoutConversion(),
+                keyFormatter: new KeyFormatterWithoutConversion(),
             ),
         );
 
-        $lpaObject = $mapper->hydrateObject(
+        return $mapper->hydrateObject(
             LpaStore::class,
             $lpa
-        );
-
-        return $mapper->serializeObject(
-            $lpaObject
         );
     }
 }
