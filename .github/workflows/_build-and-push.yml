@@ -80,7 +80,7 @@ jobs:
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d
         env:
           cache-name: cache-node-modules
         with:
@@ -269,7 +269,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@3b8097c25e1fc9742d2d91e6cdafe7b13d1f3d93 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@78e0829b196d0af37b19b1fed53cf6d6b15f565a # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
