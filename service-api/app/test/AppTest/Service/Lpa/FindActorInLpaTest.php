@@ -34,7 +34,7 @@ class FindActorInLpaTest extends TestCase
     {
         $lpa = [
             'uId'       => '700000012346',
-            'donor'     => [
+            'donor'     => new SiriusPerson([
                 'uId'       => '700000001111',
                 'dob'       => '1975-10-05',
                 'firstname' => 'Donor',
@@ -44,7 +44,7 @@ class FindActorInLpaTest extends TestCase
                         'postcode' => 'PY1 3Kd',
                     ],
                 ],
-            ],
+            ]),
             'attorneys' => [
                 new SiriusPerson(
                 [
@@ -137,7 +137,7 @@ class FindActorInLpaTest extends TestCase
             )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(
+            ->__invoke( new SiriusPerson(
                 [
                     'uId'          => '700000004444',
                     'dob'          => '1980-03-01',
@@ -152,7 +152,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]
+                ])
             )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
@@ -185,7 +185,7 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 [
-                    'actor'  => [
+                    'actor'  => new SiriusPerson([
                         'uId'          => '700000001234',
                         'dob'          => '1980-03-01',
                         'firstname'    => 'Test',
@@ -196,7 +196,7 @@ class FindActorInLpaTest extends TestCase
                             ],
                         ],
                         'systemStatus' => true,
-                    ],
+                    ]),
                     'role'   => 'attorney', // successful match for attorney
                     'lpa-id' => '700000012346',
                 ],
@@ -210,7 +210,7 @@ class FindActorInLpaTest extends TestCase
             ],
             [
                 [
-                    'actor'  => [
+                    'actor'  => new SiriusPerson([
                         'uId'       => '700000001111',
                         'dob'       => '1975-10-05',
                         'firstname' => 'Donor',
@@ -220,7 +220,7 @@ class FindActorInLpaTest extends TestCase
                                 'postcode' => 'PY1 3Kd',
                             ],
                         ],
-                    ],
+                    ]),
                     'role'   => 'donor', // successful match for donor
                     'lpa-id' => '700000012346',
                 ],

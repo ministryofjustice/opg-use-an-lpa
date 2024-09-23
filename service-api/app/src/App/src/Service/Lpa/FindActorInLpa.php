@@ -101,7 +101,7 @@ class FindActorInLpa
      * @param array $matchData The user provided data we're searching for a match against
      * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
      */
-    private function checkForActorMatch(array $actor, array $matchData): int
+    private function checkForActorMatch(array|SiriusPerson $actor, array $matchData): int
     {
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {
