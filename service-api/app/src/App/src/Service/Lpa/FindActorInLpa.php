@@ -81,7 +81,7 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function findAttorneyDetails(array $attorneys, array $matchData, string $lpaId): array|SiriusPerson
+    private function findAttorneyDetails(array $attorneys, array $matchData, string $lpaId): array
     {
         foreach ($attorneys as $attorney) {
             [$actor, $role] = $this->checkForAttorneyMatch($attorney, $matchData, $lpaId);
