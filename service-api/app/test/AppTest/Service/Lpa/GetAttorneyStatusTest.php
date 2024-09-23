@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
+use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -26,7 +27,7 @@ class GetAttorneyStatusTest extends TestCase
     #[Test]
     public function returns_0_if_attorney_is_active(): void
     {
-        $attorney = ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true];
+        $attorney = new SiriusPerson(['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]);
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()
@@ -38,7 +39,7 @@ class GetAttorneyStatusTest extends TestCase
     #[Test]
     public function returns_1_if_attorney_is_a_ghost(): void
     {
-        $attorney = ['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true];
+        $attorney = new SiriusPerson(['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true]);
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()
@@ -50,7 +51,7 @@ class GetAttorneyStatusTest extends TestCase
     #[Test]
     public function returns_2_if_attorney_is_inactive(): void
     {
-        $attorney = ['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false];
+        $attorney = new SiriusPerson(['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]);
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()

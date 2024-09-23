@@ -30,6 +30,16 @@ class SiriusPerson implements GetAttorneyStatusInterface, ArrayAccess, IteratorA
         return $this->person['surname'];
     }
 
+    public function getSystemStatus(): bool
+    {
+        return $this->person['systemStatus'];
+    }
+
+    public function getUid(): string
+    {
+        return (string)$this->person['uId'];
+    }
+
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->person[$offset]);

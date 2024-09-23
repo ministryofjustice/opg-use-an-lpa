@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use Common\Service\Lpa\Factory\Sirius;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -19,7 +20,8 @@ use App\Service\Lpa\{GetAttorneyStatus,
     ResolveActor\ActorType,
     ResolveActor\LpaActor,
     SiriusLpa,
-    SiriusLpaManager};
+    SiriusLpaManager,
+    SiriusPerson};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -107,29 +109,29 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'          => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
+                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
+                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
                     ],
                     'original_attorneys' => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
+                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
+                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
                     ],
                     'trustCorporations'  => [
                         ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
                     ],
                     'inactiveAttorneys'  => [
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
                     ],
                     'activeAttorneys'    => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
                     ],
                 ],
             ),
