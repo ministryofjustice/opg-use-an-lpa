@@ -97,7 +97,34 @@
     }
   ],
   "replacementAttorneys": [],
-  "trustCorporations": [],
+  "trustCorporations": [
+    {
+    "addresses": [
+      {
+        "id": 3207,
+        "town": "Town",
+        "county": "County",
+        "postcode": "ABC 123",
+        "country": "GB",
+        "type": "Primary",
+        "addressLine1": "Street 1",
+        "addressLine2": "Street 2",
+        "addressLine3": "Street 3"
+      }
+    ],
+      "id": 3485,
+      "uId": "7000-0015-1998",
+      "dob": null,
+      "email": null,
+      "salutation": null,
+      "firstname": "trust",
+      "middlenames": null,
+      "surname": "test",
+      "otherNames": null,
+      "systemStatus": true,
+      "companyName": "trust corporation"
+    }
+  ],
   "certificateProviders": [
     {
       "id": 11,

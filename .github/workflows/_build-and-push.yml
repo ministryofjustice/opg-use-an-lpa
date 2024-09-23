@@ -76,11 +76,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
+        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d
         env:
           cache-name: cache-node-modules
         with:
@@ -112,7 +112,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
@@ -269,7 +269,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@3b8097c25e1fc9742d2d91e6cdafe7b13d1f3d93 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@78e0829b196d0af37b19b1fed53cf6d6b15f565a # pin@v1.5.1
         with:
           registries: 311462405659
         if: |

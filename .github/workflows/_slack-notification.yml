@@ -28,7 +28,7 @@ jobs:
   send-slack-notification:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
       - name: install python
         uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # pin@v4.2.0
@@ -40,7 +40,7 @@ jobs:
         run: pip install -r scripts/pipeline/requirements.txt
 
       - name: download cluster_config
-        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: /tmp
