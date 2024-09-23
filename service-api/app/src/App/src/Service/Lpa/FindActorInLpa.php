@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
@@ -20,10 +21,7 @@ class FindActorInLpa
     {
     }
 
-    // TODO make this take aaray or SiriusLPA, and return array or SiriusPerson and a role
-
-    // need SiriusPerson class and at later point SiriusAddress, with associated
-    // testing , run test twice one with array once with object
+    // TODO testing , run test twice one with array once with object
     public function __invoke(array|SiriusLpa $lpa, array $matchData): ?array
     {
         $actor = null;
@@ -49,7 +47,7 @@ class FindActorInLpa
         ];
     }
 
-    private function checkForAttorneyMatch(array $attorney, array $matchData, string $lpaId): array
+    private function checkForAttorneyMatch(GetAttorneyStatusInterface $attorney, array $matchData, string $lpaId): array
     {
         if (($this->getAttorneyStatus)($attorney) !== AttorneyStatus::ACTIVE_ATTORNEY) {
             $this->logger->info(
@@ -83,7 +81,7 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function findAttorneyDetails(array $attorneys, array $matchData, string $lpaId): array
+    private function findAttorneyDetails(array $attorneys, array $matchData, string $lpaId): array|SiriusPerson
     {
         foreach ($attorneys as $attorney) {
             [$actor, $role] = $this->checkForAttorneyMatch($attorney, $matchData, $lpaId);

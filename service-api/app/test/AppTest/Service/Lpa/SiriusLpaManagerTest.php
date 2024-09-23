@@ -91,11 +91,11 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'         => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
+                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
+                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
+                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
                     ],
                     'trustCorporations' => [
                         ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
@@ -145,23 +145,23 @@ class SiriusLpaManagerTest extends TestCase
         $this->lpasInterfaceProphecy->get($testUid)->willReturn($lpaResponse);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true])
+            ->__invoke(new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]))
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false])
+            ->__invoke(new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]))
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 3, 'firstname' => 'A', 'systemStatus' => true])
+            ->__invoke(new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]))
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 4, 'surname' => 'B', 'systemStatus' => true])
+            ->__invoke(new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]))
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 5, 'systemStatus' => true])
+            ->__invoke(new SiriusPerson(['id' => 5, 'systemStatus' => true]))
             ->willReturn(AttorneyStatus::GHOST_ATTORNEY);
 
         $this->getTrustCorporationStatusProphecy
@@ -194,21 +194,23 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
+                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
+                        new SiriusPerson(
                         [
                             'id'           => 1,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
                     ],
                     'inactiveAttorneys' => [],
                 ],
@@ -246,12 +248,12 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn($validState);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => $t->ActorId,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -273,35 +275,39 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
+                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
+                        new SiriusPerson(
                         [
                             'id'           => 2,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => false,
-                        ],
+                        ]),
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
+                        new SiriusPerson(
                         [
                             'id'           => 1,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
                     ],
                     'inactiveAttorneys' => [
+                        new SiriusPerson(
                         [
                             'id'           => 2,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => false,
-                        ],
+                        ]),
                     ],
                 ],
             ),
@@ -339,19 +345,19 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn(true);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => $t->ActorId,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => 2,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => false,
-        ])->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+        ]))->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -391,21 +397,22 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
+                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
-                        0 => [
+                        0 => new SiriusPerson([
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ],
+                        ]),
                     ],
                     'inactiveAttorneys' => [],
                 ],

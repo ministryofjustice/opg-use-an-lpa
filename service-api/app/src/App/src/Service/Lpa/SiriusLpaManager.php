@@ -50,7 +50,7 @@ class SiriusLpaManager implements LpaManagerInterface
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['activeAttorneys']    = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)(new SiriusPerson($attorney)) === AttorneyStatus::ACTIVE_ATTORNEY;
+                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::ACTIVE_ATTORNEY;
                 })
             );
         }
@@ -59,7 +59,7 @@ class SiriusLpaManager implements LpaManagerInterface
             $lpaData['original_attorneys'] = $lpaData['attorneys'];
             $lpaData['inactiveAttorneys']  = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)(new SiriusPerson($attorney)) === AttorneyStatus::INACTIVE_ATTORNEY;
+                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::INACTIVE_ATTORNEY;
                 })
             );
         }

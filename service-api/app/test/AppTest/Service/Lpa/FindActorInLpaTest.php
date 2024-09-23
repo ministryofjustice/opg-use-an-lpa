@@ -7,6 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
+use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +46,7 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
             'attorneys' => [
+                new SiriusPerson(
                 [
                     'uId'          => '700000002222',
                     'dob'          => '1977-11-21',
@@ -56,7 +58,8 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => false, // inactive attorney
-                ],
+                ]),
+                new SiriusPerson(
                 [
                     'uId'          => '700000003333',
                     'dob'          => '1960-05-05',
@@ -68,7 +71,8 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ],
+                ]),
+                new SiriusPerson(
                 [
                     'uId'          => '700000004444',
                     'dob'          => '1980-03-01',
@@ -83,7 +87,8 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ],
+                ]),
+                new SiriusPerson(
                 [
                     'uId'          => '700000001234',
                     'dob'          => '1980-03-01',
@@ -95,12 +100,12 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ],
+                ]),
             ],
         ];
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(
+            ->__invoke( new SiriusPerson(
                 [
                     'uId'          => '700000002222',
                     'dob'          => '1977-11-21',
@@ -112,11 +117,11 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => false, // inactive attorney
-                ]
+                ])
             )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(
+            ->__invoke( new SiriusPerson(
                 [
                     'uId'          => '700000003333',
                     'dob'          => '1960-05-05',
@@ -128,7 +133,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]
+                ])
             )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
@@ -151,7 +156,7 @@ class FindActorInLpaTest extends TestCase
             )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(
+            ->__invoke( new SiriusPerson(
                 [
                     'uId'          => '700000001234',
                     'dob'          => '1980-03-01',
@@ -163,7 +168,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]
+                ])
             )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
         $sut = new FindActorInLpa(
