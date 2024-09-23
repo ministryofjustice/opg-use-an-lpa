@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
-      - uses: actions/setup-node@c2ac33f2c62f978d6c944d9648125a294e56dc0b # pin@v3.6.0
+      - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # pin@v3.6.0
         with:
           node-version-file: '.nvmrc'
       - name: cache node modules
