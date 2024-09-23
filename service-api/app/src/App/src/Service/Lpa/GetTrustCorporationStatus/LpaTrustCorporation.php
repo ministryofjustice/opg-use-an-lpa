@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\GetTrustCorporationStatus;
 
-use JsonSerializable;
+use App\Service\Lpa\ResolveActor\ActorType;
+use App\Service\Lpa\ResolveActor\LpaActor;
 
-class LpaTrustCorporation implements JsonSerializable
+class LpaTrustCorporation extends LpaActor
 {
     /**
-     * @param array|object $actor
-     * @param ActorType $actorType
+     * @param mixed $actor
      */
-    public function __construct(
-        public readonly mixed $trustCorporation,
-        public readonly TrustCorporation $actorType,
-    ) {
+    public function __construct(mixed $actor) {
+        parent::__construct($actor, ActorType::TRUST_CORPORATION);
     }
 
     public function jsonSerialize(): array
     {
         return [
             'details' => $this->actor,
-            'type'    => $this->actorType->value,
+            'type'    => ActorType::TRUST_CORPORATION->value,
         ];
     }
 }
