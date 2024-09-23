@@ -8,7 +8,7 @@ interface TrustCorporationStatusInterface
 {
     public function getCompanyName(): string;
 
-    public function getSystemStatus(): string;
+    public function getSystemStatus(): bool;
 
     public function getUid(): string;
 }

@@ -20,7 +20,7 @@ class GetTrustCorporationStatus
         if (empty($trustCorporation->getCompanyName())) {
             $this->logger->debug(
                 'Looked up attorney {id} but company name not found',
-                ['id' => $trustCorporation['uId']]
+                ['id' => $trustCorporation->getUid()]
             );
             return TrustCorporationStatuses::GHOST_TC->value;
         }

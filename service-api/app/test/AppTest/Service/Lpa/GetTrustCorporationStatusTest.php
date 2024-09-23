@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\GetTrustCorporationStatus;
-use App\Service\Lpa\GetTrustCorporationStatus\LpaTrustCorporation;
-use App\Service\Lpa\ResolveActor\ActorType;
-use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -28,7 +26,7 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_0_if_trustCorporation_is_active(): void
     {
-        $trustCorporation = new LpaTrustCorporation(
+        $trustCorporation = new SiriusPerson(
             [
                 'uId' => 7,
                 'companyName' => 'ABC Ltd',
@@ -46,13 +44,12 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_1_if_trustCorporation_is_a_ghost(): void
     {
-        $trustCorporation = new LpaActor(
+        $trustCorporation = new SiriusPerson(
             [
                 'uId' => 8,
                 'companyName' => '',
                 'systemStatus' => false
-            ],
-            ActorType::TRUST_CORPORATION
+            ]
         );
 
         $status = new GetTrustCorporationStatus(
@@ -65,7 +62,7 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_2_if_trustCorporation_is_inactive(): void
     {
-        $trustCorporation = new LpaTrustCorporation(
+        $trustCorporation = new SiriusPerson(
             [
                 'uId' => 7,
                 'companyName' => 'XYZ Ltd',
