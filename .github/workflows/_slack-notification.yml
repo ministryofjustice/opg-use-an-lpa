@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
 
       - name: install python
-        uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d # pin@v4.2.0
+        uses: actions/setup-python@70dcb22d269dc9546a5d97f4b11548f130526421 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
