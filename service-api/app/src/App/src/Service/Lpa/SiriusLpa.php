@@ -23,22 +23,40 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function __construct(private array $lpa)
     {
+        if ($this->lpa['donor'] !== null) {
+            $donorAsSiriusPerson = new SiriusPerson($this->lpa['donor']);
+            $this->lpa['donor'] = $donorAsSiriusPerson;
+        }
+
+        if ($this->lpa['attorneys'] !== null) {
+            $attorneysAsSiriusPersons = [];
+            $index = 0;
+            foreach ($this->lpa['attorneys'] as $attorney) {
+                $attorneysAsSiriusPersons[$index] = new SiriusPerson($attorney);
+                $index++;
+            }
+            $this->lpa['attorneys'] = $attorneysAsSiriusPersons;
+        }
+
+        if ($this->lpa['trustCorporations'] !== null) {
+            $trustCorpsAsSiriusPersons = [];
+            $index = 0;
+            foreach ($this->lpa['trustCorporations'] as $trustCorporation) {
+                $trustCorpsAsSiriusPersons[$index] = new SiriusPerson($trustCorporation);
+                $index++;
+            }
+            $this->lpa['trustCorporations'] = $trustCorpsAsSiriusPersons;
+        }
     }
 
     private function getAttorneys(): array
     {
-        $attorneys = [];
-        $index = 0;
-        foreach ($this->lpa['attorneys'] as $attorney) {
-            $attorneys[$index] = new SiriusPerson($attorney);
-            $index++;
-        }
-        return $attorneys;
+        return $this->lpa['attorneys'];
     }
 
     private function getDonor(): SiriusPerson
     {
-        return new SiriusPerson($this->lpa['donor']);
+        return $this->lpa['donor'];
     }
 
     public function getUid(): string
@@ -53,13 +71,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     private function getTrustCorporations(): array
     {
-        $trustCorporations = [];
-        $index = 0;
-        foreach ($this->lpa['trustCorporations'] as $trustCorporation) {
-            $trustCorporations[$index] = new SiriusPerson($trustCorporation);
-            $index++;
-        }
-        return $trustCorporations;
+        return $this->lpa['trustCorporations'];
     }
 
     public function offsetExists(mixed $offset): bool

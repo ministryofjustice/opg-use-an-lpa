@@ -91,11 +91,11 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'         => [
-                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
-                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
+                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 5, 'systemStatus' => true],
                     ],
                     'trustCorporations' => [
                         ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
@@ -109,29 +109,29 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'          => [
-                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
-                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
+                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 5, 'systemStatus' => true],
                     ],
                     'original_attorneys' => [
-                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
-                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 5, 'systemStatus' => true]),
+                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 5, 'systemStatus' => true],
                     ],
                     'trustCorporations'  => [
                         ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
                     ],
                     'inactiveAttorneys'  => [
-                        new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]),
+                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
                     ],
                     'activeAttorneys'    => [
-                        new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]),
-                        new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]),
+                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                     ],
                 ],
             ),
@@ -194,13 +194,12 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
-                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
+                        ],
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
@@ -275,39 +274,35 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
-                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
-                        new SiriusPerson(
+                        ],
                         [
                             'id'           => 2,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => false,
-                        ]),
+                        ],
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
-                        new SiriusPerson(
                         [
                             'id'           => 1,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
+                        ],
                     ],
                     'inactiveAttorneys' => [
-                        new SiriusPerson(
                         [
                             'id'           => 2,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => false,
-                        ]),
+                        ],
                     ],
                 ],
             ),
@@ -397,13 +392,12 @@ class SiriusLpaManagerTest extends TestCase
                     'uId'               => $t->SiriusUid,
                     'status'            => 'Registered',
                     'attorneys'         => [
-                        new SiriusPerson(
                         [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
+                        ],
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
