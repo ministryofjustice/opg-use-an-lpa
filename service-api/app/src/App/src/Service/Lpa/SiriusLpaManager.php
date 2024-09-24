@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
     Response\Lpa,
@@ -69,7 +68,7 @@ class SiriusLpaManager implements LpaManagerInterface
         if ($lpaData['trustCorporations'] !== null) {
             $lpaData['trustCorporations'] = array_values(
                 array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
-                    return ($this->getTrustCorporationStatus)($trustCorporation) === TrustCorporationStatuses::ACTIVE_TC->value;
+                    return ($this->getTrustCorporationStatus)($trustCorporation) === self::ACTIVE_TC;
                 })
             );
         }
