@@ -102,8 +102,4 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         return $this->lpa['status'];
     }
 
-    public function getUid(): string
-    {
-        return $this->lpa['uId'];
-    }
 }
