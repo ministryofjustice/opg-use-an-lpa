@@ -257,6 +257,8 @@ jobs:
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
