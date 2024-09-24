@@ -28,25 +28,33 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
             $this->lpa['donor'] = $donorAsSiriusPerson;
         }
 
-        if ($this->lpa['attorneys'] !== null) {
-            $attorneysAsSiriusPersons = [];
-            $index = 0;
-            foreach ($this->lpa['attorneys'] as $attorney) {
-                $attorneysAsSiriusPersons[$index] = new SiriusPerson($attorney);
-                $index++;
-            }
-            $this->lpa['attorneys'] = $attorneysAsSiriusPersons;
+        if (array_key_exists('attorneys', $this->lpa)) {
+            $this->convertToSiriusPersons($this->lpa['attorneys']);
         }
 
-        if ($this->lpa['trustCorporations'] !== null) {
-            $trustCorpsAsSiriusPersons = [];
-            $index = 0;
-            foreach ($this->lpa['trustCorporations'] as $trustCorporation) {
-                $trustCorpsAsSiriusPersons[$index] = new SiriusPerson($trustCorporation);
-                $index++;
-            }
-            $this->lpa['trustCorporations'] = $trustCorpsAsSiriusPersons;
+        if (array_key_exists('original_attorneys',$this->lpa)) {
+            $this->convertToSiriusPersons($this->lpa['original_attorneys']);
         }
+
+        if (array_key_exists('inactiveAttorneys',$this->lpa)) {
+            $this->convertToSiriusPersons($this->lpa['inactiveAttorneys']);
+        }
+
+        if (array_key_exists('activeAttorneys',$this->lpa)) {
+            $this->convertToSiriusPersons($this->lpa['activeAttorneys']);
+        }
+        //$this->convertToSiriusPersons($this->lpa['trustCorporations'])
+    }
+
+    private function convertToSiriusPersons(array $persons): array
+    {
+        $personAsSiriusPersons = [];
+        $index = 0;
+        foreach ($persons as $person) {
+            $personsAsSiriusPersons[$index] = new SiriusPerson($person);
+            $index++;
+        }
+        return $personAsSiriusPersons;
     }
 
     private function getAttorneys(): array

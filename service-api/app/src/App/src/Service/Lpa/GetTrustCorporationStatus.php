@@ -16,7 +16,7 @@ class GetTrustCorporationStatus
     {
     }
 
-    public function __invoke(array|SiriusPerson $trustCorporation): int
+    public function __invoke(array $trustCorporation): int
     {
         if (empty($trustCorporation['companyName'])) {
             $this->logger->debug(

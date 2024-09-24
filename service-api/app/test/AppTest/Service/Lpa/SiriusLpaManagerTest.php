@@ -203,13 +203,12 @@ class SiriusLpaManagerTest extends TestCase
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
-                        new SiriusPerson(
                         [
                             'id'           => 1,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
+                        ],
                     ],
                     'inactiveAttorneys' => [],
                 ],
@@ -401,12 +400,12 @@ class SiriusLpaManagerTest extends TestCase
                     ],
                     'trustCorporations' => [],
                     'activeAttorneys'   => [
-                        0 => new SiriusPerson([
+                        0 => [
                             'id'           => $t->ActorId,
                             'firstname'    => 'Test',
                             'surname'      => 'Test',
                             'systemStatus' => true,
-                        ]),
+                        ],
                     ],
                     'inactiveAttorneys' => [],
                 ],
