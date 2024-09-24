@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use ArrayAccess;
@@ -16,7 +17,7 @@ use Traversable;
  * @template-implements ArrayAccess<array-key, string|array>
  * @template-implements IteratorAggregate<array-key, string|array>
  */
-class SiriusLpa implements HasActorInterface, ArrayAccess, IteratorAggregate, JsonSerializable
+class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, IteratorAggregate, JsonSerializable
 {
     use SiriusHasActorTrait;
 
@@ -94,5 +95,15 @@ class SiriusLpa implements HasActorInterface, ArrayAccess, IteratorAggregate, Js
     public function jsonSerialize(): array
     {
         return $this->toArray();
+    }
+
+    public function getStatus(): string
+    {
+        return $this->lpa['status'];
+    }
+
+    public function getUid(): string
+    {
+        return $this->lpa['uId'];
     }
 }
