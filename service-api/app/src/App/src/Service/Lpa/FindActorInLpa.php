@@ -32,8 +32,8 @@ class FindActorInLpa
         }
 
         // If not an attorney, check if they're the donor.
-        if ($actor === null && isset($lpa['donor']) && is_array($lpa['donor'])) {
-            [$actor, $role] = $this->checkDonorDetails($lpa['donor'], $matchData);
+        if ($actor === null && isset($lpa['donor']) && $lpa['donor'] instanceof SiriusPerson) {
+                    [$actor, $role] = $this->checkDonorDetails($lpa['donor'], $matchData);
         }
 
         if ($actor === null) {
@@ -70,7 +70,7 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function checkDonorDetails(array $donor, array $matchData): array
+    private function checkDonorDetails(array|SiriusPerson $donor, array $matchData): array
     {
         $donorMatchResponse = $this->checkForActorMatch($donor, $matchData);
 
