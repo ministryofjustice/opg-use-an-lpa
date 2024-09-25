@@ -28,22 +28,11 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
             $this->lpa['donor'] = $donorAsSiriusPerson;
         }
 
-        if (array_key_exists('attorneys', $this->lpa)) {
-            $this->lpa['attorneys'] = $this->convertToSiriusPersons($this->lpa['attorneys']);
-        }
-
-        if (array_key_exists('original_attorneys',$this->lpa)) {
-            $this->lpa['original_attorneys'] = $this->convertToSiriusPersons($this->lpa['original_attorneys']);
-        }
-
-        if (array_key_exists('inactiveAttorneys',$this->lpa)) {
-            $this->lpa['inactiveAttorneys'] = $this->convertToSiriusPersons($this->lpa['inactiveAttorneys']);
-        }
-
-        if (array_key_exists('activeAttorneys',$this->lpa)) {
-            $this->lpa['activeAttorneys'] = $this->convertToSiriusPersons($this->lpa['activeAttorneys']);
-        }
-        //$this->lpa['trustCorporations'] = $this->convertToSiriusPersons($this->lpa['trustCorporations'])
+        $this->transformArrayToSiriusPersons('attorneys');
+        $this->transformArrayToSiriusPersons('original_attorneys');
+        $this->transformArrayToSiriusPersons('inactiveAttorneys');
+        $this->transformArrayToSiriusPersons('activeAttorneys');
+        $this->transformArrayToSiriusPersons('trustCorporations');
     }
 
     private function convertToSiriusPersons(array $persons): array
@@ -80,6 +69,22 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
     public function getSystemStatus(): string
     {
         return $this->lpa['systemStatus'];
+    }
+
+    private function transformArrayToSiriusPersons(string $keyName): void
+    {
+        if (array_key_exists($keyName, $this->lpa)) {
+            $this->lpa[$keyName] = array_map(function ($entity) {
+                return $this->convertToSiriusPerson($entity);
+            }, $this->lpa[$keyName]);
+        }
+    }
+
+    private function convertToSiriusPerson($entity): SiriusPerson
+    {
+        return $entity instanceof SiriusPerson
+            ? $entity
+            : new SiriusPerson($entity);
     }
 
     private function getTrustCorporations(): array

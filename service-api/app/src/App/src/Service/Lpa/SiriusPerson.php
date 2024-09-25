@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
 use ArrayAccess;
 use IteratorAggregate;
 use JsonSerializable;
@@ -14,7 +15,7 @@ use Traversable;
  * @template-implements ArrayAccess<array-key, string|array>
  * @template-implements IteratorAggregate<array-key, string|array>
  */
-class SiriusPerson implements GetAttorneyStatusInterface, ArrayAccess, IteratorAggregate, JsonSerializable
+class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatusInterface, ArrayAccess, IteratorAggregate, JsonSerializable
 {
     public function __construct(private array $person)
     {
@@ -38,6 +39,11 @@ class SiriusPerson implements GetAttorneyStatusInterface, ArrayAccess, IteratorA
     public function getUid(): string
     {
         return (string)$this->person['uId'];
+    }
+
+    public function getCompanyName(): string
+    {
+        return $this->person['companyName'];
     }
 
     public function offsetExists(mixed $offset): bool
