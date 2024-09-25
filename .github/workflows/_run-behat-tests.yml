@@ -25,7 +25,7 @@ jobs:
           cache: 'pip'
 
       - name: install chrome
-        uses: browser-actions/setup-chrome@c1191dc4e79dcd91be7b16302e04460c20a2a784 # pin@1.7.0
+        uses: browser-actions/setup-chrome@1208fbfeb50c2d4be7a87c2fa47d4cd7db1270e3 # pin@1.7.0
         with:
           chrome-version: stable
 
