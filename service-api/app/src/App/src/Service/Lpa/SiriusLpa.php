@@ -22,6 +22,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function __construct(private array $lpa)
     {
+        $this->transformTrustCorporations();
     }
 
     private function getAttorneys(): array
@@ -32,6 +33,22 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
     private function getDonor(): array
     {
         return $this->lpa['donor'];
+    }
+
+    private function transformTrustCorporations(): void
+    {
+        if (array_key_exists('trustCorporations', $this->lpa)) {
+            $this->lpa['trustCorporations'] = array_map(function ($trustCorporation) {
+                return $this->convertToSiriusPerson($trustCorporation);
+            }, $this->getTrustCorporations());
+        }
+    }
+
+    private function convertToSiriusPerson($entity): SiriusPerson
+    {
+        return $entity instanceof SiriusPerson
+            ? $entity
+            : new SiriusPerson($entity);
     }
 
     private function getTrustCorporations(): array

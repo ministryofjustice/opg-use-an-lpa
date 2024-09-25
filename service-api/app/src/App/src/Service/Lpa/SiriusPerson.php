@@ -20,16 +20,6 @@ class SiriusPerson implements TrustCorporationStatusInterface, ArrayAccess, Iter
     {
     }
 
-    public function getFirstname(): string
-    {
-        return $this->person['firstname'];
-    }
-
-    public function getSurname(): string
-    {
-        return $this->person['surname'];
-    }
-
     public function getSystemStatus(): bool
     {
         return $this->person['systemStatus'];
