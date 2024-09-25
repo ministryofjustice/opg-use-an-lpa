@@ -76,7 +76,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
 
       - name: cache node modules
         id: cache-npm
