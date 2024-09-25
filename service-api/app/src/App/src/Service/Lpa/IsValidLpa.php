@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\IsValid\LpaStatus;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpa
 {
-    private const LPA_REGISTERED = 'registered';
-    private const LPA_CANCELLED  = 'cancelled';
-
     public function __construct(
         private LoggerInterface $logger,
     ) {
@@ -26,14 +24,17 @@ class IsValidLpa
      */
     public function __invoke(array|SiriusLpa $lpa): bool
     {
+        $status = $lpa->getStatus();
+
         if (
-            !(strtolower($lpa['status']) === self::LPA_REGISTERED || strtolower($lpa['status']) === self::LPA_CANCELLED)
+            !(strtolower($status) === LpaStatus::REGISTERED->value ||
+                strtolower($status) === LpaStatus::CANCELLED->value )
         ) {
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [
                     'status' => $lpa['status'],
-                    'lpaUid' => $lpa['uId'],
+                    'lpaUid' => $lpa->getUid(),
                 ]
             );
             return false;

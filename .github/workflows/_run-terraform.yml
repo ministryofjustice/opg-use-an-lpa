@@ -58,7 +58,7 @@ jobs:
             echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           fi
 
-      - uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b # pin@v3
+      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
         with:
           fetch-depth: '0'
 
@@ -71,12 +71,12 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@7f4493e15578a47490e79892b308bf23dee56c45 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@c23d9fb1b7ead2e283cd20aab7c4974b032f61f6 # pin@v2.0.0
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
       - name: configure AWS credentials for getting pagerduty token
-        uses: aws-actions/configure-aws-credentials@a78e788c51463a506fbaaec784bab37f73afb4e8 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@050bf7aae915badb82daa8e68fd95c9070706953 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -93,7 +93,7 @@ jobs:
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@a78e788c51463a506fbaaec784bab37f73afb4e8 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@050bf7aae915badb82daa8e68fd95c9070706953 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -152,7 +152,7 @@ jobs:
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@552bf3722c16e81001aea7db72d8cedf64eb5f68 # pin@v3.1.0
+        uses: actions/upload-artifact@b18b1d32f3f31abcdc29dee3f2484801fe7822f4 # pin@v3.1.0
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment/cluster_config.json
