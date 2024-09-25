@@ -51,7 +51,12 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         $personAsSiriusPersons = [];
         $index = 0;
         foreach ($persons as $person) {
-            $personsAsSiriusPersons[$index] = new SiriusPerson($person);
+            if ($person instanceof SiriusPerson) {
+                $personsAsSiriusPersons[$index] = $person;
+            }
+            else {
+                $personsAsSiriusPersons[$index] = new SiriusPerson($person);
+            }
             $index++;
         }
         return $personAsSiriusPersons;
