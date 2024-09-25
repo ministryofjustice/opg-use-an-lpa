@@ -35,22 +35,6 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         $this->transformArrayToSiriusPersons('trustCorporations');
     }
 
-    private function convertToSiriusPersons(array $persons): array
-    {
-        $personsAsSiriusPersons = [];
-        $index = 0;
-        foreach ($persons as $person) {
-            if ($person instanceof SiriusPerson) {
-                $personsAsSiriusPersons[$index] = $person;
-            }
-            else {
-                $personsAsSiriusPersons[$index] = new SiriusPerson($person);
-            }
-            $index++;
-        }
-        return $personsAsSiriusPersons;
-    }
-
     private function getAttorneys(): array
     {
         return $this->lpa['attorneys'];
