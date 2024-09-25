@@ -21,7 +21,6 @@ class FindActorInLpa
     {
     }
 
-    // TODO testing , run test twice one with array once with object
     public function __invoke(array|SiriusLpa $lpa, array $matchData): ?array
     {
         $actor = null;
@@ -32,7 +31,8 @@ class FindActorInLpa
         }
 
         // If not an attorney, check if they're the donor.
-        if ($actor === null && isset($lpa['donor']) && $lpa['donor'] instanceof SiriusPerson) {
+        if ($actor === null && isset($lpa['donor']) &&
+            (is_array($lpa['donor']) || ($lpa['donor'] instanceof SiriusPerson))) {
                     [$actor, $role] = $this->checkDonorDetails($lpa['donor'], $matchData);
         }
 
