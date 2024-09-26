@@ -24,7 +24,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
     public function __construct(private array $lpa)
     {
         if ($this->lpa['donor'] !== null) {
-            $donorAsSiriusPerson = new SiriusPerson($this->lpa['donor']);
+            $donorAsSiriusPerson = $this->convertToSiriusPerson($this->lpa['donor']);
             $this->lpa['donor'] = $donorAsSiriusPerson;
         }
 
