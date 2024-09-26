@@ -76,7 +76,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
 
       - name: cache node modules
         id: cache-npm
@@ -112,7 +112,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
@@ -250,6 +250,9 @@ jobs:
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
         uses: aquasecurity/trivy-action@97646fedde05bcd0961217c60b50e23f721e7ec7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
@@ -257,8 +260,6 @@ jobs:
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
