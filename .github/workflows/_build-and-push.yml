@@ -76,7 +76,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938
 
       - name: cache node modules
         id: cache-npm
@@ -271,7 +271,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@78e0829b196d0af37b19b1fed53cf6d6b15f565a # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@f8cb900d38ecff281181b9924245b4f0ddc1860a # pin@v1.5.1
         with:
           registries: 311462405659
         if: |

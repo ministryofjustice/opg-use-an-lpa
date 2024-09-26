@@ -16,7 +16,7 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
 
       - name: install python
         uses: actions/setup-python@70dcb22d269dc9546a5d97f4b11548f130526421 # pin@v4.2.0

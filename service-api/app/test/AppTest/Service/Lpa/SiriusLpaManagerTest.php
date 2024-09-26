@@ -18,7 +18,8 @@ use App\Service\Lpa\{GetAttorneyStatus,
     ResolveActor\ActorType,
     ResolveActor\LpaActor,
     SiriusLpa,
-    SiriusLpaManager};
+    SiriusLpaManager,
+    SiriusPerson};
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -95,7 +96,12 @@ class SiriusLpaManagerTest extends TestCase
                         ['id' => 5, 'systemStatus' => true],
                     ],
                     'trustCorporations' => [
-                        ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
+                        new SiriusPerson(
+                            [
+                             'id'           => 6,
+                             'companyName'  => 'XYZ Ltd',
+                             'systemStatus' => true,
+                            ]),
                     ],
                 ],
             ),
@@ -120,7 +126,12 @@ class SiriusLpaManagerTest extends TestCase
                         ['id' => 5, 'systemStatus' => true],
                     ],
                     'trustCorporations'  => [
-                        ['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true],
+                        new SiriusPerson(
+                            [
+                                'id'           => 6,
+                                'companyName'  => 'XYZ Ltd',
+                                'systemStatus' => true,
+                            ]),
                     ],
                     'inactiveAttorneys'  => [
                         ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
@@ -162,11 +173,23 @@ class SiriusLpaManagerTest extends TestCase
             ->willReturn(1);
 
         $this->getTrustCorporationStatusProphecy
-            ->__invoke(['id' => 6, 'companyName' => 'XYZ Ltd', 'systemStatus' => true])
+            ->__invoke(
+                new SiriusPerson([
+                    'id'           => 6,
+                    'companyName'  => 'XYZ Ltd',
+                    'systemStatus' => true,
+                ])
+            )
             ->willReturn(0);
 
         $this->getTrustCorporationStatusProphecy
-            ->__invoke(['id' => 7, 'companyName' => 'ABC Ltd', 'systemStatus' => true])
+            ->__invoke(
+                new SiriusPerson([
+                    'id'           => 7,
+                    'companyName'  => 'ABC Ltd',
+                    'systemStatus' => true,
+                ])
+            )
             ->willReturn(2);
 
         $result = $service->getByUid($testUid);

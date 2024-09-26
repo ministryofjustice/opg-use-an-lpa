@@ -15,7 +15,7 @@ jobs:
   ecr-scan-results:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
 
       - name: configure AWS credentials ECR scan results
         uses: aws-actions/configure-aws-credentials@050bf7aae915badb82daa8e68fd95c9070706953 # pin@v1.7.0
