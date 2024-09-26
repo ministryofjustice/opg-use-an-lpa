@@ -47,9 +47,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
       noncurrent_version_expiration {
         noncurrent_days = var.expiration_days
       }
-      abort_incomplete_multipart_upload {
-        days_after_initiation = 7
-      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "multi_part" {
+  bucket = aws_s3_bucket.bucket.id
+  rule {
+    id     = "abort-incomplete-multipart-upload"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
     }
   }
 }
