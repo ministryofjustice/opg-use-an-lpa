@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\Translator;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Mezzio\Helper\UrlHelper;
@@ -18,7 +19,7 @@ class SetLocaleMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_sets_a_default_locale_of_en_GB_if_none_provided(): void
     {
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);
@@ -52,7 +53,7 @@ class SetLocaleMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_a_locale_of_cy_GB_if_requested_to(): void
     {
         $urlHelperProphecy = $this->prophesize(UrlHelper::class);

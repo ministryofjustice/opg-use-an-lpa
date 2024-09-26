@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\TranslatorInterface;
 use Common\View\Twig\GenericGlobalVariableExtension;
 use Common\View\Twig\GenericGlobalVariableExtensionFactory;
@@ -17,10 +18,8 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function can_create_an_instance_of_the_variable_extension()
+    #[Test]
+    public function can_create_an_instance_of_the_variable_extension(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get('config')
@@ -40,17 +39,15 @@ class GenericGlobalVariableExtensionFactoryTest extends TestCase
         $containerProphecy->get(TranslatorInterface::class)
             ->willReturn($translationProphecy->reveal());
 
-        $factory       = new GenericGlobalVariableExtensionFactory();
+        $factory = new GenericGlobalVariableExtensionFactory();
 
         $genericConfig = $factory($containerProphecy->reveal());
 
         $this->assertInstanceOf(GenericGlobalVariableExtension::class, $genericConfig);
     }
 
-    /**
-     * @test
-     */
-    public function throws_exception_when_missing_configuration()
+    #[Test]
+    public function throws_exception_when_missing_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

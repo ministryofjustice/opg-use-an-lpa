@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\UserFactory;
 use Mezzio\Authentication\UserInterface;
 use PHPUnit\Framework\TestCase;
@@ -16,8 +17,8 @@ class UserFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_returns_a_valid_callable()
+    #[Test]
+    public function it_returns_a_valid_callable(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -38,8 +39,8 @@ class UserFactoryTest extends TestCase
         $this->assertEquals(UserInterface::class, $r->getReturnType());
     }
 
-    /** @test */
-    public function the_callable_generates_a_user()
+    #[Test]
+    public function the_callable_generates_a_user(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -53,8 +54,8 @@ class UserFactoryTest extends TestCase
         $this->assertEquals('test', $user->getIdentity());
     }
 
-    /** @test */
-    public function the_callable_will_error_if_no_email_supplied()
+    #[Test]
+    public function the_callable_will_error_if_no_email_supplied(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

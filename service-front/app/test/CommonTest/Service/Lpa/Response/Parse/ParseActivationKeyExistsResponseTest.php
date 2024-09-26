@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response\Parse;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\ActivationKeyExists;
@@ -44,8 +45,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
     }
 
-    /** @test */
-    public function it_creates_a_dto_from_array_data()
+    #[Test]
+    public function it_creates_a_dto_from_array_data(): void
     {
         $this->lpaFactory
             ->createCaseActorFromData($this->response['donor'])
@@ -60,8 +61,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertEquals('2021-12-06', $result->getDueDate());
     }
 
-    /** @test */
-    public function it_creates_a_dto_from_array_data_if_name_fields_are_null()
+    #[Test]
+    public function it_creates_a_dto_from_array_data_if_name_fields_are_null(): void
     {
         $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
@@ -84,8 +85,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $this->assertEquals('hw', $result->getCaseSubtype());
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -106,8 +107,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -128,8 +129,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_surname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -150,8 +151,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_lpa_type_is_not_set()
+    #[Test]
+    public function it_will_fail_if_lpa_type_is_not_set(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(

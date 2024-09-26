@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\DateValidator;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -17,10 +18,8 @@ class DateValidatorTest extends TestCase
         $this->validator = new DateValidator();
     }
 
-    /**
-     * @dataProvider validFormatProvider
-     */
-    public function testIsValidFormat($day, $month, $year)
+    #[DataProvider('validFormatProvider')]
+    public function testIsValidFormat($day, $month, $year): void
     {
         $value = [
             'day'   => $day,
@@ -33,7 +32,7 @@ class DateValidatorTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    public function validFormatProvider()
+    public static function validFormatProvider()
     {
         return [
             [1, 2, 1999],
@@ -44,10 +43,8 @@ class DateValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider notValidFormatProvider
-     */
-    public function testIsValidNotValidFormat($day, $month, $year)
+    #[DataProvider('notValidFormatProvider')]
+    public function testIsValidNotValidFormat($day, $month, $year): void
     {
         $value = [];
 
@@ -72,7 +69,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function notValidFormatProvider()
+    public static function notValidFormatProvider()
     {
         return [
             [null, null, null],
@@ -85,7 +82,7 @@ class DateValidatorTest extends TestCase
         ];
     }
 
-    public function testIsValidEmptyFormat()
+    public function testIsValidEmptyFormat(): void
     {
         $isValid = $this->validator->isValid([
             'day'   => '',
@@ -100,7 +97,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function testIsValidIncompleteDayFormat()
+    public function testIsValidIncompleteDayFormat(): void
     {
         $isValid = $this->validator->isValid([
             'day'   => '',
@@ -115,7 +112,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function testIsValidIncompleteMonthFormat()
+    public function testIsValidIncompleteMonthFormat(): void
     {
         $isValid = $this->validator->isValid([
             'day'   => 2,
@@ -130,7 +127,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function testIsValidIncompleteYearFormat()
+    public function testIsValidIncompleteYearFormat(): void
     {
         $isValid = $this->validator->isValid([
             'day'   => 5,
@@ -145,10 +142,8 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    /**
-     * @dataProvider invalidFormatProvider
-     */
-    public function testIsValidInvalid($day, $month, $year)
+    #[DataProvider('invalidFormatProvider')]
+    public function testIsValidInvalid($day, $month, $year): void
     {
         $value = [];
 
@@ -173,7 +168,7 @@ class DateValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function invalidFormatProvider()
+    public static function invalidFormatProvider()
     {
         return [
             [-1, -2, -1999],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\SessionRefreshHandler;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
@@ -14,10 +15,8 @@ class SessionRefreshHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function testReturnsExpectedJsonResponseReturnsTrue()
+    #[Test]
+    public function testReturnsExpectedJsonResponseReturnsTrue(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 

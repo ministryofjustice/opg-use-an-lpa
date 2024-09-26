@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\View\Twig\OrdinalNumberExtension;
 use InvalidArgumentException;
 use Locale;
@@ -13,7 +14,7 @@ use Twig\TwigFilter;
 
 class OrdinalNumberExtensionTest extends TestCase
 {
-    public function testGetFilters()
+    public function testGetFilters(): void
     {
         $extension = new OrdinalNumberExtension();
 
@@ -38,10 +39,8 @@ class OrdinalNumberExtensionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider exceptionOrdinalDataProvider
-     */
-    public function testMakeOrdinalException($value)
+    #[DataProvider('exceptionOrdinalDataProvider')]
+    public function testMakeOrdinalException($value): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Ordinals can only be provided for integers');
@@ -51,7 +50,7 @@ class OrdinalNumberExtensionTest extends TestCase
         $extension->makeOrdinal($value);
     }
 
-    public function exceptionOrdinalDataProvider()
+    public static function exceptionOrdinalDataProvider()
     {
         return [
             [
@@ -65,10 +64,8 @@ class OrdinalNumberExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider ordinalDataProvider
-     */
-    public function testMakeOrdinal($locale, $value, $expected)
+    #[DataProvider('ordinalDataProvider')]
+    public function testMakeOrdinal($locale, $value, $expected): void
     {
         $extension = new OrdinalNumberExtension();
 
@@ -84,7 +81,7 @@ class OrdinalNumberExtensionTest extends TestCase
         $this->assertEquals($expected, $ordinal);
     }
 
-    public function ordinalDataProvider()
+    public static function ordinalDataProvider()
     {
         return [
             ['en', 1, '1st'],

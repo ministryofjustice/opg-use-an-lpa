@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\Response\AccessForAllResult;
@@ -11,18 +14,11 @@ use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\Response\AccessForAllResult
- */
+#[CoversClass(AccessForAllResult::class)]
 class AccessForAllApiResultTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
-     * @covers ::validateResponseType
-     * @dataProvider validDataTypeProvider
-     */
+    #[DataProvider('validDataTypeProvider')]
+    #[Test]
     public function it_can_be_created_with_a_recognised_response_and_data_type($responseType, $additionalData): void
     {
         $response = new AccessForAllApiResult($responseType, $additionalData);
@@ -88,13 +84,7 @@ class AccessForAllApiResultTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateResponseType
-     * @covers ::getResponse
-     * @covers ::getData
-     */
+    #[Test]
     public function it_makes_available_the_type_and_passed_in_additional_data(): void
     {
         $data = [

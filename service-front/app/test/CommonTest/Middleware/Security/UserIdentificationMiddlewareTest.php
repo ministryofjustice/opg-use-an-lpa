@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Security;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Service\Security\UserIdentificationService;
 use Common\Service\Security\UserIdentity;
@@ -18,9 +21,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @coversDefaultClass UserIdentificationMiddleware
- */
+#[CoversClass(UserIdentificationMiddleware::class)]
 class UserIdentificationMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
@@ -62,10 +63,7 @@ class UserIdentificationMiddlewareTest extends TestCase
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_created(): void
     {
         $sut = new UserIdentificationMiddleware(
@@ -75,10 +73,7 @@ class UserIdentificationMiddlewareTest extends TestCase
         $this->assertInstanceOf(UserIdentificationMiddleware::class, $sut);
     }
 
-    /**
-     * @test
-     * @covers ::process
-     */
+    #[Test]
     public function it_uniquely_identifies_a_user_without_a_session(): void
     {
         $id = new UserIdentity('', '', '', '', '');
@@ -104,10 +99,7 @@ class UserIdentificationMiddlewareTest extends TestCase
         $response = $uim->process($this->requestProphecy->reveal(), $this->delegateProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::process
-     */
+    #[Test]
     public function it_uniquely_identifies_a_user_with_a_session_first_visit(): void
     {
         $id = new UserIdentity('', '', '', '', '');
@@ -136,10 +128,7 @@ class UserIdentificationMiddlewareTest extends TestCase
         $response = $uim->process($this->requestProphecy->reveal(), $this->delegateProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::process
-     */
+    #[Test]
     public function it_uniquely_identifies_a_user_with_a_session_subsequent_visit(): void
     {
         $id = new UserIdentity('', '', '', '', '');
@@ -167,12 +156,8 @@ class UserIdentificationMiddlewareTest extends TestCase
         $response = $uim->process($this->requestProphecy->reveal(), $this->delegateProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @dataProvider javascriptRoutes
-     * @covers ::process
-     * @covers ::isValidRoute
-     */
+    #[DataProvider('javascriptRoutes')]
+    #[Test]
     public function it_does_not_update_identity_for_javascript_endpoints(string $routeName, bool $setExpected): void
     {
         $id = new UserIdentity('', '', '', '', '');
@@ -222,7 +207,7 @@ class UserIdentificationMiddlewareTest extends TestCase
         $response = $uim->process($this->requestProphecy->reveal(), $this->delegateProphecy->reveal());
     }
 
-    public function javascriptRoutes(): array
+    public static function javascriptRoutes(): array
     {
         return [
             'route is session-check'   => [

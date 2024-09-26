@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Container;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Container\PhpDiModifiableContainer;
 use DI\Container;
 use InvalidArgumentException;
@@ -15,8 +16,8 @@ class PhpDiModifiableContainerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_only_acts_on_a_phpdi_container()
+    #[Test]
+    public function it_only_acts_on_a_phpdi_container(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -24,8 +25,8 @@ class PhpDiModifiableContainerTest extends TestCase
         $di = new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 
-    /** @test */
-    public function it_decorates_set_on_a_phpdi_container()
+    #[Test]
+    public function it_decorates_set_on_a_phpdi_container(): void
     {
         $containerProphecy = $this->prophesize(Container::class);
         $containerProphecy->set('test', 'test')->shouldBeCalled();

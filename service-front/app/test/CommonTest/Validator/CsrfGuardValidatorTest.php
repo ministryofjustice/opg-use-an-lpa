@@ -15,13 +15,13 @@ class CsrfGuardValidatorTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testThrowsExceptionWhenNoGuardOption()
+    public function testThrowsExceptionWhenNoGuardOption(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $validator = new CsrfGuardValidator();
     }
 
-    public function testThrowsExceptionWhenIncorrectGuardPassed()
+    public function testThrowsExceptionWhenIncorrectGuardPassed(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $validator = new CsrfGuardValidator([
@@ -29,7 +29,7 @@ class CsrfGuardValidatorTest extends TestCase
         ]);
     }
 
-    public function testIsValidWhenShouldBe()
+    public function testIsValidWhenShouldBe(): void
     {
         $guard = $this->prophesize(CsrfGuardInterface::class);
         $guard->validateToken('token')->willReturn(true);
@@ -41,7 +41,7 @@ class CsrfGuardValidatorTest extends TestCase
         $this->assertTrue($validator->isValid('token'));
     }
 
-    public function testIsNotValidWhenShouldntBe()
+    public function testIsNotValidWhenShouldntBe(): void
     {
         $guard = $this->prophesize(CsrfGuardInterface::class);
         $guard->validateToken('token')->willReturn(false);

@@ -4,19 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\CSPNonce;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Common\Service\Security\CSPNonce
- */
+#[CoversClass(CSPNonce::class)]
 class CSPNonceTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::__toString
-     */
+    #[Test]
     public function it_can_be_supplied_a_set_value(): void
     {
         $sut = new CSPNonce('test');
@@ -24,11 +20,7 @@ class CSPNonceTest extends TestCase
         $this->assertEquals('test', (string) $sut);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::__toString
-     */
+    #[Test]
     public function it_will_create_a_secure_value_if_not_set(): void
     {
         $sut = new CSPNonce();

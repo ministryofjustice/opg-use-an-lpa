@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\PopulateLpaMetadata;
@@ -17,8 +19,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
  * @property ViewerCodeService viewerCodeServiceProphecy
  * @property ArrayObject       lpas
  * @property CaseActor         lpaActor
- * @coversDefaultClass \Common\Service\Lpa\PopulateLpaMetadata
  */
+#[CoversClass(PopulateLpaMetadata::class)]
 class PopulateLpaMetadataTest extends TestCase
 {
     use ProphecyTrait;
@@ -59,10 +61,7 @@ class PopulateLpaMetadataTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_adds_a_viewer_code_count_per_lpa(): void
     {
         $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
@@ -72,10 +71,7 @@ class PopulateLpaMetadataTest extends TestCase
         $this->assertEquals(1, $result->{'56-5-5-5-5678'}->{'activeCodeCount'});
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_adds_an_active_status_for_actor(): void
     {
         $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
@@ -85,10 +81,7 @@ class PopulateLpaMetadataTest extends TestCase
         $this->assertEquals(true, $result->{'56-5-5-5-5678'}->{'actorActive'});
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_always_makes_a_donor_be_active(): void
     {
         $lpaData    = new ArrayObject(

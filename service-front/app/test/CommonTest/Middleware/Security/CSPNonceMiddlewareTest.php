@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Security;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Security\CSPNonceMiddleware;
 use Common\Service\Security\CSPNonce;
 use PHPUnit\Framework\TestCase;
@@ -12,18 +14,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @coversDefaultClass \Common\Middleware\Security\CSPNonceMiddleware
- */
+#[CoversClass(CSPNonceMiddleware::class)]
 class CSPNonceMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::process
-     */
+    #[Test]
     public function it_correctly_attaches_a_csp_nonce_header(): void
     {
         $testNonce = new CSPNonce('test');

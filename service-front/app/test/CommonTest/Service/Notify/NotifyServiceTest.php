@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Notify;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\ApiClient\Client;
 use Common\Service\Notify\NotifyService;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -20,8 +21,8 @@ class NotifyServiceTest extends TestCase
     private const EN_LOCALE = 'en_GB';
     private const CY_LOCALE = 'cy_GB';
 
-    /** @test */
-    public function can_send_email_to_user()
+    #[Test]
+    public function can_send_email_to_user(): void
     {
         $this->defaultLocale = self::CY_LOCALE;
         $loggerProphecy      = $this->prophesize(LoggerInterface::class);

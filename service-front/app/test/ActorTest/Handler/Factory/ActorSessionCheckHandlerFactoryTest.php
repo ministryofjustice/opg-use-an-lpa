@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Handler\ActorSessionCheckHandler;
 use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -45,8 +46,8 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
             ->willReturn($httpClientProphecy->reveal());
     }
 
-    /** @test */
-    public function testItCreatesASessionCheckHandler()
+    #[Test]
+    public function testItCreatesASessionCheckHandler(): void
     {
         $this->containerProphecy->get('config')
             ->willReturn(
@@ -64,8 +65,8 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(ActorSessionCheckHandler::class, $sessionCheckHandler);
     }
 
-    /** @test */
-    public function testThrowsExceptionMissingConfigValue()
+    #[Test]
+    public function testThrowsExceptionMissingConfigValue(): void
     {
         $this->containerProphecy->get('config')
             ->willReturn([]);

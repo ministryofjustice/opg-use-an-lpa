@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\Response\LpaMatch;
 use PHPUnit\Framework\TestCase;
 
 class LpaMatchResponseTest extends TestCase
 {
-    /** @test */
-    public function it_can_create_a_response_dto()
+    #[Test]
+    public function it_can_create_a_response_dto(): void
     {
         $dto = new LpaMatch();
 
         $this->assertInstanceOf(LpaMatch::class, $dto);
     }
 
-    /** @test */
-    public function it_allows_donor_and_attorney_name_and_lpa_type_to_be_set_and_get()
+    #[Test]
+    public function it_allows_donor_and_attorney_name_and_lpa_type_to_be_set_and_get(): void
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -43,8 +44,8 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
-    public function it_allows_donor_and_lpa_type_and_empty_attorney_to_be_set_and_get()
+    #[Test]
+    public function it_allows_donor_and_lpa_type_and_empty_attorney_to_be_set_and_get(): void
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -69,8 +70,8 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
-    public function it_allows_donor_name_and_lpa_type_to_be_set_and_get()
+    #[Test]
+    public function it_allows_donor_name_and_lpa_type_to_be_set_and_get(): void
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -87,8 +88,8 @@ class LpaMatchResponseTest extends TestCase
         $this->assertEquals('pfa', $dto->getCaseSubtype());
     }
 
-    /** @test */
-    public function it_allows_lpa_activation_key_due_date_to_be_set()
+    #[Test]
+    public function it_allows_lpa_activation_key_due_date_to_be_set(): void
     {
         $donor = new CaseActor();
         $donor->setUId('12345');

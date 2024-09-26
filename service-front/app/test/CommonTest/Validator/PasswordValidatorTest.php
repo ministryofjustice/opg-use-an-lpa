@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\PasswordValidator;
 use PHPUnit\Framework\TestCase;
 
 class PasswordValidatorTest extends TestCase
 {
-    /** @test */
-    public function it_passes_a_good_password()
+    #[Test]
+    public function it_passes_a_good_password(): void
     {
         $validator = new PasswordValidator();
 
@@ -18,11 +20,9 @@ class PasswordValidatorTest extends TestCase
         $this->assertCount(0, $validator->getMessages());
     }
 
-    /**
-     * @test
-     * @dataProvider badPasswords
-     */
-    public function it_fails_bad_passwords(string $password, string $errorMessage)
+    #[DataProvider('badPasswords')]
+    #[Test]
+    public function it_fails_bad_passwords(string $password, string $errorMessage): void
     {
         $validator = new PasswordValidator();
 
@@ -30,7 +30,7 @@ class PasswordValidatorTest extends TestCase
         $this->assertArrayHasKey($errorMessage, $validator->getMessages());
     }
 
-    public function badPasswords(): array
+    public static function badPasswords(): array
     {
         return [
             [

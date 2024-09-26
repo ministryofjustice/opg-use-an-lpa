@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Authentication;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\AuthenticationInterface;
@@ -45,7 +46,7 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
         $this->response = $this->createStub(ResponseInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_continues_the_pipeline_if_not_needing_reset(): void
     {
         $this->authenticator->expects($this->once())
@@ -53,9 +54,15 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
             ->with($this->isInstanceOf(ServerRequestInterface::class))
             ->willReturn($this->user);
 
-        $this->user->method('getDetail')
-            ->withConsecutive(['Email'], ['NeedsReset'])
-            ->willReturnOnConsecutiveCalls('a@b.com', false);
+        $matcher = $this->exactly(2);
+        $this->user->expects($matcher)
+            ->method('getDetail')
+            ->willReturnCallback(function (string $param) use ($matcher) {
+                match ($matcher->numberOfInvocations()) {
+                    1 => $this->assertEquals('Email', $param),
+                    2 => $this->assertEquals('NeedsReset', $param),
+                };
+            });
 
         $this->handler->expects($this->once())
             ->method('handle')
@@ -69,7 +76,7 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
         $this->assertEquals($this->response, $result);
     }
 
-    /** @test */
+    #[Test]
     public function it_renders_a_page_if_user_password_needs_reset(): void
     {
         $this->authenticator->expects($this->once())
@@ -77,9 +84,20 @@ class ForcedPasswordResetMiddlewareTest extends TestCase
             ->with($this->isInstanceOf(ServerRequestInterface::class))
             ->willReturn($this->user);
 
-        $this->user->method('getDetail')
-            ->withConsecutive(['Email'], ['NeedsReset'])
-            ->willReturnOnConsecutiveCalls('a@b.com', true);
+        $matcher = $this->exactly(2);
+        $this->user->expects($matcher)
+            ->method('getDetail')
+            ->willReturnCallback(function (string $param) use ($matcher) {
+                switch ($matcher->numberOfInvocations()) {
+                    case 1:
+                        $this->assertEquals('Email', $param);
+                        return 'test@example.com';
+
+                    case 2:
+                        $this->assertEquals('NeedsReset', $param);
+                        return true;
+                }
+            });
 
         $csrfGuard = $this->createStub(CsrfGuardInterface::class);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\RateLimitService;
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
 use Laminas\Cache\Storage\StorageInterface;
@@ -15,8 +16,8 @@ class RateLimitServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function its_name_comes_from_the_cache_definition()
+    #[Test]
+    public function its_name_comes_from_the_cache_definition(): void
     {
         $adapterProphecy = $this->prophesize(AdapterOptions::class);
         $adapterProphecy->getNamespace()->willReturn('cache-namespace-name');

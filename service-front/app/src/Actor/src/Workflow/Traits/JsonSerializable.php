@@ -8,9 +8,6 @@ use DateTimeImmutable;
 
 trait JsonSerializable
 {
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         $serialized = [];

@@ -16,7 +16,7 @@ class HomePageHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testReturnsHtmlResponseWhenTemplateRendererProvided()
+    public function testReturnsHtmlResponseWhenTemplateRendererProvided(): void
     {
         $rendererProphecy = $this->prophesize(TemplateRendererInterface::class);
         $rendererProphecy->render('viewer::home-page')
