@@ -35,12 +35,12 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         $this->transformArrayToSiriusPersons('trustCorporations');
     }
 
-    private function getAttorneys(): array
+    public function getAttorneys(): array
     {
         return $this->lpa['attorneys'];
     }
 
-    private function getDonor(): SiriusPerson
+    public function getDonor(): SiriusPerson
     {
         return $this->lpa['donor'];
     }

@@ -21,19 +21,16 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(array|SiriusLpa $lpa, array $matchData): ?array
+    public function __invoke(SiriusLpa $lpa, array $matchData): ?array
     {
         $actor = null;
         $role  = null;
 
-        if (isset($lpa['attorneys']) && is_array($lpa['attorneys'])) {
-            [$actor, $role] = $this->findAttorneyDetails($lpa['attorneys'], $matchData, $lpa['uId']);
-        }
+        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa['uId']);
 
         // If not an attorney, check if they're the donor.
-        if ($actor === null && isset($lpa['donor']) &&
-            (is_array($lpa['donor']) || ($lpa['donor'] instanceof SiriusPerson))) {
-                    [$actor, $role] = $this->checkDonorDetails($lpa['donor'], $matchData);
+        if ($actor === null) {
+            [$actor, $role] = $this->checkDonorDetails($lpa->getDonor(), $matchData);
         }
 
         if ($actor === null) {
@@ -70,7 +67,7 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function checkDonorDetails(array|SiriusPerson $donor, array $matchData): array
+    private function checkDonorDetails(SiriusPerson $donor, array $matchData): array
     {
         $donorMatchResponse = $this->checkForActorMatch($donor, $matchData);
 
@@ -101,7 +98,7 @@ class FindActorInLpa
      * @param array $matchData The user provided data we're searching for a match against
      * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
      */
-    private function checkForActorMatch(array|SiriusPerson $actor, array $matchData): int
+    private function checkForActorMatch(SiriusPerson $actor, array $matchData): int
     {
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {

@@ -7,6 +7,7 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
+use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,7 +35,7 @@ class FindActorInLpaTest extends TestCase
     {
         $lpa = [
             'uId'       => '700000012346',
-            'donor'     => new SiriusPerson([
+            'donor'     => [
                 'uId'       => '700000001111',
                 'dob'       => '1975-10-05',
                 'firstname' => 'Donor',
@@ -44,9 +45,8 @@ class FindActorInLpaTest extends TestCase
                         'postcode' => 'PY1 3Kd',
                     ],
                 ],
-            ]),
+            ],
             'attorneys' => [
-                new SiriusPerson(
                 [
                     'uId'          => '700000002222',
                     'dob'          => '1977-11-21',
@@ -58,8 +58,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => false, // inactive attorney
-                ]),
-                new SiriusPerson(
+                ],
                 [
                     'uId'          => '700000003333',
                     'dob'          => '1960-05-05',
@@ -71,8 +70,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]),
-                new SiriusPerson(
+                ],
                 [
                     'uId'          => '700000004444',
                     'dob'          => '1980-03-01',
@@ -87,8 +85,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]),
-                new SiriusPerson(
+                ],
                 [
                     'uId'          => '700000001234',
                     'dob'          => '1980-03-01',
@@ -100,7 +97,7 @@ class FindActorInLpaTest extends TestCase
                         ],
                     ],
                     'systemStatus' => true,
-                ]),
+                ],
             ],
         ];
 
@@ -176,7 +173,7 @@ class FindActorInLpaTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $matchData = $sut($lpa, $userData);
+        $matchData = $sut(new SiriusLpa($lpa), $userData);
         $this->assertEquals($expectedResponse, $matchData);
     }
 
