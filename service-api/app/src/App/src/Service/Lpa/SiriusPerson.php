@@ -22,7 +22,7 @@ class SiriusPerson implements TrustCorporationStatusInterface, ArrayAccess, Iter
 
     public function getSystemStatus(): bool
     {
-        return $this->person['systemStatus'];
+        return (bool)$this->person['systemStatus'];
     }
 
     public function getUid(): string
@@ -32,7 +32,7 @@ class SiriusPerson implements TrustCorporationStatusInterface, ArrayAccess, Iter
 
     public function getCompanyName(): string
     {
-        return $this->person['companyName'];
+        return (string)$this->person['companyName'];
     }
 
     public function offsetExists(mixed $offset): bool
