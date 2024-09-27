@@ -53,7 +53,6 @@ variable "kms_key" {
 
 variable "enable_lifecycle" {
   description = "Set to true to delete items in the bucket after 6 months."
-  default     = false
   type        = bool
 }
 
