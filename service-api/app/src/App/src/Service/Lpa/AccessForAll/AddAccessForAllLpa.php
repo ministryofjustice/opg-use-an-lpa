@@ -2,16 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\AccessForAll;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
+use App\Service\Features\FeatureEnabled;
+use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
+use App\Service\Lpa\FindActorInLpa;
+use App\Service\Lpa\LpaManagerInterface;
+use App\Service\Lpa\RestrictSendingLpaForCleansing;
+use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
-use App\Service\Features\FeatureEnabled;
 
 class AddAccessForAllLpa
 {
