@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-08-13T15:27:35+00:00\n"
+"POT-Creation-Date: 2024-09-27T10:01:12+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2444,7 +2444,7 @@ msgid "Death Notification"
 msgstr "Hysbysiad o Farwolaeth"
 
 #: src/Actor/templates/actor/death-notification.html.twig:22
-#: src/Actor/templates/actor/change-details.html.twig:66
+#: src/Actor/templates/actor/change-details.html.twig:68
 msgid "Let us know if a donor or attorney dies"
 msgstr "Rhowch wybod i ni os bydd rhoddwr neu atwrnai yn marw"
 
@@ -3921,7 +3921,7 @@ msgstr "Cadarnhau"
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:252
+#: src/Actor/src/Handler/CheckLpaHandler.php:253
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
@@ -4126,7 +4126,6 @@ msgid "the LPA reference number"
 msgstr "cyfeirnod yr awtrneiaeth arhosol"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:46
-#: src/Actor/templates/actor/change-details.html.twig:55
 msgid "your name"
 msgstr "eich enw"
 
@@ -4760,7 +4759,7 @@ msgstr ""
 "Os ydych yn atwrnai, gallwch ddweud wrthym am unrhyw newid i fanylion y "
 "rhoddwr a’ch manylion chi. Ni allwch ddiweddaru manylion atwrnai arall."
 
-#: src/Actor/templates/actor/change-details.html.twig:68
+#: src/Actor/templates/actor/change-details.html.twig:70
 msgid ""
 "It's important that we hold up-to-date information about donors and attorneys. "
 "This is because an LPA will end when the donor dies, and can end if an "
@@ -4770,7 +4769,7 @@ msgstr ""
 "rheswm am hyn yw y bydd yr LPA yn dod i ben pan fydd y rhoddwr yn marw, a gall "
 "ddod i ben os bydd atwrnai’n marw."
 
-#: src/Actor/templates/actor/change-details.html.twig:75
+#: src/Actor/templates/actor/change-details.html.twig:77
 msgid ""
 "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the "
 "donor or an attorney dies</a>"
@@ -6636,6 +6635,18 @@ msgstr "Defnyddio atwrneiaeth arhosol"
 #: src/Viewer/templates/viewer/partials/service-names.html.twig:1
 msgid "View a lasting power of attorney"
 msgstr "Gweld atwrneiaeth arhosol"
+
+#: src/Actor/templates/actor/change-details.html.twig:55
+msgid "your name and address"
+msgstr "eich enw a chyfeiriad"
+
+#: src/Actor/templates/actor/change-details.html.twig:62
+msgid ""
+"If you are the donor, please also provide the name and address for one of your "
+"attorneys."
+msgstr ""
+"Os mai chi yw’r rhoddwr, bydd angen i chi hefyd ddarparu enw a chyfeiriad ar "
+"gyfer un o’ch atwrneiod."
 
 #~ msgid ""
 #~ "Give %organisation% this access code. They should go to www.gov.uk/view-lpa "
