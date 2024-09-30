@@ -11,7 +11,7 @@ use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response\ActorCode;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
-use App\Service\Lpa\AccessForAllLpaService;
+use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
