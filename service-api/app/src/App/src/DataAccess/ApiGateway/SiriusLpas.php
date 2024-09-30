@@ -10,7 +10,9 @@ use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\ApiException;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\EventCodes;
+use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\SiriusLpa;
 use DateTimeImmutable;
 use Exception;
@@ -45,6 +47,8 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         string $traceId,
         private readonly DataSanitiserStrategy $sanitiser,
         private readonly LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
+        private LpaDataFormatter $lpaDataFormatter,
     ) {
         parent::__construct(
             $httpClient,
@@ -124,21 +128,23 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         // Handle all request response now
         foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();
-
+            $response   = json_decode(
+                $result->getBody()->getContents(),
+                true,
+            );
             switch ($statusCode) {
                 case 200:
                     # TODO: We can some more error checking around this.
-                    $results[$uid] = new Lpa(
-                        new SiriusLpa(
-                            $this->sanitiser->sanitise(
-                                json_decode(
-                                    $result->getBody()->getContents(),
-                                    true
-                                ),
+                    if (($this->featureEnabled)('support_datastore_lpas')) {
+                        $results[$uid] = ($this->lpaDataFormatter)($response);
+                    } else {
+                        $results[$uid] = new Lpa(
+                            new SiriusLpa(
+                                $this->sanitiser->sanitise($response),
                             ),
-                        ),
-                        new DateTimeImmutable($result->getHeaderLine('Date'))
-                    );
+                            new DateTimeImmutable($result->getHeaderLine('Date'))
+                        );
+                    }
                     break;
                 default:
                     $this->logger->warning(
