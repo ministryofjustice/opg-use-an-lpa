@@ -1,4 +1,5 @@
 <?php
+
  /**
  * File required to allow enablement of development mode.
  *
@@ -21,10 +22,10 @@
  */
 
 declare(strict_types=1);
- 
+
 use Elie\PHPDI\Config\ConfigInterface;
 use Laminas\ConfigAggregator\ConfigAggregator;
- 
+
 return [
     'debug'                                  => true,
     ConfigAggregator::ENABLE_CACHE           => false,

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\CSPNonce;
 use Common\View\Twig\JavascriptVariablesExtension;
 use Common\View\Twig\JavascriptVariablesExtensionFactory;
@@ -17,7 +18,7 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function can_create_an_instance_of_the_variable_extension(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -46,7 +47,7 @@ class JavascriptVariablesExtensionFactoryTest extends TestCase
         $this->assertInstanceOf(JavascriptVariablesExtension::class, $analyticsConfig);
     }
 
-    /** @test */
+    #[Test]
     public function throws_exception_when_missing_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -4,20 +4,16 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\CSPNonce;
 use Common\View\Twig\JavascriptVariablesExtension;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Common\View\Twig\JavascriptVariablesExtension
- */
+#[CoversClass(JavascriptVariablesExtension::class)]
 class JavascriptVariablesExtensionTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::getGlobals
-     */
+    #[Test]
     public function testGetGlobals(): void
     {
         $analyticsId = 'uaid1234';

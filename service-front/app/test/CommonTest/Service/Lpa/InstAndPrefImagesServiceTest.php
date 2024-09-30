@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Exception\ApiException;
@@ -35,8 +36,8 @@ class InstAndPrefImagesServiceTest extends TestCase
         );
     }
 
-    /** @test */
-    public function it_gets_images_for_an_lpa()
+    #[Test]
+    public function it_gets_images_for_an_lpa(): void
     {
         $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';
@@ -72,8 +73,8 @@ class InstAndPrefImagesServiceTest extends TestCase
         $this->assertEquals('http://www.example.com/image3.jpg', $preferencesUrls[0]->url);
     }
 
-    /** @test */
-    public function it_handles_api_exceptions()
+    #[Test]
+    public function it_handles_api_exceptions(): void
     {
         $userToken     = 'i-am-a-user-token';
         $actorLpaToken = '01234567-01234-01234-01234-012345678901';

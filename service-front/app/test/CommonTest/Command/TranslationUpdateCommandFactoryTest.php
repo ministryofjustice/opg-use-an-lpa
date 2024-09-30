@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Command;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Command\TranslationUpdateCommand;
 use Common\Command\TranslationUpdateCommandFactory;
 use Common\Service\I18n\CatalogueLoader;
@@ -18,7 +19,7 @@ class TranslationUpdateCommandFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_a_translation_update_command(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

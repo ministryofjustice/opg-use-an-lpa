@@ -20,7 +20,7 @@ class GenericGlobalVariableExtension extends AbstractExtension implements Global
 
     public function getGlobals(): array
     {
-        $useServiceName = $this->translator->translate('Use a lasting power of attorney', []);
+        $useServiceName  = $this->translator->translate('Use a lasting power of attorney', []);
         $viewServiceName = $this->translator->translate('View a lasting power of attorney', []);
 
         return [

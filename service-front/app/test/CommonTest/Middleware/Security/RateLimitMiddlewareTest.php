@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Security;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Exception\RateLimitExceededException;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
@@ -19,7 +20,7 @@ class RateLimitMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_functions_without_an_identity(): void
     {
         $factoryProphecy = $this->prophesize(RateLimitServiceFactory::class);
@@ -41,8 +42,8 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
-    public function an_identified_user_is_checked_for_limit_transgressions_and_no_limiters_available()
+    #[Test]
+    public function an_identified_user_is_checked_for_limit_transgressions_and_no_limiters_available(): void
     {
         $factoryProphecy = $this->prophesize(RateLimitServiceFactory::class);
         $factoryProphecy
@@ -67,8 +68,8 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
-    public function an_identified_user_is_checked_for_limit_transgressions_with_one_limiter()
+    #[Test]
+    public function an_identified_user_is_checked_for_limit_transgressions_with_one_limiter(): void
     {
         $limiterProphecy = $this->prophesize(KeyedRateLimitService::class);
         $limiterProphecy
@@ -99,8 +100,8 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
-    public function an_identified_user_is_checked_for_limit_transgressions_with_multiple_limiters()
+    #[Test]
+    public function an_identified_user_is_checked_for_limit_transgressions_with_multiple_limiters(): void
     {
         $limiterOneProphecy = $this->prophesize(KeyedRateLimitService::class);
         $limiterOneProphecy
@@ -137,8 +138,8 @@ class RateLimitMiddlewareTest extends TestCase
         $response = $rlm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
-    public function an_identified_user_is_limited()
+    #[Test]
+    public function an_identified_user_is_limited(): void
     {
         $limiterProphecy = $this->prophesize(KeyedRateLimitService::class);
         $limiterProphecy

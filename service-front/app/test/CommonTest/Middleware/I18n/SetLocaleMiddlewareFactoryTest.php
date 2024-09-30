@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\Translator;
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\I18n\SetLocaleMiddlewareFactory;
@@ -16,7 +17,7 @@ class SetLocaleMiddlewareFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_can_be_configured_with_a_default_locale(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

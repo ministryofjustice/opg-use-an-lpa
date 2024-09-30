@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Form;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Form\AbstractForm;
 use InvalidArgumentException;
 use Laminas\Form\Element\Text;
@@ -41,8 +42,8 @@ class AbstractFormTest extends TestCase
         };
     }
 
-    /** @test */
-    public function you_can_add_error_messages_to_the_form()
+    #[Test]
+    public function you_can_add_error_messages_to_the_form(): void
     {
         $this->form->addErrorMessage('testKey');
 
@@ -50,8 +51,8 @@ class AbstractFormTest extends TestCase
         $this->assertContains('testErrorMessage', $errors['']);
     }
 
-    /** @test */
-    public function you_can_add_error_messages_to_a_form_element()
+    #[Test]
+    public function you_can_add_error_messages_to_a_form_element(): void
     {
         $this->form->addErrorMessage('testKey', 'testElement');
 
@@ -59,22 +60,22 @@ class AbstractFormTest extends TestCase
         $this->assertContains('testErrorMessage', $errors);
     }
 
-    /** @test */
-    public function adding_an_undefined_error_fails()
+    #[Test]
+    public function adding_an_undefined_error_fails(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('doesNotExist');
     }
 
-    /** @test */
-    public function adding_an_error_to_a_nonexistent_form_element_fails()
+    #[Test]
+    public function adding_an_error_to_a_nonexistent_form_element_fails(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->form->addErrorMessage('testKey', 'doesNotExist');
     }
 
-    /** @test */
-    public function returns_a_merged_set_of_all_error_messages()
+    #[Test]
+    public function returns_a_merged_set_of_all_error_messages(): void
     {
         $this->form->addErrorMessage('testKey');
 
@@ -87,8 +88,8 @@ class AbstractFormTest extends TestCase
         $this->assertContains('messageText', $errors['testElement']);
     }
 
-    /** @test */
-    public function returns_error_messages_for_an_element()
+    #[Test]
+    public function returns_error_messages_for_an_element(): void
     {
         /** @var Text $element */
         $element = $this->form->get('testElement');

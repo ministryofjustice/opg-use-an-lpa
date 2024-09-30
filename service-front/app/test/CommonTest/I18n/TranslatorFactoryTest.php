@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\TranslatorInterface;
 use Common\I18n\TranslatorFactory;
 use Gettext\GettextTranslator;
@@ -16,8 +17,7 @@ class TranslatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test
-     */
+    #[Test]
     public function it_returns_a_welsh_translator_instance(): void
     {
         $gettextTranslator = $this->prophesize(GettextTranslator::class);
@@ -65,7 +65,7 @@ class TranslatorFactoryTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_needs_language_file_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

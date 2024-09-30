@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\SiriusReferenceStartsWithCheck;
 use PHPUnit\Framework\TestCase;
 
@@ -16,9 +17,7 @@ class SiriusReferenceStartsWithTest extends TestCase
         $this->validator = new SiriusReferenceStartsWithCheck();
     }
 
-    /**
-     * @dataProvider validFormatProvider
-     */
+    #[DataProvider('validFormatProvider')]
     public function testIsValidReference($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
@@ -26,7 +25,7 @@ class SiriusReferenceStartsWithTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    public function validFormatProvider()
+    public static function validFormatProvider()
     {
         return [
             ['700000000252'],
@@ -36,9 +35,7 @@ class SiriusReferenceStartsWithTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider notValidMerisFormatProvider
-     */
+    #[DataProvider('notValidMerisFormatProvider')]
     public function testMerisReferenceStartsWithSeven($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
@@ -54,7 +51,7 @@ class SiriusReferenceStartsWithTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function notValidMerisFormatProvider()
+    public static function notValidMerisFormatProvider()
     {
         return [
             ['100000000132'],

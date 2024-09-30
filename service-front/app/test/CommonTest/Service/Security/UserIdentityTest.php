@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\UserIdentity;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass UserIdentity
- */
+#[CoversClass(UserIdentity::class)]
 class UserIdentityTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::hash
-     * @covers ::__toString
-     */
+    #[Test]
     public function it_returns_an_expected_hash(): void
     {
         $sut = new UserIdentity('', '', '', '', '');

@@ -18,9 +18,6 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
 {
     public const THEME_FILE = '@partials/govuk_error.html.twig';
 
-    /**
-     * @return array
-     */
     public function getFunctions(): array
     {
         return [
@@ -77,10 +74,6 @@ class GovUKLaminasFormErrorsExtension extends AbstractExtension
         ]);
     }
 
-    /**
-     * @param array $messages
-     * @return array
-     */
     private function flattenMessages(array $messages): array
     {
         $messagesToPrint = [];

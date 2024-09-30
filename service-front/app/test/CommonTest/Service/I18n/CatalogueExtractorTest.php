@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\ExtractorInterface;
 use Acpr\I18n\TwigExtractor;
 use Common\Service\I18n\CatalogueExtractor;
@@ -18,7 +19,7 @@ class CatalogueExtractorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_will_extract_a_single_twig_file(): void
     {
         $vfs = vfsStream::setup(
@@ -47,7 +48,7 @@ class CatalogueExtractorTest extends TestCase
         $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_extract_a_folder_of_twig(): void
     {
         $vfs = vfsStream::setup(
@@ -76,7 +77,7 @@ class CatalogueExtractorTest extends TestCase
         $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_merge_catalogues_across_extractions_of_twig(): void
     {
         $vfs = vfsStream::setup(
@@ -114,7 +115,7 @@ class CatalogueExtractorTest extends TestCase
         $this->assertEquals(['messages' => $translationsProphecy->reveal()], $translations);
     }
 
-    /** @test */
+    #[Test]
     public function it_will_merge_translation_catalogues(): void
     {
         /** @var Translations|ObjectProphecy $originalTranslationsProphecy */

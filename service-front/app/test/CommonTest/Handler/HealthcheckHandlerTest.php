@@ -15,7 +15,7 @@ class HealthcheckHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testReturnsExpectedJsonResponse()
+    public function testReturnsExpectedJsonResponse(): void
     {
         $healthyResponse = [
             'lpa_api'       => ['healthy' => true],

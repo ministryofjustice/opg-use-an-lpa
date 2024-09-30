@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace CommonTest\Form;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Form\AbstractForm;
 use Laminas\InputFilter\InputFilter;
 
 trait LaminasFormTests
 {
-    /** @test */
-    public function it_is_a_form()
+    #[Test]
+    public function it_is_a_form(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->getForm());
 
         $this->assertEquals($this->getFormName(), $this->getForm()->getName());
     }
 
-    /** @test */
-    public function it_declares_all_necessary_inputs()
+    #[Test]
+    public function it_declares_all_necessary_inputs(): void
     {
         $formElements = $this->getForm()->getElements();
 
@@ -46,8 +47,8 @@ trait LaminasFormTests
         }
     }
 
-    /** @test */
-    public function it_declares_all_neccessary_input_filters()
+    #[Test]
+    public function it_declares_all_neccessary_input_filters(): void
     {
         if (method_exists($this->getForm(), 'getInputFilterSpecification')) {
             $this->assertIsArray($this->getForm()->getInputFilterSpecification());

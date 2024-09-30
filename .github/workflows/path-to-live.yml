@@ -34,7 +34,7 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
@@ -90,19 +90,19 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
       - name: download artifact for front tests
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
           name: service-front
           path: service-front
       - name: download artifact for api tests
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
           name: service-api
           path: service-api
       - name: download artifact for api tests
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
           name: service-admin
           path: service-admin
@@ -200,11 +200,11 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16
+        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
           name: environment_config_file_production
           path: terraform/environment

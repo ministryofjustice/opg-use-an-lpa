@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Handler\Factory\LogoutPageHandlerFactory;
 use Common\Service\Authentication\LocalAccountLogout;
 use Common\Service\Authentication\LogoutStrategy;
@@ -45,7 +47,7 @@ class LogoutPageHandlerFactoryTest extends TestCase
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
     }
 
-    public function featureFlagStrategies(): array
+    public static function featureFlagStrategies(): array
     {
         return [
             'one-login disabled' => [
@@ -60,10 +62,10 @@ class LogoutPageHandlerFactoryTest extends TestCase
     }
 
     /**
-     * @test
-     * @dataProvider featureFlagStrategies
      * @psalm-param class-string<LogoutStrategy> $strategyClass
      */
+    #[DataProvider('featureFlagStrategies')]
+    #[Test]
     public function it_creates_an_appropriate_logout_page_handler(
         bool $allowGovOneLogin,
         string $strategyClass,

@@ -33,7 +33,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         AuthenticationInterface $authenticator,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
-        private SystemMessageService $systemMessageService
+        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper);
 

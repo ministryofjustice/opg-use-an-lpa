@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Service\ApiClient\Client;
 use Common\Service\Lpa\ViewerCodeService;
@@ -36,8 +37,8 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled();
     }
 
-    /** @test */
-    public function it_creates_a_new_viewercode_given_correct_details()
+    #[Test]
+    public function it_creates_a_new_viewercode_given_correct_details(): void
     {
         $lpaId      = '700000000047';
         $viewerCode = '123456789012';
@@ -64,8 +65,8 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals($orgName, $codeData->organisation);
     }
 
-    /** @test */
-    public function it_gets_share_codes_for_a_given_lpa()
+    #[Test]
+    public function it_gets_share_codes_for_a_given_lpa(): void
     {
         $lpaId = '98765432-01234-01234-01234-012345678901';
 
@@ -87,8 +88,8 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals($lpaId, $shareCodes[0]['UserLpaActor']);
     }
 
-    /** @test */
-    public function returns_empty_array_if_no_share_codes_generated()
+    #[Test]
+    public function returns_empty_array_if_no_share_codes_generated(): void
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
@@ -104,8 +105,8 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEmpty($shareCodes);
     }
 
-    /** @test */
-    public function gets_number_of_active_codes_for_lpa()
+    #[Test]
+    public function gets_number_of_active_codes_for_lpa(): void
     {
         $lpaId = '98765432-01234-01234-01234-012345678902';
 
@@ -148,8 +149,8 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals(2, $shareCodes['activeCodeCount']);
     }
 
-    /** @test */
-    public function it_cancels_a_new_viewercode_given_correct_details()
+    #[Test]
+    public function it_cancels_a_new_viewercode_given_correct_details(): void
     {
         $lpaId      = '700000000047';
         $viewerCode = '123456789012';
@@ -167,8 +168,8 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertEquals(null, $codeData);
     }
 
-    /** @test */
-    public function it_orders_viewercode_by_order_of_added_date()
+    #[Test]
+    public function it_orders_viewercode_by_order_of_added_date(): void
     {
         $lpaId  = '98765432-01234-01234-01234-012345678901';
         $expiry = (new DateTime('now +30 days'))->format('c');

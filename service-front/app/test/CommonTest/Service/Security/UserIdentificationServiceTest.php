@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Service\Log\EventCodes;
 use Common\Service\Security\UserIdentificationService;
 use Common\Service\Security\UserIdentity;
@@ -13,9 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass UserIdentificationService
- */
+#[CoversClass(UserIdentificationService::class)]
 class UserIdentificationServiceTest extends TestCase
 {
     use ProphecyTrait;
@@ -23,11 +24,8 @@ class UserIdentificationServiceTest extends TestCase
     /**
      * Because this request has no headers we're not actually testing that a unique ID is generated per request,
      * this test is therefore just a validation of the code not throwing errors.
-     *
-     * @test
-     * @covers ::__construct
-     * @covers ::id
      */
+    #[Test]
     public function it_can_uniquely_identify_a_request_with_no_headers(): void
     {
         /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
@@ -42,11 +40,7 @@ class UserIdentificationServiceTest extends TestCase
         $this->assertEquals('da11b962a28412cd40253f6047801b5fc0dd01503b475e88eaa58f332c37c9d5', (string) $id);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::id
-     */
+    #[Test]
     public function it_logs_a_identity_mismatch(): void
     {
         /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
@@ -74,12 +68,8 @@ class UserIdentificationServiceTest extends TestCase
         $id = $service->id([], 'a-different-id');
     }
 
-    /**
-     * @test
-     * @dataProvider headerCombinations
-     * @covers ::__construct
-     * @covers ::id
-     */
+    #[DataProvider('headerCombinations')]
+    #[Test]
     public function it_can_uniquely_identify_a_request_with_headers(array $headers, string $expectedId): void
     {
         /** @var ObjectProphecy|LoggerInterface $loggerProphecy */
@@ -97,7 +87,7 @@ class UserIdentificationServiceTest extends TestCase
         $this->assertEquals($expectedId, (string) $id);
     }
 
-    public function headerCombinations(): array
+    public static function headerCombinations(): array
     {
         return [
             'the realistic bare minimum unique thing to track' => [

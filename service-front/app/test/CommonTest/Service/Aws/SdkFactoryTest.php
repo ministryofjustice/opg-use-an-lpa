@@ -15,7 +15,7 @@ class SdkFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testMissingConfig()
+    public function testMissingConfig(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -31,7 +31,7 @@ class SdkFactoryTest extends TestCase
         $factory($containerProphecy->reveal());
     }
 
-    public function testValidConfig()
+    public function testValidConfig(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
