@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class KeyTest extends TestCase
 {
-    public function testGetters()
+    public function testGetters(): void
     {
         $testId       = '1';
         $testMaterial = hex2bin('0000000000000000000000000000000000000000000000000000000000000000');
@@ -29,7 +29,7 @@ class KeyTest extends TestCase
     /*
      * Key must be exactly 256 bits.
      */
-    public function testInvalidShortLengthKey()
+    public function testInvalidShortLengthKey(): void
     {
         $this->expectException(InvalidKey::class);
 
@@ -47,7 +47,7 @@ class KeyTest extends TestCase
     /*
      * Key must be exactly 256 bits.
      */
-    public function testInvalidLongLengthKey()
+    public function testInvalidLongLengthKey(): void
     {
         $this->expectException(InvalidKey::class);
 

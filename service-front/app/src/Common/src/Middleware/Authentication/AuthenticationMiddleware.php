@@ -15,7 +15,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private MiddlewarePipeInterface $pipe,
-        MiddlewareInterface ...$middlewares
+        MiddlewareInterface ...$middlewares,
     ) {
         foreach ($middlewares as $middleware) {
             $this->pipe->pipe($middleware);

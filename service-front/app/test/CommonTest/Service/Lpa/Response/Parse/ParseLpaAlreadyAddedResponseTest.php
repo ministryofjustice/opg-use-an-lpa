@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response\Parse;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
@@ -44,8 +46,8 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
     }
 
-    /** @test */
-    public function it_creates_an_already_added_dto_from_array_data()
+    #[Test]
+    public function it_creates_an_already_added_dto_from_array_data(): void
     {
         $this->lpaFactory
             ->createCaseActorFromData($this->response['donor'])
@@ -60,8 +62,8 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         $this->assertEquals('abc-321', $result->getLpaActorToken());
     }
 
-    /** @test */
-    public function it_creates_an_already_added_dto_from_array_data_with_null_name_fields()
+    #[Test]
+    public function it_creates_an_already_added_dto_from_array_data_with_null_name_fields(): void
     {
         $this->response['donor']['firstname']   = null;
         $this->response['donor']['middlenames'] = null;
@@ -85,8 +87,8 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         $this->assertEquals('abc-321', $result->getLpaActorToken());
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -108,8 +110,8 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -131,8 +133,8 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /** @test */
-    public function it_will_fail_if_donor_surname_array_key_doesnt_exist()
+    #[Test]
+    public function it_will_fail_if_donor_surname_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -154,11 +156,9 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         ($sut)($data);
     }
 
-    /**
-     * @dataProvider alreadyAddedDataProvider
-     * @test
-     */
-    public function it_will_fail_if_donor_uId_or_lpa_type_or_token_is_not_set(array $data)
+    #[DataProvider('alreadyAddedDataProvider')]
+    #[Test]
+    public function it_will_fail_if_donor_uId_or_lpa_type_or_token_is_not_set(array $data): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -170,7 +170,7 @@ class ParseLpaAlreadyAddedResponseTest extends TestCase
         ($sut)($data);
     }
 
-    public function alreadyAddedDataProvider()
+    public static function alreadyAddedDataProvider()
     {
         return [
             [

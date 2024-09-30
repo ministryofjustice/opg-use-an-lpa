@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -17,9 +19,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\RemoveLpa
- */
+#[CoversClass(RemoveLpa::class)]
 class RemoveLpaTest extends TestCase
 {
     use ProphecyTrait;
@@ -74,11 +74,8 @@ class RemoveLpaTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function it_returns_lpa_data_when_lpa_successfully_removed()
+    #[Test]
+    public function it_returns_lpa_data_when_lpa_successfully_removed(): void
     {
         $this->apiClientProphecy
             ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
@@ -93,11 +90,8 @@ class RemoveLpaTest extends TestCase
         $this->assertStringContainsString($this->lpa->getUId(), $result->getArrayCopy()['lpa']->getUId());
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function it_will_fail_if_actor_lpa_token_not_found()
+    #[Test]
+    public function it_will_fail_if_actor_lpa_token_not_found(): void
     {
         $this->apiClientProphecy
             ->httpDelete('/v1/lpas/' . $this->actorLpaToken)
@@ -115,11 +109,8 @@ class RemoveLpaTest extends TestCase
         ($this->removeLpa)($this->userToken, $this->actorLpaToken);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function it_will_fail_if_actor_lpa_token_does_not_match_user_id()
+    #[Test]
+    public function it_will_fail_if_actor_lpa_token_does_not_match_user_id(): void
     {
         $this->apiClientProphecy
             ->httpDelete('/v1/lpas/' . $this->actorLpaToken)

@@ -77,7 +77,7 @@ class LpaAddHandlerTest extends TestCase
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
 
-    public function testGetReturnsHtmlResponse()
+    public function testGetReturnsHtmlResponse(): void
     {
         $this->requestProphecy->getMethod()
             ->willReturn('GET');

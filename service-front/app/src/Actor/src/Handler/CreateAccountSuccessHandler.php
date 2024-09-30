@@ -36,10 +36,6 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
         parent::__construct($renderer, $urlHelper);
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @return ResponseInterface
-     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         /*
@@ -53,9 +49,9 @@ class CreateAccountSuccessHandler extends AbstractHandler implements SessionAwar
         $params = $request->getQueryParams();
 
         // Retrieve email from session
-        $session = $this->getSession($request, 'session');
+        $session      = $this->getSession($request, 'session');
         $emailAddress = $session->get(self::SESSION_EMAIL_KEY);
-        $resend = (isset($params['resend']) && $params['resend'] === 'true');
+        $resend       = (isset($params['resend']) && $params['resend'] === 'true');
 
         if (is_null($emailAddress)) {
             return $this->redirectToRoute('create-account');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -32,9 +33,7 @@ class SiriusLpaFactoryTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function bad_data_throws_exception_in_create_lpa(): void
     {
         $factory = new Sirius();
@@ -43,9 +42,7 @@ class SiriusLpaFactoryTest extends TestCase
         $lpa = $factory->createLpaFromData([]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function bad_data_throws_exception_in_create_case_actor(): void
     {
         $factory = new Sirius();
@@ -54,9 +51,7 @@ class SiriusLpaFactoryTest extends TestCase
         $caseActor = $factory->createCaseActorFromData([]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function bad_data_throws_exception_in_create_address(): void
     {
         $factory = new Sirius();
@@ -65,9 +60,7 @@ class SiriusLpaFactoryTest extends TestCase
         $address = $factory->createAddressFromData([]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_create_empty_lpa(): void
     {
         $factory = new Sirius();
@@ -78,9 +71,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals('1234', $lpa->getUId());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_create_lpa_from_swagger_example(): void
     {
         $factory = new Sirius();
@@ -103,9 +94,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertInstanceOf(CaseActor::class, $lpa->getInactiveAttorneys()[0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_create_lpa_from_simple_example(): void
     {
         $factory = new Sirius();
@@ -130,14 +119,12 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals([0], $lpa->getDonor()->getIds());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_hydrate_donor_from_simple_example(): void
     {
         $factory = new Sirius();
 
-        $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
+        $lpa   = $factory->createLpaFromData($this->simpleExampleFixtureData);
         $donor = $lpa->getDonor();
 
         $this->assertEquals(0, $donor->getId());
@@ -151,14 +138,12 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals('ABC Ltd', $donor->getCompanyName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_hydrate_attorney_from_simple_example(): void
     {
         $factory = new Sirius();
 
-        $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
+        $lpa      = $factory->createLpaFromData($this->simpleExampleFixtureData);
         $attorney = $lpa->getAttorneys()[0];
 
         $this->assertEquals(0, $attorney->getId());
@@ -172,9 +157,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals('ABC Ltd', $attorney->getCompanyName());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function can_create_lpa_from_example_with_linked_donors(): void
     {
         $factory = new Sirius();

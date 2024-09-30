@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\DobValidator;
 use DateTime;
 use PHPUnit\Framework\TestCase;
@@ -17,10 +18,8 @@ class DobValidatorTest extends TestCase
         $this->validator = new DobValidator();
     }
 
-    /**
-     * @dataProvider validFormatProvider
-     */
-    public function testIsValidFormat($day, $month, $year)
+    #[DataProvider('validFormatProvider')]
+    public function testIsValidFormat($day, $month, $year): void
     {
         $value = [
             'day'   => $day,
@@ -33,7 +32,7 @@ class DobValidatorTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    public function validFormatProvider()
+    public static function validFormatProvider()
     {
         return [
             [1, 2, 1999],
@@ -44,7 +43,7 @@ class DobValidatorTest extends TestCase
         ];
     }
 
-    public function testIsValidFutureDate()
+    public function testIsValidFutureDate(): void
     {
         $now = new DateTime();
         $now->modify('+1 day');
@@ -62,7 +61,7 @@ class DobValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function testIsValidTooYoung()
+    public function testIsValidTooYoung(): void
     {
         $now = new DateTime();
         $now->modify('-1 day');

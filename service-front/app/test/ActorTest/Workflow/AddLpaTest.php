@@ -4,20 +4,17 @@ declare(strict_types=1);
 
 namespace ActorTest\Workflow;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Workflow\AddLpa;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Actor\Workflow\AddLpa
- */
+#[CoversClass(AddLpa::class)]
 class AddLpaTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_created_empty(): void
     {
         $sut = new AddLpa();
@@ -25,10 +22,7 @@ class AddLpaTest extends TestCase
         Assert::assertInstanceOf(AddLpa::class, $sut);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_created_with_data(): void
     {
         $sut = new AddLpa(
@@ -44,11 +38,7 @@ class AddLpaTest extends TestCase
         Assert::assertEquals('700000000054', $sut->lpaReferenceNumber);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::reset
-     */
+    #[Test]
     public function it_can_be_reset(): void
     {
         $sut = new AddLpa(

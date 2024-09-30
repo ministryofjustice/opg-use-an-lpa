@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler\Factory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\CookiesPageHandler;
 use Common\Handler\Factory\CookiesPageHandlerFactory;
 use Common\Service\Url\UrlValidityCheckService;
@@ -19,7 +20,7 @@ class CookiesPageHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_returns_a_CookiesPageHandler(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -46,7 +47,7 @@ class CookiesPageHandlerFactoryTest extends TestCase
         $this->assertInstanceOf(CookiesPageHandler::class, $instance);
     }
 
-    /** @test */
+    #[Test]
     public function it_needs_an_application_configuration_value(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\AbstractHandler;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -18,9 +19,7 @@ class AbstractHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testRedirectToRouteWithOverride(): void
     {
         $localOverride = 'cy';
@@ -50,9 +49,7 @@ class AbstractHandlerTest extends TestCase
         $this->assertEquals('/cy/fake-route', $response->getHeader('location')[0]);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function testRedirectToRouteOverrideSetToNull(): void
     {
         /** @var UrlHelper|ObjectProphecy $urlHelperMock */

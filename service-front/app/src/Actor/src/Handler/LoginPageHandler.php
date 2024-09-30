@@ -35,8 +35,8 @@ class LoginPageHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 {
     use CsrfGuard;
     use Logger;
-    use User;
     use Session;
+    use User;
 
     public const SESSION_EMAIL_KEY = CreateAccountHandler::SESSION_EMAIL_KEY;
 

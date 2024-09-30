@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\EncryptedCookiePersistenceFactory;
 use Common\Service\Session\Encryption\EncryptInterface;
@@ -13,17 +15,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
 
-/**
- * @coversDefaultClass \Common\Service\Session\EncryptedCookiePersistenceFactory
- */
+#[CoversClass(EncryptedCookiePersistenceFactory::class)]
 class EncryptedCookiePersistenceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_will_create_an_instance_when_given_correct_configuration(): void
     {
         $config = [
@@ -54,10 +51,7 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
         $this->assertInstanceOf(EncryptedCookiePersistence::class, $ecp);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_will_throw_runtime_exceptions_if_session_configuration_is_missing(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -74,10 +68,7 @@ class EncryptedCookiePersistenceFactoryTest extends TestCase
         $ecp = $sut($containerProphecy->reveal());
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_will_throw_runtime_exceptions_if_necessary_configuration_is_missing(): void
     {
         $config = [

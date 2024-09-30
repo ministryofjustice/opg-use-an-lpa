@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\LocalisedDate;
 use DateTime;
 use Locale;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\LocalisedDate
- */
+#[CoversClass(LocalisedDate::class)]
 class LocalisedDateTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    /**
-     * @test
-     * @dataProvider dateProvider
-     */
-    public function it_correctly_formats_date_for_letter($date, $locale, $expected)
+    #[DataProvider('dateProvider')]
+    #[Test]
+    public function it_correctly_formats_date_for_letter($date, $locale, $expected): void
     {
         $dateFormatter = new LocalisedDate();
 
@@ -38,7 +33,7 @@ class LocalisedDateTest extends TestCase
         $this->assertEquals($expected, $dateString);
     }
 
-    public function dateProvider()
+    public static function dateProvider()
     {
         return [
             [

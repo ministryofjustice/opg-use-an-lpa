@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\MerisReferenceCheckValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -16,9 +17,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         $this->validator = new MerisReferenceCheckValidator();
     }
 
-    /**
-     * @dataProvider validFormatProvider
-     */
+    #[DataProvider('validFormatProvider')]
     public function testIsValidReference($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
@@ -26,7 +25,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    public function validFormatProvider()
+    public static function validFormatProvider()
     {
         return [
             ['700000000252'],
@@ -40,9 +39,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider notValidMerisFormatProvider
-     */
+    #[DataProvider('notValidMerisFormatProvider')]
     public function testMerisReferenceStartsWithTwoOrThree($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
@@ -58,7 +55,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function notValidMerisFormatProvider()
+    public static function notValidMerisFormatProvider()
     {
         return [
             ['5004919'],
@@ -71,9 +68,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidLengthProvider
-     */
+    #[DataProvider('invalidLengthProvider')]
     public function testIsValidInvalid($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
@@ -89,7 +84,7 @@ class MerisReferenceCheckValidatorTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function invalidLengthProvider()
+    public static function invalidLengthProvider()
     {
         return [
             ['70000000025432'],

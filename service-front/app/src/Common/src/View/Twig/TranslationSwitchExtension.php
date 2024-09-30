@@ -17,9 +17,6 @@ class TranslationSwitchExtension extends AbstractExtension
         $this->urlHelper = $urlHelper;
     }
 
-    /**
-     * @return array
-     */
     public function getFunctions(): array
     {
         return [

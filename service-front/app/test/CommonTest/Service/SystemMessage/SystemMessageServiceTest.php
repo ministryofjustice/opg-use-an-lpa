@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\SystemMessage;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
 use Common\Service\SystemMessage\SystemMessageService;
@@ -16,9 +17,9 @@ class SystemMessageServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @test
      * @throws Exception
      */
+    #[Test]
     public function get_messages_calls_api(): void
     {
         $apiClientProphecy = $this->prophesize(Client::class);
@@ -36,9 +37,9 @@ class SystemMessageServiceTest extends TestCase
     }
 
     /**
-     * @test
      * @throws Exception
      */
+    #[Test]
     public function gets_no_messages_when_api_fails(): void
     {
         $apiClientProphecy = $this->prophesize(Client::class);

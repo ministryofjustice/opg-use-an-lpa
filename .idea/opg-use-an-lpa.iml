@@ -5,6 +5,26 @@
       <sourceFolder url="file://$MODULE_DIR$/tests/smoke/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-api/app/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/service-front/app/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/features/context" isTestSource="true" packagePrefix="BehatTest\Context\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/src/App/src" isTestSource="false" packagePrefix="App\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/AppTest" isTestSource="true" packagePrefix="AppTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/BehatTest" isTestSource="true" packagePrefix="BehatTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/test/FunctionalTest" isTestSource="true" packagePrefix="FunctionalTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-api/app/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/features/context" isTestSource="true" packagePrefix="BehatTest\Context\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Actor/src" isTestSource="false" packagePrefix="Actor\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Common/src" isTestSource="false" packagePrefix="Common\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/src/Viewer/src" isTestSource="false" packagePrefix="Viewer\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ActorTest" isTestSource="true" packagePrefix="ActorTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/BehatTest" isTestSource="true" packagePrefix="BehatTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/CommonTest" isTestSource="true" packagePrefix="CommonTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/service-front/app/test/ViewerTest" isTestSource="true" packagePrefix="ViewerTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/smoke/context" isTestSource="false" packagePrefix="Test\Context\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests/smoke/src" isTestSource="false" packagePrefix="Smoke\" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/phpstan/phpstan" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/rector/rector" />
+      <excludeFolder url="file://$MODULE_DIR$/service-front/app/vendor/symfony/filesystem" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

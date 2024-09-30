@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\I18n\PotGenerator;
 use DateTime;
 use Gettext\Generator\GeneratorInterface;
@@ -17,7 +18,7 @@ class PotGeneratorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_will_write_out_a_catalogue(): void
     {
         $headersProphecy = $this->prophesize(Headers::class);

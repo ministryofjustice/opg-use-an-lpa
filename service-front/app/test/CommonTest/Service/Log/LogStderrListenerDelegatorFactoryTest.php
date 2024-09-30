@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Log;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Log\LogStderrListener;
 use Common\Service\Log\LogStderrListenerDelegatorFactory;
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -13,18 +15,13 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @coversDefaultClass \Common\Service\Log\LogStderrListenerDelegatorFactory
- */
+#[CoversClass(LogStderrListenerDelegatorFactory::class)]
 class LogStderrListenerDelegatorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function creates_and_attaches_configured_logging_delegator_no_tracing()
+    #[Test]
+    public function creates_and_attaches_configured_logging_delegator_no_tracing(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get(LoggerInterface::class)
@@ -54,11 +51,8 @@ class LogStderrListenerDelegatorFactoryTest extends TestCase
         $this->assertInstanceOf(ErrorHandler::class, $errorHandler);
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
-    public function creates_and_attaches_configured_logging_delegator_with_tracing()
+    #[Test]
+    public function creates_and_attaches_configured_logging_delegator_with_tracing(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy->get(LoggerInterface::class)

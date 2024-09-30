@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Session;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Service\Session\EncryptedCookiePersistence;
 use DateTime;
@@ -21,7 +22,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_correctly_handles_request_with_no_session(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
@@ -43,7 +44,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_handles_an_non_expired_session(): void
     {
         $sessionProphecy = $this->prophesize(Session::class);
@@ -75,7 +76,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function it_strips_session_values_that_have_not_been_allowed(): void
     {
         $sessionData = [
@@ -126,7 +127,7 @@ class SessionAttributeAllowlistMiddlewareTest extends TestCase
         $sem->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function it_strips_session_values_when_a_logout_has_been_flagged(): void
     {
         $sessionData = [

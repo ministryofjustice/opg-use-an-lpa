@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\User;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\ApiClient\Client;
 use Common\Service\User\UserService;
 use Common\Service\User\UserServiceFactory;
@@ -17,8 +18,8 @@ class UserServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_creates_a_valid_UserServiceFactory_instance()
+    #[Test]
+    public function it_creates_a_valid_UserServiceFactory_instance(): void
     {
         $clientProphecy = $this->prophesize(Client::class);
         $loggerProphecy = $this->prophesize(LoggerInterface::class);

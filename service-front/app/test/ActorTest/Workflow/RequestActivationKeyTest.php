@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace ActorTest\Workflow;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Actor\Workflow\RequestActivationKey;
 use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass \Actor\Workflow\RequestActivationKey
- */
+#[CoversClass(RequestActivationKey::class)]
 class RequestActivationKeyTest extends TestCase
 {
-    public function fullActivationKeyWorkflow(): array
+    public static function fullActivationKeyWorkflow(): array
     {
         return [
             [
@@ -46,10 +47,7 @@ class RequestActivationKeyTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     */
+    #[Test]
     public function it_can_be_created_empty(): void
     {
         $sut = new RequestActivationKey();
@@ -57,15 +55,8 @@ class RequestActivationKeyTest extends TestCase
         Assert::assertInstanceOf(RequestActivationKey::class, $sut);
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::getActorRole
-     * @covers ::setActorRole
-     * @covers ::setActorAddressResponse
-     * @covers ::getActorAddressCheckResponse
-     * @dataProvider fullActivationKeyWorkflow
-     */
+    #[DataProvider('fullActivationKeyWorkflow')]
+    #[Test]
     public function it_can_be_created_with_data(array $data): void
     {
         $sut = new RequestActivationKey(...$data);
@@ -94,16 +85,8 @@ class RequestActivationKeyTest extends TestCase
         }
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::getActorRole
-     * @covers ::setActorRole
-     * @covers ::setActorAddressResponse
-     * @covers ::getActorAddressCheckResponse
-     * @covers ::reset
-     * @dataProvider fullActivationKeyWorkflow
-     */
+    #[DataProvider('fullActivationKeyWorkflow')]
+    #[Test]
     public function it_can_be_reset(array $data): void
     {
         $sut = new RequestActivationKey(...$data);

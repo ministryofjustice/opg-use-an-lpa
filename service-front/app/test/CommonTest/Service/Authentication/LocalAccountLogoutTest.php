@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Authentication;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\User;
 use Common\Service\Authentication\LocalAccountLogout;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +14,7 @@ class LocalAccountLogoutTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_returns_a_survey_redirect_url(): void
     {
         $sut = new LocalAccountLogout();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Routing;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Interop\Container\ContainerInterface;
 use Mezzio\MiddlewareFactoryInterface;
@@ -35,7 +36,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
         $this->requestHandlerInterfaceProphecy = $this->prophesize(RequestHandlerInterface::class);
     }
 
-    /** @test */
+    #[Test]
     public function test_when_feature_flag_is_on_true_route_is_called(): void
     {
         $middlewareProphecy = $this->prophesize(MiddlewareInterface::class);
@@ -57,7 +58,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
         $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function test_when_feature_flag_is_off_false_route_is_called(): void
     {
         $middlewareProphecy = $this->prophesize(MiddlewareInterface::class);
@@ -79,7 +80,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
         $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function test_when_feature_flag_is_undefined_false_route_is_called(): void
     {
         $middlewareProphecy = $this->prophesize(MiddlewareInterface::class);
@@ -101,7 +102,7 @@ class ConditionalRoutingMiddlewareTest extends TestCase
         $sut->process($this->requestInterfaceProphecy->reveal(), $this->requestHandlerInterfaceProphecy->reveal());
     }
 
-    /** @test  */
+    #[Test]
     public function test_when_feature_flag_is_not_defined_error_raised(): void
     {
         $this->containerProphecy->get('config')->willReturn([]);

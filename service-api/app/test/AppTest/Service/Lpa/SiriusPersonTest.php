@@ -85,4 +85,20 @@ class SiriusPersonTest extends TestCase
             json_encode($sut),
         );
     }
+
+    #[Test]
+    public function it_typecasts_on_getters(): void
+    {
+        $sut = new SiriusPerson(
+            [
+                'uId' => 700000000000,
+                'systemStatus' => 1,
+                'companyName' => null,
+            ]
+        );
+
+        $this->assertSame('700000000000', $sut->getUid());
+        $this->assertSame(true, $sut->getSystemStatus());
+        $this->assertSame('', $sut->getCompanyName());
+    }
 }

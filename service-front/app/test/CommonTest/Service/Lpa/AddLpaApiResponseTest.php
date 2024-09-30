@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AddLpaApiResult;
@@ -11,18 +14,11 @@ use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\AddLpaApiResult
- */
+#[CoversClass(AddLpaApiResult::class)]
 class AddLpaApiResponseTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
-     * @covers ::validateResponseType
-     * @dataProvider validDataTypeProvider
-     */
+    #[DataProvider('validDataTypeProvider')]
+    #[Test]
     public function it_can_be_created_with_a_recognised_response_and_data_type($responseType, $additionalData): void
     {
         $response = new AddLpaApiResult($responseType, $additionalData);
@@ -65,12 +61,8 @@ class AddLpaApiResponseTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateDataType
-     * @dataProvider invalidDataTypeProvider
-     */
+    #[DataProvider('invalidDataTypeProvider')]
+    #[Test]
     public function it_throws_an_exception_with_an_unrecognised_response_data_type($data): void
     {
         $this->expectException(RuntimeException::class);
@@ -80,7 +72,7 @@ class AddLpaApiResponseTest extends TestCase
     /**
      * @return array
      */
-    public function invalidDataTypeProvider()
+    public static function invalidDataTypeProvider()
     {
         return [
             [3],
@@ -91,11 +83,7 @@ class AddLpaApiResponseTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @covers ::__construct
-     * @covers ::validateResponseType
-     */
+    #[Test]
     public function it_throws_an_exception_with_an_unrecognised_response_type(): void
     {
         $this->expectException(RuntimeException::class);

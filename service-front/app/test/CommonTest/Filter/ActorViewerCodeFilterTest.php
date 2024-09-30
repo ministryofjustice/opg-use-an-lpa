@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Filter;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Filter\ActorViewerCodeFilter;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -19,16 +20,14 @@ class ActorViewerCodeFilterTest extends TestCase
         $this->filter = new ActorViewerCodeFilter();
     }
 
-    /**
-     * @dataProvider codeFormatProvider
-     */
-    public function testRemovesPrefixAndHyphensAndWhitespace(string $code, string $expected)
+    #[DataProvider('codeFormatProvider')]
+    public function testRemovesPrefixAndHyphensAndWhitespace(string $code, string $expected): void
     {
         $formattedCode = $this->filter->filter($code);
         $this->assertEquals($expected, $formattedCode);
     }
 
-    public function codeFormatProvider(): array
+    public static function codeFormatProvider(): array
     {
         return [
             ['V-ABCD-1234-EFGH', 'ABCD1234EFGH'],

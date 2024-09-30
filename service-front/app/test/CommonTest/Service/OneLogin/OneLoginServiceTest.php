@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\OneLogin;
 
+use PHPUnit\Framework\Attributes\Test;
 use Closure;
 use Common\Entity\User;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -23,7 +24,8 @@ class OneLoginServiceTest extends TestCase
     private ObjectProphecy|LoggerInterface $logger;
     private Closure $userFactoryCallable;
 
-    public function setUp() : void{
+    public function setUp(): void
+    {
         $this->logger              = $this->prophesize(LoggerInterface::class);
         $this->userFactoryCallable = function ($identity, $roles, $details) {
             $this->assertEquals('fake-id', $identity);
@@ -37,7 +39,7 @@ class OneLoginServiceTest extends TestCase
         };
     }
 
-    /** @test */
+    #[Test]
     public function can_get_authentication_request_uri(): void
     {
         $state    = 'STATE';
@@ -72,7 +74,7 @@ class OneLoginServiceTest extends TestCase
         $this->assertEquals(['state' => $state, 'nonce' => $nonce, 'url' => $uri], $response);
     }
 
-    /** @test */
+    #[Test]
     public function can_get_callback_request_uri(): void
     {
         $state           = 'fakeState';
@@ -127,7 +129,7 @@ class OneLoginServiceTest extends TestCase
         $this->assertEquals(false, $response->getDetail('NeedsReset'));
     }
 
-    /** @test */
+    #[Test]
     public function can_get_logout_request_uri(): void
     {
         $redirect = 'FAKE_REDIRECT';
