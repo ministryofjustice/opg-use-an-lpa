@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
@@ -22,17 +23,36 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function __construct(private array $lpa)
     {
+        if ($this->lpa['donor'] !== null) {
+            $donorAsSiriusPerson = $this->convertToSiriusPerson($this->lpa['donor']);
+            $this->lpa['donor'] = $donorAsSiriusPerson;
+        }
+
+        $this->transformArrayToSiriusPersons('attorneys');
+        $this->transformArrayToSiriusPersons('original_attorneys');
+        $this->transformArrayToSiriusPersons('inactiveAttorneys');
+        $this->transformArrayToSiriusPersons('activeAttorneys');
         $this->transformArrayToSiriusPersons('trustCorporations');
     }
 
-    private function getAttorneys(): array
+    public function getAttorneys(): array
     {
         return $this->lpa['attorneys'];
     }
 
-    private function getDonor(): array
+    public function getDonor(): SiriusPerson
     {
         return $this->lpa['donor'];
+    }
+
+    public function getUid(): string
+    {
+        return (string)$this->lpa['uId'];
+    }
+
+    public function getSystemStatus(): string
+    {
+        return (string)$this->lpa['systemStatus'];
     }
 
     private function transformArrayToSiriusPersons(string $keyName): void
@@ -93,11 +113,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function getStatus(): string
     {
-        return $this->lpa['status'];
+        return (string)$this->lpa['status'];
     }
 
-    public function getUid(): string
-    {
-        return $this->lpa['uId'];
-    }
 }

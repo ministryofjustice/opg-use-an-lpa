@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Exception\BadRequestException;
-use App\Service\Lpa\AddLpa;
+use App\Service\Lpa\AddLpa\AddLpa;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

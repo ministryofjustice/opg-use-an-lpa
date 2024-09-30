@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-08-13T15:27:35+00:00\n"
+"POT-Creation-Date: 2024-09-27T10:01:12+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -1634,7 +1634,7 @@ msgid "Death Notification"
 msgstr ""
 
 #: src/Actor/templates/actor/death-notification.html.twig:22
-#: src/Actor/templates/actor/change-details.html.twig:66
+#: src/Actor/templates/actor/change-details.html.twig:68
 msgid "Let us know if a donor or attorney dies"
 msgstr ""
 
@@ -2814,7 +2814,7 @@ msgstr ""
 
 #. Add LPA
 #: src/Actor/templates/actor/flash-messages.html.twig:4
-#: src/Actor/src/Handler/CheckLpaHandler.php:252
+#: src/Actor/src/Handler/CheckLpaHandler.php:253
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
 msgstr ""
@@ -2965,7 +2965,6 @@ msgid "the LPA reference number"
 msgstr ""
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:46
-#: src/Actor/templates/actor/change-details.html.twig:55
 msgid "your name"
 msgstr ""
 
@@ -3435,11 +3434,11 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:68
+#: src/Actor/templates/actor/change-details.html.twig:70
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and can end if an attorney dies."
 msgstr ""
 
-#: src/Actor/templates/actor/change-details.html.twig:75
+#: src/Actor/templates/actor/change-details.html.twig:77
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
 msgstr ""
 
@@ -4683,4 +4682,12 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/partials/service-names.html.twig:1
 msgid "View a lasting power of attorney"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:55
+msgid "your name and address"
+msgstr ""
+
+#: src/Actor/templates/actor/change-details.html.twig:62
+msgid "If you are the donor, please also provide the name and address for one of your attorneys."
 msgstr ""

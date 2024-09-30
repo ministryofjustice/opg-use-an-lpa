@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Service\Lpa\LpaAlreadyAdded;
+use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\SiriusLpaManager;
 use DateTimeImmutable;

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\AccessForAll;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;

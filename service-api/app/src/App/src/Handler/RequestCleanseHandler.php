@@ -6,9 +6,9 @@ namespace App\Handler;
 
 use App\Exception\BadRequestException;
 use App\Service\Log\EventCodes;
-use App\Service\Lpa\LpaAlreadyAdded;
+use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
+use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
-use App\Service\Lpa\AccessForAllLpaService;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;

@@ -52,12 +52,14 @@
                     <p class="govuk-body">{% trans %}When you get in touch, you’ll need to tell us:{% endtrans %}</p>
                     <ul class="govuk-list govuk-list--bullet">
                         <li>{% trans %}the LPA reference number{% endtrans %}</li>
-                        <li>{% trans %}your name{% endtrans %}</li>
+                        <li>{% trans %}your name and address{% endtrans %}</li>
                         <li>{% trans %}your role (ie, whether you are the donor or an attorney){% endtrans %}</li>
                         <li>{% trans %}the donor’s name (if you are not the donor){% endtrans %}</li>
                         <li>{% trans %}the donor’s date of birth{% endtrans %}</li>
                         <li>{% trans %}the donor’s address and postcode{% endtrans %}</li>
                     </ul>
+
+                    <p class="govuk-body">{% trans %}If you are the donor, please also provide the name and address for one of your attorneys.{% endtrans %}</p>
 
                     {{ include('@partials/contact-details/contact-details.html.twig') }}
 

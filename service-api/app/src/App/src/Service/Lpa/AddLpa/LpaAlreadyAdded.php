@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\AddLpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Service\Lpa\LpaManagerInterface;
 
 class LpaAlreadyAdded
 {
