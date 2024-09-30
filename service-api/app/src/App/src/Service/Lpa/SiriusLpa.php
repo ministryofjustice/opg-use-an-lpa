@@ -47,12 +47,12 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function getUid(): string
     {
-        return $this->lpa['uId'];
+        return (string)$this->lpa['uId'];
     }
 
     public function getSystemStatus(): string
     {
-        return $this->lpa['systemStatus'];
+        return (string)$this->lpa['systemStatus'];
     }
 
     private function transformArrayToSiriusPersons(string $keyName): void
@@ -113,7 +113,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
 
     public function getStatus(): string
     {
-        return $this->lpa['status'];
+        return (string)$this->lpa['status'];
     }
 
 }

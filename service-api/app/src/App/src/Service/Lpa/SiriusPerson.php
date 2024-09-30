@@ -23,12 +23,12 @@ class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatus
 
     public function getFirstname(): string
     {
-        return $this->person['firstname'];
+        return (string)$this->person['firstname'];
     }
 
     public function getSurname(): string
     {
-        return $this->person['surname'];
+        return (string)$this->person['surname'];
     }
 
     public function getSystemStatus(): bool
