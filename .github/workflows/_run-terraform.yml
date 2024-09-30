@@ -58,7 +58,7 @@ jobs:
             echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           fi
 
-      - uses: actions/checkout@6d193bf28034eafb982f37bd894289fe649468fc # pin@v3
+      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
         with:
           fetch-depth: '0'
 
@@ -71,7 +71,7 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@c23d9fb1b7ead2e283cd20aab7c4974b032f61f6 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@c4396e588c9df127748dc67459fd162eca7f7220 # pin@v2.0.0
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
@@ -152,7 +152,7 @@ jobs:
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@b18b1d32f3f31abcdc29dee3f2484801fe7822f4 # pin@v3.1.0
+        uses: actions/upload-artifact@3eadd8b791cabf7cd572f194da82158c24125bd8 # pin@v3.1.0
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment/cluster_config.json

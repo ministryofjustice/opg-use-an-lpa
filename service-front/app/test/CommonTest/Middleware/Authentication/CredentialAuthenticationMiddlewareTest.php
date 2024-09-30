@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Authentication;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Authentication\CredentialAuthenticationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
@@ -38,7 +39,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
+    #[Test]
     public function it_requires_a_session(): void
     {
         $this->request->method('getAttribute')
@@ -54,7 +55,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $sut->process($this->request, $this->handler);
     }
 
-    /** @test */
+    #[Test]
     public function it_redirects_upon_an_expired_session(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -77,7 +78,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_an_unauthorised_response_if_auth_fails(): void
     {
         $session = $this->createStub(SessionInterface::class);
@@ -107,19 +108,10 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_continues_to_the_handler_if_auth_is_successful(): void
     {
         $session = $this->createStub(SessionInterface::class);
-        $session->method('has')
-            ->withConsecutive(
-                [SessionExpiryMiddleware::SESSION_EXPIRED_KEY],
-                [UserInterface::class],
-            )
-            ->willReturnOnConsecutiveCalls(
-                false,
-                true,
-            );
 
         $this->request->method('getAttribute')
             ->with(SessionMiddleware::SESSION_ATTRIBUTE)
@@ -139,7 +131,7 @@ class CredentialAuthenticationMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function a_handler_can_request_a_logout(): void
     {
         $session = $this->createStub(SessionInterface::class);

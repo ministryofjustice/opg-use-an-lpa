@@ -14,6 +14,7 @@ use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
+use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
@@ -127,7 +128,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
@@ -205,7 +206,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
@@ -268,7 +269,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($expectedResponse);
 
         $response = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
@@ -411,7 +412,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
@@ -448,7 +449,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
@@ -541,7 +542,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData);
 
         $this->findActorInLpaProphecy
-            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->restrictSendingLpaForCleansingProphecy

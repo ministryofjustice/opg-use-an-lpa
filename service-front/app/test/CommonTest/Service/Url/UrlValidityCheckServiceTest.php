@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Url;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Url\UrlValidityCheckService;
 use Laminas\Diactoros\ServerRequest;
 use Laminas\Diactoros\ServerRequestFactory;
@@ -35,8 +36,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->locale                         = 'en_GB';
     }
 
-    /** @test */
-    public function it_checks_if_referer_url_is_valid()
+    #[Test]
+    public function it_checks_if_referer_url_is_valid(): void
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
 
@@ -52,8 +53,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertTrue($valid);
     }
 
-    /** @test */
-    public function it_checks_if_referer_url_is_invalid()
+    #[Test]
+    public function it_checks_if_referer_url_is_invalid(): void
     {
         $refererUrl = 'https:///wwww.your_web_app.com/script.php?info_variable=123xyz';
 
@@ -69,8 +70,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertFalse($valid);
     }
 
-    /** @test */
-    public function it_checks_if_referer_route_exists()
+    #[Test]
+    public function it_checks_if_referer_route_exists(): void
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/add-details';
 
@@ -105,8 +106,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertTrue($valid);
     }
 
-    /** @test */
-    public function it_returns_a_valid_referer()
+    #[Test]
+    public function it_returns_a_valid_referer(): void
     {
         $refererUrl = 'https://366uml695cook.use.lastingpowerofattorney.opg.service.justice.gov.uk/lpa/dashboard';
 
@@ -135,8 +136,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($refererUrl, $resultReferer);
     }
 
-    /** @test */
-    public function it_returns_a_url_for_home_if_referer_is_invalid()
+    #[Test]
+    public function it_returns_a_url_for_home_if_referer_is_invalid(): void
     {
         $homeUrl    = 'https://localhost:9002/';
         $refererUrl = 'https://www.invalid/url';
@@ -169,8 +170,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($homeUrl, $resultReferer);
     }
 
-    /** @test */
-    public function it_returns_a_url_for_home_if_referer_is_null()
+    #[Test]
+    public function it_returns_a_url_for_home_if_referer_is_null(): void
     {
         $homeUrl = 'https://localhost:9002/';
 
@@ -187,8 +188,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($homeUrl, $resultReferer);
     }
 
-    /** @test */
-    public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy()
+    #[Test]
+    public function it_returns_a_welsh_url_for_home_if_referer_is_invalid_and_locale_is_cy(): void
     {
         $this->locale      = 'cy_GB';
         $englishRefererUrl = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/login';
@@ -223,8 +224,8 @@ class UrlValidityCheckServiceTest extends TestCase
         $this->assertEquals($welshHomeUrl, $resultReferer);
     }
 
-    /** @test */
-    public function it_returns_a_valid_welsh_referer_if_locale_is_cy()
+    #[Test]
+    public function it_returns_a_valid_welsh_referer_if_locale_is_cy(): void
     {
         $this->locale      = 'cy_GB';
         $refererUrl        = 'https://use.lastingpowerofattorney.opg.service.justice.gov.uk/cy/login';

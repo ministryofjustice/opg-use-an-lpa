@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -26,8 +28,8 @@ use RuntimeException;
  * @property AddLpa $addLpa
  * @property array $lpaArrayData
  * @property ArrayObject $lpaParsedData
- * @coversDefaultClass \Common\Service\Lpa\AddLpa
  */
+#[CoversClass(AddLpa::class)]
 class AddLpaTest extends TestCase
 {
     use ProphecyTrait;
@@ -93,7 +95,7 @@ class AddLpaTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function it_will_validate_the_data_and_fetch_the_lpa(): void
     {
         $this->apiClientProphecy
@@ -121,7 +123,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals($this->lpaParsedData, $result->getData());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_fail_to_add_an_lpa_which_has_already_been_added(): void
     {
         $response = [
@@ -178,7 +180,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals($dto, $result->getData());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_fail_to_add_an_lpa_which_is_not_registered(): void
     {
         $this->apiClientProphecy
@@ -213,7 +215,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals([], $result->getData());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_fail_to_add_an_lpa_if_code_validation_fails(): void
     {
         $this->apiClientProphecy
@@ -248,7 +250,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals([], $result->getData());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_fail_to_add_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
@@ -277,7 +279,7 @@ class AddLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_will_fail_to_add_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
@@ -308,7 +310,7 @@ class AddLpaTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_will_confirm_adding_the_lpa(): void
     {
         // this verifies the lpa was added successfully
@@ -334,7 +336,7 @@ class AddLpaTest extends TestCase
         $this->assertEquals(AddLpaApiResult::ADD_LPA_SUCCESS, $result->getResponse());
     }
 
-    /** @test */
+    #[Test]
     public function it_will_return_failed_event_code_if_failed_when_adding_the_lpa(): void
     {
         $this->apiClientProphecy

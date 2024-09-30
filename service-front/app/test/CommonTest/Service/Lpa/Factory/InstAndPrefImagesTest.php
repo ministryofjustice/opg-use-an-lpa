@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Factory;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\Factory\InstAndPrefImages;
 use PHPUnit\Framework\TestCase;
 use ValueError;
+use Common\Entity\InstructionsAndPreferences\Images;
+use Common\Entity\InstructionsAndPreferences\SignedUrl;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\Factory\InstAndPrefImages
- */
+#[CoversClass(InstAndPrefImages::class)]
+#[CoversClass(Images::class)]
+#[CoversClass(SignedUrl::class)]
 class InstAndPrefImagesTest extends TestCase
 {
-    /**
-     * @test
-     * @covers ::createFromData
-     * @covers \Common\Entity\InstructionsAndPreferences\Images::__construct
-     */
+    #[Test]
     public function it_creates_an_IAPImages(): void
     {
         $data = [
@@ -33,11 +33,7 @@ class InstAndPrefImagesTest extends TestCase
         $this->assertEquals($data['uId'], $images->uId);
     }
 
-    /**
-     * @test
-     * @covers ::createFromData
-     * @covers \Common\Entity\InstructionsAndPreferences\Images::__construct
-     */
+    #[Test]
     public function it_fails_with_a_bad_status(): void
     {
         $data = [
@@ -52,12 +48,7 @@ class InstAndPrefImagesTest extends TestCase
         $images = $factory->createFromData($data);
     }
 
-    /**
-     * @test
-     * @covers ::createFromData
-     * @covers \Common\Entity\InstructionsAndPreferences\Images::__construct
-     * @covers \Common\Entity\InstructionsAndPreferences\SignedUrl::__construct
-     */
+    #[Test]
     public function it_creates_an_IAPImages_with_urls(): void
     {
         $data = [

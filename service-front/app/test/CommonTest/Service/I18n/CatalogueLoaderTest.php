@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\I18n;
 
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Service\I18n\CatalogueLoader;
 use Gettext\Loader\LoaderInterface;
@@ -47,7 +48,7 @@ class CatalogueLoaderTest extends TestCase
         return $translations;
     }
 
-    /** @test */
+    #[Test]
     public function it_will_load_all_pot_files_in_a_folder(): void
     {
         $poloaderProphecy = $this->prophesize(LoaderInterface::class);

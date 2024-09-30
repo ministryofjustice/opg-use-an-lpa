@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\RequestActivationKey;
 
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
@@ -51,7 +52,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
         $this->form          = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_correct_validator_when_flag_set_to_true(): void
     {
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
@@ -63,7 +64,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
         $this->assertStringContainsString($validators[$key]['name'], MerisReferenceCheckValidator::class);
     }
 
-    /** @test */
+    #[Test]
     public function it_sets_correct_validator_when_flag_set_to_false(): void
     {
         $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Session;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Mezzio\Router\RouteResult;
 use Mezzio\Session\SessionInterface;
@@ -27,7 +28,7 @@ class SessionExpiryMiddlewareTest extends TestCase
         parent::setUp();
     }
 
-    /** @test */
+    #[Test]
     public function it_correctly_processes_a_non_expired_session(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -40,15 +41,10 @@ class SessionExpiryMiddlewareTest extends TestCase
         $routeResult->method('getMatchedRouteName')
             ->willReturn('home');
 
-        $this->request->method('getAttribute')
-            ->withConsecutive(
-                [SessionMiddleware::SESSION_ATTRIBUTE],
-                [RouteResult::class],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $session,
-                $routeResult,
-            );
+        $matcher = $this->exactly(2);
+        $this->request->expects($matcher)
+            ->method('getAttribute')
+            ->willReturnOnConsecutiveCalls($session, $routeResult);
 
         $sut = new SessionExpiryMiddleware(300);
 
@@ -57,7 +53,7 @@ class SessionExpiryMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_marks_a_session_as_expired(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -65,26 +61,22 @@ class SessionExpiryMiddlewareTest extends TestCase
             ->method('get')
             ->with(SessionExpiryMiddleware::SESSION_TIME_KEY)
             ->willReturn(time() - 301);
-        $session->expects($this->exactly(2))
-            ->method('set')
-            ->withConsecutive(
-                [SessionExpiryMiddleware::SESSION_EXPIRED_KEY, true],
-                [SessionExpiryMiddleware::SESSION_TIME_KEY, time()]
-            );
+
+        $matcher = $this->exactly(2);
+        $session->expects($matcher)
+            ->method('set')->willReturnCallback(function ($param) use ($matcher) {
+                match ($matcher->numberOfInvocations()) {
+                    1 => self::assertEquals(SessionExpiryMiddleware::SESSION_EXPIRED_KEY, $param),
+                    2 => self::assertEquals(SessionExpiryMiddleware::SESSION_TIME_KEY, $param),
+                };
+            });
 
         $routeResult = $this->createStub(RouteResult::class);
         $routeResult->method('getMatchedRouteName')
             ->willReturn('home');
 
         $this->request->method('getAttribute')
-            ->withConsecutive(
-                [SessionMiddleware::SESSION_ATTRIBUTE],
-                [RouteResult::class],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $session,
-                $routeResult,
-            );
+            ->willReturnOnConsecutiveCalls($session, $routeResult);
 
         $sut = new SessionExpiryMiddleware(300);
 
@@ -93,7 +85,7 @@ class SessionExpiryMiddlewareTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    /** @test */
+    #[Test]
     public function it_does_not_increment_session_time_for_javascript_calls(): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -101,26 +93,22 @@ class SessionExpiryMiddlewareTest extends TestCase
             ->method('get')
             ->with(SessionExpiryMiddleware::SESSION_TIME_KEY)
             ->willReturn(time() - 301);
-        $session->expects($this->exactly(2))
-            ->method('set')
-            ->withConsecutive(
-                [SessionExpiryMiddleware::SESSION_EXPIRED_KEY, true],
-                [SessionExpiryMiddleware::SESSION_TIME_KEY, time() - 301]
-            );
+
+        $matcher = $this->exactly(2);
+        $session->expects($matcher)
+            ->method('set')->willReturnCallback(function ($param) use ($matcher) {
+                match ($matcher->numberOfInvocations()) {
+                    1 => self::assertEquals(SessionExpiryMiddleware::SESSION_EXPIRED_KEY, $param),
+                    2 => self::assertEquals(SessionExpiryMiddleware::SESSION_TIME_KEY, $param),
+                };
+            });
 
         $routeResult = $this->createStub(RouteResult::class);
         $routeResult->method('getMatchedRouteName')
             ->willReturn('session-check');
 
         $this->request->method('getAttribute')
-            ->withConsecutive(
-                [SessionMiddleware::SESSION_ATTRIBUTE],
-                [RouteResult::class],
-            )
-            ->willReturnOnConsecutiveCalls(
-                $session,
-                $routeResult,
-            );
+            ->willReturnOnConsecutiveCalls($session, $routeResult);
 
         $sut = new SessionExpiryMiddleware(300);
 

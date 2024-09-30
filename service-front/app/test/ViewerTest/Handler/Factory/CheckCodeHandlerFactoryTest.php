@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler\Factory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use Common\Service\Security\RateLimitServiceFactory;
@@ -19,8 +20,8 @@ class CheckCodeHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_creates_a_correctly_configured_instance()
+    #[Test]
+    public function it_creates_a_correctly_configured_instance(): void
     {
         $rlsfProphecy = $this->prophesize(RateLimitServiceFactory::class);
         $rlsfProphecy

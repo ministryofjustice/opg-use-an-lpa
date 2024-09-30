@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security\RateLimit;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Exception\RateLimitExceededException;
 use Common\Service\Security\RateLimit\KeyedRateLimitService;
 use Laminas\Cache\Storage\Adapter\AdapterOptions;
@@ -16,8 +17,8 @@ class KeyedRateLimitServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_will_limit_an_identity_when_required()
+    #[Test]
+    public function it_will_limit_an_identity_when_required(): void
     {
         $records = [
             time() - 10,
@@ -50,8 +51,8 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertTrue($result);
     }
 
-    /** @test */
-    public function it_will_check_if_a_request_is_limited()
+    #[Test]
+    public function it_will_check_if_a_request_is_limited(): void
     {
         $storageProphecy = $this->prophesize(StorageInterface::class);
         $storageProphecy
@@ -73,8 +74,8 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
-    public function it_will_move_a_cache_window_dropping_records()
+    #[Test]
+    public function it_will_move_a_cache_window_dropping_records(): void
     {
         $beforeWindow = [
             time() - 20,
@@ -111,8 +112,8 @@ class KeyedRateLimitServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
-    public function it_will_record_an_identity_access()
+    #[Test]
+    public function it_will_record_an_identity_access(): void
     {
         $records = [
             time() - 10,
@@ -147,8 +148,8 @@ class KeyedRateLimitServiceTest extends TestCase
         $keyedRateLimitService->limit('test-identity');
     }
 
-    /** @test */
-    public function it_will_throw_an_exception_when_recording_a_limit_that_exceeds()
+    #[Test]
+    public function it_will_throw_an_exception_when_recording_a_limit_that_exceeds(): void
     {
         $records = [
             time() - 10,

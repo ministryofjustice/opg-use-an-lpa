@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
@@ -23,8 +24,8 @@ class CheckLpaHandlerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_creates_a_correctly_configured_instance()
+    #[Test]
+    public function it_creates_a_correctly_configured_instance(): void
     {
         $rlsfProphecy = $this->prophesize(RateLimitServiceFactory::class);
         $rlsfProphecy

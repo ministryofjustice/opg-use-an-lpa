@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\User;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\User;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client;
@@ -20,8 +21,8 @@ class UserServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function can_create_a_new_user_account()
+    #[Test]
+    public function can_create_a_new_user_account(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -53,8 +54,8 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('ActivationToken', $return);
     }
 
-    /** @test */
-    public function can_get_an_account_by_email()
+    #[Test]
+    public function can_get_an_account_by_email(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -82,8 +83,8 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('Email', $return);
     }
 
-    /** @test */
-    public function passes_exception_when_user_not_found_by_email()
+    #[Test]
+    public function passes_exception_when_user_not_found_by_email(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -108,8 +109,8 @@ class UserServiceTest extends TestCase
         $return = $service->getByEmail('test@example.com');
     }
 
-    /** @test */
-    public function can_authenticate_with_good_credentials()
+    #[Test]
+    public function can_authenticate_with_good_credentials(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -147,8 +148,8 @@ class UserServiceTest extends TestCase
         $this->assertEquals('test@example.com', $return->getDetail('email'));
     }
 
-    /** @test */
-    public function authentication_fails_with_bad_credentials()
+    #[Test]
+    public function authentication_fails_with_bad_credentials(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -174,8 +175,8 @@ class UserServiceTest extends TestCase
         $this->assertNull($return);
     }
 
-    /** @test */
-    public function bad_datetime_throws_exception_during_authentication()
+    #[Test]
+    public function bad_datetime_throws_exception_during_authentication(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -204,8 +205,8 @@ class UserServiceTest extends TestCase
         $return = $service->authenticate('test@example.com', 'test');
     }
 
-    /** @test */
-    public function can_activate_a_user()
+    #[Test]
+    public function can_activate_a_user(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -233,8 +234,8 @@ class UserServiceTest extends TestCase
         $this->assertEquals('test@example.com', $return);
     }
 
-    /** @test */
-    public function whilst_activating_an_unknown_user_false_is_returned()
+    #[Test]
+    public function whilst_activating_an_unknown_user_false_is_returned(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -259,8 +260,8 @@ class UserServiceTest extends TestCase
         $this->assertFalse($return);
     }
 
-    /** @test */
-    public function whilst_activating_a_user_an_exception_can_be_thrown()
+    #[Test]
+    public function whilst_activating_a_user_an_exception_can_be_thrown(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -285,8 +286,8 @@ class UserServiceTest extends TestCase
         $return = $service->activate('activate1234567890');
     }
 
-    /** @test */
-    public function can_request_a_password_reset_token_for_a_valid_user()
+    #[Test]
+    public function can_request_a_password_reset_token_for_a_valid_user(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -315,8 +316,8 @@ class UserServiceTest extends TestCase
         $this->assertEquals('resettokenAABBCCDDEE', $token);
     }
 
-    /** @test */
-    public function a_password_reset_request_for_an_invalid_user_will_not_be_found()
+    #[Test]
+    public function a_password_reset_request_for_an_invalid_user_will_not_be_found(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -341,8 +342,8 @@ class UserServiceTest extends TestCase
         $token = $service->requestPasswordReset('test@example.com');
     }
 
-    /** @test */
-    public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request()
+    #[Test]
+    public function exception_thrown_when_api_gives_invalid_response_to_reset_password_request(): void
     {
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
@@ -369,8 +370,8 @@ class UserServiceTest extends TestCase
         $token = $service->requestPasswordReset('test@example.com');
     }
 
-    /** @test */
-    public function can_change_password_for_authenticated_user()
+    #[Test]
+    public function can_change_password_for_authenticated_user(): void
     {
         $password1 = new HiddenString('CurrentPassw0rd');
         $password2 = new HiddenString('FinalF0rm');
@@ -399,8 +400,8 @@ class UserServiceTest extends TestCase
         $this->assertEmpty($return);
     }
 
-    /** @test */
-    public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user()
+    #[Test]
+    public function exception_thrown_when_bad_password_provided_for_change_password_for_authenticated_user(): void
     {
         $password1 = new HiddenString('BadPassw0rd');
         $password2 = new HiddenString('FinalF0rm');
@@ -433,8 +434,8 @@ class UserServiceTest extends TestCase
         $return = $service->changePassword('01234567-0123-0123-0123-012345678901', $password1, $password2);
     }
 
-    /** @test */
-    public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user()
+    #[Test]
+    public function exception_thrown_when_user_not_found_for_change_password_for_authenticated_user(): void
     {
         $password1 = new HiddenString('BadPassw0rd');
         $password2 = new HiddenString('FinalF0rm');
@@ -464,8 +465,8 @@ class UserServiceTest extends TestCase
         $return = $service->changePassword('01234567-9999-9999-9999-012345678901', $password1, $password2);
     }
 
-    /** @test */
-    public function can_delete_a_users_account()
+    #[Test]
+    public function can_delete_a_users_account(): void
     {
         $id    = '01234567-0123-0123-0123-012345678901';
         $email = 'a@b.com';
@@ -494,8 +495,8 @@ class UserServiceTest extends TestCase
         $this->assertNull($result);
     }
 
-    /** @test */
-    public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request()
+    #[Test]
+    public function exception_thrown_when_api_gives_invalid_response_to_delete_account_request(): void
     {
         $id    = '01234567-0123-0123-0123-012345678901';
         $email = 'a@b.com';
@@ -522,8 +523,8 @@ class UserServiceTest extends TestCase
         $service->deleteAccount($id);
     }
 
-    /** @test */
-    public function can_request_email_reset()
+    #[Test]
+    public function can_request_email_reset(): void
     {
         $password       = new HiddenString('pa33W0rd');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -563,8 +564,8 @@ class UserServiceTest extends TestCase
         $this->assertArrayHasKey('EmailResetExpiry', $data);
     }
 
-    /** @test */
-    public function exception_thrown_when_user_id_not_provided_in_request_email_change()
+    #[Test]
+    public function exception_thrown_when_user_id_not_provided_in_request_email_change(): void
     {
         $password = new HiddenString('pa33W0rd');
 
@@ -593,8 +594,8 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('', 'new@email.com', $password);
     }
 
-    /** @test */
-    public function exception_thrown_when_new_email_not_provided_in_request_email_change()
+    #[Test]
+    public function exception_thrown_when_new_email_not_provided_in_request_email_change(): void
     {
         $password       = new HiddenString('pa33W0rd');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -622,8 +623,8 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('12345', '', $password);
     }
 
-    /** @test */
-    public function exception_thrown_when_password_not_provided_in_request_email_change()
+    #[Test]
+    public function exception_thrown_when_password_not_provided_in_request_email_change(): void
     {
         $password       = new HiddenString('');
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -651,8 +652,8 @@ class UserServiceTest extends TestCase
         $service->requestChangeEmail('12345', 'new@email.com', $password);
     }
 
-    /** @test */
-    public function can_reset_email_function_returns_true_when_successful()
+    #[Test]
+    public function can_reset_email_function_returns_true_when_successful(): void
     {
         $resetToken     = 't0ken12345';
         $userId         = '12345';
@@ -678,8 +679,8 @@ class UserServiceTest extends TestCase
         $this->assertTrue($canReset);
     }
 
-    /** @test */
-    public function can_reset_email_function_returns_false_when_token_expired_or_not_found()
+    #[Test]
+    public function can_reset_email_function_returns_false_when_token_expired_or_not_found(): void
     {
         $resetToken     = 't0ken12345';
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -703,8 +704,8 @@ class UserServiceTest extends TestCase
         $this->assertFalse($result);
     }
 
-    /** @test */
-    public function can_reset_email_function_throws_anything_other_than_a_gone_exception()
+    #[Test]
+    public function can_reset_email_function_throws_anything_other_than_a_gone_exception(): void
     {
         $resetToken     = 't0ken12345';
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
@@ -732,8 +733,8 @@ class UserServiceTest extends TestCase
         $service->canResetEmail($resetToken);
     }
 
-    /** @test */
-    public function complete_change_email_returns_nothing_when_successful()
+    #[Test]
+    public function complete_change_email_returns_nothing_when_successful(): void
     {
         $resetToken     = 't0ken12345';
         $loggerProphecy = $this->prophesize(LoggerInterface::class);

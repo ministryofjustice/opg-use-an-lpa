@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler\Traits;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\Traits\CsrfGuard;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -15,8 +16,8 @@ class CsrfGuardTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function can_get_guard_from_request_pipeline()
+    #[Test]
+    public function can_get_guard_from_request_pipeline(): void
     {
         $requestProphecy = $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)

@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\View\Twig\GovUKLaminasFormErrorsExtension;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
 
 class GovUkLaminasFormErrorsExtensionTest extends TestCase
 {
-    /** @test */
-    public function it_returns_an_array_of_exported_twig_functions()
+    #[Test]
+    public function it_returns_an_array_of_exported_twig_functions(): void
     {
         $extension = new GovUKLaminasFormErrorsExtension();
 

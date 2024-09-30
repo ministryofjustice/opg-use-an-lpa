@@ -17,6 +17,7 @@ use App\Service\Lpa\AddLpa\AddLpa;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpaManager;
+use App\Service\Lpa\SiriusPerson;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
@@ -385,7 +386,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->attorneys[0]), true)),
             'role'        => 'attorney',
             'lpa-id'      => $this->lpa->uId,
             'caseSubtype' => $this->lpa->caseSubtype,
@@ -1601,7 +1602,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($lpa->donor), true),
+            'actor'       => new SiriusPerson(json_decode(json_encode($lpa->donor), true)),
             'role'        => 'donor',
             'lpa-id'      => $lpa->uId,
             'caseSubtype' => $lpa->caseSubtype,
@@ -1881,7 +1882,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
             'role'        => 'donor',
             'lpa-id'      => $this->lpa->uId,
             'caseSubtype' => $this->lpa->caseSubtype,
@@ -1943,7 +1944,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
             'role'        => 'donor',
             'lpa-id'      => $this->lpa->uId,
             'caseSubtype' => $this->lpa->caseSubtype,
@@ -2751,7 +2752,7 @@ class LpaContext extends BaseIntegrationContext
         $response = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
             'role'        => 'donor',
             'lpa-id'      => $this->lpa->uId,
             'caseSubtype' => $this->lpa->caseSubtype,

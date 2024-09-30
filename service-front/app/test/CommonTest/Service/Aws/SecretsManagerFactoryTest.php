@@ -15,7 +15,7 @@ class SecretsManagerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testValidConfig()
+    public function testValidConfig(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

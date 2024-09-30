@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\Encryption\EncryptInterface;
 use Common\Service\Session\KeyManager\Key;
@@ -70,8 +71,8 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->encrypterProphecy = $this->prophesize(EncryptInterface::class);
     }
 
-    /** @test */
-    public function it_can_be_instantiated()
+    #[Test]
+    public function it_can_be_instantiated(): void
     {
         $cp = new EncryptedCookiePersistence(
             $this->encrypterProphecy->reveal(),
@@ -88,12 +89,8 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->assertInstanceOf(EncryptedCookiePersistence::class, $cp);
     }
 
-    /**
-     * @test
-     *
-     * When no cookie data is present in the header, we expect an empty/new session to be returned.
-     */
-    public function it_creates_a_session_when_no_data_in_request()
+    #[Test]
+    public function it_creates_a_session_when_no_data_in_request(): void
     {
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
@@ -128,14 +125,8 @@ class EncryptedCookiePersistenceTest extends TestCase
 
     //--------------------------------------------------------------------------------------------------
     // Test writing session data into a response.
-
-    /**
-     * @test
-     *
-     * We expect $responseProphecy to be checked for its current state.
-     * Then all required new values set, including the `Set-Cookie` header containing the session data.
-     */
-    public function it_persists_a_session_with_data()
+    #[Test]
+    public function it_persists_a_session_with_data(): void
     {
         $testData = [
             'bool'   => true,
@@ -244,13 +235,8 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->assertEquals($responseProphecy->reveal(), $response);
     }
 
-    /**
-     * @test
-     *
-     * We expect $responseProphecy to be checked for its current state.
-     * Then all required new values set, including the `Set-Cookie` header containing the session data.
-     */
-    public function it_persists_a_session_same_site_strict_when_user_logged_in()
+    #[Test]
+    public function it_persists_a_session_same_site_strict_when_user_logged_in(): void
     {
         $testData = [
             'bool'   => true,
@@ -362,13 +348,8 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->assertEquals($responseProphecy->reveal(), $response);
     }
 
-    /**
-     * @test
-     *
-     * We expect no methods to be called on the $responseProphecy.
-     * i.e. the response is returned unaltered.
-     */
-    public function it_persists_a_session_with_no_data()
+    #[Test]
+    public function it_persists_a_session_with_no_data(): void
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
@@ -437,15 +418,13 @@ class EncryptedCookiePersistenceTest extends TestCase
 
     //--------------------------------------------------------------------------------------------------
     // Test reading session data out of a request.
-
     /**
      * When cookie data is present along with a valid time, we expect the included data to be returned in the session.
      *
      * Note: We never rely on the `Expires` field in the cookie. This is for the browser, not for us.
-     *
-     * @test
      */
-    public function a_valid_session_unexpired_session_cookie_will_contain_data()
+    #[Test]
+    public function a_valid_session_unexpired_session_cookie_will_contain_data(): void
     {
         $testData = [
             'bool'                                       => true,

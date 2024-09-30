@@ -37,11 +37,6 @@ class UserService implements UserRepositoryInterface
         };
     }
 
-    /**
-     * @param string $email
-     * @param HiddenString $password
-     * @return array
-     */
     public function create(string $email, HiddenString $password): array
     {
         $data = $this->apiClient->httpPost('/v1/user', [
@@ -117,7 +112,7 @@ class UserService implements UserRepositoryInterface
                 'Authentication failed for {email} with code {code}',
                 [
                     'code'  => $e->getCode(),
-                    'email' =>new Email($credential),
+                    'email' => new Email($credential),
                 ]
             );
             if ($e->getCode() === StatusCodeInterface::STATUS_UNAUTHORIZED) {

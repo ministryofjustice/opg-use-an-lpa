@@ -101,10 +101,10 @@ class ConfigProvider
                 SystemMessageService::class => SystemMessageServiceFactory::class,
 
                 // Middleware
-                SessionMiddleware::class                    => SessionMiddlewareFactory::class,
-                SessionExpiryMiddleware::class              => SessionExpiryMiddlewareFactory::class,
-                Middleware\I18n\SetLocaleMiddleware::class  => Middleware\I18n\SetLocaleMiddlewareFactory::class,
-                AuthenticationMiddleware::class             => AuthenticationMiddlewareFactory::class,
+                SessionMiddleware::class                   => SessionMiddlewareFactory::class,
+                SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
+                Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
+                AuthenticationMiddleware::class            => AuthenticationMiddlewareFactory::class,
 
                 // Auth
                 UserInterface::class                    => Entity\UserFactory::class,

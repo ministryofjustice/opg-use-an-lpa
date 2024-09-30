@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Service\OneLogin;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\ApiClient\Client;
 use Common\Service\OneLogin\OneLoginService;
 use Common\Service\OneLogin\OneLoginServiceFactory;
@@ -17,7 +18,7 @@ class OneLoginServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_an_instance(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
