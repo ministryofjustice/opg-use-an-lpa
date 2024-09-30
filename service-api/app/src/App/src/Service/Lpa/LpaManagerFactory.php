@@ -16,9 +16,9 @@ class LpaManagerFactory
 
     public function __invoke(): LpaManagerInterface
     {
-        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
-            throw new RuntimeException('Datastore LPA support is enabled but not implemented yet.');
-        }
+//        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+//            throw new RuntimeException('Datastore LPA support is enabled but not implemented yet.');
+//        }
 
         return $this->container->get(SiriusLpaManager::class);
     }

@@ -108,7 +108,7 @@ services:
       ALLOW_MERIS_LPAS: "false"
       INSTRUCTIONS_AND_PREFERENCES: "true"
       ALLOW_GOV_ONE_LOGIN: "true"
-      SUPPORT_DATASTORE_LPAS: "false"
+      SUPPORT_DATASTORE_LPAS: "true"
 
       # Local only
       API_SERVICE_URL:
@@ -195,7 +195,7 @@ services:
       ALLOW_MERIS_LPAS: "false"
       INSTRUCTIONS_AND_PREFERENCES: "true"
       ALLOW_GOV_ONE_LOGIN: "true"
-      SUPPORT_DATASTORE_LPAS: "false"
+      SUPPORT_DATASTORE_LPAS: "true"
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"
