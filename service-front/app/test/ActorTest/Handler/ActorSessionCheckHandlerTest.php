@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler;
 
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Handler\ActorSessionCheckHandler;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -42,10 +43,8 @@ class ActorSessionCheckHandlerTest extends TestCase
             ->willReturn($this->userProphecy->reveal());
     }
 
-    /**
-     * @test
-     */
-    public function testReturnsExpectedJsonResponseReturnsFalse()
+    #[Test]
+    public function testReturnsExpectedJsonResponseReturnsFalse(): void
     {
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
@@ -78,10 +77,8 @@ class ActorSessionCheckHandlerTest extends TestCase
         $this->assertIsInt($json['time_remaining']);
     }
 
-    /**
-     * @test
-     */
-    public function testReturnsExpectedJsonResponseReturnsTrue()
+    #[Test]
+    public function testReturnsExpectedJsonResponseReturnsTrue(): void
     {
 
         $sessionProphecy = $this->prophesize(SessionInterface::class);

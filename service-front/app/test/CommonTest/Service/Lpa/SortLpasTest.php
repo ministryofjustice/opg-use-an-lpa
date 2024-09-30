@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Service\Lpa\SortLpas;
 
-/**
- * @coversDefaultClass \Common\Service\Lpa\SortLpas
- */
+#[CoversClass(SortLpas::class)]
 class SortLpasTest extends LpaFixtureTestCase
 {
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_sorts_lpas_by_donors_surname_forename(): void
     {
         $lpas = $this->lpaFixtureData();
@@ -36,10 +33,7 @@ class SortLpasTest extends LpaFixtureTestCase
         $this->assertEquals('Williams, Daniel', array_shift($resultOrder));
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_sorts_lpas_by_donors_birthday(): void
     {
         $lpas = $this->lpaFixtureData();
@@ -65,10 +59,7 @@ class SortLpasTest extends LpaFixtureTestCase
         ); // Gemma Taylor 1998-02-09
     }
 
-    /**
-     * @test
-     * @covers ::__invoke
-     */
+    #[Test]
     public function it_sorts_lpas_by_lpa_type(): void
     {
         $lpas = $this->lpaFixtureData();
@@ -102,10 +93,8 @@ class SortLpasTest extends LpaFixtureTestCase
     /**
      * A full test of the expected order of LPA's returned from the sorter. Duplicates the work of each of the
      * individual tests above but is also more prone to breakage if the fixture data changes at all.
-     *
-     * @test
-     * @covers ::__invoke
      */
+    #[Test]
     public function it_sorts_into_expected_order(): void
     {
         $lpas = $this->lpaFixtureData();

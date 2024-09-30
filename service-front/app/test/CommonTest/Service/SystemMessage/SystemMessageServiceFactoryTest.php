@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\SystemMessage;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\ApiClient\Client;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Service\SystemMessage\SystemMessageServiceFactory;
@@ -12,18 +14,15 @@ use Prophecy\Exception\Prophecy\ObjectProphecyException;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
 
-/**
- * @coversDefaultClass \Common\Service\SystemMessage\SystemMessageServiceFactory
- */
+#[CoversClass(SystemMessageServiceFactory::class)]
 class SystemMessageServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
     /**
-     * @test
-     * @covers ::__invoke
      * @throws ObjectProphecyException
      */
+    #[Test]
     public function it_will_create_an_instance(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);

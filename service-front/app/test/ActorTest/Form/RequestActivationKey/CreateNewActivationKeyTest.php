@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\RequestActivationKey;
 
+use PHPUnit\Framework\Attributes\Test;
 use Actor\Form\RequestActivationKey\CreateNewActivationKey;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
@@ -44,8 +45,8 @@ class CreateNewActivationKeyTest extends TestCase implements TestsLaminasForm
         $this->form    = new CreateNewActivationKey($guardProphecy->reveal());
     }
 
-    /** @test */
-    public function it_defaults_to_false()
+    #[Test]
+    public function it_defaults_to_false(): void
     {
         $this->assertEquals('no', $this->form->get('force_activation')->getValue());
     }

@@ -33,7 +33,7 @@ class KmsManagerTest extends TestCase
         $this->kmsClientProphecy = $this->prophesize(KmsClient::class);
     }
 
-    public function testCanInstantiate()
+    public function testCanInstantiate(): void
     {
         $manager = new KmsManager(
             $this->kmsClientProphecy->reveal(),
@@ -51,7 +51,7 @@ class KmsManagerTest extends TestCase
      * If KMS is unable to decrypt a key, KmsException will be thrown.
      * If the exception type is InvalidCiphertextException, we expect a KeyNotFoundException exception back.
      */
-    public function testExceptionWhenInvalidCiphertextExceptionFromKms()
+    public function testExceptionWhenInvalidCiphertextExceptionFromKms(): void
     {
         $this->expectException(KeyNotFoundException::class);
 
@@ -80,7 +80,7 @@ class KmsManagerTest extends TestCase
      * If KMS is unable to decrypt a key, KmsException will be thrown.
      * If the exception type is not InvalidCiphertextException, the exception will be re-throw.
      */
-    public function testExceptionWhenOtherExceptionFromKms()
+    public function testExceptionWhenOtherExceptionFromKms(): void
     {
         $this->expectException(KmsException::class);
 
@@ -110,7 +110,7 @@ class KmsManagerTest extends TestCase
     /*
      * Test for when we need a decryption key that's already in the cache.
      */
-    public function testGetDecryptionKeyWhenKeyIsInCache()
+    public function testGetDecryptionKeyWhenKeyIsInCache(): void
     {
         $keyCiphertext = 'test-key';
         $testMaterial  = random_bytes(32);
@@ -137,7 +137,7 @@ class KmsManagerTest extends TestCase
     /*
      * Test that a key is returned when KMS is able to decrypted the passed Key Ciphertext.
      */
-    public function testGetDecryptionKeyWhenKeyIsNotInCache()
+    public function testGetDecryptionKeyWhenKeyIsNotInCache(): void
     {
         $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);
@@ -193,7 +193,7 @@ class KmsManagerTest extends TestCase
     /*
      * Key getting the encryption key when one is stored in the cache
      */
-    public function testGetEncryptionKeyWhenKeyIsInCache()
+    public function testGetEncryptionKeyWhenKeyIsInCache(): void
     {
         $keyCiphertext = 'test-key';
         $testMaterial  = random_bytes(32);
@@ -220,7 +220,7 @@ class KmsManagerTest extends TestCase
         $this->assertEquals($testMaterial, $key->getKeyMaterial());
     }
 
-    public function testGetEncryptionKeyWhenKeyIsNotInCache()
+    public function testGetEncryptionKeyWhenKeyIsNotInCache(): void
     {
         $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);

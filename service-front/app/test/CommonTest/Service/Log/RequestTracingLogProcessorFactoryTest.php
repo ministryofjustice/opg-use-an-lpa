@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Log;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -14,8 +15,8 @@ class RequestTracingLogProcessorFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_constructs_a_request_tracing_log_processor()
+    #[Test]
+    public function it_constructs_a_request_tracing_log_processor(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

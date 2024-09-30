@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Validator;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Validator\LuhnCheck;
 use PHPUnit\Framework\TestCase;
 
@@ -16,17 +17,15 @@ class LuhnCheckTest extends TestCase
         $this->validator = new LuhnCheck();
     }
 
-    /**
-     * @dataProvider validFormatProvider
-     */
-    public function testIsValidReference($reference_number)
+    #[DataProvider('validFormatProvider')]
+    public function testIsValidReference($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
         $this->assertTrue($isValid);
     }
 
-    public function validFormatProvider()
+    public static function validFormatProvider()
     {
         return [
             ['700000000252'],
@@ -38,10 +37,8 @@ class LuhnCheckTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider notValidFormatProvider
-     */
-    public function testIsValidNotValidFormat($reference_number)
+    #[DataProvider('notValidFormatProvider')]
+    public function testIsValidNotValidFormat($reference_number): void
     {
         $isValid = $this->validator->isValid($reference_number);
 
@@ -52,7 +49,7 @@ class LuhnCheckTest extends TestCase
         $this->assertFalse($isValid);
     }
 
-    public function notValidFormatProvider()
+    public static function notValidFormatProvider()
     {
         return [
             ['700000000132'],

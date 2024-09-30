@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Pdf;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
 use Common\Entity\Lpa;
@@ -48,8 +49,8 @@ class PdfServiceTest extends TestCase
         return $responseProphecy;
     }
 
-    /** @test */
-    public function it_returns_a_stream_when_given_an_lpa_without_images()
+    #[Test]
+    public function it_returns_a_stream_when_given_an_lpa_without_images(): void
     {
         $lpa = new Lpa();
 
@@ -99,8 +100,8 @@ class PdfServiceTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
 
-    /** @test */
-    public function it_returns_a_stream_when_given_an_lpa_with_images()
+    #[Test]
+    public function it_returns_a_stream_when_given_an_lpa_with_images(): void
     {
         $lpa    = new Lpa();
         $images = new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []);
@@ -138,8 +139,8 @@ class PdfServiceTest extends TestCase
         $this->assertInstanceOf(StreamInterface::class, $pdfStream);
     }
 
-    /** @test */
-    public function it_throws_an_exception_when_response_not_ok()
+    #[Test]
+    public function it_throws_an_exception_when_response_not_ok(): void
     {
         $lpa = new Lpa();
 
@@ -175,8 +176,8 @@ class PdfServiceTest extends TestCase
         $pdfStream = $service->getLpaAsPdf($lpa);
     }
 
-    /** @test */
-    public function it_handles_a_client_exception_by_throwing_an_api_exception()
+    #[Test]
+    public function it_handles_a_client_exception_by_throwing_an_api_exception(): void
     {
         $lpa = new Lpa();
 
@@ -212,8 +213,8 @@ class PdfServiceTest extends TestCase
         $pdfStream = $service->getLpaAsPdf($lpa);
     }
 
-    /** @test */
-    public function it_correctly_attaches_a_tracing_header()
+    #[Test]
+    public function it_correctly_attaches_a_tracing_header(): void
     {
         $lpa = new Lpa();
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Security;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Security\RateLimiterInterface;
 use Common\Service\Security\RateLimitServiceFactory;
 use Laminas\Cache\Service\StorageAdapterFactoryInterface;
@@ -19,8 +20,8 @@ class RateLimitServiceFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
-    public function it_requires_a_ratelimits_configuration()
+    #[Test]
+    public function it_requires_a_ratelimits_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
@@ -30,8 +31,8 @@ class RateLimitServiceFactoryTest extends TestCase
         $rateLimiter = $factory->factory('a-rate-limiter');
     }
 
-    /** @test */
-    public function it_requires_a_ratelimits_configuration_for_individual_services()
+    #[Test]
+    public function it_requires_a_ratelimits_configuration_for_individual_services(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -47,8 +48,8 @@ class RateLimitServiceFactoryTest extends TestCase
         $rateLimiter = $factory->factory('a-rate-limiter');
     }
 
-    /** @test */
-    public function it_requires_a_valid_ratelimits_configuration_type_for_a_service()
+    #[Test]
+    public function it_requires_a_valid_ratelimits_configuration_type_for_a_service(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
         $containerProphecy
@@ -68,8 +69,8 @@ class RateLimitServiceFactoryTest extends TestCase
         $rateLimiter = $factory->factory('a-rate-limiter');
     }
 
-    /** @test */
-    public function it_throws_an_exception_with_an_invalid_limiter_service_type()
+    #[Test]
+    public function it_throws_an_exception_with_an_invalid_limiter_service_type(): void
     {
         $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
         $cacheAdapterProphecy
@@ -104,8 +105,8 @@ class RateLimitServiceFactoryTest extends TestCase
         $rateLimiter = $factory->factory('a-rate-limiter');
     }
 
-    /** @test */
-    public function it_creates_a_configured_keyed_rate_limiter_service()
+    #[Test]
+    public function it_creates_a_configured_keyed_rate_limiter_service(): void
     {
         $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
         $cacheAdapterProphecy
@@ -143,8 +144,8 @@ class RateLimitServiceFactoryTest extends TestCase
         $this->assertInstanceOf(RateLimiterInterface::class, $rateLimiter);
     }
 
-    /** @test */
-    public function it_creates_multiple_configured_rate_limiters()
+    #[Test]
+    public function it_creates_multiple_configured_rate_limiters(): void
     {
         $cacheAdapterProphecy = $this->prophesize(StorageAdapterFactoryInterface::class);
         $cacheAdapterProphecy
@@ -198,8 +199,8 @@ class RateLimitServiceFactoryTest extends TestCase
         }
     }
 
-    /** @test */
-    public function it_requires_multiple_ratelimits_configuration()
+    #[Test]
+    public function it_requires_multiple_ratelimits_configuration(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 

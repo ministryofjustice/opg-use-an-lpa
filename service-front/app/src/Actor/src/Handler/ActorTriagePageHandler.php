@@ -33,7 +33,7 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         AuthenticationInterface $authenticator,
-        private SystemMessageService $systemMessageService
+        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -55,7 +55,7 @@ class ActorTriagePageHandler extends AbstractHandler implements CsrfGuardAware, 
         $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render('actor::home-page', [
-            'form' => $form->prepare(),
+            'form'       => $form->prepare(),
             'en_message' => $systemMessages['use/en'] ?? null,
             'cy_message' => $systemMessages['use/cy'] ?? null,
         ]));

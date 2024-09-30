@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Mezzio\Session\SessionInterface;
 use Monolog\Test\TestCase;
@@ -13,7 +14,7 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function successfully_removes_post_lpa_match_session_values(): void
     {
         $removeSessionValues = new RemoveAccessForAllSessionValues();
@@ -37,7 +38,7 @@ class RemoveAccessForAllSessionValuesTest extends TestCase
         $removeSessionValues->removePostLPAMatchSessionValues($sessionProphecy->reveal());
     }
 
-    /** @test */
+    #[Test]
     public function successfully_cleans_all_access_for_all_session_values(): void
     {
         $removeSessionValues = new RemoveAccessForAllSessionValues();

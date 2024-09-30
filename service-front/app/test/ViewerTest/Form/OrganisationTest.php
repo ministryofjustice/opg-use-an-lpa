@@ -34,7 +34,7 @@ class OrganisationTest extends TestCase
         $this->form = new Organisation($guardProphecy->reveal());
     }
 
-    public function testIsAForm()
+    public function testIsAForm(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
         $this->assertInstanceOf(Organisation::class, $this->form);
@@ -42,7 +42,7 @@ class OrganisationTest extends TestCase
         $this->assertEquals('organisation_name', $this->form->getName());
     }
 
-    public function testInputs()
+    public function testInputs(): void
     {
         $formElements = $this->form->getElements();
 
@@ -70,7 +70,7 @@ class OrganisationTest extends TestCase
         }
     }
 
-    public function testInputFilter()
+    public function testInputFilter(): void
     {
         $this->assertIsArray($this->form->getInputFilterSpecification());
         $this->assertInstanceOf(InputFilter::class, $this->form->getInputFilter());

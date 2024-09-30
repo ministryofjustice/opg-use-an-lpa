@@ -17,14 +17,14 @@ class DateTest extends TestCase
         $this->fieldset = new Date('date');
     }
 
-    public function testIsAForm()
+    public function testIsAForm(): void
     {
         $this->assertInstanceOf(Date::class, $this->fieldset);
 
         $this->assertEquals('date', $this->fieldset->getName());
     }
 
-    public function testInputs()
+    public function testInputs(): void
     {
         $fieldsetElements = $this->fieldset->getElements();
 

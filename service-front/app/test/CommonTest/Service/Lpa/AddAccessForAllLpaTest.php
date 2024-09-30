@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\CaseActor;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -26,8 +29,8 @@ use RuntimeException;
 /**
  * @property array              olderLpa
  * @property AddAccessForAllLpa $sut
- * @coversDefaultClass \Common\Service\Lpa\AddAccessForAllLpa
  */
+#[CoversClass(AddAccessForAllLpa::class)]
 class AddAccessForAllLpaTest extends TestCase
 {
     use ProphecyTrait;
@@ -65,10 +68,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     */
+    #[Test]
     public function it_will_successfully_finds_an_lpa(): void
     {
         $response = [
@@ -127,7 +127,7 @@ class AddAccessForAllLpaTest extends TestCase
      *
      * @return array
      */
-    public function exceptionThrown(): array
+    public static function exceptionThrown(): array
     {
         return [
             ['LPA not eligible due to registration date', AccessForAllResult::NOT_ELIGIBLE],
@@ -136,12 +136,8 @@ class AddAccessForAllLpaTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider exceptionThrown
-     * @covers ::validate
-     * @covers ::badRequestReturned
-     */
+    #[DataProvider('exceptionThrown')]
+    #[Test]
     public function it_will_fail_to_validate_due_to_bad_request_exception($message, $accessForAllResult): void
     {
         $this->apiClientProphecy
@@ -174,11 +170,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals($accessForAllResult, $result->getResponse());
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function it_will_let_know_user_LPA_has_an_active_activation_key(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
@@ -240,11 +232,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals($dto, $result->getData());
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function it_will_let_know_user_they_have_already_requested_an_activation_key_for_an_LPA(): void
     {
         $response = [
@@ -304,11 +292,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals($dto, $result->getData());
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function it_will_fail_if_they_have_already_added_the_LPA(): void
     {
         $response = [
@@ -370,11 +354,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals($dto, $result->getData());
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     * @covers ::notFoundReturned
-     */
+    #[Test]
     public function it_will_fail_to_validate_due_to_not_finding_the_lpa(): void
     {
         $this->apiClientProphecy
@@ -407,10 +387,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals(AccessForAllResult::NOT_FOUND, $result->getResponse());
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     */
+    #[Test]
     public function it_will_fail_to_validate_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
@@ -444,11 +421,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::validate
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function it_will_fail_to_validate_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy
@@ -480,11 +453,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::confirm
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function generate_new_activation_key_again_for_user(): void
     {
         $response = [];
@@ -520,10 +489,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals(AccessForAllResult::SUCCESS, $result->getResponse());
     }
 
-    /**
-     * @test
-     * @covers ::confirm
-     */
+    #[Test]
     public function it_will_fail_to_confirm_due_to_an_api_exception(): void
     {
         $this->apiClientProphecy
@@ -558,10 +524,7 @@ class AddAccessForAllLpaTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     * @covers ::confirm
-     */
+    #[Test]
     public function it_will_fail_to_add_lpa_when_lpa_is_not_cleansed(): void
     {
         $this->apiClientProphecy
@@ -598,11 +561,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->assertEquals(AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING, $result->getResponse());
     }
 
-    /**
-     * @test
-     * @covers ::confirm
-     * @covers ::badRequestReturned
-     */
+    #[Test]
     public function it_will_fail_to_add_lpa_due_to_an_unknown_request_exception(): void
     {
         $this->apiClientProphecy

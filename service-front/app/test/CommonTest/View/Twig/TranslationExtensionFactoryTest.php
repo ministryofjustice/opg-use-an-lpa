@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use PHPUnit\Framework\Attributes\Test;
 use Acpr\I18n\NodeVisitor\TranslationNodeVisitor;
 use Acpr\I18n\TranslationExtension;
 use Acpr\I18n\TranslatorInterface;
@@ -16,7 +17,7 @@ class TranslationExtensionFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /** @test */
+    #[Test]
     public function it_creates_an_extension(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
