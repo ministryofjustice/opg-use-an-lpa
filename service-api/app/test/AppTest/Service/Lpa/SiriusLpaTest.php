@@ -85,4 +85,19 @@ class SiriusLpaTest extends TestCase
             json_encode($sut),
         );
     }
+    #[Test]
+    public function it_typecasts_on_getters(): void
+    {
+        $sut = new SiriusLpa(
+            [
+                'uId' => 700000000000,
+                'systemStatus' => 'true',
+                'status' => 'Registered',
+            ]
+        );
+
+        $this->assertSame('700000000000', $sut->getUid());
+        $this->assertSame('true', $sut->getSystemStatus());
+        $this->assertSame('Registered', $sut->getStatus());
+    }
 }

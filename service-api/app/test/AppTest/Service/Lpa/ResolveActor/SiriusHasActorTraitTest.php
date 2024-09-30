@@ -8,6 +8,7 @@ use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\LpaActor;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
+use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,29 +21,29 @@ class SiriusHasActorTraitTest extends TestCase
         $this->mock = new class () implements HasActorInterface {
             use SiriusHasActorTrait;
 
-            private function getDonor(): array
+            private function getDonor(): SiriusPerson
             {
-                return [
+                return new SiriusPerson([
                     'id'     => 1,
                     'uId'    => '123456789',
                     'linked' => [['id' => 1, 'uId' => '123456789'], ['id' => 2, 'uId' => '234567890']],
-                ];
+                ]);
             }
 
             private function getAttorneys(): array
             {
                 return [
-                    ['id' => 3, 'uId' => '345678901', 'firstname' => 'A', 'surname' => 'B'],
-                    ['id' => 4, 'uId' => '456789012', 'firstname' => 'B', 'surname' => 'C'],
-                    ['id' => 5, 'uId' => '567890123', 'firstname' => 'C', 'surname' => 'D'],
+                    new SiriusPerson(['id' => 3, 'uId' => '345678901', 'firstname' => 'A', 'surname' => 'B']),
+                    new SiriusPerson(['id' => 4, 'uId' => '456789012', 'firstname' => 'B', 'surname' => 'C']),
+                    new SiriusPerson(['id' => 5, 'uId' => '567890123', 'firstname' => 'C', 'surname' => 'D']),
                 ];
             }
 
             private function getTrustCorporations(): array
             {
                 return [
-                    ['id' => 6, 'uId' => '678901234', 'companyName' => 'A'],
-                    ['id' => 7, 'uId' => '789012345', 'companyName' => 'B'],
+                    new SiriusPerson(['id' => 6, 'uId' => '678901234', 'companyName' => 'A']),
+                    new SiriusPerson(['id' => 7, 'uId' => '789012345', 'companyName' => 'B']),
                 ];
             }
         };

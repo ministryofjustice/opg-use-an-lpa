@@ -218,7 +218,7 @@ class AddAccessForAllLpa
         ($this->validateAccessForAllLpaRequirements)($lpaData);
 
         // Find actor in LPA
-        $resolvedActor = ($this->findActorInLpa)($lpaData, $matchData);
+        $resolvedActor = ($this->findActorInLpa)(new SiriusLpa($lpaData), $matchData);
 
         // We may want to turn off the ability for a user to have their case pushed to the cleansing
         // team if they fail to match and have a "newer" older lpa. In which case they'll be told we
