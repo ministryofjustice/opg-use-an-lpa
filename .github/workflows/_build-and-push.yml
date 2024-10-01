@@ -111,6 +111,15 @@ jobs:
           inputs.push_to_ecr == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@f8cb900d38ecff281181b9924245b4f0ddc1860a # pin@v1.5.1
+        with:
+          registries: 311462405659
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
       - name: download artifact
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
@@ -252,7 +261,7 @@ jobs:
         uses: aquasecurity/trivy-action@97646fedde05bcd0961217c60b50e23f721e7ec7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
@@ -269,15 +278,6 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         with:
           sarif_file: 'trivy-results.sarif'
-
-      - name: ecr login
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@f8cb900d38ecff281181b9924245b4f0ddc1860a # pin@v1.5.1
-        with:
-          registries: 311462405659
-        if: |
-          inputs.push_to_ecr == 'true' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: tag and push container
         env:
