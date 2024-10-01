@@ -338,6 +338,6 @@ jobs:
     if: |
       always() &&
       ((needs.ecr_scan_results.result == 'success' || needs.ecr_scan_results.result == 'skipped') &&
-      (needs.slack_notify.result == 'success' || needs.slack_notify.result == 'skipped') &&
+      needs.slack_notify.result == 'success' &&
       needs.workflow_variables.result == 'success') ||
       needs.update_documentation.result == 'success'
