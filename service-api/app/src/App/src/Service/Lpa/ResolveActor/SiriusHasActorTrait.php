@@ -60,9 +60,9 @@ trait SiriusHasActorTrait
         return null;
     }
 
-    abstract private function getAttorneys(): array;
+    abstract private function getAttorneys(): ?array;
 
-    abstract private function getDonor(): array;
+    abstract private function getDonor(): ?object;
 
-    abstract private function getTrustCorporations(): array;
+    abstract private function getTrustCorporations(): ?array;
 }
