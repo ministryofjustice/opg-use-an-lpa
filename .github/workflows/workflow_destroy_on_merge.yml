@@ -40,7 +40,7 @@ jobs:
       - workspace_name
     steps:
       - name: Checkout
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
 
       - name: Set terraform version
         id: set-terraform-version
@@ -48,7 +48,7 @@ jobs:
         with:
           terraform_directory: "./terraform/environment"
 
-      - uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # tag=v2.0.3
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.version }}
           terraform_wrapper: false
@@ -58,7 +58,7 @@ jobs:
           ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: configure AWS credentials for getting pagerduty token
-        uses: aws-actions/configure-aws-credentials@050bf7aae915badb82daa8e68fd95c9070706953 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@73daff1b20af655c574cf2018ed2cc18a597bf5c # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -75,7 +75,7 @@ jobs:
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@050bf7aae915badb82daa8e68fd95c9070706953 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@73daff1b20af655c574cf2018ed2cc18a597bf5c # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

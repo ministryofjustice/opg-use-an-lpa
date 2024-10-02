@@ -11,7 +11,7 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # pin@v3
+      - uses: actions/checkout@de5a000abf73b6f4965bd1bcdf8f8d94a56ea815 # pin@v3
       - uses: actions/setup-node@aca7b64a59c0063db8564e0ffdadd3887f1cbae5 # pin@v3.6.0
         with:
           node-version-file: '.nvmrc'

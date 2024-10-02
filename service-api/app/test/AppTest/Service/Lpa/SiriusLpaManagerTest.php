@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use Common\Service\Lpa\Factory\Sirius;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -12,6 +13,7 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
+    GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
@@ -153,24 +155,24 @@ class SiriusLpaManagerTest extends TestCase
         $this->lpasInterfaceProphecy->get($testUid)->willReturn($lpaResponse);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true])
-            ->willReturn(0);
+            ->__invoke(new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]))
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false])
-            ->willReturn(2);
+            ->__invoke(new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]))
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 3, 'firstname' => 'A', 'systemStatus' => true])
-            ->willReturn(0);
+            ->__invoke(new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]))
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 4, 'surname' => 'B', 'systemStatus' => true])
-            ->willReturn(0);
+            ->__invoke(new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]))
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(['id' => 5, 'systemStatus' => true])
-            ->willReturn(1);
+            ->__invoke(new SiriusPerson(['id' => 5, 'systemStatus' => true]))
+            ->willReturn(AttorneyStatus::GHOST_ATTORNEY);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
@@ -266,12 +268,12 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn($validState);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => $t->ActorId,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(0);
+        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -359,19 +361,19 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn(true);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => $t->ActorId,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => true,
-        ])->willReturn(0);
+        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
-        $this->getAttorneyStatusProphecy->__invoke([
+        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
             'id'           => 2,
             'firstname'    => 'Test',
             'surname'      => 'Test',
             'systemStatus' => false,
-        ])->willReturn(2);
+        ]))->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         return $t;
     }

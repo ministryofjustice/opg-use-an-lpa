@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\ResolveActor;
 
+use App\Service\Lpa\SiriusPerson;
+
 /**
  * @psalm-require-implements HasActorInterface
  */
@@ -62,7 +64,7 @@ trait SiriusHasActorTrait
 
     abstract private function getAttorneys(): array;
 
-    abstract private function getDonor(): array;
+    abstract private function getDonor(): SiriusPerson;
 
     abstract private function getTrustCorporations(): array;
 }

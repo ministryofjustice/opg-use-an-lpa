@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa;
+namespace App\Service\Lpa\AddLpa;
 
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
