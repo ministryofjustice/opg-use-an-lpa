@@ -8,14 +8,9 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DefinitionProvider;
-use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
-use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
-use EventSauce\ObjectHydrator\UnableToSerializeObject;
 
 class Lpa implements \JsonSerializable
 {
-    private ObjectMapperUsingReflection $mapper;
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
@@ -42,20 +37,18 @@ class Lpa implements \JsonSerializable
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
     ) {
-        $this->mapper = new ObjectMapperUsingReflection(
-            new DefinitionProvider(
-                keyFormatter: new KeyFormatterWithoutConversion(),
-            ),
-        );
     }
 
-    /**
-     * @throws UnableToSerializeObject
-     */
-    public function jsonSerialize(): array
+    public function jsonSerialize(): mixed
     {
-        return $this->mapper->serializeObject(
-            $this
-        );
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
     }
 }

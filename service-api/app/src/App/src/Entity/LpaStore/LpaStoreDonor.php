@@ -11,7 +11,7 @@ use App\Entity\Person;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class LpaStoreDonor extends Person
+class LpaStoreDonor extends Person implements \JsonSerializable
 {
     public function __construct(
         #[MapFrom('address')]
@@ -62,5 +62,18 @@ class LpaStoreDonor extends Person
             $type,
             $uId,
         );
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
     }
 }
