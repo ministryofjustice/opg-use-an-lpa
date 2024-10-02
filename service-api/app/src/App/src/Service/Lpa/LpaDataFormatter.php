@@ -33,9 +33,7 @@ class LpaDataFormatter
     {
         $lpaObject = $this->hydrateObject($lpa);
 
-        return $this->mapper->serializeObject(
-            $lpaObject
-        );
+        return $lpaObject;
     }
 
     /**
