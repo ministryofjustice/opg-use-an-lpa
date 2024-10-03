@@ -71,7 +71,7 @@ logs:
 
 update_mock:
 	@echo "Merging Swagger Documents..."
-	./mock-integrations/opg-lpa-data/merge.sh
+	./mock-integrations/opg-data-lpa/merge.sh
 	./mock-integrations/image-request-handler/update.sh
 	./mock-integrations/lpa-data-store/update.sh
 	@echo "Restarting data-lpa API..."
