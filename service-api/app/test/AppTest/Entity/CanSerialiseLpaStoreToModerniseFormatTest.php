@@ -93,7 +93,6 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'statusDate'                 => null,
             'trustCorporations'          => [
                 [
-                    'name'         => 'Trust us Corp.',
                     'addressLine1' => '103 Line 1',
                     'addressLine2' => null,
                     'addressLine3' => null,
@@ -103,6 +102,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'email'        => null,
                     'firstname'    => null,
                     'firstnames'   => null,
+                    'name'         => 'Trust us Corp.',
                     'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => null,
@@ -110,6 +110,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'town'         => 'Town',
                     'type'         => null,
                     'uId'          => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+                    'companyName'  => 'Trust us Corp.',
                 ],
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
