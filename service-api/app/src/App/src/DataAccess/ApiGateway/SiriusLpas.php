@@ -128,12 +128,12 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         // Handle all request response now
         foreach ($results as $uid => $result) {
             $statusCode = $result->getStatusCode();
-            $response   = json_decode(
-                $result->getBody()->getContents(),
-                true,
-            );
             switch ($statusCode) {
                 case 200:
+                    $response = json_decode(
+                        $result->getBody()->getContents(),
+                        true,
+                    );
                     # TODO: We can some more error checking around this.
                     if (($this->featureEnabled)('support_datastore_lpas')) {
                         $results[$uid] = ($this->lpaDataFormatter)($response);

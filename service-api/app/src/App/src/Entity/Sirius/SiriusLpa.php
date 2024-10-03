@@ -13,6 +13,7 @@ use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
@@ -96,11 +97,12 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         return $this->trustCorporations ?? [];
     }
 
+    #[DoNotSerialize]
     public function getStatus(): string
     {
         return $this->status ?? '';
     }
-
+    #[DoNotSerialize]
     public function getUid(): string
     {
         return $this->uId ?? '';

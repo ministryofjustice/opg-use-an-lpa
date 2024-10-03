@@ -6,17 +6,20 @@ namespace App\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
+use App\Service\Features\FeatureEnabled;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
+use RuntimeException;
 
 class LpaDataFormatter
 {
     private ObjectMapperUsingReflection $mapper;
 
-    public function __construct()
-    {
+    public function __construct(
+        private FeatureEnabled $featureEnabled,
+    ) {
         $this->mapper = new ObjectMapperUsingReflection(
             new DefinitionProvider(
                 keyFormatter: new KeyFormatterWithoutConversion(),
@@ -26,10 +29,15 @@ class LpaDataFormatter
 
     /**
      * @throws UnableToHydrateObject
+     * @throws RuntimeException
      */
     public function __invoke(array $lpa)
     {
         $lpaObject = $this->hydrateObject($lpa);
+
+        if (!($this->featureEnabled)('support_datastore_lpas')) {
+            return $this->mapper->serializeObject($lpaObject);
+        }
 
         return $lpaObject;
     }

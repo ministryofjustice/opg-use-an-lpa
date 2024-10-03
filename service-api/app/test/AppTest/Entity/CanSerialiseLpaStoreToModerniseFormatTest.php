@@ -4,17 +4,26 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
+use App\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use App\Service\Lpa\LpaDataFormatter;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
 {
+    use ProphecyTrait;
     private LpaDataFormatter $lpaDataFormatter;
+    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->lpaDataFormatter = new LpaDataFormatter();
+        $this->featureEnabled = $this->prophesize(FeatureEnabled::class);
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
+        $this->lpaDataFormatter = new LpaDataFormatter($this->featureEnabled->reveal());
     }
 
     #[Test]
