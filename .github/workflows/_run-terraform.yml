@@ -58,7 +58,7 @@ jobs:
             echo "admin-tag=$(echo ${TAG})" >> $GITHUB_OUTPUT
           fi
 
-      - uses: actions/checkout@de5a000abf73b6f4965bd1bcdf8f8d94a56ea815 # pin@v3
+      - uses: actions/checkout@6b42224f41ee5dfe5395e27c8b2746f1f9955030 # pin@v3
         with:
           fetch-depth: '0'
 
