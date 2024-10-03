@@ -10,6 +10,8 @@ use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\ApiException;
+use App\Service\Features\FeatureEnabled;
+use App\Service\Lpa\LpaDataFormatter;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -34,12 +36,17 @@ class SiriusLpasTest extends TestCase
     private DataSanitiserStrategy|ObjectProphecy $dataSanitiserStrategy;
     private LoggerInterface|ObjectProphecy $loggerInterface;
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
+    private FeatureEnabled|ObjectProphecy $featureEnabled;
+    private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
 
     public function setUp(): void
     {
         $this->guzzleClientProphecy  = $this->prophesize(GuzzleClient::class);
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
         $this->loggerInterface       = $this->prophesize(LoggerInterface::class);
+        $this->featureEnabled        = $this->prophesize(FeatureEnabled::class);
+
+        $this->lpaDataFormatter      = $this->prophesize(LpaDataFormatter::class);
 
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
@@ -62,7 +69,9 @@ class SiriusLpasTest extends TestCase
             'localhost',
             'test-trace-id',
             $this->dataSanitiserStrategy->reveal(),
-            $this->loggerInterface->reveal()
+            $this->loggerInterface->reveal(),
+            $this->featureEnabled->reveal(),
+            $this->lpaDataFormatter->reveal(),
         );
     }
 
@@ -96,6 +105,10 @@ class SiriusLpasTest extends TestCase
             )->willReturn($this->requestProphecy->reveal());
 
         $this->dataSanitiserStrategy->sanitise(Argument::any())->willReturnArgument(0);
+
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
 
         $shouldBeAnLPA = $this->getLpas()->get('700000055554');
 
