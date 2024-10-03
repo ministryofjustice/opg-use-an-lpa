@@ -249,7 +249,7 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@97646fedde05bcd0961217c60b50e23f721e7ec7
+        uses: aquasecurity/trivy-action@89b14e517dd8699cba3d787e53d4355cad28605c
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
@@ -272,7 +272,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@f8cb900d38ecff281181b9924245b4f0ddc1860a # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@04c5bc7890cd4ab43124b87cf61fcfcc84500170 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
