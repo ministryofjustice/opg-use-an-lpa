@@ -44,7 +44,7 @@ class SiriusLpaDonor extends Person
         ?string $firstnames,
         #[MapFrom('linked')]
         #[LinkedDonorCaster]
-        public readonly ?array $linkedDonors,
+        public readonly ?array $linked,
         ?string $name,
         ?string $otherNames,
         #[MapFrom('addresses')]
