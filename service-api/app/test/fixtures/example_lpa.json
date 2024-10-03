@@ -14,9 +14,9 @@
     "applicationHasRestrictions": true,
     "applicationHasGuidance": true,
     "lpaDonorSignatureDate": "2018-06-30",
-    "lifeSustainingTreatment": "Option A",
+    "lifeSustainingTreatment": "yes",
     "onlineLpaId": "ABC123",
-    "attorneyActDecisions": "jointly",
+    "attorneyActDecisions": "Example decision",
     "donor": {
       "id": 0,
       "uId": "700000000053",
