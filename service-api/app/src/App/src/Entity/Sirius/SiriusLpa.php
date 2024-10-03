@@ -82,17 +82,20 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         );
     }
 
-    private function getAttorneys(): array
+    #[DoNotSerialize]
+    public function getAttorneys(): array
     {
         return $this->attorneys ?? [];
     }
 
-    private function getDonor(): ?object
+    #[DoNotSerialize]
+    public function getDonor(): ?object
     {
         return $this->donor;
     }
 
-    private function getTrustCorporations(): array
+    #[DoNotSerialize]
+    public function getTrustCorporations(): array
     {
         return $this->trustCorporations ?? [];
     }
