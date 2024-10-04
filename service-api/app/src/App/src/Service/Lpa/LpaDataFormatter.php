@@ -16,8 +16,8 @@ class LpaDataFormatter
 {
     private ObjectMapperUsingReflection $mapper;
 
-    public function __construct(
-    ) {
+    public function __construct()
+    {
         $this->mapper = new ObjectMapperUsingReflection(
             new DefinitionProvider(
                 keyFormatter: new KeyFormatterWithoutConversion(),

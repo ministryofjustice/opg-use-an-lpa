@@ -22,18 +22,12 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
     public function setUp(): void
     {
         $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
-        $this->lpaDataFormatter = new LpaDataFormatter($this->featureEnabled->reveal());
+        $this->lpaDataFormatter = new LpaDataFormatter();
     }
-    #[Test]
-    public function can_serialise_sirius_lpa_to_modernise_format(): void
+
+    private function getExpectedLpa(): array
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(false);
-
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
-
-        $expectedLpa = [
+        return [
             'applicationHasGuidance'     => false,
             'applicationHasRestrictions' => false,
             'applicationType'            => 'Classic',
@@ -142,12 +136,35 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'uId'                        => '700000000047',
             'withdrawnDate'              => null,
         ];
+    }
 
-        $newLpa = ($this->lpaDataFormatter)($lpa);
+    #[Test]
+    public function can_serialise_sirius_lpa_to_modernise_format(): void
+    {
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
+
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
+
+        $expectedLpa = $this->getExpectedLpa();
+        $newLpa      = ($this->lpaDataFormatter)($lpa);
 
         $jsonLpa         = json_encode($newLpa);
         $expectedJsonLpa = json_encode($expectedLpa);
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
+    }
+
+    #[Test]
+    public function can_serialise_sirius_lpa_using_data_formatter(): void
+    {
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
+
+        $expectedLpa   = $this->getExpectedLpa();
+        $newLpa        = ($this->lpaDataFormatter)($lpa);
+        $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
+
+        $this->assertEquals($expectedLpa, $serialisedLpa);
     }
 }

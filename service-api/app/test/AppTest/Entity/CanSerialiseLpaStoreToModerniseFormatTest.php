@@ -24,15 +24,12 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
         $this->featureEnabled
             ->__invoke('support_datastore_lpas')
             ->willReturn(false);
-        $this->lpaDataFormatter = new LpaDataFormatter($this->featureEnabled->reveal());
+        $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
-    #[Test]
-    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    private function getExpectedLpa(): array
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
-
-        $expectedLpa = [
+        return [
             'applicationHasGuidance'     => null,
             'applicationHasRestrictions' => null,
             'applicationType'            => null,
@@ -117,6 +114,13 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
         ];
+    }
+
+    #[Test]
+    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    {
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $expectedLpa = $this->getExpectedLpa();
 
         $newLpa = ($this->lpaDataFormatter)($lpa);
 
@@ -124,5 +128,17 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
         $expectedJsonLpa = json_encode($expectedLpa);
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
+    }
+
+    #[Test]
+    public function can_serialise_datastore_lpa_using_data_formatter(): void
+    {
+        $lpa           = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $expectedLpa   = $this->getExpectedLpa();
+
+        $newLpa        = ($this->lpaDataFormatter)($lpa);
+        $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
+
+        $this->assertEquals($expectedLpa, $serialisedLpa);
     }
 }
