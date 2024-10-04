@@ -14,6 +14,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
 {
     use ProphecyTrait;
+
     private LpaDataFormatter $lpaDataFormatter;
     private FeatureEnabled|ObjectProphecy $featureEnabled;
 
