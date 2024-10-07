@@ -24,7 +24,7 @@ class IsValidLpa
      * @param OldSiriusLpa|SiriusLpa $lpa An LPA data structure
      * @return bool True if status is Registered or Cancelled
      */
-    public function __invoke(SiriusLpa $lpa): bool
+    public function __invoke(OldSiriusLpa|SiriusLpa $lpa): bool
     {
         $status = $lpa->getStatus();
 
