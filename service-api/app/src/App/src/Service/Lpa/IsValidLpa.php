@@ -6,6 +6,8 @@ namespace App\Service\Lpa;
 
 use App\Service\Lpa\IsValid\LpaStatus;
 use Psr\Log\LoggerInterface;
+use App\Entity\Sirius\SiriusLpa;
+use App\Service\Lpa\SiriusLpa as OldSiriusLpa;
 
 class IsValidLpa
 {
@@ -19,10 +21,10 @@ class IsValidLpa
      *
      * This function is used by codes to check the validity of a LPA and its details to be displayed to user.
      *
-     * @param array|SiriusLpa $lpa An LPA data structure
+     * @param OldSiriusLpa|SiriusLpa $lpa An LPA data structure
      * @return bool True if status is Registered or Cancelled
      */
-    public function __invoke(array|SiriusLpa $lpa): bool
+    public function __invoke(SiriusLpa $lpa): bool
     {
         $status = $lpa->getStatus();
 
@@ -33,7 +35,7 @@ class IsValidLpa
             $this->logger->notice(
                 'LPA with id {lpaUid} has an invalid status of {status}',
                 [
-                    'status' => $lpa['status'],
+                    'status' => $status,
                     'lpaUid' => $lpa->getUid(),
                 ]
             );
