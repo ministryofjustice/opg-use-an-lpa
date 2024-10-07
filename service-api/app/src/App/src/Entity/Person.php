@@ -29,7 +29,7 @@ class Person
         public readonly ?string $uId,
     ) {
     }
-    
+
     #[DoNotSerialize]
     public function getUid(): string
     {

@@ -111,7 +111,7 @@ class GetAttorneyStatusTest extends TestCase
     #[Test]
     public function returns_1_if_attorney_is_a_ghost_combined_format_lpastore(): void
     {
-        $attorney = new SiriusLpaAttorney(
+        $attorney = new LpaStoreAttorney(
             $addressLine1 = '81 NighOnTimeWeBuiltIt Street',
             $addressLine2 = null,
             $addressLine3 = null,
@@ -139,9 +139,97 @@ class GetAttorneyStatusTest extends TestCase
     }
 
     #[Test]
+    public function returns_1_if_attorney_is_a_ghost_combined_format_sirius(): void
+    {
+        $attorney = new SiriusLpaAttorney(
+            $addressLine1 = '81 NighOnTimeWeBuiltIt Street',
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country      = 'GB',
+            $county       = null,
+            $dob          = new \DateTimeImmutable('1982-07-24'),
+            $email        = null,
+            $firstname    = '',
+            $firstnames   = '',
+            $name         = null,
+            $otherNames   = null,
+            $postcode     = null,
+            $surname      = '',
+            $systemStatus = 'true',
+            $town         = 'Mahhhhhhhhhh',
+            $type         = null,
+            $uId          = '7'
+        );
+
+        $status = new GetAttorneyStatus(
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
+    }
+    #[Test]
     public function returns_2_if_attorney_is_inactive(): void
     {
         $attorney = new SiriusPerson(['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]);
+
+        $status = new GetAttorneyStatus(
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+    }
+
+    #[Test]
+    public function returns_2_if_attorney_is_inactive_combined_format_lpastore(): void
+    {
+        $attorney = new LpaStoreAttorney(
+            $addressLine1 = '81 NighOnTimeWeBuiltIt Street',
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country      = 'GB',
+            $county       = null,
+            $dob          = new \DateTimeImmutable('1982-07-24'),
+            $email        = null,
+            $firstname    = 'A',
+            $firstnames   = 'A',
+            $name         = null,
+            $otherNames   = null,
+            $postcode     = null,
+            $surname      = 'B',
+            $systemStatus = 'false',
+            $town         = 'Mahhhhhhhhhh',
+            $type         = null,
+            $uId          = '7'
+        );
+
+        $status = new GetAttorneyStatus(
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+    }
+    #[Test]
+    public function returns_2_if_attorney_is_inactive_combined_format_sirius(): void
+    {
+        $attorney = new SiriusLpaAttorney(
+            $addressLine1 = '81 NighOnTimeWeBuiltIt Street',
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country      = 'GB',
+            $county       = null,
+            $dob          = new \DateTimeImmutable('1982-07-24'),
+            $email        = null,
+            $firstname    = 'A',
+            $firstnames   = 'A',
+            $name         = null,
+            $otherNames   = null,
+            $postcode     = null,
+            $surname      = 'B',
+            $systemStatus = 'false',
+            $town         = 'Mahhhhhhhhhh',
+            $type         = null,
+            $uId          = '7'
+        );
 
         $status = new GetAttorneyStatus(
             $this->loggerProphecy->reveal()
