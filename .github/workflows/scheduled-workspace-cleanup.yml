@@ -31,7 +31,7 @@ jobs:
           TF_VERSION=$(cat .terraform-version)
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
 
-      - uses: hashicorp/setup-terraform@76fd07bad386ea4e790eca43250a461a5fa7f716 # pin@v2
+      - uses: hashicorp/setup-terraform@98aecdfa81f310199bf5976867c4b2841a790378 # pin@v2
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
           terraform_wrapper: false
