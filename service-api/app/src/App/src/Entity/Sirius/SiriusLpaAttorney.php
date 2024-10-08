@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
@@ -21,7 +22,7 @@ use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use JsonSerializable;
 
-class SiriusLpaAttorney extends Person implements JsonSerializable
+class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyStatusInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -94,5 +95,23 @@ class SiriusLpaAttorney extends Person implements JsonSerializable
         });
 
         return $data;
+    }
+
+    #[DoNotSerialize]
+    public function getFirstname(): string
+    {
+        return $this->firstname;
+    }
+
+    #[DoNotSerialize]
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+
+    #[DoNotSerialize]
+    public function getSystemStatus(): bool|string
+    {
+        return $this->systemStatus;
     }
 }
