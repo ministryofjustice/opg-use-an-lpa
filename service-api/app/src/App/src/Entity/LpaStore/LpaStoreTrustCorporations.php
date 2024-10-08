@@ -8,10 +8,12 @@ use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
 use App\Entity\Person;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
 
-class LpaStoreTrustCorporations extends Person
+class LpaStoreTrustCorporations extends Person implements TrustCorporationStatusInterface
 {
     public function __construct(
         #[MapFrom('address')]
@@ -67,5 +69,23 @@ class LpaStoreTrustCorporations extends Person
     public function companyName(): ?string
     {
         return $this->companyName;
+    }
+
+    #[DoNotSerialize]
+    public function getCompanyName(): string
+    {
+        return $this->companyName();
+    }
+
+    #[DoNotSerialize]
+    public function getSystemStatus(): bool|string
+    {
+        return $this->systemStatus;
+    }
+
+    #[DoNotSerialize]
+    public function getUid(): string
+    {
+        return $this->uId;
     }
 }
