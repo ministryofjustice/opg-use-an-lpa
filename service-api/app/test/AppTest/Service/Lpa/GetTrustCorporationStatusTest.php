@@ -182,7 +182,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $email        = null,
             $firstname    = 'trust',
             $firstnames   = null,
-            $name         = null,
+            $name         = 'XYZ Ltd',
             $otherNames   = null,
             $postcode     = 'ABC 123',
             $surname      = 'test',

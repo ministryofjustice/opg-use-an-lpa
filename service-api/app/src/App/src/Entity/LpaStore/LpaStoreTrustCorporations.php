@@ -74,7 +74,7 @@ class LpaStoreTrustCorporations extends Person implements TrustCorporationStatus
     #[DoNotSerialize]
     public function getCompanyName(): string
     {
-        return $this->companyName;
+        return $this->companyName();
     }
 
     #[DoNotSerialize]

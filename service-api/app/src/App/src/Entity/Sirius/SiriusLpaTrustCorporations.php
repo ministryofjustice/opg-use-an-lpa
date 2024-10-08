@@ -98,9 +98,9 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
     }
 
     #[DoNotSerialize]
-    public function getCompanyName(): string|null
+    public function getCompanyName(): ?string
     {
-        return $this->companyName;
+        return $this->name;
     }
 
     #[DoNotSerialize]
