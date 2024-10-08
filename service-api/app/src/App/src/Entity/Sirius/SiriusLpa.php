@@ -103,7 +103,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
     #[DoNotSerialize]
     public function getStatus(): string
     {
-        return (string)$this->status;
+        return $this->status ?? '';
     }
     #[DoNotSerialize]
     public function getUid(): string
