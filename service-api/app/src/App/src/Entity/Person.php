@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
 class Person
 {
@@ -27,5 +28,11 @@ class Person
         public readonly ?string $type,
         public readonly ?string $uId,
     ) {
+    }
+
+    #[DoNotSerialize]
+    public function getUid(): string
+    {
+        return $this->uId;
     }
 }
