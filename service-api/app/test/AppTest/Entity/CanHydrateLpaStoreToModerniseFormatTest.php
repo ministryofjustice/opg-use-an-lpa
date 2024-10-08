@@ -99,7 +99,7 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     $addressLine1 = '103 Line 1',
                     $addressLine2 = null,
                     $addressLine3 = null,
-                    $countryName  = 'Trust us Corp.',
+                    $companyName  = 'Trust us Corp.',
                     $country      = 'GB',
                     $county       = null,
                     $dob          = null,
