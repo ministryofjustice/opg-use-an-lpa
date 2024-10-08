@@ -8,8 +8,10 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
+use JsonSerializable;
 
-class Lpa implements \JsonSerializable
+class Lpa implements JsonSerializable
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
@@ -39,6 +41,7 @@ class Lpa implements \JsonSerializable
     ) {
     }
 
+    #[DoNotSerialize]
     public function jsonSerialize(): mixed
     {
         $data = get_object_vars($this);

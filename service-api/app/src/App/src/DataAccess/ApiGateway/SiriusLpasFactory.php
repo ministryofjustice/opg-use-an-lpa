@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\LpaDataFormatter;
 use GuzzleHttp\Client;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -40,7 +42,9 @@ class SiriusLpasFactory
             $config['sirius_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),
-            $container->get(LoggerInterface::class)
+            $container->get(LoggerInterface::class),
+            $container->get(FeatureEnabled::class),
+            $container->get(LpaDataFormatter::class),
         );
     }
 }

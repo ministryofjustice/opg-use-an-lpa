@@ -63,4 +63,9 @@ class LpaStoreTrustCorporations extends Person
             $uId,
         );
     }
+
+    public function companyName(): ?string
+    {
+        return $this->companyName;
+    }
 }

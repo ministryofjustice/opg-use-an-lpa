@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -18,8 +19,9 @@ use App\Entity\Person;
 use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
+use JsonSerializable;
 
-class SiriusLpaAttorney extends Person implements \JsonSerializable
+class SiriusLpaAttorney extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -80,6 +82,7 @@ class SiriusLpaAttorney extends Person implements \JsonSerializable
         );
     }
 
+    #[DoNotSerialize]
     public function jsonSerialize(): mixed
     {
         $data = get_object_vars($this);

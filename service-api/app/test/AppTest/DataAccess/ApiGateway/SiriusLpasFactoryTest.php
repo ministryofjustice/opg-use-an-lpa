@@ -9,7 +9,9 @@ use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\SiriusLpasFactory;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\LpaDataFormatter;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Test;
@@ -68,6 +70,14 @@ class SiriusLpasFactoryTest extends TestCase
 
         $containerProphecy->get(LoggerInterface::class)->willReturn(
             $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $containerProphecy->get(FeatureEnabled::class)->willReturn(
+            $this->prophesize(FeatureEnabled::class)->reveal()
+        );
+
+        $containerProphecy->get(LpaDataFormatter::class)->willReturn(
+            $this->prophesize(LpaDataFormatter::class)->reveal()
         );
 
         $factory = new SiriusLpasFactory();

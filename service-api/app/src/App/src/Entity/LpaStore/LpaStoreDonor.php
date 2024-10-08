@@ -9,9 +9,11 @@ use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
 use App\Entity\Person;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
+use JsonSerializable;
 
-class LpaStoreDonor extends Person implements \JsonSerializable
+class LpaStoreDonor extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('address')]
@@ -64,6 +66,7 @@ class LpaStoreDonor extends Person implements \JsonSerializable
         );
     }
 
+    #[DoNotSerialize]
     public function jsonSerialize(): mixed
     {
         $data = get_object_vars($this);
