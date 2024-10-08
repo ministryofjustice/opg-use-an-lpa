@@ -21,7 +21,8 @@ class GetAttorneyStatus
             return AttorneyStatus::GHOST_ATTORNEY;
         }
 
-        if (!$attorney->getSystemStatus()) {
+        $systemStatus = $attorney->getSystemStatus();
+        if (!$systemStatus || $systemStatus === 'false') {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $attorney->getUid()]);
             return AttorneyStatus::INACTIVE_ATTORNEY;
         }
