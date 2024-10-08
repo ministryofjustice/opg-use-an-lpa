@@ -25,7 +25,8 @@ class GetTrustCorporationStatus
             return TrustCorporationStatuses::GHOST_TC->value;
         }
 
-        if (!$trustCorporation->getSystemStatus()) {
+        $systemStatus = $trustCorporation->getSystemStatus();
+        if (!$systemStatus || $systemStatus === 'false') {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation->getUid()]);
             return TrustCorporationStatuses::INACTIVE_TC->value;
         }

@@ -53,7 +53,7 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@6b42224f41ee5dfe5395e27c8b2746f1f9955030 # pin@v4
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v4
         with:
           fetch-depth: 2
           ref: ${{ inputs.git_ref }}

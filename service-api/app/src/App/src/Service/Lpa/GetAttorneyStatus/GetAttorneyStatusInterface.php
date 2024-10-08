@@ -10,5 +10,5 @@ interface GetAttorneyStatusInterface
 
     public function getSurname(): string;
 
-    public function getSystemStatus(): bool;
+    public function getSystemStatus(): bool|string;
 }
