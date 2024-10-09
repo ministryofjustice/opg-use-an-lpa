@@ -8,8 +8,10 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
+use JsonSerializable;
 
-class Lpa
+class Lpa implements JsonSerializable
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
@@ -37,5 +39,19 @@ class Lpa
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
     ) {
+    }
+
+    #[DoNotSerialize]
+    public function jsonSerialize(): mixed
+    {
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -18,8 +20,9 @@ use App\Entity\Sirius\Casters\{
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
+use JsonSerializable;
 
-class SiriusLpaTrustCorporations extends Person
+class SiriusLpaTrustCorporations extends Person implements JsonSerializable , TrustCorporationStatusInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -78,5 +81,37 @@ class SiriusLpaTrustCorporations extends Person
             $type,
             $uId,
         );
+    }
+
+    #[DoNotSerialize]
+    public function jsonSerialize(): mixed
+    {
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
+    }
+
+    #[DoNotSerialize]
+    public function getCompanyName(): ?string
+    {
+        return $this->name;
+    }
+
+    #[DoNotSerialize]
+    public function getSystemStatus(): bool|string
+    {
+        return $this->systemStatus;
+    }
+
+    #[DoNotSerialize]
+    public function getUid(): string
+    {
+        return $this->uId;
     }
 }

@@ -98,7 +98,7 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class        => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
-                DataAccess\ApiGateway\SiriusLpas::class             => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\ApiGateway\SiriusLpas::class       => DataAccess\ApiGateway\SiriusLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
 

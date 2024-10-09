@@ -76,11 +76,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@de5a000abf73b6f4965bd1bcdf8f8d94a56ea815
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@81382a721fc89d96eca335d0c3ba33144b2baa9d
+        uses: actions/cache@8469c94c6a180dfb41a1bd7e1b46ac557ea124f1
         env:
           cache-name: cache-node-modules
         with:
@@ -107,6 +107,15 @@ jobs:
           role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRGithubAction
+        if: |
+          inputs.push_to_ecr == 'true' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
+      - name: ecr login
+        id: login_ecr
+        uses: aws-actions/amazon-ecr-login@d5dd46d537c86e506335323688c342319bedcfe1 # pin@v1.5.1
+        with:
+          registries: 311462405659
         if: |
           inputs.push_to_ecr == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
@@ -208,7 +217,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@3eadd8b791cabf7cd572f194da82158c24125bd8
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
@@ -249,10 +258,10 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@97646fedde05bcd0961217c60b50e23f721e7ec7
+        uses: aquasecurity/trivy-action@a20de5420d57c4102486cdd9578b45609c99d7eb
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
@@ -269,15 +278,6 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         with:
           sarif_file: 'trivy-results.sarif'
-
-      - name: ecr login
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@04c5bc7890cd4ab43124b87cf61fcfcc84500170 # pin@v1.5.1
-        with:
-          registries: 311462405659
-        if: |
-          inputs.push_to_ecr == 'true' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: tag and push container
         env:

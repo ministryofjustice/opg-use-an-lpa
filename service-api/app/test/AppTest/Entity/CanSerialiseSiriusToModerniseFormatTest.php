@@ -4,25 +4,30 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
+use App\Service\Features\FeatureEnabled;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use App\Service\Lpa\LpaDataFormatter;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class CanSerialiseSiriusToModerniseFormatTest extends TestCase
 {
+    use ProphecyTrait;
+
     private LpaDataFormatter $lpaDataFormatter;
+    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
+        $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
         $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
-    #[Test]
-    public function can_serialise_sirius_lpa_to_modernise_format(): void
+    private function getExpectedLpa(): array
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
-
-        $expectedLpa = [
+        return [
             'applicationHasGuidance'     => false,
             'applicationHasRestrictions' => false,
             'applicationType'            => 'Classic',
@@ -71,12 +76,6 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'channel'                    => null,
             'dispatchDate'               => null,
             'donor'                      => [
-                'linked'       => [
-                    [
-                        'id'  => 7,
-                        'uId' => '700000000799',
-                    ],
-                ],
                 'addressLine1' => '81 Front Street',
                 'addressLine2' => 'LACEBY',
                 'addressLine3' => '',
@@ -94,6 +93,12 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                 'town'         => '',
                 'type'         => 'Primary',
                 'uId'          => '700000000799',
+                'linked'       => [
+                    [
+                        'id'  => 7,
+                        'uId' => '700000000799',
+                    ],
+                ],
             ],
             'hasSeveranceWarning'        => null,
             'invalidDate'                => null,
@@ -131,12 +136,35 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'uId'                        => '700000000047',
             'withdrawnDate'              => null,
         ];
+    }
 
-        $newLpa = ($this->lpaDataFormatter)($lpa);
+    #[Test]
+    public function can_serialise_sirius_lpa_to_modernise_format(): void
+    {
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
+
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
+
+        $expectedLpa = $this->getExpectedLpa();
+        $newLpa      = ($this->lpaDataFormatter)($lpa);
 
         $jsonLpa         = json_encode($newLpa);
         $expectedJsonLpa = json_encode($expectedLpa);
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
+    }
+
+    #[Test]
+    public function can_serialise_sirius_lpa_using_data_formatter(): void
+    {
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
+
+        $expectedLpa   = $this->getExpectedLpa();
+        $newLpa        = ($this->lpaDataFormatter)($lpa);
+        $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
+
+        $this->assertEquals($expectedLpa, $serialisedLpa);
     }
 }

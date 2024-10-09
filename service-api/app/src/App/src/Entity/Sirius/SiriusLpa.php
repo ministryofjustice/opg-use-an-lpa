@@ -9,13 +9,19 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Service\Lpa\IsValid\IsValidInterface;
+use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
 
-class SiriusLpa extends Lpa
+class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
 {
+    use SiriusHasActorTrait;
+
     public function __construct(
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
@@ -74,5 +80,34 @@ class SiriusLpa extends Lpa
             $uId,
             $withdrawnDate
         );
+    }
+
+    #[DoNotSerialize]
+    public function getAttorneys(): array
+    {
+        return $this->attorneys ?? [];
+    }
+
+    #[DoNotSerialize]
+    public function getDonor(): ?object
+    {
+        return $this->donor;
+    }
+
+    #[DoNotSerialize]
+    public function getTrustCorporations(): array
+    {
+        return $this->trustCorporations ?? [];
+    }
+
+    #[DoNotSerialize]
+    public function getStatus(): string
+    {
+        return $this->status ?? '';
+    }
+    #[DoNotSerialize]
+    public function getUid(): string
+    {
+        return $this->uId ?? '';
     }
 }

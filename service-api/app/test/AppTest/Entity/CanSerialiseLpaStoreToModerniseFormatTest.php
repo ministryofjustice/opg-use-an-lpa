@@ -4,25 +4,32 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
+use App\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use App\Service\Lpa\LpaDataFormatter;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
 {
+    use ProphecyTrait;
+
     private LpaDataFormatter $lpaDataFormatter;
+    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
+        $this->featureEnabled = $this->prophesize(FeatureEnabled::class);
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
         $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
-    #[Test]
-    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    private function getExpectedLpa(): array
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
-
-        $expectedLpa = [
+        return [
             'applicationHasGuidance'     => null,
             'applicationHasRestrictions' => null,
             'applicationType'            => null,
@@ -84,7 +91,6 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'statusDate'                 => null,
             'trustCorporations'          => [
                 [
-                    'name'         => 'Trust us Corp.',
                     'addressLine1' => '103 Line 1',
                     'addressLine2' => null,
                     'addressLine3' => null,
@@ -94,6 +100,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'email'        => null,
                     'firstname'    => null,
                     'firstnames'   => null,
+                    'name'         => 'Trust us Corp.',
                     'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => null,
@@ -101,11 +108,19 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'town'         => 'Town',
                     'type'         => null,
                     'uId'          => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+                    'companyName'  => 'Trust us Corp.',
                 ],
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
         ];
+    }
+
+    #[Test]
+    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    {
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $expectedLpa = $this->getExpectedLpa();
 
         $newLpa = ($this->lpaDataFormatter)($lpa);
 
@@ -113,5 +128,17 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
         $expectedJsonLpa = json_encode($expectedLpa);
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
+    }
+
+    #[Test]
+    public function can_serialise_datastore_lpa_using_data_formatter(): void
+    {
+        $lpa           = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $expectedLpa   = $this->getExpectedLpa();
+
+        $newLpa        = ($this->lpaDataFormatter)($lpa);
+        $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
+
+        $this->assertEquals($expectedLpa, $serialisedLpa);
     }
 }

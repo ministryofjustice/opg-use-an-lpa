@@ -22,7 +22,7 @@ jobs:
   terraform_environment_cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de5a000abf73b6f4965bd1bcdf8f8d94a56ea815 # pin@v3
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
 
       - name: Set Terraform version
         working-directory: ./terraform/environment
@@ -31,7 +31,7 @@ jobs:
           TF_VERSION=$(cat .terraform-version)
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
 
-      - uses: hashicorp/setup-terraform@76fd07bad386ea4e790eca43250a461a5fa7f716 # pin@v2
+      - uses: hashicorp/setup-terraform@4b8e29db070e511fc9f67a42cf566d74cfc83c24 # pin@v2
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
           terraform_wrapper: false
