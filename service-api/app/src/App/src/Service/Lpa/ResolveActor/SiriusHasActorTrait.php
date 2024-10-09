@@ -29,8 +29,13 @@ trait SiriusHasActorTrait
 
     private function isADonor(string $uid): ?LpaActor
     {
-        foreach ($this->getDonor()['linked'] as $value) {
-            if ((string) $value['id'] === $uid || $value['uId'] === $uid) {
+        $linkedDonors = $this->getDonor()->linked ?? $this->getDonor()['linked'];
+
+        foreach ($linkedDonors as $linkedDonor) {
+            $linkedDonorId  = $linkedDonor->id ?? $linkedDonor['id'];
+            $linkedDonorUid = $linkedDonor->uId ?? $linkedDonor['uId'];
+
+            if ((string) $linkedDonorId === $uid || $linkedDonorUid === $uid) {
                 return new LpaActor($this->getDonor(), ActorType::DONOR);
             }
         }
