@@ -12,6 +12,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
+
 class LpaService
 {
     public function __construct(
