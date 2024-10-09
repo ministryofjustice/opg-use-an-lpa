@@ -22,7 +22,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mock = new SiriusLpa(
+        $this->mock                     = new SiriusLpa(
             $applicationHasGuidance     = false,
             $applicationHasRestrictions = false,
             $applicationType            = 'Classic',
