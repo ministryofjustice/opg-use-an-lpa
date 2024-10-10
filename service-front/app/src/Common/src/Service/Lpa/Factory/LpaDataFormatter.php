@@ -33,9 +33,7 @@ class LpaDataFormatter
     {
         $lpaObject = $this->hydrateObject($lpa);
 
-        return $this->mapper->serializeObject(
-            $lpaObject
-        );
+        return $lpaObject;
     }
 
     /**
@@ -56,5 +54,10 @@ class LpaDataFormatter
         return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')
             ? LpaStore::class
             : SiriusLpa::class;
+    }
+
+    public function serializeObject(object $lpa): mixed
+    {
+        return $this->mapper->serializeObject($lpa);
     }
 }
