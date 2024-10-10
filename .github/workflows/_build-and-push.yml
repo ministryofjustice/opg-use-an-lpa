@@ -99,7 +99,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@73daff1b20af655c574cf2018ed2cc18a597bf5c
+        uses: aws-actions/configure-aws-credentials@a70163716ac95dea0bf269be9aff669ad6a933c5
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -217,7 +217,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9
+        uses: actions/upload-artifact@84480863f228bb9747b473957fcc9e309aa96097
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
