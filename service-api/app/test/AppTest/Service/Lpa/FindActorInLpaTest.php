@@ -74,18 +74,7 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 [
-                    'actor'  => new SiriusPerson([
-                        'uId'          => '700000001234',
-                        'dob'          => '1980-03-01',
-                        'firstname'    => 'Test',
-                        'surname'      => 'T’esting',
-                        'addresses'    => [
-                            [
-                                'postcode' => 'Ab1 2Cd',
-                            ],
-                        ],
-                        'systemStatus' => true,
-                    ]),
+                    'actor'  => new SiriusPerson(FindActorInLpaTest::activeAttorneyFixture()),
                     'role'   => 'attorney', // successful match for attorney
                     'lpa-id' => '700000012346',
                 ],
@@ -99,17 +88,7 @@ class FindActorInLpaTest extends TestCase
             ],
             [
                 [
-                    'actor'  => new SiriusPerson([
-                        'uId'       => '700000001111',
-                        'dob'       => '1975-10-05',
-                        'firstname' => 'Donor',
-                        'surname'   => 'Person',
-                        'addresses' => [
-                            [
-                                'postcode' => 'PY1 3Kd',
-                            ],
-                        ],
-                    ]),
+                    'actor'  => new SiriusPerson(FindActorInLpaTest::donorFixture()),
                     'role'   => 'donor', // successful match for donor
                     'lpa-id' => '700000012346',
                 ],
