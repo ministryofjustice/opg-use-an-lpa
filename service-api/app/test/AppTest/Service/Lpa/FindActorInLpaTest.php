@@ -35,138 +35,30 @@ class FindActorInLpaTest extends TestCase
     {
         $lpa = [
             'uId'       => '700000012346',
-            'donor'     => [
-                'uId'       => '700000001111',
-                'dob'       => '1975-10-05',
-                'firstname' => 'Donor',
-                'surname'   => 'Person',
-                'addresses' => [
-                    [
-                        'postcode' => 'PY1 3Kd',
-                    ],
-                ],
-            ],
+            'donor'     => $this->donorFixture(),
             'attorneys' => [
-                [
-                    'uId'          => '700000002222',
-                    'dob'          => '1977-11-21',
-                    'firstname'    => 'Attorneyone',
-                    'surname'      => 'Person',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'Gg1 2ff',
-                        ],
-                    ],
-                    'systemStatus' => false, // inactive attorney
-                ],
-                [
-                    'uId'          => '700000003333',
-                    'dob'          => '1960-05-05',
-                    'firstname'    => '', // ghost attorney
-                    'surname'      => '',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'BB1 9ee',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ],
-                [
-                    'uId'          => '700000004444',
-                    'dob'          => '1980-03-01',
-                    'firstname'    => 'Attorneythree',
-                    'surname'      => 'Person',
-                    'addresses'    => [ // multiple addresses
-                        [
-                            'postcode' => 'Ab1 2Cd',
-                        ],
-                        [
-                            'postcode' => 'Bc2 3Df',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ],
-                [
-                    'uId'          => '700000001234',
-                    'dob'          => '1980-03-01',
-                    'firstname'    => 'Test',
-                    'surname'      => 'T’esting',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'Ab1 2Cd',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ],
-            ],
+                $this->inactiveAttorneyFixture(),
+                $this->ghostAttorneyFixture(),
+                $this->multipleAddressAttorneyFixture(),
+                $this->activeAttorneyFixture(),
+            ]
         ];
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson(
-                [
-                    'uId'          => '700000002222',
-                    'dob'          => '1977-11-21',
-                    'firstname'    => 'Attorneyone',
-                    'surname'      => 'Person',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'Gg1 2ff',
-                        ],
-                    ],
-                    'systemStatus' => false, // inactive attorney
-                ])
-            )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+            ->__invoke( new SiriusPerson($this->inactiveAttorneyFixture()))
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson(
-                [
-                    'uId'          => '700000003333',
-                    'dob'          => '1960-05-05',
-                    'firstname'    => '', // ghost attorney
-                    'surname'      => '',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'BB1 9ee',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ])
-            )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+            ->__invoke( new SiriusPerson($this->ghostAttorneyFixture()))
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson(
-                [
-                    'uId'          => '700000004444',
-                    'dob'          => '1980-03-01',
-                    'firstname'    => 'Attorneythree',
-                    'surname'      => 'Person',
-                    'addresses'    => [ // multiple addresses
-                        [
-                            'postcode' => 'Ab1 2Cd',
-                        ],
-                        [
-                            'postcode' => 'Bc2 3Df',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ])
-            )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+            ->__invoke( new SiriusPerson($this->multipleAddressAttorneyFixture()))
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson(
-                [
-                    'uId'          => '700000001234',
-                    'dob'          => '1980-03-01',
-                    'firstname'    => 'Test',
-                    'surname'      => 'T’esting',
-                    'addresses'    => [
-                        [
-                            'postcode' => 'Ab1 2Cd',
-                        ],
-                    ],
-                    'systemStatus' => true,
-                ])
-            )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
+            ->__invoke( new SiriusPerson($this->activeAttorneyFixture()))
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
@@ -291,4 +183,86 @@ class FindActorInLpaTest extends TestCase
             ],
         ];
     }
+
+    public static function inactiveAttorneyFixture(): array
+    {
+        return [
+            'uId'          => '700000002222',
+            'dob'          => '1977-11-21',
+            'firstname'    => 'Attorneyone',
+            'surname'      => 'Person',
+            'addresses'    => [
+                [
+                    'postcode' => 'Gg1 2ff',
+                ],
+            ],
+            'systemStatus' => false, // inactive attorney
+        ];
+    }
+
+    public static function ghostAttorneyFixture(): array
+    {
+        return [
+            'uId'          => '700000003333',
+            'dob'          => '1960-05-05',
+            'firstname'    => '', // ghost attorney
+            'surname'      => '',
+            'addresses'    => [
+                [
+                    'postcode' => 'BB1 9ee',
+                ],
+            ],
+            'systemStatus' => true,
+        ];
+    }
+
+    public static function multipleAddressAttorneyFixture(): array
+    {
+        return [
+            'uId'          => '700000004444',
+            'dob'          => '1980-03-01',
+            'firstname'    => 'Attorneythree',
+            'surname'      => 'Person',
+            'addresses'    => [ // multiple addresses
+                [
+                    'postcode' => 'Ab1 2Cd',
+                ],
+                [
+                    'postcode' => 'Bc2 3Df',
+                ],
+            ],
+            'systemStatus' => true,
+        ];
+    }
+    public static function activeAttorneyFixture(): array
+    {
+        return [
+            'uId'          => '700000001234',
+            'dob'          => '1980-03-01',
+            'firstname'    => 'Test',
+            'surname'      => 'T’esting',
+            'addresses'    => [
+                [
+                    'postcode' => 'Ab1 2Cd',
+                ],
+            ],
+            'systemStatus' => true,
+        ];
+    }
+
+    public static function donorFixture(): array
+    {
+        return [
+            'uId'       => '700000001111',
+            'dob'       => '1975-10-05',
+            'firstname' => 'Donor',
+            'surname'   => 'Person',
+            'addresses' => [
+                [
+                    'postcode' => 'PY1 3Kd',
+                ],
+            ],
+        ];
+    }
+
 }
