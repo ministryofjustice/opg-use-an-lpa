@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Entity\Lpa;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
+use App\Service\Lpa\SiriusLpa as OldSiriusLpa;
 
 class FindActorInLpa
 {
@@ -21,7 +23,7 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(SiriusLpa $lpa, array $matchData): ?array
+    public function __invoke(OldSiriusLpa|Lpa $lpa, array $matchData): ?array
     {
         $actor = null;
         $role  = null;
