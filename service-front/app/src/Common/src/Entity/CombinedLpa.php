@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
-use App\Enum\HowAttorneysMakeDecisions;
-use App\Enum\LifeSustainingTreatment;
-use App\Enum\LpaType;
+use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
 use DateTimeImmutable;
 
 class CombinedLpa

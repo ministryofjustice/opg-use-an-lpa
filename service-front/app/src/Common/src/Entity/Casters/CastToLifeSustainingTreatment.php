@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity\Casters;
 
-use App\Enum\LifeSustainingTreatment;
+use Common\Enum\LifeSustainingTreatment;
 use Attribute;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;

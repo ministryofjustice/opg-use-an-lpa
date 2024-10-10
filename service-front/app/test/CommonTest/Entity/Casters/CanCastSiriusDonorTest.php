@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Entity;
+namespace CommonTest\Entity\Casters;
 
-use App\Entity\Sirius\Casters\CastSiriusDonor;
-use App\Entity\Sirius\SiriusLpaDonor;
+use Common\Entity\Casters\CastSiriusDonor;
+use Common\Entity\Sirius\SiriusLpaDonor;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;

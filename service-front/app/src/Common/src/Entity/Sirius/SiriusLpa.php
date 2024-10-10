@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Common\Entity\Sirius;
 
-use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
-use App\Entity\Lpa;
-use App\Enum\HowAttorneysMakeDecisions;
-use App\Enum\LifeSustainingTreatment;
-use App\Enum\LpaType;
+use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
+use Common\Entity\CombinedLpa;
+use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use App\Entity\Sirius\Casters\CastSiriusDonor;
-use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
+use Common\Entity\Casters\CastSiriusDonor;
+use Common\Entity\Casters\CastToSiriusLifeSustainingTreatment;
 
-class SiriusLpa extends Lpa
+class SiriusLpa extends CombinedLpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,

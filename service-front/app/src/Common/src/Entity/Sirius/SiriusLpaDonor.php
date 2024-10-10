@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Entity\Sirius;
 
-use App\Entity\Person;
-use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
+use Common\Entity\Person;
+use Common\Entity\Casters\{ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
     ExtractCountryFromSiriusLpa,

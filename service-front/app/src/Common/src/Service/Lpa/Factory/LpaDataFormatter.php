@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa\Factory;
 
-use App\Entity\LpaStore\LpaStore;
-use App\Entity\Sirius\SiriusLpa;
+use Common\Entity\LpaStore\LpaStore;
+use Common\Entity\Sirius\SiriusLpa;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;

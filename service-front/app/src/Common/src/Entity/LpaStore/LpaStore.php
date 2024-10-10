@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Common\Entity\LpaStore;
 
-use App\Entity\Casters\CastSingleDonor;
-use App\Entity\Casters\CastToCaseSubtype;
-use App\Entity\Casters\CastToLifeSustainingTreatment;
-use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
-use App\Entity\Lpa;
-use App\Enum\HowAttorneysMakeDecisions;
-use App\Enum\LifeSustainingTreatment;
-use App\Enum\LpaType;
+use Common\Entity\Casters\CastSingleDonor;
+use Common\Entity\Casters\CastToCaseSubtype;
+use Common\Entity\Casters\CastToLifeSustainingTreatment;
+use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
+use Common\Entity\CombinedLpa;
+use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 
-class LpaStore extends Lpa
+class LpaStore extends CombinedLpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,

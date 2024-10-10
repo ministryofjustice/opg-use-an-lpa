@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Sirius\Casters;
+namespace Common\Entity\Casters;
 
 use Attribute;
 use EventSauce\ObjectHydrator\ObjectMapper;

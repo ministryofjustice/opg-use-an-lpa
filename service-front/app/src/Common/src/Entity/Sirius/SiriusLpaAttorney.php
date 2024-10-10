@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity\Sirius;
 
-use App\Entity\Sirius\Casters\{
+use Common\Entity\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
@@ -14,7 +14,7 @@ use App\Entity\Sirius\Casters\{
     ExtractTownFromSiriusLpa,
     ExtractTypeFromSiriusLpa,
 };
-use App\Entity\Person;
+use Common\Entity\Person;
 use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;

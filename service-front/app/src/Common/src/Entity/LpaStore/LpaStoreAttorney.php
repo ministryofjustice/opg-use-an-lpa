@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Common\Entity\LpaStore;
 
-use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
-use App\Entity\Casters\ExtractCountryFromLpaStore;
-use App\Entity\Casters\ExtractTownFromLpaStore;
-use App\Entity\Person;
+use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
+use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractTownFromLpaStore;
+use Common\Entity\Person;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 
