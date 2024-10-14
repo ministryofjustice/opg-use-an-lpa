@@ -9,9 +9,11 @@ use Common\Entity\Casters\ExtractCountryFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
+use JsonSerializable;
 
-class LpaStoreDonor extends Person
+class LpaStoreDonor extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('address')]
@@ -62,5 +64,19 @@ class LpaStoreDonor extends Person
             $type,
             $uId,
         );
+    }
+
+    #[DoNotSerialize]
+    public function jsonSerialize(): mixed
+    {
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
     }
 }

@@ -141,14 +141,10 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
     #[Test]
     public function can_serialise_sirius_lpa_to_modernise_format(): void
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(false);
-
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
-
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
         $expectedLpa = $this->getExpectedLpa();
-        $newLpa      = ($this->lpaDataFormatter)($lpa);
+
+        $newLpa = ($this->lpaDataFormatter)($lpa);
 
         $jsonLpa         = json_encode($newLpa);
         $expectedJsonLpa = json_encode($expectedLpa);

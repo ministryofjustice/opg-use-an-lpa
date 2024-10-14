@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity\Sirius;
 
+use EventSauce\ObjectHydrator\DoNotSerialize;
 use Common\Entity\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -18,8 +19,9 @@ use Common\Entity\Person;
 use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
+use JsonSerializable;
 
-class SiriusLpaAttorney extends Person
+class SiriusLpaAttorney extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -78,5 +80,19 @@ class SiriusLpaAttorney extends Person
             $type,
             $uId,
         );
+    }
+
+    #[DoNotSerialize]
+    public function jsonSerialize(): mixed
+    {
+        $data = get_object_vars($this);
+
+        array_walk($data, function (&$value) {
+            if ($value instanceof DateTimeImmutable) {
+                $value = $value->format('Y-m-d H:i:s.uO');
+            }
+        });
+
+        return $data;
     }
 }
