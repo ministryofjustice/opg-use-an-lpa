@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace AppTest\Handler\Factory;
 
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\ActorUsersInterface;
-use App\DataAccess\Repository\LpasInterface;
 use App\Handler\Factory\HealthcheckHandlerFactory;
 use App\Handler\HealthcheckHandler;
-use GuzzleHttp\Client as HttpClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class HealthcheckHandlerFactoryTest extends TestCase
 {
@@ -22,11 +22,11 @@ class HealthcheckHandlerFactoryTest extends TestCase
     {
         $factory = new HealthcheckHandlerFactory();
 
-        $actorUsers            = $this->prophesize(ActorUsersInterface::class);
-        $lpaInterface          = $this->prophesize(LpasInterface::class);
-        $container             = $this->prophesize(ContainerInterface::class);
-        $httpClientProphecy    = $this->prophesize(HttpClient::class);
-        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
+        $container              = $this->prophesize(ContainerInterface::class);
+        $actorUsers             = $this->prophesize(ActorUsersInterface::class);
+        $clientProphecy         = $this->prophesize(ClientInterface::class);
+        $requestFactoryProphecy = $this->prophesize(RequestFactoryInterface::class);
+        $requestSignerProphecy  = $this->prophesize(RequestSignerFactory::class);
 
         $container->get('config')->willReturn(
             [
@@ -44,9 +44,9 @@ class HealthcheckHandlerFactoryTest extends TestCase
         );
 
         $container->get(ActorUsersInterface::class)->willReturn($actorUsers->reveal());
-        $container->get(LpasInterface::class)->willReturn($lpaInterface->reveal());
-        $container->get(HttpClient::class)->willReturn($httpClientProphecy->reveal());
-        $container->get(RequestSigner::class)->willReturn($requestSignerProphecy->reveal());
+        $container->get(ClientInterface::class)->willReturn($clientProphecy->reveal());
+        $container->get(RequestFactoryInterface::class)->willReturn($requestFactoryProphecy->reveal());
+        $container->get(RequestSignerFactory::class)->willReturn($requestSignerProphecy->reveal());
 
         $handler = $factory($container->reveal());
 
