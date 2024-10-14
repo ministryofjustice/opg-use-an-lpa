@@ -40,6 +40,15 @@ resource "aws_s3_bucket_lifecycle_configuration" "cloudtrail" {
       storage_class = "GLACIER"
     }
   }
+
+  rule {
+    id     = "abort-incomplete-multipart-upload"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "cloudtrail" {
