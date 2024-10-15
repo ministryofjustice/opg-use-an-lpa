@@ -18,7 +18,6 @@ use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use JsonSerializable;
 
-
 class LpaStore extends CombinedLpa implements JsonSerializable
 {
     public function __construct(

@@ -97,5 +97,4 @@ class SiriusLpaDonor extends Person implements JsonSerializable
 
         return $data;
     }
-
 }
