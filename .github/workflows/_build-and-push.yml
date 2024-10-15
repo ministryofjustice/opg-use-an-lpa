@@ -142,6 +142,12 @@ jobs:
           matrix.build_development_docker == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
+      - name: install python
+        uses: actions/setup-python@19dfb7b659fa9e60c2f89c33335ab5f6f1792b6e # pin@v4.2.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
       - name: docker unit tests
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
