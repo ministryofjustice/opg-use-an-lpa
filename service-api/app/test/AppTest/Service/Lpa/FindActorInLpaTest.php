@@ -48,19 +48,19 @@ class FindActorInLpaTest extends TestCase
         ];
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson($this->inactiveAttorneyFixture()))
+            ->__invoke( $this->inactiveAttorneyFixture())
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson($this->ghostAttorneyFixture()))
+            ->__invoke( $this->ghostAttorneyFixture())
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson($this->multipleAddressAttorneyFixture()))
+            ->__invoke( $this->multipleAddressAttorneyFixture())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke( new SiriusPerson($this->activeAttorneyFixture()))
+            ->__invoke( $this->activeAttorneyFixture())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
         $sut = new FindActorInLpa(
@@ -74,8 +74,8 @@ class FindActorInLpaTest extends TestCase
 
     public static function actorLookupDataProviderOldSiriusPerson(): array
     {
-        return self::actorLookupDataProvider(new SiriusPerson(FindActorInLpaTest::activeAttorneyFixture()),
-                                             new SiriusPerson(FindActorInLpaTest::donorFixture()));
+        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixture(),
+                                             FindActorInLpaTest::donorFixture());
     }
     public static function actorLookupDataProvider(SiriusPerson|Person|LpaStoreAttorney $attorneyFixture, SiriusPerson|Person|LpaStoreDonor $donorFixture): array
     {
@@ -171,9 +171,9 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
-    public static function inactiveAttorneyFixture(): array
+    public static function inactiveAttorneyFixture(): SiriusPerson
     {
-        return [
+        return new SiriusPerson([
             'uId'          => '700000002222',
             'dob'          => '1977-11-21',
             'firstname'    => 'Attorneyone',
@@ -184,7 +184,7 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
             'systemStatus' => false, // inactive attorney
-        ];
+        ]);
     }
 
     public static function inactiveAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
@@ -216,9 +216,9 @@ class FindActorInLpaTest extends TestCase
             $withdrawnDate = null
         );
     }
-    public static function ghostAttorneyFixture(): array
+    public static function ghostAttorneyFixture(): SiriusPerson
     {
-        return [
+        return new SiriusPerson([
             'uId'          => '700000003333',
             'dob'          => '1960-05-05',
             'firstname'    => '', // ghost attorney
@@ -229,7 +229,7 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
             'systemStatus' => true,
-        ];
+        ]);
     }
 
     public static function ghostAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
@@ -261,9 +261,9 @@ class FindActorInLpaTest extends TestCase
             $withdrawnDate = null
         );
     }
-    public static function multipleAddressAttorneyFixture(): array
+    public static function multipleAddressAttorneyFixture(): SiriusPerson
     {
-        return [
+        return new SiriusPerson([
             'uId'          => '700000004444',
             'dob'          => '1980-03-01',
             'firstname'    => 'Attorneythree',
@@ -277,11 +277,11 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
             'systemStatus' => true,
-        ];
+        ]);
     }
-    public static function activeAttorneyFixture(): array
+    public static function activeAttorneyFixture(): SiriusPerson
     {
-        return [
+        return new SiriusPerson([
             'uId'          => '700000001234',
             'dob'          => '1980-03-01',
             'firstname'    => 'Test',
@@ -292,7 +292,7 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
             'systemStatus' => true,
-        ];
+        ]);
     }
 
     public static function activeAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
@@ -325,9 +325,9 @@ class FindActorInLpaTest extends TestCase
         );
 
     }
-    public static function donorFixture(): array
+    public static function donorFixture(): SiriusPerson
     {
-        return [
+        return new SiriusPerson([
             'uId'       => '700000001111',
             'dob'       => '1975-10-05',
             'firstname' => 'Donor',
@@ -337,7 +337,7 @@ class FindActorInLpaTest extends TestCase
                     'postcode' => 'PY1 3Kd',
                 ],
             ],
-        ];
+        ]);
     }
 
 }
