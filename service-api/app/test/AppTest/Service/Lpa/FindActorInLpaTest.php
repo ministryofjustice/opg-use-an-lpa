@@ -179,6 +179,35 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
+    public static function inactiveAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    {
+        return new \App\Entity\Sirius\SiriusLpa(
+            $applicationHasGuidance = null,
+            $applicationHasRestrictions = null,
+            $applicationType = null,
+            $attorneyActDecisions = null,
+            $attorneys = null,
+            $caseSubtype = null,
+            $channel = null,
+            $dispatchDate = null,
+            $donor = null,
+            $hasSeveranceWarning = null,
+            $invalidDate = null,
+            $lifeSustainingTreatment = null,
+            $lpaDonorSignatureDate = null,
+            $lpaIsCleansed = null,
+            $onlineLpaId = null,
+            $receiptDate = null,
+            $registrationDate = null,
+            $rejectedDate = null,
+            $replacementAttorneys = null,
+            $status = 'Revoked',
+            $statusDate = null,
+            $trustCorporations = null,
+            $uId = '700000000001',
+            $withdrawnDate = null
+        );
+    }
     public static function ghostAttorneyFixture(): array
     {
         return [
@@ -195,6 +224,35 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
+    public static function ghostAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    {
+        return new \App\Entity\Sirius\SiriusLpa(
+            $applicationHasGuidance = null,
+            $applicationHasRestrictions = null,
+            $applicationType = null,
+            $attorneyActDecisions = null,
+            $attorneys = null,
+            $caseSubtype = null,
+            $channel = null,
+            $dispatchDate = null,
+            $donor = null,
+            $hasSeveranceWarning = null,
+            $invalidDate = null,
+            $lifeSustainingTreatment = null,
+            $lpaDonorSignatureDate = null,
+            $lpaIsCleansed = null,
+            $onlineLpaId = null,
+            $receiptDate = null,
+            $registrationDate = null,
+            $rejectedDate = null,
+            $replacementAttorneys = null,
+            $status = 'Revoked',
+            $statusDate = null,
+            $trustCorporations = null,
+            $uId = '700000000001',
+            $withdrawnDate = null
+        );
+    }
     public static function multipleAddressAttorneyFixture(): array
     {
         return [
@@ -229,6 +287,36 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
+    public static function activeAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    {
+        return new \App\Entity\Sirius\SiriusLpa(
+            $applicationHasGuidance = null,
+            $applicationHasRestrictions = null,
+            $applicationType = null,
+            $attorneyActDecisions = null,
+            $attorneys = null,
+            $caseSubtype = null,
+            $channel = null,
+            $dispatchDate = null,
+            $donor = null,
+            $hasSeveranceWarning = null,
+            $invalidDate = null,
+            $lifeSustainingTreatment = null,
+            $lpaDonorSignatureDate = null,
+            $lpaIsCleansed = null,
+            $onlineLpaId = null,
+            $receiptDate = null,
+            $registrationDate = null,
+            $rejectedDate = null,
+            $replacementAttorneys = null,
+            $status = 'Revoked',
+            $statusDate = null,
+            $trustCorporations = null,
+            $uId = '700000000001',
+            $withdrawnDate = null
+        );
+
+    }
     public static function donorFixture(): array
     {
         return [
