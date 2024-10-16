@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\LpaStore\LpaStoreAttorney;
+use App\Entity\LpaStore\LpaStoreDonor;
+use App\Entity\Person;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
@@ -74,7 +77,7 @@ class FindActorInLpaTest extends TestCase
         return self::actorLookupDataProvider(new SiriusPerson(FindActorInLpaTest::activeAttorneyFixture()),
                                              new SiriusPerson(FindActorInLpaTest::donorFixture()));
     }
-    public static function actorLookupDataProvider(SiriusPerson $attorneyFixture, SiriusPerson $donorFixture): array
+    public static function actorLookupDataProvider(SiriusPerson|Person|LpaStoreAttorney $attorneyFixture, SiriusPerson|Person|LpaStoreDonor $donorFixture): array
     {
         return [
             [
