@@ -187,34 +187,26 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function inactiveAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    public static function inactiveAttorneyFixtureCombinedSirius(): Person
     {
-        return new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance = null,
-            $applicationHasRestrictions = null,
-            $applicationType = null,
-            $attorneyActDecisions = null,
-            $attorneys = null,
-            $caseSubtype = null,
-            $channel = null,
-            $dispatchDate = null,
-            $donor = null,
-            $hasSeveranceWarning = null,
-            $invalidDate = null,
-            $lifeSustainingTreatment = null,
-            $lpaDonorSignatureDate = null,
-            $lpaIsCleansed = null,
-            $onlineLpaId = null,
-            $receiptDate = null,
-            $registrationDate = null,
-            $rejectedDate = null,
-            $replacementAttorneys = null,
-            $status = 'Revoked',
-            $statusDate = null,
-            $trustCorporations = null,
-            $uId = '700000000001',
-            $withdrawnDate = null
-        );
+        return new Person(
+            $addressLine1 = null,
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country = null,
+            $county = null,
+            $dob = '1977-11-21',
+            $email = null,
+            $firstname = 'Attorneyone',
+            $firstnames = null,
+            $name = null,
+            $otherNames = null,
+            $postcode = 'Gg1 2ff',
+            $surname = 'Person',
+            $systemStatus = 'false',
+            $town = null,
+            $type = null,
+            $uId = '7000000002222');
     }
     public static function ghostAttorneyFixture(): SiriusPerson
     {
@@ -232,34 +224,26 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function ghostAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    public static function ghostAttorneyFixtureCombinedSirius(): Person
     {
-        return new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance = null,
-            $applicationHasRestrictions = null,
-            $applicationType = null,
-            $attorneyActDecisions = null,
-            $attorneys = null,
-            $caseSubtype = null,
-            $channel = null,
-            $dispatchDate = null,
-            $donor = null,
-            $hasSeveranceWarning = null,
-            $invalidDate = null,
-            $lifeSustainingTreatment = null,
-            $lpaDonorSignatureDate = null,
-            $lpaIsCleansed = null,
-            $onlineLpaId = null,
-            $receiptDate = null,
-            $registrationDate = null,
-            $rejectedDate = null,
-            $replacementAttorneys = null,
-            $status = 'Revoked',
-            $statusDate = null,
-            $trustCorporations = null,
-            $uId = '700000000001',
-            $withdrawnDate = null
-        );
+        return new Person(
+            $addressLine1 = null,
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country = null,
+            $county = null,
+            $dob = '1960-05-05',
+            $email = null,
+            $firstname = '',
+            $firstnames = null,
+            $name = null,
+            $otherNames = null,
+            $postcode = 'BB1 9ee',
+            $surname = '',
+            $systemStatus = 'true',
+            $town = null,
+            $type = null,
+            $uId = '700000003333');
     }
     public static function multipleAddressAttorneyFixture(): SiriusPerson
     {
@@ -295,35 +279,26 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function activeAttorneyFixtureCombinedSirius(): \App\Entity\Sirius\SiriusLpa
+    public static function activeAttorneyFixtureCombinedSirius(): Person
     {
-        return new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance = null,
-            $applicationHasRestrictions = null,
-            $applicationType = null,
-            $attorneyActDecisions = null,
-            $attorneys = null,
-            $caseSubtype = null,
-            $channel = null,
-            $dispatchDate = null,
-            $donor = null,
-            $hasSeveranceWarning = null,
-            $invalidDate = null,
-            $lifeSustainingTreatment = null,
-            $lpaDonorSignatureDate = null,
-            $lpaIsCleansed = null,
-            $onlineLpaId = null,
-            $receiptDate = null,
-            $registrationDate = null,
-            $rejectedDate = null,
-            $replacementAttorneys = null,
-            $status = 'Revoked',
-            $statusDate = null,
-            $trustCorporations = null,
-            $uId = '700000000001',
-            $withdrawnDate = null
-        );
-
+        return new Person(
+            $addressLine1 = null,
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country = null,
+            $county = null,
+            $dob = '1980-03-01',
+            $email = null,
+            $firstname = 'Test',
+            $firstnames = null,
+            $name = null,
+            $otherNames = null,
+            $postcode = 'Ab1 2Cd',
+            $surname = 'T’esting',
+            $systemStatus = 'true',
+            $town = null,
+            $type = null,
+            $uId = '700000001234');
     }
     public static function donorFixture(): SiriusPerson
     {
