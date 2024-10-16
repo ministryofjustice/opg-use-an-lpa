@@ -36,7 +36,7 @@ class FindActorInLpaTest extends TestCase
     #[DataProvider('actorLookupDataProviderOldSiriusPerson')]
     public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
-        $lpa = [
+        $lpa = new SiriusLpa([
             'uId'       => '700000012346',
             'donor'     => $this->donorFixture(),
             'attorneys' => [
@@ -45,7 +45,7 @@ class FindActorInLpaTest extends TestCase
                 $this->multipleAddressAttorneyFixture(),
                 $this->activeAttorneyFixture(),
             ]
-        ];
+        ]);
 
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->inactiveAttorneyFixture())
@@ -68,7 +68,7 @@ class FindActorInLpaTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $matchData = $sut(new SiriusLpa($lpa), $userData);
+        $matchData = $sut($lpa, $userData);
         $this->assertEquals($expectedResponse, $matchData);
     }
 
@@ -76,6 +76,11 @@ class FindActorInLpaTest extends TestCase
     {
         return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixture(),
                                              FindActorInLpaTest::donorFixture());
+    }
+    public static function actorLookupDataProviderCombinedSirius(): array
+    {
+        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixtureCombinedSirius(),
+                                             FindActorInLpaTest::donorFixtureCombinedSirius());
     }
     public static function actorLookupDataProvider(SiriusPerson|Person|LpaStoreAttorney $attorneyFixture, SiriusPerson|Person|LpaStoreDonor $donorFixture): array
     {
@@ -195,7 +200,7 @@ class FindActorInLpaTest extends TestCase
             $addressLine3 = null,
             $country = null,
             $county = null,
-            $dob = '1977-11-21',
+            $dob = new \DateTimeImmutable('1977-11-21'),
             $email = null,
             $firstname = 'Attorneyone',
             $firstnames = null,
@@ -232,7 +237,7 @@ class FindActorInLpaTest extends TestCase
             $addressLine3 = null,
             $country = null,
             $county = null,
-            $dob = '1960-05-05',
+            $dob = new \DateTimeImmutable('1960-05-05'),
             $email = null,
             $firstname = '',
             $firstnames = null,
@@ -287,7 +292,7 @@ class FindActorInLpaTest extends TestCase
             $addressLine3 = null,
             $country = null,
             $county = null,
-            $dob = '1980-03-01',
+            $dob = new \DateTimeImmutable('1980-03-01'),
             $email = null,
             $firstname = 'Test',
             $firstnames = null,
@@ -313,6 +318,27 @@ class FindActorInLpaTest extends TestCase
                 ],
             ],
         ]);
+    }
+    public static function donorFixtureCombinedSirius(): Person
+    {
+        return new Person(
+            $addressLine1 = null,
+            $addressLine2 = null,
+            $addressLine3 = null,
+            $country = null,
+            $county = null,
+            $dob = new \DateTimeImmutable('1975-10-05'),
+            $email = null,
+            $firstname = 'Donor',
+            $firstnames = null,
+            $name = null,
+            $otherNames = null,
+            $postcode = 'PY1 3Kd',
+            $surname = 'Person',
+            $systemStatus = null,
+            $town = null,
+            $type = null,
+            $uId = '700000001111');
     }
 
 }
