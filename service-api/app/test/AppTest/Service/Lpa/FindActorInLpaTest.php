@@ -30,7 +30,7 @@ class FindActorInLpaTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('actorLookupDataProvider')]
+    #[DataProvider('actorLookupDataProviderOldSiriusPerson')]
     public function returns_actor_and_lpa_details_if_match_found(?array $expectedResponse, array $userData): void
     {
         $lpa = [
@@ -69,12 +69,17 @@ class FindActorInLpaTest extends TestCase
         $this->assertEquals($expectedResponse, $matchData);
     }
 
-    public static function actorLookupDataProvider(): array
+    public static function actorLookupDataProviderOldSiriusPerson(): array
+    {
+        return self::actorLookupDataProvider(new SiriusPerson(FindActorInLpaTest::activeAttorneyFixture()),
+                                             new SiriusPerson(FindActorInLpaTest::donorFixture()));
+    }
+    public static function actorLookupDataProvider(SiriusPerson $attorneyFixture, SiriusPerson $donorFixture): array
     {
         return [
             [
                 [
-                    'actor'  => new SiriusPerson(FindActorInLpaTest::activeAttorneyFixture()),
+                    'actor'  => $attorneyFixture,
                     'role'   => 'attorney', // successful match for attorney
                     'lpa-id' => '700000012346',
                 ],
@@ -88,7 +93,7 @@ class FindActorInLpaTest extends TestCase
             ],
             [
                 [
-                    'actor'  => new SiriusPerson(FindActorInLpaTest::donorFixture()),
+                    'actor'  => $donorFixture,
                     'role'   => 'donor', // successful match for donor
                     'lpa-id' => '700000012346',
                 ],
