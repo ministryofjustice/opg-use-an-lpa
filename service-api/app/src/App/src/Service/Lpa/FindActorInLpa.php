@@ -43,7 +43,7 @@ class FindActorInLpa
         return [
             'actor'  => $actor,
             'role'   => $role,
-            'lpa-id' => $lpa['uId'],
+            'lpa-id' => $lpa->getUid(),
         ];
     }
 
@@ -103,30 +103,32 @@ class FindActorInLpa
      */
     private function checkForActorMatch(SiriusPerson|Person $actor, array $matchData): int
     {
-        // Check if the actor has more than one address
-        if (count($actor['addresses']) > 1) {
-            $this->logger->notice(
-                'Data match failed for actor {id} as more than 1 address found',
-                [
-                    'id' => $actor['uId'],
-                ]
-            );
-            return self::NO_MATCH__MULTIPLE_ADDRESSES;
+        // Check if the actor has more than one address (only applies to old SiriusPerson class not new Person)
+        if (gettype($actor) == SiriusPerson::class) {
+            if (count($actor['addresses']) > 1) {
+                $this->logger->notice(
+                    'Data match failed for actor {id} as more than 1 address found',
+                    [
+                        'id' => $actor['uId'],
+                    ]
+                );
+                return self::NO_MATCH__MULTIPLE_ADDRESSES;
+            }
         }
 
         $matchData = $this->normaliseComparisonData($matchData);
         $actorData = $this->normaliseComparisonData(
             [
-                'first_names' => $actor['firstname'],
-                'last_name'   => $actor['surname'],
-                'postcode'    => $actor['addresses'][0]['postcode'],
+                'first_names' => $actor->getFirstname(),
+                'last_name'   => $actor->getSurname(),
+                'postcode'    => $actor->getPostcode(),
             ]
         );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'   => $actor['uId'],
+                'actor_id'   => $actor->getUid(),
                 'to_match'   => $matchData,
                 'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
             ]
@@ -158,7 +160,7 @@ class FindActorInLpa
                     . 'Fields in error: {fields_in_error}',
                 [
                     'uId'             => $matchData['reference_number'],
-                    'actor_id'        => $actor['uId'],
+                    'actor_id'        => $actor->getUid(),
                     'fields_in_error' => $match,
                 ]
             );

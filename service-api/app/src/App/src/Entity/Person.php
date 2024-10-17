@@ -54,4 +54,10 @@ class Person implements GetAttorneyStatusInterface
     {
         return $this->systemStatus;
     }
+
+    #[DoNotSerialize]
+    public function getPostcode(): bool|string
+    {
+        return $this->postcode;
+    }
 }
