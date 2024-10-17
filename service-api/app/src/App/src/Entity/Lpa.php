@@ -54,4 +54,22 @@ class Lpa implements JsonSerializable
 
         return $data;
     }
+
+    #[DoNotSerialize]
+    public function getAttorneys(): array
+    {
+        return $this->attorneys ?? [];
+    }
+
+    #[DoNotSerialize]
+    public function getDonor(): ?object
+    {
+        return $this->donor;
+    }
+
+    #[DoNotSerialize]
+    public function getUid(): string
+    {
+        return $this->uId;
+    }
 }
