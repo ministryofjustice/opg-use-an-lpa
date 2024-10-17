@@ -45,6 +45,7 @@
         "cooperaj/better-twig-i18n": "^3.0",
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^9.0",
+        "eventsauce/object-hydrator": "^1.4",
         "facile-it/php-openid-client": "^0.3.5",
         "guzzlehttp/guzzle": "^7.8.1",
         "laminas/laminas-cache": "^3.6",
