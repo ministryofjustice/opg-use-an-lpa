@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Entity\Lpa;
+use App\Entity\Person;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
@@ -23,12 +24,12 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(OldSiriusLpa|GetAttorneyStatusInterface $lpa, array $matchData): ?array
+    public function __invoke(OldSiriusLpa|Lpa $lpa, array $matchData): ?array
     {
         $actor = null;
         $role  = null;
 
-        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa['uId']);
+        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa->getUid());
 
         // If not an attorney, check if they're the donor.
         if ($actor === null) {
@@ -52,7 +53,7 @@ class FindActorInLpa
             $this->logger->info(
                 'Actor {id} status is not active for LPA {uId}',
                 [
-                    'id'  => $attorney['uId'],
+                    'id'  => $attorney->getUid(),
                     'uId' => $lpaId,
                 ]
             );
@@ -69,7 +70,7 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function checkDonorDetails(SiriusPerson $donor, array $matchData): array
+    private function checkDonorDetails(SiriusPerson|Person $donor, array $matchData): array
     {
         $donorMatchResponse = $this->checkForActorMatch($donor, $matchData);
 
@@ -100,7 +101,7 @@ class FindActorInLpa
      * @param array $matchData The user provided data we're searching for a match against
      * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
      */
-    private function checkForActorMatch(SiriusPerson $actor, array $matchData): int
+    private function checkForActorMatch(SiriusPerson|Person $actor, array $matchData): int
     {
         // Check if the actor has more than one address
         if (count($actor['addresses']) > 1) {

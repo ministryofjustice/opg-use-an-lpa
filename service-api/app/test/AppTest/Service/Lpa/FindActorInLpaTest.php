@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\Lpa;
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
@@ -77,16 +78,39 @@ class FindActorInLpaTest extends TestCase
     #[DataProvider('actorLookupDataProviderCombinedSirius')]
     public function returns_actor_and_lpa_details_if_match_found_combined_sirius(?array $expectedResponse, array $userData): void
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa([
-                                 'uId'       => '700000012346',
-                                 'donor'     => $this->donorFixture(),
-                                 'attorneys' => [
-                                     $this->inactiveAttorneyFixture(),
-                                     $this->ghostAttorneyFixture(),
-                                     //$this->multipleAddressAttorneyFixture(),
-                                     $this->activeAttorneyFixture(),
-                                 ]
-                             ]);
+        $attorneys =  [
+            $this->inactiveAttorneyFixture(),
+            $this->ghostAttorneyFixture(),
+            $this->activeAttorneyFixture(),
+        ];
+
+        $lpa = new Lpa(
+            null,
+            null,
+            null,
+            null,
+             $attorneys,
+            null,
+            null,
+            null,
+             $this->donorFixture(),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            uId: '700000012346',
+            withdrawnDate: null
+        );
+
 
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->inactiveAttorneyFixture())
