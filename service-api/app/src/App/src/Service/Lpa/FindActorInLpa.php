@@ -23,7 +23,7 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(OldSiriusLpa|Lpa $lpa, array $matchData): ?array
+    public function __invoke(OldSiriusLpa|GetAttorneyStatusInterface $lpa, array $matchData): ?array
     {
         $actor = null;
         $role  = null;
