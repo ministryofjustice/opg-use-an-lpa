@@ -62,8 +62,8 @@ class Person implements GetAttorneyStatusInterface
     }
 
     #[DoNotSerialize]
-    public function getDob(): DateTimeImmutable
+    public function getDob(): String
     {
-        return $this->dob;
+        return $this->dob->format('Y-m-d');
     }
 }
