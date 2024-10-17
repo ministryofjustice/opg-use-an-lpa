@@ -22,7 +22,7 @@ use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use JsonSerializable;
 
-class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyStatusInterface
+class SiriusLpaAttorney extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -95,23 +95,5 @@ class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyS
         });
 
         return $data;
-    }
-
-    #[DoNotSerialize]
-    public function getFirstname(): string
-    {
-        return $this->firstname;
-    }
-
-    #[DoNotSerialize]
-    public function getSurname(): string
-    {
-        return $this->surname;
-    }
-
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
-    {
-        return $this->systemStatus;
     }
 }

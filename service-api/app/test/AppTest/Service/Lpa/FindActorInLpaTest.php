@@ -7,6 +7,8 @@ namespace AppTest\Service\Lpa;
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
+use App\Entity\Sirius\SiriusLpaAttorney;
+use App\Entity\Sirius\SiriusLpaDonor;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
@@ -38,14 +40,53 @@ class FindActorInLpaTest extends TestCase
     {
         $lpa = new SiriusLpa([
             'uId'       => '700000012346',
-            'donor'     => $this->donorFixture(),
+            'donor'     => $this->donorFixtureOld(),
             'attorneys' => [
-                $this->inactiveAttorneyFixture(),
-                $this->ghostAttorneyFixture(),
-                $this->multipleAddressAttorneyFixture(),
-                $this->activeAttorneyFixture(),
+                $this->inactiveAttorneyFixtureOld(),
+                $this->ghostAttorneyFixtureOld(),
+                $this->multipleAddressAttorneyFixtureOld(),
+                $this->activeAttorneyFixtureOld(),
             ]
         ]);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke( $this->inactiveAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke( $this->ghostAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke( $this->multipleAddressAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke( $this->activeAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
+
+        $sut = new FindActorInLpa(
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->loggerProphecy->reveal()
+        );
+
+        $matchData = $sut($lpa, $userData);
+        $this->assertEquals($expectedResponse, $matchData);
+    }
+    #[Test]
+    #[DataProvider('actorLookupDataProviderCombinedSirius')]
+    public function returns_actor_and_lpa_details_if_match_found_combined_sirius(?array $expectedResponse, array $userData): void
+    {
+        $lpa = new \App\Entity\Sirius\SiriusLpa([
+                                 'uId'       => '700000012346',
+                                 'donor'     => $this->donorFixture(),
+                                 'attorneys' => [
+                                     $this->inactiveAttorneyFixture(),
+                                     $this->ghostAttorneyFixture(),
+                                     //$this->multipleAddressAttorneyFixture(),
+                                     $this->activeAttorneyFixture(),
+                                 ]
+                             ]);
 
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->inactiveAttorneyFixture())
@@ -55,9 +96,9 @@ class FindActorInLpaTest extends TestCase
             ->__invoke( $this->ghostAttorneyFixture())
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
-        $this->getAttorneyStatusProphecy
-            ->__invoke( $this->multipleAddressAttorneyFixture())
-            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+        //$this->getAttorneyStatusProphecy
+         //   ->__invoke( $this->multipleAddressAttorneyFixtureComb())
+          //  ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->activeAttorneyFixture())
@@ -74,15 +115,15 @@ class FindActorInLpaTest extends TestCase
 
     public static function actorLookupDataProviderOldSiriusPerson(): array
     {
-        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixture(),
-                                             FindActorInLpaTest::donorFixture());
+        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixtureOld(),
+                                             FindActorInLpaTest::donorFixtureOld());
     }
     public static function actorLookupDataProviderCombinedSirius(): array
     {
-        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixtureCombinedSirius(),
-                                             FindActorInLpaTest::donorFixtureCombinedSirius());
+        return self::actorLookupDataProvider(FindActorInLpaTest::activeAttorneyFixture(),
+                                             FindActorInLpaTest::donorFixture());
     }
-    public static function actorLookupDataProvider(SiriusPerson|Person|LpaStoreAttorney $attorneyFixture, SiriusPerson|Person|LpaStoreDonor $donorFixture): array
+    private static function actorLookupDataProvider(SiriusPerson|Person $attorneyFixture, SiriusPerson|Person|LpaStoreDonor $donorFixture): array
     {
         return [
             [
@@ -176,7 +217,7 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
-    public static function inactiveAttorneyFixture(): SiriusPerson
+    public static function inactiveAttorneyFixtureOld(): SiriusPerson
     {
         return new SiriusPerson([
             'uId'          => '700000002222',
@@ -192,28 +233,28 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function inactiveAttorneyFixtureCombinedSirius(): Person
+    public static function inactiveAttorneyFixture(): Person
     {
         return new Person(
-            $addressLine1 = null,
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $country = null,
-            $county = null,
-            $dob = new \DateTimeImmutable('1977-11-21'),
-            $email = null,
-            $firstname = 'Attorneyone',
-            $firstnames = null,
-            $name = null,
-            $otherNames = null,
-            $postcode = 'Gg1 2ff',
-            $surname = 'Person',
-            $systemStatus = 'false',
-            $town = null,
-            $type = null,
-            $uId = '7000000002222');
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country: null,
+            county: null,
+            dob: new \DateTimeImmutable('1977-11-21'),
+            email: null,
+            firstname: 'Attorneyone',
+            firstnames: null,
+            name: null,
+            otherNames: null,
+            postcode: 'Gg1 2ff',
+            surname: 'Person',
+            systemStatus: 'false',
+            town: null,
+            type: null,
+            uId: '7000000002222');
     }
-    public static function ghostAttorneyFixture(): SiriusPerson
+    public static function ghostAttorneyFixtureOld(): SiriusPerson
     {
         return new SiriusPerson([
             'uId'          => '700000003333',
@@ -229,28 +270,28 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function ghostAttorneyFixtureCombinedSirius(): Person
+    public static function ghostAttorneyFixture(): Person
     {
         return new Person(
-            $addressLine1 = null,
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $country = null,
-            $county = null,
-            $dob = new \DateTimeImmutable('1960-05-05'),
-            $email = null,
-            $firstname = '',
-            $firstnames = null,
-            $name = null,
-            $otherNames = null,
-            $postcode = 'BB1 9ee',
-            $surname = '',
-            $systemStatus = 'true',
-            $town = null,
-            $type = null,
-            $uId = '700000003333');
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country: null,
+            county: null,
+            dob: new \DateTimeImmutable('1960-05-05'),
+            email: null,
+            firstname: '',
+            firstnames: null,
+            name: null,
+            otherNames: null,
+            postcode: 'BB1 9ee',
+            surname: '',
+            systemStatus: 'true',
+            town: null,
+            type: null,
+            uId: '700000003333');
     }
-    public static function multipleAddressAttorneyFixture(): SiriusPerson
+    public static function multipleAddressAttorneyFixtureOld(): SiriusPerson
     {
         return new SiriusPerson([
             'uId'          => '700000004444',
@@ -268,7 +309,7 @@ class FindActorInLpaTest extends TestCase
             'systemStatus' => true,
         ]);
     }
-    public static function activeAttorneyFixture(): SiriusPerson
+    public static function activeAttorneyFixtureOld(): SiriusPerson
     {
         return new SiriusPerson([
             'uId'          => '700000001234',
@@ -284,28 +325,28 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function activeAttorneyFixtureCombinedSirius(): Person
+    public static function activeAttorneyFixture(): Person
     {
         return new Person(
-            $addressLine1 = null,
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $country = null,
-            $county = null,
-            $dob = new \DateTimeImmutable('1980-03-01'),
-            $email = null,
-            $firstname = 'Test',
-            $firstnames = null,
-            $name = null,
-            $otherNames = null,
-            $postcode = 'Ab1 2Cd',
-            $surname = 'T’esting',
-            $systemStatus = 'true',
-            $town = null,
-            $type = null,
-            $uId = '700000001234');
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country: null,
+            county: null,
+            dob: new \DateTimeImmutable('1980-03-01'),
+            email: null,
+            firstname: 'Test',
+            firstnames: null,
+            name: null,
+            otherNames: null,
+            postcode: 'Ab1 2Cd',
+            surname: 'T’esting',
+            systemStatus: 'true',
+            town: null,
+            type: null,
+            uId: '700000001234');
     }
-    public static function donorFixture(): SiriusPerson
+    public static function donorFixtureOld(): SiriusPerson
     {
         return new SiriusPerson([
             'uId'       => '700000001111',
@@ -319,26 +360,26 @@ class FindActorInLpaTest extends TestCase
             ],
         ]);
     }
-    public static function donorFixtureCombinedSirius(): Person
+    public static function donorFixture(): Person
     {
         return new Person(
-            $addressLine1 = null,
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $country = null,
-            $county = null,
-            $dob = new \DateTimeImmutable('1975-10-05'),
-            $email = null,
-            $firstname = 'Donor',
-            $firstnames = null,
-            $name = null,
-            $otherNames = null,
-            $postcode = 'PY1 3Kd',
-            $surname = 'Person',
-            $systemStatus = null,
-            $town = null,
-            $type = null,
-            $uId = '700000001111');
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country: null,
+            county: null,
+            dob: new \DateTimeImmutable('1975-10-05'),
+            email: null,
+            firstname: 'Donor',
+            firstnames: null,
+            name: null,
+            otherNames: null,
+            postcode: 'PY1 3Kd',
+            surname: 'Person',
+            systemStatus: null,
+            town: null,
+            type: null,
+            uId: '700000001111');
     }
 
 }
