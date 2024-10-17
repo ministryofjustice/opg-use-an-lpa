@@ -81,7 +81,6 @@ class FindActorInLpaTest extends TestCase
         $attorneys =  [
             $this->inactiveAttorneyFixture(),
             $this->ghostAttorneyFixture(),
-            $this->multipleAddressAttorneyFixtureOld(),
             $this->activeAttorneyFixture(),
         ];
 
@@ -120,10 +119,6 @@ class FindActorInLpaTest extends TestCase
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->ghostAttorneyFixture())
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
-
-        $this->getAttorneyStatusProphecy
-            ->__invoke( $this->multipleAddressAttorneyFixtureOld())
-            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
             ->__invoke( $this->activeAttorneyFixture())
