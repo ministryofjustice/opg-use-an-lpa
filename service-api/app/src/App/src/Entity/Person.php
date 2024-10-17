@@ -56,8 +56,14 @@ class Person implements GetAttorneyStatusInterface
     }
 
     #[DoNotSerialize]
-    public function getPostcode(): bool|string
+    public function getPostcode(): string
     {
         return $this->postcode;
+    }
+
+    #[DoNotSerialize]
+    public function getDob(): DateTimeImmutable
+    {
+        return $this->dob;
     }
 }

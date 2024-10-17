@@ -130,13 +130,13 @@ class FindActorInLpa
             [
                 'actor_id'   => $actor->getUid(),
                 'to_match'   => $matchData,
-                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
+                'actor_data' => array_merge($actorData, ['dob' => $actor->getDob()]),
             ]
         );
 
         $match = self::MATCH;
 
-        $match = $actor['dob'] !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
+        $match = $actor->getDob() !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
         $match = $actorData['first_names'] !== $matchData['first_names']
             ? $match | self::NO_MATCH__FIRSTNAMES
             : $match;
