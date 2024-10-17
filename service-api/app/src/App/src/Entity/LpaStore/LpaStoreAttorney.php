@@ -14,7 +14,7 @@ use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
 use JsonSerializable;
 
-class LpaStoreAttorney extends Person implements JsonSerializable, GetAttorneyStatusInterface
+class LpaStoreAttorney extends Person implements JsonSerializable
 {
     public function __construct(
         #[MapFrom('address')]

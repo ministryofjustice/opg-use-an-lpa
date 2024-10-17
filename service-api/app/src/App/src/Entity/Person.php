@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 
-class Person
+class Person implements GetAttorneyStatusInterface
 {
     public function __construct(
         public readonly ?string $addressLine1,
@@ -34,5 +35,35 @@ class Person
     public function getUid(): string
     {
         return $this->uId;
+    }
+
+    #[DoNotSerialize]
+    public function getFirstname(): string
+    {
+        return $this->firstname;
+    }
+
+    #[DoNotSerialize]
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+
+    #[DoNotSerialize]
+    public function getSystemStatus(): bool|string
+    {
+        return $this->systemStatus;
+    }
+
+    #[DoNotSerialize]
+    public function getPostcode(): string
+    {
+        return $this->postcode;
+    }
+
+    #[DoNotSerialize]
+    public function getDob(): String
+    {
+        return $this->dob->format('Y-m-d');
     }
 }
