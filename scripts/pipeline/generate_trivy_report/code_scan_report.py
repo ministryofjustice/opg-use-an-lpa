@@ -74,6 +74,7 @@ class CodeScanReport:
         high_alerts, critical_alerts = self.get_trivy_alerts()
 
         overall_report = (
+            f"Trivy Code Scan Report\n"
             f"{'-' * 100}\n"
             f"*HIGH ALERTS*: [{len(high_alerts)}]\n"
             f"*CRITICAL ALERTS*: [{len(critical_alerts)}]\n"
