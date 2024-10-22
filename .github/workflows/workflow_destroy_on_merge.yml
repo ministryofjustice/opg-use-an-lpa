@@ -30,7 +30,19 @@ on:
 
 jobs:
   workspace_name:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-workspace.yml@383650d409aad063a69ce6cc3a013ac538cc1508
+    runs-on: ubuntu-latest
+    outputs:
+      workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
+    steps:
+      - name: Set safe branch name
+        id: safe_branch_name
+        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@v3.1.0
+
+      - name: Set workspace name
+        id: set_workspace_name
+        run: |
+          echo "workspace_name=${{ github.event.number }}${{ steps.safe_branch_name.outputs.safe }}" >> $GITHUB_OUTPUT
+
     if: github.event.pull_request.merged == true
 
   cleanup_workspace:
@@ -91,4 +103,4 @@ jobs:
         env:
           TF_VAR_pagerduty_token: ${{ env.TF_VAR_pagerduty_token }}
         run: |
-          ../../scripts/pipeline/workspace_cleanup/destroy_workspace.sh ${{ needs.workspace_name.outputs.name }}
+          ../../scripts/pipeline/workspace_cleanup/destroy_workspace.sh ${{ needs.workspace_name.outputs.workspace_name }}
