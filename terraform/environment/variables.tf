@@ -118,7 +118,3 @@ variable "environments" {
   )
   description = "A map of environment names to environment configurations"
 }
-
-locals {
-  environment = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
-}
