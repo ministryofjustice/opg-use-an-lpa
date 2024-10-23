@@ -32,7 +32,7 @@ data "aws_sns_topic" "cloudwatch_application_insights" {
 resource "pagerduty_service_integration" "cloudwatch_application_insights" {
   count   = var.cloudwatch_application_insights_enabled ? 1 : 0
   name    = "Use an LPA ${data.aws_region.current.name} Cloudwatch Application Insights Ops Item Alarm"
-  service = data.pagerduty_service.main.id
+  service = var.pagerduty_service_id
   vendor  = data.pagerduty_vendor.cloudwatch.id
 }
 
