@@ -24,11 +24,6 @@ resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
   provider = aws.region
 }
 
-data "aws_sns_topic" "cloudwatch_application_insights" {
-  name     = "cloudwatch_application_insights"
-  provider = aws.region
-}
-
 resource "pagerduty_service_integration" "cloudwatch_application_insights" {
   count   = var.cloudwatch_application_insights_enabled ? 1 : 0
   name    = "Use an LPA ${data.aws_region.current.name} Cloudwatch Application Insights Ops Item Alarm"
@@ -38,7 +33,7 @@ resource "pagerduty_service_integration" "cloudwatch_application_insights" {
 
 resource "aws_sns_topic_subscription" "cloudwatch_application_insights" {
   count                  = var.cloudwatch_application_insights_enabled ? 1 : 0
-  topic_arn              = data.aws_sns_topic.cloudwatch_application_insights.arn
+  topic_arn              = aws_sns_topic.cloudwatch_application_insights.arn
   protocol               = "https"
   endpoint_auto_confirms = true
   endpoint               = "https://events.pagerduty.com/integration/${pagerduty_service_integration.cloudwatch_application_insights[0].integration_key}/enqueue"
