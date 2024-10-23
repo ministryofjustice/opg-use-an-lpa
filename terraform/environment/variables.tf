@@ -46,6 +46,7 @@ variable "environments" {
       })
       cookie_expires_use                               = number
       cookie_expires_view                              = number
+      cloudwatch_application_insights_enabled          = bool
       create_dashboard                                 = bool
       create_onelogin_dashboard                        = bool
       google_analytics_id_use                          = string
@@ -116,4 +117,8 @@ variable "environments" {
     })
   )
   description = "A map of environment names to environment configurations"
+}
+
+locals {
+  environment = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
 }
