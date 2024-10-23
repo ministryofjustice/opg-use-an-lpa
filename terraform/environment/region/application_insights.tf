@@ -1,25 +1,8 @@
 resource "aws_sns_topic" "cloudwatch_application_insights" {
-  name              = "user-updates-topic"
-  kms_master_key_id = "alias/pagerduty-sns"
-  delivery_policy   = <<EOF
-{
-  "http": {
-    "defaultHealthyRetryPolicy": {
-      "minDelayTarget": 20,
-      "maxDelayTarget": 20,
-      "numRetries": 3,
-      "numMaxDelayRetries": 0,
-      "numNoDelayRetries": 0,
-      "numMinDelayRetries": 0,
-      "backoffFunction": "linear"
-    },
-    "disableSubscriptionOverrides": false,
-    "defaultRequestPolicy": {
-      "headerContentType": "text/plain; charset=UTF-8"
-    }
-  }
-}
-EOF
+  name              = "CloudWatch-Application-Insights-to-PagerDuty-${var.environment_name}"
+  kms_master_key_id = data.aws_kms_alias.pagerduty_sns.target_key_arn
+
+  provider = aws.region
 }
 
 resource "aws_applicationinsights_application" "environment" {
