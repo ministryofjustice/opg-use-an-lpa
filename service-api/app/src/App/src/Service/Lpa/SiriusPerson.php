@@ -46,6 +46,16 @@ class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatus
         return (string)$this->person['companyName'];
     }
 
+    public function getPostcode(): string
+    {
+        return (string)$this->person['addresses'][0]['postcode'];
+    }
+
+    public function getDob(): string
+    {
+        return (string)$this->person['dob'];
+    }
+    
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->person[$offset]);
