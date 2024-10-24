@@ -38,6 +38,11 @@ variable "capacity_provider" {
   type        = string
 }
 
+variable "cloudwatch_application_insights_enabled" {
+  type        = bool
+  description = "Enable CloudWatch Application Insights"
+}
+
 variable "container_version" {
   description = "The image tag to use for the containers."
   type        = string
