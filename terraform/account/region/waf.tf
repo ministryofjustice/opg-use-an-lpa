@@ -151,6 +151,29 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
+  rule {
+    name     = "RateLimitByIP"
+    priority = 5
+
+    action {
+      count {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 200
+        aggregate_key_type = "IP"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      sampled_requests_enabled   = true
+      metric_name                = "RateLimitByIP"
+    }
+
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "${var.account_name}-web-acl"
