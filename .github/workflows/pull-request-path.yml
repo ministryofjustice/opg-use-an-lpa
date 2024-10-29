@@ -152,6 +152,7 @@ jobs:
     secrets: inherit
     if: |
       always() &&
+      needs.workflow_variables.outputs.specific_path != 'docs' &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
