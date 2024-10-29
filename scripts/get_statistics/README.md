@@ -5,7 +5,7 @@ Returns json data from DynamoDB and Cloudwatch Metric Statistics about the use o
 Without specifying arguments, this script will assume a role into the production account and print statistics for the last 3 months.
 
 ```bash
-aws-vault exec identity -- python ./get_accounts_created_metric.py | jq
+aws-vault exec identity -- python ./get_statistics.py | jq
 ```
 
 ```json
@@ -51,14 +51,14 @@ aws-vault exec identity -- python ./get_accounts_created_metric.py | jq
 }
 ```
 
-Arguments can be used to specify start and end dates (which will be used to set a full month), and the environment to get statistics for.
+Arguments can be used to specify start and end dates (which will be used to set a full month), and the environment to get statistics for. The arguments should be in ISO format.
 
 ```bash
 aws-vault exec identity -- python ./get_statistics.py -h
 usage: get_statistics.py [-h] [--environment ENVIRONMENT]
                          [--startdate STARTDATE] [--enddate ENDDATE]
 
-Print the total accounts created. Starts from teh first of the month of the
+Print the total accounts created. Starts from the first of the month of the
 given start date.
 
 optional arguments:
