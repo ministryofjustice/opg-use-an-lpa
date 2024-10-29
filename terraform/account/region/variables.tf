@@ -42,6 +42,11 @@ variable "lambda_container_version" {
   type        = string
 }
 
+variable "pagerduty_service_id" {
+  description = "The ID of the PagerDuty service to use."
+  type        = string
+}
+
 variable "vpc_flow_logs_iam_role" {
   description = "The IAM role for VPC flow logs"
   type = object({

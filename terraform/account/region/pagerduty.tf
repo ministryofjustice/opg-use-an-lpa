@@ -102,14 +102,14 @@ resource "aws_sns_topic_subscription" "cloudwatch_sns_subscription" {
 }
 
 resource "pagerduty_service_integration" "cloudwatch_application_insights" {
-  count   = var.cloudwatch_application_insights_enabled ? 1 : 0
+  count   = var.account.cloudwatch_application_insights_enabled ? 1 : 0
   name    = "Use an LPA ${data.aws_region.current.name} Cloudwatch Application Insights Ops Item Alarm"
   service = var.pagerduty_service_id
   vendor  = data.pagerduty_vendor.cloudwatch.id
 }
 
 resource "aws_sns_topic_subscription" "cloudwatch_application_insights" {
-  count                  = var.cloudwatch_application_insights_enabled ? 1 : 0
+  count                  = var.account.cloudwatch_application_insights_enabled ? 1 : 0
   topic_arn              = aws_sns_topic.cloudwatch_application_insights.arn
   protocol               = "https"
   endpoint_auto_confirms = true
