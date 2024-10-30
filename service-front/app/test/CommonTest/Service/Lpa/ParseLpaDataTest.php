@@ -17,6 +17,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Common\Service\Lpa\Factory\LpaDataFormatter;
 
 /**
  * @property array     lpaData
@@ -34,6 +35,8 @@ class ParseLpaDataTest extends TestCase
 
     private ObjectProphecy|LpaFactory $lpaFactory;
     private ObjectProphecy|InstAndPrefImagesFactory $instAndPrefImagesFactory;
+
+    private ObjectProphecy|LpaDataFormatter $lpaDataFormatter;
 
     public function setUp(): void
     {
@@ -73,6 +76,7 @@ class ParseLpaDataTest extends TestCase
 
         $this->lpaFactory               = $this->prophesize(LpaFactory::class);
         $this->instAndPrefImagesFactory = $this->prophesize(InstAndPrefImagesFactory::class);
+        $this->lpaDataFormatter         = $this->prophesize(LpaDataFormatter::class);
     }
 
     /**
@@ -86,12 +90,17 @@ class ParseLpaDataTest extends TestCase
 
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
 
-        $sut    = new ParseLpaData($this->lpaFactory->reveal(), $this->instAndPrefImagesFactory->reveal());
+        $sut = new ParseLpaData(
+            $this->lpaFactory->reveal(),
+            $this->instAndPrefImagesFactory->reveal(),
+            $this->lpaDataFormatter->reveal()
+        );
         $result = $sut(
             [
                 $this->lpaId => $this->lpaData,
             ]
         );
+
         $this->assertObjectHasProperty($this->lpaId, $result);
         $this->assertEquals($this->lpa, $result->{$this->lpaId}->lpa);
         $this->assertEquals($this->actor, $result->{$this->lpaId}->actor['details']);

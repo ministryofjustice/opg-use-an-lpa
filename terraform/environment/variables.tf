@@ -46,6 +46,7 @@ variable "environments" {
       })
       cookie_expires_use                               = number
       cookie_expires_view                              = number
+      cloudwatch_application_insights_enabled          = bool
       create_dashboard                                 = bool
       create_onelogin_dashboard                        = bool
       google_analytics_id_use                          = string

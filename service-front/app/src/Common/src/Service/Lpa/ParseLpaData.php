@@ -6,6 +6,7 @@ namespace Common\Service\Lpa;
 
 use ArrayObject;
 use Exception;
+use Common\Service\Lpa\Factory\LpaDataFormatter;
 
 /**
  * Single action invokeable class that transforms incoming LPA data arrays from the API into ones containing
@@ -16,8 +17,11 @@ class ParseLpaData
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(private LpaFactory $lpaFactory, private InstAndPrefImagesFactory $imagesFactory)
-    {
+    public function __construct(
+        private LpaFactory $lpaFactory,
+        private InstAndPrefImagesFactory $imagesFactory,
+        private LpaDataFormatter $lpaDataFormatter,
+    ) {
     }
 
     /**
@@ -40,7 +44,14 @@ class ParseLpaData
         foreach ($data as $dataItemName => $dataItem) {
             switch ($dataItemName) {
                 case 'lpa':
-                    $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                    //introduce feature flag here #3551
+                    //the lpaData array converted to object using hydrator
+                    if ($this->featureFlags['support_datastore_lpas'] ?? false) {
+                        $data['lpa'] = ($this->lpaDataFormatter)($dataItem);
+                    }
+                    else {
+                        $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                    }
                     break;
                 case 'actor':
                     $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);

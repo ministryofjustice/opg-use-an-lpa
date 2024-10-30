@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import requests
+import sys
 
 class CodeScanReport:
     def __init__(self, repo, github_token) -> None:
@@ -73,6 +74,7 @@ class CodeScanReport:
         high_alerts, critical_alerts = self.get_trivy_alerts()
 
         overall_report = (
+            f"Trivy Code Scan Report\n"
             f"{'-' * 100}\n"
             f"*HIGH ALERTS*: [{len(high_alerts)}]\n"
             f"*CRITICAL ALERTS*: [{len(critical_alerts)}]\n"
@@ -131,6 +133,10 @@ def main():
     vulnrability_report = CodeScanReport(repo, github_token)
 
     overall_report, critical_alert_report, high_alert_report = vulnrability_report.generate_report()
+
+    if len(critical_alert_report) == 0 and len(high_alert_report) == 0:
+        print("No Critical or High alerts, Quitting")
+        sys.exit(0)
 
     slack_report = f"""
 """
