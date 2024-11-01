@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
@@ -37,6 +38,7 @@ class ParseLpaDataTest extends TestCase
     private ObjectProphecy|InstAndPrefImagesFactory $instAndPrefImagesFactory;
 
     private ObjectProphecy|LpaDataFormatter $lpaDataFormatter;
+    private ObjectProphecy|FeatureEnabled $featureEnabled;
 
     public function setUp(): void
     {
@@ -77,6 +79,7 @@ class ParseLpaDataTest extends TestCase
         $this->lpaFactory               = $this->prophesize(LpaFactory::class);
         $this->instAndPrefImagesFactory = $this->prophesize(InstAndPrefImagesFactory::class);
         $this->lpaDataFormatter         = $this->prophesize(LpaDataFormatter::class);
+        $this->featureEnabled           = $this->prophesize(FeatureEnabled::class);
     }
 
     /**
@@ -93,8 +96,14 @@ class ParseLpaDataTest extends TestCase
         $sut = new ParseLpaData(
             $this->lpaFactory->reveal(),
             $this->instAndPrefImagesFactory->reveal(),
-            $this->lpaDataFormatter->reveal()
+            $this->lpaDataFormatter->reveal(),
+            $this->featureEnabled->reveal()
         );
+
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(false);
+
         $result = $sut(
             [
                 $this->lpaId => $this->lpaData,
