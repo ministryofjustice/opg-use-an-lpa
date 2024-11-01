@@ -10,17 +10,20 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 ## Setup
 
-Clone the following repository into the same base directory:
+Clone the following repositories into the same base directory:
 
 - [https://github.com/ministryofjustice/opg-use-an-lpa](https://github.com/ministryofjustice/opg-use-an-lpa)
-
-Additionally, work related to Use is done in:
 - [https://github.com/ministryofjustice/opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
 - [https://github.com/ministryofjustice/opg-data-lpa-codes](https://github.com/ministryofjustice/opg-data-lpa-codes)
+
+Additionally, work related to Use is done in:
+
 - [https://github.com/ministryofjustice/opg-opg-data-lpa-instructions-preferences](https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences)
 
 
 All commands assume a working directory of `opg-use-my-lpa`.
+
+Add a profile named `ual-dev` to your ~/.aws/config file (speak to your team for the configuration details).
 
 ### Makefile
 
@@ -60,13 +63,15 @@ make rebuild [container name]
 
 ***Note:*** this can take several minutes to run.
 
-To bring up the local environment
+If you plan on developing the application i:e in most cases, you should also enable development mode.
+
+Before enabling development mode for the first time, run
 
 ```shell
-make up
+make composer_install
 ```
 
-If you plan on developing the application i:e in most cases, you should also enable development mode.
+then run:
 
 ```shell
 make development_mode
@@ -85,12 +90,13 @@ The API service will be available via [http://localhost:9003](http://localhost:9
 To run all the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
 
 ```shell
-make unit_test_all
-
+make unit_test  
+  
 # or, seperately
 make unit_test_viewer_app
 make unit_test_actor_app
 make unit_test_javascript
+make unit_test_api_app
 ```
 
 ### Functional (Behat) test
