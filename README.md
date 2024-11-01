@@ -25,6 +25,12 @@ All commands assume a working directory of `opg-use-my-lpa`.
 
 Add a profile named `ual-dev` to your ~/.aws/config file (speak to your team for the configuration details).
 
+To maintain repo standards and avoid commiting secrets [install pre-commit](https://pre-commit.com/#install) and then initialize with:
+
+```shell
+pre-commit install
+```
+
 ### Makefile
 
 A Makefile is maintained that aliases the most useful docker-compose commands.
@@ -90,8 +96,8 @@ The API service will be available via [http://localhost:9003](http://localhost:9
 To run all the unit tests (the command for viewer-app and actor-app will run exactly the same suite of unit tests in the front service)
 
 ```shell
-make unit_test  
-  
+make unit_test
+
 # or, seperately
 make unit_test_viewer_app
 make unit_test_actor_app
