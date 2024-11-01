@@ -25,16 +25,16 @@ class SortLpas
         uasort($lpas, function ($a, $b) {
             $aSortKey = sprintf(
                 '%s%s%s',
-                $a->lpa->getDonor()->getSurname(),
-                $a->lpa->getDonor()->getFirstname(),
-                $a->lpa->getCaseSubtype()
+                $a->lpa->donor->surname,
+                $a->lpa->donor->firstname,
+                $a->lpa->caseSubtype->value
             );
 
             $bSortKey = sprintf(
                 '%s%s%s',
-                $b->lpa->getDonor()->getSurname(),
-                $b->lpa->getDonor()->getFirstname(),
-                $b->lpa->getCaseSubtype()
+                $b->lpa->donor->surname,
+                $b->lpa->donor->firstname,
+                $b->lpa->caseSubtype->value
             );
 
             if (0 === $cmp = strcmp($aSortKey, $bSortKey)) {

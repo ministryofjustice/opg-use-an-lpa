@@ -28,4 +28,25 @@ class Person
         public readonly ?string $uId,
     ) {
     }
+
+    public function getSalutation(): ?string
+    {
+        return '';
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function getMiddlenames(): ?string
+    {
+        return $this->otherNames;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
 }

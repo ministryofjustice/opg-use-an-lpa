@@ -22,7 +22,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
-        public readonly ?object $donor,
+        public readonly ?person $donor,
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
@@ -53,5 +53,10 @@ class CombinedLpa implements JsonSerializable
         });
 
         return $data;
+    }
+
+    public function getLpaDonorSignatureDate(): ?DateTimeImmutable
+    {
+        return $this->lpaDonorSignatureDate;
     }
 }

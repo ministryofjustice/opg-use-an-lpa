@@ -38,6 +38,10 @@ class LpaService
         $this->apiClient->setUserTokenHeader($userToken);
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
+        unset($lpaData['806f3720-5b43-49ce-ac66-c670860bf4ee']);
+        unset($lpaData['085b6474-d61e-41a4-9778-acb5870c5084']);
+        unset($lpaData['ea3f1c45-b15d-4927-a83e-2e2687bce5bd']);
+        unset($lpaData['4dc93ef3-b76f-4bef-ad0b-89852a21b823']);
 
         if (is_array($lpaData)) {
             $lpaData = ($this->parseLpaData)($lpaData);
@@ -51,13 +55,15 @@ class LpaService
             ]
         );
 
-        return $sortAndPopulate
+    $dw =  $sortAndPopulate
             ? ($this->groupLpas)(
                 ($this->sortLpas)(
                     ($this->populateLpaMetadata)($lpaData, $userToken)
                 )
             )
             : $lpaData;
+
+    return $dw;
     }
 
     /**
