@@ -55,6 +55,7 @@ class CombinedLpa implements JsonSerializable
         return $data;
     }
 
+    #[DoNotSerialize]
     public function getLpaDonorSignatureDate(): ?DateTimeImmutable
     {
         return $this->lpaDonorSignatureDate;

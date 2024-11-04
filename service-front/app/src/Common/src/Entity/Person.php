@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
 class Person
 {
@@ -29,24 +30,34 @@ class Person
     ) {
     }
 
+    #[DoNotSerialize]
     public function getSalutation(): ?string
     {
         return '';
     }
 
+    #[DoNotSerialize]
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
+    #[DoNotSerialize]
     public function getMiddlenames(): ?string
     {
         return $this->otherNames;
     }
 
+    #[DoNotSerialize]
     public function getSurname(): ?string
     {
         return $this->surname;
+    }
+
+    #[DoNotSerialize]
+    public function getDob(): DateTimeImmutable|null
+    {
+        return $this->dob;
     }
 
 }

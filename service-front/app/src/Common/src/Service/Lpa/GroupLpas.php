@@ -28,11 +28,11 @@ class GroupLpas
                 ' ',
                 array_filter(
                     [
-                        $lpa->lpa->donor->firstname,
-                        $lpa->lpa->donor->otherNames,
-                        $lpa->lpa->donor->surname,
+                        $lpa->lpa->getDonor()->getFirstname(),
+                        $lpa->lpa->getDonor()->getMiddlenames(),
+                        $lpa->lpa->getDonor()->getSurname(),
                         // prevents different donors with same name from being grouped together
-                        $lpa->lpa->donor->dob ? $lpa->lpa->donot->dob->format('Y-m-d') : '0-0-0',
+                        $lpa->lpa->getDonor()->getDob() ? $lpa->lpa->getDonor()->getDob()->format('Y-m-d') : '0-0-0',
                     ]
                 )
             );
