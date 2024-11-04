@@ -79,13 +79,11 @@ class SiriusLpa extends CombinedLpa implements SortLpasInterface
         );
     }
 
-    #[DoNotSerialize]
     public function getDonor(): Person
     {
         return $this->donor;
     }
 
-    #[DoNotSerialize]
     public function getCaseSubtype(): string
     {
         return $this->caseSubtype->value;

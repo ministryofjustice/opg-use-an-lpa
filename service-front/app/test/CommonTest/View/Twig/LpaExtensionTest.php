@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Service\Lpa\Factory\LpaDataFormatter;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\Address;
@@ -17,6 +19,13 @@ use Twig\TwigFunction;
 
 class LpaExtensionTest extends TestCase
 {
+    private LpaDataFormatter $lpaDataFormatter;
+
+    public function setUp(): void
+    {
+        $this->lpaDataFormatter = new LpaDataFormatter();
+    }
+
     #[Test]
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
@@ -480,5 +489,16 @@ class LpaExtensionTest extends TestCase
         $status = $extension->isDonorSignatureDateOld($lpa);
 
         $this->assertEquals(false, $status);
+    }
+
+    #[Test]
+    public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p_for_combined_lpa(): void
+    {
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
+        $combinedLpa = ($this->lpaDataFormatter)($lpa);
+
+        $lpaDonorSignatureDate = $combinedLpa->getLpaDonorSignatureDate();
+
+        $this->assertEquals(new DateTimeImmutable('2012-12-12'), $lpaDonorSignatureDate);
     }
 }
