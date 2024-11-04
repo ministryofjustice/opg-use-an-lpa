@@ -195,7 +195,7 @@ class LpaExtension extends AbstractExtension
         return implode(' - ', $viewerCodeParts);
     }
 
-    public function isLPACancelled(Lpa $lpa): bool
+    public function isLPACancelled(Lpa|CombinedLpa $lpa): bool
     {
         $status = $lpa->getStatus();
         return ($status === 'Cancelled') || ($status === 'Revoked');

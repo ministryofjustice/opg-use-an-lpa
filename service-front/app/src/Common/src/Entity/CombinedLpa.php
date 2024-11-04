@@ -7,11 +7,13 @@ namespace Common\Entity;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
+use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use JsonSerializable;
 
-class CombinedLpa implements JsonSerializable
+class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInterface
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
@@ -59,5 +61,35 @@ class CombinedLpa implements JsonSerializable
     public function getLpaDonorSignatureDate(): ?DateTimeImmutable
     {
         return $this->lpaDonorSignatureDate;
+    }
+
+    #[DoNotSerialize]
+    public function getUId(): ?string
+    {
+        return $this->uId;
+    }
+
+    #[DoNotSerialize]
+    public function getApplicationHasGuidance(): ?bool
+    {
+        return $this->applicationHasGuidance;
+    }
+
+    #[DoNotSerialize]
+    public function getApplicationHasRestrictions(): ?bool
+    {
+        return $this->applicationHasRestrictions;
+    }
+
+    #[DoNotSerialize]
+    public function getDonor(): Person
+    {
+        return $this->donor;
+    }
+
+    #[DoNotSerialize]
+    public function getCaseSubtype(): string
+    {
+        return $this->caseSubtype->value;
     }
 }

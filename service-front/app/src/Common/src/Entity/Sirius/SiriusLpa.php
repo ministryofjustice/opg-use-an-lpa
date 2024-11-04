@@ -6,18 +6,15 @@ namespace Common\Entity\Sirius;
 
 use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use Common\Entity\CombinedLpa;
-use Common\Entity\Person;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
-use Common\Service\Lpa\SortLpasInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use Common\Entity\Casters\CastSiriusDonor;
 use Common\Entity\Casters\CastToSiriusLifeSustainingTreatment;
 
-class SiriusLpa extends CombinedLpa implements SortLpasInterface
+class SiriusLpa extends CombinedLpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -77,15 +74,5 @@ class SiriusLpa extends CombinedLpa implements SortLpasInterface
             $uId,
             $withdrawnDate
         );
-    }
-
-    public function getDonor(): Person
-    {
-        return $this->donor;
-    }
-
-    public function getCaseSubtype(): string
-    {
-        return $this->caseSubtype->value;
     }
 }
