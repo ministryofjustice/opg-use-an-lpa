@@ -27,9 +27,9 @@ class CombinedLpaTest extends TestCase
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
-        $expectedUid                     = '700000000047';
-        $expectedApplicationHasGuidance  = false;
-        $expectedHasRestrictions         = false;
+        $expectedUid                    = '700000000047';
+        $expectedApplicationHasGuidance = false;
+        $expectedHasRestrictions        = false;
 
         $this->assertEquals($expectedUid, $combinedLpa->getUId());
         $this->assertEquals($expectedApplicationHasGuidance, $combinedLpa->getApplicationHasGuidance());
