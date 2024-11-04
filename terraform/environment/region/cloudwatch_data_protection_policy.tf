@@ -1,39 +1,29 @@
-resource "aws_cloudwatch_log_data_protection_policy" "application_logs" {
-
-  log_group_name = "${var.environment_name}_application_logs"
-
-
+resource "aws_cloudwatch_log_account_policy" "data_protection" {
+  policy_name = "data-protection"
+  policy_type = "DATA_PROTECTION_POLICY"
   policy_document = jsonencode({
-    Name    = "data_protection_${var.environment_name}_application_logs"
+    Name    = "DataProtection"
     Version = "2021-06-01"
 
-    "Statement" : [
+    Statement = [
       {
-        "Sid" : "audit-policy",
-        "DataIdentifier" : [
-          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
-        ],
-        "Operation" : {
-          "Audit" : {
-            "FindingsDestination" : {}
+        Sid            = "Audit"
+        DataIdentifier = ["arn:aws:dataprotection::aws:data-identifier/EmailAddress"]
+        Operation = {
+          Audit = {
+            FindingsDestination = {}
           }
         }
       },
       {
-        "Sid" : "redact-policy",
-        "DataIdentifier" : [
-          "arn:aws:dataprotection::aws:data-identifier/EmailAddress"
-        ],
-        "Operation" : {
-          "Deidentify" : {
-            "MaskConfig" : {}
+        Sid            = "Redact"
+        DataIdentifier = ["arn:aws:dataprotection::aws:data-identifier/EmailAddress"]
+        Operation = {
+          Deidentify = {
+            MaskConfig = {}
           }
         }
       }
     ]
   })
-
-  depends_on = [
-    aws_cloudwatch_log_group.application_logs
-  ]
 }

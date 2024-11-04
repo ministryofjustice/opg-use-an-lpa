@@ -5,11 +5,7 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
-use Common\Entity\CombinedLpa;
-use Common\Entity\Person;
-use Common\Enum\LifeSustainingTreatment;
-use Common\Enum\LpaType;
-use DateTimeImmutable;
+use Common\Service\Features\FeatureEnabled;
 use Exception;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 
@@ -26,6 +22,7 @@ class ParseLpaData
         private LpaFactory $lpaFactory,
         private InstAndPrefImagesFactory $imagesFactory,
         private LpaDataFormatter $lpaDataFormatter,
+        private FeatureEnabled $featureEnabled,
     ) {
     }
 
@@ -51,16 +48,11 @@ class ParseLpaData
                 case 'lpa':
                     //introduce feature flag here #3551
                     //the lpaData array converted to object using hydrator
-                    if ($this->featureFlags['support_datastore_lpas'] ?? false) {
-                        $data['lpa'] = ($this->lpaDataFormatter)($dataItem);
-                    }
-                    else {
-                        if($data['user-lpa-actor-token'] == '1600be0d-727c-41aa-a9cb-45857a73ba4f') {
-                            $data['lpa'] = $this->getCombinedMockData();
-                        } else if($data['user-lpa-actor-token'] == 'f1315df5-b7c3-430a-baa0-9b96cc629648') {
-                            $data['lpa'] = $this->getCombinedMockData();
-                        }
-
+                    if (($this->featureEnabled)('support_datastore_lpas')) {
+                        $mockedCombinedLpa = $this->getMockedCombinedFormat();
+                        $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
+                    } else {
+                        $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
                     }
                     break;
                 case 'actor':
@@ -79,148 +71,160 @@ class ParseLpaData
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 
-    private function getCombinedMockData(): CombinedLpa
+    private function getMockedCombinedFormat(): array
     {
-        return new CombinedLpa(
-            applicationHasGuidance: false,
-            $applicationHasRestrictions = false,
-            $applicationType            = 'Classic',
-            $attorneyActDecisions       = null,
-            $attorneys                  = [
+        return [
+            'id' => 2,
+            'uId' => '700000000047',
+            'receiptDate' => '2014-09-26',
+            'registrationDate' => '2019-10-10',
+            'rejectedDate' => null,
+            'donor' => [
+                'id' => 7,
+                'uId' => '700000000799',
+                'linked' => [['id' => 7, 'uId' => '700000000799']],
+                'dob' => '1948-11-01',
+                'email' => 'RachelSanderson@opgtest.com',
+                'salutation' => 'Mr',
+                'firstname' => 'Rachel',
+                'middlenames' => 'Emma',
+                'surname' => 'Sanderson',
+                'addresses' => [
+                    [
+                        'id' => 7,
+                        'town' => '',
+                        'county' => '',
+                        'postcode' => 'DN37 5SH',
+                        'country' => '',
+                        'type' => 'Primary',
+                        'addressLine1' => '81 Front Street',
+                        'addressLine2' => 'LACEBY',
+                        'addressLine3' => '',
+                    ],
+                ],
+                'companyName' => null,
+            ],
+            'applicationType' => 'Classic',
+            'caseSubtype' => 'hw',
+            'status' => 'Registered',
+            'lpaIsCleansed' => true,
+            'caseAttorneySingular' => false,
+            'caseAttorneyJointlyAndSeverally' => true,
+            'caseAttorneyJointly' => false,
+            'caseAttorneyJointlyAndJointlyAndSeverally' => false,
+            'onlineLpaId' => 'A33718377316',
+            'cancellationDate' => null,
+            'attorneys' => [
                 [
-                    'addressLine1' => '9 high street',
-                    'addressLine2' => '',
-                    'addressLine3' => '',
-                    'country'      => '',
-                    'county'       => '',
-                    'dob'          => null,
-                    'email'        => '',
-                    'firstname'    => 'A',
-                    'firstnames'   => null,
-                    'name'         => null,
-                    'otherNames'   => null,
-                    'postcode'     => 'DN37 5SH',
-                    'surname'      => 'B',
-                    'systemStatus' => '1',
-                    'town'         => '',
-                    'type'         => 'Primary',
-                    'uId'          => '345678901',
+                    'id' => 9,
+                    'uId' => '700000000815',
+                    'dob' => '1990-05-04',
+                    'email' => '',
+                    'salutation' => '',
+                    'firstname' => 'jean',
+                    'middlenames' => '',
+                    'surname' => 'sanderson',
+                    'addresses' => [
+                        [
+                            'id' => 9,
+                            'town' => '',
+                            'county' => '',
+                            'postcode' => 'DN37 5SH',
+                            'country' => '',
+                            'type' => 'Primary',
+                            'addressLine1' => '9 high street',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                        ],
+                    ],
+                    'systemStatus' => true,
+                    'companyName' => '',
                 ],
                 [
-                    'addressLine1' => '',
-                    'addressLine2' => '',
-                    'addressLine3' => '',
-                    'country'      => '',
-                    'county'       => '',
-                    'dob'          => null,
-                    'email'        => 'XXXXX',
-                    'firstname'    => 'B',
-                    'firstnames'   => null,
-                    'name'         => null,
-                    'otherNames'   => null,
-                    'postcode'     => '',
-                    'surname'      => 'C',
-                    'systemStatus' => '1',
-                    'town'         => '',
-                    'type'         => 'Primary',
-                    'uId'          => '456789012',
-                ],
-                [
-                    'addressLine1' => '',
-                    'addressLine2' => '',
-                    'addressLine3' => '',
-                    'country'      => '',
-                    'county'       => '',
-                    'dob'          => null,
-                    'email'        => 'XXXXX',
-                    'firstname'    => 'C',
-                    'firstnames'   => null,
-                    'name'         => null,
-                    'otherNames'   => null,
-                    'postcode'     => '',
-                    'surname'      => 'D',
-                    'systemStatus' => '1',
-                    'town'         => '',
-                    'type'         => 'Primary',
-                    'uId'          => '567890123',
+                    'id' => 12,
+                    'uId' => '7000-0000-0849',
+                    'dob' => '1975-10-05',
+                    'email' => 'XXXXX',
+                    'salutation' => 'Mrs',
+                    'firstname' => 'Ann',
+                    'middlenames' => '',
+                    'surname' => 'Summers',
+                    'addresses' => [
+                        [
+                            'id' => 12,
+                            'town' => '',
+                            'county' => '',
+                            'postcode' => '',
+                            'country' => '',
+                            'type' => 'Primary',
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                        ],
+                    ],
+                    'systemStatus' => true,
+                    'companyName' => '',
                 ],
             ],
-            $caseSubtype                = LpaType::fromShortName('personal-welfare'),
-            $channel                    = null,
-            $dispatchDate               = null,
-            $donor                      = new Person(
-                $addressLine1           = '81 Front Street',
-                $addressLine2           = 'LACEBY',
-                $addressLine3           = '',
-                $country                = '',
-                $county                 = '',
-                $dob                    = null,
-                $email                  = 'RachelSanderson@opgtest.com',
-                $firstname              = 'Rachel',
-                $firstnames             = null,
-                $name                   = null,
-                $otherNames             = null,
-                $postcode               = 'DN37 5SH',
-                $surname                = 'Sanderson',
-                $systemStatus           = null,
-                $town                   = '',
-                $type                   = 'Primary',
-                $uId                    = '123456789',
-            ),
-            $hasSeveranceWarning        = null,
-            $invalidDate                = null,
-            $lifeSustainingTreatment    = LifeSustainingTreatment::fromShortName('Option A'),
-            $lpaDonorSignatureDate      = new DateTimeImmutable('2012-12-12'),
-            $lpaIsCleansed              = true,
-            $onlineLpaId                = 'A33718377316',
-            $receiptDate                = new DateTimeImmutable('2014-09-26'),
-            $registrationDate           = new DateTimeImmutable('2019-10-10'),
-            $rejectedDate               = null,
-            $replacementAttorneys       = [],
-            $status                     = 'Registered',
-            $statusDate                 = null,
-            $trustCorporations          = [
+            'replacementAttorneys' => [],
+            'trustCorporations' => [
                 [
-                    'addressLine1' => 'Street 1',
-                    'addressLine2' => 'Street 2',
-                    'addressLine3' => 'Street 3',
-                    'country'      => 'GB',
-                    'county'       => 'County',
-                    'dob'          => null,
-                    'email'        => null,
-                    'firstname'    => 'trust',
-                    'firstnames'   => null,
-                    'name'         => 'A',
-                    'otherNames'   => null,
-                    'postcode'     => 'ABC 123',
-                    'surname'      => 'test',
-                    'systemStatus' => '1',
-                    'town'         => 'Town',
-                    'type'         => 'Primary',
-                    'uId'          => '678901234',
-                ],
-                [
-                    'addressLine1' => 'Street 1',
-                    'addressLine2' => 'Street 2',
-                    'addressLine3' => 'Street 3',
-                    'country'      => 'GB',
-                    'county'       => 'County',
-                    'dob'          => null,
-                    'email'        => null,
-                    'firstname'    => 'trust',
-                    'firstnames'   => null,
-                    'name'         => 'B',
-                    'otherNames'   => null,
-                    'postcode'     => 'ABC 123',
-                    'surname'      => 'test',
-                    'systemStatus' => '1',
-                    'town'         => 'Town',
-                    'type'         => 'Primary',
-                    'uId'          => '789012345',
+                    'addresses' => [
+                        [
+                            'id' => 3207,
+                            'town' => 'Town',
+                            'county' => 'County',
+                            'postcode' => 'ABC 123',
+                            'country' => 'GB',
+                            'type' => 'Primary',
+                            'addressLine1' => 'Street 1',
+                            'addressLine2' => 'Street 2',
+                            'addressLine3' => 'Street 3',
+                        ],
+                    ],
+                    'id' => 3485,
+                    'uId' => '7000-0015-1998',
+                    'dob' => null,
+                    'email' => null,
+                    'salutation' => null,
+                    'firstname' => 'trust',
+                    'middlenames' => null,
+                    'surname' => 'test',
+                    'otherNames' => null,
+                    'systemStatus' => true,
+                    'companyName' => 'trust corporation',
                 ],
             ],
-            $uId                        = '700000000047',
-            $withdrawnDate              = null
-        );
+            'certificateProviders' => [
+                [
+                    'id' => 11,
+                    'uId' => '7000-0000-0831',
+                    'dob' => null,
+                    'email' => null,
+                    'salutation' => 'Miss',
+                    'firstname' => 'Danielle',
+                    'middlenames' => null,
+                    'surname' => 'Hart ',
+                    'addresses' => [
+                        [
+                            'id' => 11,
+                            'town' => '',
+                            'county' => '',
+                            'postcode' => 'SK14 0RH',
+                            'country' => '',
+                            'type' => 'Primary',
+                            'addressLine1' => '50 Fordham Rd',
+                            'addressLine2' => 'HADFIELD',
+                            'addressLine3' => '',
+                        ],
+                    ],
+                ],
+            ],
+            'attorneyActDecisions' => null,
+            'applicationHasRestrictions' => false,
+            'applicationHasGuidance' => false,
+            'lpaDonorSignatureDate' => '2012-12-12',
+            'lifeSustainingTreatment' => 'Option A',
+        ];
     }
 }
