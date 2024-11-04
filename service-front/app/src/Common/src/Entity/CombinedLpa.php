@@ -22,7 +22,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
-        public readonly ?object $donor,
+        public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
@@ -35,6 +35,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?array $replacementAttorneys,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
+        /** @var ?Person[] $trustCorporations */
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
@@ -53,5 +54,89 @@ class CombinedLpa implements JsonSerializable
         });
 
         return $data;
+    }
+
+    #[DoNotSerialize]
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    #[DoNotSerialize]
+    public function getLifeSustainingTreatment(): string
+    {
+        return $this->lifeSustainingTreatment->value;
+    }
+
+    #[DoNotSerialize]
+    public function getLpaDonorSignatureDate(): ?DateTimeImmutable
+    {
+        return $this->lpaDonorSignatureDate;
+    }
+
+    #[DoNotSerialize]
+    public function getUId(): ?string
+    {
+        return $this->uId;
+    }
+
+    #[DoNotSerialize]
+    public function getApplicationHasGuidance(): ?bool
+    {
+        return $this->applicationHasGuidance;
+    }
+
+    #[DoNotSerialize]
+    public function getApplicationHasRestrictions(): ?bool
+    {
+        return $this->applicationHasRestrictions;
+    }
+
+    #[DoNotSerialize]
+    public function getDonor(): Person
+    {
+        return $this->donor;
+    }
+
+    #[DoNotSerialize]
+    public function getCaseSubtype(): string
+    {
+        return $this->caseSubtype->value;
+    }
+
+    #[DoNotSerialize]
+    public function getCaseAttorneySingular(): bool
+    {
+        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::SINGULAR;
+    }
+
+    #[DoNotSerialize]
+    public function getCaseAttorneyJointly(): bool
+    {
+        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY;
+    }
+
+    #[DoNotSerialize]
+    public function getCaseAttorneyJointlyAndSeverally(): bool
+    {
+        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
+    }
+
+    #[DoNotSerialize]
+    public function caseAttorneyJointlyAndJointlyAndSeverally(): bool
+    {
+        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
+    }
+
+    #[DoNotSerialize]
+    public function getActiveAttorneys(): ?array
+    {
+        return $this->attorneys;
+    }
+
+    #[DoNotSerialize]
+    public function getTrustCorporations(): ?array
+    {
+        return $this->trustCorporations;
     }
 }
