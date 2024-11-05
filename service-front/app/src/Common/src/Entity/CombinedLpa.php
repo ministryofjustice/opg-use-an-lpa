@@ -7,11 +7,12 @@ namespace Common\Entity;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
+use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use JsonSerializable;
 
-class CombinedLpa implements JsonSerializable
+class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInterface
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
@@ -22,7 +23,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
-        public readonly ?object $donor,
+        public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
@@ -41,7 +42,6 @@ class CombinedLpa implements JsonSerializable
     ) {
     }
 
-    #[DoNotSerialize]
     public function jsonSerialize(): mixed
     {
         $data = get_object_vars($this);
@@ -53,5 +53,35 @@ class CombinedLpa implements JsonSerializable
         });
 
         return $data;
+    }
+
+    public function getLpaDonorSignatureDate(): ?DateTimeImmutable
+    {
+        return $this->lpaDonorSignatureDate;
+    }
+
+    public function getUId(): ?string
+    {
+        return $this->uId;
+    }
+
+    public function getApplicationHasGuidance(): ?bool
+    {
+        return $this->applicationHasGuidance;
+    }
+
+    public function getApplicationHasRestrictions(): ?bool
+    {
+        return $this->applicationHasRestrictions;
+    }
+
+    public function getDonor(): Person
+    {
+        return $this->donor;
+    }
+
+    public function getCaseSubtype(): string
+    {
+        return $this->caseSubtype->value;
     }
 }

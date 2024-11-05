@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Entity\Lpa;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
 use EventSauce\ObjectHydrator\DefinitionProvider;
