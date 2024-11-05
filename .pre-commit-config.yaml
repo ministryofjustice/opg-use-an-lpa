@@ -25,3 +25,9 @@ repos:
       entry: pre-commit-hooks/structurizr/pre-commit
       language: script
       args: ['/docs/diagrams/dsl']
+  - repo: local
+    hooks:
+      - id: code-sniffer
+        name: "code-sniffer"
+        entry: pre-commit-hooks/code-sniffer/pre-commit
+        language: script
