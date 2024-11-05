@@ -6,6 +6,7 @@ namespace App\Entity\LpaStore;
 
 use App\Entity\Casters\CastSingleDonor;
 use App\Entity\Casters\CastToCaseSubtype;
+use App\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
@@ -25,7 +26,7 @@ class LpaStore extends Lpa implements JsonSerializable
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
         #[MapFrom('howAttorneysMakeDecisions')]
-        #[CastToWhenTheLpaCanBeUsed]
+        #[CastToHowAttorneysMakeDecisions]
         ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(LpaStoreAttorney::class)]
         ?array $attorneys,
@@ -56,6 +57,9 @@ class LpaStore extends Lpa implements JsonSerializable
         #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
+        #[MapFrom('whenTheLpaCanBeUsed')]
+        #[CastToWhenTheLpaCanBeUsed]
+        $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
             $applicationHasGuidance,
@@ -81,7 +85,8 @@ class LpaStore extends Lpa implements JsonSerializable
             $statusDate,
             $trustCorporations,
             $uId,
-            $withdrawnDate
+            $withdrawnDate,
+            $whenTheLpaCanBeUsed
         );
     }
 

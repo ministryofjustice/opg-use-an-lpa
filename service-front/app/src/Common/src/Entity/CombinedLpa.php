@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
+use Behat\Step\When;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use JsonSerializable;
@@ -18,6 +20,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
         public readonly ?HowAttorneysMakeDecisions $attorneyActDecisions,
+        /** @var Person[] $attorneys */
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
@@ -32,13 +35,15 @@ class CombinedLpa implements JsonSerializable
         public readonly ?DateTimeImmutable $receiptDate,
         public readonly ?DateTimeImmutable $registrationDate,
         public readonly ?DateTimeImmutable $rejectedDate,
+        /** @var Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
-        /** @var ?Person[] $trustCorporations */
+        /** @var SiriusLpaTrustCorporations[] $trustCorporations */
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
+        public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
     }
 
@@ -99,9 +104,9 @@ class CombinedLpa implements JsonSerializable
     }
 
     #[DoNotSerialize]
-    public function getCaseSubtype(): string
+    public function getCaseSubtype(): ?LpaType
     {
-        return $this->caseSubtype->value;
+        return $this->caseSubtype;
     }
 
     #[DoNotSerialize]
@@ -138,5 +143,11 @@ class CombinedLpa implements JsonSerializable
     public function getTrustCorporations(): ?array
     {
         return $this->trustCorporations;
+    }
+
+    #[DoNotSerialize]
+    public function getWhenTheLpaCanBeUsed(): WhenTheLpaCanBeUsed
+    {
+        return $this->whenTheLpaCanBeUsed;
     }
 }

@@ -40,35 +40,21 @@ class LpaExtension extends AbstractExtension
 
     public function actorAddress(CaseActor|Person $actor): string
     {
-        if (is_a($actor, CaseActor::class, true)) {
-            //  Multiple addresses can appear for an actor - just use the first one
-            if (count($actor->getAddresses()) > 0) {
-                $address = $actor->getAddresses()[0];
+        //  Multiple addresses can appear for an actor - just use the first one
+        if (count($actor->getAddresses()) > 0) {
+            $address = $actor->getAddresses()[0];
 
-                return implode(
-                    ', ',
-                    array_filter([
-                      $address->getAddressLine1(),
-                      $address->getAddressLine2(),
-                      $address->getAddressLine3(),
-                      $address->getTown(),
-                      $address->getCounty(),
-                      $address->getPostcode(),
-                      $address->getCountry(),
-                  ]));
-            }
-        } elseif ($actor->getAddressLine1() !== '') {
             return implode(
                 ', ',
                 array_filter([
-                      $actor->getAddressLine1(),
-                      $actor->getAddressLine2(),
-                      $actor->getAddressLine3(),
-                      $actor->getTown(),
-                      $actor->getCounty(),
-                      $actor->getPostcode(),
-                      $actor->getCountry(),
-                  ]));
+                  $address->getAddressLine1(),
+                  $address->getAddressLine2(),
+                  $address->getAddressLine3(),
+                  $address->getTown(),
+                  $address->getCounty(),
+                  $address->getPostcode(),
+                  $address->getCountry(),
+              ]));
         }
 
         return '';

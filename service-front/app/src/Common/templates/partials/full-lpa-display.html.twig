@@ -3,23 +3,23 @@
         <div class="govuk-grid-row">
             <div class="govuk-panel govuk-!-padding-bottom-2 govuk-!-margin-top-4 govuk-panel{{ is_lpa_cancelled(lpa) ? '--failed' : '--confirmation' }}">
                 {% if is_lpa_cancelled(lpa) %}
-                <h1 class="govuk-panel__title">
-                    {% if lpa.getCaseSubtype()|lower == "pfa" %}
-                        {% trans %}This property and finance LPA has been cancelled{% endtrans %}
-                    {% else %}
-                        {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
-                    {% endif %}
-                </h1>
-                <div class="govuk-panel__body govuk-!-font-size-24">
-                    {% if lpa.cancellationDate is not null %}
-                        <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
-                    {% endif %}
-                    {% else %}
                     <h1 class="govuk-panel__title">
-                        {% if lpa.getCaseSubtype()|lower == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
+                        {% if lpa.caseSubType.propertyAndAffairs %}
+                            {% trans %}This property and finance LPA has been cancelled{% endtrans %}
+                        {% else %}
+                            {% trans %}This health and welfare LPA has been cancelled{% endtrans %}
+                        {% endif %}
+                    </h1>
+                    <div class="govuk-panel__body govuk-!-font-size-24">
+                        {% if lpa.cancellationDate is not null %}
+                            <strong>{% trans with {'%cancellationDate%': lpa_date(lpa.cancellationDate)} %}Cancelled on %cancellationDate%{% endtrans %}</strong>
+                        {% endif %}
+                {% else %}
+                    <h1 class="govuk-panel__title">
+                        {% if lpa.caseSubType.propertyAndAffairs and lpa.whenTheLpaCanBeUsed.whenHasCapacity() %}
                             {% trans %}This property and finance LPA is valid and can be used now{% endtrans %}
                         {% else %}
-                            {% if lpa.getCaseSubtype()|lower == "pfa" %}
+                            {% if lpa.caseSubType.propertyAndAffairs %}
                                 {% trans %}This property and finance LPA is valid{% endtrans %}
                             {% else %}
                                 {% trans %}This health and welfare LPA is valid{% endtrans %}
@@ -28,16 +28,16 @@
                     </h1>
                     <div class="govuk-panel__body">
                         <p class="govuk-!-font-size-24">
-                            {% if lpa.getCaseSubtype()|lower == "pfa" %}
-                                {% if lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                            {% if lpa.caseSubType.propertyAndAffairs %}
+                                {% if lpa.whenTheLpaCanBeUsed.whenCapacityLost %}
                                     {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
-                                {% elseif lpa.attorneyActDecisions == null %}
+                                {% elseif lpa.whenTheLpaCanBeUsed.unknown %}
                                     {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
                                 {% endif %}
                             {% else %}
-                                {% if lpa.getLifeSustainingTreatment()|lower == 'option a' %}
+                                {% if lpa.lifeSustainingTreatment.OptionA %}
                                     {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                {% elseif lpa.getLifeSustainingTreatment()|lower == 'option b' %}
+                                {% elseif lpa.lifeSustainingTreatment.OptionB %}
                                     {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
                                 {% endif %}
                             {% endif %}
@@ -62,7 +62,7 @@
             </div>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
-                    {% if lpa.getCaseSubtype()|lower == "pfa" %}
+                    {% if lpa.caseSubType.propertyAndAffairs %}
                         {% set type = "Property and finance" %}
                     {% else %}
                         {% set type = "Health and welfare" %}

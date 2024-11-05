@@ -1,23 +1,17 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Entity\Casters;
 
-use App\Enum\WhenTheLpaCanBeUsed;
 use Attribute;
+use Common\Enum\HowAttorneysMakeDecisions;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
-class CastToWhenTheLpaCanBeUsed implements PropertyCaster
+class CastToHowAttorneysMakeDecisions implements PropertyCaster
 {
     public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
-        if (is_null($value)) {
-            $value = '';
-        }
-
-        return WhenTheLpaCanBeUsed::from($value)->value;
+        return HowAttorneysMakeDecisions::from($value)->value;
     }
 }

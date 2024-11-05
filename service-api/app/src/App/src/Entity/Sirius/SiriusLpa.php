@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Entity\Sirius\Casters\CastToHowAttorneysMakeDecisions;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
@@ -14,6 +15,7 @@ use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
+use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
@@ -26,7 +28,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[CastToWhenTheLpaCanBeUsed]
+        #[CastToHowAttorneysMakeDecisions]
         ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(SiriusLpaAttorney::class)]
         ?array $attorneys,
@@ -53,6 +55,9 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?array $trustCorporations,
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
+        #[MapFrom('whenTheLpaCanBeUsed')]
+        #[CastToWhenTheLpaCanBeUsed]
+        $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
             $applicationHasGuidance,
@@ -78,7 +83,8 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
             $statusDate,
             $trustCorporations,
             $uId,
-            $withdrawnDate
+            $withdrawnDate,
+            $whenTheLpaCanBeUsed
         );
     }
 

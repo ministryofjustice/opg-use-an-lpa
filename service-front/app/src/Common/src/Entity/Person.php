@@ -106,4 +106,17 @@ class Person
     {
         return $this->name;
     }
+
+    #[DoNotSerialize]
+    public function getAddresses(): array
+    {
+        return [(new Address())
+            ->setAddressLine1($this->getAddressLine1())
+            ->setAddressLine2($this->getAddressLine2())
+            ->setAddressLine3($this->getAddressLine3())
+            ->setTown($this->getTown())
+            ->setCounty($this->getCounty())
+            ->setPostcode($this->getPostCode())
+            ->setCountry($this->getCountry())];
+    }
 }

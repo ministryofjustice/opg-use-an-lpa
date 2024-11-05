@@ -3,13 +3,13 @@
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">{% trans %}How decisions are made{% endtrans %}</dt>
         <dd class="govuk-summary-list__value">
-            {% if lpa.caseAttorneySingular %}
+            {% if lpa.attorneyActDecisions.singular %}
                 {% trans %}Decisions are made by one attorney{% endtrans %}
-            {% elseif lpa.caseAttorneyJointly %}
+            {% elseif lpa.attorneyActDecisions.jointly %}
                 {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
-            {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+            {% elseif lpa.attorneyActDecisions.jointlyAndSeverally %}
                 {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
-            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+            {% elseif lpa.attorneyActDecisions.jointlyForSomeSeverallyForOthers %}
                 {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
                     <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
             {% endif %}
