@@ -56,9 +56,4 @@ class LpaDataFormatter
             ? LpaStore::class
             : SiriusLpa::class;
     }
-
-    public function serializeObject(object $lpa): mixed
-    {
-        return $this->mapper->serializeObject($lpa);
-    }
 }

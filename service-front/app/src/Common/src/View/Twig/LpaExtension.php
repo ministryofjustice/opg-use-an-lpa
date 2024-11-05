@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Entity\CombinedLpa;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -69,11 +71,11 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param CaseActor $actor
+     * @param CaseActor|Person $actor
      * @param bool $withSalutation Prepend salutation?
      * @return string
      */
-    public function actorName(CaseActor $actor, bool $withSalutation = true): string
+    public function actorName(CaseActor|Person $actor, bool $withSalutation = true): string
     {
         $nameData = [];
 
@@ -193,13 +195,13 @@ class LpaExtension extends AbstractExtension
         return implode(' - ', $viewerCodeParts);
     }
 
-    public function isLPACancelled(Lpa $lpa): bool
+    public function isLPACancelled(Lpa|CombinedLpa $lpa): bool
     {
         $status = $lpa->getStatus();
         return ($status === 'Cancelled') || ($status === 'Revoked');
     }
 
-    public function isDonorSignatureDateOld(Lpa $lpa): bool
+    public function isDonorSignatureDateOld(Lpa|CombinedLpa $lpa): bool
     {
         return $lpa->getLpaDonorSignatureDate() < new DateTime('2016-01-01');
     }

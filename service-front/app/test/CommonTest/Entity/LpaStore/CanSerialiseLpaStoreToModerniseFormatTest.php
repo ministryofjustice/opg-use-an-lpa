@@ -129,17 +129,4 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
     }
-
-    #[Test]
-    public function can_serialise_datastore_lpa_using_data_formatter(): void
-    {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/4UX3.json'), true);
-
-        $expectedLpa = $this->getExpectedLpa();
-
-        $newLpa        = ($this->lpaDataFormatter)($lpa);
-        $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
-
-        $this->assertEquals($expectedLpa, $serialisedLpa);
-    }
 }

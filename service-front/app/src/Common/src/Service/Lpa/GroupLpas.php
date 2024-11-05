@@ -8,7 +8,7 @@ use ArrayObject;
 
 /**
  * Single action invokeable that groups incoming LPA array objects according to our criteria.
- * Groups LPAs by donor, separating incorrect matches by DoB
+ * Groups LPAs by donor, separating   matches by DoB
  */
 class GroupLpas
 {
