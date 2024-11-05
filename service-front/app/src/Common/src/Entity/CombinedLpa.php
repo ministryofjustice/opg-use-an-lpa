@@ -24,7 +24,7 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
-        public readonly ?person $donor,
+        public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
