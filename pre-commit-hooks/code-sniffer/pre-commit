@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#From https://raw.githubusercontent.com/osteel/git-pre-commit-phpcs/master/pre-commit
+
 STANDARD="PSR12"
 BIN="$HOME/.composer/vendor/bin"
 
