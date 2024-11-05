@@ -9,19 +9,12 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
-use App\Service\Lpa\IsValid\IsValidInterface;
-use App\Service\Lpa\ResolveActor\HasActorInterface;
-use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
 
-class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
+class SiriusLpa extends Lpa
 {
-    use SiriusHasActorTrait;
-
     public function __construct(
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
@@ -33,8 +26,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?LpaType $caseSubtype,
         ?string $channel,
         ?DateTimeImmutable $dispatchDate,
-        #[CastSiriusDonor]
-        ?object $donor,
+        ?SiriusLpaDonor $donor,
         ?bool $hasSeveranceWarning,
         ?DateTimeImmutable $invalidDate,
         #[CastToSiriusLifeSustainingTreatment]
@@ -49,7 +41,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?array $replacementAttorneys,
         ?string $status,
         ?DateTimeImmutable $statusDate,
-        #[CastListToType(SiriusLpaTrustCorporations::class)]
+        #[CastListToType(SiriusLpaTrustCorporation::class)]
         ?array $trustCorporations,
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
@@ -82,32 +74,8 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         );
     }
 
-    #[DoNotSerialize]
-    public function getAttorneys(): array
-    {
-        return $this->attorneys ?? [];
-    }
-
-    #[DoNotSerialize]
-    public function getDonor(): ?object
-    {
-        return $this->donor;
-    }
-
-    #[DoNotSerialize]
     public function getTrustCorporations(): array
     {
         return $this->trustCorporations ?? [];
-    }
-
-    #[DoNotSerialize]
-    public function getStatus(): string
-    {
-        return $this->status ?? '';
-    }
-    #[DoNotSerialize]
-    public function getUid(): string
-    {
-        return $this->uId ?? '';
     }
 }

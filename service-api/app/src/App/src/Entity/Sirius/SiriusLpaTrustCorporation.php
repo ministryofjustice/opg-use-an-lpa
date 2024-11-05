@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
-use EventSauce\ObjectHydrator\DoNotSerialize;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -20,9 +19,8 @@ use App\Entity\Sirius\Casters\{
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
-use JsonSerializable;
 
-class SiriusLpaTrustCorporations extends Person implements JsonSerializable , TrustCorporationStatusInterface
+class SiriusLpaTrustCorporation extends Person
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -40,12 +38,16 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
         #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[CastToType('string')]
+        public readonly ?string $id,
+        #[MapFrom('companyName')]
         ?string $name,
         ?string $otherNames,
         #[MapFrom('addresses')]
@@ -83,35 +85,8 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
         );
     }
 
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
+    public function getId(): string
     {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
-    }
-
-    #[DoNotSerialize]
-    public function getCompanyName(): ?string
-    {
-        return $this->name;
-    }
-
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
-    {
-        return $this->systemStatus;
-    }
-
-    #[DoNotSerialize]
-    public function getUid(): string
-    {
-        return $this->uId;
+        return $this->id ?? '';
     }
 }

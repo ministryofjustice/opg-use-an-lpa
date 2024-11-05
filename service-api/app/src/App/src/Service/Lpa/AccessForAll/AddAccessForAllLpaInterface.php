@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Lpa\IsValid;
+namespace App\Service\Lpa\AccessForAll;
 
+use App\Service\Lpa\SiriusPerson;
 use EventSauce\ObjectHydrator\MapperSettings;
 
 #[MapperSettings(serializePublicMethods: false)]
-interface IsValidInterface
+interface AddAccessForAllLpaInterface
 {
-    public function getStatus(): string;
+    public function getDonor(): SiriusPerson;
 
     public function getUid(): string;
 }

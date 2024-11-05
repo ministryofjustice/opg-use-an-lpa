@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
-use EventSauce\ObjectHydrator\DoNotSerialize;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
@@ -18,9 +18,8 @@ use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
-use JsonSerializable;
 
-class SiriusLpaDonor extends Person implements JsonSerializable
+class SiriusLpaDonor extends Person
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -38,12 +37,15 @@ class SiriusLpaDonor extends Person implements JsonSerializable
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
         #[MapFrom('firstname')]
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[CastToType('string')]
+        public readonly ?string $id,
         #[MapFrom('linked')]
         #[LinkedDonorCaster]
         public readonly ?array $linked,
@@ -84,17 +86,8 @@ class SiriusLpaDonor extends Person implements JsonSerializable
         );
     }
 
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
+    public function getId(): string
     {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
+        return $this->id ?? '';
     }
 }

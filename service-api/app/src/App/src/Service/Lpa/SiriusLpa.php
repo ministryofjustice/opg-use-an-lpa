@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\AccessForAll\AddAccessForAllLpaInterface;
+use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
@@ -17,7 +18,14 @@ use Traversable;
  * @template-implements ArrayAccess<array-key, string|array>
  * @template-implements IteratorAggregate<array-key, string|array>
  */
-class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, IteratorAggregate, JsonSerializable
+class SiriusLpa implements
+    AddAccessForAllLpaInterface,
+    HasActorInterface,
+    FindActorInLpaInterface,
+    IsValidInterface,
+    ArrayAccess,
+    IteratorAggregate,
+    JsonSerializable
 {
     use SiriusHasActorTrait;
 
@@ -25,7 +33,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
     {
         if ($this->lpa['donor'] !== null) {
             $donorAsSiriusPerson = $this->convertToSiriusPerson($this->lpa['donor']);
-            $this->lpa['donor'] = $donorAsSiriusPerson;
+            $this->lpa['donor']  = $donorAsSiriusPerson;
         }
 
         $this->transformArrayToSiriusPersons('attorneys');
@@ -50,11 +58,6 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         return (string)$this->lpa['uId'];
     }
 
-    public function getSystemStatus(): string
-    {
-        return (string)$this->lpa['systemStatus'];
-    }
-
     private function transformArrayToSiriusPersons(string $keyName): void
     {
         if (array_key_exists($keyName, $this->lpa)) {
@@ -64,7 +67,7 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
         }
     }
 
-    private function convertToSiriusPerson($entity): SiriusPerson
+    private function convertToSiriusPerson(SiriusPerson|array $entity): SiriusPerson
     {
         return $entity instanceof SiriusPerson
             ? $entity
@@ -115,5 +118,4 @@ class SiriusLpa implements HasActorInterface, IsValidInterface, ArrayAccess, Ite
     {
         return (string)$this->lpa['status'];
     }
-
 }

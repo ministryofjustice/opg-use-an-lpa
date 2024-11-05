@@ -6,13 +6,13 @@ namespace AppTest\Entity;
 
 use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\SiriusLpaDonor;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use DateTimeImmutable;
 
 class CanCastSiriusDonorTest extends TestCase
 {
@@ -34,6 +34,7 @@ class CanCastSiriusDonorTest extends TestCase
             'email'        => 'RachelSanderson@opgtest.com',
             'firstname'    => 'Rachel',
             'firstnames'   => null,
+            'id'           => '7',
             'surname'      => 'Sanderson',
             'otherNames'   => null,
             'systemStatus' => null,
@@ -67,6 +68,7 @@ class CanCastSiriusDonorTest extends TestCase
             'RachelSanderson@opgtest.com',
             'Rachel',
             null,
+            '7',
             [
                 [
                     'id'  => 7,

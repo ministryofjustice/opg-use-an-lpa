@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity\LpaStore;
 
-use App\Entity\Casters\CastSingleDonor;
 use App\Entity\Casters\CastToCaseSubtype;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
@@ -13,12 +12,10 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use JsonSerializable;
 
-class LpaStore extends Lpa implements JsonSerializable
+class LpaStore extends Lpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -34,8 +31,7 @@ class LpaStore extends Lpa implements JsonSerializable
         ?LpaType $caseSubtype,
         ?string $channel,
         ?DateTimeImmutable $dispatchDate,
-        #[CastSingleDonor]
-        ?object $donor,
+        ?LpaStoreDonor $donor,
         ?bool $hasSeveranceWarning,
         ?DateTimeImmutable $invalidDate,
         #[MapFrom('lifeSustainingTreatmentOption')]
@@ -51,7 +47,7 @@ class LpaStore extends Lpa implements JsonSerializable
         ?array $replacementAttorneys,
         ?string $status,
         ?DateTimeImmutable $statusDate,
-        #[CastListToType(LpaStoreTrustCorporations::class)]
+        #[CastListToType(LpaStoreTrustCorporation::class)]
         ?array $trustCorporations,
         #[MapFrom('uid')]
         ?string $uId,
@@ -83,19 +79,5 @@ class LpaStore extends Lpa implements JsonSerializable
             $uId,
             $withdrawnDate
         );
-    }
-
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
     }
 }

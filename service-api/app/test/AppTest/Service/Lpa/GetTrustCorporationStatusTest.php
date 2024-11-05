@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Entity\LpaStore\LpaStoreTrustCorporations;
-use App\Entity\Sirius\SiriusLpaTrustCorporations;
+use App\Entity\LpaStore\LpaStoreTrustCorporation;
+use App\Entity\Sirius\SiriusLpaTrustCorporation;
 use App\Service\Lpa\GetTrustCorporationStatus;
 use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,25 +47,24 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_0_if_trustCorporation_is_active_combined_format_lpastore(): void
     {
-        $trustCorporation = new LpaStoreTrustCorporations(
-            $addressLine1 = '103 Line 1',
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $countryName  = 'UK',
-            $country      = 'GB',
-            $county       = null,
-            $dob          = null,
-            $email        = null,
-            $firstname    = null,
-            $firstnames   = null,
-            $name         = 'ABC Ltd',
-            $otherNames   = null,
-            $postcode     = null,
-            $surname      = null,
-            $systemStatus = 'active',
-            $town         = 'Town',
-            $type         = null,
-            $uId          = '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+        $trustCorporation = new LpaStoreTrustCorporation(
+            addressLine1: '103 Line 1',
+            addressLine2: null,
+            addressLine3: null,
+            country:      'GB',
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    null,
+            firstnames:   null,
+            name:         'ABC Ltd',
+            otherNames:   null,
+            postcode:     null,
+            surname:      null,
+            systemStatus: 'active',
+            town:         'Town',
+            type:         null,
+            uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
         $status = new GetTrustCorporationStatus(
@@ -94,25 +93,24 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_1_if_trustCorporation_is_a_ghost_combined_format_lpastore(): void
     {
-        $trustCorporation = new LpaStoreTrustCorporations(
-            $addressLine1 = '103 Line 1',
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $companyName  = '',
-            $country      = 'GB',
-            $county       = null,
-            $dob          = null,
-            $email        = null,
-            $firstname    = null,
-            $firstnames   = null,
-            $name         = '',
-            $otherNames   = null,
-            $postcode     = null,
-            $surname      = null,
-            $systemStatus = 'active',
-            $town         = 'Town',
-            $type         = null,
-            $uId          = '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+        $trustCorporation = new LpaStoreTrustCorporation(
+            addressLine1: '103 Line 1',
+            addressLine2: null,
+            addressLine3: null,
+            country:      'GB',
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    null,
+            firstnames:   null,
+            name:         '',
+            otherNames:   null,
+            postcode:     null,
+            surname:      null,
+            systemStatus: 'active',
+            town:         'Town',
+            type:         null,
+            uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
         $status = new GetTrustCorporationStatus(
@@ -142,25 +140,24 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_2_if_trustCorporation_is_inactive_combined_format_lpastore(): void
     {
-        $trustCorporation = new LpaStoreTrustCorporations(
-            $addressLine1 = '103 Line 1',
-            $addressLine2 = null,
-            $addressLine3 = null,
-            $country      = 'GB',
-            $county       = null,
-            $companyName  = 'XYZ Ltd',
-            $dob          = null,
-            $email        = null,
-            $firstname    = null,
-            $firstnames   = null,
-            $name         = '',
-            $otherNames   = null,
-            $postcode     = null,
-            $surname      = null,
-            $systemStatus = 'false',
-            $town         = 'Town',
-            $type         = null,
-            $uId          = '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+        $trustCorporation = new LpaStoreTrustCorporation(
+            addressLine1: '103 Line 1',
+            addressLine2: null,
+            addressLine3: null,
+            country:      'GB',
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    null,
+            firstnames:   null,
+            name:         'XYZ Ltd',
+            otherNames:   null,
+            postcode:     null,
+            surname:      null,
+            systemStatus: 'false',
+            town:         'Town',
+            type:         null,
+            uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
         $status = new GetTrustCorporationStatus(
@@ -172,24 +169,25 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_2_if_trustCorporation_is_inactive_combined_format_sirius(): void
     {
-        $trustCorporation = new SiriusLpaTrustCorporations(
-            $addressLine1 = 'Street 1',
-            $addressLine2 = 'Street 2',
-            $addressLine3 = 'Street 3',
-            $country      = 'GB',
-            $county       = 'County',
-            $dob          = null,
-            $email        = null,
-            $firstname    = 'trust',
-            $firstnames   = null,
-            $name         = 'XYZ Ltd',
-            $otherNames   = null,
-            $postcode     = 'ABC 123',
-            $surname      = 'test',
-            $systemStatus = 'false',
-            $town         = 'Town',
-            $type         = 'Primary',
-            $uId          = '7000-0015-1998',
+        $trustCorporation = new SiriusLpaTrustCorporation(
+            addressLine1: 'Street 1',
+            addressLine2: 'Street 2',
+            addressLine3: 'Street 3',
+            country:      'GB',
+            county:       'County',
+            dob:          null,
+            email:        null,
+            firstname:    'trust',
+            firstnames:   null,
+            id:           '998',
+            name:         'XYZ Ltd',
+            otherNames:   null,
+            postcode:     'ABC 123',
+            surname:      'test',
+            systemStatus: 'false',
+            town:         'Town',
+            type:         'Primary',
+            uId:          '700000151998',
         );
 
         $status = new GetTrustCorporationStatus(
