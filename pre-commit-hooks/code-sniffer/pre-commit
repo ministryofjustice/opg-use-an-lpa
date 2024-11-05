@@ -1,8 +1,10 @@
 #!/bin/bash
 
 STANDARD="PSR12"
-BIN="./vendor/bin"
+BIN="$HOME/.composer/vendor/bin"
 
+echo "bin is:"
+echo "$BIN"
 echo
 echo "PHP_CodeSniffer pre-commit hook – commit with the --no-verify option to skip the hook"
 echo
