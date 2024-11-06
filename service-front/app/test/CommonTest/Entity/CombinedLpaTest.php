@@ -30,9 +30,11 @@ class CombinedLpaTest extends TestCase
         $expectedUid                    = '700000000047';
         $expectedApplicationHasGuidance = false;
         $expectedHasRestrictions        = false;
+        $expectedStatus                 = 'Registered';
 
         $this->assertEquals($expectedUid, $combinedLpa->getUId());
         $this->assertEquals($expectedApplicationHasGuidance, $combinedLpa->getApplicationHasGuidance());
         $this->assertEquals($expectedHasRestrictions, $combinedLpa->getApplicationHasRestrictions());
+        $this->assertEquals($expectedStatus, $combinedLpa->getStatus());
     }
 }

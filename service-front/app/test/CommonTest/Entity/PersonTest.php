@@ -27,16 +27,18 @@ class PersonTest extends TestCase
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
-        $expectedSalutation = '';
-        $expectedFirstname  = 'Rachel';
-        $expectedMiddlename = '';
-        $expectedSurname    = 'Sanderson';
-        $expectedDob        = new DateTimeImmutable('1948-11-01');
+        $expectedSalutation  = '';
+        $expectedFirstname   = 'Rachel';
+        $expectedMiddlename  = '';
+        $expectedSurname     = 'Sanderson';
+        $expectedDob         = new DateTimeImmutable('1948-11-01');
+        $expectedCompanyName = 'trust corporation';
 
         $this->assertEquals($expectedSalutation, $combinedLpa->getDonor()->getSalutation());
         $this->assertEquals($expectedFirstname, $combinedLpa->getDonor()->getFirstname());
         $this->assertEquals($expectedMiddlename, $combinedLpa->getDonor()->getMiddlenames());
         $this->assertEquals($expectedSurname, $combinedLpa->getDonor()->getSurname());
         $this->assertEquals($expectedDob, $combinedLpa->getDonor()->getDob());
+        $this->assertEquals($expectedCompanyName, $combinedLpa->trustCorporations[0]->getCompanyName());
     }
 }
