@@ -123,7 +123,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                     'email'        => null,
                     'firstname'    => 'trust',
                     'firstnames'   => null,
-                    'name'         => null,
+                    'name'         => 'trust corporation',
                     'otherNames'   => null,
                     'postcode'     => 'ABC 123',
                     'surname'      => 'test',

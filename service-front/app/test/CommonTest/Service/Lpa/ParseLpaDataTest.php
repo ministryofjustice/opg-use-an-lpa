@@ -126,11 +126,14 @@ class ParseLpaDataTest extends TestCase
     #[Test]
     public function it_correctly_parses_an_combined_lpa_api_response(): void
     {
-        $combinedFormat = $this->getMockedCombinedFormat();
+        $combinedFormat    = $this->getMockedCombinedFormat();
+        $expectedSiriusLpa = $this->expectedSiriusLpa();
+        $expectedSiriusLpa->activeAttorneys = $this->expectedAttorneys();
+
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
-        $this->lpaDataFormatter->__invoke($combinedFormat)->willReturn($this->expectedSiriusLpa());
+        $this->lpaDataFormatter->__invoke($combinedFormat)->willReturn($expectedSiriusLpa);
 
         $sut = new ParseLpaData(
             $this->lpaFactory->reveal(),
@@ -148,7 +151,7 @@ class ParseLpaDataTest extends TestCase
             $this->lpaData
         );
 
-        $this->assertEquals($this->expectedSiriusLpa(), $result->lpa);
+        $this->assertEquals($expectedSiriusLpa, $result->lpa);
     }
 
     private function getMockedCombinedFormat(): array
@@ -315,46 +318,7 @@ class ParseLpaDataTest extends TestCase
             applicationHasRestrictions:  false,
             applicationType            : 'Classic',
             attorneyActDecisions       : null,
-            attorneys:                   [
-                new SiriusLpaAttorney(
-                    addressLine1 : '9 high street',
-                    addressLine2 : '',
-                    addressLine3 : '',
-                    country      : '',
-                    county       : '',
-                    dob          : new DateTimeImmutable('1990-05-04'),
-                    email        : '',
-                    firstname    : 'jean',
-                    firstnames   : null,
-                    name         : null,
-                    otherNames   : null,
-                    postcode     : 'DN37 5SH',
-                    surname      : 'sanderson',
-                    systemStatus : '1',
-                    town         : '',
-                    type         : 'Primary',
-                    uId          : '700000000815'
-                ),
-                new SiriusLpaAttorney(
-                    addressLine1       : '',
-                    addressLine2       : '',
-                    addressLine3       : '',
-                    country            : '',
-                    county             : '',
-                    dob                : new DateTimeImmutable('1975-10-05'),
-                    email              : 'XXXXX',
-                    firstname          : 'Ann',
-                    firstnames         : null,
-                    name               : null,
-                    otherNames         : null,
-                    postcode           : '',
-                    surname            : 'Summers',
-                    systemStatus       : '1',
-                    town               : '',
-                    type               : 'Primary',
-                    uId                : '7000-0000-0849'
-                ),
-            ],
+            attorneys:                   $this->expectedAttorneys(),
             caseSubtype      : LpaType::fromShortName('personal-welfare'),
             channel          : null,
             dispatchDate     : null,
@@ -419,6 +383,50 @@ class ParseLpaDataTest extends TestCase
             uId                     : '700000000047',
             withdrawnDate           : null
         );
+    }
+
+    public function expectedAttorneys(): array
+    {
+        return [
+            new SiriusLpaAttorney(
+                addressLine1 : '9 high street',
+                addressLine2 : '',
+                addressLine3 : '',
+                country      : '',
+                county       : '',
+                dob          : new DateTimeImmutable('1990-05-04'),
+                email        : '',
+                firstname    : 'jean',
+                firstnames   : null,
+                name         : null,
+                otherNames   : null,
+                postcode     : 'DN37 5SH',
+                surname      : 'sanderson',
+                systemStatus : '1',
+                town         : '',
+                type         : 'Primary',
+                uId          : '700000000815'
+            ),
+            new SiriusLpaAttorney(
+                addressLine1       : '',
+                addressLine2       : '',
+                addressLine3       : '',
+                country            : '',
+                county             : '',
+                dob                : new DateTimeImmutable('1975-10-05'),
+                email              : 'XXXXX',
+                firstname          : 'Ann',
+                firstnames         : null,
+                name               : null,
+                otherNames         : null,
+                postcode           : '',
+                surname            : 'Summers',
+                systemStatus       : '1',
+                town               : '',
+                type               : 'Primary',
+                uId                : '7000-0000-0849'
+            ),
+        ];
     }
 
 }
