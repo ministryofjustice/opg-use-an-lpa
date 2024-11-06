@@ -12,6 +12,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionTimeoutException;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
 use DateTime;
@@ -36,6 +37,7 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
         UrlHelper $urlHelper,
         private LpaService $lpaService,
         private RateLimitService $failureRateLimiter,
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper);
     }
@@ -68,9 +70,15 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                     // Then we found a LPA for the given code
                     $expires = new DateTime($lpa->expires);
                     $status  = strtolower($lpa->lpa->getStatus());
+
+                    $templateName = 'viewer::check-code-found';
+                    if (($this->featureEnabled)('support_datastore_lpas')) {
+                        $templateName = 'viewer::check-code-found-combined-lpa';
+                    }
+
                     if ($this->canDisplayLPA($status)) {
                         return new HtmlResponse($this->renderer->render(
-                            'viewer::check-code-found',
+                            $templateName,
                             [
                                 'lpa'     => $lpa->lpa,
                                 'expires' => $expires->format('Y-m-d'),

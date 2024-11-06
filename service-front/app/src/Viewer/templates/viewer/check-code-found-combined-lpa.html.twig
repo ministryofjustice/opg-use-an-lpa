@@ -22,7 +22,7 @@
                         <tbody class="govuk-table__body">
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</td>
+                            <td class="govuk-table__cell">{{ lpa.caseSubtype.propertyAndAffairs ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</td>
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
@@ -50,10 +50,10 @@
                                 {% trans with {'%date%': lpa_date(expires)} %}You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire.{% endtrans %}
                             </p>
                             <p class="govuk-body">{% trans %}Ask the donor or attorney for a new access code if your organisation:{% endtrans %}
-                                <ul class="list list-bullet">
-                                    <li>{% trans %}needs more time to process this LPA{% endtrans %}</li>
-                                    <li>{% trans %}need to see this LPA at a later date{% endtrans %}</li>
-                                </ul>
+                            <ul class="list list-bullet">
+                                <li>{% trans %}needs more time to process this LPA{% endtrans %}</li>
+                                <li>{% trans %}need to see this LPA at a later date{% endtrans %}</li>
+                            </ul>
                             </p>
                         </div>
                     </details>

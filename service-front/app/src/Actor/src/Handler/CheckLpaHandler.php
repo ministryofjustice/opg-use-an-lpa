@@ -18,6 +18,7 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResult;
