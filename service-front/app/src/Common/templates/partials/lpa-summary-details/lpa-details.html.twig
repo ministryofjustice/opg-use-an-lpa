@@ -1,27 +1,49 @@
 {% import "@partials/lpa-summary-details/iap-macros.html.twig" as iap %}
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">
-    {% if lpa.caseSubtype == "pfa" %}
+    {% if lpa.caseSubtype == "pfa" or (lpa.caseSubtype and lpa.caseSubtype.value == "pfa") %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
                         title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
-                {% if lpa.attorneyActDecisions|lower == 'when registered' %}
-                    {% if actor.type == 'donor' %}
-                        {% trans %}You have said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
-                    {% else %}
-                        {% trans %}The donor has said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                {% if not feature_enabled("support_datastore_lpas") %}
+                    {% if lpa.attorneyActDecisions|lower == 'when registered' %}
+                        {% if actor.type == 'donor' %}
+                            {% trans %}You have said that this <abbr
+                                    title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
+                                <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
+                        {% else %}
+                            {% trans %}The donor has said that this <abbr
+                                    title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
+                                <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                        {% endif %}
+                    {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                        {% trans %}This <abbr
+                                title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+                    {% elseif lpa.attorneyActDecisions == null %}
+                        {% trans %}This <abbr
+                                title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
                     {% endif %}
-                {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
-                {% elseif lpa.attorneyActDecisions == null %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                {% endif %}
+
+                {% if feature_enabled("support_datastore_lpas") %}
+                    {% if lpa.attorneyActDecisions and lpa.attorneyActDecisions.value|lower == 'when registered' %}
+                        {% if actor.type == 'donor' %}
+                            {% trans %}You have said that this <abbr
+                                    title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
+                                <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
+                        {% else %}
+                            {% trans %}The donor has said that this <abbr
+                                    title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
+                                <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                        {% endif %}
+                    {% elseif lpa.attorneyActDecisions and lpa.attorneyActDecisions.value|lower == 'loss of capacity' %}
+                        {% trans %}This <abbr
+                                title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+                    {% elseif lpa.attorneyActDecisions == null %}
+                        {% trans %}This <abbr
+                                title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                    {% endif %}
                 {% endif %}
             </dd>
         </div>
@@ -30,13 +52,26 @@
             <dt class="govuk-summary-list__key">{% trans %}Life-sustaining
                     <br>treatment{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
-                {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
-                    {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                    {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                {% else %}
-                    {% trans %}To view this, ask to see the paper <abbr
-                            title="lasting power of attorney">LPA</abbr>{% endtrans %}
+                {% if not feature_enabled("support_datastore_lpas") %}
+                    {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
+                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                    {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
+                        {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                    {% else %}
+                        {% trans %}To view this, ask to see the paper <abbr
+                                title="lasting power of attorney">LPA</abbr>{% endtrans %}
+                    {% endif %}
+                {% endif %}
+
+                {% if feature_enabled("support_datastore_lpas") %}
+                    {% if lpa.lifeSustainingTreatment.value|lower == 'option-a' %}
+                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                    {% elseif lpa.lifeSustainingTreatment.value|lower == 'option-b' %}
+                        {% trans %}The attorneys do not have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                    {% else %}
+                        {% trans %}To view this, ask to see the paper <abbr
+                                title="lasting power of attorney">LPA</abbr>{% endtrans %}
+                    {% endif %}
                 {% endif %}
             </dd>
         </div>

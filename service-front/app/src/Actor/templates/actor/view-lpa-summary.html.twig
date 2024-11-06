@@ -14,7 +14,13 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    {% if not feature_enabled("support_datastore_lpas") %}
+                        <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    {% endif %}
+
+                    {% if feature_enabled("support_datastore_lpas") %}
+                        <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.value == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    {% endif %}
                     <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}
                     </h1>
@@ -35,40 +41,88 @@
             {% else %}
                 <div class="govuk-grid-row lpa-valid-border">
                     <div class="govuk-grid-column-full column-full-alt-1">
-                        {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">
-                                {% trans %}This <abbr
-                                        title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}
-                            </h2>
-                        {% else %}
-                            <h2 class="govuk-heading-m heading-m-alt-1">
-                                {% trans %}This <abbr
-                                        title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}
-                            </h2>
+                        {% if not feature_enabled("support_datastore_lpas") %}
+                            {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
+                                <h2 class="govuk-heading-m heading-m-alt-1">
+                                    {% trans %}This <abbr
+                                            title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}
+                                </h2>
+                            {% else %}
+                                <h2 class="govuk-heading-m heading-m-alt-1">
+                                    {% trans %}This <abbr
+                                            title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}
+                                </h2>
+                            {% endif %}
                         {% endif %}
 
-                        <p class="govuk-body body-alt-1">
-                            {% if lpa.caseSubtype == "pfa" %}
-                                {% if lpa.attorneyActDecisions|lower == 'when registered' %}
-                                    {% if actor.type == 'donor' %}
-                                        {% trans %}While you have mental capacity, your attorneys must get your permission to use this
-                                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
-                                    {% else %}
-                                        {% trans %}While the donor has mental capacity, you must get their permission to use this
-                                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
-                                    {% endif %}
-                                {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                        {% if feature_enabled("support_datastore_lpas") %}
+                            {% if lpa.caseSubtype.value == "pfa" and (lpa.attorneyActDecisions and lpa.attorneyActDecisions.value|lower == 'when registered') %}
+                                <h2 class="govuk-heading-m heading-m-alt-1">
                                     {% trans %}This <abbr
-                                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.{% endtrans %}
-                                {% elseif lpa.attorneyActDecisions == null %}
-                                    {% trans %}This <abbr
-                                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
-                                {% endif %}
+                                            title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}
+                                </h2>
                             {% else %}
-                                {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
-                                    {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                                    {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                <h2 class="govuk-heading-m heading-m-alt-1">
+                                    {% trans %}This <abbr
+                                            title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}
+                                </h2>
+                            {% endif %}
+                        {% endif %}
+                        <p class="govuk-body body-alt-1">
+                            {% if not feature_enabled("support_datastore_lpas") %}
+                                {% if lpa.caseSubtype == "pfa" %}
+                                    {% if lpa.attorneyActDecisions|lower == 'when registered' %}
+                                        {% if actor.type == 'donor' %}
+                                            {% trans %}While you have mental capacity, your attorneys must get your permission to use this
+                                                <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                        {% else %}
+                                            {% trans %}While the donor has mental capacity, you must get their permission to use this
+                                                <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                        {% endif %}
+                                    {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
+                                        {% trans %}This <abbr
+                                                title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.{% endtrans %}
+                                    {% elseif lpa.attorneyActDecisions == null %}
+                                        {% trans %}This <abbr
+                                                title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                                    {% endif %}
+                                {% else %}
+                            {% endif %}
+
+                            {% if feature_enabled("support_datastore_lpas") %}
+                                {% if (lpa.caseSubtype and lpa.caseSubtype.value == "pfa") %}
+                                    {% if (lpa.attorneyActDecisions and lpa.attorneyActDecisions|lower == 'when registered') %}
+                                        {% if actor.type == 'donor' %}
+                                            {% trans %}While you have mental capacity, your attorneys must get your permission to use this
+                                                <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                        {% else %}
+                                            {% trans %}While the donor has mental capacity, you must get their permission to use this
+                                                <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                        {% endif %}
+                                    {% elseif (lpa.attorneyActDecisions and lpa.attorneyActDecisions|lower == 'loss of capacity') %}
+                                        {% trans %}This <abbr
+                                                title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.{% endtrans %}
+                                    {% elseif lpa.attorneyActDecisions == null %}
+                                        {% trans %}This <abbr
+                                                title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                                    {% endif %}
+                                {% else %}
+                            {% endif %}
+
+                                {% if feature_enabled("support_datastore_lpas") %}
+                                    {% if lpa.lifeSustainingTreatment.value|lower == 'option-a' %}
+                                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                    {% elseif lpa.lifeSustainingTreatment.value|lower == 'option-b' %}
+                                        {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if not feature_enabled("support_datastore_lpas") %}
+                                    {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
+                                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                    {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
+                                        {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </p>

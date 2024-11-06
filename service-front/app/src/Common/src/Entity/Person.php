@@ -54,4 +54,9 @@ class Person
         return $this->dob;
     }
 
+    public function getCompanyName(): ?string
+    {
+        return $this->name;
+    }
+
 }

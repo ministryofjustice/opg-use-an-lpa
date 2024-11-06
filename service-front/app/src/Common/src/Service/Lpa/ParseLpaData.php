@@ -49,8 +49,11 @@ class ParseLpaData
                     //introduce feature flag here #3551
                     //the lpaData array converted to object using hydrator
                     if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $mockedCombinedLpa = $this->getMockedCombinedFormat();
-                        $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
+                        $mockedCombinedLpa            = $this->getMockedCombinedFormat();
+                        $CombinedLpa                  = ($this->lpaDataFormatter)($mockedCombinedLpa);
+                        $CombinedLpa->activeAttorneys = $CombinedLpa->attorneys;
+
+                        $data['lpa']       = $CombinedLpa;
                     } else {
                         $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
                     }

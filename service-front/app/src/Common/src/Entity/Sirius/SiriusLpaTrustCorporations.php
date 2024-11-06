@@ -45,6 +45,7 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[MapFrom('companyName')]
         ?string $name,
         ?string $otherNames,
         #[MapFrom('addresses')]

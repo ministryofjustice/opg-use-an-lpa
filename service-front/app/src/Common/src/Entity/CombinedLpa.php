@@ -84,4 +84,9 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
     {
         return $this->caseSubtype->value;
     }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
 }

@@ -38,10 +38,10 @@ class LpaExtension extends AbstractExtension
         ];
     }
 
-    public function actorAddress(CaseActor $actor): string
+    public function actorAddress(CaseActor|Person $actor): string
     {
         //  Multiple addresses can appear for an actor - just use the first one
-        if (count($actor->getAddresses()) > 0) {
+        if ($actor instanceof CaseActor && count($actor->getAddresses()) > 0) {
             $address = $actor->getAddresses()[0];
 
             return implode(', ', array_filter([
@@ -52,6 +52,18 @@ class LpaExtension extends AbstractExtension
                 $address->getCounty(),
                 $address->getPostcode(),
                 $address->getCountry(),
+            ]));
+        }
+
+        if ($actor instanceof Person) {
+            return implode(', ', array_filter([
+              $actor->addressLine1,
+              $actor->addressLine2,
+              $actor->addressLine3,
+              $actor->town,
+              $actor->county,
+              $actor->postcode,
+              $actor->country,
             ]));
         }
 

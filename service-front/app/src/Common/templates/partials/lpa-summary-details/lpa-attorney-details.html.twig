@@ -3,6 +3,8 @@
     <div class="govuk-summary-list__row">
         <dt class="govuk-summary-list__key">{% trans %}How decisions are made{% endtrans %}</dt>
         <dd class="govuk-summary-list__value">
+
+        {% if not feature_enabled("support_datastore_lpas") %}
             {% if lpa.caseAttorneySingular %}
                 {% trans %}Decisions are made by one attorney{% endtrans %}
             {% elseif lpa.caseAttorneyJointly %}
@@ -13,6 +15,20 @@
                 {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
                     <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
             {% endif %}
+        {% endif %}
+
+        {% if feature_enabled("support_datastore_lpas") %}
+            {% if lpa.attorneyActDecisions and lpa.attorneyActDecisions.value == 'singular' %}
+                {% trans %}Decisions are made by one attorney{% endtrans %}
+            {% elseif lpa.attorneyActDecisions and lpa.attorneyActDecisions.value == 'jointly' %}
+                {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
+            {% elseif lpa.attorneyActDecisions and lpa.attorneyActDecisions.value == 'jointly-and-severally' %}
+                {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
+            {% elseif lpa.attorneyActDecisions and lpa.attorneyActDecisions.value == 'jointly-for-some-severally-for-others' %}
+                {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
+                    <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
+            {% endif %}
+        {% endif %}
         </dd>
     </div>
 </dl>
