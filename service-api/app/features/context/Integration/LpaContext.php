@@ -391,7 +391,7 @@ class LpaContext extends BaseIntegrationContext
                 'attorney',
                 $this->lpa->uId),
             new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
-            null
+            null,
         );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
@@ -2921,7 +2921,7 @@ class LpaContext extends BaseIntegrationContext
                 'donor',
                 $this->lpa->uId),
             new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
-            null
+            null,
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
