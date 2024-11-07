@@ -228,6 +228,7 @@ class ParseLpaData
             'applicationHasGuidance' => false,
             'lpaDonorSignatureDate' => '2012-12-12',
             'lifeSustainingTreatment' => 'Option A',
+            'whenTheLpaCanBeUsed' => 'when-has-capacity'
         ];
     }
 }

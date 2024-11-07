@@ -23,9 +23,9 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
     #[Test]
     public function can_when_lpa_can_be_used(): void
     {
-        $whenTheLpaCanBeUsed = 'singular';
+        $whenTheLpaCanBeUsed = 'when registered';
 
-        $expectedWhenTheLpaCanBeUsed = 'singular';
+        $expectedWhenTheLpaCanBeUsed = 'when-has-capacity';
 
         $result = $this->castToWhenTheLpaCanBeUsed->cast($whenTheLpaCanBeUsed, $this->mockHydrator);
 

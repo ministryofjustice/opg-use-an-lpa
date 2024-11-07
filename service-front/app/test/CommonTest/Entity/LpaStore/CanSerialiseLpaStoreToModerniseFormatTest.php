@@ -113,6 +113,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
+            'whenTheLpaCanBeUsed'        => 'when-capacity-lost'
         ];
     }
 

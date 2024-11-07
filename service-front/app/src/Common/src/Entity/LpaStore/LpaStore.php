@@ -6,12 +6,14 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\CastSingleDonor;
 use Common\Entity\Casters\CastToCaseSubtype;
+use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use Common\Entity\Casters\CastToLifeSustainingTreatment;
 use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use Common\Entity\CombinedLpa;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -25,7 +27,7 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
         #[MapFrom('howAttorneysMakeDecisions')]
-        #[CastToWhenTheLpaCanBeUsed]
+        #[CastToHowAttorneysMakeDecisions]
         ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(LpaStoreAttorney::class)]
         ?array $attorneys,
@@ -56,6 +58,9 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
+        #[MapFrom('whenTheLpaCanBeUsed')]
+        #[CastToWhenTheLpaCanBeUsed]
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
         parent::__construct(
             $applicationHasGuidance,
@@ -81,7 +86,8 @@ class LpaStore extends CombinedLpa implements JsonSerializable
             $statusDate,
             $trustCorporations,
             $uId,
-            $withdrawnDate
+            $withdrawnDate,
+            $whenTheLpaCanBeUsed
         );
     }
 

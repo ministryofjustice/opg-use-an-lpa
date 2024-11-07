@@ -11,6 +11,7 @@ use Common\Entity\LpaStore\LpaStoreTrustCorporations;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Features\FeatureEnabled;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -117,7 +118,8 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                 ),
             ],
             $uId                     = 'M-789Q-P4DF-4UX3',
-            $withdrawnDate           = null
+            $withdrawnDate           = null,
+            $whenTheLpaCanBeUsed     = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
         );
     }
 

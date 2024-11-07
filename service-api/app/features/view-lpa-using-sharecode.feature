@@ -1,4 +1,4 @@
-@viewer @viewlpa
+@viewer @viewlpa @ff:support_datastore_lpas:false
 Feature: View an LPA via sharecode
   As an organisation who has been given a share code
   I can enter that code and see the details of an LPA

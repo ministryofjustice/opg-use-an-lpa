@@ -135,6 +135,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             ],
             'uId'                        => '700000000047',
             'withdrawnDate'              => null,
+            'whenTheLpaCanBeUsed'        => 'when-has-capacity',
         ];
     }
 

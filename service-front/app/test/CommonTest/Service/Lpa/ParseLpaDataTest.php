@@ -10,6 +10,7 @@ use Common\Entity\Sirius\SiriusLpaDonor;
 use Common\Entity\Sirius\SiriusLpaTrustCorporations;
 use Common\Enum\LpaType;
 use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Features\FeatureEnabled;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -308,6 +309,7 @@ class ParseLpaDataTest extends TestCase
             'applicationHasGuidance' => false,
             'lpaDonorSignatureDate' => '2012-12-12',
             'lifeSustainingTreatment' => 'Option A',
+            'whenTheLpaCanBeUsed' => 'when-has-capacity'
         ];
     }
 
@@ -381,7 +383,8 @@ class ParseLpaDataTest extends TestCase
                 ),
             ],
             uId                     : '700000000047',
-            withdrawnDate           : null
+            withdrawnDate           : null,
+            whenTheLpaCanBeUsed     : WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY
         );
     }
 

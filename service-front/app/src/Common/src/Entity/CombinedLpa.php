@@ -7,6 +7,7 @@ namespace Common\Entity;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
 use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
 use DateTimeImmutable;
@@ -39,6 +40,7 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
+        public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
     }
 
