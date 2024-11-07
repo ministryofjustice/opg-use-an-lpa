@@ -1593,11 +1593,11 @@ class LpaContext extends BaseIntegrationContext
 
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                new SiriusPerson(json_decode(json_encode($lpa->donor), true)),
                 'donor',
-                $this->lpa->uId),
-            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
-            $this->userLpaActorToken,
+                $lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($lpa), true)),
+            null,
         );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
