@@ -6,14 +6,17 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Entity\Sirius\SiriusLpa;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
+use App\Service\Lpa\AccessForAll\AccessForAllValidation;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa\AddLpa;
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpaManager;
@@ -309,17 +312,14 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
-
-        $expectedResponse = [
-            'donor' => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-            'caseSubtype'   => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken,
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            $this->userLpaActorToken,
+        );
 
         try {
             $addLpaService->validateAddLpaData(
@@ -385,24 +385,14 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedResponse = [
-            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->attorneys[0]), true)),
-            'role'        => 'attorney',
-            'lpa-id'      => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-            'attorney'    => [
-                'uId'         => $this->lpa->attorneys[0]->uId,
-                'firstname'   => $this->lpa->attorneys[0]->firstname,
-                'middlenames' => $this->lpa->attorneys[0]->middlenames,
-                'surname'     => $this->lpa->attorneys[0]->surname,
-            ],
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->attorneys[0]), true)),
+                'attorney',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -1601,18 +1591,14 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedResponse = [
-            'actor'       => new SiriusPerson(json_decode(json_encode($lpa->donor), true)),
-            'role'        => 'donor',
-            'lpa-id'      => $lpa->uId,
-            'caseSubtype' => $lpa->caseSubtype,
-            'donor'       => [
-                'uId'         => $lpa->donor->uId,
-                'firstname'   => $lpa->donor->firstname,
-                'middlenames' => $lpa->donor->middlenames,
-                'surname'     => $lpa->donor->surname,
-            ],
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            $this->userLpaActorToken,
+        );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -1881,18 +1867,14 @@ class LpaContext extends BaseIntegrationContext
         $addAccessForAllLpa = $this->container->get(AddAccessForAllLpa::class);
         $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
 
-        $expectedResponse = [
-            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-            'role'        => 'donor',
-            'lpa-id'      => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -1943,18 +1925,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedResponse = [
-            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-            'role'        => 'donor',
-            'lpa-id'      => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                    $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -2751,18 +2729,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $response = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedResponse = [
-            'actor'       => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-            'role'        => 'donor',
-            'lpa-id'      => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
-            'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         Assert::assertEquals($expectedResponse, $response);
     }
@@ -2835,17 +2809,14 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $expectedResponse = [
-            'donor' => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'lpaActorToken'        => $this->userLpaActorToken,
-            'activationKeyDueDate' => null,
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
@@ -2944,16 +2915,14 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $expectedResponse = [
-            'donor'                => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-            ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'activationKeyDueDate' => $activationKeyDueDate,
-        ];
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            new \App\Service\Lpa\SiriusLpa(json_decode(json_encode($this->lpa), true)),
+            null
+        );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
