@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
-use App\Entity\Sirius\Casters\CastToHowAttorneysMakeDecisions;
+use App\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
@@ -28,8 +29,6 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[CastToHowAttorneysMakeDecisions]
-        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(SiriusLpaAttorney::class)]
         ?array $attorneys,
         ?LpaType $caseSubtype,
@@ -38,6 +37,8 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         #[CastSiriusDonor]
         ?object $donor,
         ?bool $hasSeveranceWarning,
+        #[CastToHowAttorneysMakeDecisions]
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         ?DateTimeImmutable $invalidDate,
         #[CastToSiriusLifeSustainingTreatment]
         ?LifeSustainingTreatment $lifeSustainingTreatment,
@@ -55,21 +56,21 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?array $trustCorporations,
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
-        #[MapFrom('whenTheLpaCanBeUsed')]
+        #[MapFrom('attorneyActDecisions')]
         #[CastToWhenTheLpaCanBeUsed]
-        $whenTheLpaCanBeUsed
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
             $applicationHasGuidance,
             $applicationHasRestrictions,
             $applicationType,
-            $attorneyActDecisions,
             $attorneys,
             $caseSubtype,
             $channel,
             $dispatchDate,
             $donor,
             $hasSeveranceWarning,
+            $howAttorneysMakeDecisions,
             $invalidDate,
             $lifeSustainingTreatment,
             $lpaDonorSignatureDate,

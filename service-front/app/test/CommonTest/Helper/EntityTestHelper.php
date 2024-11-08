@@ -131,42 +131,42 @@ class EntityTestHelper
     }
 
     public static function makeSiriusLpa(
-        ?bool $applicationHasGuidance = true,
-        ?bool $applicationHasRestrictions = true,
-        ?string $applicationType = 'applicationType',
+        ?bool $applicationHasGuidance = false,
+        ?bool $applicationHasRestrictions = false,
+        ?string $applicationType = 'Classic',
         ?HowAttorneysMakeDecisions $attorneyActDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?array $attorneys = [],
         ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
-        ?string $channel = 'channel',
-        ?DateTimeImmutable $dispatchDate = new DateTimeImmutable(TestData::testDateString),
+        ?string $channel = 'online',
+        ?DateTimeImmutable $dispatchDate = null,
         ?Person $donor = null,
-        ?bool $hasSeveranceWarning = true,
-        ?DateTimeImmutable $invalidDate = new DateTimeImmutable(TestData::testDateString),
+        ?bool $hasSeveranceWarning = null,
+        ?DateTimeImmutable $invalidDate = null,
         ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
         ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
-        ?bool $lpaIsCleansed = true,
-        ?string $onlineLpaId = 'onlineLpaId',
-        ?DateTimeImmutable $receiptDate = new DateTimeImmutable(TestData::testDateString),
+        ?bool $lpaIsCleansed = null,
+        ?string $onlineLpaId = null,
+        ?DateTimeImmutable $receiptDate = null,
         ?DateTimeImmutable $registrationDate = new DateTimeImmutable(TestData::testDateString),
-        ?DateTimeImmutable $rejectedDate = new DateTimeImmutable(TestData::testDateString),
-        ?array $replacementAttorneys = [],
+        ?DateTimeImmutable $rejectedDate = null,
+        ?array $replacementAttorneys = null,
         ?string $status = 'Registered',
-        ?DateTimeImmutable $statusDate = new DateTimeImmutable(TestData::testDateString),
+        ?DateTimeImmutable $statusDate = null,
         ?array $trustCorporations = [],
         ?string $uId = 'uId',
-        ?DateTimeImmutable $withdrawnDate = new DateTimeImmutable(TestData::testDateString),
+        ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
     ): SiriusLpa
     {
-        if (count($attorneys) === 0) {
+        if (!is_null($attorneys) && count($attorneys) === 0) {
             $attorneys[] = EntityTestHelper::MakePerson();
         }
 
-        if (count($replacementAttorneys) === 0) {
+        if (!is_null($replacementAttorneys) && count($replacementAttorneys) === 0) {
             $replacementAttorneys[] = EntityTestHelper::MakePerson();
         }
 
-        if (count($trustCorporations) === 0) {
+        if (!is_null($trustCorporations) && count($trustCorporations) === 0) {
             $trustCorporations[] = EntityTestHelper::MakePerson();
         }
 

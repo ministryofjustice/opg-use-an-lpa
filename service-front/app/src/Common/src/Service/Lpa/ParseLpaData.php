@@ -220,7 +220,7 @@ class ParseLpaData
                     ],
                 ],
             ],
-            'attorneyActDecisions' => 'jointly-and-severally',
+            'howAttorneysMakeDecisions' => 'jointly-and-severally',
             'applicationHasRestrictions' => false,
             'applicationHasGuidance' => false,
             'lpaDonorSignatureDate' => '2012-12-12',

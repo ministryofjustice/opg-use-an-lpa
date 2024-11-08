@@ -155,5 +155,6 @@
   "applicationHasGuidance": false,
   "lpaDonorSignatureDate": "2012-12-12",
   "lifeSustainingTreatment": "Option A",
-  "whenTheLpaCanBeUsed": "when registered"
+  "whenTheLpaCanBeUsed": "when registered",
+  "howAttorneysMakeDecisions": "jointly-and-severally"
 }

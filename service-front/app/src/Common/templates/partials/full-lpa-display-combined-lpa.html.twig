@@ -113,7 +113,7 @@
                         <iap-images>
                     {% endif %}
 
-                    {% include '@partials/lpa-summary-details/lpa-details.html.twig' %}
+                    {% include '@partials/lpa-summary-details/lpa-details-combined-lpa.html.twig' %}
 
                     {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
                         {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}

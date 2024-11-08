@@ -4,6 +4,7 @@ namespace Common\Entity\Casters;
 
 use Attribute;
 use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
 

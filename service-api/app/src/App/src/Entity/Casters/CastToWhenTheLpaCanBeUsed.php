@@ -14,8 +14,12 @@ class CastToWhenTheLpaCanBeUsed implements PropertyCaster
 {
     public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
-        if (is_null($value)) {
-            $value = '';
+        if (is_null(WhenTheLpaCanBeUsed::tryFrom($value))) {
+            $value = match (strtolower($value)) {
+                'when registered' => WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY->value,
+                'loss of capacity' => WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST->value,
+                default => '',
+            };
         }
 
         return WhenTheLpaCanBeUsed::from($value)->value;

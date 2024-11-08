@@ -26,9 +26,6 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[MapFrom('howAttorneysMakeDecisions')]
-        #[CastToHowAttorneysMakeDecisions]
-        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(LpaStoreAttorney::class)]
         ?array $attorneys,
         #[MapFrom('lpaType')]
@@ -39,6 +36,9 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         #[CastSingleDonor]
         ?object $donor,
         ?bool $hasSeveranceWarning,
+        #[MapFrom('howAttorneysMakeDecisions')]
+        #[CastToHowAttorneysMakeDecisions]
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         ?DateTimeImmutable $invalidDate,
         #[MapFrom('lifeSustainingTreatmentOption')]
         #[CastToLifeSustainingTreatment]
@@ -66,13 +66,13 @@ class LpaStore extends CombinedLpa implements JsonSerializable
             $applicationHasGuidance,
             $applicationHasRestrictions,
             $applicationType,
-            $attorneyActDecisions,
             $attorneys,
             $caseSubtype,
             $channel,
             $dispatchDate,
             $donor,
             $hasSeveranceWarning,
+            $howAttorneysMakeDecisions,
             $invalidDate,
             $lifeSustainingTreatment,
             $lpaDonorSignatureDate,

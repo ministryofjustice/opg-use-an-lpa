@@ -345,7 +345,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
 
         $data = [
             'reference_number'     => (int) $this->lpa->uId,
@@ -1571,7 +1571,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect(): void
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
 
         $data = [
             'reference_number'     => (int) $this->lpa->uId,
@@ -1838,7 +1838,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideDetailsThatMatchAValidPaperDocument($firstnames, $lastname, $postcode, $dob)
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
 
         $this->lpa->donor->firstname = 'Rachel';
         $this->lpa->donor->surname   =  'S’anderson';
@@ -1902,7 +1902,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
 
         $data = [
             'reference_number'     => (int) $this->lpa->uId,
@@ -2772,7 +2772,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
-        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
 
         $data = [
             'reference_number'     => (int) $this->lpaUid,

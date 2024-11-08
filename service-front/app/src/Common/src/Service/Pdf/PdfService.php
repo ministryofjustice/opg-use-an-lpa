@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Common\Service\Pdf;
 
+use Common\Entity\CombinedLpa;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\Lpa;
+use Common\Entity\Sirius\SiriusLpa;
 use Common\Exception\ApiException;
 use Common\Service\Log\EventCodes;
 use Common\Service\Log\RequestTracing;
@@ -31,14 +33,14 @@ class PdfService
     ) {
     }
 
-    public function getLpaAsPdf(Lpa $lpa, ?Images $images = null): StreamInterface
+    public function getLpaAsPdf(Lpa|SiriusLpa|CombinedLpa $lpa, ?Images $images = null): StreamInterface
     {
         $renderedLpa = $this->renderLpaAsHtml($lpa, $images);
 
         return $this->requestPdfFromService($renderedLpa);
     }
 
-    private function renderLpaAsHtml(Lpa $lpa, ?Images $images): string
+    private function renderLpaAsHtml(Lpa|SiriusLpa|CombinedLpa $lpa, ?Images $images): string
     {
         $renderData = [
             'lpa'       => $lpa,
@@ -49,8 +51,13 @@ class PdfService
             $renderData['iap_images'] = $images;
         }
 
+        $template = 'viewer::download-lpa-combined-lpa';
+        if ($lpa instanceof Lpa) {
+            $template = 'viewer::download-lpa';
+        }
+
         return $this->renderer->render(
-            'viewer::download-lpa',
+            $template,
             $renderData,
         );
     }

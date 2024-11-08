@@ -23,8 +23,6 @@ class SiriusLpa extends CombinedLpa
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[CastToHowAttorneysMakeDecisions]
-        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(SiriusLpaAttorney::class)]
         ?array $attorneys,
         ?LpaType $caseSubtype,
@@ -33,6 +31,8 @@ class SiriusLpa extends CombinedLpa
         #[CastSiriusDonor]
         ?object $donor,
         ?bool $hasSeveranceWarning,
+        #[CastToHowAttorneysMakeDecisions]
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         ?DateTimeImmutable $invalidDate,
         #[CastToSiriusLifeSustainingTreatment]
         ?LifeSustainingTreatment $lifeSustainingTreatment,
@@ -58,13 +58,13 @@ class SiriusLpa extends CombinedLpa
             $applicationHasGuidance,
             $applicationHasRestrictions,
             $applicationType,
-            $attorneyActDecisions,
             $attorneys,
             $caseSubtype,
             $channel,
             $dispatchDate,
             $donor,
             $hasSeveranceWarning,
+            $howAttorneysMakeDecisions,
             $invalidDate,
             $lifeSustainingTreatment,
             $lpaDonorSignatureDate,

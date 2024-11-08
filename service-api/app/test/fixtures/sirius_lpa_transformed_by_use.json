@@ -150,9 +150,10 @@
       ]
     }
   ],
-  "attorneyActDecisions": null,
+  "attorneyActDecisions": "Loss of capacity",
   "applicationHasRestrictions": false,
   "applicationHasGuidance": false,
   "lpaDonorSignatureDate": "2012-12-12",
-  "lifeSustainingTreatment": "Option A"
+  "lifeSustainingTreatment": "Option A",
+  "howAttorneysMakeDecisions": "jointly-and-severally"
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
-use Behat\Step\When;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
@@ -19,7 +18,6 @@ class CombinedLpa implements JsonSerializable
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
-        public readonly ?HowAttorneysMakeDecisions $attorneyActDecisions,
         /** @var Person[] $attorneys */
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
@@ -27,6 +25,7 @@ class CombinedLpa implements JsonSerializable
         public readonly ?DateTimeImmutable $dispatchDate,
         public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
+        public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,
@@ -110,27 +109,33 @@ class CombinedLpa implements JsonSerializable
     }
 
     #[DoNotSerialize]
+    public function getHowAttorneysMakeDecisions(): HowAttorneysMakeDecisions
+    {
+        return $this->howAttorneysMakeDecisions;
+    }
+
+    #[DoNotSerialize]
     public function getCaseAttorneySingular(): bool
     {
-        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::SINGULAR;
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::SINGULAR;
     }
 
     #[DoNotSerialize]
     public function getCaseAttorneyJointly(): bool
     {
-        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY;
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY;
     }
 
     #[DoNotSerialize]
     public function getCaseAttorneyJointlyAndSeverally(): bool
     {
-        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
     }
 
     #[DoNotSerialize]
     public function caseAttorneyJointlyAndJointlyAndSeverally(): bool
     {
-        return $this->attorneyActDecisions === HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
     }
 
     #[DoNotSerialize]
