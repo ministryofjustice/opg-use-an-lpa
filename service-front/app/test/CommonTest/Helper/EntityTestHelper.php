@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommonTest\Helper;
 
 use Common\Entity\CombinedLpa;
@@ -36,10 +38,7 @@ class EntityTestHelper
         ?string $town = 'Town',
         ?string $type = 'Type',
         ?string $uId = 'UID',
-
-
-    ): Person
-    {
+    ): Person {
         return new Person(
             addressLine1: $addressLine1,
             addressLine2: $addressLine2,
@@ -65,13 +64,13 @@ class EntityTestHelper
         ?bool $applicationHasGuidance = true,
         ?bool $applicationHasRestrictions = true,
         ?string $applicationType = 'applicationType',
-        ?HowAttorneysMakeDecisions $attorneyActDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?array $attorneys = [],
         ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
         ?string $channel = 'channel',
         ?DateTimeImmutable $dispatchDate = new DateTimeImmutable(TestData::testDateString),
         ?Person $donor = null,
         ?bool $hasSeveranceWarning = true,
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?DateTimeImmutable $invalidDate = new DateTimeImmutable(TestData::testDateString),
         ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
         ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
@@ -87,8 +86,7 @@ class EntityTestHelper
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = new DateTimeImmutable(TestData::testDateString),
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
-    ): CombinedLpa
-    {
+    ): CombinedLpa {
         if (count($attorneys) === 0) {
             $attorneys[] = EntityTestHelper::MakePerson();
         }
@@ -105,13 +103,13 @@ class EntityTestHelper
             applicationHasGuidance: $applicationHasGuidance,
             applicationHasRestrictions: $applicationHasRestrictions,
             applicationType: $applicationType,
-            attorneyActDecisions: $attorneyActDecisions,
             attorneys: $attorneys,
             caseSubtype: $caseSubtype,
             channel: $channel,
             dispatchDate: $dispatchDate,
             donor: $donor,
             hasSeveranceWarning: $hasSeveranceWarning,
+            howAttorneysMakeDecisions: $howAttorneysMakeDecisions,
             invalidDate: $invalidDate,
             lifeSustainingTreatment: $lifeSustainingTreatment,
             lpaDonorSignatureDate: $lpaDonorSignatureDate,
@@ -134,13 +132,13 @@ class EntityTestHelper
         ?bool $applicationHasGuidance = false,
         ?bool $applicationHasRestrictions = false,
         ?string $applicationType = 'Classic',
-        ?HowAttorneysMakeDecisions $attorneyActDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?array $attorneys = [],
         ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
         ?string $channel = 'online',
         ?DateTimeImmutable $dispatchDate = null,
         ?Person $donor = null,
         ?bool $hasSeveranceWarning = null,
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?DateTimeImmutable $invalidDate = null,
         ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
         ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
@@ -156,8 +154,7 @@ class EntityTestHelper
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
-    ): SiriusLpa
-    {
+    ): SiriusLpa {
         if (!is_null($attorneys) && count($attorneys) === 0) {
             $attorneys[] = EntityTestHelper::MakePerson();
         }
@@ -174,13 +171,13 @@ class EntityTestHelper
             applicationHasGuidance:      $applicationHasGuidance,
             applicationHasRestrictions:  $applicationHasRestrictions,
             applicationType            : $applicationType,
-            attorneyActDecisions       : $attorneyActDecisions,
             attorneys:                   $attorneys,
             caseSubtype      : $caseSubtype,
             channel          : $channel,
             dispatchDate     : $dispatchDate,
             donor            : $donor,
             hasSeveranceWarning     : $hasSeveranceWarning,
+            howAttorneysMakeDecisions       : $howAttorneysMakeDecisions,
             invalidDate             : $invalidDate,
             lifeSustainingTreatment : $lifeSustainingTreatment,
             lpaDonorSignatureDate   : $lpaDonorSignatureDate,
@@ -203,13 +200,13 @@ class EntityTestHelper
         ?bool $applicationHasGuidance = null,
         ?bool $applicationHasRestrictions = null,
         ?string $applicationType = null,
-        ?HowAttorneysMakeDecisions $attorneyActDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?array $attorneys = [],
         ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
         ?string $channel = 'online',
         ?DateTimeImmutable $dispatchDate = null,
         ?Person $donor = null,
         ?bool $hasSeveranceWarning = null,
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
         ?DateTimeImmutable $invalidDate = null,
         ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
         ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
@@ -225,8 +222,7 @@ class EntityTestHelper
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
-    ): LpaStore
-    {
+    ): LpaStore {
         if (!is_null($attorneys) && count($attorneys) === 0) {
             $attorneys[] = EntityTestHelper::MakePerson();
         }
@@ -243,13 +239,13 @@ class EntityTestHelper
             applicationHasGuidance     : $applicationHasGuidance,
             applicationHasRestrictions : $applicationHasRestrictions,
             applicationType            : $applicationType,
-            attorneyActDecisions       : $attorneyActDecisions,
             attorneys                  : $attorneys,
             caseSubtype                : $caseSubtype,
             channel                    : $channel,
             dispatchDate               : $dispatchDate,
             donor                      : $donor,
             hasSeveranceWarning        : $hasSeveranceWarning,
+            attorneyActDecisions       : $howAttorneysMakeDecisions,
             invalidDate                : $invalidDate,
             lifeSustainingTreatment    : $lifeSustainingTreatment,
             lpaDonorSignatureDate      : $lpaDonorSignatureDate,

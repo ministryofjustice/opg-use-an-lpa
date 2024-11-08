@@ -36,7 +36,7 @@ class ViewLpaHandler extends AbstractHandler
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Exception
      */

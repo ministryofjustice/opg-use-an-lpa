@@ -48,15 +48,18 @@ class LpaExtension extends AbstractExtension
 
             return implode(
                 ', ',
-                array_filter([
-                  $address->getAddressLine1(),
-                  $address->getAddressLine2(),
-                  $address->getAddressLine3(),
-                  $address->getTown(),
-                  $address->getCounty(),
-                  $address->getPostcode(),
-                  $address->getCountry(),
-              ]));
+                array_filter(
+                    [
+                    $address->getAddressLine1(),
+                    $address->getAddressLine2(),
+                    $address->getAddressLine3(),
+                    $address->getTown(),
+                    $address->getCounty(),
+                    $address->getPostcode(),
+                    $address->getCountry(),
+                    ]
+                )
+            );
         }
 
         return '';
@@ -65,7 +68,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Removes the dob from the string and returns just donor name
      *
-     * @param string $donorNameAndDob
+     * @param  string $donorNameAndDob
      * @return string
      */
     public function donorNameWithDobRemoved(string $donorNameAndDob): string
@@ -75,8 +78,8 @@ class LpaExtension extends AbstractExtension
     }
 
     /**
-     * @param CaseActor|Person $actor
-     * @param bool $withSalutation Prepend salutation?
+     * @param  CaseActor|Person $actor
+     * @param  bool             $withSalutation Prepend salutation?
      * @return string
      */
     public function actorName(CaseActor|Person $actor, bool $withSalutation = true): string
@@ -98,7 +101,7 @@ class LpaExtension extends AbstractExtension
      * Takes an input date, whether as a string (relative or absolute - in the format 2020-11-27)
      * or as a Datetime and converts it for displaying on pages
      *
-     * @param DateTimeInterface|string|null $date
+     * @param  DateTimeInterface|string|null $date
      * @return string
      */
     public function lpaDate(DateTimeInterface|string|null $date): string
@@ -110,8 +113,8 @@ class LpaExtension extends AbstractExtension
      * Takes an input date, whether as a string (relative or absolute) or as a Datetime
      * and converts it for displaying on pages
      *
-     * @param DateTimeInterface|string|null $date
-     * @param string                        $parseFormat A PHP Datetime format string that should be used to parse $date
+     * @param  DateTimeInterface|string|null $date
+     * @param  string                        $parseFormat A PHP Datetime format string that should be used to parse $date
      * @return string
      */
     public function formatDate(DateTimeInterface|string|null $date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
@@ -136,7 +139,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Calculates the days remaining until the viewer code expires
      *
-     * @param string|null $expiryDate
+     * @param  string|null $expiryDate
      * @return string
      * @throws Exception
      */
@@ -156,7 +159,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Checks whether the code has been cancelled
      *
-     * @param array $code
+     * @param  array $code
      * @return bool|null
      */
     public function isCodeCancelled(array $code): ?bool
@@ -171,7 +174,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Checks whether the code has expired or not
      *
-     * @param string|null $expiryDate
+     * @param  string|null $expiryDate
      * @return bool|null
      * @throws Exception
      */
@@ -188,7 +191,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Create a hyphenated viewer code
      *
-     * @param string $viewerCode
+     * @param  string $viewerCode
      * @return string
      */
     public function formatViewerCode(string $viewerCode): string
@@ -213,7 +216,7 @@ class LpaExtension extends AbstractExtension
     /**
      * Creates an international date formatter that is capable of doing locale based dates.
      *
-     * @param string $locale
+     * @param  string $locale
      * @return IntlDateFormatter
      */
     private function getDateFormatter(string $locale): IntlDateFormatter

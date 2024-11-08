@@ -33,7 +33,7 @@ class ParseLpaData
      * Currently, fairly naive in its assumption that the data types are stored under explicit keys, which
      * may change.
      *
-     * @param array{
+     * @param  array{
      *     lpa: array,
      *     actor?: array,
      *     iap?: array,
@@ -45,26 +45,26 @@ class ParseLpaData
     {
         foreach ($data as $dataItemName => $dataItem) {
             switch ($dataItemName) {
-                case 'lpa':
-                    //introduce feature flag here #3551
-                    //the lpaData array converted to object using hydrator
-                    if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $mockedCombinedLpa = self::getMockedCombinedFormat();
-                        $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
-                    } else {
-                        $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
-                    }
-                    break;
-                case 'actor':
-                    $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
-                    break;
-                case 'iap':
-                    $data['iap'] = $this->imagesFactory->createFromData($dataItem);
-                    break;
-                default:
-                    if (is_array($dataItem)) {
-                        $data[$dataItemName] = ($this)($dataItem);
-                    }
+            case 'lpa':
+                //introduce feature flag here #3551
+                //the lpaData array converted to object using hydrator
+                if (($this->featureEnabled)('support_datastore_lpas')) {
+                    $mockedCombinedLpa = self::getMockedCombinedFormat();
+                    $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
+                } else {
+                    $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
+                }
+                break;
+            case 'actor':
+                $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                break;
+            case 'iap':
+                $data['iap'] = $this->imagesFactory->createFromData($dataItem);
+                break;
+            default:
+                if (is_array($dataItem)) {
+                    $data[$dataItemName] = ($this)($dataItem);
+                }
             }
         }
 
