@@ -2,6 +2,8 @@
 
 #From https://raw.githubusercontent.com/osteel/git-pre-commit-phpcs/master/pre-commit
 
+echo: "starting hook"
+
 STANDARD="PSR12"
 BIN="$HOME/.composer/vendor/bin"
 
@@ -14,7 +16,7 @@ echo
 # Check whether PHP_CodeSniffer can be found
 if [ ! -f "$BIN/phpcs" ]
 then
-    echo "PHP_CodeSniffer not found – is it installed? 'composer require --dev squizlabs/php_codesniffer'"
+    echo "PHP_CodeSniffer not found – is it installed? 'composer global require --dev squizlabs/php_codesniffer'"
     echo
     exit 1
 fi
