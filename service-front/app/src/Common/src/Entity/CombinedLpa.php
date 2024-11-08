@@ -98,61 +98,51 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         return $this->caseSubtype->value;
     }
 
-    #[DoNotSerialize]
     public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    #[DoNotSerialize]
     public function getLifeSustainingTreatment(): string
     {
         return $this->lifeSustainingTreatment->value;
     }
 
-    #[DoNotSerialize]
     public function getHowAttorneysMakeDecisions(): HowAttorneysMakeDecisions
     {
         return $this->howAttorneysMakeDecisions;
     }
 
-    #[DoNotSerialize]
     public function getCaseAttorneySingular(): bool
     {
         return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::SINGULAR;
     }
 
-    #[DoNotSerialize]
     public function getCaseAttorneyJointly(): bool
     {
         return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY;
     }
 
-    #[DoNotSerialize]
     public function getCaseAttorneyJointlyAndSeverally(): bool
     {
         return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
     }
 
-    #[DoNotSerialize]
-    public function caseAttorneyJointlyAndJointlyAndSeverally(): bool
+    public function getCaseAttorneyJointlyAndJointlyAndSeverally(): bool
     {
         return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
     }
 
-    #[DoNotSerialize]
     public function getActiveAttorneys(): ?array
     {
         return $this->attorneys;
     }
 
-    #[DoNotSerialize]
     public function getTrustCorporations(): ?array
     {
         return $this->trustCorporations;
     }
 
-    #[DoNotSerialize]
     public function getWhenTheLpaCanBeUsed(): WhenTheLpaCanBeUsed
     {
         return $this->whenTheLpaCanBeUsed;
