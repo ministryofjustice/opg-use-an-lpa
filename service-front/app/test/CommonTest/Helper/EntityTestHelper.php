@@ -3,6 +3,7 @@
 namespace CommonTest\Helper;
 
 use Common\Entity\CombinedLpa;
+use Common\Entity\LpaStore\LpaStore;
 use Common\Entity\Person;
 use Common\Entity\Sirius\SiriusLpa;
 use Common\Entity\Sirius\SiriusLpaAttorney;
@@ -195,6 +196,75 @@ class EntityTestHelper
             uId                     : $uId,
             withdrawnDate           : $withdrawnDate,
             whenTheLpaCanBeUsed:    $whenTheLpaCanBeUsed
+        );
+    }
+
+    public static function makeLpaStoreLpa(
+        ?bool $applicationHasGuidance = null,
+        ?bool $applicationHasRestrictions = null,
+        ?string $applicationType = null,
+        ?HowAttorneysMakeDecisions $attorneyActDecisions = HowAttorneysMakeDecisions::SINGULAR,
+        ?array $attorneys = [],
+        ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
+        ?string $channel = 'online',
+        ?DateTimeImmutable $dispatchDate = null,
+        ?Person $donor = null,
+        ?bool $hasSeveranceWarning = null,
+        ?DateTimeImmutable $invalidDate = null,
+        ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
+        ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
+        ?bool $lpaIsCleansed = null,
+        ?string $onlineLpaId = null,
+        ?DateTimeImmutable $receiptDate = null,
+        ?DateTimeImmutable $registrationDate = new DateTimeImmutable(TestData::testDateString),
+        ?DateTimeImmutable $rejectedDate = null,
+        ?array $replacementAttorneys = null,
+        ?string $status = 'Registered',
+        ?DateTimeImmutable $statusDate = null,
+        ?array $trustCorporations = [],
+        ?string $uId = 'uId',
+        ?DateTimeImmutable $withdrawnDate = null,
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
+    ): LpaStore
+    {
+        if (!is_null($attorneys) && count($attorneys) === 0) {
+            $attorneys[] = EntityTestHelper::MakePerson();
+        }
+
+        if (!is_null($replacementAttorneys) && count($replacementAttorneys) === 0) {
+            $replacementAttorneys[] = EntityTestHelper::MakePerson();
+        }
+
+        if (!is_null($trustCorporations) && count($trustCorporations) === 0) {
+            $trustCorporations[] = EntityTestHelper::MakePerson();
+        }
+
+        return new LpaStore(
+            applicationHasGuidance     : $applicationHasGuidance,
+            applicationHasRestrictions : $applicationHasRestrictions,
+            applicationType            : $applicationType,
+            attorneyActDecisions       : $attorneyActDecisions,
+            attorneys                  : $attorneys,
+            caseSubtype                : $caseSubtype,
+            channel                    : $channel,
+            dispatchDate               : $dispatchDate,
+            donor                      : $donor,
+            hasSeveranceWarning        : $hasSeveranceWarning,
+            invalidDate                : $invalidDate,
+            lifeSustainingTreatment    : $lifeSustainingTreatment,
+            lpaDonorSignatureDate      : $lpaDonorSignatureDate,
+            lpaIsCleansed              : $lpaIsCleansed,
+            onlineLpaId                : $onlineLpaId,
+            receiptDate                : $receiptDate,
+            registrationDate           : $registrationDate,
+            rejectedDate               : $rejectedDate,
+            replacementAttorneys       : $replacementAttorneys,
+            status                     : $status,
+            statusDate                 : $statusDate,
+            trustCorporations          : $trustCorporations,
+            uId                        : $uId,
+            withdrawnDate              : $withdrawnDate,
+            whenTheLpaCanBeUsed        : $whenTheLpaCanBeUsed,
         );
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
 class Person
 {

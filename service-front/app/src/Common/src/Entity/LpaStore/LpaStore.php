@@ -13,6 +13,7 @@ use Common\Entity\CombinedLpa;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -59,7 +60,7 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         ?DateTimeImmutable $withdrawnDate,
         #[MapFrom('whenTheLpaCanBeUsed')]
         #[CastToWhenTheLpaCanBeUsed]
-        $whenTheLpaCanBeUsed
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
             $applicationHasGuidance,

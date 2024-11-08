@@ -6,7 +6,7 @@ namespace Common\Entity;
 
 class Address
 {
-    protected int $id;
+    protected ?int $id = null;
     protected ?string $town         = null;
     protected ?string $county       = null;
     protected ?string $postcode     = null;
@@ -16,7 +16,7 @@ class Address
     protected ?string $addressLine2 = null;
     protected ?string $addressLine3 = null;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
