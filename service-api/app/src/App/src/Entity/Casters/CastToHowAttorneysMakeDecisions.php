@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Casters;
 
+use App\Enum\HowAttorneysMakeDecisions;
 use Attribute;
-use Common\Enum\HowAttorneysMakeDecisions;
+
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
 

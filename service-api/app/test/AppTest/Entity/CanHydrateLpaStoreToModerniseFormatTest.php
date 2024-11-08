@@ -36,11 +36,10 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
     public function expectedLpaStore(): LpaStore
     {
         return new LpaStore(
-            applicationHasGuidance     : null,
-            applicationHasRestrictions : null,
-            applicationType            : null,
-            attorneyActDecisions       : HowAttorneysMakeDecisions::tryFrom('jointly'),
-            attorneys                  : [
+            applicationHasGuidance:     null,
+            applicationHasRestrictions: null,
+            applicationType:            null,
+            attorneys:                  [
                 new LpaStoreAttorney(
                     addressLine1 : '81 NighOnTimeWeBuiltIt Street',
                     addressLine2 : null,
@@ -61,10 +60,10 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     uId          : '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d'
                 ),
             ],
-            caseSubtype                : LpaType::fromShortName('personal-welfare'),
-            channel                    : 'online',
-            dispatchDate               : null,
-            donor                      : new LpaStoreDonor(
+            caseSubtype:                LpaType::fromShortName('personal-welfare'),
+            channel:                    'online',
+            dispatchDate:               null,
+            donor:                      new LpaStoreDonor(
                 addressLine1           : '74 Cloob Close',
                 addressLine2           : null,
                 addressLine3           : null,
@@ -83,19 +82,20 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                 type                   : null,
                 uId                    : 'eda719db-8880-4dda-8c5d-bb9ea12c236f'
             ),
-            hasSeveranceWarning     : null,
-            invalidDate             : null,
-            lifeSustainingTreatment : LifeSustainingTreatment::fromShortName('Option A'),
-            lpaDonorSignatureDate   : new DateTimeImmutable('2024-01-10T23:00:00Z'),
-            lpaIsCleansed           : null,
-            onlineLpaId             : null,
-            receiptDate             : null,
-            registrationDate        : new DateTimeImmutable('2024-01-12'),
-            rejectedDate            : null,
-            replacementAttorneys    : null,
-            status                  : 'registered',
-            statusDate              : null,
-            trustCorporations       : [
+            hasSeveranceWarning:        null,
+            howAttorneysMakeDecisions:  HowAttorneysMakeDecisions::JOINTLY,
+            invalidDate:                null,
+            lifeSustainingTreatment:    LifeSustainingTreatment::fromShortName('Option A'),
+            lpaDonorSignatureDate:      new DateTimeImmutable('2024-01-10T23:00:00Z'),
+            lpaIsCleansed:              null,
+            onlineLpaId:                null,
+            receiptDate:                null,
+            registrationDate:           new DateTimeImmutable('2024-01-12'),
+            rejectedDate:               null,
+            replacementAttorneys:       null,
+            status:                     'registered',
+            statusDate:                 null,
+            trustCorporations:          [
                 new LpaStoreTrustCorporations(
                     addressLine1 : '103 Line 1',
                     addressLine2 : null,
@@ -117,9 +117,9 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     uId          : '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ),
             ],
-            uId                     : 'M-789Q-P4DF-4UX3',
-            withdrawnDate           : null,
-            whenTheLpaCanBeUsed: WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
+            uId:                        'M-789Q-P4DF-4UX3',
+            withdrawnDate:              null,
+            whenTheLpaCanBeUsed:        WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
         );
     }
 

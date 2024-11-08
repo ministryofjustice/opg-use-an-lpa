@@ -7,6 +7,7 @@ namespace AppTest\Service\Lpa\ResolveActor;
 use App\Entity\Sirius\SiriusLpa;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\LpaActor;
@@ -23,11 +24,10 @@ class CombinedLpaHasActorTraitTest extends TestCase
     public function setUp(): void
     {
         $this->mock                     = new SiriusLpa(
-            $applicationHasGuidance     = false,
-            $applicationHasRestrictions = false,
-            $applicationType            = 'Classic',
-            $attorneyActDecisions       = null,
-            $attorneys                  = [
+            applicationHasGuidance     : false,
+            applicationHasRestrictions : false,
+            applicationType            : 'Classic',
+            attorneys                  : [
                 [
                     'addressLine1' => '9 high street',
                     'addressLine2' => '',
@@ -86,10 +86,10 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     'uId'          => '567890123',
                 ],
             ],
-            $caseSubtype                = LpaType::fromShortName('personal-welfare'),
-            $channel                    = null,
-            $dispatchDate               = null,
-            $donor                      = (object)[
+            caseSubtype                : LpaType::fromShortName('personal-welfare'),
+            channel                    : null,
+            dispatchDate               : null,
+            donor                      : (object)[
                 'addressLine1' => '81 Front Street',
                 'addressLine2' => 'LACEBY',
                 'addressLine3' => '',
@@ -118,19 +118,20 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     ],
                 ],
             ],
-            $hasSeveranceWarning        = null,
-            $invalidDate                = null,
-            $lifeSustainingTreatment    = LifeSustainingTreatment::fromShortName('Option A'),
-            $lpaDonorSignatureDate      = new DateTimeImmutable('2012-12-12'),
-            $lpaIsCleansed              = true,
-            $onlineLpaId                = 'A33718377316',
-            $receiptDate                = new DateTimeImmutable('2014-09-26'),
-            $registrationDate           = new DateTimeImmutable('2019-10-10'),
-            $rejectedDate               = null,
-            $replacementAttorneys       = [],
-            $status                     = 'Registered',
-            $statusDate                 = null,
-            $trustCorporations          = [
+            hasSeveranceWarning        : null,
+            howAttorneysMakeDecisions  : null,
+            invalidDate                : null,
+            lifeSustainingTreatment    : LifeSustainingTreatment::fromShortName('Option A'),
+            lpaDonorSignatureDate      : new DateTimeImmutable('2012-12-12'),
+            lpaIsCleansed              : true,
+            onlineLpaId                : 'A33718377316',
+            receiptDate                : new DateTimeImmutable('2014-09-26'),
+            registrationDate           : new DateTimeImmutable('2019-10-10'),
+            rejectedDate               : null,
+            replacementAttorneys       : [],
+            status                     : 'Registered',
+            statusDate                 : null,
+            trustCorporations          : [
                 [
                     'addressLine1' => 'Street 1',
                     'addressLine2' => 'Street 2',
@@ -170,8 +171,9 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     'uId'          => '789012345',
                 ],
             ],
-            $uId                        = '700000000047',
-            $withdrawnDate              = null
+            uId                        : '700000000047',
+            withdrawnDate              : null,
+            whenTheLpaCanBeUsed    : WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
         );
     }
 

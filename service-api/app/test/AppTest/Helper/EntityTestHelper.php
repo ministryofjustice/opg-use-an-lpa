@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Helper;
+namespace AppTest\Helper;
 
-use Common\Entity\CombinedLpa;
-use Common\Entity\LpaStore\LpaStore;
-use Common\Entity\Person;
-use Common\Entity\Sirius\SiriusLpa;
-use Common\Enum\HowAttorneysMakeDecisions;
-use Common\Enum\LifeSustainingTreatment;
-use Common\Enum\LpaStatus;
-use Common\Enum\LpaType;
-use Common\Enum\WhenTheLpaCanBeUsed;
+
+use App\Entity\LpaStore\LpaStore;
+use App\Entity\Person;
+use App\Entity\Sirius\SiriusLpa;
+use App\Enum\HowAttorneysMakeDecisions;
+use App\Enum\LifeSustainingTreatment;
+use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 
 class EntityTestHelper
@@ -54,74 +53,6 @@ class EntityTestHelper
             town:         $town,
             type:         $type,
             uId:          $uId
-        );
-    }
-
-    public static function makeCombinedLpa(
-        ?bool $applicationHasGuidance = true,
-        ?bool $applicationHasRestrictions = true,
-        ?string $applicationType = 'applicationType',
-        ?array $attorneys = [],
-        ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
-        ?string $channel = 'channel',
-        ?DateTimeImmutable $dispatchDate = new DateTimeImmutable(TestData::testDateString),
-        ?Person $donor = null,
-        ?bool $hasSeveranceWarning = true,
-        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
-        ?DateTimeImmutable $invalidDate = new DateTimeImmutable(TestData::testDateString),
-        ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
-        ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::testDateString),
-        ?bool $lpaIsCleansed = true,
-        ?string $onlineLpaId = 'onlineLpaId',
-        ?DateTimeImmutable $receiptDate = new DateTimeImmutable(TestData::testDateString),
-        ?DateTimeImmutable $registrationDate = new DateTimeImmutable(TestData::testDateString),
-        ?DateTimeImmutable $rejectedDate = new DateTimeImmutable(TestData::testDateString),
-        ?array $replacementAttorneys = [],
-        ?string $status = 'Registered',
-        ?DateTimeImmutable $statusDate = new DateTimeImmutable(TestData::testDateString),
-        ?array $trustCorporations = [],
-        ?string $uId = 'uId',
-        ?DateTimeImmutable $withdrawnDate = new DateTimeImmutable(TestData::testDateString),
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
-    ): CombinedLpa {
-        if (count($attorneys) === 0) {
-            $attorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (count($replacementAttorneys) === 0) {
-            $replacementAttorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (count($trustCorporations) === 0) {
-            $trustCorporations[] = EntityTestHelper::MakePerson();
-        }
-
-        return new CombinedLpa(
-            applicationHasGuidance: $applicationHasGuidance,
-            applicationHasRestrictions: $applicationHasRestrictions,
-            applicationType: $applicationType,
-            attorneys: $attorneys,
-            caseSubtype: $caseSubtype,
-            channel: $channel,
-            dispatchDate: $dispatchDate,
-            donor: $donor,
-            hasSeveranceWarning: $hasSeveranceWarning,
-            howAttorneysMakeDecisions: $howAttorneysMakeDecisions,
-            invalidDate: $invalidDate,
-            lifeSustainingTreatment: $lifeSustainingTreatment,
-            lpaDonorSignatureDate: $lpaDonorSignatureDate,
-            lpaIsCleansed: $lpaIsCleansed,
-            onlineLpaId: $onlineLpaId,
-            receiptDate: $receiptDate,
-            registrationDate: $registrationDate,
-            rejectedDate: $rejectedDate,
-            replacementAttorneys: $replacementAttorneys,
-            status: $status,
-            statusDate: $statusDate,
-            trustCorporations: $trustCorporations,
-            uId: $uId,
-            withdrawnDate: $withdrawnDate,
-            whenTheLpaCanBeUsed: $whenTheLpaCanBeUsed
         );
     }
 
@@ -230,7 +161,7 @@ class EntityTestHelper
             dispatchDate               : $dispatchDate,
             donor                      : $donor,
             hasSeveranceWarning        : $hasSeveranceWarning,
-            howAttorneysMakeDecisions       : $howAttorneysMakeDecisions,
+            howAttorneysMakeDecisions  : $howAttorneysMakeDecisions,
             invalidDate                : $invalidDate,
             lifeSustainingTreatment    : $lifeSustainingTreatment,
             lpaDonorSignatureDate      : $lpaDonorSignatureDate,

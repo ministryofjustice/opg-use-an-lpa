@@ -13,6 +13,7 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -57,9 +58,7 @@ class LpaStore extends Lpa implements JsonSerializable
         #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
-        #[MapFrom('whenTheLpaCanBeUsed')]
-        #[CastToWhenTheLpaCanBeUsed]
-        $whenTheLpaCanBeUsed
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
             applicationHasGuidance: $applicationHasGuidance,
