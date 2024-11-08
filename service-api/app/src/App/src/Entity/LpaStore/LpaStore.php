@@ -25,9 +25,6 @@ class LpaStore extends Lpa implements JsonSerializable
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[MapFrom('howAttorneysMakeDecisions')]
-        #[CastToHowAttorneysMakeDecisions]
-        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(LpaStoreAttorney::class)]
         ?array $attorneys,
         #[MapFrom('lpaType')]
@@ -38,6 +35,9 @@ class LpaStore extends Lpa implements JsonSerializable
         #[CastSingleDonor]
         ?object $donor,
         ?bool $hasSeveranceWarning,
+        #[MapFrom('howAttorneysMakeDecisions')]
+        #[CastToHowAttorneysMakeDecisions]
+        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         ?DateTimeImmutable $invalidDate,
         #[MapFrom('lifeSustainingTreatmentOption')]
         #[CastToLifeSustainingTreatment]
@@ -62,31 +62,31 @@ class LpaStore extends Lpa implements JsonSerializable
         $whenTheLpaCanBeUsed
     ) {
         parent::__construct(
-            $applicationHasGuidance,
-            $applicationHasRestrictions,
-            $applicationType,
-            $attorneyActDecisions,
-            $attorneys,
-            $caseSubtype,
-            $channel,
-            $dispatchDate,
-            $donor,
-            $hasSeveranceWarning,
-            $invalidDate,
-            $lifeSustainingTreatment,
-            $lpaDonorSignatureDate,
-            $lpaIsCleansed,
-            $onlineLpaId,
-            $receiptDate,
-            $registrationDate,
-            $rejectedDate,
-            $replacementAttorneys,
-            $status,
-            $statusDate,
-            $trustCorporations,
-            $uId,
-            $withdrawnDate,
-            $whenTheLpaCanBeUsed
+            applicationHasGuidance: $applicationHasGuidance,
+            applicationHasRestrictions: $applicationHasRestrictions,
+            applicationType: $applicationType,
+            attorneys: $attorneys,
+            caseSubtype: $caseSubtype,
+            channel: $channel,
+            dispatchDate: $dispatchDate,
+            donor: $donor,
+            hasSeveranceWarning: $hasSeveranceWarning,
+            howAttorneysMakeDecisions: $howAttorneysMakeDecisions,
+            invalidDate: $invalidDate,
+            lifeSustainingTreatment: $lifeSustainingTreatment,
+            lpaDonorSignatureDate: $lpaDonorSignatureDate,
+            lpaIsCleansed: $lpaIsCleansed,
+            onlineLpaId: $onlineLpaId,
+            receiptDate: $receiptDate,
+            registrationDate: $registrationDate,
+            rejectedDate: $rejectedDate,
+            replacementAttorneys: $replacementAttorneys,
+            status: $status,
+            statusDate: $statusDate,
+            trustCorporations: $trustCorporations,
+            uId: $uId,
+            withdrawnDate: $withdrawnDate,
+            whenTheLpaCanBeUsed: $whenTheLpaCanBeUsed
         );
     }
 

@@ -155,44 +155,32 @@ class EntityTestHelper
         ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
     ): SiriusLpa {
-        if (!is_null($attorneys) && count($attorneys) === 0) {
-            $attorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (!is_null($replacementAttorneys) && count($replacementAttorneys) === 0) {
-            $replacementAttorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (!is_null($trustCorporations) && count($trustCorporations) === 0) {
-            $trustCorporations[] = EntityTestHelper::MakePerson();
-        }
-
         return new SiriusLpa(
-            applicationHasGuidance:      $applicationHasGuidance,
-            applicationHasRestrictions:  $applicationHasRestrictions,
-            applicationType            : $applicationType,
-            attorneys:                   $attorneys,
-            caseSubtype      : $caseSubtype,
-            channel          : $channel,
-            dispatchDate     : $dispatchDate,
-            donor            : $donor,
-            hasSeveranceWarning     : $hasSeveranceWarning,
-            howAttorneysMakeDecisions       : $howAttorneysMakeDecisions,
-            invalidDate             : $invalidDate,
-            lifeSustainingTreatment : $lifeSustainingTreatment,
-            lpaDonorSignatureDate   : $lpaDonorSignatureDate,
-            lpaIsCleansed           : $lpaIsCleansed,
-            onlineLpaId             : $onlineLpaId,
-            receiptDate             : $receiptDate,
-            registrationDate        : $registrationDate,
-            rejectedDate            : $rejectedDate,
-            replacementAttorneys    : $replacementAttorneys,
-            status                  : $status,
-            statusDate              : $statusDate,
-            trustCorporations       : $trustCorporations,
-            uId                     : $uId,
-            withdrawnDate           : $withdrawnDate,
-            whenTheLpaCanBeUsed:    $whenTheLpaCanBeUsed
+            applicationHasGuidance:     $applicationHasGuidance,
+            applicationHasRestrictions: $applicationHasRestrictions,
+            applicationType:            $applicationType,
+            attorneys:                  $attorneys,
+            caseSubtype:                $caseSubtype,
+            channel:                    $channel,
+            dispatchDate:               $dispatchDate,
+            donor:                      $donor,
+            hasSeveranceWarning:        $hasSeveranceWarning,
+            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
+            invalidDate:                $invalidDate,
+            lifeSustainingTreatment:    $lifeSustainingTreatment,
+            lpaDonorSignatureDate:      $lpaDonorSignatureDate,
+            lpaIsCleansed:              $lpaIsCleansed,
+            onlineLpaId:                $onlineLpaId,
+            receiptDate:                $receiptDate,
+            registrationDate:           $registrationDate,
+            rejectedDate:               $rejectedDate,
+            replacementAttorneys:       $replacementAttorneys,
+            status:                     $status,
+            statusDate:                 $statusDate,
+            trustCorporations:          $trustCorporations,
+            uId:                        $uId,
+            withdrawnDate:              $withdrawnDate,
+            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed
         );
     }
 
@@ -245,7 +233,7 @@ class EntityTestHelper
             dispatchDate               : $dispatchDate,
             donor                      : $donor,
             hasSeveranceWarning        : $hasSeveranceWarning,
-            attorneyActDecisions       : $howAttorneysMakeDecisions,
+            howAttorneysMakeDecisions       : $howAttorneysMakeDecisions,
             invalidDate                : $invalidDate,
             lifeSustainingTreatment    : $lifeSustainingTreatment,
             lpaDonorSignatureDate      : $lpaDonorSignatureDate,

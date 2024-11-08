@@ -111,12 +111,6 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
     }
 
     #[DoNotSerialize]
-    public function getUId(): ?string
-    {
-        return $this->uId;
-    }
-
-    #[DoNotSerialize]
     public function getHowAttorneysMakeDecisions(): HowAttorneysMakeDecisions
     {
         return $this->howAttorneysMakeDecisions;

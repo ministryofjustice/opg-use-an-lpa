@@ -31,7 +31,6 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'applicationHasGuidance'     => false,
             'applicationHasRestrictions' => false,
             'applicationType'            => 'Classic',
-            'attorneyActDecisions'       => null,
             'attorneys'                  => [
                 [
                     'addressLine1' => '9 high street',
@@ -101,6 +100,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                 ],
             ],
             'hasSeveranceWarning'        => null,
+            'howAttorneysMakeDecisions'  => 'jointly-and-severally',
             'invalidDate'                => null,
             'lifeSustainingTreatment'    => 'option-a',
             'lpaDonorSignatureDate'      => '2012-12-12 00:00:00.000000+0000',

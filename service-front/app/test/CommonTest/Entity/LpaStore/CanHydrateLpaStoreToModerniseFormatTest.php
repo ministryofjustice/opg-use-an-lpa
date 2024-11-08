@@ -102,14 +102,14 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
         ];
 
         return EntityTestHelper::makeLpaStoreLpa(
-            attorneyActDecisions:  HowAttorneysMakeDecisions::JOINTLY,
-            attorneys:             $attorneys,
-            donor:                 $donor,
-            lpaDonorSignatureDate: new DateTimeImmutable('2024-01-10 23:00:00'),
-            registrationDate:      new DateTimeImmutable('2024-01-12'),
-            status:                'registered',
-            trustCorporations:     $trustCorporations,
-            uId:                   'M-789Q-P4DF-4UX3',
+            attorneys:                 $attorneys,
+            donor:                     $donor,
+            howAttorneysMakeDecisions: HowAttorneysMakeDecisions::JOINTLY,
+            lpaDonorSignatureDate:     new DateTimeImmutable('2024-01-10 23:00:00'),
+            registrationDate:          new DateTimeImmutable('2024-01-12'),
+            status:                    'registered',
+            trustCorporations:         $trustCorporations,
+            uId:                       'M-789Q-P4DF-4UX3',
         );
     }
 

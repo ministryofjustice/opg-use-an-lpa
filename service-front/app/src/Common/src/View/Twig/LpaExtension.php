@@ -8,8 +8,6 @@ use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\CombinedLpa;
 use Common\Entity\Lpa;
-use Common\Entity\Person;
-use Common\Entity\CombinedLpa;
 use DateTime;
 use DateTimeInterface;
 use Exception;

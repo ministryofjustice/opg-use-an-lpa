@@ -8,8 +8,11 @@ use Common\Entity\Sirius\SiriusLpa;
 use Common\Entity\Sirius\SiriusLpaAttorney;
 use Common\Entity\Sirius\SiriusLpaDonor;
 use Common\Entity\Sirius\SiriusLpaTrustCorporations;
+use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
+use Common\Form\Fieldset\Date;
 use Common\Service\Features\FeatureEnabled;
 use CommonTest\Helper\EntityTestHelper;
 use DateTimeImmutable;
@@ -124,37 +127,20 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
         ];
 
         return EntityTestHelper::makeSiriusLpa(
-            attorneys:         $attorneys,
-            donor:             $donor,
-            trustCorporations: $trustCorporations,
+            attorneys:                 $attorneys,
+            channel:                   null,
+            donor:                     $donor,
+            howAttorneysMakeDecisions: HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY,
+            lpaDonorSignatureDate:     new DateTimeImmutable('2012-12-12'),
+            lpaIsCleansed:             true,
+            onlineLpaId:               'A33718377316',
+            receiptDate:               new DateTimeImmutable('2014-09-26'),
+            registrationDate:          new DateTimeImmutable('2019-10-10'),
+            replacementAttorneys:      [],
+            trustCorporations:         $trustCorporations,
+            uId:                       '700000000047',
+            whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY,
         );
-
-        //        return new SiriusLpa(
-        //            $applicationHasGuidance     = false,
-        //            $applicationHasRestrictions = false,
-        //            $applicationType            = 'Classic',
-        //            $attorneyActDecisions       = null,
-        //            $attorneys                  = ,
-        //            $caseSubtype      = LpaType::fromShortName('personal-welfare'),
-        //            $channel          = null,
-        //            $dispatchDate     = null,
-        //            $donor            = ,
-        //            $hasSeveranceWarning     = null,
-        //            $invalidDate             = null,
-        //            $lifeSustainingTreatment = LifeSustainingTreatment::fromShortName('Option A'),
-        //            $lpaDonorSignatureDate   = new DateTimeImmutable('2012-12-12'),
-        //            $lpaIsCleansed           = true,
-        //            $onlineLpaId             = 'A33718377316',
-        //            $receiptDate             = new DateTimeImmutable('2014-09-26'),
-        //            $registrationDate        = new DateTimeImmutable('2019-10-10'),
-        //            $rejectedDate            = null,
-        //            $replacementAttorneys    = [],
-        //            $status                  = 'Registered',
-        //            $statusDate              = null,
-        //            $trustCorporations       = ,
-        //            $uId                     = '700000000047',
-        //            $withdrawnDate           = null
-        //        );
     }
 
     #[Test]
