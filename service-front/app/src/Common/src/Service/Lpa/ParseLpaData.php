@@ -49,7 +49,7 @@ class ParseLpaData
                     //introduce feature flag here #3551
                     //the lpaData array converted to object using hydrator
                     if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $mockedCombinedLpa = $this->getMockedCombinedFormat();
+                        $mockedCombinedLpa = self::getMockedCombinedFormat();
                         $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
                     } else {
                         $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
@@ -71,7 +71,7 @@ class ParseLpaData
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 
-    private function getMockedCombinedFormat(): array
+    public static function getMockedCombinedFormat(): array
     {
         return [
             'id' => 2,

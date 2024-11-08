@@ -126,7 +126,7 @@ class ParseLpaDataTest extends TestCase
     #[Test]
     public function it_correctly_parses_an_combined_lpa_api_response(): void
     {
-        $combinedFormat = $this->getMockedCombinedFormat();
+        $combinedFormat = ParseLpaData::;
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
