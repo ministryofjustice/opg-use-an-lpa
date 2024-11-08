@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\CombinedLpa;
 use Common\Entity\Lpa;
 use Common\Entity\Person;
+use Common\Entity\CombinedLpa;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -74,8 +76,7 @@ class LpaExtension extends AbstractExtension
 
     /**
      * @param CaseActor|Person $actor
-     * @param bool             $withSalutation Prepend salutation?
-     *
+     * @param bool $withSalutation Prepend salutation?
      * @return string
      */
     public function actorName(CaseActor|Person $actor, bool $withSalutation = true): string
