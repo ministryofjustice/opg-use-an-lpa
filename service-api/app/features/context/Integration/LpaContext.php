@@ -2826,7 +2826,12 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
         $expectedResponse = [
-            'donor'                => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+            'donor'                => [
+                    'uId'         => $this->lpa->donor->uId,
+                    'firstname'   => $this->lpa->donor->firstname,
+                    'middlenames' => $this->lpa->donor->middlenames,
+                    'surname'     => $this->lpa->donor->surname,
+            ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'lpaActorToken'        => $this->userLpaActorToken,
             'activationKeyDueDate' => null,
@@ -2930,7 +2935,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $expectedResponse = [
-            'donor'                => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+            'donor'                => [
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
         ];
