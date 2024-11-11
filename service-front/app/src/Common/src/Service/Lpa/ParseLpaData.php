@@ -53,7 +53,7 @@ class ParseLpaData
                         $CombinedLpa                  = ($this->lpaDataFormatter)($mockedCombinedLpa);
                         $CombinedLpa->activeAttorneys = $CombinedLpa->attorneys;
 
-                        $data['lpa']       = $CombinedLpa;
+                        $data['lpa'] = $CombinedLpa;
                     } else {
                         $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
                     }

@@ -1,7 +1,7 @@
 {% import "@partials/lpa-summary-details/iap-macros.html.twig" as iap %}
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">
-    {% if lpa.caseSubtype == "pfa" or (lpa.caseSubtype and lpa.caseSubtype.value == "pfa") %}
+    {% if lpa.caseSubtype == "pfa" or (feature_enabled("support_datastore_lpas") and lpa.caseSubtype and lpa.caseSubtype.value == "pfa") %}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
                         title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>

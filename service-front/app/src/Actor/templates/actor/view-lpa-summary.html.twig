@@ -42,6 +42,7 @@
                 <div class="govuk-grid-row lpa-valid-border">
                     <div class="govuk-grid-column-full column-full-alt-1">
                         {% if not feature_enabled("support_datastore_lpas") %}
+
                             {% if lpa.caseSubtype == "pfa" and lpa.attorneyActDecisions|lower == 'when registered' %}
                                 <h2 class="govuk-heading-m heading-m-alt-1">
                                     {% trans %}This <abbr
@@ -53,6 +54,7 @@
                                             title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}
                                 </h2>
                             {% endif %}
+
                         {% endif %}
 
                         {% if feature_enabled("support_datastore_lpas") %}
@@ -86,7 +88,7 @@
                                         {% trans %}This <abbr
                                                 title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
                                     {% endif %}
-                                {% else %}
+                                {% endif %}
                             {% endif %}
 
                             {% if feature_enabled("support_datastore_lpas") %}
@@ -106,25 +108,25 @@
                                         {% trans %}This <abbr
                                                 title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
                                     {% endif %}
-                                {% else %}
-                            {% endif %}
-
-                                {% if feature_enabled("support_datastore_lpas") %}
-                                    {% if lpa.lifeSustainingTreatment.value|lower == 'option-a' %}
-                                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                    {% elseif lpa.lifeSustainingTreatment.value|lower == 'option-b' %}
-                                        {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                    {% endif %}
-                                {% endif %}
-
-                                {% if not feature_enabled("support_datastore_lpas") %}
-                                    {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
-                                        {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                    {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
-                                        {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                                    {% endif %}
                                 {% endif %}
                             {% endif %}
+
+                            {% if feature_enabled("support_datastore_lpas") %}
+                                {% if lpa.lifeSustainingTreatment.value|lower == 'option-a' %}
+                                    {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                {% elseif lpa.lifeSustainingTreatment.value|lower == 'option-b' %}
+                                    {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if not feature_enabled("support_datastore_lpas") %}
+                                {% if lpa.lifeSustainingTreatment|lower == 'option a' %}
+                                    {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                {% elseif lpa.lifeSustainingTreatment|lower == 'option b' %}
+                                    {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                                {% endif %}
+                            {% endif %}
+
                         </p>
                         {% if not feature_enabled("instructions_and_preferences") %}
                             <p class="govuk-body body-alt-1">

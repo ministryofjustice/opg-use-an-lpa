@@ -56,3 +56,14 @@ Feature: View an LPA that I have added to my account
     And I am on the dashboard page
     When I request to view an LPA where all actors do not have an also known by name
     Then I will not see the also known as field
+
+  @integration @ui @ff:support_datastore_lpas:true
+  Scenario Outline: The user can view an LPA added to their account
+    Given I have added an LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which status is "<status>"
+    Then The full LPA is displayed with the correct <message>
+    Examples:
+      | status | message |
+      | Registered | This LPA is registered |
+      | Cancelled | This LPA has been cancelled |
