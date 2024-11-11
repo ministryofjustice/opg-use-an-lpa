@@ -2011,6 +2011,20 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
+        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
+        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
+        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
+        $expectedLpaArray['inactiveAttorneys'] = [];
+        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedResponse = new AccessForAllValidation(
+            new ActorMatch(
+                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                'donor',
+                $this->lpa->uId),
+            $expectedLpa,
+            $this->userLpaActorToken,
+        );
+
         try {
             $addOlderLpa->validateRequest($this->userId, $data);
         } catch (BadRequestException $ex) {
@@ -2018,12 +2032,12 @@ class LpaContext extends BaseIntegrationContext
             Assert::assertEquals('LPA has an activation key already', $ex->getMessage());
             Assert::assertEquals(
                 [
-                    'donor' => [
+                    'donor' => new SiriusPerson([
                         'uId'         => $this->lpa->donor->uId,
                         'firstname'   => $this->lpa->donor->firstname,
                         'middlenames' => $this->lpa->donor->middlenames,
                         'surname'     => $this->lpa->donor->surname,
-                    ],
+                    ]),
                     'caseSubtype'          => $this->lpa->caseSubtype,
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ],
