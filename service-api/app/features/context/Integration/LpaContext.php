@@ -2852,20 +2852,17 @@ class LpaContext extends BaseIntegrationContext
             StatusCodeInterface::STATUS_OK,
             $this->lpa
         );
-
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-                'donor',
-                $this->lpa->uId),
-                $expectedLpa,
-            null
-        );
+        $expectedResponse = [
+            'donor' => new SiriusPerson([
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ]),
+            'caseSubtype'          => $this->lpa->caseSubtype,
+            'lpaActorToken'        => $this->userLpaActorToken,
+            'activationKeyDueDate' => null,
+        ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
@@ -2964,19 +2961,16 @@ class LpaContext extends BaseIntegrationContext
             $codeExists
         );
 
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-                'donor',
-                $this->lpa->uId),
-                $expectedLpa,
-            null,
-        );
+        $expectedResponse = [
+            'donor'                => new SiriusPerson([
+                'uId'         => $this->lpa->donor->uId,
+                'firstname'   => $this->lpa->donor->firstname,
+                'middlenames' => $this->lpa->donor->middlenames,
+                'surname'     => $this->lpa->donor->surname,
+            ]),
+            'caseSubtype'          => $this->lpa->caseSubtype,
+            'activationKeyDueDate' => $activationKeyDueDate,
+        ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
