@@ -60,8 +60,6 @@ jobs:
           with_v: true
           default_bump: minor
           prerelease: false
-        if: |
-          ${{ steps.changed-files-docs.outputs.path }} != "docs"
 
   update_documentation:
     name: update documentation
