@@ -18,9 +18,9 @@ use DateTimeImmutable;
 class EntityTestHelper
 {
     public static function makePerson(
-        ?string $addressLine1 = 'Address Line 1',
-        ?string $addressLine2 = 'Address Line 2',
-        ?string $addressLine3 = 'Address Line 3',
+        ?string $line1 = 'Address Line 1',
+        ?string $line2 = 'Address Line 2',
+        ?string $line3 = 'Address Line 3',
         ?string $country = 'Country',
         ?string $county = 'County',
         ?DateTimeImmutable $dob = new DateTimeImmutable(TestData::testDateString),
@@ -37,9 +37,9 @@ class EntityTestHelper
         ?string $uId = 'UID',
     ): Person {
         return new Person(
-            addressLine1: $addressLine1,
-            addressLine2: $addressLine2,
-            addressLine3: $addressLine3,
+            line1: $line1,
+            line2: $line2,
+            line3: $line3,
             country:      $country,
             county:       $county,
             dob:          $dob,

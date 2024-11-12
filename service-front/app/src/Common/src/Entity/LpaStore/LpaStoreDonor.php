@@ -6,6 +6,7 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractPostcodeFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
@@ -18,9 +19,9 @@ class LpaStoreDonor extends Person implements JsonSerializable
     public function __construct(
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
-        ?string $addressLine1,
-        ?string $addressLine2,
-        ?string $addressLine3,
+        ?string $line1,
+        ?string $line2,
+        ?string $line3,
         #[MapFrom('address')]
         #[ExtractCountryFromLpaStore]
         ?string $country,
@@ -33,6 +34,8 @@ class LpaStoreDonor extends Person implements JsonSerializable
         ?string $firstnames,
         ?string $name,
         ?string $otherNames,
+        #[MapFrom('address')]
+        #[ExtractPostcodeFromLpaStore]
         ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
@@ -46,9 +49,9 @@ class LpaStoreDonor extends Person implements JsonSerializable
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
+            $line1,
+            $line2,
+            $line3,
             $country,
             $county,
             $dob,

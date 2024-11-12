@@ -55,7 +55,7 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         ?DateTimeImmutable $statusDate,
         #[CastListToType(LpaStoreTrustCorporations::class)]
         ?array $trustCorporations,
-        #[MapFrom('uid')]
+        #[MapFrom('uId')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
         #[MapFrom('whenTheLpaCanBeUsed')]

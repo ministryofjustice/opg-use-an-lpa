@@ -127,7 +127,7 @@ class ParseLpaDataTest extends TestCase
     #[Test]
     public function it_correctly_parses_an_combined_lpa_api_response(): void
     {
-        $combinedFormat = ParseLpaData::getMockedCombinedFormat();
+        $combinedFormat = ParseLpaData::getMockedCombinedFormat(false);
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
@@ -145,9 +145,7 @@ class ParseLpaDataTest extends TestCase
             ->willReturn(true);
 
         $this->lpaData['lpa'] = $combinedFormat;
-        $result = $sut(
-            $this->lpaData
-        );
+        $result = $sut($this->lpaData);
 
         $this->assertEquals($this->expectedSiriusLpa(), $result->lpa);
     }

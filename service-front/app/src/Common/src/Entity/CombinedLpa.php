@@ -147,4 +147,9 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
     {
         return $this->whenTheLpaCanBeUsed;
     }
+
+    public function getLpaType(): LpaType
+    {
+        return LpaType::from($this->getCaseSubtype());
+    }
 }

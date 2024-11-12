@@ -10,9 +10,9 @@ use EventSauce\ObjectHydrator\DoNotSerialize;
 class Person
 {
     public function __construct(
-        public readonly ?string $addressLine1,
-        public readonly ?string $addressLine2,
-        public readonly ?string $addressLine3,
+        public readonly ?string $line1,
+        public readonly ?string $line2,
+        public readonly ?string $line3,
         public readonly ?string $country,
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
@@ -61,21 +61,21 @@ class Person
     }
 
     #[DoNotSerialize]
-    public function getAddressLine1(): string|null
+    public function getLine1(): string|null
     {
-        return $this->addressLine1;
+        return $this->line1;
     }
 
     #[DoNotSerialize]
-    public function getAddressLine2(): string|null
+    public function getLine2(): string|null
     {
-        return $this->addressLine2;
+        return $this->line2;
     }
 
     #[DoNotSerialize]
-    public function getAddressLine3(): string|null
+    public function getLine3(): string|null
     {
-        return $this->addressLine3;
+        return $this->line3;
     }
 
     #[DoNotSerialize]
@@ -112,9 +112,9 @@ class Person
     public function getAddresses(): array
     {
         return [(new Address())
-            ->setAddressLine1($this->getAddressLine1())
-            ->setAddressLine2($this->getAddressLine2())
-            ->setAddressLine3($this->getAddressLine3())
+            ->setAddressLine1($this->getLine1())
+            ->setAddressLine2($this->getLine2())
+            ->setAddressLine3($this->getLine3())
             ->setTown($this->getTown())
             ->setCounty($this->getCounty())
             ->setPostcode($this->getPostCode())

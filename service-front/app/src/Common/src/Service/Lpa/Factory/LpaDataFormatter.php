@@ -32,9 +32,7 @@ class LpaDataFormatter
      */
     public function __invoke(array $lpa)
     {
-        $lpaObject = $this->hydrateObject($lpa);
-
-        return $lpaObject;
+        return $this->hydrateObject($lpa);
     }
 
     /**
@@ -52,7 +50,7 @@ class LpaDataFormatter
 
     private function getHydrationClass(array $lpa): string
     {
-        return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')
+        return isset($lpa['uId']) && str_starts_with($lpa['uId'], 'M-')
             ? LpaStore::class
             : SiriusLpa::class;
     }

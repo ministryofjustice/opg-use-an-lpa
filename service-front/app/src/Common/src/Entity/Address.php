@@ -43,7 +43,7 @@ class Address
         return $this->county;
     }
 
-    public function setCounty(string $county): self
+    public function setCounty(?string $county): self
     {
         $this->county = $county;
         return $this;
@@ -65,7 +65,7 @@ class Address
         return $this->country;
     }
 
-    public function setCountry(string $country): self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
         return $this;
@@ -98,7 +98,7 @@ class Address
         return $this->addressLine2;
     }
 
-    public function setAddressLine2(string $addressLine2): self
+    public function setAddressLine2(?string $addressLine2): self
     {
         $this->addressLine2 = $addressLine2;
         return $this;
@@ -109,7 +109,7 @@ class Address
         return $this->addressLine3;
     }
 
-    public function setAddressLine3(string $addressLine3): self
+    public function setAddressLine3(?string $addressLine3): self
     {
         $this->addressLine3 = $addressLine3;
         return $this;

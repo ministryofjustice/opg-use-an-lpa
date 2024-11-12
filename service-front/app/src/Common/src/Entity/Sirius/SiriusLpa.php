@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Entity\Sirius;
 
+use Common\Entity\Casters\CastToCaseSubtype;
 use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use Common\Entity\CombinedLpa;
@@ -25,6 +26,7 @@ class SiriusLpa extends CombinedLpa
         ?string $applicationType,
         #[CastListToType(SiriusLpaAttorney::class)]
         ?array $attorneys,
+        #[CastToCaseSubtype]
         ?LpaType $caseSubtype,
         ?string $channel,
         ?DateTimeImmutable $dispatchDate,
