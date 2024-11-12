@@ -72,6 +72,10 @@ class ParseLpaData
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
     }
 
+
+    /**
+     * @codeCoverageIgnore
+     */
     public static function getMockedCombinedFormat(bool $asLpaStoreLpa): array
     {
         $lpaArray = [

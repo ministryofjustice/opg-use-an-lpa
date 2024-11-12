@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Entity\LpaStore\LpaStore;
+use Common\Entity\LpaStore\LpaStoreAttorney;
+use Common\Entity\LpaStore\LpaStoreDonor;
+use Common\Entity\LpaStore\LpaStoreTrustCorporations;
 use Common\Entity\Sirius\SiriusLpa;
 use Common\Entity\Sirius\SiriusLpaAttorney;
 use Common\Entity\Sirius\SiriusLpaDonor;
 use Common\Entity\Sirius\SiriusLpaTrustCorporations;
-use Common\Enum\LpaType;
-use Common\Enum\LifeSustainingTreatment;
 use Common\Service\Features\FeatureEnabled;
 use CommonTest\Helper\EntityTestHelper;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Entity\InstructionsAndPreferences\Images;
