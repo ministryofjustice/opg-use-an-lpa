@@ -49,7 +49,8 @@ class ParseLpaData
                     //introduce feature flag here #3551
                     //the lpaData array converted to object using hydrator
                     if (($this->featureEnabled)('support_datastore_lpas')) {
-                        // Set asLpaStoreLpa to toggle the format of the response (but ensure its set to false before running tests)
+                        // Set asLpaStoreLpa to toggle the format of the response (but ensure
+                        // its set to false before running tests)
                         $mockedCombinedLpa = self::getMockedCombinedFormat(false);
                         $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
                     } else {
@@ -77,7 +78,7 @@ class ParseLpaData
      */
     public static function getMockedCombinedFormat(bool $asLpaStoreLpa): array
     {
-        $lpaArray = [
+        $lpa = [
             'id'                                        => 2,
             'uId'                                       => '700000000047',
             'receiptDate'                               => '2014-09-26',
@@ -233,59 +234,59 @@ class ParseLpaData
         ];
 
         if ($asLpaStoreLpa) {
-            $lpaArray['uId']                       = 'M-123412341234';
-            $lpaArray['howAttorneysMakeDecisions'] = 'jointly-and-severally';
-            $lpaArray['lpaType']                   = 'property-and-affairs';
-            $lpaArray['lifeSustainingTreatment']   = 'option-a';
-            $lpaArray['whenTheLpaCanBeUsed']       = 'when-has-capacity';
+            $lpa['uId']                       = 'M-123412341234';
+            $lpa['howAttorneysMakeDecisions'] = 'jointly-and-severally';
+            $lpa['lpaType']                   = 'property-and-affairs';
+            $lpa['lifeSustainingTreatment']   = 'option-a';
+            $lpa['whenTheLpaCanBeUsed']       = 'when-has-capacity';
 
-            $lpaArray['donor']['address']['line1']    = $lpaArray['donor']['addresses'][0]['addressLine1'];
-            $lpaArray['donor']['address']['line2']    = $lpaArray['donor']['addresses'][0]['addressLine2'];
-            $lpaArray['donor']['address']['line3']    = $lpaArray['donor']['addresses'][0]['addressLine3'];
-            $lpaArray['donor']['address']['town']     = $lpaArray['donor']['addresses'][0]['town'];
-            $lpaArray['donor']['address']['postcode'] = $lpaArray['donor']['addresses'][0]['postcode'];
-            $lpaArray['donor']['address']['county']   = $lpaArray['donor']['addresses'][0]['county'];
-            $lpaArray['donor']['address']['country']  = $lpaArray['donor']['addresses'][0]['country'];
-            $lpaArray['donor']['dateOfBirth']         = $lpaArray['donor']['dob'];
+            $lpa['donor']['address']['line1']    = $lpa['donor']['addresses'][0]['addressLine1'];
+            $lpa['donor']['address']['line2']    = $lpa['donor']['addresses'][0]['addressLine2'];
+            $lpa['donor']['address']['line3']    = $lpa['donor']['addresses'][0]['addressLine3'];
+            $lpa['donor']['address']['town']     = $lpa['donor']['addresses'][0]['town'];
+            $lpa['donor']['address']['postcode'] = $lpa['donor']['addresses'][0]['postcode'];
+            $lpa['donor']['address']['county']   = $lpa['donor']['addresses'][0]['county'];
+            $lpa['donor']['address']['country']  = $lpa['donor']['addresses'][0]['country'];
+            $lpa['donor']['dateOfBirth']         = $lpa['donor']['dob'];
 
-            unset($lpaArray['donor']['addresses']);
-            unset($lpaArray['donor']['dob']);
+            unset($lpa['donor']['addresses']);
+            unset($lpa['donor']['dob']);
 
-            $lpaArray['attorneys'][0]['address']['line1']    = $lpaArray['attorneys'][0]['addresses'][0]['addressLine1'];
-            $lpaArray['attorneys'][0]['address']['line2']    = $lpaArray['attorneys'][0]['addresses'][0]['addressLine2'];
-            $lpaArray['attorneys'][0]['address']['line3']    = $lpaArray['attorneys'][0]['addresses'][0]['addressLine3'];
-            $lpaArray['attorneys'][0]['address']['town']     = $lpaArray['attorneys'][0]['addresses'][0]['town'];
-            $lpaArray['attorneys'][0]['address']['postcode'] = $lpaArray['attorneys'][0]['addresses'][0]['postcode'];
-            $lpaArray['attorneys'][0]['address']['county']   = $lpaArray['attorneys'][0]['addresses'][0]['county'];
-            $lpaArray['attorneys'][0]['address']['country']  = $lpaArray['attorneys'][0]['addresses'][0]['country'];
-            $lpaArray['attorneys'][0]['dateOfBirth']         = $lpaArray['attorneys'][0]['dob'];
+            $lpa['attorneys'][0]['address']['line1']    = $lpa['attorneys'][0]['addresses'][0]['addressLine1'];
+            $lpa['attorneys'][0]['address']['line2']    = $lpa['attorneys'][0]['addresses'][0]['addressLine2'];
+            $lpa['attorneys'][0]['address']['line3']    = $lpa['attorneys'][0]['addresses'][0]['addressLine3'];
+            $lpa['attorneys'][0]['address']['town']     = $lpa['attorneys'][0]['addresses'][0]['town'];
+            $lpa['attorneys'][0]['address']['postcode'] = $lpa['attorneys'][0]['addresses'][0]['postcode'];
+            $lpa['attorneys'][0]['address']['county']   = $lpa['attorneys'][0]['addresses'][0]['county'];
+            $lpa['attorneys'][0]['address']['country']  = $lpa['attorneys'][0]['addresses'][0]['country'];
+            $lpa['attorneys'][0]['dateOfBirth']         = $lpa['attorneys'][0]['dob'];
 
-            unset($lpaArray['attorneys'][0]['addresses']);
-            unset($lpaArray['attorneys'][0]['dob']);
+            unset($lpa['attorneys'][0]['addresses']);
+            unset($lpa['attorneys'][0]['dob']);
 
-            $lpaArray['attorneys'][1]['address']['line1']    = $lpaArray['attorneys'][1]['addresses'][0]['addressLine1'];
-            $lpaArray['attorneys'][1]['address']['line2']    = $lpaArray['attorneys'][1]['addresses'][0]['addressLine2'];
-            $lpaArray['attorneys'][1]['address']['line3']    = $lpaArray['attorneys'][1]['addresses'][0]['addressLine3'];
-            $lpaArray['attorneys'][1]['address']['town']     = $lpaArray['attorneys'][1]['addresses'][0]['town'];
-            $lpaArray['attorneys'][1]['address']['postcode'] = $lpaArray['attorneys'][1]['addresses'][0]['postcode'];
-            $lpaArray['attorneys'][1]['address']['county']   = $lpaArray['attorneys'][1]['addresses'][0]['county'];
-            $lpaArray['attorneys'][1]['address']['country']  = $lpaArray['attorneys'][1]['addresses'][0]['country'];
-            $lpaArray['attorneys'][1]['dateOfBirth']         = $lpaArray['attorneys'][1]['dob'];
+            $lpa['attorneys'][1]['address']['line1']    = $lpa['attorneys'][1]['addresses'][0]['addressLine1'];
+            $lpa['attorneys'][1]['address']['line2']    = $lpa['attorneys'][1]['addresses'][0]['addressLine2'];
+            $lpa['attorneys'][1]['address']['line3']    = $lpa['attorneys'][1]['addresses'][0]['addressLine3'];
+            $lpa['attorneys'][1]['address']['town']     = $lpa['attorneys'][1]['addresses'][0]['town'];
+            $lpa['attorneys'][1]['address']['postcode'] = $lpa['attorneys'][1]['addresses'][0]['postcode'];
+            $lpa['attorneys'][1]['address']['county']   = $lpa['attorneys'][1]['addresses'][0]['county'];
+            $lpa['attorneys'][1]['address']['country']  = $lpa['attorneys'][1]['addresses'][0]['country'];
+            $lpa['attorneys'][1]['dateOfBirth']         = $lpa['attorneys'][1]['dob'];
 
-            unset($lpaArray['attorneys'][1]['addresses']);
-            unset($lpaArray['attorneys'][1]['dob']);
+            unset($lpa['attorneys'][1]['addresses']);
+            unset($lpa['attorneys'][1]['dob']);
 
-            $lpaArray['trustCorporations'][0]['address']['line1']    = $lpaArray['trustCorporations'][0]['addresses'][0]['addressLine1'];
-            $lpaArray['trustCorporations'][0]['address']['line2']    = $lpaArray['trustCorporations'][0]['addresses'][0]['addressLine2'];
-            $lpaArray['trustCorporations'][0]['address']['line3']    = $lpaArray['trustCorporations'][0]['addresses'][0]['addressLine3'];
-            $lpaArray['trustCorporations'][0]['address']['town']     = $lpaArray['trustCorporations'][0]['addresses'][0]['town'];
-            $lpaArray['trustCorporations'][0]['address']['postcode'] = $lpaArray['trustCorporations'][0]['addresses'][0]['postcode'];
-            $lpaArray['trustCorporations'][0]['address']['county']   = $lpaArray['trustCorporations'][0]['addresses'][0]['county'];
-            $lpaArray['trustCorporations'][0]['address']['country']  = $lpaArray['trustCorporations'][0]['addresses'][0]['country'];
+            $lpa['trustCorporations'][0]['address']['line1']    = $lpa['trustCorporations'][0]['addresses'][0]['addressLine1'];
+            $lpa['trustCorporations'][0]['address']['line2']    = $lpa['trustCorporations'][0]['addresses'][0]['addressLine2'];
+            $lpa['trustCorporations'][0]['address']['line3']    = $lpa['trustCorporations'][0]['addresses'][0]['addressLine3'];
+            $lpa['trustCorporations'][0]['address']['town']     = $lpa['trustCorporations'][0]['addresses'][0]['town'];
+            $lpa['trustCorporations'][0]['address']['postcode'] = $lpa['trustCorporations'][0]['addresses'][0]['postcode'];
+            $lpa['trustCorporations'][0]['address']['county']   = $lpa['trustCorporations'][0]['addresses'][0]['county'];
+            $lpa['trustCorporations'][0]['address']['country']  = $lpa['trustCorporations'][0]['addresses'][0]['country'];
 
-            unset($lpaArray['trustCorporations'][0]['addresses']);
+            unset($lpa['trustCorporations'][0]['addresses']);
         }
 
-        return $lpaArray;
+        return $lpa;
     }
 }

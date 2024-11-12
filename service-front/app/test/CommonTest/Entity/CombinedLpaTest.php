@@ -54,7 +54,7 @@ class CombinedLpaTest extends TestCase
             donor:                      $donor,
             howAttorneysMakeDecisions:  HowAttorneysMakeDecisions::JOINTLY,
             lifeSustainingTreatment:    LifeSustainingTreatment::OPTION_B,
-            lpaDonorSignatureDate:      new DateTimeImmutable(TestData::testDateString),
+            lpaDonorSignatureDate:      new DateTimeImmutable(TestData::TESTDATESTRING),
             status:                     'status',
             trustCorporations:          $trustCorporations,
             uId:                        '123',
@@ -71,7 +71,7 @@ class CombinedLpaTest extends TestCase
         $this->assertEquals(false, $combinedLpa->getCaseAttorneyJointlyAndSeverally());
         $this->assertEquals(false, $combinedLpa->getCaseAttorneyJointlyAndJointlyAndSeverally());
         $this->assertEquals(LifeSustainingTreatment::OPTION_B->value, $combinedLpa->getLifeSustainingTreatment());
-        $this->assertEquals(new DateTimeImmutable(TestData::testDateString), $combinedLpa->getLpaDonorSignatureDate());
+        $this->assertEquals(new DateTimeImmutable(TestData::TESTDATESTRING), $combinedLpa->getLpaDonorSignatureDate());
         $this->assertEquals('status', $combinedLpa->getStatus());
         $this->assertEquals($trustCorporations, $combinedLpa->getTrustCorporations());
         $this->assertEquals('123', $combinedLpa->getUId());
