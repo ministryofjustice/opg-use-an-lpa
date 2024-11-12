@@ -74,11 +74,14 @@ class LpaStoreDonor extends Person implements JsonSerializable
     {
         $data = get_object_vars($this);
 
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
+        array_walk(
+            $data,
+            function (&$value) {
+                if ($value instanceof DateTimeImmutable) {
+                    $value = $value->format('Y-m-d H:i:s.uO');
+                }
             }
-        });
+        );
 
         return $data;
     }

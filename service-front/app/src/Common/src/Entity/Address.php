@@ -6,7 +6,7 @@ namespace Common\Entity;
 
 class Address
 {
-    protected ?int $id = null;
+    protected ?int $id              = null;
     protected ?string $town         = null;
     protected ?string $county       = null;
     protected ?string $postcode     = null;

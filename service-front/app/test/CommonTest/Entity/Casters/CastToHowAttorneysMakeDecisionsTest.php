@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use ValueError;
 
-
 class CastToHowAttorneysMakeDecisionsTest extends TestCase
 {
     use ProphecyTrait;

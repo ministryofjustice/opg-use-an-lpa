@@ -22,8 +22,8 @@ class CastToLifeSustainingTreatmentTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mockHydrator                  = $this->createMock(ObjectMapper::class);
-        $this->caster = new CastToLifeSustainingTreatment();
+        $this->mockHydrator = $this->createMock(ObjectMapper::class);
+        $this->caster       = new CastToLifeSustainingTreatment();
     }
 
     #[Test]

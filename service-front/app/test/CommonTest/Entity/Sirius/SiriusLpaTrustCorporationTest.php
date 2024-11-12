@@ -15,7 +15,7 @@ class SiriusLpaTrustCorporationTest extends TestCase
     public function uses_name_as_company_name()
     {
         $this->assertEquals(
-            "name",
+            'name',
             (new SiriusLpaTrustCorporations(
                 addressLine1: '',
                 addressLine2: '',

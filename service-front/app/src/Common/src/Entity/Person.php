@@ -55,55 +55,55 @@ class Person
     }
 
     #[DoNotSerialize]
-    public function getDob(): DateTimeImmutable|null
+    public function getDob(): ?DateTimeImmutable
     {
         return $this->dob;
     }
 
     #[DoNotSerialize]
-    public function getLine1(): string|null
+    public function getLine1(): ?string
     {
         return $this->line1;
     }
 
     #[DoNotSerialize]
-    public function getLine2(): string|null
+    public function getLine2(): ?string
     {
         return $this->line2;
     }
 
     #[DoNotSerialize]
-    public function getLine3(): string|null
+    public function getLine3(): ?string
     {
         return $this->line3;
     }
 
     #[DoNotSerialize]
-    public function getTown(): string|null
+    public function getTown(): ?string
     {
         return $this->town;
     }
 
     #[DoNotSerialize]
-    public function getCounty(): string|null
+    public function getCounty(): ?string
     {
         return $this->county;
     }
 
     #[DoNotSerialize]
-    public function getPostCode(): string|null
+    public function getPostCode(): ?string
     {
         return $this->postcode;
     }
 
     #[DoNotSerialize]
-    public function getCountry(): string|null
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
     #[DoNotSerialize]
-    public function getCompanyName(): string|null
+    public function getCompanyName(): ?string
     {
         return $this->name;
     }
@@ -111,13 +111,15 @@ class Person
     #[DoNotSerialize]
     public function getAddresses(): array
     {
-        return [(new Address())
+        return [
+        (new Address())
             ->setAddressLine1($this->getLine1())
             ->setAddressLine2($this->getLine2())
             ->setAddressLine3($this->getLine3())
             ->setTown($this->getTown())
             ->setCounty($this->getCounty())
             ->setPostcode($this->getPostCode())
-            ->setCountry($this->getCountry())];
+            ->setCountry($this->getCountry()),
+        ];
     }
 }

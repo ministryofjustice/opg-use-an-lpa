@@ -34,13 +34,17 @@ class CombinedLpaTest extends TestCase
             uId: 'donor'
         );
 
-        $attorneys = [EntityTestHelper::makePerson(
+        $attorneys = [
+        EntityTestHelper::makePerson(
             uId: 'attorney'
-        )];
+        ),
+        ];
 
-        $trustCorporations = [EntityTestHelper::makePerson(
+        $trustCorporations = [
+        EntityTestHelper::makePerson(
             uId: 'trust-corporation'
-        )];
+        ),
+        ];
 
         $combinedLpa = EntityTestHelper::makeCombinedLpa(
             applicationHasGuidance:     true,
@@ -72,6 +76,5 @@ class CombinedLpaTest extends TestCase
         $this->assertEquals($trustCorporations, $combinedLpa->getTrustCorporations());
         $this->assertEquals('123', $combinedLpa->getUId());
         $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY, $combinedLpa->getWhenTheLpaCanBeUsed());
-
     }
 }

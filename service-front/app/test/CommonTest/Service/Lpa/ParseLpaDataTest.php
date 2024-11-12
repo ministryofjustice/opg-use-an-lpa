@@ -148,7 +148,7 @@ class ParseLpaDataTest extends TestCase
             ->willReturn(true);
 
         $this->lpaData['lpa'] = $combinedFormat;
-        $result = $sut($this->lpaData);
+        $result               = $sut($this->lpaData);
 
         $this->assertEquals($this->expectedSiriusLpa(), $result->lpa);
     }

@@ -35,9 +35,9 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'applicationType'            => null,
             'attorneys'                  => [
                 [
-                    'line1' => '81 NighOnTimeWeBuiltIt Street',
-                    'line2' => null,
-                    'line3' => null,
+                    'line1'        => '81 NighOnTimeWeBuiltIt Street',
+                    'line2'        => null,
+                    'line3'        => null,
                     'country'      => 'GB',
                     'county'       => null,
                     'dob'          => '1982-07-24 00:00:00.000000+0000',
@@ -58,9 +58,9 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'channel'                    => 'online',
             'dispatchDate'               => null,
             'donor'                      => [
-                'line1' => '74 Cloob Close',
-                'line2' => null,
-                'line3' => null,
+                'line1'        => '74 Cloob Close',
+                'line2'        => null,
+                'line3'        => null,
                 'country'      => 'GB',
                 'county'       => null,
                 'dob'          => '1970-01-24 00:00:00.000000+0000',
@@ -91,9 +91,9 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'statusDate'                 => null,
             'trustCorporations'          => [
                 [
-                    'line1' => '103 Line 1',
-                    'line2' => null,
-                    'line3' => null,
+                    'line1'        => '103 Line 1',
+                    'line2'        => null,
+                    'line3'        => null,
                     'country'      => 'GB',
                     'county'       => null,
                     'dob'          => null,
@@ -113,7 +113,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
-            'whenTheLpaCanBeUsed'  => 'when-capacity-lost'
+            'whenTheLpaCanBeUsed'        => 'when-capacity-lost',
         ];
     }
 

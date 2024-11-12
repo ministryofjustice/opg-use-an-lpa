@@ -13,9 +13,9 @@ class WhenCanTheLpaBeUsedTest extends TestCase
     #[Test]
     public function test_when_can_the_lpa_be_used_enum_has_issers(): void
     {
-        $whenHasCapacity = WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY;
+        $whenHasCapacity  = WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY;
         $whenCapacityLost = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST;
-        $unknown = WhenTheLpaCanBeUsed::UNKNOWN;
+        $unknown          = WhenTheLpaCanBeUsed::UNKNOWN;
 
         $this->assertTrue($whenHasCapacity->isWhenHasCapacity());
         $this->assertFalse($whenHasCapacity->isUnknown());

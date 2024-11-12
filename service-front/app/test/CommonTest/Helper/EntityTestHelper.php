@@ -150,7 +150,7 @@ class EntityTestHelper
         ?array $trustCorporations = [],
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = null,
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
     ): SiriusLpa {
         return new SiriusLpa(
             applicationHasGuidance:     $applicationHasGuidance,
@@ -206,7 +206,7 @@ class EntityTestHelper
         ?array $trustCorporations = [],
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = null,
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
     ): LpaStore {
         if (!is_null($attorneys) && count($attorneys) === 0) {
             $attorneys[] = EntityTestHelper::MakePerson();

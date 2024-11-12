@@ -14,7 +14,7 @@ class LpaTypeTest extends TestCase
     public function test_lpa_type_enum_has_issers(): void
     {
         $propertyAndAffairs = LpaType::PROPERTY_AND_AFFAIRS;
-        $personalWelfare = LpaType::PERSONAL_WELFARE;
+        $personalWelfare    = LpaType::PERSONAL_WELFARE;
 
         $this->assertTrue($propertyAndAffairs->isPropertyAndAffairs());
         $this->assertFalse($propertyAndAffairs->isPersonalWelfare());

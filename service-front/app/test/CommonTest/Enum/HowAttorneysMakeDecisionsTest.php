@@ -13,10 +13,10 @@ class HowAttorneysMakeDecisionsTest extends TestCase
     #[Test]
     public function test_how_attorneys_make_decisions_enum_has_issers(): void
     {
-        $singular = HowAttorneysMakeDecisions::SINGULAR;
-        $jointly = HowAttorneysMakeDecisions::JOINTLY;
+        $singular            = HowAttorneysMakeDecisions::SINGULAR;
+        $jointly             = HowAttorneysMakeDecisions::JOINTLY;
         $jointlyAndSeverally = HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
-        $jointlyForSome = HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
+        $jointlyForSome      = HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
 
         $this->assertTrue($singular->isSingular());
         $this->assertFalse($singular->isJointly());
@@ -29,6 +29,5 @@ class HowAttorneysMakeDecisionsTest extends TestCase
 
         $this->assertTrue($jointlyForSome->isJointlyForSomeSeverallyForOthers());
         $this->assertFalse($jointlyForSome->isSingular());
-
     }
 }

@@ -33,9 +33,9 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'applicationType'            => 'Classic',
             'attorneys'                  => [
                 [
-                    'line1' => '9 high street',
-                    'line2' => '',
-                    'line3' => '',
+                    'line1'        => '9 high street',
+                    'line2'        => '',
+                    'line3'        => '',
                     'country'      => '',
                     'county'       => '',
                     'dob'          => '1990-05-04 00:00:00.000000+0000',
@@ -52,9 +52,9 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                     'uId'          => '700000000815',
                 ],
                 [
-                    'line1' => '',
-                    'line2' => '',
-                    'line3' => '',
+                    'line1'        => '',
+                    'line2'        => '',
+                    'line3'        => '',
                     'country'      => '',
                     'county'       => '',
                     'dob'          => '1975-10-05 00:00:00.000000+0000',
@@ -75,9 +75,9 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'channel'                    => null,
             'dispatchDate'               => null,
             'donor'                      => [
-                'line1' => '81 Front Street',
-                'line2' => 'LACEBY',
-                'line3' => '',
+                'line1'        => '81 Front Street',
+                'line2'        => 'LACEBY',
+                'line3'        => '',
                 'country'      => '',
                 'county'       => '',
                 'dob'          => '1948-11-01 00:00:00.000000+0000',
@@ -114,9 +114,9 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             'statusDate'                 => null,
             'trustCorporations'          => [
                 [
-                    'line1' => 'Street 1',
-                    'line2' => 'Street 2',
-                    'line3' => 'Street 3',
+                    'line1'        => 'Street 1',
+                    'line2'        => 'Street 2',
+                    'line3'        => 'Street 3',
                     'country'      => 'GB',
                     'county'       => 'County',
                     'dob'          => null,
@@ -135,7 +135,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             ],
             'uId'                        => '700000000047',
             'withdrawnDate'              => null,
-            'whenTheLpaCanBeUsed'        => 'when-has-capacity'
+            'whenTheLpaCanBeUsed'        => 'when-has-capacity',
         ];
     }
 

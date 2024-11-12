@@ -54,7 +54,7 @@ class SiriusLpa extends CombinedLpa
         ?DateTimeImmutable $withdrawnDate,
         #[MapFrom('whenTheLpaCanBeUsed')]
         #[CastToWhenTheLpaCanBeUsed]
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
         parent::__construct(
             $applicationHasGuidance,
