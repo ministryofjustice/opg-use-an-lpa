@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Entity\Lpa;
 use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
+use App\Entity\Sirius\SiriusLpaAttorney;
+use App\Entity\Sirius\SiriusLpaDonor;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetAttorneyStatus;
@@ -88,7 +89,7 @@ class FindActorInLpaTest extends TestCase
             $this->activeAttorneyFixture(),
         ];
 
-        $lpa = new Lpa(
+        $lpa = new \App\Entity\Sirius\SiriusLpa(
             applicationHasGuidance:     null,
             applicationHasRestrictions: null,
             applicationType:            null,
@@ -265,26 +266,26 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function inactiveAttorneyFixture(): Person
+    public static function inactiveAttorneyFixture(): SiriusLpaAttorney
     {
-        return new Person(
+        return new SiriusLpaAttorney(
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
-            country: null,
-            county: null,
-            dob: new DateTimeImmutable('1977-11-21'),
-            email: null,
-            firstname: 'Attorneyone',
-            firstnames: null,
-            name: null,
-            otherNames: null,
-            postcode: 'Gg1 2ff',
-            surname: 'Person',
+            country:      null,
+            county:       null,
+            dob:          new DateTimeImmutable('1977-11-21'),
+            email:        null,
+            firstname:    'Attorneyone',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'Gg1 2ff',
+            surname:      'Person',
             systemStatus: 'false',
-            town: null,
-            type: null,
-            uId: '7000000002222'
+            town:         null,
+            type:         null,
+            uId:          '7000000002222'
         );
     }
 
@@ -306,24 +307,24 @@ class FindActorInLpaTest extends TestCase
 
     public static function ghostAttorneyFixture(): Person
     {
-        return new Person(
+        return new SiriusLpaAttorney(
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
-            country: null,
-            county: null,
-            dob: new DateTimeImmutable('1960-05-05'),
-            email: null,
-            firstname: '',
-            firstnames: null,
-            name: null,
-            otherNames: null,
-            postcode: 'BB1 9ee',
-            surname: '',
+            country:      null,
+            county:       null,
+            dob:          new DateTimeImmutable('1960-05-05'),
+            email:        null,
+            firstname:    '',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'BB1 9ee',
+            surname:      '',
             systemStatus: 'true',
-            town: null,
-            type: null,
-            uId: '700000003333'
+            town:         null,
+            type:         null,
+            uId:          '700000003333'
         );
     }
 
@@ -362,26 +363,26 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function activeAttorneyFixture(): Person
+    public static function activeAttorneyFixture(): SiriusLpaAttorney
     {
-        return new Person(
+        return new SiriusLpaAttorney(
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
-            country: null,
-            county: null,
-            dob: new DateTimeImmutable('1980-03-01'),
-            email: null,
-            firstname: 'Test',
-            firstnames: null,
-            name: null,
-            otherNames: null,
-            postcode: 'Ab1 2Cd',
-            surname: 'T’esting',
+            country:      null,
+            county:       null,
+            dob:          new DateTimeImmutable('1980-03-01'),
+            email:        null,
+            firstname:    'Test',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'Ab1 2Cd',
+            surname:      'T’esting',
             systemStatus: 'true',
-            town: null,
-            type: null,
-            uId: '700000001234'
+            town:         null,
+            type:         null,
+            uId:          '700000001234'
         );
     }
 
@@ -400,26 +401,27 @@ class FindActorInLpaTest extends TestCase
         ]);
     }
 
-    public static function donorFixture(): Person
+    public static function donorFixture(): SiriusLpaDonor
     {
-        return new Person(
+        return new SiriusLpaDonor(
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
-            country: null,
-            county: null,
-            dob: new DateTimeImmutable('1975-10-05'),
-            email: null,
-            firstname: 'Donor',
-            firstnames: null,
-            name: null,
-            otherNames: null,
-            postcode: 'PY1 3Kd',
-            surname: 'Person',
+            country:      null,
+            county:       null,
+            dob:          new DateTimeImmutable('1975-10-05'),
+            email:        null,
+            firstname:    'Donor',
+            id:           '7',
+            linked:       [],
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'PY1 3Kd',
+            surname:      'Person',
             systemStatus: null,
-            town: null,
-            type: null,
-            uId: '700000001111'
+            town:         null,
+            type:         null,
+            uId:          '700000001111'
         );
     }
 }
