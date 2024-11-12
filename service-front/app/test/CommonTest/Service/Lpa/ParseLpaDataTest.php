@@ -129,7 +129,6 @@ class ParseLpaDataTest extends TestCase
     {
         $combinedFormat    = $this->getMockedCombinedFormat();
         $expectedSiriusLpa = $this->expectedSiriusLpa();
-        $expectedSiriusLpa->activeAttorneys = $this->expectedAttorneys();
 
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);

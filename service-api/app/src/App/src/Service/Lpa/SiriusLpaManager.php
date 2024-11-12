@@ -48,19 +48,9 @@ class SiriusLpaManager implements LpaManagerInterface
         $lpaData = $lpa->getData();
 
         if ($lpaData['attorneys'] !== null) {
-            $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['activeAttorneys']    = array_values(
+            $lpaData['attorneys'] = array_values(
                 array_filter($lpaData['attorneys'], function ($attorney) {
                     return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::ACTIVE_ATTORNEY;
-                })
-            );
-        }
-
-        if ($lpaData['attorneys'] !== null) {
-            $lpaData['original_attorneys'] = $lpaData['attorneys'];
-            $lpaData['inactiveAttorneys']  = array_values(
-                array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::INACTIVE_ATTORNEY;
                 })
             );
         }
@@ -93,7 +83,6 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         $lpaData = $lpa->getData();
-        unset($lpaData['original_attorneys']);
 
         $result = [
             'user-lpa-actor-token' => $map['Id'],
@@ -183,7 +172,6 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         $lpaData = $lpa->getData();
-        unset($lpaData['original_attorneys']);
 
         $result = [
             'date'         => $lpa->getLookupTime()->format('c'),
@@ -241,7 +229,6 @@ class SiriusLpaManager implements LpaManagerInterface
             $actor   = ($this->resolveActor)($lpaData, (string) $item['ActorId']);
 
             $added = $item['Added']->format('Y-m-d H:i:s');
-            unset($lpaData['original_attorneys']);
 
             //Extract and return only LPA's where status is Registered or Cancelled
             if (($this->isValidLpa)($lpaData)) {
