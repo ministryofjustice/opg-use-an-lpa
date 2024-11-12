@@ -49,6 +49,7 @@ class ParseLpaData
                 //introduce feature flag here #3551
                 //the lpaData array converted to object using hydrator
                 if (($this->featureEnabled)('support_datastore_lpas')) {
+                    // Set asLpaStoreLpa to toggle the format of the response (but ensure its set to false before running tests)
                     $mockedCombinedLpa = self::getMockedCombinedFormat(false);
                     $data['lpa']       = ($this->lpaDataFormatter)($mockedCombinedLpa);
                 } else {
@@ -220,11 +221,12 @@ class ParseLpaData
                     ],
                 ],
             ],
-            'attorneyActDecisions' => 'When Registered',
+            'whenTheLpaCanBeUsed' => 'when-has-capacity',
             'applicationHasRestrictions' => false,
             'applicationHasGuidance' => false,
             'lpaDonorSignatureDate' => '2012-12-12',
             'lifeSustainingTreatment' => 'Option A',
+            'howAttorneysMakeDecisions' => 'jointly'
         ];
 
         if ($asLpaStoreLpa) {
