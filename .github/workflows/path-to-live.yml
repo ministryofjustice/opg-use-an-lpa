@@ -35,13 +35,14 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      
       - name: get changed docs files in any folder
         id: changed-files-docs
         uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
         with:
           files: |
             **/*.md
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
