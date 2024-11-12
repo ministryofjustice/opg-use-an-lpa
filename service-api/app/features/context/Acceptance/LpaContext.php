@@ -383,7 +383,7 @@ class LpaContext implements Context
      */
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
-        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
+        $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
@@ -2918,7 +2918,7 @@ class LpaContext implements Context
      */
     public function iProvideDetailsThatMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $this->lpa->lpaIsCleansed    = true;
         $this->lpa->donor->firstname = 'Rachel';
@@ -3358,7 +3358,7 @@ class LpaContext implements Context
      */
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
@@ -3418,7 +3418,7 @@ class LpaContext implements Context
      */
     public function iAmShownDetailsOfAnLpa(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $this->lpa->lpaIsCleansed = true;
 
@@ -3482,7 +3482,7 @@ class LpaContext implements Context
      */
     public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'));
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
         $this->lpa->lpaIsCleansed = true;
         $this->lpaUid             = '700000000047';

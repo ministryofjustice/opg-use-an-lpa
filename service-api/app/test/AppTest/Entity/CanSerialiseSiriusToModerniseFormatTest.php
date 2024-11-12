@@ -28,10 +28,11 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
     private function getExpectedLpa(): array
     {
         return [
-            'applicationHasGuidance'       => false,
-            'applicationHasRestrictions'   => false,
-            'applicationType'              => 'Classic',
-            'attorneys'                    => [
+            'applicationHasGuidance'     => false,
+            'applicationHasRestrictions' => false,
+            'applicationType'            => 'Classic',
+            'attorneyActDecisions'       => null,
+            'attorneys'                  => [
                 [
                     'addressLine1' => '9 high street',
                     'addressLine2' => '',
@@ -71,10 +72,10 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                     'uId'          => '7000-0000-0849',
                 ],
             ],
-            'caseSubtype'                  => 'hw',
-            'channel'                      => null,
-            'dispatchDate'                 => null,
-            'donor'                        => [
+            'caseSubtype'                => 'hw',
+            'channel'                    => null,
+            'dispatchDate'               => null,
+            'donor'                      => [
                 'addressLine1' => '81 Front Street',
                 'addressLine2' => 'LACEBY',
                 'addressLine3' => '',
@@ -99,20 +100,19 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                     ],
                 ],
             ],
-            'hasSeveranceWarning'          => null,
-            'howAttorneysMakeDecisions'    => 'jointly-and-severally',
-            'invalidDate'                  => null,
-            'lifeSustainingTreatment'      => 'option-a',
-            'lpaDonorSignatureDate'        => '2012-12-12 00:00:00.000000+0000',
-            'lpaIsCleansed'                => true,
-            'onlineLpaId'                  => 'A33718377316',
-            'receiptDate'                  => '2014-09-26 00:00:00.000000+0000',
-            'registrationDate'             => '2019-10-10 00:00:00.000000+0000',
-            'rejectedDate'                 => null,
-            'replacementAttorneys'         => [],
-            'status'                       => 'Registered',
-            'statusDate'                   => null,
-            'trustCorporations'            => [
+            'hasSeveranceWarning'        => null,
+            'invalidDate'                => null,
+            'lifeSustainingTreatment'    => 'option-a',
+            'lpaDonorSignatureDate'      => '2012-12-12 00:00:00.000000+0000',
+            'lpaIsCleansed'              => true,
+            'onlineLpaId'                => 'A33718377316',
+            'receiptDate'                => '2014-09-26 00:00:00.000000+0000',
+            'registrationDate'           => '2019-10-10 00:00:00.000000+0000',
+            'rejectedDate'               => null,
+            'replacementAttorneys'       => [],
+            'status'                     => 'Registered',
+            'statusDate'                 => null,
+            'trustCorporations'          => [
                 [
                     'addressLine1' => 'Street 1',
                     'addressLine2' => 'Street 2',
@@ -133,9 +133,8 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
                     'uId'          => '7000-0015-1998',
                 ],
             ],
-            'uId'                          => '700000000047',
-            'withdrawnDate'                => null,
-            'whenTheLpaCanBeUsed'          => 'when-capacity-lost'
+            'uId'                        => '700000000047',
+            'withdrawnDate'              => null,
         ];
     }
 
@@ -146,7 +145,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
             ->__invoke('support_datastore_lpas')
             ->willReturn(false);
 
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'), true);
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
         $expectedLpa = $this->getExpectedLpa();
         $newLpa      = ($this->lpaDataFormatter)($lpa);
@@ -160,7 +159,7 @@ class CanSerialiseSiriusToModerniseFormatTest extends TestCase
     #[Test]
     public function can_serialise_sirius_lpa_using_data_formatter(): void
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/sirius_lpa_transformed_by_use.json'), true);
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
         $expectedLpa   = $this->getExpectedLpa();
         $newLpa        = ($this->lpaDataFormatter)($lpa);

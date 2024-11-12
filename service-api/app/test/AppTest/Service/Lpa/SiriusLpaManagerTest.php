@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use Common\Service\Lpa\Factory\Sirius;
-use PHPUnit\Framework\Attributes\DataProvider;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -84,8 +83,7 @@ class SiriusLpaManagerTest extends TestCase
     }
 
     #[Test]
-    #[DataProvider('howAttorneysMakeDecisionsProvider')]
-    public function can_get_by_id($caseKey, $expectedHowAttorneysMakeDecisions): void
+    public function can_get_by_id(): void
     {
         $testUid = '700012349874';
 
@@ -107,7 +105,6 @@ class SiriusLpaManagerTest extends TestCase
                              'systemStatus' => true,
                             ]),
                     ],
-                    "$caseKey" => true,
                 ],
             ),
             new DateTime()
@@ -146,8 +143,6 @@ class SiriusLpaManagerTest extends TestCase
                         ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                         ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                     ],
-                    "$caseKey" => true,
-                    'howAttorneysMakeDecisions' => $expectedHowAttorneysMakeDecisions
                 ],
             ),
             $lpaResponse->getLookupTime()
@@ -202,16 +197,6 @@ class SiriusLpaManagerTest extends TestCase
         $result = $service->getByUid($testUid);
 
         $this->assertEquals($expectedLpaResponse, $result);
-    }
-
-    public static function howAttorneysMakeDecisionsProvider(): array
-    {
-        return [
-            'singular' => ['caseAttorneySingular', 'singular'],
-            'jointly and severally' => ['caseAttorneyJointlyAndSeverally', 'jointly-and-severally'],
-            'jointly' => ['caseAttorneyJointly', 'jointly'],
-            'jointly for some' => ['caseAttorneyJointlyAndJointlyAndSeverally', 'jointly-for-some-severally-for-others']
-        ];
     }
 
     //-------------------------------------------------------------------------
