@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Enum\HowAttorneysMakeDecisions;
 use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
@@ -74,6 +75,21 @@ class SiriusLpaManager implements LpaManagerInterface
                 );
         }
 
+        if ($lpaData['caseAttorneySingular']) {
+            $lpaData['howAttorneysMakeDecisions'] = HowAttorneysMakeDecisions::SINGULAR->value;
+        }
+
+        if ($lpaData['caseAttorneyJointly']) {
+            $lpaData['howAttorneysMakeDecisions'] = HowAttorneysMakeDecisions::JOINTLY->value;
+        }
+
+        if ($lpaData['caseAttorneyJointlyAndSeverally']) {
+            $lpaData['howAttorneysMakeDecisions'] = HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY->value;
+        }
+
+        if ($lpaData['caseAttorneyJointlyAndJointlyAndSeverally']) {
+            $lpaData['howAttorneysMakeDecisions'] = HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS->value;
+        }
         return $lpa;
     }
 

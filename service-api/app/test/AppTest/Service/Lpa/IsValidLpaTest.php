@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\IsValidLpa;
+use AppTest\Helper\EntityTestHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -86,107 +88,25 @@ class IsValidLpaTest extends TestCase
     }
 
     #[Test]
-    public function check_if_lpa_valid_when_status_registered_combined_format(): void
+    #[DataProvider('statusProvider')]
+    public function check_if_lpa_valid_combined_format($status, $expectedValid): void
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance     = null,
-            $applicationHasRestrictions = null,
-            $applicationType            = null,
-            $attorneyActDecisions       = null,
-            $attorneys                  = null,
-            $caseSubtype                = null,
-            $channel                    = null,
-            $dispatchDate               = null,
-            $donor                      = null,
-            $hasSeveranceWarning        = null,
-            $invalidDate                = null,
-            $lifeSustainingTreatment    = null,
-            $lpaDonorSignatureDate      = null,
-            $lpaIsCleansed              = null,
-            $onlineLpaId                = null,
-            $receiptDate                = null,
-            $registrationDate           = null,
-            $rejectedDate               = null,
-            $replacementAttorneys       = null,
-            $status                     = 'Registered',
-            $statusDate                 = null,
-            $trustCorporations          = null,
-            $uId                        = '700000000001',
-            $withdrawnDate              = null
+        $lpa = EntityTestHelper::makeSiriusLpa(
+            status:                     $status,
+            uId:                        '700000000001',
         );
 
         $resolver = $this->isValidLpaResolver();
         $result = $resolver($lpa);
-        $this->assertTrue($result);
+        $this->assertEquals($expectedValid, $result);
     }
 
-    #[Test]
-    public function check_if_lpa_valid_when_status_cancelled_combined_format(): void
+    public static function statusProvider(): array
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance     = null,
-            $applicationHasRestrictions = null,
-            $applicationType            = null,
-            $attorneyActDecisions       = null,
-            $attorneys                  = null,
-            $caseSubtype                = null,
-            $channel                    = null,
-            $dispatchDate               = null,
-            $donor                      = null,
-            $hasSeveranceWarning        = null,
-            $invalidDate                = null,
-            $lifeSustainingTreatment    = null,
-            $lpaDonorSignatureDate      = null,
-            $lpaIsCleansed              = null,
-            $onlineLpaId                = null,
-            $receiptDate                = null,
-            $registrationDate           = null,
-            $rejectedDate               = null,
-            $replacementAttorneys       = null,
-            $status                     = 'Cancelled',
-            $statusDate                 = null,
-            $trustCorporations          = null,
-            $uId                        = '700000000001',
-            $withdrawnDate              = null
-        );
-
-        $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
-        $this->assertTrue($result);
-    }
-
-    #[Test]
-    public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled_combined_format(): void
-    {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
-            $applicationHasGuidance     = null,
-            $applicationHasRestrictions = null,
-            $applicationType            = null,
-            $attorneyActDecisions       = null,
-            $attorneys                  = null,
-            $caseSubtype                = null,
-            $channel                    = null,
-            $dispatchDate               = null,
-            $donor                      = null,
-            $hasSeveranceWarning        = null,
-            $invalidDate                = null,
-            $lifeSustainingTreatment    = null,
-            $lpaDonorSignatureDate      = null,
-            $lpaIsCleansed              = null,
-            $onlineLpaId                = null,
-            $receiptDate                = null,
-            $registrationDate           = null,
-            $rejectedDate               = null,
-            $replacementAttorneys       = null,
-            $status                     = 'Revoked',
-            $statusDate                 = null,
-            $trustCorporations          = null,
-            $uId                        = '700000000001',
-            $withdrawnDate              = null
-        );
-
-        $resolver = $this->isValidLpaResolver();
-        $result   = $resolver($lpa);
-        $this->assertFalse($result);
+        return [
+            ['Registered', true],
+            ['Cancelled', true],
+            ['Revoked', false],
+        ];
     }
 }

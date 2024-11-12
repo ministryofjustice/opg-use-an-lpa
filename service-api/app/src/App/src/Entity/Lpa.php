@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DoNotSerialize;
 use JsonSerializable;
@@ -17,13 +18,13 @@ class Lpa implements JsonSerializable
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
-        public readonly ?HowAttorneysMakeDecisions $attorneyActDecisions,
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
         public readonly ?object $donor,
         public readonly ?bool $hasSeveranceWarning,
+        public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,
@@ -38,6 +39,7 @@ class Lpa implements JsonSerializable
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
+        public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
     }
 

@@ -33,7 +33,6 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'applicationHasGuidance'     => null,
             'applicationHasRestrictions' => null,
             'applicationType'            => null,
-            'attorneyActDecisions'       => 'jointly',
             'attorneys'                  => [
                 [
                     'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
@@ -78,6 +77,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                 'uId'          => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             ],
             'hasSeveranceWarning'        => null,
+            'howAttorneysMakeDecisions'  => 'jointly',
             'invalidDate'                => null,
             'lifeSustainingTreatment'    => 'option-a',
             'lpaDonorSignatureDate'      => '2024-01-10 23:00:00.000000+0000',
@@ -113,6 +113,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
+            'whenTheLpaCanBeUsed'           => 'when-capacity-lost'
         ];
     }
 
