@@ -57,7 +57,7 @@ class LpaDataFormatter
 
     private function getHydrationClass(array $lpa): string
     {
-        return isset($lpa['uId']) && str_starts_with($lpa['uId'], 'M-')
+        return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')
             ? LpaStore::class
             : SiriusLpa::class;
     }
