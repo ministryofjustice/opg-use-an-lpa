@@ -28,10 +28,8 @@ class LpaStoreTrustCorporation extends Person
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        ?string $firstname,
         ?string $firstnames,
         ?string $name,
-        ?string $otherNames,
         ?string $postcode,
         ?string $surname,
         #[MapFrom('status')]
@@ -51,10 +49,8 @@ class LpaStoreTrustCorporation extends Person
             $county,
             $dob,
             $email,
-            $firstname,
             $firstnames,
             $name,
-            $otherNames,
             $postcode,
             $surname,
             $systemStatus,

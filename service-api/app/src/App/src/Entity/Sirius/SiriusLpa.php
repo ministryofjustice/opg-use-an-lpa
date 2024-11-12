@@ -9,11 +9,16 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
+use Exception;
 
-class SiriusLpa extends Lpa
+class SiriusLpa extends Lpa implements FindActorInLpaInterface
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -77,5 +82,22 @@ class SiriusLpa extends Lpa
     public function getTrustCorporations(): array
     {
         return $this->trustCorporations ?? [];
+    }
+
+    public function getDonor(): ActorMatchingInterface&GetAttorneyStatusInterface&ResolveActorInterface
+    {
+        if (
+            !(
+                $this->donor instanceof ActorMatchingInterface &&
+                $this->donor instanceof GetAttorneyStatusInterface &&
+                $this->donor instanceof ResolveActorInterface
+            )
+        ) {
+            throw new Exception(
+                'Donor is not a valid ActorMatchingInterface&GetAttorneyStatusInterface instance'
+            );
+        }
+
+        return $this->donor;
     }
 }

@@ -28,12 +28,9 @@ class LpaStoreAttorney extends Person
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
         ?string $name,
-        ?string $otherNames,
         ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
@@ -54,10 +51,8 @@ class LpaStoreAttorney extends Person
             $county,
             $dob,
             $email,
-            $firstname,
             $firstnames,
             $name,
-            $otherNames,
             $postcode,
             $surname,
             $systemStatus,

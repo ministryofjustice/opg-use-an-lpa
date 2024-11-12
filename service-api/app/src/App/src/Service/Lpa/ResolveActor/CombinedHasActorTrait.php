@@ -67,12 +67,4 @@ trait CombinedHasActorTrait
 
         return null;
     }
-
-    /** @return array<ResolveActorInterface> */
-    abstract private function getAttorneys(): array;
-
-    abstract private function getDonor(): ResolveActorInterface;
-
-    /** @return array<ResolveActorInterface> */
-    abstract private function getTrustCorporations(): array;
 }

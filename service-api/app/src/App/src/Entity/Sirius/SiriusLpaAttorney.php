@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
@@ -20,7 +21,7 @@ use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
-class SiriusLpaAttorney extends Person
+class SiriusLpaAttorney extends Person implements ActorMatchingInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -41,14 +42,11 @@ class SiriusLpaAttorney extends Person
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
+        public readonly ?string $firstname,
         #[CastToType('string')]
         public readonly ?string $id,
-        ?string $name,
-        ?string $otherNames,
+        public readonly ?string $middlenames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
@@ -71,10 +69,8 @@ class SiriusLpaAttorney extends Person
             $county,
             $dob,
             $email,
-            $firstname,
-            $firstnames,
-            $name,
-            $otherNames,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            null,
             $postcode,
             $surname,
             $systemStatus,
@@ -87,5 +83,10 @@ class SiriusLpaAttorney extends Person
     public function getId(): string
     {
         return $this->id ?? '';
+    }
+
+    public function getFirstname(): string
+    {
+        return $this->firstname ?? '';
     }
 }

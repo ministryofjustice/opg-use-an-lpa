@@ -120,7 +120,7 @@ class FindActorInLpa
         $matchData = $this->normaliseComparisonData($matchData);
         $actorData = $this->normaliseComparisonData(
             [
-                'first_names' => $actor->getFirstname(),
+                'first_names' => $actor->getFirstnames(),
                 'last_name'   => $actor->getSurname(),
                 'postcode'    => $actor->getPostcode(),
             ]

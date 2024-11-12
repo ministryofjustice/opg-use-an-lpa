@@ -37,6 +37,11 @@ class SiriusPerson implements
         return (string)$this->person['firstname'];
     }
 
+    public function getFirstnames(): string
+    {
+        return trim(sprintf('%s %s', $this->person['firstname'], $this->person['middlenames']));
+    }
+
     public function getMiddleNames(): string
     {
         return (string)$this->person['middlenames'];

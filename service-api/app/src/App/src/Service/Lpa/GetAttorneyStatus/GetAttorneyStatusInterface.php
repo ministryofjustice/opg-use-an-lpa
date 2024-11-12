@@ -9,7 +9,7 @@ use EventSauce\ObjectHydrator\MapperSettings;
 #[MapperSettings(serializePublicMethods: false)]
 interface GetAttorneyStatusInterface
 {
-    public function getFirstname(): string;
+    public function getFirstnames(): string;
 
     public function getSurname(): string;
 

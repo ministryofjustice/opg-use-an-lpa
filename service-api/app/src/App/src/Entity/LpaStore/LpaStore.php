@@ -11,9 +11,11 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
+use Exception;
 
 class LpaStore extends Lpa
 {
@@ -79,5 +81,16 @@ class LpaStore extends Lpa
             $uId,
             $withdrawnDate
         );
+    }
+
+    public function getDonor(): ResolveActorInterface
+    {
+        if (!($this->donor instanceof ResolveActorInterface)) {
+            throw new Exception(
+                'Donor is not a valid ResolveActorInterface instance'
+            );
+        }
+
+        return $this->donor;
     }
 }

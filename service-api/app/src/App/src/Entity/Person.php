@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
@@ -15,7 +14,6 @@ use JsonSerializable;
 class Person implements
     JsonSerializable,
     GetAttorneyStatusInterface,
-    ActorMatchingInterface,
     GetTrustCorporationStatusInterface,
     ResolveActorInterface
 {
@@ -27,10 +25,8 @@ class Person implements
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
         public readonly ?string $email,
-        public readonly ?string $firstname,
         public readonly ?string $firstnames,
         public readonly ?string $name,
-        public readonly ?string $otherNames,
         public readonly ?string $postcode,
         public readonly ?string $surname,
         public readonly ?string $systemStatus,
@@ -60,9 +56,9 @@ class Person implements
         return $this->uId ?? '';
     }
 
-    public function getFirstname(): string
+    public function getFirstnames(): string
     {
-        return $this->firstname ?? '';
+        return $this->firstnames ?? '';
     }
 
     public function getSurname(): string
@@ -91,8 +87,6 @@ class Person implements
     }
 
     /**
-     *
-     *
      * @return string The id (or uid) of the person
      */
     public function getId(): string

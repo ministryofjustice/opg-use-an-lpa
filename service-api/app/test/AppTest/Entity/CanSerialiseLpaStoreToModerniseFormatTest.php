@@ -43,10 +43,8 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'county'       => null,
                     'dob'          => '1982-07-24',
                     'email'        => null,
-                    'firstname'    => null,
                     'firstnames'   => 'Herman',
                     'name'         => null,
-                    'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => 'Seakrest',
                     'systemStatus' => 'active',
@@ -66,10 +64,8 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                 'county'       => null,
                 'dob'          => '1970-01-24',
                 'email'        => 'nobody@not.a.real.domain',
-                'firstname'    => null,
                 'firstnames'   => 'Feeg',
                 'name'         => null,
-                'otherNames'   => null,
                 'postcode'     => null,
                 'surname'      => 'Bundlaaaa',
                 'systemStatus' => null,
@@ -98,10 +94,8 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                     'county'       => null,
                     'dob'          => null,
                     'email'        => null,
-                    'firstname'    => null,
                     'firstnames'   => null,
                     'name'         => 'Trust us Corp.',
-                    'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => null,
                     'systemStatus' => 'active',
@@ -127,29 +121,5 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
         $expectedJsonLpa = json_encode($expectedLpa);
 
         $this->assertEquals($expectedJsonLpa, $jsonLpa);
-    }
-
-    /**
-     * This test currently does not pass in any useful fashion and the associated functionality can not be expected
-     * to work. This is because we've made a fundamental misunderstanding of the chosen Object Hydration library
-     * and how it works with OOP objects and property inheritance.
-     *
-     * Although it's possible to get it vaguely working the library makes the (probably correct) assumption that
-     * serialised array keys should represent the original source name, not the new property name, as configured
-     * by the MappedBy attribute. It's *not* possible to disable this inverse transformation and would likely
-     * require a library change to fix.
-     */
-    #[Test]
-    public function can_serialise_datastore_lpa_using_data_formatter(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        // $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
-        // $expectedLpa = $this->getExpectedLpa();
-        //
-        // $newLpa        = ($this->lpaDataFormatter)($lpa);
-        // $serialisedLpa = $this->lpaDataFormatter->serializeObject($newLpa);
-        //
-        // $this->assertEquals($expectedLpa, $serialisedLpa);
     }
 }

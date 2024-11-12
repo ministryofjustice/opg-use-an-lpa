@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
@@ -20,7 +21,7 @@ use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
 
-class SiriusLpaTrustCorporation extends Person
+class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -32,6 +33,8 @@ class SiriusLpaTrustCorporation extends Person
         #[MapFrom('addresses')]
         #[ExtractAddressLine3FromSiriusLpa]
         ?string $addressLine3,
+        #[MapFrom('companyName')]
+        ?string $companyName,
         #[MapFrom('addresses')]
         #[ExtractCountryFromSiriusLpa]
         ?string $country,
@@ -41,15 +44,11 @@ class SiriusLpaTrustCorporation extends Person
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
+        public readonly ?string $firstname,
         #[CastToType('string')]
         public readonly ?string $id,
-        #[MapFrom('companyName')]
-        ?string $name,
-        ?string $otherNames,
+        public readonly ?string $middlenames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
@@ -72,10 +71,8 @@ class SiriusLpaTrustCorporation extends Person
             $county,
             $dob,
             $email,
-            $firstname,
-            $firstnames,
-            $name,
-            $otherNames,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            $companyName,
             $postcode,
             $surname,
             $systemStatus,
@@ -88,5 +85,10 @@ class SiriusLpaTrustCorporation extends Person
     public function getId(): string
     {
         return $this->id ?? '';
+    }
+
+    public function getFirstname(): string
+    {
+        return $this->firstname;
     }
 }

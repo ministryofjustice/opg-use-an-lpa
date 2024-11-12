@@ -7,19 +7,16 @@ namespace App\Entity;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
-use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use DateTimeImmutable;
 use DateTimeZone;
-use Exception;
 use JsonSerializable;
 
 class Lpa implements
     JsonSerializable,
     HasActorInterface,
-    FindActorInLpaInterface,
     IsValidInterface
 {
     use CombinedHasActorTrait;
@@ -69,15 +66,6 @@ class Lpa implements
     public function getAttorneys(): array
     {
         return $this->attorneys ?? [];
-    }
-
-    public function getDonor(): Person
-    {
-        if (!isset($this->donor)) {
-            throw new Exception('Donor value not set before retrieval');
-        }
-
-        return $this->donor;
     }
 
     public function getStatus(): string
