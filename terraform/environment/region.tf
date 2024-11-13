@@ -39,7 +39,6 @@ module "eu_west_1" {
   notify_key_secret_name                           = local.environment.notify_key_secret_name
   parameter_store_arns                             = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
   pagerduty_service_id                             = local.environment.pagerduty_service_id
-  pdf_container_version                            = local.environment.pdf_container_version
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
   session_expires_use                              = local.environment.session_expires_use
@@ -127,7 +126,6 @@ module "eu_west_2" {
   notify_key_secret_name                           = local.environment.notify_key_secret_name
   parameter_store_arns                             = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
   pagerduty_service_id                             = local.environment.pagerduty_service_id
-  pdf_container_version                            = local.environment.pdf_container_version
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
   session_expires_use                              = local.environment.session_expires_use
