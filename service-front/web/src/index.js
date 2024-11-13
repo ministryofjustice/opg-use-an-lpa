@@ -46,4 +46,4 @@ if (
 
 //used by smoke test
 
-useAnLPALoaded = true;
+window.useAnLPALoaded = true;
