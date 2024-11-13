@@ -100,4 +100,9 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
 
         return $this->donor;
     }
+
+    public function getCaseSubType(): string
+    {
+        return $this->caseSubtype->value;
+    }
 }

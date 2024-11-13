@@ -28,7 +28,7 @@ class AccessForAllValidation implements JsonSerializable
 
     public function getCaseSubtype(): string
     {
-        return $this->lpa['caseSubtype'];
+        return $this->lpa->getCaseSubtype();
     }
 
     public function jsonSerialize(): array

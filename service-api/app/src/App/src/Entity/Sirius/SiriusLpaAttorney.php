@@ -89,4 +89,9 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface
     {
         return $this->firstname ?? '';
     }
+
+    public function getMiddlenames(): string
+    {
+        return $this->middlenames ?? '';
+    }
 }

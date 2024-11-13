@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa\AccessForAll;
 
-use App\Entity\Lpa;
-use App\Entity\Person;
+use App\Entity\Sirius\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
+use App\Entity\Sirius\SiriusLpaDonor;
+use App\Enum\LpaType;
 use App\Service\Lpa\AccessForAll\AccessForAllValidation;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
+use App\Service\Lpa\SiriusLpa as OldSiriusLpa;
 use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 class AccessForAllValidationTest extends TestCase
 {
     private ActorMatch $actorMatch;
-    private Lpa $lpa;
+    private SiriusLpa|OldSiriusLpa $lpa;
 
     public function setUp(): void
     {
@@ -45,7 +47,7 @@ class AccessForAllValidationTest extends TestCase
             '700000000011',
         );
 
-        $this->lpa = new Lpa(
+        $this->lpa = new SiriusLpa(
             applicationHasGuidance: null,
             applicationHasRestrictions: null,
             applicationType: null,
@@ -53,10 +55,10 @@ class AccessForAllValidationTest extends TestCase
             attorneys: [
                 $this->actorMatch->actor,
             ],
-            caseSubtype: null,
+            caseSubtype: LpaType::PERSONAL_WELFARE,
             channel: 'online',
             dispatchDate: null,
-            donor: new Person(
+            donor: new SiriusLpaDonor(
                 addressLine1: null,
                 addressLine2: null,
                 addressLine3: null,
@@ -64,8 +66,11 @@ class AccessForAllValidationTest extends TestCase
                 county: null,
                 dob: new DateTimeImmutable('1962-4-18', new DateTimeZone('UTC')),
                 email: null,
-                firstnames: null,
-                name: null,
+                firstname: null,
+                id: null,
+                linked: null,
+                middlenames: null,
+                otherNames: null,
                 postcode: null,
                 surname: null,
                 systemStatus: null,
@@ -100,5 +105,50 @@ class AccessForAllValidationTest extends TestCase
         );
 
         $this->assertInstanceOf(AccessForAllValidation::class, $sut);
+    }
+
+    #[Test]
+    public function serializes_as_expected(): void
+    {
+        $sut = new AccessForAllValidation(
+            $this->actorMatch,
+            $this->lpa,
+        );
+
+        $jsonString = '{
+            "actor": {
+                "addressLine1": null,
+                "addressLine2": null,
+                "addressLine3": null,
+                "country": null,
+                "county": null,
+                "dob": "1970-10-14",
+                "email": null,
+                "firstnames": "Test",
+                "name": null,
+                "postcode": null,
+                "surname": "Testerson",
+                "systemStatus": null,
+                "town": null,
+                "type": null,
+                "uId": "700000000011"
+            },
+            "attorney": {
+                "firstname": "Test",
+                "middlenames": "",
+                "surname": "Testerson",
+                "uId": "700000000011"
+            },
+            "caseSubtype": "hw",
+            "donor": {
+                "firstname": "",
+                "middlenames": "",
+                "surname": "",
+                "uId": "700000000012"
+            },
+            "lpa-id": "700000000011",
+            "role": "attorney"
+        }';
+        $this->assertJsonStringEqualsJsonString($jsonString, json_encode($sut));
     }
 }

@@ -118,4 +118,9 @@ class SiriusLpa implements
     {
         return (string)$this->lpa['status'];
     }
+
+    public function getCaseSubType(): string
+    {
+        return $this['caseSubType'] ?? '';
+    }
 }
