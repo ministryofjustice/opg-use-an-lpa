@@ -43,3 +43,7 @@ if (
 ) {
     new sessionDialog(document.getElementById('dialog'));
 }
+
+//used by smoke test
+
+useAnLPALoaded = true;

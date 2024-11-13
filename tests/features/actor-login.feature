@@ -13,3 +13,4 @@ Feature: A user of the system is able to login
     Given I access the login form
     When I enter correct credentials
     Then I am signed in
+    Then Scripts Work 

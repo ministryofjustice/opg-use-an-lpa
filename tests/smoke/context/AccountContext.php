@@ -144,4 +144,18 @@ class AccountContext implements Context
             $this->ui->assertElementOnPage('nav.signin');
         }
     }
+
+    /**
+     * @Then Scripts Work
+     */
+
+    public function scriptsWork(): void
+    {
+        if(!$this->ui->getSession()->evaluateScript("return useAnLPALoaded")){
+            throw new ExpectationException(
+                'Javascript did not parse without errors',
+                $this->ui->getMink()->getSession()->getDriver()
+                )
+        }
+    }
 }
