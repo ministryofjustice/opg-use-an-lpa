@@ -212,6 +212,11 @@ variable "parameter_store_arns" {
   type        = list(string)
 }
 
+variable "pdf_container_version" {
+  description = "The image tag to use for the PDF container."
+  type        = string
+}
+
 variable "public_access_enabled" {
   description = "Whether or not the front ECS services should be publicly accessible via the ALBs."
   type        = bool
