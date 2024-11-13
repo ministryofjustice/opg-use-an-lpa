@@ -52,24 +52,24 @@ class AccessForAllLpaConfirmationHandler implements RequestHandlerInterface
         }
 
         $lpaMatchResponse = $this->addAccessForAllLpa->validateRequest($userId, $requestData);
-            ($this->checkLpaCleansed)($userId, $lpaMatchResponse);
+            ($this->checkLpaCleansed)($userId, $lpaMatchResponse->actorMatch);
 
         $this->accessForAllLpaService->requestAccessByLetter(
             (string) $requestData['reference_number'],
-            $lpaMatchResponse['actor']['uId'],
+            $lpaMatchResponse->actorMatch->actor->getUid(),
             $userId,
-            $lpaMatchResponse['lpaActorToken'] ?? null,
+            $lpaMatchResponse->lpaActorToken,
         );
 
         $this->logger->notice(
             'Successfully matched data for LPA {uId} and requested letter for account {id} ',
             [
-                'event_code' => $lpaMatchResponse['caseSubtype'] === 'hw'
+                'event_code' => $lpaMatchResponse->getCaseSubtype() === 'hw'
                     ? EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW
                     : EventCodes::FULL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,
                 'uId'        => (string)$requestData['reference_number'],
-                'lpaType'    => $lpaMatchResponse['caseSubtype'],
+                'lpaType'    => $lpaMatchResponse->getCaseSubtype(),
             ],
         );
 
