@@ -155,7 +155,7 @@ class AccountContext implements Context
             throw new ExpectationException(
                 'Javascript did not parse without errors',
                 $this->ui->getMink()->getSession()->getDriver()
-                )
+            );
         }
     }
 }
