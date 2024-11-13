@@ -151,7 +151,7 @@ class AccountContext implements Context
 
     public function scriptsWork(): void
     {
-        if(!$this->ui->getSession()->evaluateScript("return useAnLPALoaded")){
+        if(!$this->ui->getSession()->evaluateScript("return window.useAnLPALoaded")){
             throw new ExpectationException(
                 'Javascript did not parse without errors',
                 $this->ui->getMink()->getSession()->getDriver()
