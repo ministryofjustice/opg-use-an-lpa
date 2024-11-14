@@ -43,7 +43,7 @@ class SiriusLpaTest extends TestCase
                 type:         null,
                 uId:          '700000000012',
             ),
-        ],
+            ],
             caseSubtype: LpaType::PERSONAL_WELFARE,
             channel: 'online',
             dispatchDate: null,
