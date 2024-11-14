@@ -110,6 +110,30 @@ class AccessForAllValidationTest extends TestCase
     #[Test]
     public function serializes_as_expected(): void
     {
+        // test serialization of ActorMatch too here because it doesn't have its own test class
+        $jsonString = '{
+              "actor" : {
+                "addressLine1" : null,
+                "addressLine2" : null,
+                "addressLine3" : null,
+                "country" : null,
+                "county" : null,
+                "dob" : "1970-10-14",
+                "email" : null,
+                "firstnames" : "Test",
+                "name" : null,
+                "postcode" : null,
+                "surname" : "Testerson",
+                "systemStatus" : null,
+                "town" : null,
+                "type" : null,
+                "uId" : "700000000011"
+              },
+              "role" : "attorney",
+              "lpa-uid" : "700000000011"
+            }';
+        $this->assertJsonStringEqualsJsonString($jsonString, json_encode($this->actorMatch));
+
         $sut = new AccessForAllValidation(
             $this->actorMatch,
             $this->lpa,
