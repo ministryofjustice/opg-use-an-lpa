@@ -16,7 +16,15 @@
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+
+                    {% if not feature_enabled("support_datastore_lpas") %}
+                        <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    {% endif %}
+
+                    {% if feature_enabled("support_datastore_lpas") %}
+                        <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.value == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    {% endif %}
+
                     <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Check access codes{% endtrans %}</h1>
                 </div>
 

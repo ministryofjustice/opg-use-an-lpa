@@ -59,4 +59,13 @@ class Person
         return $this->name;
     }
 
+    public function getUId(): ?string
+    {
+        return $this->uId;
+    }
+
+    public function getId(): ?string
+    {
+        return $this->uId;
+    }
 }

@@ -7,6 +7,7 @@ namespace Actor\Handler;
 use Actor\Form\CancelCode;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Entity\Person;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
@@ -171,7 +172,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         ]));
     }
 
-    private function idMatch(CaseActor $actor, array $code): bool
+    private function idMatch(CaseActor|Person $actor, array $code): bool
     {
             return $actor->getId() === $code['ActorId']
             || intval($actor->getUId()) === $code['ActorId'];

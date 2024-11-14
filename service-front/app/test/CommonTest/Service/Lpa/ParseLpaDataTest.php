@@ -172,6 +172,7 @@ class ParseLpaDataTest extends TestCase
                 'firstname' => 'Rachel',
                 'middlenames' => 'Emma',
                 'surname' => 'Sanderson',
+                'otherNames' => 'Ezra',
                 'addresses' => [
                     [
                         'id' => 7,
@@ -340,7 +341,7 @@ class ParseLpaDataTest extends TestCase
                     ],
                 ],
                 name         : null,
-                otherNames   : null,
+                otherNames   : 'Ezra',
                 postcode     : 'DN37 5SH',
                 surname      : 'Sanderson',
                 systemStatus : null,

@@ -33,6 +33,7 @@ class PersonTest extends TestCase
         $expectedSurname     = 'Sanderson';
         $expectedDob         = new DateTimeImmutable('1948-11-01');
         $expectedCompanyName = 'trust corporation';
+        $expectedUid         = '700000000799';
 
         $this->assertEquals($expectedSalutation, $combinedLpa->getDonor()->getSalutation());
         $this->assertEquals($expectedFirstname, $combinedLpa->getDonor()->getFirstname());
@@ -40,5 +41,7 @@ class PersonTest extends TestCase
         $this->assertEquals($expectedSurname, $combinedLpa->getDonor()->getSurname());
         $this->assertEquals($expectedDob, $combinedLpa->getDonor()->getDob());
         $this->assertEquals($expectedCompanyName, $combinedLpa->trustCorporations[0]->getCompanyName());
+        $this->assertEquals($expectedUid, $combinedLpa->getDonor()->getUId());
+        $this->assertEquals($expectedUid, $combinedLpa->getDonor()->getId());
     }
 }

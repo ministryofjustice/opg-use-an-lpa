@@ -77,6 +77,16 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         return $this->applicationHasRestrictions;
     }
 
+    public function getAttorneys(): ?array
+    {
+        return $this->attorneys;
+    }
+
+    public function getTrustCorporations(): ?array
+    {
+        return $this->trustCorporations;
+    }
+
     public function getDonor(): Person
     {
         return $this->donor;
