@@ -19,11 +19,6 @@ class AccessForAllValidation implements JsonSerializable
         public readonly SiriusLpa|Lpa $lpa,
         public readonly ?string $lpaActorToken = null,
     ) {
-        if (! $this->actorMatch->actor instanceof ActorMatchingInterface) {
-            throw new InvalidActorTypeException(
-                'Given ActorMatch actor must implement ' . ActorMatchingInterface::class
-            );
-        }
     }
 
     public function getCaseSubtype(): string

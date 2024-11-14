@@ -121,6 +121,6 @@ class SiriusLpa implements
 
     public function getCaseSubType(): string
     {
-        return $this['caseSubType'] ?? '';
+        return $this['caseSubtype'] ?? '';
     }
 }
