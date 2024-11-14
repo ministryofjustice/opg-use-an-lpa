@@ -86,5 +86,4 @@ class SiriusLpaTest extends TestCase
 
         $this->assertInstanceOf(SiriusLpa::class, $sut);
     }
-
 }
