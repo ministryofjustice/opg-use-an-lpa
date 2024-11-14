@@ -40,7 +40,7 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'county'       => '',
                     'dob'          => '1990-05-04',
                     'email'        => '',
-                    'firstnames'    => 'jean',
+                    'firstnames'   => 'jean',
                     'name'         => null,
                     'postcode'     => 'DN37 5SH',
                     'surname'      => 'sanderson',

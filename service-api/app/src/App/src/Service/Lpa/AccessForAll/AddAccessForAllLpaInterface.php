@@ -13,6 +13,6 @@ interface AddAccessForAllLpaInterface
     public function getDonor(): SiriusPerson;
 
     public function getUid(): string;
-    
+
     public function getCaseSubType(): string;
 }
