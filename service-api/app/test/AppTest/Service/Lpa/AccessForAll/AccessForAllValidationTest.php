@@ -137,6 +137,7 @@ class AccessForAllValidationTest extends TestCase
         $sut = new AccessForAllValidation(
             $this->actorMatch,
             $this->lpa,
+            'myActorToken'
         );
 
         $jsonString = '{
@@ -171,7 +172,8 @@ class AccessForAllValidationTest extends TestCase
                 "uId": "700000000012"
             },
             "lpa-id": "700000000011",
-            "role": "attorney"
+            "role": "attorney",
+            "lpaActorToken": "myActorToken"
         }';
         $this->assertJsonStringEqualsJsonString($jsonString, json_encode($sut));
     }
