@@ -76,11 +76,11 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@8469c94c6a180dfb41a1bd7e1b46ac557ea124f1
+        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
         env:
           cache-name: cache-node-modules
         with:
@@ -99,7 +99,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@2cefa29f8797029f898b1baeff3e21a144128687
+        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -113,7 +113,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@6f9c6fad87720db87041e25e3ecf5b609c0368a0 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@82e0fc39d1cb50e0db083a0a18ae1b775ef44892 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
@@ -143,7 +143,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: install python
-        uses: actions/setup-python@19dfb7b659fa9e60c2f89c33335ab5f6f1792b6e # pin@v4.2.0
+        uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
         with:
           python-version: '3.12'
 
