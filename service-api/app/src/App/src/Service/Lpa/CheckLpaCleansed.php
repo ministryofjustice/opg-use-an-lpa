@@ -28,7 +28,7 @@ class CheckLpaCleansed
      */
     public function __invoke(string $userId, ActorMatch $actorDetailsMatch): void
     {
-        $lpa = $this->lpaManager->getByUid($actorDetailsMatch->uid)->getData();
+        $lpa = $this->lpaManager->getByUid($actorDetailsMatch->lpaUId)->getData();
 
         if (
             !$lpa['lpaIsCleansed'] &&
@@ -38,7 +38,7 @@ class CheckLpaCleansed
                 'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
                 [
                     'userId' => $userId,
-                    'lpaId'  => $actorDetailsMatch->uid,
+                    'lpaId'  => $actorDetailsMatch->lpaUId,
                 ]
             );
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
+use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
@@ -21,7 +22,7 @@ use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
 
-class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
+class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
 {
     public function __construct(
         #[MapFrom('addresses')]

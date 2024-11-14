@@ -161,9 +161,9 @@ class FindActorInLpaTest extends TestCase
         return [
             [
                 new ActorMatch(
-                    actor: $attorneyFixture,
-                    role: 'attorney',
-                    uid: '700000012346',
+                    actor:  $attorneyFixture,
+                    role:   'attorney',
+                    lpaUId: '700000012346',
                 ),
                 [
                     'reference_number' => '700000000001',
@@ -175,9 +175,9 @@ class FindActorInLpaTest extends TestCase
             ],
             [
                 new ActorMatch(
-                    actor: $donorFixture,
-                    role: 'donor',
-                    uid: '700000012346',
+                    actor:  $donorFixture,
+                    role:   'donor',
+                    lpaUId: '700000012346',
                 ),
                 [
                     'reference_number' => '700000000001',

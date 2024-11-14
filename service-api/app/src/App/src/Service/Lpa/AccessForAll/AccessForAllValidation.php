@@ -36,7 +36,7 @@ class AccessForAllValidation implements JsonSerializable
         $data = [
             'actor'  => $this->actorMatch->actor,
             'role'   => $this->actorMatch->role,
-            'lpa-id' => $this->actorMatch->uid,
+            'lpa-id' => $this->actorMatch->lpaUId,
         ];
 
         if ($this->actorMatch->role === 'attorney') {

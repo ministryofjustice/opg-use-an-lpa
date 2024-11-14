@@ -13,7 +13,7 @@ class ActorMatch implements JsonSerializable
     public function __construct(
         readonly public SiriusPerson|Person $actor,
         readonly public string $role,
-        readonly public string $uid,
+        readonly public string $lpaUId,
     ) {
     }
 
@@ -22,7 +22,7 @@ class ActorMatch implements JsonSerializable
         return [
             'actor'   => $this->actor,
             'role'    => $this->role,
-            'lpa-uid' => $this->uid,
+            'lpa-uid' => $this->lpaUId,
         ];
     }
 }

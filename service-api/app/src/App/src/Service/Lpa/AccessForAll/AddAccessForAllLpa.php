@@ -113,7 +113,7 @@ class AddAccessForAllLpa
         }
 
         $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-            $validationData->actorMatch->uid,
+            $validationData->actorMatch->lpaUId,
             $validationData->actorMatch->actor->getUid()
         );
 
