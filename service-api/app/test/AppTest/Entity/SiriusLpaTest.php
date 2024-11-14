@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
+use DateTimeImmutable;
+use DateTimeZone;
 use App\Entity\Sirius\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
@@ -22,29 +24,26 @@ class SiriusLpaTest extends TestCase
             applicationType: null,
             attorneyActDecisions: null,
             attorneys: [
-                                        new SiriusLpaAttorney(
-                                            addressLine1: null,
-                                            addressLine2: null,
-                                            addressLine3: null,
-                                            country:      null,
-                                            county:       null,
-                                            dob:          new \DateTimeImmutable(
-                                                              '1962-4-18',
-                                                              new \DateTimeZone('UTC')
-                                                          ),
-                                            email:        null,
-                                            firstname:    null,
-                                            id:           null,
-                                            middlenames:  null,
-                                            otherNames:   null,
-                                            postcode:     null,
-                                            surname:      null,
-                                            systemStatus: null,
-                                            town:         null,
-                                            type:         null,
-                                            uId:          '700000000012',
-                                        ),
-                                    ],
+            new SiriusLpaAttorney(
+                addressLine1: null,
+                addressLine2: null,
+                addressLine3: null,
+                country:      null,
+                county:       null,
+                dob:          new DateTimeImmutable('1962-4-18', new DateTimeZone('UTC')),
+                email:        null,
+                firstname:    null,
+                id:           null,
+                middlenames:  null,
+                otherNames:   null,
+                postcode:     null,
+                surname:      null,
+                systemStatus: null,
+                town:         null,
+                type:         null,
+                uId:          '700000000012',
+            ),
+        ],
             caseSubtype: LpaType::PERSONAL_WELFARE,
             channel: 'online',
             dispatchDate: null,
@@ -54,7 +53,7 @@ class SiriusLpaTest extends TestCase
                 addressLine3: null,
                 country:      null,
                 county:       null,
-                dob:          new \DateTimeImmutable('1962-4-18', new \DateTimeZone('UTC')),
+                dob:          new DateTimeImmutable('1962-4-18', new DateTimeZone('UTC')),
                 email:        null,
                 firstname:    null,
                 id:           null,
