@@ -1,4 +1,5 @@
 const copyAccessCode = () => {
+    //TODO fix this to use event delegation
     let elements = document.querySelectorAll(".js-accesscodecopy");
     for (let i = 0; i < elements.length; i++) {
         let element = elements[i];
@@ -7,9 +8,8 @@ const copyAccessCode = () => {
         let copyDefaultMessage = element.querySelector('.js-accesscodecopy-default');
         let copySuccessMessage = element.querySelector('.js-accesscodecopy-success');
         copyButton.onclick = function () {
-            copyButtonValue.select();
-            copyButtonValue.setSelectionRange(0, 99999);
-            document.execCommand("copy");
+            navigator.clipboard.writeText(copyButtonValue.value);
+
             copyDefaultMessage.classList.toggle('hide', true)
             copySuccessMessage.classList.toggle('hide', false)
             setTimeout(

@@ -35,13 +35,14 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
+        uses: tj-actions/changed-files@3f646a35495417b5549f98c7f7b78b41cbfaf43d
         with:
           files: |
             **/*.md
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
       - name: extract variables for workflow
         id: variables
         run: |
@@ -54,12 +55,14 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.0.8
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.0
         id: semver_tag
         with:
           with_v: true
           default_bump: minor
           prerelease: false
+        if: |
+          ${{ steps.changed-files-docs.outputs.path }} != "docs"
 
   update_documentation:
     name: update documentation
@@ -132,7 +135,7 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
       - name: download artifact for front tests
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
@@ -242,7 +245,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config
