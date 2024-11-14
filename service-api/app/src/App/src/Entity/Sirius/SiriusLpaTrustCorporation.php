@@ -88,11 +88,21 @@ class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
         return $this->id ?? '';
     }
 
+    /**
+     * not called in practice - here to satisfy interface
+     *
+     * @codeCoverageIgnore
+     */
     public function getFirstname(): string
     {
         return $this->firstname;
     }
 
+    /**
+     * not called in practice - here to satisfy interface
+     *
+     * @codeCoverageIgnore
+     */
     public function getMiddlenames(): string
     {
         return $this->middlenames ?? '';
