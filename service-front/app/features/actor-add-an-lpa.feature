@@ -122,7 +122,7 @@ Feature: Add an LPA
     When I attempt to add the same LPA again
     Then I should be told that I have already added this LPA
 
-  @ui @ff:support_datastore_lpas:false
+  @ui
   Scenario: The user can request to see the LPA they have already added
     Given I attempt to add the same LPA again
     When I request to view the LPA that has already been added

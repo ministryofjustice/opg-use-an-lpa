@@ -1,4 +1,4 @@
-@actor @changeDetailsPage @ff:support_datastore_lpas:false
+@actor @changeDetailsPage
 Feature: View the change details page
   As a user
   I want to know what to do if I need to change the donor or attorney's details

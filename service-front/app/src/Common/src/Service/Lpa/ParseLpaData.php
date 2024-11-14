@@ -91,6 +91,7 @@ class ParseLpaData
                 'firstname' => 'Rachel',
                 'middlenames' => 'Emma',
                 'surname' => 'Sanderson',
+                'otherNames' => 'Ezra',
                 'addresses' => [
                     [
                         'id' => 7,
