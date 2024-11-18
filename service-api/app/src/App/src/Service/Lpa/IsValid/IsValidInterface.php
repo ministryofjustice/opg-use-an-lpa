@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\IsValid;
 
-use EventSauce\ObjectHydrator\MapperSettings;
-
-#[MapperSettings(serializePublicMethods: false)]
 interface IsValidInterface
 {
     public function getStatus(): string;

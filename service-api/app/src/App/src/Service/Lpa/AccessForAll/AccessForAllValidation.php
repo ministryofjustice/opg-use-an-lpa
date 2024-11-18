@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa\AccessForAll;
 
 use App\Entity\Lpa;
-use App\Entity\Person;
-use App\Exception\InvalidActorTypeException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\SiriusLpa;
 use JsonSerializable;
 

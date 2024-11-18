@@ -11,9 +11,9 @@ use JsonSerializable;
 class ActorMatch implements JsonSerializable
 {
     public function __construct(
-        readonly public ActorMatchingInterface $actor,
-        readonly public string $role,
-        readonly public string $lpaUId,
+        public readonly ActorMatchingInterface $actor,
+        public readonly string $role,
+        public readonly string $lpaUId,
     ) {
     }
 
