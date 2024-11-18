@@ -151,7 +151,7 @@ jobs:
         with:
           name: service-admin
           path: service-admin
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           name: codecov-use-an-lpa
 
