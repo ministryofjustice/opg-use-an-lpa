@@ -15,7 +15,7 @@ jobs:
   code_coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       - name: download artifact for front tests
         id: download-artifact-front-tests
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
@@ -43,7 +43,7 @@ jobs:
           ${{ inputs.specific_path }} == 'all' ||
           ${{ inputs.specific_path }} == 'admin'
       - name: service front codecov upload
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           name: use-an-lpa-front
           directory: ./service-front
@@ -54,7 +54,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service api codecov upload
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           name: use-an-lpa-api
           directory: ./service-api
@@ -65,7 +65,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service admin codecov upload
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           name: use-an-lpa-admin
           directory: ./service-admin
