@@ -11,7 +11,7 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # pin@v3.6.0
         with:
           node-version-file: '.nvmrc'
