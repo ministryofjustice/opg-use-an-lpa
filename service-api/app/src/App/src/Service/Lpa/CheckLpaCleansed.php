@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Exception\BadRequestException;
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -25,9 +26,9 @@ class CheckLpaCleansed
      * @param string $userId
      * @throws Exception Thrown when LPA needs cleansed
      */
-    public function __invoke(string $userId, array $actorDetailsMatch): void
+    public function __invoke(string $userId, ActorMatch $actorDetailsMatch): void
     {
-        $lpa = $this->lpaManager->getByUid((string) $actorDetailsMatch['lpa-id'])->getData();
+        $lpa = $this->lpaManager->getByUid($actorDetailsMatch->lpaUId)->getData();
 
         if (
             !$lpa['lpaIsCleansed'] &&
@@ -37,7 +38,7 @@ class CheckLpaCleansed
                 'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
                 [
                     'userId' => $userId,
-                    'lpaId'  => $actorDetailsMatch['lpa-id'],
+                    'lpaId'  => $actorDetailsMatch->lpaUId,
                 ]
             );
 
@@ -45,7 +46,7 @@ class CheckLpaCleansed
             throw new BadRequestException(
                 'LPA needs cleansing',
                 [
-                    'actor_id' => $actorDetailsMatch['actor']['uId'],
+                    'actor_id' => $actorDetailsMatch->actor->getUid(),
                 ]
             );
         }

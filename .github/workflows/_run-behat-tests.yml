@@ -16,7 +16,7 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3b9b8c884f6b4bb4d5be2779c26374abadae0871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
 
       - name: install python
         uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@ce2f681d2257b1c64228aa701fefa22db84edf4b # pin@v2.21.2
+        uses: shivammathur/setup-php@944fb41c67bf260d77ef9eab76dfb859c2fd9cb2 # pin@v2.21.2
         with:
           php-version: 8.3
 

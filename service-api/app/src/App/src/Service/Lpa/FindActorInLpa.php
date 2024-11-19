@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
@@ -21,12 +24,12 @@ class FindActorInLpa
     {
     }
 
-    public function __invoke(SiriusLpa $lpa, array $matchData): ?array
+    public function __invoke(FindActorInLpaInterface $lpa, array $matchData): ?ActorMatch
     {
         $actor = null;
         $role  = null;
 
-        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa['uId']);
+        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa->getUid());
 
         // If not an attorney, check if they're the donor.
         if ($actor === null) {
@@ -37,20 +40,19 @@ class FindActorInLpa
             return null;
         }
 
-        return [
-            'actor'  => $actor,
-            'role'   => $role,
-            'lpa-id' => $lpa['uId'],
-        ];
+        return new ActorMatch($actor, $role, $lpa->getUid());
     }
 
-    private function checkForAttorneyMatch(GetAttorneyStatusInterface $attorney, array $matchData, string $lpaId): array
-    {
+    private function checkForAttorneyMatch(
+        GetAttorneyStatusInterface & ActorMatchingInterface $attorney,
+        array $matchData,
+        string $lpaId,
+    ): array {
         if (($this->getAttorneyStatus)($attorney) !== AttorneyStatus::ACTIVE_ATTORNEY) {
             $this->logger->info(
                 'Actor {id} status is not active for LPA {uId}',
                 [
-                    'id'  => $attorney['uId'],
+                    'id'  => $attorney->getUid(),
                     'uId' => $lpaId,
                 ]
             );
@@ -67,8 +69,10 @@ class FindActorInLpa
         return [null, null];
     }
 
-    private function checkDonorDetails(SiriusPerson $donor, array $matchData): array
-    {
+    private function checkDonorDetails(
+        GetAttorneyStatusInterface & ActorMatchingInterface $donor,
+        array $matchData,
+    ): array {
         $donorMatchResponse = $this->checkForActorMatch($donor, $matchData);
 
         if ($donorMatchResponse === self::MATCH) {
@@ -94,44 +98,48 @@ class FindActorInLpa
     /**
      * Compares LPA data retrieved from Sirius to the data provided by the user to check if it matches
      *
-     * @param array $actor     The actor details being compared against
-     * @param array $matchData The user provided data we're searching for a match against
+     * @param ActorMatchingInterface $actor     The actor details being compared against
+     * @param array                  $matchData The user provided data we're searching for a match against
      * @return int A bitfield containing the failure to match reasons, or 0 if it matched.
      */
-    private function checkForActorMatch(SiriusPerson $actor, array $matchData): int
+    private function checkForActorMatch(ActorMatchingInterface $actor, array $matchData): int
     {
-        // Check if the actor has more than one address
-        if (count($actor['addresses']) > 1) {
-            $this->logger->notice(
-                'Data match failed for actor {id} as more than 1 address found',
-                [
-                    'id' => $actor['uId'],
-                ]
-            );
-            return self::NO_MATCH__MULTIPLE_ADDRESSES;
+        // Check if the actor has more than one address (only applies to old SiriusPerson class not new Person)
+        if ($actor instanceof SiriusPerson) {
+            if (count($actor['addresses']) > 1) {
+                $this->logger->notice(
+                    'Data match failed for actor {id} as more than 1 address found',
+                    [
+                        'id' => $actor->getUid(),
+                    ]
+                );
+                return self::NO_MATCH__MULTIPLE_ADDRESSES;
+            }
         }
 
         $matchData = $this->normaliseComparisonData($matchData);
         $actorData = $this->normaliseComparisonData(
             [
-                'first_names' => $actor['firstname'],
-                'last_name'   => $actor['surname'],
-                'postcode'    => $actor['addresses'][0]['postcode'],
+                'first_names' => $actor->getFirstname(),
+                'last_name'   => $actor->getSurname(),
+                'postcode'    => $actor->getPostcode(),
             ]
         );
 
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'   => $actor['uId'],
+                'actor_id'   => $actor->getUid(),
                 'to_match'   => $matchData,
-                'actor_data' => array_merge($actorData, ['dob' => $actor['dob']]),
+                'actor_data' => array_merge($actorData, ['dob' => $actor->getDob()]),
             ]
         );
 
         $match = self::MATCH;
 
-        $match = $actor['dob'] !== $matchData['dob'] ? $match | self::NO_MATCH__DOB : $match;
+        $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
+            ? $match | self::NO_MATCH__DOB
+            : $match;
         $match = $actorData['first_names'] !== $matchData['first_names']
             ? $match | self::NO_MATCH__FIRSTNAMES
             : $match;
@@ -155,7 +163,7 @@ class FindActorInLpa
                     . 'Fields in error: {fields_in_error}',
                 [
                     'uId'             => $matchData['reference_number'],
-                    'actor_id'        => $actor['uId'],
+                    'actor_id'        => $actor->getUid(),
                     'fields_in_error' => $match,
                 ]
             );

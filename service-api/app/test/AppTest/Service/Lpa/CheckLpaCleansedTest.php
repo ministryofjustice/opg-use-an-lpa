@@ -7,7 +7,9 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\CheckLpaCleansed;
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\SiriusLpaManager;
+use App\Service\Lpa\SiriusPerson;
 use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -50,15 +52,16 @@ class CheckLpaCleansedTest extends TestCase
             new DateTime()
         );
 
-        $actorDetailsMatch = [
-            'lpa-id' => '700000000001',
-            'actor'  => [
+        $actorDetailsMatch = new ActorMatch(
+            new SiriusPerson([
                 'uId' => '700000000002',
-            ],
-        ];
+            ]),
+            '',
+            '700000000001',
+        );
 
         $this->lpaServiceProphecy
-            ->getByUid($actorDetailsMatch['lpa-id'])
+            ->getByUid($actorDetailsMatch->lpaUId)
             ->willReturn($lpa);
 
         $this->expectException(BadRequestException::class);
@@ -79,12 +82,16 @@ class CheckLpaCleansedTest extends TestCase
             new DateTime()
         );
 
-        $actorDetailsMatch = [
-            'lpa-id' => '700000000001',
-        ];
+        $actorDetailsMatch = new ActorMatch(
+            new SiriusPerson([
+                                 'uId' => '700000000002',
+                             ]),
+            '',
+            '700000000001',
+        );
 
         $this->lpaServiceProphecy
-            ->getByUid($actorDetailsMatch['lpa-id'])
+            ->getByUid($actorDetailsMatch->lpaUId)
             ->willReturn($lpa);
 
         $result = $this->checkLpaCleansed()($userId, $actorDetailsMatch);
@@ -103,12 +110,16 @@ class CheckLpaCleansedTest extends TestCase
             new DateTime()
         );
 
-        $actorDetailsMatch = [
-            'lpa-id' => '700000000001',
-        ];
+        $actorDetailsMatch = new ActorMatch(
+            new SiriusPerson([
+                 'uId' => '700000000002',
+             ]),
+            '',
+            '700000000001',
+        );
 
         $this->lpaServiceProphecy
-            ->getByUid($actorDetailsMatch['lpa-id'])
+            ->getByUid($actorDetailsMatch->lpaUId)
             ->willReturn($lpa);
 
         $result = $this->checkLpaCleansed()($userId, $actorDetailsMatch);
@@ -127,12 +138,16 @@ class CheckLpaCleansedTest extends TestCase
             new DateTime()
         );
 
-        $actorDetailsMatch = [
-            'lpa-id' => '700000000001',
-        ];
+        $actorDetailsMatch = new ActorMatch(
+            new SiriusPerson([
+                 'uId' => '700000000002',
+             ]),
+            '',
+            '700000000001',
+        );
 
         $this->lpaServiceProphecy
-            ->getByUid($actorDetailsMatch['lpa-id'])
+            ->getByUid($actorDetailsMatch->lpaUId)
             ->willReturn($lpa);
 
         $result = $this->checkLpaCleansed()($userId, $actorDetailsMatch);

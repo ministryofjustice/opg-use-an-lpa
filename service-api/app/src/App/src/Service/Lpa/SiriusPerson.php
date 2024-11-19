@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use ArrayAccess;
+use DateTimeImmutable;
+use DateTimeInterface;
 use IteratorAggregate;
 use JsonSerializable;
 use Traversable;
@@ -15,7 +19,14 @@ use Traversable;
  * @template-implements ArrayAccess<array-key, string|array>
  * @template-implements IteratorAggregate<array-key, string|array>
  */
-class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatusInterface, ArrayAccess, IteratorAggregate, JsonSerializable
+class SiriusPerson implements
+    AddAccessForAllActorInterface,
+    GetTrustCorporationStatusInterface,
+    GetAttorneyStatusInterface,
+    ActorMatchingInterface,
+    ArrayAccess,
+    IteratorAggregate,
+    JsonSerializable
 {
     public function __construct(private array $person)
     {
@@ -26,12 +37,30 @@ class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatus
         return (string)$this->person['firstname'];
     }
 
+    public function getFirstnames(): string
+    {
+        /**
+         * Although technically we should be doing
+         *
+         *     trim(sprintf('%s %s', $this->person['firstname'], $this->person['middlenames']));
+         *
+         * to produce an accurate "firstNames" field the interim object and current frontend code
+         * are not setup to handle that so we'll just return the firstname field here.
+         */
+        return $this->getFirstname();
+    }
+
+    public function getMiddleNames(): string
+    {
+        return (string)$this->person['middlenames'];
+    }
+
     public function getSurname(): string
     {
         return (string)$this->person['surname'];
     }
 
-    public function getSystemStatus(): bool
+    public function getStatus(): bool
     {
         return (bool)$this->person['systemStatus'];
     }
@@ -44,6 +73,16 @@ class SiriusPerson implements TrustCorporationStatusInterface, GetAttorneyStatus
     public function getCompanyName(): string
     {
         return (string)$this->person['companyName'];
+    }
+
+    public function getPostcode(): string
+    {
+        return (string)$this->person['addresses'][0]['postcode'];
+    }
+
+    public function getDob(): DateTimeInterface
+    {
+        return new DateTimeImmutable($this->person['dob']);
     }
 
     public function offsetExists(mixed $offset): bool

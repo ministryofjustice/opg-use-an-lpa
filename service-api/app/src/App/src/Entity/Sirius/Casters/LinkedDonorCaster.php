@@ -21,9 +21,9 @@ class LinkedDonorCaster implements PropertyCaster
 
         foreach ($value as $linked) {
             $linkedDonors[] = [
-                   'id'  => $linked['id'],
-                   'uId' => $linked['uId'],
-               ];
+               'id'  => $linked['id'],
+               'uId' => $linked['uId'],
+            ];
         }
 
         return $linkedDonors;

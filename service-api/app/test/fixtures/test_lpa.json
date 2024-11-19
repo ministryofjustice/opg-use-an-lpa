@@ -72,7 +72,7 @@
     },
     {
       "id": 12,
-      "uId": "7000-0000-0849",
+      "uId": "700000000849",
       "dob": "1975-10-05",
       "email": "XXXXX",
       "salutation": "Mrs",
@@ -113,7 +113,7 @@
       }
     ],
       "id": 3485,
-      "uId": "7000-0015-1998",
+      "uId": "700000151998",
       "dob": null,
       "email": null,
       "salutation": null,
@@ -128,7 +128,7 @@
   "certificateProviders": [
     {
       "id": 11,
-      "uId": "7000-0000-0831",
+      "uId": "700000000831",
       "dob": null,
       "email": null,
       "salutation": "Miss",

@@ -51,6 +51,7 @@ endOfToday = timezone.localize(now.replace(
 
 lastWeek = endOfToday - datetime.timedelta(days=7)
 nextWeek = endOfToday + datetime.timedelta(days=7)
+twoWeeks = endOfToday + datetime.timedelta(days=14)
 nextYear = endOfToday + datetime.timedelta(days=365)
 
 activateBy = Decimal(nextYear.timestamp())
@@ -194,6 +195,7 @@ userLpaActorMap = [
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivateBy': activateBy,
+        'DueBy': twoWeeks.isoformat(),
         'Comment': 'Seeded data: Code available to use'
     },
     {

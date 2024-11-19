@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
+use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
+use DateTimeInterface;
+use JsonSerializable;
 
-class Person
+class Person implements
+    JsonSerializable,
+    GetAttorneyStatusInterface,
+    GetTrustCorporationStatusInterface,
+    ResolveActorInterface
 {
     public function __construct(
         public readonly ?string $addressLine1,
@@ -17,10 +25,8 @@ class Person
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
         public readonly ?string $email,
-        public readonly ?string $firstname,
         public readonly ?string $firstnames,
         public readonly ?string $name,
-        public readonly ?string $otherNames,
         public readonly ?string $postcode,
         public readonly ?string $surname,
         public readonly ?string $systemStatus,
@@ -30,9 +36,61 @@ class Person
     ) {
     }
 
-    #[DoNotSerialize]
+    public function jsonSerialize(): array
+    {
+        $data = get_class_vars(Person::class);
+
+        array_walk($data, function (&$value, $key) {
+            if ($key === 'dob' && $this->dob !== null) {
+                $value = $this->dob->format('Y-m-d');
+            } elseif ($key !== 'dob') {
+                $value = $this->$key;
+            }
+        });
+
+        return $data;
+    }
+
     public function getUid(): string
     {
-        return $this->uId;
+        return $this->uId ?? '';
+    }
+
+    public function getFirstnames(): string
+    {
+        return $this->firstnames ?? '';
+    }
+
+    public function getSurname(): string
+    {
+        return $this->surname ?? '';
+    }
+
+    public function getStatus(): bool|string
+    {
+        return $this->systemStatus ?? '';
+    }
+
+    public function getCompanyName(): ?string
+    {
+        return $this->name ?? '';
+    }
+
+    public function getPostCode(): string
+    {
+        return $this->postcode ?? '';
+    }
+
+    public function getDob(): DateTimeInterface
+    {
+        return $this->dob ?? new DateTimeImmutable('1800-01-01');
+    }
+
+    /**
+     * @return string The id (or uid) of the person
+     */
+    public function getId(): string
+    {
+        return $this->uId ?? '';
     }
 }
