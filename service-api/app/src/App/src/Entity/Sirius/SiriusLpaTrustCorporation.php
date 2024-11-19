@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
-use EventSauce\ObjectHydrator\DoNotSerialize;
+use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -20,9 +21,8 @@ use App\Entity\Sirius\Casters\{
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
-use JsonSerializable;
 
-class SiriusLpaTrustCorporations extends Person implements JsonSerializable , TrustCorporationStatusInterface
+class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -34,20 +34,22 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
         #[MapFrom('addresses')]
         #[ExtractAddressLine3FromSiriusLpa]
         ?string $addressLine3,
+        #[MapFrom('companyName')]
+        ?string $companyName,
         #[MapFrom('addresses')]
         #[ExtractCountryFromSiriusLpa]
         ?string $country,
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
-        ?string $name,
-        ?string $otherNames,
+        public readonly ?string $firstname,
+        #[CastToType('string')]
+        public readonly ?string $id,
+        public readonly ?string $middlenames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
@@ -70,10 +72,8 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
             $county,
             $dob,
             $email,
-            $firstname,
-            $firstnames,
-            $name,
-            $otherNames,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            $companyName,
             $postcode,
             $surname,
             $systemStatus,
@@ -83,35 +83,28 @@ class SiriusLpaTrustCorporations extends Person implements JsonSerializable , Tr
         );
     }
 
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
+    public function getId(): string
     {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
+        return $this->id ?? '';
     }
 
-    #[DoNotSerialize]
-    public function getCompanyName(): ?string
+    /**
+     * not called in practice - here to satisfy interface
+     *
+     * @codeCoverageIgnore
+     */
+    public function getFirstname(): string
     {
-        return $this->name;
+        return $this->firstname;
     }
 
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
+    /**
+     * not called in practice - here to satisfy interface
+     *
+     * @codeCoverageIgnore
+     */
+    public function getMiddlenames(): string
     {
-        return $this->systemStatus;
-    }
-
-    #[DoNotSerialize]
-    public function getUid(): string
-    {
-        return $this->uId;
+        return $this->middlenames ?? '';
     }
 }

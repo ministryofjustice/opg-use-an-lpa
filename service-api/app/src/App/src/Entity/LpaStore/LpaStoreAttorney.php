@@ -8,13 +8,11 @@ use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
 use App\Entity\Person;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
-use JsonSerializable;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 
-class LpaStoreAttorney extends Person implements JsonSerializable, GetAttorneyStatusInterface
+class LpaStoreAttorney extends Person
 {
     public function __construct(
         #[MapFrom('address')]
@@ -27,14 +25,12 @@ class LpaStoreAttorney extends Person implements JsonSerializable, GetAttorneySt
         ?string $country,
         ?string $county,
         #[MapFrom('dateOfBirth')]
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
         ?string $name,
-        ?string $otherNames,
         ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
@@ -55,10 +51,8 @@ class LpaStoreAttorney extends Person implements JsonSerializable, GetAttorneySt
             $county,
             $dob,
             $email,
-            $firstname,
             $firstnames,
             $name,
-            $otherNames,
             $postcode,
             $surname,
             $systemStatus,
@@ -66,37 +60,5 @@ class LpaStoreAttorney extends Person implements JsonSerializable, GetAttorneySt
             $type,
             $uId,
         );
-    }
-
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
-    }
-
-    #[DoNotSerialize]
-    public function getFirstname(): string
-    {
-        return $this->firstname;
-    }
-
-    #[DoNotSerialize]
-    public function getSurname(): string
-    {
-        return $this->surname;
-    }
-
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
-    {
-        return $this->systemStatus;
     }
 }

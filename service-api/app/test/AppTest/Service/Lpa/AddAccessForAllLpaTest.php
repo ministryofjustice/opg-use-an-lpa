@@ -9,12 +9,15 @@ use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
+use App\Service\Lpa\AccessForAll\AccessForAllValidation;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\FindActorInLpa;
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\SiriusPerson;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
@@ -45,12 +48,10 @@ class AddAccessForAllLpaTest extends TestCase
     /** @var array<string, mixed> */
     private array $dataToMatch;
 
-    /** @var array<string, mixed> */
-    private array $resolvedActor;
+    private ActorMatch $resolvedActor;
     private Lpa $lpa;
 
-    /** @var array<string, mixed> */
-    private array $lpaData;
+    private SiriusLpa $lpaData;
 
     public function setUp(): void
     {
@@ -79,24 +80,11 @@ class AddAccessForAllLpaTest extends TestCase
             'force_activation_key' => false,
         ];
 
-        $this->resolvedActor = [
-            'lpa-id'      => $this->lpaUid,
-            'caseSubtype' => 'pfa',
-            'actor'       => $this->lpaData['attorneys'][1],
-            'role'        => 'attorney',
-            'attorney'    => [
-                'uId'         => $this->lpaData['attorneys'][1]['uId'],
-                'firstname'   => $this->lpaData['attorneys'][1]['firstname'],
-                'middlenames' => $this->lpaData['attorneys'][1]['middlenames'],
-                'surname'     => $this->lpaData['attorneys'][1]['surname'],
-            ],
-            'donor'       => [
-                'uId'         => $this->lpaData['donor']['uId'],
-                'firstname'   => 'Donor',
-                'middlenames' => 'Example',
-                'surname'     => 'Person',
-            ],
-        ];
+        $this->resolvedActor = new ActorMatch(
+            $this->lpaData->getAttorneys()[1],
+            'attorney',
+            (string) $this->lpaUid,
+        );
     }
 
     protected function getSut(): AddAccessForAllLpa
@@ -109,13 +97,17 @@ class AddAccessForAllLpaTest extends TestCase
             $this->validateAccessForAllLpaRequirementsProphecy->reveal(),
             $this->restrictSendingLpaForCleansingProphecy->reveal(),
             $this->loggerProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal()
         );
     }
 
     #[Test]
     public function returns_matched_actorId_and_lpaId_when_passing_all_older_lpa_criteria(): void
     {
+        $expectedResponse = new AccessForAllValidation(
+            $this->resolvedActor,
+            $this->lpaData
+        );
+
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
@@ -125,26 +117,19 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
+            ->__invoke($this->lpa->getData(), $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
+            ->hasActivationCode((string) $this->lpaUid, $this->lpaData->getAttorneys()[1]->getUid())
             ->willReturn(null);
 
         $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
 
-        $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals($this->lpaData['donor']['uId'], $result['donor']['uId']);
-        $this->assertEquals($this->lpaData['donor']['firstname'], $result['donor']['firstname']);
-        $this->assertEquals($this->lpaData['donor']['middlenames'], $result['donor']['middlenames']);
-        $this->assertEquals($this->lpaData['donor']['surname'], $result['donor']['surname']);
-        $this->assertEquals($this->lpaData['caseSubtype'], $result['caseSubtype']);
-        $this->assertEquals($this->lpaData['attorneys'][1], $result['actor']);
-        $this->assertEquals('attorney', $result['role']);
+        $this->assertEquals($expectedResponse, $result);
     }
 
     #[Test]
@@ -203,10 +188,10 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
+            ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
@@ -216,8 +201,8 @@ class AddAccessForAllLpaTest extends TestCase
         $expectedException = new BadRequestException(
             'Activation key already requested for LPA',
             [
-                'donor'                => $this->resolvedActor['donor'],
-                'caseSubtype'          => $this->resolvedActor['caseSubtype'],
+                'donor'                => $this->lpaData->getDonor(),
+                'caseSubtype'          => $this->lpaData['caseSubtype'],
                 'activationKeyDueDate' => $activationKeyDueDate,
             ]
         );
@@ -243,19 +228,24 @@ class AddAccessForAllLpaTest extends TestCase
             'notActivated'  => true,
         ];
 
-        $expectedResponse = [
-            'lpa-id'        => $this->lpaUid,
-            'caseSubtype'   => 'pfa',
-            'actor'         => $this->lpaData['donor'],
-            'role'          => 'donor',
-            'lpaActorToken' => 'qwerty-54321',
-            'donor'         => [
-                'uId'         => $this->lpaData['donor']['uId'],
-                'firstname'   => 'Donor',
-                'middlenames' => 'Example',
-                'surname'     => 'Person',
-            ],
-        ];
+        $actorMatch = new ActorMatch(
+            new SiriusPerson(
+                [
+                    'uId'         => $this->lpaData->getDonor()->getUId(),
+                    'firstname'   => 'Donor',
+                    'middlenames' => 'Example',
+                    'surname'     => 'Person',
+                ]
+            ),
+            'donor',
+            (string) $this->lpaUid,
+        );
+
+        $expectedResponse = new AccessForAllValidation(
+            $actorMatch,
+            $this->lpaData,
+            'qwerty-54321'
+        );
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, (string) $this->lpaUid)
@@ -266,13 +256,14 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
-            ->willReturn($expectedResponse);
+            ->__invoke($this->lpaData, $this->dataToMatch)
+            ->willReturn($actorMatch);
 
         $response = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
+
         $this->assertEquals($expectedResponse, $response);
     }
 
@@ -299,11 +290,13 @@ class AddAccessForAllLpaTest extends TestCase
     public function older_lpa_lookup_throws_an_exception_if_lpa_registration_date_not_valid(): void
     {
         $invalidLpa = new Lpa(
-            [
-                'uId'              => $this->lpaUid,
-                'registrationDate' => '2019-08-31',
-                'status'           => 'Registered',
-            ],
+            new SiriusLpa(
+                [
+                    'uId'              => $this->lpaUid,
+                    'registrationDate' => '2019-08-31',
+                    'status'           => 'Registered',
+                ],
+            ),
             new DateTime()
         );
 
@@ -317,7 +310,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($invalidLpa->getData())
+            ->__invoke($invalidLpa->getData()->toArray())
             ->willThrow(new BadRequestException('LPA not eligible due to registration date'));
 
         $this->expectException(BadRequestException::class);
@@ -331,11 +324,13 @@ class AddAccessForAllLpaTest extends TestCase
     public function older_lpa_lookup_throws_an_exception_if_lpa_status_not_registered(): void
     {
         $invalidLpa = new Lpa(
-            [
-                'uId'              => $this->lpaUid,
-                'registrationDate' => '2019-08-31',
-                'status'           => 'Registered',
-            ],
+            new SiriusLpa(
+                [
+                    'uId'              => $this->lpaUid,
+                    'registrationDate' => '2019-08-31',
+                    'status'           => 'Registered',
+                ],
+            ),
             new DateTime()
         );
 
@@ -349,7 +344,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($invalidLpa->getData())
+            ->__invoke($invalidLpa->getData()->toArray())
             ->willThrow(new NotFoundException('LPA status invalid'));
 
         $this->expectException(NotFoundException::class);
@@ -381,7 +376,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -409,10 +404,10 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
+            ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->accessForAllLpaServiceProphecy
@@ -422,8 +417,8 @@ class AddAccessForAllLpaTest extends TestCase
         $expectedException = new BadRequestException(
             'LPA has an activation key already',
             [
-                'donor'                => $this->resolvedActor['donor'],
-                'caseSubtype'          => $this->resolvedActor['caseSubtype'],
+                'donor'                => $this->lpaData->getDonor(),
+                'caseSubtype'          => $this->lpaData['caseSubtype'],
                 'activationKeyDueDate' => $activationKeyDueDate,
             ]
         );
@@ -437,6 +432,11 @@ class AddAccessForAllLpaTest extends TestCase
     {
         $this->dataToMatch['force_activation_key'] = true;
 
+        $expectedResponse = new AccessForAllValidation(
+            $this->resolvedActor,
+            $this->lpaData
+        );
+
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, (string) $this->lpaUid)
             ->willReturn(null);
@@ -446,22 +446,15 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
+            ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $result = $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
 
-        $this->assertEquals($this->lpaUid, $result['lpa-id']);
-        $this->assertEquals($this->lpaData['donor']['uId'], $result['donor']['uId']);
-        $this->assertEquals($this->lpaData['donor']['firstname'], $result['donor']['firstname']);
-        $this->assertEquals($this->lpaData['donor']['middlenames'], $result['donor']['middlenames']);
-        $this->assertEquals($this->lpaData['donor']['surname'], $result['donor']['surname']);
-        $this->assertEquals($this->lpaData['caseSubtype'], $result['caseSubtype']);
-        $this->assertEquals($this->lpaData['attorneys'][1], $result['actor']);
-        $this->assertEquals('attorney', $result['role']);
+        $this->assertEquals($expectedResponse, $result);
     }
 
     /**
@@ -500,29 +493,31 @@ class AddAccessForAllLpaTest extends TestCase
         ];
 
         return new Lpa(
-            [
-                'uId'              => $this->lpaUid,
-                'registrationDate' => '2016-01-01',
-                'status'           => 'Registered',
-                'lpaIsCleansed'    => false,
-                'caseSubtype'      => 'pfa',
-                'donor'            => [
-                    'uId'         => '700000001111',
-                    'dob'         => '1975-10-05',
-                    'firstname'   => 'Donor',
-                    'middlenames' => 'Example',
-                    'surname'     => 'Person',
-                    'addresses'   => [
-                        [
-                            'postcode' => 'PY1 3Kd',
+            new SiriusLpa(
+                [
+                    'uId'              => $this->lpaUid,
+                    'registrationDate' => '2016-01-01',
+                    'status'           => 'Registered',
+                    'lpaIsCleansed'    => false,
+                    'caseSubtype'      => 'pfa',
+                    'donor'            => [
+                        'uId'         => '700000001111',
+                        'dob'         => '1975-10-05',
+                        'firstname'   => 'Donor',
+                        'middlenames' => 'Example',
+                        'surname'     => 'Person',
+                        'addresses'   => [
+                            [
+                                'postcode' => 'PY1 3Kd',
+                            ],
                         ],
                     ],
+                    'attorneys'        => [
+                        $attorney1,
+                        $attorney2,
+                    ],
                 ],
-                'attorneys'        => [
-                    $attorney1,
-                    $attorney2,
-                ],
-            ],
+            ),
             new DateTime()
         );
     }
@@ -539,14 +534,14 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData);
+            ->__invoke($this->lpaData->toArray());
 
         $this->findActorInLpaProphecy
-            ->__invoke(new SiriusLpa($this->lpaData), $this->dataToMatch)
+            ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->restrictSendingLpaForCleansingProphecy
-            ->__invoke($this->lpaData, $this->resolvedActor)
+            ->__invoke($this->lpaData->toArray(), $this->resolvedActor)
             ->willThrow(new NotFoundException('LPA not found'));
 
         $this->expectException(NotFoundException::class);

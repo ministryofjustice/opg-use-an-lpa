@@ -98,7 +98,7 @@ class SiriusPersonTest extends TestCase
         );
 
         $this->assertSame('700000000000', $sut->getUid());
-        $this->assertSame(true, $sut->getSystemStatus());
+        $this->assertSame(true, $sut->getStatus());
         $this->assertSame('', $sut->getCompanyName());
     }
 }

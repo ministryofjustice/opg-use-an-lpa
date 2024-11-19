@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use EventSauce\ObjectHydrator\DoNotSerialize;
+use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
@@ -20,9 +21,8 @@ use App\Entity\Person;
 use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
-use JsonSerializable;
 
-class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyStatusInterface
+class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -40,14 +40,14 @@ class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyS
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
-        ?string $name,
-        ?string $otherNames,
+        public readonly ?string $firstname,
+        #[CastToType('string')]
+        public readonly ?string $id,
+        public readonly ?string $middlenames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
@@ -70,10 +70,8 @@ class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyS
             $county,
             $dob,
             $email,
-            $firstname,
-            $firstnames,
-            $name,
-            $otherNames,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            null,
             $postcode,
             $surname,
             $systemStatus,
@@ -83,35 +81,18 @@ class SiriusLpaAttorney extends Person implements JsonSerializable, GetAttorneyS
         );
     }
 
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
+    public function getId(): string
     {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
+        return $this->id ?? '';
     }
 
-    #[DoNotSerialize]
     public function getFirstname(): string
     {
-        return $this->firstname;
+        return $this->firstname ?? '';
     }
 
-    #[DoNotSerialize]
-    public function getSurname(): string
+    public function getMiddlenames(): string
     {
-        return $this->surname;
-    }
-
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
-    {
-        return $this->systemStatus;
+        return $this->middlenames ?? '';
     }
 }

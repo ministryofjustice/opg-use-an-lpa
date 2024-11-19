@@ -6,9 +6,9 @@ namespace App\Service\Lpa\GetAttorneyStatus;
 
 interface GetAttorneyStatusInterface
 {
-    public function getFirstname(): string;
+    public function getFirstnames(): string;
 
     public function getSurname(): string;
 
-    public function getSystemStatus(): bool|string;
+    public function getStatus(): bool|string;
 }
