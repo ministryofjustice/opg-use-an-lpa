@@ -256,7 +256,7 @@ jobs:
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
 
           elif [[ "${SVC_SUFFIX}" = "lambda" ]]; then
-            docker build --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+            docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
 
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
