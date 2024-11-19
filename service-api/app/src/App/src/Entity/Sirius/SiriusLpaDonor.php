@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
-use EventSauce\ObjectHydrator\DoNotSerialize;
-use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
+use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
+use App\Entity\Sirius\Casters\{
+    ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
     ExtractCountryFromSiriusLpa,
@@ -18,9 +21,8 @@ use App\Entity\Sirius\Casters\{ExtractAddressLine1FromSiriusLpa,
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
-use JsonSerializable;
 
-class SiriusLpaDonor extends Person implements JsonSerializable
+class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -38,17 +40,17 @@ class SiriusLpaDonor extends Person implements JsonSerializable
         #[MapFrom('addresses')]
         #[ExtractCountyFromSiriusLpa]
         ?string $county,
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        #[MapFrom('firstname')]
-        ?string $firstname,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
+        public readonly ?string $firstname,
+        #[CastToType('string')]
+        public readonly ?string $id,
         #[MapFrom('linked')]
         #[LinkedDonorCaster]
         public readonly ?array $linked,
-        ?string $name,
-        ?string $otherNames,
+        public readonly ?string $middlenames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
@@ -71,10 +73,8 @@ class SiriusLpaDonor extends Person implements JsonSerializable
             $county,
             $dob,
             $email,
-            $firstname,
-            $firstnames,
-            $name,
-            $otherNames,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            null,
             $postcode,
             $surname,
             $systemStatus,
@@ -84,17 +84,18 @@ class SiriusLpaDonor extends Person implements JsonSerializable
         );
     }
 
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
+    public function getId(): string
     {
-        $data = get_object_vars($this);
+        return $this->id ?? '';
+    }
 
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
+    public function getFirstname(): string
+    {
+        return $this->firstname ?? '';
+    }
 
-        return $data;
+    public function getMiddlenames(): string
+    {
+        return $this->middlenames ?? '';
     }
 }

@@ -3089,10 +3089,16 @@ class LpaContext implements Context
 
         $expectedResponse = [
             'donor'                => [
+                'id'          => $this->lpa->donor->id,
                 'uId'         => $this->lpa->donor->uId,
+                'email'       => $this->lpa->donor->email,
+                'dob'         => $this->lpa->donor->dob,
+                'salutation'  => $this->lpa->donor->salutation,
                 'firstname'   => $this->lpa->donor->firstname,
                 'middlenames' => $this->lpa->donor->middlenames,
                 'surname'     => $this->lpa->donor->surname,
+                'companyName' => $this->lpa->donor->companyName,
+                'addresses'   => json_decode(json_encode($this->lpa->donor->addresses), true)
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
@@ -3100,7 +3106,7 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
 
-        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse,$this->getResponseAsJson()['data']);
     }
 
     /**

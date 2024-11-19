@@ -90,14 +90,12 @@ class SiriusLpaTest extends TestCase
     {
         $sut = new SiriusLpa(
             [
-                'uId' => 700000000000,
-                'systemStatus' => 'true',
+                'uId'    => 700000000000,
                 'status' => 'Registered',
             ]
         );
 
         $this->assertSame('700000000000', $sut->getUid());
-        $this->assertSame('true', $sut->getSystemStatus());
         $this->assertSame('Registered', $sut->getStatus());
     }
 }

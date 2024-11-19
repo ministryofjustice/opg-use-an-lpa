@@ -8,12 +8,11 @@ use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use App\Entity\Casters\ExtractCountryFromLpaStore;
 use App\Entity\Casters\ExtractTownFromLpaStore;
 use App\Entity\Person;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
+use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 
-class LpaStoreTrustCorporations extends Person implements TrustCorporationStatusInterface
+class LpaStoreTrustCorporation extends Person
 {
     public function __construct(
         #[MapFrom('address')]
@@ -21,19 +20,16 @@ class LpaStoreTrustCorporations extends Person implements TrustCorporationStatus
         ?string $addressLine1,
         ?string $addressLine2,
         ?string $addressLine3,
-        #[MapFrom('name')]
-        public readonly ?string $companyName,
         #[MapFrom('address')]
         #[ExtractCountryFromLpaStore]
         ?string $country,
         ?string $county,
         #[MapFrom('dateOfBirth')]
+        #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
         ?string $email,
-        ?string $firstname,
         ?string $firstnames,
         ?string $name,
-        ?string $otherNames,
         ?string $postcode,
         ?string $surname,
         #[MapFrom('status')]
@@ -53,10 +49,8 @@ class LpaStoreTrustCorporations extends Person implements TrustCorporationStatus
             $county,
             $dob,
             $email,
-            $firstname,
             $firstnames,
             $name,
-            $otherNames,
             $postcode,
             $surname,
             $systemStatus,
@@ -64,28 +58,5 @@ class LpaStoreTrustCorporations extends Person implements TrustCorporationStatus
             $type,
             $uId,
         );
-    }
-
-    public function companyName(): ?string
-    {
-        return $this->companyName;
-    }
-
-    #[DoNotSerialize]
-    public function getCompanyName(): string
-    {
-        return $this->companyName();
-    }
-
-    #[DoNotSerialize]
-    public function getSystemStatus(): bool|string
-    {
-        return $this->systemStatus;
-    }
-
-    #[DoNotSerialize]
-    public function getUid(): string
-    {
-        return $this->uId;
     }
 }

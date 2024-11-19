@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Service\Log\EventCodes;
+use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use Exception;
 use Psr\Log\LoggerInterface;
 use DateTimeImmutable;
@@ -22,11 +23,11 @@ class RestrictSendingLpaForCleansing
     }
 
     /**
-     * @param ?array $actorDetailsMatch
+     * @param ?ActorMatch $actorDetailsMatch
      * @param array $lpaData An LPA data structure
      * @throws Exception Thrown when LPA needs to restricted from cleansing
      */
-    public function __invoke(array $lpaData, ?array $actorDetailsMatch): void
+    public function __invoke(array $lpaData, ?ActorMatch $actorDetailsMatch): void
     {
         $lpaPassesAgeRequirements = new DateTimeImmutable($lpaData['registrationDate']) >= $this->earliestDate;
         if (

@@ -9,19 +9,17 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
-use App\Service\Lpa\IsValid\IsValidInterface;
-use App\Service\Lpa\ResolveActor\HasActorInterface;
-use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
+use Exception;
 
-class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
+class SiriusLpa extends Lpa implements FindActorInLpaInterface
 {
-    use SiriusHasActorTrait;
-
     public function __construct(
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
@@ -33,8 +31,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?LpaType $caseSubtype,
         ?string $channel,
         ?DateTimeImmutable $dispatchDate,
-        #[CastSiriusDonor]
-        ?object $donor,
+        ?SiriusLpaDonor $donor,
         ?bool $hasSeveranceWarning,
         ?DateTimeImmutable $invalidDate,
         #[CastToSiriusLifeSustainingTreatment]
@@ -49,7 +46,7 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         ?array $replacementAttorneys,
         ?string $status,
         ?DateTimeImmutable $statusDate,
-        #[CastListToType(SiriusLpaTrustCorporations::class)]
+        #[CastListToType(SiriusLpaTrustCorporation::class)]
         ?array $trustCorporations,
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
@@ -82,32 +79,30 @@ class SiriusLpa extends Lpa implements HasActorInterface, IsValidInterface
         );
     }
 
-    #[DoNotSerialize]
-    public function getAttorneys(): array
-    {
-        return $this->attorneys ?? [];
-    }
-
-    #[DoNotSerialize]
-    public function getDonor(): ?object
-    {
-        return $this->donor;
-    }
-
-    #[DoNotSerialize]
     public function getTrustCorporations(): array
     {
         return $this->trustCorporations ?? [];
     }
 
-    #[DoNotSerialize]
-    public function getStatus(): string
+    public function getDonor(): ActorMatchingInterface&GetAttorneyStatusInterface&ResolveActorInterface
     {
-        return $this->status ?? '';
+        if (
+            !(
+                $this->donor instanceof ActorMatchingInterface &&
+                $this->donor instanceof GetAttorneyStatusInterface &&
+                $this->donor instanceof ResolveActorInterface
+            )
+        ) {
+            throw new Exception(
+                'Donor is not a valid ActorMatchingInterface&GetAttorneyStatusInterface instance'
+            );
+        }
+
+        return $this->donor;
     }
-    #[DoNotSerialize]
-    public function getUid(): string
+
+    public function getCaseSubType(): string
     {
-        return $this->uId ?? '';
+        return $this->caseSubtype->value;
     }
 }
