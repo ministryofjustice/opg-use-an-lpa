@@ -6,13 +6,13 @@ namespace AppTest\Entity;
 
 use App\Entity\Sirius\Casters\CastSiriusDonor;
 use App\Entity\Sirius\SiriusLpaDonor;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use DateTimeImmutable;
 
 class CanCastSiriusDonorTest extends TestCase
 {
@@ -28,59 +28,60 @@ class CanCastSiriusDonorTest extends TestCase
     public function can_cast_sirius_donor(): void
     {
         $donor = [
-            'uId'          => '700000000799',
-            'name'         => null,
-            'dob'          => '1948-11-01',
-            'email'        => 'RachelSanderson@opgtest.com',
-            'firstname'    => 'Rachel',
-            'firstnames'   => null,
-            'surname'      => 'Sanderson',
-            'otherNames'   => null,
-            'systemStatus' => null,
-            'addresses'    => [
-                [
-                    'addressLine1' => '81 Front Street',
-                    'addressLine2' => 'LACEBY',
-                    'addressLine3' => 'Street 3',
-                    'country'      => 'GB',
-                    'county'       => 'London',
-                    'postcode'     => 'DN37 5SH',
-                    'town'         => 'Town',
-                    'type'         => 'Primary',
-                ],
-            ],
-            'linked'       => [
+            'id'          => 7,
+            'uId'         => '700000000799',
+            'linked'      => [
                 [
                     'id'  => 7,
                     'uId' => '700000000799',
                 ],
             ],
+            'dob'         => '1948-11-01',
+            'email'       => 'RachelSanderson@opgtest.com',
+            'salutation'  => 'Mr',
+            'firstname'   => 'Rachel',
+            'middlenames' => 'Emma',
+            'surname'     => 'Sanderson',
+            'addresses'   => [
+                [
+                    'id'           => 7,
+                    'town'         => 'Town',
+                    'county'       => '',
+                    'postcode'     => 'DN37 5SH',
+                    'country'      => '',
+                    'type'         => 'Primary',
+                    'addressLine1' => '81 Front Street',
+                    'addressLine2' => 'LACEBY',
+                    'addressLine3' => '',
+                ],
+            ],
+            'companyName' => null,
         ];
 
         $expectedSiriusDonor = new SiriusLpaDonor(
-            '81 Front Street',
-            'LACEBY',
-            'Street 3',
-            'GB',
-            'London',
-            new DateTimeImmutable('1948-11-01 00:00:00.000000'),
-            'RachelSanderson@opgtest.com',
-            'Rachel',
-            null,
-            [
+            addressLine1: '81 Front Street',
+            addressLine2: 'LACEBY',
+            addressLine3: '',
+            country:      '',
+            county:       '',
+            dob:          new DateTimeImmutable('1948-11-01T00:00:00Z'),
+            email:        'RachelSanderson@opgtest.com',
+            firstname:    'Rachel',
+            id:           '7',
+            linked:       [
                 [
                     'id'  => 7,
                     'uId' => '700000000799',
                 ],
             ],
-            null,
-            null,
-            'DN37 5SH',
-            'Sanderson',
-            null,
-            'Town',
-            'Primary',
-            '700000000799',
+            middlenames:  'Emma',
+            otherNames:   null,
+            postcode:     'DN37 5SH',
+            surname:      'Sanderson',
+            systemStatus: null,
+            town:         'Town',
+            type:         'Primary',
+            uId:          '700000000799',
         );
 
         $mapper = new ObjectMapperUsingReflection(

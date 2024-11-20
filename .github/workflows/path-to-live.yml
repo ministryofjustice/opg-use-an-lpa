@@ -35,11 +35,11 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
+        uses: tj-actions/changed-files@fe1bc0e3d35d94ed03a43d070f62cce13ce558ff
         with:
           files: |
             **/*.md
@@ -135,7 +135,7 @@ jobs:
       - workflow_variables
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       - name: download artifact for front tests
         uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
         with:
@@ -151,7 +151,7 @@ jobs:
         with:
           name: service-admin
           path: service-admin
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           name: codecov-use-an-lpa
 
@@ -245,7 +245,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
         with:
           fetch-depth: '0'
       - name: download cluster_config

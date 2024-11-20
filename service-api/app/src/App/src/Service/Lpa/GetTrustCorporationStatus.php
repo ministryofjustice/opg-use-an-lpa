@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use Psr\Log\LoggerInterface;
 
 class GetTrustCorporationStatus
@@ -14,7 +14,7 @@ class GetTrustCorporationStatus
     {
     }
 
-    public function __invoke(TrustCorporationStatusInterface $trustCorporation): int
+    public function __invoke(GetTrustCorporationStatusInterface $trustCorporation): int
     {
 
         if (empty($trustCorporation->getCompanyName())) {
@@ -25,7 +25,7 @@ class GetTrustCorporationStatus
             return TrustCorporationStatuses::GHOST_TC->value;
         }
 
-        $systemStatus = $trustCorporation->getSystemStatus();
+        $systemStatus = $trustCorporation->getStatus();
         if (!$systemStatus || $systemStatus === 'false') {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation->getUid()]);
             return TrustCorporationStatuses::INACTIVE_TC->value;

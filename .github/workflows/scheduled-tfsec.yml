@@ -13,7 +13,7 @@ jobs:
       contents: read
       security-events: write
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
         with:
           persist-credentials: false
 

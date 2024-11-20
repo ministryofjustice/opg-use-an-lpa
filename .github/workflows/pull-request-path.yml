@@ -40,7 +40,7 @@ jobs:
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
 
     steps:
-      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # pin@v3
+      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
         with:
           fetch-depth: 2
 
@@ -50,19 +50,19 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
+        uses: tj-actions/changed-files@fe1bc0e3d35d94ed03a43d070f62cce13ce558ff
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
+        uses: tj-actions/changed-files@fe1bc0e3d35d94ed03a43d070f62cce13ce558ff
         with:
           files: |
             terraform/**
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@41ce994be96a740b53ae11ecbf86d1619a7bd640
+        uses: tj-actions/changed-files@fe1bc0e3d35d94ed03a43d070f62cce13ce558ff
         with:
           files: |
             **/*.md
