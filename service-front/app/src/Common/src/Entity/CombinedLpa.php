@@ -7,9 +7,9 @@ namespace Common\Entity;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
-use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
 use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use JsonSerializable;
 
@@ -19,13 +19,16 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
-        public readonly ?HowAttorneysMakeDecisions $attorneyActDecisions,
+        /**
+         * @var Person[] $attorneys
+         */
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
         public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
+        public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,
@@ -34,9 +37,15 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         public readonly ?DateTimeImmutable $receiptDate,
         public readonly ?DateTimeImmutable $registrationDate,
         public readonly ?DateTimeImmutable $rejectedDate,
+        /**
+         * @var Person[] $replacementAttorneys
+         */
         public readonly ?array $replacementAttorneys,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
+        /**
+         * @var SiriusLpaTrustCorporations[] $trustCorporations
+         */
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
@@ -48,11 +57,14 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
     {
         $data = get_object_vars($this);
 
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
+        array_walk(
+            $data,
+            function (&$value) {
+                if ($value instanceof DateTimeImmutable) {
+                    $value = $value->format('Y-m-d H:i:s.uO');
+                }
             }
-        });
+        );
 
         return $data;
     }
@@ -82,11 +94,6 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         return $this->attorneys;
     }
 
-    public function getTrustCorporations(): ?array
-    {
-        return $this->trustCorporations;
-    }
-
     public function getDonor(): Person
     {
         return $this->donor;
@@ -100,5 +107,55 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+
+    public function getLifeSustainingTreatment(): string
+    {
+        return $this->lifeSustainingTreatment->value;
+    }
+
+    public function getHowAttorneysMakeDecisions(): HowAttorneysMakeDecisions
+    {
+        return $this->howAttorneysMakeDecisions;
+    }
+
+    public function getCaseAttorneySingular(): bool
+    {
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::SINGULAR;
+    }
+
+    public function getCaseAttorneyJointly(): bool
+    {
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY;
+    }
+
+    public function getCaseAttorneyJointlyAndSeverally(): bool
+    {
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_AND_SEVERALLY;
+    }
+
+    public function getCaseAttorneyJointlyAndJointlyAndSeverally(): bool
+    {
+        return $this->howAttorneysMakeDecisions === HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS;
+    }
+
+    public function getActiveAttorneys(): ?array
+    {
+        return $this->attorneys;
+    }
+
+    public function getTrustCorporations(): ?array
+    {
+        return $this->trustCorporations;
+    }
+
+    public function getWhenTheLpaCanBeUsed(): WhenTheLpaCanBeUsed
+    {
+        return $this->whenTheLpaCanBeUsed;
+    }
+
+    public function getLpaType(): LpaType
+    {
+        return LpaType::from($this->getCaseSubtype());
     }
 }

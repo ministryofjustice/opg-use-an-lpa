@@ -4,52 +4,56 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity\Casters;
 
+use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
-use Common\Enum\WhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ValueError;
 
 class CastToWhenTheLpaCanBeUsedTest extends TestCase
 {
-    private ObjectMapper $mockHydrator;
-    private CastToWhenTheLpaCanBeUsed $castToWhenTheLpaCanBeUsed;
+    use ProphecyTrait;
 
-    public function setUp(): void
+    #[Test]
+    #[DataProvider('whenCanTheLpaBeUsedProvider')]
+    public function can_cast_how_attorneys_make_decisions($input, $expectedOutput): void
     {
-        $this->mockHydrator              = $this->createMock(ObjectMapper::class);
-        $this->castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
+        $castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
+
+        $this->assertEquals(
+            $expectedOutput,
+            $castToWhenTheLpaCanBeUsed->cast(
+                $input,
+                $this->prophesize(ObjectMapper::class)->reveal()
+            )
+        );
+    }
+
+    public function whenCanTheLpaBeUsedProvider(): array
+    {
+        return [
+            ['when registered', 'when-has-capacity'],
+            ['when-has-capacity', 'when-has-capacity'],
+            ['loss of capacity', 'when-capacity-lost'],
+            ['when-capacity-lost', 'when-capacity-lost'],
+            ['', ''],
+            ['unexpected', ''],
+        ];
     }
 
     #[Test]
-    public function can_when_lpa_can_be_used(): void
+    public function throws_exception_on_invalid_type()
     {
-        $whenRegistered   = 'when registered';
-        $whenLossCapacity = 'loss of capacity';
+        $castToHowAttorneysMakeDecisions = new CastToHowAttorneysMakeDecisions();
 
-        $whenRegisteredResult   = $this->castToWhenTheLpaCanBeUsed->cast($whenRegistered, $this->mockHydrator);
-        $whenLossCapacityResult = $this->castToWhenTheLpaCanBeUsed->cast($whenLossCapacity, $this->mockHydrator);
-        $defaultResult          = $this->castToWhenTheLpaCanBeUsed->cast('', $this->mockHydrator);
+        $this->expectException(ValueError::class);
 
-        $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY->value, $whenRegisteredResult);
-        $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST->value, $whenLossCapacityResult);
-        $this->assertEquals('', $defaultResult);
-    }
-
-    #[Test]
-    public function test_when_can_the_lpa_be_used_enum_has_issers(): void
-    {
-        $whenHasCapacity  = WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY;
-        $whenCapacityLost = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST;
-        $unknown          = WhenTheLpaCanBeUsed::UNKNOWN;
-
-        $this->assertTrue($whenHasCapacity->isWhenHasCapacity());
-        $this->assertFalse($whenHasCapacity->isUnknown());
-
-        $this->assertTrue($whenCapacityLost->isWhenCapacityLost());
-        $this->assertFalse($whenCapacityLost->isUnknown());
-
-        $this->assertTrue($unknown->isUnknown());
-        $this->assertFalse($unknown->isWhenCapacityLost());
+        $castToHowAttorneysMakeDecisions->cast(
+            'not-a-valid-type',
+            $this->prophesize(ObjectMapper::class)->reveal()
+        );
     }
 }

@@ -12,8 +12,12 @@ use EventSauce\ObjectHydrator\PropertyCaster;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class CastToCaseSubtype implements PropertyCaster
 {
-    public function cast(mixed $value, ObjectMapper $hydrator): string
+    public function cast(mixed $value, ObjectMapper $hydrator): ?string
     {
-        return LpaType::fromShortName($value)->value;
+        if (is_null(LpaType::tryFrom($value))) {
+            return LpaType::fromShortName($value)->value;
+        }
+
+        return LpaType::from($value)->value;
     }
 }

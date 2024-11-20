@@ -33,12 +33,11 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'applicationHasGuidance'     => null,
             'applicationHasRestrictions' => null,
             'applicationType'            => null,
-            'attorneyActDecisions'       => 'jointly',
             'attorneys'                  => [
                 [
-                    'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
-                    'addressLine2' => null,
-                    'addressLine3' => null,
+                    'line1'        => '81 NighOnTimeWeBuiltIt Street',
+                    'line2'        => null,
+                    'line3'        => null,
                     'country'      => 'GB',
                     'county'       => null,
                     'dob'          => '1982-07-24 00:00:00.000000+0000',
@@ -59,9 +58,9 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'channel'                    => 'online',
             'dispatchDate'               => null,
             'donor'                      => [
-                'addressLine1' => '74 Cloob Close',
-                'addressLine2' => null,
-                'addressLine3' => null,
+                'line1'        => '74 Cloob Close',
+                'line2'        => null,
+                'line3'        => null,
                 'country'      => 'GB',
                 'county'       => null,
                 'dob'          => '1970-01-24 00:00:00.000000+0000',
@@ -78,6 +77,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
                 'uId'          => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             ],
             'hasSeveranceWarning'        => null,
+            'howAttorneysMakeDecisions'  => 'jointly',
             'invalidDate'                => null,
             'lifeSustainingTreatment'    => 'option-a',
             'lpaDonorSignatureDate'      => '2024-01-10 23:00:00.000000+0000',
@@ -91,9 +91,9 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             'statusDate'                 => null,
             'trustCorporations'          => [
                 [
-                    'addressLine1' => '103 Line 1',
-                    'addressLine2' => null,
-                    'addressLine3' => null,
+                    'line1'        => '103 Line 1',
+                    'line2'        => null,
+                    'line3'        => null,
                     'country'      => 'GB',
                     'county'       => null,
                     'dob'          => null,
@@ -113,7 +113,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
             'withdrawnDate'              => null,
-            'whenTheLpaCanBeUsed'        => 'when-capacity-lost'
+            'whenTheLpaCanBeUsed'        => 'when-capacity-lost',
         ];
     }
 

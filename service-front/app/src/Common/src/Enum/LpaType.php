@@ -19,4 +19,14 @@ enum LpaType: string
             default => throw new InvalidArgumentException('Invalid shorthand name: ' . $shortName),
         };
     }
+
+    public function isPersonalWelfare(): bool
+    {
+        return $this === self::PERSONAL_WELFARE;
+    }
+
+    public function isPropertyAndAffairs(): bool
+    {
+        return $this === self::PROPERTY_AND_AFFAIRS;
+    }
 }

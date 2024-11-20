@@ -6,29 +6,51 @@ namespace CommonTest\Entity\Casters;
 
 use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ValueError;
 
 class CastToHowAttorneysMakeDecisionsTest extends TestCase
 {
-    private ObjectMapper $mockHydrator;
-    private CastToHowAttorneysMakeDecisions $castToHowAttorneysMakeDecisions;
+    use ProphecyTrait;
 
-    public function setUp(): void
+    #[Test]
+    #[DataProvider('howAttorneysMakeDecisionsProvider')]
+    public function can_cast_how_attorneys_make_decisions($howMakeDecision): void
     {
-        $this->mockHydrator                    = $this->createMock(ObjectMapper::class);
-        $this->castToHowAttorneysMakeDecisions = new CastToHowAttorneysMakeDecisions();
+        $castToHowAttorneysMakeDecisions = new CastToHowAttorneysMakeDecisions();
+
+        $this->assertEquals(
+            $howMakeDecision,
+            $castToHowAttorneysMakeDecisions->cast(
+                $howMakeDecision,
+                $this->prophesize(ObjectMapper::class)->reveal()
+            )
+        );
+    }
+
+    public function howAttorneysMakeDecisionsProvider(): array
+    {
+        return [
+            ['singular'],
+            ['jointly'],
+            ['jointly-and-severally'],
+            ['jointly-for-some-severally-for-others'],
+        ];
     }
 
     #[Test]
-    public function can_cast_how_attorneys_make_decisions(): void
+    public function throws_exception_on_invalid_type()
     {
-        $howAttorneysMakeDecisions = 'singular';
+        $castToHowAttorneysMakeDecisions = new CastToHowAttorneysMakeDecisions();
 
-        $expectedhowAttorneysMakeDecisions = 'singular';
+        $this->expectException(ValueError::class);
 
-        $result = $this->castToHowAttorneysMakeDecisions->cast($howAttorneysMakeDecisions, $this->mockHydrator);
-
-        $this->assertEquals($expectedhowAttorneysMakeDecisions, $result);
+        $castToHowAttorneysMakeDecisions->cast(
+            'not-a-valid-type',
+            $this->prophesize(ObjectMapper::class)->reveal()
+        );
     }
 }

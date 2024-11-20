@@ -9,9 +9,9 @@ use DateTimeImmutable;
 class Person
 {
     public function __construct(
-        public readonly ?string $addressLine1,
-        public readonly ?string $addressLine2,
-        public readonly ?string $addressLine3,
+        public readonly ?string $line1,
+        public readonly ?string $line2,
+        public readonly ?string $line3,
         public readonly ?string $country,
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
@@ -49,9 +49,44 @@ class Person
         return $this->surname;
     }
 
-    public function getDob(): DateTimeImmutable|null
+    public function getDob(): ?DateTimeImmutable
     {
         return $this->dob;
+    }
+
+    public function getLine1(): ?string
+    {
+        return $this->line1;
+    }
+
+    public function getLine2(): ?string
+    {
+        return $this->line2;
+    }
+
+    public function getLine3(): ?string
+    {
+        return $this->line3;
+    }
+
+    public function getTown(): ?string
+    {
+        return $this->town;
+    }
+
+    public function getCounty(): ?string
+    {
+        return $this->county;
+    }
+
+    public function getPostCode(): ?string
+    {
+        return $this->postcode;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
     }
 
     public function getCompanyName(): ?string
@@ -67,5 +102,19 @@ class Person
     public function getId(): ?string
     {
         return $this->uId;
+    }
+
+    public function getAddresses(): array
+    {
+        return [
+        (new Address())
+            ->setAddressLine1($this->getLine1())
+            ->setAddressLine2($this->getLine2())
+            ->setAddressLine3($this->getLine3())
+            ->setTown($this->getTown())
+            ->setCounty($this->getCounty())
+            ->setPostcode($this->getPostCode())
+            ->setCountry($this->getCountry()),
+        ];
     }
 }
