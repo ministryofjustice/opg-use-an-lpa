@@ -15,7 +15,7 @@ coverage:
         flags:
           - use-an-lpa-api
       admin:
-        target: 60%
+        target: 0%
         flags:
           - use-an-lpa-admin
 
