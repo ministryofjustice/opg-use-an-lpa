@@ -16,12 +16,12 @@ class GetAttorneyStatus
 
     public function __invoke(GetAttorneyStatusInterface $attorney): AttorneyStatus
     {
-        if (empty($attorney->getFirstname()) && empty($attorney->getSurname())) {
+        if (empty($attorney->getFirstnames()) && empty($attorney->getSurname())) {
             $this->logger->debug('Looked up attorney {id} but is a ghost', ['id' => $attorney->getUid()]);
             return AttorneyStatus::GHOST_ATTORNEY;
         }
 
-        $systemStatus = $attorney->getSystemStatus();
+        $systemStatus = $attorney->getStatus();
         if (!$systemStatus || $systemStatus === 'false') {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $attorney->getUid()]);
             return AttorneyStatus::INACTIVE_ATTORNEY;
