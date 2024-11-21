@@ -22,11 +22,10 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
-            {{ $accounts_created := add .account_created_event .auth_onelogin_account_created_event }}
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Accounts created</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" accounts_created }}</td>
+                    <td class="govuk-table__cell">{{ len (printf "%*s%*s" .accounts_created "" .auth_onelogin_acccounts_created "")}}</td>
                 {{end}}
             </tr>
 
