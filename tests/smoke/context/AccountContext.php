@@ -146,7 +146,7 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then Scripts Work
+     * @Then the javascript is working
      */
 
     public function scriptsWork(): void
