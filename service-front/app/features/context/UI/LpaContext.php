@@ -3110,8 +3110,8 @@ class LpaContext implements Context
     public function iRequestToViewAnLPAWithADonorWhoIsAlsoKnownAs($name): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
-        $this->lpa->donor->otherNames = $name;
         $this->mockApiGetLpaByIdAndGetImagesById();
+        $this->lpa->donor->otherNames = $name;
     }
 
     /**

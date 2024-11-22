@@ -10,6 +10,7 @@ use Common\Entity\Lpa;
 use Common\Entity\Person;
 use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -37,6 +38,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
         LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -160,10 +162,15 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             );
         }
 
+        $templateName = 'actor::check-access-codes';
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            $templateName = 'actor::check-access-codes-combined-lpa';
+        }
+
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
-        return new HtmlResponse($this->renderer->render('actor::check-access-codes', [
+        return new HtmlResponse($this->renderer->render($templateName, [
             'actorToken' => $actorLpaToken,
             'user'       => $user,
             'lpa'        => $lpa,

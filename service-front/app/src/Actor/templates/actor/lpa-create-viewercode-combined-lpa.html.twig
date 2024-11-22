@@ -16,7 +16,7 @@
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.value == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
                     <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Which organisation do you want to give access to?{% endtrans %}</h1>
                 </div>
 
@@ -32,18 +32,17 @@
                     {{ govuk_form_element(form.get('lpa_token')) }}
 
                     <div class="govuk-form-group">
-                            {% if lpa.caseSubtype|lower == 'hw' %}
-                                {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' | trans %}
-                            {% elseif lpa.caseSubtype|lower == 'pfa' %}
-                                {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' | trans %}
-                            {% endif %}
+                        {% if lpa.caseSubtype.value|lower == 'hw' %}
+                            {% set hint = 'The organisation could be a hospital, care home, or other health care provider. This is for your reference only' | trans %}
+                        {% elseif lpa.caseSubtype.value|lower == 'pfa' %}
+                            {% set hint = 'The organisation could be a bank, energy provider, or another business. This is for your reference only' | trans %}
+                        {% endif %}
 
-
-                            {{ govuk_form_element(form.get('org_name'), {
-                                'label': 'Organisation name' | trans,
-                                'hint':  hint,
-                                'attr' : {'class': 'govuk-!-width-three-quarters', 'label_class': 'govuk-label--s govuk-!-margin-bottom-3'}
-                            }) }}
+                        {{ govuk_form_element(form.get('org_name'), {
+                            'label': 'Organisation name' | trans,
+                            'hint':  hint,
+                            'attr' : {'class': 'govuk-!-width-three-quarters', 'label_class': 'govuk-label--s govuk-!-margin-bottom-3'}
+                        }) }}
                     </div>
 
                     {% if (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) and not feature_enabled('instructions_and_preferences')%}
