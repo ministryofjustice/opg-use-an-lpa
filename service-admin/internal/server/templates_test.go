@@ -25,7 +25,7 @@ func testFS() (fs.FS, error) {
 		return nil, err
 	}
 
-	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ end }}"), 0644)
+	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ add 2 3}}{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
