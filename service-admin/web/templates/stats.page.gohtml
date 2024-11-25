@@ -78,7 +78,8 @@
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Activation key requested</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .account_activated_event }}</td>
+                    {{ $accounts_activated := add .older_lpa_needs_cleansing_event .older_lpa_force_activation_key_event .older_lpa_success_event .oolpa_key_requested_for_donor_event .oolpa_key_requested_for_attorney_event}}
+                    <td class="govuk-table__cell">{{ printf "%.0f" $accounts_activated }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">

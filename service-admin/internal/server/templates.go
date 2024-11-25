@@ -103,6 +103,6 @@ func add(nums ...float64) float64 {
 	for _, num := range nums {
 		total += num
 	}
-	
+
 	return total
 }
