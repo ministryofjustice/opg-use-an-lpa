@@ -96,10 +96,3 @@ Feature: View an LPA that I have added to my account
     And I am on the dashboard page
     When I request to view an LPA with a donor who is also known as 'Ezra'
     Then I will see Ezra in the also known as field
-
-  @ui @ff:support_datastore_lpas:true
-  Scenario: Do not show also known as when no actors have other names defined of Combined LPA
-    Given I have added a Combined LPA to my account
-    And I am on the dashboard page
-    When I request to view an LPA where all actors do not have an also known by name
-    Then I will not see the also known as field

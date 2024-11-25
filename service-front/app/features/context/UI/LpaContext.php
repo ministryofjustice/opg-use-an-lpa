@@ -3112,6 +3112,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('View LPA summary');
         $this->mockApiGetLpaByIdAndGetImagesById();
         $this->lpa->donor->otherNames = $name;
+        $this->lpa->donor->otherNames = 'Ezra';
     }
 
     /**

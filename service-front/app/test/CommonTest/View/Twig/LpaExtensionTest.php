@@ -103,9 +103,9 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $actor = new Person(
-            addressLine1: 'Street 1',
-            addressLine2: 'Street 2',
-            addressLine3: 'Street 3',
+            line1: 'Street 1',
+            line2: 'Street 2',
+            line3: 'Street 3',
             country: 'Country',
             county: 'County',
             dob: new DateTimeImmutable('22-12-1997'),
@@ -128,11 +128,23 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $addressString);
     }
 
+    #[Test]
+    public function access_address_key_values(): void
+    {
+        $address = new Address();
+        $address->setId(1);
+        $address->setType('Primary');
+
+        $this->assertEquals(1, $address->getId());
+        $this->assertEquals('Primary', $address->getType());
+    }
+
     public static function addressDataProvider()
     {
         return [
             [
                 [
+                    'id'           => 1,
                     'addressLine1' => 'Some House',
                     'addressLine2' => 'Some Place',
                     'addressLine3' => 'Somewhere',
@@ -140,6 +152,7 @@ class LpaExtensionTest extends TestCase
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
                     'country'      => 'Some country',
+                    'type'         => 'Primary',
                 ],
                 'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD, Some country',
             ],

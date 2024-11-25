@@ -76,5 +76,7 @@ class CombinedLpaTest extends TestCase
         $this->assertEquals($trustCorporations, $combinedLpa->getTrustCorporations());
         $this->assertEquals('123', $combinedLpa->getUId());
         $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY, $combinedLpa->getWhenTheLpaCanBeUsed());
+        $this->assertEquals($attorneys, $combinedLpa->getAttorneys());
+        $this->assertEquals(LpaType::PERSONAL_WELFARE, $combinedLpa->getLpaType());
     }
 }

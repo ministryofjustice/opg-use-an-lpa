@@ -229,7 +229,7 @@ class ParseLpaDataTest extends TestCase
                 addressLine3 : 'Street 3',
                 country      : 'GB',
                 county       : 'County',
-                dob          : null,
+                dob          : new DateTimeImmutable('1990-05-04'),
                 email        : null,
                 firstname    : 'trust',
                 firstnames   : null,
