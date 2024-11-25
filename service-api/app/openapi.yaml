@@ -1,0 +1,207 @@
+openapi: 3.1.0
+info:
+  title: UaLPA API
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://127.0.0.1:9005
+    description: Local development
+paths:
+  /v1/lpas:
+    summary: 'LPA resources collection'
+    get:
+      summary: 'Fetch LPAs attached to account'
+      description: 'Using the accounts uId, fetch all LPAs in good standing attached to the account'
+      operationId: lpa.collection
+      parameters:
+        - in: header
+          name: User-Token
+          schema:
+            $ref: '#/components/schemas/UserToken'
+          required: true
+      responses:
+        200:
+          description: The LPAs attached to the users account
+          content:
+            application/json:
+              schema:
+                type: object
+                patternProperties:
+                  '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$':
+                    $ref: '#/components/schemas/LpaResponse'
+              examples:
+                EmptyResponse:
+                  summary: User has no LPAs
+                  value: { }
+                LpaResponse:
+                  $ref: './docs/examples/lpa-response-example.yaml'
+        401:
+          $ref: '#/components/responses/UnauthorisedError'
+
+
+components:
+  examples:
+    UnauthorisedError:
+      summary: Default
+      value:
+        title: Unauthorized
+        details: User-Token not specified or invalid
+        data: [ ]
+  responses:
+    UnauthorisedError:
+      description: Authorisation information missing or invalid
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/APIException'
+          examples:
+            Default:
+              $ref: '#/components/examples/UnauthorisedError'
+  schemas:
+    APIException:
+      type: object
+      properties:
+        title:
+          type: string
+        details:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: string
+    LpaResponse:
+      type: object
+      properties:
+        user-lpa-actor-token:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        actor:
+          type: object
+          properties:
+            details:
+              $ref: '#/components/schemas/Person'
+            type:
+              type: string
+              enum: [ primary-attorney, donor, trust-corporation ]
+        lpa:
+          $ref: '#/components/schemas/Lpa'
+        added:
+          type: string
+          format: date-time
+    Lpa:
+      type: object
+      properties:
+        applicationHasGuidance:
+          type: boolean
+        applicationHasRestrictions:
+          type: boolean
+        applicationType:
+          type: string
+        attorneyActDecisions:
+          type: string
+          enum: [ singular, jointly, jointly-and-severally, jointly-for-some-severally-for-others ]
+        attorneys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        caseSubtype:
+          type: string
+          enum: [ hw, pfa ]
+        channel:
+          type: string
+          enum: [ online, paper ]
+        dispatchDate:
+          type: string
+          format: datetime
+        donor:
+          $ref: '#/components/schemas/Person'
+        hasSeveranceWarning:
+          type: boolean
+        invalidDate:
+          type: string
+          format: datetime
+        lifeSustainingTreatment:
+          type: string
+          enum: [ option-a, option-b ]
+        lpaDonorSignatureDate:
+          type: string
+          format: datetime
+        lpaIsCleansed:
+          type: boolean
+        onlineLpaId:
+          type: string
+        receiptDate:
+          type: string
+          format: datetime
+        registrationDate:
+          type: string
+          format: datetime
+        rejectedDate:
+          type: string
+          format: datetime
+        replacementAttorneys:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        status:
+          type: string
+          enum: [ registered, cancelled ]
+        statusDate:
+          type: string
+          format: datetime
+        trustCorporations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        uId:
+          type: string
+          format: uuid
+        withdrawnDate:
+          type: string
+          format: datetime
+    Person:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+        addressLine2:
+          type: string
+        addressLine3:
+          type: string
+        country:
+          type: string
+        county:
+          type: string
+        dob:
+          type: string
+          format: date
+        email:
+          type: string
+          format: email
+        firstnames:
+          type: string
+        name:
+          type: string
+        postcode:
+          type: string
+        surname:
+          type: string
+        systemStatus:
+          type: string
+        town:
+          type: string
+        type:
+          type: string
+        uId:
+          type: string
+          format: uuid
+    UserToken:
+      type: string
+      format: uuid
+      example: 'bf9e7e77-f283-49c6-a79c-65d5d309ef77'
+      description: The ID of the user
