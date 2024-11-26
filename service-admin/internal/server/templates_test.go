@@ -116,3 +116,9 @@ func TestWithTemplates(t *testing.T) {
 
 	assert.HTTPSuccess(t, sut.ServeHTTP, "GET", "/", nil, "handler not successfully running")
 }
+
+func TestAdd(t *testing.T) {
+	t.Parallel()
+	result := Add(1, 2, 3)
+	assert.Equal(t, result, 6.0)
+}
