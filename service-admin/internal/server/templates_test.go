@@ -119,6 +119,8 @@ func TestWithTemplates(t *testing.T) {
 
 func TestAdd(t *testing.T) {
 	t.Parallel()
+
 	result := Add(1, 2, 3)
+
 	assert.Equal(t, result, 6.0)
 }
