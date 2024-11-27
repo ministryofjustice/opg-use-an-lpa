@@ -10,9 +10,9 @@ use EventSauce\ObjectHydrator\DoNotSerialize;
 class Person
 {
     public function __construct(
-        public readonly ?string $line1,
-        public readonly ?string $line2,
-        public readonly ?string $line3,
+        public readonly ?string $addressLine1,
+        public readonly ?string $addressLine2,
+        public readonly ?string $addressLine3,
         public readonly ?string $country,
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
@@ -30,85 +30,72 @@ class Person
     ) {
     }
 
-    #[DoNotSerialize]
     public function getSalutation(): ?string
     {
         return '';
     }
 
-    #[DoNotSerialize]
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    #[DoNotSerialize]
     public function getMiddlenames(): ?string
     {
         return $this->otherNames;
     }
 
-    #[DoNotSerialize]
     public function getSurname(): ?string
     {
         return $this->surname;
     }
 
-    #[DoNotSerialize]
     public function getDob(): ?DateTimeImmutable
     {
         return $this->dob;
     }
 
-    #[DoNotSerialize]
     public function getLine1(): ?string
     {
-        return $this->line1;
+        return $this->addressLine1;
     }
 
-    #[DoNotSerialize]
     public function getLine2(): ?string
     {
-        return $this->line2;
+        return $this->addressLine2;
     }
 
-    #[DoNotSerialize]
     public function getLine3(): ?string
     {
-        return $this->line3;
+        return $this->addressLine3;
     }
 
-    #[DoNotSerialize]
     public function getTown(): ?string
     {
         return $this->town;
     }
 
-    #[DoNotSerialize]
     public function getCounty(): ?string
     {
         return $this->county;
     }
 
-    #[DoNotSerialize]
     public function getPostCode(): ?string
     {
         return $this->postcode;
     }
 
-    #[DoNotSerialize]
     public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    #[DoNotSerialize]
+
     public function getCompanyName(): ?string
     {
         return $this->name;
     }
 
-    #[DoNotSerialize]
     public function getAddresses(): array
     {
         return [
