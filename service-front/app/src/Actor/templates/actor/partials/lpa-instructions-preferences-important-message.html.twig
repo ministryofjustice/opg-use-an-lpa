@@ -55,7 +55,7 @@
 {% if actorActive and is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     <p class="govuk-body govuk-!-margin-bottom-1">
         {% trans %}
-            This LPA has instructions and/or preferences.<br>
+            This LPA has preferences and/or instructions.<br>
         {% endtrans %}
         {% if not feature_enabled('instructions_and_preferences') %}
             {% trans %}
