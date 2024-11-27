@@ -26,10 +26,15 @@ different POT file. It's probably best to stick to the first '_in container_' ru
 To edit the Welsh we can open messages.po in poedit, and do `Translate->Update from POT` from messages.pot . 
 Edit any new or edited translations, then save the file.
 
-At the moment the file that we get back from translation (a `.po` file) has some incorrect syntax in
-that breaks our html output. Essentially the poedit software tries to be helpful and replaces all instances
-of " with the more linguistically correct “ and ”. This is unwanted within html tags. You'll need to reset those 
-before moving onto the next step
+The poedit software tries to be helpful and replaces all instances
+of " with the more linguistically correct “ and ”. This is unwanted within html tags. 
+
+This can be fixed by holding ctrl as you type a quote. (or ctrl shift for double quote)
+
+If you fail to do the above when typing quotes used within html tags, the po file 
+will have incorrect quotes, which would break our html output. 
+
+You'll need to reset those by hand before moving onto the next step
 
 You may use a substitution like:
 ```
