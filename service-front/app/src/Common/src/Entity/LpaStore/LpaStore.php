@@ -53,7 +53,7 @@ class LpaStore extends CombinedLpa
         ?DateTimeImmutable $statusDate,
         #[CastListToType(LpaStoreTrustCorporations::class)]
         ?array $trustCorporations,
-        #[MapFrom('uId')]
+        #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
         #[MapFrom('whenTheLpaCanBeUsed')]
