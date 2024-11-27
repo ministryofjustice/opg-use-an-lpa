@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2024-09-27T10:01:12+00:00\n"
+"POT-Creation-Date: 2024-11-27T09:53:30+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4690,4 +4690,9 @@ msgstr ""
 
 #: src/Actor/templates/actor/change-details.html.twig:62
 msgid "If you are the donor, please also provide the name and address for one of your attorneys."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:44
+#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:42
+msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, including a scanned image of any restrictions and conditions (can also be known as “preferences and instructions” depending on when the LPA was made)"
 msgstr ""
