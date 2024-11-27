@@ -54,9 +54,10 @@ func Test_GetAllMetrics(t *testing.T) {
 					if list[0] == "2022-11" {
 						return map[string]map[string]float64{
 							"2022-11": {
-								"lpas_added":            1,
-								"lpa_removed_event":     1,
-								"account_created_event": 5,
+								"lpas_added":                          1,
+								"lpa_removed_event":                   1,
+								"account_created_event":               5,
+								"auth_onelogin_account_created_event": 5,
 							},
 						}, nil
 					}
@@ -73,9 +74,10 @@ func Test_GetAllMetrics(t *testing.T) {
 			},
 			want: map[string]map[string]float64{
 				"2022-11": {
-					"lpas_added":            1,
-					"lpa_removed_event":     1,
-					"account_created_event": 5,
+					"lpas_added":                          1,
+					"lpa_removed_event":                   1,
+					"account_created_event":               5,
+					"auth_onelogin_account_created_event": 5,
 				},
 			},
 		},
@@ -110,24 +112,28 @@ func TestTemplateErrorPanic(t *testing.T) {
 
 	testMetrics := &map[string]map[string]float64{
 		"2022-11": {
-			"lpas_added":            1,
-			"lpa_removed_event":     1,
-			"account_created_event": 5,
+			"lpas_added":                          1,
+			"lpa_removed_event":                   1,
+			"account_created_event":               5,
+			"auth_onelogin_account_created_event": 5,
 		},
 		"2022-10": {
-			"lpas_added":            4,
-			"lpa_removed_event":     2,
-			"account_created_event": 7,
+			"lpas_added":                          4,
+			"lpa_removed_event":                   2,
+			"account_created_event":               7,
+			"auth_onelogin_account_created_event": 7,
 		},
 		"2022-09": {
-			"lpas_added":            3,
-			"lpa_removed_event":     1,
-			"account_created_event": 4,
+			"lpas_added":                          3,
+			"lpa_removed_event":                   1,
+			"account_created_event":               4,
+			"auth_onelogin_account_created_event": 4,
 		},
 		"Total": {
-			"lpas_added":            10,
-			"lpa_removed_event":     11,
-			"account_created_event": 12,
+			"lpas_added":                          10,
+			"lpa_removed_event":                   11,
+			"account_created_event":               12,
+			"auth_onelogin_account_created_event": 12,
 		},
 	}
 
