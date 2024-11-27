@@ -42,6 +42,7 @@ func LoadTemplates(folder fs.FS) *Templates {
 	t := template.New("")
 	t = t.Funcs(template.FuncMap{
 		"readableDateTime": readableDateTime,
+		"add":              add,
 	})
 
 	files, err := fs.Glob(folder, "*.page.gohtml")
@@ -94,4 +95,14 @@ func readableDateTime(date string) string {
 	}
 
 	return t.In(l).Format("2 January 2006 at 3:04PM")
+}
+
+func add(nums ...float64) float64 {
+	total := 0.0
+
+	for _, num := range nums {
+		total += num
+	}
+
+	return total
 }

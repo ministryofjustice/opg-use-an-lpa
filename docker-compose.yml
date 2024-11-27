@@ -160,7 +160,7 @@ services:
     volumes:
       - ./service-api/web/dist:/web
     ports:
-      - 9005:80
+      - 9010:80
     environment:
       APP_HOST: api-app
       APP_PORT: 9000
