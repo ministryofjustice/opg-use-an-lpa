@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CommonTest\Entity\Casters;
 
 use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
-use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -13,34 +12,32 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use ValueError;
 
-class CastToWhenTheLpaCanBeUsedTest extends TestCase
+class CastToHowAttorneysMakeDecisionsTest extends TestCase
 {
     use ProphecyTrait;
 
     #[Test]
-    #[DataProvider('whenCanTheLpaBeUsedProvider')]
-    public function can_cast_how_attorneys_make_decisions($input, $expectedOutput): void
+    #[DataProvider('howAttorneysMakeDecisionsProvider')]
+    public function can_cast_how_attorneys_make_decisions($howMakeDecision): void
     {
-        $castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
+        $castToHowAttorneysMakeDecisions = new CastToHowAttorneysMakeDecisions();
 
         $this->assertEquals(
-            $expectedOutput,
-            $castToWhenTheLpaCanBeUsed->cast(
-                $input,
+            $howMakeDecision,
+            $castToHowAttorneysMakeDecisions->cast(
+                $howMakeDecision,
                 $this->prophesize(ObjectMapper::class)->reveal()
             )
         );
     }
 
-    public function whenCanTheLpaBeUsedProvider(): array
+    public function howAttorneysMakeDecisionsProvider(): array
     {
         return [
-            ['when registered', 'when-has-capacity'],
-            ['when-has-capacity', 'when-has-capacity'],
-            ['loss of capacity', 'when-capacity-lost'],
-            ['when-capacity-lost', 'when-capacity-lost'],
-            ['', ''],
-            ['unexpected', ''],
+            ['singular'],
+            ['jointly'],
+            ['jointly-and-severally'],
+            ['jointly-for-some-severally-for-others'],
         ];
     }
 

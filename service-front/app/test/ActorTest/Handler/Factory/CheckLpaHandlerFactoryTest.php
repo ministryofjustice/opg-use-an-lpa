@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
+use Common\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
@@ -58,6 +59,9 @@ class CheckLpaHandlerFactoryTest extends TestCase
         $containerProphecy
             ->get(AddLpa::class)
             ->willReturn($this->prophesize(AddLpa::class)->reveal());
+        $containerProphecy
+            ->get(FeatureEnabled::class)
+            ->willReturn($this->prophesize(FeatureEnabled::class)->reveal());
 
         $factory = new CheckLpaHandlerFactory();
 

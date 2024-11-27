@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
 class Person
 {
@@ -49,9 +50,63 @@ class Person
         return $this->surname;
     }
 
-    public function getDob(): DateTimeImmutable|null
+    public function getDob(): ?DateTimeImmutable
     {
         return $this->dob;
     }
 
+    public function getLine1(): ?string
+    {
+        return $this->addressLine1;
+    }
+
+    public function getLine2(): ?string
+    {
+        return $this->addressLine2;
+    }
+
+    public function getLine3(): ?string
+    {
+        return $this->addressLine3;
+    }
+
+    public function getTown(): ?string
+    {
+        return $this->town;
+    }
+
+    public function getCounty(): ?string
+    {
+        return $this->county;
+    }
+
+    public function getPostCode(): ?string
+    {
+        return $this->postcode;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+
+    public function getCompanyName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getAddresses(): array
+    {
+        return [
+        (new Address())
+            ->setAddressLine1($this->getLine1())
+            ->setAddressLine2($this->getLine2())
+            ->setAddressLine3($this->getLine3())
+            ->setTown($this->getTown())
+            ->setCounty($this->getCounty())
+            ->setPostcode($this->getPostCode())
+            ->setCountry($this->getCountry()),
+        ];
+    }
 }
