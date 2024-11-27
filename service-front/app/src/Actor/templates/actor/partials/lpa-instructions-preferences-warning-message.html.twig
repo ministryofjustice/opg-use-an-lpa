@@ -12,7 +12,10 @@
     {% endtrans %}
 {% elseif not is_donor_signature_date_too_old(lpa) and lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
     {% trans %}
-        This LPA has instructions and preferences. You might need to show organisations the paper LPA.
+        This LPA has preferences and instructions. 
+    {% endtrans %}
+    {% trans %}
+        You might need to show organisations the paper LPA.
     {% endtrans %}
 {% endif %}
 <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"

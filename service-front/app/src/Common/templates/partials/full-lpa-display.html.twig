@@ -49,7 +49,7 @@
                                 {% if is_donor_signature_date_too_old(lpa) %}
                                     {% trans %}This LPA has instructions and/or preferences{% endtrans %}
                                 {% elseif lpa.applicationHasGuidance and lpa.applicationHasRestrictions %}
-                                    {% trans %}This LPA has instructions and preferences{% endtrans %}
+                                    {% trans %}This LPA has preferences and instructions{% endtrans %}
                                 {% elseif lpa.applicationHasGuidance %}
                                     {% trans %}This LPA has preferences{% endtrans %}
                                 {% elseif lpa.applicationHasRestrictions %}

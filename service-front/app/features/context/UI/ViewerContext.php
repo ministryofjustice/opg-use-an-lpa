@@ -782,7 +782,7 @@ class ViewerContext implements Context
      */
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
-        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and instructions');
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
             $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
             $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');

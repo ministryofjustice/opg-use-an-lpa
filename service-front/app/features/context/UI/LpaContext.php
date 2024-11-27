@@ -737,7 +737,7 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
 
         $this->ui->assertPageContainsText(
-            'This LPA has instructions and preferences. '
+            'This LPA has preferences and instructions. '
         );
 
         $session = $this->ui->getSession();
