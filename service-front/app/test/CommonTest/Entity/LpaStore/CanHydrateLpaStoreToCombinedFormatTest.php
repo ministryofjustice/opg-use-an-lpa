@@ -9,29 +9,22 @@ use Common\Entity\LpaStore\LpaStoreAttorney;
 use Common\Entity\LpaStore\LpaStoreDonor;
 use Common\Entity\LpaStore\LpaStoreTrustCorporations;
 use Common\Enum\HowAttorneysMakeDecisions;
-use Common\Enum\LifeSustainingTreatment;
-use Common\Enum\LpaType;
-use Common\Enum\WhenTheLpaCanBeUsed;
-use Common\Service\Features\FeatureEnabled;
+use Common\Service\Lpa\Factory\LpaDataFormatter;
 use CommonTest\Helper\EntityTestHelper;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Common\Service\Lpa\Factory\LpaDataFormatter;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
-class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
+class CanHydrateLpaStoreToCombinedFormatTest extends TestCase
 {
     use ProphecyTrait;
 
     private LpaDataFormatter $lpaDataFormatter;
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
-        $this->lpaDataFormatter = new LpaDataFormatter($this->featureEnabled->reveal());
+        $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
     public function expectedLpaStore(): LpaStore
@@ -116,10 +109,6 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
     #[Test]
     public function can_hydrate_lpa_store_to_modernise_format(): void
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(true);
-
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/4UX3.json'), true);
 
         $combinedLpaStore = ($this->lpaDataFormatter)($lpa);
