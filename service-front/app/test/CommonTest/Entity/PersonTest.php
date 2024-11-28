@@ -64,4 +64,22 @@ class PersonTest extends TestCase
             EntityTestHelper::MakePerson()->getAddresses()
         );
     }
+
+    #[Test]
+    public function wraps_address_in_array_for_compatability()
+    {
+        $this->assertEquals(
+            [
+            (new Address())
+                ->setAddressLine1('Address Line 1')
+                ->setAddressLine2('Address Line 2')
+                ->setAddressLine3('Address Line 3')
+                ->setTown('Town')
+                ->setPostcode('Postcode')
+                ->setCounty('County')
+                ->setCountry('Country'),
+            ],
+            EntityTestHelper::MakePerson()->getAddresses()
+        );
+    }
 }

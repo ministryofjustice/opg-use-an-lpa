@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Common\Entity;
 
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
 class Person
 {
     public function __construct(
-        public readonly ?string $line1,
-        public readonly ?string $line2,
-        public readonly ?string $line3,
+        public readonly ?string $addressLine1,
+        public readonly ?string $addressLine2,
+        public readonly ?string $addressLine3,
         public readonly ?string $country,
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
@@ -56,17 +57,17 @@ class Person
 
     public function getLine1(): ?string
     {
-        return $this->line1;
+        return $this->addressLine1;
     }
 
     public function getLine2(): ?string
     {
-        return $this->line2;
+        return $this->addressLine2;
     }
 
     public function getLine3(): ?string
     {
-        return $this->line3;
+        return $this->addressLine3;
     }
 
     public function getTown(): ?string
@@ -89,19 +90,10 @@ class Person
         return $this->country;
     }
 
+
     public function getCompanyName(): ?string
     {
         return $this->name;
-    }
-
-    public function getUId(): ?string
-    {
-        return $this->uId;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->uId;
     }
 
     public function getAddresses(): array

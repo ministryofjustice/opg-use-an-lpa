@@ -37,9 +37,9 @@ class EntityTestHelper
         ?string $uId = 'UID',
     ): Person {
         return new Person(
-            line1: $line1,
-            line2: $line2,
-            line3: $line3,
+            addressLine1: $line1,
+            addressLine2: $line2,
+            addressLine3: $line3,
             country:      $country,
             county:       $county,
             dob:          $dob,

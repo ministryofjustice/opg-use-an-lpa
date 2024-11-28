@@ -2,37 +2,30 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Entity\LpaStore;
+namespace CommonTest\Entity\Sirius;
 
 use Common\Entity\Sirius\SiriusLpa;
 use Common\Entity\Sirius\SiriusLpaAttorney;
 use Common\Entity\Sirius\SiriusLpaDonor;
 use Common\Entity\Sirius\SiriusLpaTrustCorporations;
 use Common\Enum\HowAttorneysMakeDecisions;
-use Common\Enum\LifeSustainingTreatment;
-use Common\Enum\LpaType;
 use Common\Enum\WhenTheLpaCanBeUsed;
-use Common\Form\Fieldset\Date;
-use Common\Service\Features\FeatureEnabled;
+use Common\Service\Lpa\Factory\LpaDataFormatter;
 use CommonTest\Helper\EntityTestHelper;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Common\Service\Lpa\Factory\LpaDataFormatter;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
-class CanHydrateSiriusToModerniseFormatTest extends TestCase
+class CanHydrateSiriusToCombinedFormatTest extends TestCase
 {
     use ProphecyTrait;
 
     private LpaDataFormatter $lpaDataFormatter;
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
-        $this->lpaDataFormatter = new LpaDataFormatter($this->featureEnabled->reveal());
+        $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
     public function expectedSiriusLpa(): SiriusLpa
@@ -115,7 +108,7 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                 email        : null,
                 firstname    : 'trust',
                 firstnames   : null,
-                name         : 'trust corporation',
+                name         : null,
                 otherNames   : null,
                 postcode     : 'ABC 123',
                 surname      : 'test',
@@ -146,10 +139,6 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
     #[Test]
     public function can_hydrate_sirius_lpa_to_modernise_format(): void
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(true);
-
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
 
         $expectedSiriusLpa = $this->expectedSiriusLpa();

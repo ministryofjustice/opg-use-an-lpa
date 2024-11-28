@@ -13,15 +13,13 @@ use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
 use JsonSerializable;
 
-class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInterface
+class CombinedLpa implements SortLpasInterface, GroupLpasInterface
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
-        /**
-         * @var Person[] $attorneys
-         */
+        /** @var Person[] $attorneys */
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
@@ -37,36 +35,16 @@ class CombinedLpa implements JsonSerializable, SortLpasInterface, GroupLpasInter
         public readonly ?DateTimeImmutable $receiptDate,
         public readonly ?DateTimeImmutable $registrationDate,
         public readonly ?DateTimeImmutable $rejectedDate,
-        /**
-         * @var Person[] $replacementAttorneys
-         */
+        /** @var Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
-        /**
-         * @var SiriusLpaTrustCorporations[] $trustCorporations
-         */
+        /** @var Person[] $trustCorporations */
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?DateTimeImmutable $withdrawnDate,
         public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
     ) {
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk(
-            $data,
-            function (&$value) {
-                if ($value instanceof DateTimeImmutable) {
-                    $value = $value->format('Y-m-d H:i:s.uO');
-                }
-            }
-        );
-
-        return $data;
     }
 
     public function getLpaDonorSignatureDate(): ?DateTimeImmutable

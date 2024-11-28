@@ -48,13 +48,13 @@ class LpaExtension extends AbstractExtension
                 ', ',
                 array_filter(
                     [
-                        $address->getAddressLine1(),
-                        $address->getAddressLine2(),
-                        $address->getAddressLine3(),
-                        $address->getTown(),
-                        $address->getCounty(),
-                        $address->getPostcode(),
-                        $address->getCountry(),
+                    $address->getAddressLine1(),
+                    $address->getAddressLine2(),
+                    $address->getAddressLine3(),
+                    $address->getTown(),
+                    $address->getCounty(),
+                    $address->getPostcode(),
+                    $address->getCountry(),
                     ]
                 )
             );

@@ -15,12 +15,10 @@ use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
 use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use JsonSerializable;
 
-class LpaStore extends CombinedLpa implements JsonSerializable
+class LpaStore extends CombinedLpa
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -55,7 +53,7 @@ class LpaStore extends CombinedLpa implements JsonSerializable
         ?DateTimeImmutable $statusDate,
         #[CastListToType(LpaStoreTrustCorporations::class)]
         ?array $trustCorporations,
-        #[MapFrom('uId')]
+        #[MapFrom('uid')]
         ?string $uId,
         ?DateTimeImmutable $withdrawnDate,
         #[MapFrom('whenTheLpaCanBeUsed')]
@@ -89,22 +87,5 @@ class LpaStore extends CombinedLpa implements JsonSerializable
             $withdrawnDate,
             $whenTheLpaCanBeUsed
         );
-    }
-
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk(
-            $data,
-            function (&$value) {
-                if ($value instanceof DateTimeImmutable) {
-                    $value = $value->format('Y-m-d H:i:s.uO');
-                }
-            }
-        );
-
-        return $data;
     }
 }
