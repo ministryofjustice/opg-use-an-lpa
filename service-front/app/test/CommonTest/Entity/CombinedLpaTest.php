@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity;
 
+use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
+use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
+use CommonTest\Helper\EntityTestHelper;
+use CommonTest\Helper\TestData;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -24,15 +30,51 @@ class CombinedLpaTest extends TestCase
     #[Test]
     public function can_test_getters()
     {
-        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
-        $combinedLpa = ($this->lpaDataFormatter)($lpa);
+        $donor = EntityTestHelper::makePerson(
+            uId: 'donor'
+        );
 
-        $expectedUid                    = '700000000047';
-        $expectedApplicationHasGuidance = false;
-        $expectedHasRestrictions        = false;
+        $attorneys = [
+        EntityTestHelper::makePerson(
+            uId: 'attorney'
+        ),
+        ];
 
-        $this->assertEquals($expectedUid, $combinedLpa->getUId());
-        $this->assertEquals($expectedApplicationHasGuidance, $combinedLpa->getApplicationHasGuidance());
-        $this->assertEquals($expectedHasRestrictions, $combinedLpa->getApplicationHasRestrictions());
+        $trustCorporations = [
+        EntityTestHelper::makePerson(
+            uId: 'trust-corporation'
+        ),
+        ];
+
+        $combinedLpa = EntityTestHelper::makeCombinedLpa(
+            applicationHasGuidance:     true,
+            applicationHasRestrictions: true,
+            attorneys:                  $attorneys,
+            caseSubtype:                LpaType::PERSONAL_WELFARE,
+            donor:                      $donor,
+            howAttorneysMakeDecisions:  HowAttorneysMakeDecisions::JOINTLY,
+            lifeSustainingTreatment:    LifeSustainingTreatment::OPTION_B,
+            lpaDonorSignatureDate:      new DateTimeImmutable(TestData::TESTDATESTRING),
+            status:                     'status',
+            trustCorporations:          $trustCorporations,
+            uId:                        '123',
+            whenTheLpaCanBeUsed:        WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY
+        );
+
+        $this->assertEquals(true, $combinedLpa->getApplicationHasGuidance());
+        $this->assertEquals(true, $combinedLpa->getApplicationHasRestrictions());
+        $this->assertEquals($attorneys, $combinedLpa->getActiveAttorneys());
+        $this->assertEquals($donor, $combinedLpa->getDonor());
+        $this->assertEquals(HowAttorneysMakeDecisions::JOINTLY, $combinedLpa->getHowAttorneysMakeDecisions());
+        $this->assertEquals(false, $combinedLpa->getCaseAttorneySingular());
+        $this->assertEquals(true, $combinedLpa->getCaseAttorneyJointly());
+        $this->assertEquals(false, $combinedLpa->getCaseAttorneyJointlyAndSeverally());
+        $this->assertEquals(false, $combinedLpa->getCaseAttorneyJointlyAndJointlyAndSeverally());
+        $this->assertEquals(LifeSustainingTreatment::OPTION_B->value, $combinedLpa->getLifeSustainingTreatment());
+        $this->assertEquals(new DateTimeImmutable(TestData::TESTDATESTRING), $combinedLpa->getLpaDonorSignatureDate());
+        $this->assertEquals('status', $combinedLpa->getStatus());
+        $this->assertEquals($trustCorporations, $combinedLpa->getTrustCorporations());
+        $this->assertEquals('123', $combinedLpa->getUId());
+        $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY, $combinedLpa->getWhenTheLpaCanBeUsed());
     }
 }

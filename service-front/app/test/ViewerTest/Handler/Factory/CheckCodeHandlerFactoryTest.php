@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Handler\Factory;
 
+use Common\Service\Features\FeatureEnabled;
 use PHPUnit\Framework\Attributes\Test;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitService;
@@ -42,6 +43,9 @@ class CheckCodeHandlerFactoryTest extends TestCase
         $containerProphecy
             ->get(RateLimitServiceFactory::class)
             ->willReturn($rlsfProphecy->reveal());
+        $containerProphecy
+            ->get(FeatureEnabled::class)
+            ->willReturn($this->prophesize(FeatureEnabled::class)->reveal());
 
         $factory = new CheckCodeHandlerFactory();
 

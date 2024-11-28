@@ -6,6 +6,7 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractPostcodeFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
@@ -16,9 +17,9 @@ class LpaStoreTrustCorporations extends Person
     public function __construct(
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
-        ?string $addressLine1,
-        ?string $addressLine2,
-        ?string $addressLine3,
+        ?string $line1,
+        ?string $line2,
+        ?string $line3,
         #[MapFrom('name')]
         public readonly ?string $companyName,
         #[MapFrom('address')]
@@ -32,6 +33,8 @@ class LpaStoreTrustCorporations extends Person
         ?string $firstnames,
         ?string $name,
         ?string $otherNames,
+        #[MapFrom('address')]
+        #[ExtractPostcodeFromLpaStore]
         ?string $postcode,
         ?string $surname,
         #[MapFrom('status')]
@@ -44,9 +47,9 @@ class LpaStoreTrustCorporations extends Person
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
+            $line1,
+            $line2,
+            $line3,
             $country,
             $county,
             $dob,

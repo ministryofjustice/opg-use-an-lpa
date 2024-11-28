@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\Factory;
 
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Helper\UrlHelper;
@@ -21,7 +22,8 @@ class CheckCodeHandlerFactory
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
             $container->get(LpaService::class),
-            $rateLimitFactory->factory('viewer_code_failure')
+            $rateLimitFactory->factory('viewer_code_failure'),
+            $container->get(FeatureEnabled::class),
         );
     }
 }

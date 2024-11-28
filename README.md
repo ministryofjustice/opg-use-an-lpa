@@ -89,7 +89,7 @@ The Viewer service will be available via [http://localhost:9001/home](http://loc
 
 The Actor service will be available via [http://localhost:9002/home](http://localhost:9002/home)
 
-The API service will be available via [http://localhost:9003](http://localhost:9003)
+The API service will be available via [http://localhost:9010](http://localhost:9010)
 
 ### Tests
 

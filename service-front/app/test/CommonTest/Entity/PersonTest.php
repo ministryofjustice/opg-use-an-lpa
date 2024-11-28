@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity;
 
+use Common\Entity\Address;
+use CommonTest\Helper\EntityTestHelper;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -38,5 +40,23 @@ class PersonTest extends TestCase
         $this->assertEquals($expectedMiddlename, $combinedLpa->getDonor()->getMiddlenames());
         $this->assertEquals($expectedSurname, $combinedLpa->getDonor()->getSurname());
         $this->assertEquals($expectedDob, $combinedLpa->getDonor()->getDob());
+    }
+
+    #[Test]
+    public function wraps_address_in_array_for_compatability()
+    {
+        $this->assertEquals(
+            [
+            (new Address())
+                ->setAddressLine1('Address Line 1')
+                ->setAddressLine2('Address Line 2')
+                ->setAddressLine3('Address Line 3')
+                ->setTown('Town')
+                ->setPostcode('Postcode')
+                ->setCounty('County')
+                ->setCountry('Country'),
+            ],
+            EntityTestHelper::MakePerson()->getAddresses()
+        );
     }
 }

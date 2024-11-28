@@ -6,21 +6,20 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractPostcodeFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
-use JsonSerializable;
 
-class LpaStoreAttorney extends Person implements JsonSerializable
+class LpaStoreAttorney extends Person
 {
     public function __construct(
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
-        ?string $addressLine1,
-        ?string $addressLine2,
-        ?string $addressLine3,
+        ?string $line1,
+        ?string $line2,
+        ?string $line3,
         #[MapFrom('address')]
         #[ExtractCountryFromLpaStore]
         ?string $country,
@@ -34,6 +33,8 @@ class LpaStoreAttorney extends Person implements JsonSerializable
         ?string $firstnames,
         ?string $name,
         ?string $otherNames,
+        #[MapFrom('address')]
+        #[ExtractPostcodeFromLpaStore]
         ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
@@ -47,9 +48,9 @@ class LpaStoreAttorney extends Person implements JsonSerializable
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
+            $line1,
+            $line2,
+            $line3,
             $country,
             $county,
             $dob,
@@ -65,19 +66,5 @@ class LpaStoreAttorney extends Person implements JsonSerializable
             $type,
             $uId,
         );
-    }
-
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
     }
 }

@@ -36,7 +36,7 @@ class ViewLpaHandler extends AbstractHandler
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param  ServerRequestInterface $request
      * @return ResponseInterface
      * @throws \Exception
      */
@@ -86,6 +86,11 @@ class ViewLpaHandler extends AbstractHandler
             }
         }
 
-        return new HtmlResponse($this->renderer->render('viewer::view-lpa', $renderData));
+        $templateName = 'viewer::view-lpa';
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            $templateName = 'viewer::view-lpa-combined-lpa';
+        }
+
+        return new HtmlResponse($this->renderer->render($templateName, $renderData));
     }
 }
