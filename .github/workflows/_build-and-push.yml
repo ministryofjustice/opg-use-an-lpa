@@ -265,7 +265,7 @@ jobs:
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
 
           elif [[ "${SVC_PREFIX}" = "ingestion" ]]; then
-          docker build --file lambda-functions/ingestion-lambda/Dockerfile --tag ingestion_lambda:latest lambda-function/ingestion-lambda
+          docker build --file lambda-functions/ingestion-lambda/Dockerfile --tag ingestion_lambda:latest lambda-functions/ingestion-lambda
 
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
