@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY app/ ./
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /go/bin/ingestion ./app
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /go/bin/ingestion ./
 
 FROM scratch AS production
 
