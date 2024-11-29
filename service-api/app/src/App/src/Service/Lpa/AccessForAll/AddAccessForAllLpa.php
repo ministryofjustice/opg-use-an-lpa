@@ -85,7 +85,9 @@ class AddAccessForAllLpa
         throw new BadRequestException(
             'Activation key already requested for LPA',
             [
-                'donor'                => $lpaAddedData['donor'],
+                'donor'                => [
+                    'uId' => $lpaAddedData['donor']['uId'],
+                ],
                 'caseSubtype'          => $lpaAddedData['caseSubtype'],
                 'activationKeyDueDate' => $activationKeyDueDate,
             ],
@@ -126,7 +128,9 @@ class AddAccessForAllLpa
             throw new BadRequestException(
                 'LPA has an activation key already',
                 [
-                    'donor'                => $validationData->lpa->getDonor(),
+                    'donor'                => [
+                        'uId' => $validationData->lpa->getDonor()->getUid(),
+                    ],
                     'caseSubtype'          => $validationData->getCaseSubtype(),
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ]
@@ -186,7 +190,16 @@ class AddAccessForAllLpa
                     'uId' => (string) $matchData['reference_number'],
                 ]
             );
-            throw new BadRequestException('LPA already added', $lpaAddedData);
+            throw new BadRequestException(
+                'LPA already added',
+                [
+                    'donor'         => [
+                        'uId' => $lpaAddedData['donor']['uId'],
+                    ],
+                    'caseSubtype'   => $lpaAddedData['caseSubtype'],
+                    'lpaActorToken' => $lpaAddedData['lpaActorToken'],
+                ],
+            );
         }
 
         $lpa = $this->fetchLPAData($matchData['reference_number']);
