@@ -82,7 +82,7 @@ resource "aws_sqs_queue_redrive_allow_policy" "receive_events_redrive_allow_poli
 
   redrive_allow_policy = jsonencode({
     redrivePermission = "byQueue",
-    sourceQueueArns   = [aws_sqs_queue.receive_events_queue.arn]
+    sourceQueueArns   = [aws_sqs_queue.receive_events_queue[0].arn]
   })
   provider = aws.region
 }
