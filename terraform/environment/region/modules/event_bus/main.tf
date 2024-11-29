@@ -47,7 +47,7 @@ resource "aws_sqs_queue" "receive_events_queue" {
 
 data "aws_iam_policy_document" "receive_events_queue_policy" {
   statement {
-    sid    = "${data.aws_region.current.name}-ReceiveFromMLPA"
+    sid    = "${var.current_region}-ReceiveFromMLPA"
     effect = "Allow"
 
     principals {
@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "receive_events_queue_policy" {
       test     = "ArnEquals"
       variable = "aws:SourceArn"
       values = [
-        aws_cloudwatch_event_rule.receive_events_mlpa.arn
+        aws_cloudwatch_event_rule.receive_events_mlpa[0].arn
       ]
     }
   }
@@ -87,11 +87,13 @@ resource "aws_sqs_queue_redrive_allow_policy" "receive_events_redrive_allow_poli
   provider = aws.region
 }
 
+/*
 resource "aws_lambda_event_source_mapping" "reveive_events_mapping" {
   count            = var.event_bus_enabled ? 1 : 0
   event_source_arn = aws_sqs_queue.receive_events_queue[0].arn
-  enabled          = true
+  enabled          = false
   function_name    = var.ingress_lambda_name
   batch_size       = 10
   provider         = aws.region
 }
+*/
