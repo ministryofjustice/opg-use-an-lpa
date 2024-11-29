@@ -103,9 +103,9 @@ class LpaExtensionTest extends TestCase
         $extension = new LpaExtension();
 
         $actor = new Person(
-            line1: 'Street 1',
-            line2: 'Street 2',
-            line3: 'Street 3',
+            addressLine1: 'Street 1',
+            addressLine2: 'Street 2',
+            addressLine3: 'Street 3',
             country: 'Country',
             county: 'County',
             dob: new DateTimeImmutable('22-12-1997'),
