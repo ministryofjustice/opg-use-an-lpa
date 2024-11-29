@@ -46,6 +46,7 @@ resource "aws_sqs_queue" "receive_events_queue" {
 }
 
 data "aws_iam_policy_document" "receive_events_queue_policy" {
+  count = var.event_bus_enabled ? 1 : 0
   statement {
     sid    = "${var.current_region}-ReceiveFromMLPA"
     effect = "Allow"
