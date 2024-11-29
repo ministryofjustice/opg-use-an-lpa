@@ -24,21 +24,6 @@ module "sessions_actor_mrk" {
   }
 }
 
-
-
-module "sqs_mrk" {
-  source = "./modules/multi_region_kms"
-
-  key_description         = "KMS key for sqs"
-  key_alias               = "sqs-mrk"
-  deletion_window_in_days = 7
-
-  providers = {
-    aws.primary   = aws.eu_west_1
-    aws.secondary = aws.eu_west_2
-  }
-}
-
 module "cloudwatch_mrk" {
   source = "./modules/multi_region_kms"
 
