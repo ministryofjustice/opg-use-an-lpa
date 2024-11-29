@@ -75,6 +75,12 @@ jobs:
             run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
+          - svc_prefix: 'ingestion'
+            svc_suffix: 'lambda'
+            build_development_docker: 'false'
+            run_unit_tests: 'false'
+            run_integration_tests: 'false'
+            artifact_to_dl: ''
     steps:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb
 
@@ -255,8 +261,11 @@ jobs:
 
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
 
-          elif [[ "${SVC_SUFFIX}" = "lambda" ]]; then
+          elif [[ "${SVC_PREFIX}" = "stats_upload" ]]; then
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+
+          elif [[ "${SVC_PREFIX}" = "ingestion" ]]; then
+            docker build --file lambda-functions/ingestion-lambda/Dockerfile --tag ingestion_lambda:latest lambda-functions/ingestion-lambda
 
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
