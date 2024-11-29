@@ -15,7 +15,7 @@ resource "aws_cloudwatch_event_rule" "receive_events_mlpa" {
   count          = var.event_bus_enabled ? 1 : 0
   name           = "${var.environment_name}-mlpa-events-to-use"
   description    = "receive events from mlpa"
-  event_bus_name = aws_cloudwatch_event_bus[0].name
+  event_bus_name = aws_cloudwatch_event_bus.main[0].name
 
   event_pattern = jsonencode({
     source = ["opg.poas.makeregister"],
