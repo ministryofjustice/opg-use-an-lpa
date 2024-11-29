@@ -24,7 +24,7 @@ resource "aws_cloudwatch_event_rule" "receive_events_mlpa" {
 }
 
 data "aws_kms_alias" "sqs" {
-  name     = "alias/sqs-kms"
+  name     = "alias/sqs-mrk"
   provider = aws.region
 }
 
