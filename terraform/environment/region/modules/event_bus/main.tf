@@ -40,7 +40,7 @@ resource "aws_sqs_queue" "receive_events_queue" {
     deadLetterTargetArn = aws_sqs_queue.receive_events_deadletter[0].arn
     maxReceiveCount     = 3
   })
-  policy = data.aws_iam_policy_document.receive_events_queue_policy.json
+  policy = data.aws_iam_policy_document.receive_events_queue_policy[0].json
 
   provider = aws.region
 }
