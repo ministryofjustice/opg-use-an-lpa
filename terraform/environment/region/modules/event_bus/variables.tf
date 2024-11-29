@@ -8,3 +8,15 @@ variable "event_bus_enabled" {
   type        = bool
   default     = false
 }
+
+/*
+variable "ingress_lambda_name" {
+  description = "The name of the ingress lambda"
+  type        = string
+}
+*/
+
+variable "current_region" {
+  description = "The current region"
+  type        = string
+}
