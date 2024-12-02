@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-11-27T16:06:16+00:00\n"
+"POT-Creation-Date: 2024-12-02T15:44:09+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1821,7 +1821,6 @@ msgstr ""
 msgid "Last updated: 30 March 2020"
 msgstr "Diweddarwyd diwethaf: 30 Mawrth 2020"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:15
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:72
 msgid "Instructions and preferences"
 msgstr "Cyfarwyddiadau a dymuniadau"
@@ -1888,16 +1887,16 @@ msgstr ""
 "‘gyfyngiadau ac amodau’. Fe welwch y rhain ar dudalen 9 o’r <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:70
+#: src/Actor/templates/actor/instructions-preferences.html.twig:59
 msgid "I do not have the paper LPA"
 msgstr "Nid oes gen i’r copi papur o’r LPA"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:74
+#: src/Actor/templates/actor/instructions-preferences.html.twig:63
 msgid "When an LPA is registered, we post the LPA to either:"
 msgstr ""
 "Pan fydd LPA yn cael ei chofrestru, rydym yn postio’r LPA papur un ai at:"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:77
+#: src/Actor/templates/actor/instructions-preferences.html.twig:66
 msgid ""
 "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "is for)"
@@ -1905,11 +1904,11 @@ msgstr ""
 "y rhoddwr (y sawl y mae’r <abbr title=\"lasting power of attorney\">LPA</abbr> "
 "ar ei gyfer)"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:82
+#: src/Actor/templates/actor/instructions-preferences.html.twig:71
 msgid "one of the attorneys"
 msgstr "un o’r atwrneiod"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:87
+#: src/Actor/templates/actor/instructions-preferences.html.twig:76
 msgid ""
 "someone else, like a solicitor, who helped to fill in the <abbr "
 "title=\"lasting power of attorney\">LPA</abbr> form"
@@ -1917,7 +1916,7 @@ msgstr ""
 "rhywun arall, fel cyfreithiwr, a wnaeth gynorthwyo i lenwi’r ffurflen <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>"
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:94
+#: src/Actor/templates/actor/instructions-preferences.html.twig:83
 msgid ""
 "Check with these people to see who has the <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>."
@@ -1925,7 +1924,7 @@ msgstr ""
 "Gwiriwch â’r bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> papur."
 
-#: src/Actor/templates/actor/instructions-preferences.html.twig:99
+#: src/Actor/templates/actor/instructions-preferences.html.twig:88
 msgid ""
 "If you need more than one copy of the paper <abbr title=\"lasting power of "
 "attorney\">LPA</abbr>, the donor or solicitor can make <strong><a "
@@ -6673,6 +6672,88 @@ msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau."
 msgid "This LPA has preferences and instructions"
 msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau"
 
+#: src/Actor/templates/actor/instructions-preferences.html.twig:15
+msgid "Preferences and Instructions"
+msgstr "Dewisiadau a chyfarwyddiadau"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:21
+msgid ""
+"If an <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or "
+"instructions (also known as restrictions and conditions), we show a scanned "
+"image in the LPA summary. The scanned image is also shown to anyone you give "
+"an access code to."
+msgstr ""
+"Os oes gan <abbr title=“atwrneiaeth arhosol”>LPA</abbr> ddewisiadau a "
+"chyfarwyddiadau (a elwir hefyd yn gyfyngiadau ac amodau), rydym yn dangos "
+"delwedd wedi’i sganio yng nghrynodeb yr <abbr title=“atwrneiaeth arhosol”>LPA</"
+"abbr>. Mae’r ddelwedd wedi’i sganio hefyd yn cael ei dangos i unrhyw un rydych "
+"chi’n rhoi cod mynediad iddynt."
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:28
+msgid ""
+"You’ll need to show organisations the paper LPA if any part of your "
+"preferences and instructions cannot be read properly."
+msgstr ""
+"Bydd angen i chi ddangos yr LPA bapur i sefydliadau os na ellir darllen unrhyw "
+"ran o’ch dewisiadau a’ch cyfarwyddiadau yn iawn. "
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:34
+msgid "Before giving organisations access to the LPA online, check that:"
+msgstr ""
+"Cyn gadael i sefydliadau gael mynediad i’r LPA ar-lein, gwnewch yn siŵr:’"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:39
+msgid "the scanned image is readable"
+msgstr "fod y ddelwedd wedi’i sganio mewn modd darllenadwy"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:44
+msgid "the preferences and instructions are available to read in full"
+msgstr "fod y dewisiadau a’r cyfarwyddiadau ar gael i’w darllen yn llawn"
+
+#: src/Actor/templates/actor/instructions-preferences.html.twig:49
+msgid "any continuation sheets you used are not missing"
+msgstr "nid yw unrhyw daflenni parhad a ddefnyddiwyd gennych ar goll"
+
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:57
+msgid "This LPA has preferences and/or instructions.<br>"
+msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau. <br>"
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:50
+msgid ""
+"This LPA has preferences and/or instructions (sometimes known as “restrictions "
+"and conditions”)"
+msgstr ""
+"Mae gan yr LPA hon dewisiadau a chyfarwyddiadau. (neu ‘ddewisiadau a "
+"chyfarwyddiadau’ fel y’u gelwir weithiau)"
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:52
+msgid ""
+"This LPA has preferences and instructions (sometimes known as “restrictions "
+"and conditions”)"
+msgstr ""
+"Mae cyfyngiadau ac amodau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir "
+"weithiau) ar yr LPA hon"
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:54
+msgid ""
+"This LPA has preferences (sometimes known as “restrictions and conditions”)"
+msgstr ""
+"Mae gan yr LPA hon ddymuniadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u "
+"gelwir weithiau)."
+
+#: src/Common/templates/partials/full-lpa-display.html.twig:56
+msgid ""
+"This LPA has instructions (sometimes known as “restrictions and conditions”)"
+msgstr ""
+"Mae gan yr LPA hon gyfarwyddiadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u "
+"gelwir weithiau)."
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:66
+msgid "Yes, the donor made preferences and/or instructions on their LPA."
+msgstr ""
+"Oes, mae’r rhoddwr wedi nodi ddewisiadau  a/neu gyfarwyddiadau yn ei <abbr "
+"title=“atwrneiaeth arhosol”>LPA</abbr>."
+
 #~ msgid ""
 #~ "Give %organisation% this access code. They should go to www.gov.uk/view-lpa "
 #~ "to enter the access code and see a summary of the <abbr title=\"lasting "
@@ -7220,13 +7301,6 @@ msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau"
 #~ "Os nad yw’r ddelwedd, sydd wedi ei sganio, yn glir, gallai sefydliadau ofyn "
 #~ "am gael gweld y fersiwn papur o’r Atwrneiaeth Arhosol, fel y gallant weld "
 #~ "beth yw’r cyfarwyddiadau neu’r dewisiadau."
-
-#~ msgid ""
-#~ "In some older LPAs, instructions and preferences are called 'restrictions "
-#~ "and conditions'."
-#~ msgstr ""
-#~ "Mewn rhai LPAs hŷn, gelwir cyfarwyddiadau a dewisiadau yn ‘gyfyngiadau ac "
-#~ "amodau’."
 
 #~ msgid "LPA details"
 #~ msgstr "Manylion yr LPA"
