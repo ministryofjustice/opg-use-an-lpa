@@ -20,7 +20,7 @@ module "ingestion_lambda" {
 
   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
   ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn
-  lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy[0].json
+  lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy.json
   aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
 
   providers = {
