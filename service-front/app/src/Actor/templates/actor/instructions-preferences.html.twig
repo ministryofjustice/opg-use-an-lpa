@@ -1,6 +1,6 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Instructions and preferences{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}Preferences and Instructions{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -12,56 +12,45 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-full">
                     <h1 class="govuk-heading-xl">
-                        {% trans %}Instructions and preferences{% endtrans %}
+                        {% trans %}Preferences and Instructions{% endtrans %}
                     </h1>
                 </div>
 
                 <div class="govuk-grid-column-two-thirds">
-                    {% if feature_enabled('instructions_and_preferences') %}
-                        <p class="govuk-body">
-                            {% trans %}
-                                If an <abbr title="lasting power of attorney">LPA</abbr> has instructions or preferences
-                                we show a scanned image in the LPA summary.
-                            {% endtrans %}
-                        </p>
-                        <p class="govuk-body">
-                            {% trans %}
-                                This scanned image is also shown to anyone you give an access code to. Please check that
-                                the scanned image is readable before giving an access code to organisations. This will
-                                work for all access codes made after 4 July 2023.
-                            {% endtrans %}
-                        </p>
-                        <p class="govuk-body">
-                            {% trans %}
-                                Organisations may still ask to see the paper LPA if they would like to check anything.
-                            {% endtrans %}
-                        </p>
-                    {% else %}
-                        <p class="govuk-body">
-                            {% trans %}
-                                If an <abbr title="lasting power of attorney">LPA</abbr> has instructions or preferences
-                                we cannot show these online.
-                            {% endtrans %}
-                        </p>
-                        <p class="govuk-body">
-                            {% trans %}
-                                Organisations may ask to see the paper <abbr title="lasting power of attorney">LPA</abbr>
-                                so that they can find out what the instructions or preferences are.
-                            {% endtrans %}
-                        </p>
-                    {% endif %}
-
                     <p class="govuk-body">
                         {% trans %}
-                            On most LPAs, you’ll find the instructions and preferences in section 7.
+                            If an <abbr title="lasting power of attorney">LPA</abbr> has preferences or instructions (also known as restrictions and conditions),
+                            we show a scanned image in the LPA summary.
+                            The scanned image is also shown to anyone you give an access code to. 
                         {% endtrans %}
                     </p>
                     <p class="govuk-body">
                         {% trans %}
-                            On some LPAs made in or before 2015, instructions and preferences are called 'restrictions
-                            and conditions'. You’ll find them on page 9 of the
-                            <abbr title="lasting power of attorney">LPA</abbr>.
+                            You’ll need to show organisations the paper LPA if any part of your preferences and instructions cannot be read properly.
                         {% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}
+                            Before giving organisations access to the LPA online, check that:
+                        {% endtrans %}
+                        <ul class="govuk-list govuk-list--bullet">
+                            <li>
+                                {% trans %}
+                                    the scanned image is readable
+                                {% endtrans %}
+                            </li>
+                            <li>
+                                {% trans %}
+                                    the preferences and instructions are available to read in full
+                                {% endtrans %}
+                            </li>
+                            <li>
+                                {% trans %}
+                                    any continuation sheets you used are not missing
+                                {% endtrans %}</li>
+                            </li>
+                        </ul>
                     </p>
 
                     <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="I do not have the paper LPA">
@@ -88,8 +77,8 @@
                                         someone else, like a solicitor, who helped to fill in the
                                         <abbr title="lasting power of attorney">LPA</abbr> form
                                     {% endtrans %}</li>
+                                </li>
                             </ul>
-                        </div>
                         <p>
                             {% trans %}
                                 Check with these people to see who has the
@@ -102,6 +91,7 @@
                                 <strong><a href="https://www.gov.uk/power-of-attorney/certify" class="govuk-link">certified copies</a></strong>.
                             {% endtrans %}
                         </p>
+                        </div>
                     </details>
                 </div>
             </div>
