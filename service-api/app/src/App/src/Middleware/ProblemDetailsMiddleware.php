@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Exception\AbstractApiException;
+use App\Exception\LoggableAdditionalDataInterface;
 use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface as DelegateInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 
 class ProblemDetailsMiddleware implements MiddlewareInterface
@@ -19,17 +20,10 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
     {
     }
 
-    /**
-     * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
-     * @return ResponseInterface|JsonResponse
-     */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
-            $response = $delegate->handle($request);
-
-            return $response;
+            return $handler->handle($request);
         } catch (AbstractApiException $ex) {
             //  Translate this exception type into response JSON
             $problem = [
@@ -38,7 +32,10 @@ class ProblemDetailsMiddleware implements MiddlewareInterface
                 'data'    => $ex->getAdditionalData(),
             ];
 
-            $this->logger->info($ex->getMessage(), $ex->getAdditionalData());
+            $this->logger->info(
+                $ex->getMessage(),
+                $ex instanceof LoggableAdditionalDataInterface ? $ex->getAdditionalDataForLogging() : [],
+            );
 
             $previous = $ex->getPrevious();
             if ($previous instanceof Exception) {

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Exception;
 
 use Psr\Http\Message\ResponseInterface;
+use RuntimeException;
 use Throwable;
 
-class ApiException extends AbstractApiException
+class ApiException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
     // A safe bet for an exception is a 500 error response
     public const DEFAULT_ERROR = 500;
@@ -16,20 +17,22 @@ class ApiException extends AbstractApiException
     // encapsulated in the stacktrace.
     public const DEFAULT_TITLE = 'An API exception has occurred';
 
-    protected ?ResponseInterface $response;
-
     /**
      * ApiException constructor
      *
-     * @param string $message
-     * @param int $code
+     * @param string                 $message
+     * @param int                    $code
      * @param ResponseInterface|null $response
-     * @param Throwable|null $previous
+     * @param Throwable|null         $previous
+     * @throws RuntimeException
      */
-    public function __construct(string $message, int $code = self::DEFAULT_ERROR, ?ResponseInterface $response = null, ?Throwable $previous = null)
-    {
-        $this->response = $response;
-        $this->code     = $code;
+    public function __construct(
+        string $message,
+        int $code = self::DEFAULT_ERROR,
+        protected ?ResponseInterface $response = null,
+        ?Throwable $previous = null,
+    ) {
+        $this->code = $code;
 
         parent::__construct(self::DEFAULT_TITLE, $message, [], $previous);
     }
@@ -44,6 +47,7 @@ class ApiException extends AbstractApiException
      * associative array.
      *
      * @return array
+     * @throws RuntimeException
      */
     public function getAdditionalData(): array
     {
@@ -52,8 +56,16 @@ class ApiException extends AbstractApiException
             : [];
     }
 
-    public static function create(?string $message = null, ?ResponseInterface $response = null, ?Throwable $previous = null): ApiException
+    public function getAdditionalDataForLogging(): array
     {
+        return $this->getAdditionalData();
+    }
+
+    public static function create(
+        ?string $message = null,
+        ?ResponseInterface $response = null,
+        ?Throwable $previous = null,
+    ): ApiException {
         $code = self::DEFAULT_ERROR;
 
         if (! is_null($response)) {

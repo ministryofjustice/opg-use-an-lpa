@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\AccessForAll;
 
+use App\Exception\LpaActivationKeyAlreadyRequestedException;
 use App\Exception\BadRequestException;
+use App\Exception\LpaAlreadyAddedException;
+use App\Exception\LpaAlreadyHasActivationKeyException;
+use App\Exception\LpaDetailsDoNotMatchException;
 use App\Exception\NotFoundException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\FindActorInLpa;
-use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
@@ -49,7 +51,7 @@ class AddAccessForAllLpa
      * @param AccessForAllValidation $validationData
      * @param array                  $lpaAddedData
      * @return void
-     * @throws BadRequestException
+     * @throws LpaActivationKeyAlreadyRequestedException
      */
     private function existentCodeNotActivated(
         string $userId,
@@ -82,12 +84,9 @@ class AddAccessForAllLpa
             }
         }
 
-        throw new BadRequestException(
-            'Activation key already requested for LPA',
+        throw new LpaActivationKeyAlreadyRequestedException(
             [
-                'donor'                => [
-                    'uId' => $lpaAddedData['donor']['uId'],
-                ],
+                'donor'                => $lpaAddedData['donor'],
                 'caseSubtype'          => $lpaAddedData['caseSubtype'],
                 'activationKeyDueDate' => $activationKeyDueDate,
             ],
@@ -102,7 +101,8 @@ class AddAccessForAllLpa
      *     notActivated: bool
      * }|null                        $lpaAddedData
      * @return void
-     * @throws BadRequestException
+     * @throws LpaAlreadyHasActivationKeyException
+     * @throws LpaActivationKeyAlreadyRequestedException
      */
     private function processActivationCode(
         string $userId,
@@ -125,12 +125,9 @@ class AddAccessForAllLpa
                 ->add(new DateInterval('P10D'))
                 ->format('Y-m-d');
 
-            throw new BadRequestException(
-                'LPA has an activation key already',
+            throw new LpaAlreadyHasActivationKeyException(
                 [
-                    'donor'                => [
-                        'uId' => $validationData->lpa->getDonor()->getUid(),
-                    ],
+                    'donor'                => $validationData->lpa->getDonor(),
                     'caseSubtype'          => $validationData->getCaseSubtype(),
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ]
@@ -141,7 +138,7 @@ class AddAccessForAllLpa
     /**
      * @param int $referenceNumber
      * @return SiriusLpa|null
-     * @throws NotFoundException|Exception
+     * @throws NotFoundException
      */
     private function fetchLPAData(int $referenceNumber): ?SiriusLpa
     {
@@ -165,7 +162,7 @@ class AddAccessForAllLpa
      * match an active actor within that LPA return a data array containing details about that LPA - otherwise
      * throw an exception that details why the match was not able to be made.
      *
-     * @param string $userId The users database ID
+     * @param string $userId    The users database ID
      * @param array{
      *     reference_number: int,
      *     dob: string,
@@ -175,7 +172,12 @@ class AddAccessForAllLpa
      *     force_activation_key: bool,
      * }             $matchData The user supplied information to attempt to match an LPA to
      * @return AccessForAllValidation
-     * @throws BadRequestException|NotFoundException|Exception
+     * @throws BadRequestException
+     * @throws LpaAlreadyAddedException
+     * @throws LpaAlreadyHasActivationKeyException
+     * @throws LpaDetailsDoNotMatchException
+     * @throws LpaActivationKeyAlreadyRequestedException
+     * @throws NotFoundException
      */
     public function validateRequest(string $userId, array $matchData): AccessForAllValidation
     {
@@ -190,16 +192,7 @@ class AddAccessForAllLpa
                     'uId' => (string) $matchData['reference_number'],
                 ]
             );
-            throw new BadRequestException(
-                'LPA already added',
-                [
-                    'donor'         => [
-                        'uId' => $lpaAddedData['donor']['uId'],
-                    ],
-                    'caseSubtype'   => $lpaAddedData['caseSubtype'],
-                    'lpaActorToken' => $lpaAddedData['lpaActorToken'],
-                ],
-            );
+            throw new LpaAlreadyAddedException($lpaAddedData);
         }
 
         $lpa = $this->fetchLPAData($matchData['reference_number']);
@@ -222,9 +215,10 @@ class AddAccessForAllLpa
                     'uId' => $matchData['reference_number'],
                 ]
             );
-            throw new BadRequestException(
-                'LPA details do not match',
-                ['lpaRegDate' => $lpa['registrationDate']]
+            throw new LpaDetailsDoNotMatchException(
+                [
+                    'lpaRegDate' => $lpa['registrationDate'],
+                ]
             );
         }
 
