@@ -9,14 +9,14 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
 }
 
 data "aws_ecr_repository" "ingestion_repo" {
-  name = "use_an_lpa/ingestion_lambda"
+  name     = "use_an_lpa/ingestion_lambda"
   provider = aws.management
 }
 
 module "ingestion_lambda" {
-  source = "./modules/lambda_function"
-  count = var.account.ingestion_lambda.enabled ? 1 : 0
-  lambda_name = "ingestion-lambda-${data.aws_region.current.name}"
+  source            = "./modules/lambda_function"
+  count             = var.account.ingestion_lambda.enabled ? 1 : 0
+  lambda_name       = "ingestion-lambda-${data.aws_region.current.name}"
   working_directory = "/"
 
   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
@@ -30,7 +30,7 @@ module "ingestion_lambda" {
 }
 
 data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
-  count = var.account.ingestion_lambda.enabled? 1 : 0
+  count = var.account.ingestion_lambda.enabled ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
