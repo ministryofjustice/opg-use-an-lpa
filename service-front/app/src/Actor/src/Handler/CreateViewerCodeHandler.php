@@ -22,7 +22,6 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Common\Service\Features\FeatureEnabled;
 
 /**
  * @codeCoverageIgnore
