@@ -4,6 +4,7 @@ variable "account" {
     account_id                              = string
     cloudwatch_application_insights_enabled = bool
     shared_account_id                       = number
+    ingestion_lambda_enabled                = bool
     is_production                           = bool
     retention_in_days                       = number
     pagerduty_service_name                  = string

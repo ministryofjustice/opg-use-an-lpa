@@ -30,7 +30,7 @@ module "ingestion_lambda" {
 }
 
 data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
-  count = var.account.ingestion_lambda.enabled ? 1 : 0
+  count = var.account.ingestion_lambda_enabled ? 1 : 0
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
