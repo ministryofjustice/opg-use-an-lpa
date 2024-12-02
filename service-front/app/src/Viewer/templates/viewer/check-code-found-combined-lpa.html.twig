@@ -1,0 +1,83 @@
+{% extends '@viewer/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We’ve found this LPA{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper " id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    {{ govuk_error_summary(form) }}
+
+                    {{ govuk_form_open(form) }}
+
+                    <h1 class="govuk-heading-xl">{% trans with {'%firstname%': lpa.donor.firstname, '%surname%': lpa.donor.surname} %}We’ve found %firstname% %surname%'s LPA{% endtrans %}</h1>
+                    <table id="confirmation-table" class="govuk-table">
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
+                            <td class="govuk-table__cell">{{ lpa.caseSubtype.propertyAndAffairs ? 'Property and finance' | trans : 'Health and welfare' | trans  }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">{% trans %}Code expires{% endtrans %}</th>
+                            <td class="govuk-table__cell">{% trans count days_remaining_to_expiry(expires) with {'%date%': lpa_date(expires)} %}in %count% day, on %date%|in %count% days, on %date%{% endtrans %}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}If this is not the right LPA, ask the donor or attorney to check the access code.{% endtrans %}
+                        </strong>
+                    </div>
+
+                    <details class="govuk-details" data-module="" role="group" data-gaEventType="onClick" data-gaCategory="Details" data-gaAction="Expiration" data-gaLabel="If you need to see this LPA after date">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans with {'%date%': lpa_date(expires)} %}If you need to see this <abbr title="lasting power of attorney">LPA</abbr> after %date%{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p class="govuk-body">
+                                {% trans with {'%date%': lpa_date(expires)} %}You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire.{% endtrans %}
+                            </p>
+                            <p class="govuk-body">{% trans %}Ask the donor or attorney for a new access code if your organisation:{% endtrans %}
+                            <ul class="list list-bullet">
+                                <li>{% trans %}needs more time to process this LPA{% endtrans %}</li>
+                                <li>{% trans %}need to see this LPA at a later date{% endtrans %}</li>
+                            </ul>
+                            </p>
+                        </div>
+                    </details>
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    {{ govuk_form_element(form.get('organisation'),
+                        {
+                            'label': 'Your organisation name' | trans,
+                            'hint': 'This will be displayed to the attorneys and donor on the LPA' | trans
+                        }
+                    ) }}
+
+                    <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}View this LPA{% endtrans %}</button>
+
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="{{ path('home') }}">{% trans %}Try another access code{% endtrans %}</a>
+                    </p>
+
+                    {{ govuk_form_close() }}
+
+                </div>
+            </div>
+
+        </main>
+    </div>
+{% endblock %}

@@ -6,6 +6,7 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractPostcodeFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
@@ -32,6 +33,8 @@ class LpaStoreTrustCorporations extends Person
         ?string $firstnames,
         ?string $name,
         ?string $otherNames,
+        #[MapFrom('address')]
+        #[ExtractPostcodeFromLpaStore]
         ?string $postcode,
         ?string $surname,
         #[MapFrom('status')]

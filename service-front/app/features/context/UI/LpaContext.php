@@ -3111,6 +3111,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->donor->otherNames = $name;
+
         $this->mockApiGetLpaByIdAndGetImagesById();
     }
 
@@ -3245,5 +3246,63 @@ class LpaContext implements Context
     public function iReturnToTheDashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    /**
+     * @Given I have added a Combined LPA to my account
+     */
+    public function iHaveAddedACombinedLpaToMyAccount(): void
+    {
+        $this->iHaveBeenGivenAccessToUseACombinedLPAViaCredentials();
+
+        $this->dashboardLPAs = [$this->userLpaActorToken => $this->lpaData];
+    }
+
+    /**
+     * @Given I have been given access to use a Combined LPA via credentials
+     */
+    public function iHaveBeenGivenAccessToUseACombinedLPAViaCredentials(): void
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+
+        $this->userLpaActorToken = '987654321';
+        $this->actorId           = 9;
+
+        $this->lpaData = [
+            'user-lpa-actor-token'       => $this->userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1975-10-05',
+                    'email'        => 'string',
+                    'firstname'    => 'Ian',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => 'Mr',
+                    'surname'      => 'Deputy',
+                    'systemStatus' => true,
+                    'uId'          => '700000000054',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $this->lpa,
+            'added'                      => '2021-10-5 12:00:00',
+        ];
     }
 }
