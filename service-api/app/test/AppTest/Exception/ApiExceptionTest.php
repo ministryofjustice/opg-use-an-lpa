@@ -56,6 +56,7 @@ class ApiExceptionTest extends TestCase
 
         $this->assertEquals(ApiException::DEFAULT_TITLE, $ex->getTitle());
         $this->assertEquals($additionalData, $ex->getAdditionalData());
+        $this->assertEquals($additionalData, $ex->getAdditionalDataForLogging());
 
         $this->assertEquals($message, $ex->getMessage());
         $this->assertEquals(404, $ex->getCode());
@@ -153,5 +154,6 @@ class ApiExceptionTest extends TestCase
         $this->assertEquals('This is an exception', $instance->getMessage());
         $this->assertEquals(ApiException::DEFAULT_ERROR, $instance->getCode());
         $this->assertIsArray($instance->getAdditionalData());
+        $this->assertIsArray($instance->getAdditionalDataForLogging());
     }
 }
