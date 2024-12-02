@@ -8,6 +8,41 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
   provider = aws.management
 }
 
+data "aws_ecr_repository" "ingestion_repo" {
+  name = "use_an_lpa/ingestion_lambda"
+  provider = aws.management
+}
+
+module "ingestion_lambda" {
+  source = "./modules/lambda_function"
+  count = var.account.ingestion_lambda.enabled ? 1 : 0
+  lambda_name = "ingestion-lambda-${data.aws_region.current.name}"
+  working_directory = "/"
+
+  image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
+  ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn
+  lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy[0].json
+  aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
+
+  providers = {
+    aws = aws.region
+  }
+}
+
+data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
+  count = var.account.ingestion_lambda.enabled? 1 : 0
+  statement {
+    sid       = "AllowSQSAccess"
+    effect    = "Allow"
+    resources = [aws_sqs_queue.ship_to_opg_metrics[0].arn]
+    actions = [
+      "sqs:SendMessage",
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+    ]
+  }
+}
+
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
