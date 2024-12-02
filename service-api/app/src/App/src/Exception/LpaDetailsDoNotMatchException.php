@@ -11,7 +11,6 @@ class LpaDetailsDoNotMatchException extends AbstractApiException implements Logg
     public const MESSAGE = 'LPA details do not match';
     public const TITLE   = 'Bad Request';
 
-    /** @var int $code */
     protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])

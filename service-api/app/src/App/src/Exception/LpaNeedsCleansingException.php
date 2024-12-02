@@ -11,7 +11,6 @@ class LpaNeedsCleansingException extends AbstractApiException implements Loggabl
     public const MESSAGE = 'LPA needs cleansing';
     public const TITLE   = 'Bad Request';
 
-    /** @var int $code */
     protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
