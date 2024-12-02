@@ -15,7 +15,7 @@ data "aws_ecr_repository" "ingestion_repo" {
 
 module "ingestion_lambda" {
   source            = "./modules/lambda_function"
-  count             = var.account.ingestion_lambda.enabled ? 1 : 0
+  count             = var.account.ingestion_lambda_enabled ? 1 : 0
   lambda_name       = "ingestion-lambda-${data.aws_region.current.name}"
   working_directory = "/"
 
