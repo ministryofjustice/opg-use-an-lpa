@@ -43,6 +43,7 @@ class SiriusLpaTrustCorporations extends Person
         ?string $firstname,
         #[MapFrom('firstNames')]
         ?string $firstnames,
+        #[MapFrom('companyName')]
         ?string $name,
         ?string $otherNames,
         #[MapFrom('addresses')]

@@ -383,10 +383,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(json_decode(json_encode($this->lpa->attorneys[0]), true)),
@@ -1594,10 +1591,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(json_decode(json_encode($lpa->donor), true)),
@@ -1875,10 +1869,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
@@ -1938,10 +1929,7 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
@@ -2739,13 +2727,10 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
-        $response = $addOlderLpa->validateRequest($this->userId, $data);
+        $response    = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpaArray['original_attorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['activeAttorneys'] = $expectedLpaArray['attorneys'];
-        $expectedLpaArray['inactiveAttorneys'] = [];
-        $expectedLpa = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),

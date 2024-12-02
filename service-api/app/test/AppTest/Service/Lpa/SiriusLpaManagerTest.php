@@ -115,17 +115,8 @@ class SiriusLpaManagerTest extends TestCase
                 [
                     'attorneys'          => [
                         ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
                         ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                         ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
-                    ],
-                    'original_attorneys' => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
                     ],
                     'trustCorporations'  => [
                         new SiriusPerson(
@@ -134,14 +125,6 @@ class SiriusLpaManagerTest extends TestCase
                                 'companyName'  => 'XYZ Ltd',
                                 'systemStatus' => true,
                             ]),
-                    ],
-                    'inactiveAttorneys'  => [
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                    ],
-                    'activeAttorneys'    => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                     ],
                 ],
             ),

@@ -30,9 +30,9 @@ class CanHydrateLpaStoreToCombinedFormatTest extends TestCase
     public function expectedLpaStore(): LpaStore
     {
         $donor = new LpaStoreDonor(
-            line1           : '74 Cloob Close',
-            line2           : null,
-            line3           : null,
+            addressLine1           : '74 Cloob Close',
+            addressLine2           : null,
+            addressLine3           : null,
             country                : 'GB',
             county                 : null,
             dob                    : new DateTimeImmutable('1970-01-24'),
@@ -51,9 +51,9 @@ class CanHydrateLpaStoreToCombinedFormatTest extends TestCase
 
         $attorneys = [
             new LpaStoreAttorney(
-                line1 : '81 NighOnTimeWeBuiltIt Street',
-                line2 : null,
-                line3 : null,
+                addressLine1 : '81 NighOnTimeWeBuiltIt Street',
+                addressLine2 : null,
+                addressLine3 : null,
                 country      : 'GB',
                 county       : null,
                 dob          : new DateTimeImmutable('1982-07-24'),
@@ -73,9 +73,9 @@ class CanHydrateLpaStoreToCombinedFormatTest extends TestCase
 
         $trustCorporations = [
             new LpaStoreTrustCorporations(
-                line1 : '103 Line 1',
-                line2 : null,
-                line3 : null,
+                addressLine1 : '103 Line 1',
+                addressLine2 : null,
+                addressLine3 : null,
                 companyName  : 'Trust us Corp.',
                 country      : 'GB',
                 county       : null,

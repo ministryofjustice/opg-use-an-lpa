@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace BehatTest\Context;
 
 use Aws\MockHandler as AwsMockHandler;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\UI\SharedState;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
+use Monolog\Handler\TestHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Trait BaseUiContextTrait
@@ -35,6 +39,30 @@ trait BaseUiContextTrait
         $this->ui          = $this->base->ui; // MinkContext gathered in BaseUiContext
         $this->apiFixtures = $this->base->apiFixtures;
         $this->awsFixtures = $this->base->awsFixtures;
+    }
+
+    /**
+     * @AfterScenario
+     */
+    public function outputLogsOnFailure(AfterScenarioScope $scope): void
+    {
+        $logger = $this->base->container->get(LoggerInterface::class);
+
+        if ($logger instanceof Logger) {
+            /** @var TestHandler $testHandler */
+            $testHandler = array_filter(
+                $logger->getHandlers(),
+                fn ($handler) => $handler instanceof TestHandler
+            )[0];
+
+            if (!$scope->getTestResult()->isPassed()) {
+                foreach ($testHandler->getRecords() as $record) {
+                    print_r($record['formatted']);
+                }
+            }
+
+            $logger->reset();
+        }
     }
 
     /**
