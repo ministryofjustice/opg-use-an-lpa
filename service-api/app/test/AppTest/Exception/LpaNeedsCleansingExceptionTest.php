@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Exception;
 
-use App\Exception\LpaDetailsDoNotMatchException;
+use App\Exception\LpaNeedsCleansingException;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class LpaNeedsCleansingExceptionTest extends TestCase
             'data' => 'here,',
         ];
 
-        $sut = new LpaDetailsDoNotMatchException($additionalData);
+        $sut = new LpaNeedsCleansingException($additionalData);
 
         $this->assertEquals('Bad Request', $sut->getTitle());
         $this->assertEquals($additionalData, $sut->getAdditionalData());
@@ -37,7 +37,7 @@ class LpaNeedsCleansingExceptionTest extends TestCase
             'data'     => 'here,',
         ];
 
-        $sut = new LpaDetailsDoNotMatchException($additionalData);
+        $sut = new LpaNeedsCleansingException($additionalData);
 
         $this->assertEquals(
             [
