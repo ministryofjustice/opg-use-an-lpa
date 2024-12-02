@@ -8,14 +8,15 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class LpaAlreadyAddedException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
-    public const TITLE = 'Bad Request';
+    public const MESSAGE = 'LPA already added';
+    public const TITLE   = 'Bad Request';
 
     /** @var int $code */
     protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {
-        parent::__construct(self::TITLE, 'LPA already added', $additionalData);
+        parent::__construct(self::TITLE, self::MESSAGE, $additionalData);
     }
 
     public function getAdditionalDataForLogging(): array
@@ -25,10 +26,10 @@ class LpaAlreadyAddedException extends AbstractApiException implements LoggableA
         // choose to be explicit about what is being logged to avoid leakage.
         return [
             'donor'                => [
-                'uId' => $data['donor']['uId'],
+                'uId' => $data['donor']['uId'] ?? '',
             ],
-            'caseSubtype'          => $data['caseSubtype'],
-            'activationKeyDueDate' => $data['activationKeyDueDate'],
+            'caseSubtype'          => $data['caseSubtype'] ?? '',
+            'activationKeyDueDate' => $data['activationKeyDueDate'] ?? '',
         ];
     }
 }
