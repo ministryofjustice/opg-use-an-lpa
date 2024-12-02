@@ -81,9 +81,14 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken);
         }
 
+        $templateName = 'actor::view-lpa-summary';
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            $templateName = 'actor::view-lpa-summary-combined-lpa';
+        }
+
         return new HtmlResponse(
             $this->renderer->render(
-                'actor::view-lpa-summary',
+                $templateName,
                 $renderData,
             )
         );

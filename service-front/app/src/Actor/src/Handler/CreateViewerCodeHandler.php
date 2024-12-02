@@ -12,6 +12,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTimeImmutable;
@@ -37,6 +38,7 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
         AuthenticationInterface $authenticator,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper);
 
@@ -101,7 +103,12 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
             return $this->redirectToRoute('lpa.dashboard');
         }
 
-        return new HtmlResponse($this->renderer->render('actor::lpa-create-viewercode', [
+        $templateName = 'actor::lpa-create-viewercode';
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            $templateName = 'actor::lpa-create-viewercode-combined-lpa';
+        }
+
+        return new HtmlResponse($this->renderer->render($templateName, [
             'user'       => $user,
             'lpa'        => $lpaData->lpa,
             'actorToken' => $form->get('lpa_token')->getValue(),

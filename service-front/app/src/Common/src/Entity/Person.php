@@ -109,4 +109,17 @@ class Person
             ->setCountry($this->getCountry()),
         ];
     }
+
+    public function getUid(): ?string
+    {
+        return $this->uId;
+    }
+
+    /**
+     * @return string The id (or uid) of the person
+     */
+    public function getId(): ?string
+    {
+        return $this->uId;
+    }
 }

@@ -56,3 +56,43 @@ Feature: View an LPA that I have added to my account
     And I am on the dashboard page
     When I request to view an LPA where all actors do not have an also known by name
     Then I will not see the also known as field
+
+  @integration @ui @ff:support_datastore_lpas:true
+  Scenario Outline: The user can view a Combined LPA added to their account
+    Given I have added a Combined LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which status is "<status>"
+    Then The full LPA is displayed with the correct <message>
+    Examples:
+      | status | message |
+      | Registered | This LPA is registered |
+
+  @integration @ui @ff:support_datastore_lpas:true
+  Scenario: The user cannot view a Combined LPA added to their account whose status has changed Revoked
+    Given I have added a Combined LPA to my account
+    And I am on the dashboard page
+    And The LPA has been revoked
+    When I request to view an LPA whose status changed to Revoked
+    Then I am taken back to the dashboard page
+    And The Revoked LPA details are not displayed
+
+  @ui @ff:support_datastore_lpas:true
+  Scenario: The user can view a Combined LPA and see trust corporation details in attorney sections
+    Given I have added a Combined LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which has a trust corporation added
+    Then I can see the trust corporation trust corporation in the list of attorneys
+
+  @ui @ff:support_datastore_lpas:true
+  Scenario: The user can only see active attorneys in the attorney section of Combined LPA summary
+    Given I have added a Combined LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA which has an inactive attorney named 'Harold Stallman'
+    Then I will not see 'Harold Stallman' in the attorney section of LPA summary
+
+  @ui @ff:support_datastore_lpas:true
+  Scenario: Show also known as when an actor has other names defined of Combined LPA
+    Given I have added a Combined LPA to my account
+    And I am on the dashboard page
+    When I request to view an LPA with a donor who is also known as 'Ezra'
+    Then I will see Ezra in the also known as field

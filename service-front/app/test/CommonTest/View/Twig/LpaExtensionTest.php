@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Common\Entity\Person;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -96,11 +97,54 @@ class LpaExtensionTest extends TestCase
         $this->assertEquals($expected, $addressString);
     }
 
+    #[Test]
+    public function it_concatenates_an_address_array_into_a_comma_separated_string_for_combined_format(): void
+    {
+        $extension = new LpaExtension();
+
+        $actor = new Person(
+            addressLine1: 'Street 1',
+            addressLine2: 'Street 2',
+            addressLine3: 'Street 3',
+            country: 'Country',
+            county: 'County',
+            dob: new DateTimeImmutable('22-12-1997'),
+            email: 'email@email.com',
+            firstname: 'John',
+            firstnames: 'Jonathan',
+            name: 'name',
+            otherNames: 'Maverick',
+            postcode: 'ABC 123',
+            surname: 'Doe',
+            systemStatus: 'true',
+            town: 'Town',
+            type: 'Primary',
+            uId: '700000012345',
+        );
+
+        $expected      = 'Street 1, Street 2, Street 3, Town, County, ABC 123, Country';
+        $addressString = $extension->actorAddress($actor);
+
+        $this->assertEquals($expected, $addressString);
+    }
+
+    #[Test]
+    public function access_address_key_values(): void
+    {
+        $address = new Address();
+        $address->setId(1);
+        $address->setType('Primary');
+
+        $this->assertEquals(1, $address->getId());
+        $this->assertEquals('Primary', $address->getType());
+    }
+
     public static function addressDataProvider()
     {
         return [
             [
                 [
+                    'id'           => 1,
                     'addressLine1' => 'Some House',
                     'addressLine2' => 'Some Place',
                     'addressLine3' => 'Somewhere',
@@ -108,6 +152,7 @@ class LpaExtensionTest extends TestCase
                     'county'       => 'Some County',
                     'postcode'     => 'AB1 2CD',
                     'country'      => 'Some country',
+                    'type'         => 'Primary',
                 ],
                 'Some House, Some Place, Somewhere, Some Town, Some County, AB1 2CD, Some country',
             ],
