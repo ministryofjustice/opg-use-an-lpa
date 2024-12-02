@@ -6,14 +6,13 @@ namespace Common\Entity\LpaStore;
 
 use Common\Entity\Casters\ExtractAddressLine1FromLpaStore;
 use Common\Entity\Casters\ExtractCountryFromLpaStore;
+use Common\Entity\Casters\ExtractPostcodeFromLpaStore;
 use Common\Entity\Casters\ExtractTownFromLpaStore;
 use Common\Entity\Person;
 use DateTimeImmutable;
-use EventSauce\ObjectHydrator\DoNotSerialize;
 use EventSauce\ObjectHydrator\MapFrom;
-use JsonSerializable;
 
-class LpaStoreAttorney extends Person implements JsonSerializable
+class LpaStoreAttorney extends Person
 {
     public function __construct(
         #[MapFrom('address')]
@@ -34,6 +33,8 @@ class LpaStoreAttorney extends Person implements JsonSerializable
         ?string $firstnames,
         ?string $name,
         ?string $otherNames,
+        #[MapFrom('address')]
+        #[ExtractPostcodeFromLpaStore]
         ?string $postcode,
         #[MapFrom('lastName')]
         ?string $surname,
@@ -65,19 +66,5 @@ class LpaStoreAttorney extends Person implements JsonSerializable
             $type,
             $uId,
         );
-    }
-
-    #[DoNotSerialize]
-    public function jsonSerialize(): mixed
-    {
-        $data = get_object_vars($this);
-
-        array_walk($data, function (&$value) {
-            if ($value instanceof DateTimeImmutable) {
-                $value = $value->format('Y-m-d H:i:s.uO');
-            }
-        });
-
-        return $data;
     }
 }

@@ -19,6 +19,7 @@ module "eu_west_1" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
+  event_bus_enabled                                = local.environment.event_bus_enabled
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name
@@ -106,6 +107,7 @@ module "eu_west_2" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
+  event_bus_enabled                                = local.environment.event_bus_enabled
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name

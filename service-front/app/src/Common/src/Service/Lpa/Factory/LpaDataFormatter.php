@@ -10,8 +10,6 @@ use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
-use EventSauce\ObjectHydrator\UnableToSerializeObject;
-use RuntimeException;
 
 class LpaDataFormatter
 {
@@ -27,14 +25,11 @@ class LpaDataFormatter
     }
 
     /**
-     * @throws UnableToSerializeObject
      * @throws UnableToHydrateObject
      */
     public function __invoke(array $lpa)
     {
-        $lpaObject = $this->hydrateObject($lpa);
-
-        return $lpaObject;
+        return $this->hydrateObject($lpa);
     }
 
     /**

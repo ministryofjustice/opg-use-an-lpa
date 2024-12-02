@@ -25,7 +25,7 @@ func testFS() (fs.FS, error) {
 		return nil, err
 	}
 
-	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ end }}"), 0644)
+	err = afero.WriteFile(fs, "test.partial.gohtml", []byte("{{ define \"partial\" }}World{{ $test_var := add 2 3}}{{ printf \"%.0f\" $test_var }}{{ end }}"), 0644)
 	if err != nil {
 		return nil, err
 	}
@@ -115,4 +115,12 @@ func TestWithTemplates(t *testing.T) {
 	sut := WithTemplates(next, LoadTemplates(fs))
 
 	assert.HTTPSuccess(t, sut.ServeHTTP, "GET", "/", nil, "handler not successfully running")
+}
+
+func TestAdd(t *testing.T) {
+	t.Parallel()
+
+	result := Add(1, 2, 3)
+
+	assert.Equal(t, result, 6.0)
 }

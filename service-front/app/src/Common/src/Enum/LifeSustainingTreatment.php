@@ -19,4 +19,14 @@ enum LifeSustainingTreatment: string
             default => throw new InvalidArgumentException('Invalid shorthand name: ' . $shortName),
         };
     }
+
+    public function isOptionA(): bool
+    {
+        return $this === self::OPTION_A;
+    }
+
+    public function isOptionB(): bool
+    {
+        return $this === self::OPTION_B;
+    }
 }

@@ -49,6 +49,7 @@ variable "environments" {
       cloudwatch_application_insights_enabled          = bool
       create_dashboard                                 = bool
       create_onelogin_dashboard                        = bool
+      event_bus_enabled                                = bool
       google_analytics_id_use                          = string
       google_analytics_id_view                         = string
       gov_uk_onelogin_client_id_secret_name            = string

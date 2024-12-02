@@ -1,0 +1,176 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}LPA summary{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+
+    <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.dashboard') }}" class="govuk-back-link" id="back-link-navigation">
+                {% trans %}Back to your <abbr title="lasting power of attorney">LPAs</abbr>{% endtrans %}
+            </a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
+                <div class="govuk-grid-column-two-thirds">
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.propertyAndAffairs ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
+                        {% trans %}<abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}
+                    </h1>
+                </div>
+            </div>
+
+            {{ include('@actor/partials/lpa-sub-navigation.html.twig') }}
+
+            {% if is_lpa_cancelled(lpa) %}
+                <div class="govuk-grid-row lpa-cancelled-border">
+                    <div class="govuk-grid-column-full column-full-alt-1">
+                        <h2 class="govuk-heading-m heading-m-alt-1">
+                            {% trans %}This <abbr
+                                    title="lasting power of attorney">LPA</abbr> has been cancelled{% endtrans %}
+                        </h2>
+                    </div>
+                </div>
+            {% else %}
+                <div class="govuk-grid-row lpa-valid-border">
+                    <div class="govuk-grid-column-full column-full-alt-1">
+                        {% if lpa.caseSubtype.propertyAndAffairs and lpa.whenTheLpaCanBeUsed.isWhenHasCapacity %}
+                            <h2 class="govuk-heading-m heading-m-alt-1">
+                                {% trans %}This <abbr
+                                        title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}
+                            </h2>
+                        {% else %}
+                            <h2 class="govuk-heading-m heading-m-alt-1">
+                                {% trans %}This <abbr
+                                        title="lasting power of attorney">LPA</abbr> is registered{% endtrans %}
+                            </h2>
+                        {% endif %}
+                        <p class="govuk-body body-alt-1">
+                            {% if (lpa.caseSubtype and lpa.caseSubtype.propertyAndAffairs) %}
+                                {% if (lpa.whenTheLpaCanBeUsed.isWhenHasCapacity) %}
+                                    {% if actor.type == 'donor' %}
+                                        {% trans %}While you have mental capacity, your attorneys must get your permission to use this
+                                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                    {% else %}
+                                        {% trans %}While the donor has mental capacity, you must get their permission to use this
+                                            <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
+                                    {% endif %}
+                                {% elseif (lpa.whenTheLpaCanBeUsed.isWhenCapacityLost) %}
+                                    {% trans %}This <abbr
+                                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.{% endtrans %}
+                                {% elseif lpa.whenTheLpaCanBeUsed == null or lpa.whenTheLpaCanBeUsed.isUnknown %}
+                                    {% trans %}This <abbr
+                                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                                {% endif %}
+                            {% endif %}
+
+                            {% if lpa.lifeSustainingTreatment.OptionA %}
+                                {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                            {% elseif lpa.lifeSustainingTreatment.OptionB %}
+                                {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
+                            {% endif %}
+                        </p>
+                        {% if not feature_enabled("instructions_and_preferences") %}
+                            <p class="govuk-body body-alt-1">
+                                {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {% include '@partials/lpa-summary-details/lpa-donor-details-combined-lpa.html.twig' %}
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">
+                            {% trans %}Need to change the donor's details?{% endtrans %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    {% include '@partials/lpa-summary-details/lpa-attorney-details.html.twig' %}
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="{{ path('lpa.change-details', {}, {'lpa':  actorToken }) }}">
+                            {% trans %}Need to change an attorney's details?{% endtrans %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <h2 class="govuk-heading-l">
+                        {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
+                    </h2>
+
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        {% include '@partials/lpa-summary-details/iap-images-components.html.twig' %}
+
+                        <iap-images
+                        {%- if (iap_images is defined
+                                and ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                                or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED')))) %}
+                            data-wait="{{ actorToken }}"
+                        {%- endif -%}
+                        >
+                    {% endif %}
+
+                    {% include '@partials/lpa-summary-details/lpa-details-combined-lpa.html.twig' %}
+
+                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                        {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                            <div id="images-guidance" class="govuk-inset-text">
+                                {% trans %}If any scanned images are not readable, organisations may ask to see the paper LPA so that
+                                they can find out what the instructions or preferences are.{% endtrans %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if feature_enabled("instructions_and_preferences") %}
+                        </iap-images>
+                    {% endif %}
+
+                    <p class="govuk-body">
+                        <a class="govuk-link" href="{{ path('lpa.change-lpa-details', {}, {'lpa':  actorToken }) }}">
+                            {% trans %}Seen something incorrect in the LPA details?{% endtrans %}
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            {{ include('@partials/section-break.html.twig') }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+                    <dl class="govuk-summary-list govuk-summary-list--no-border">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{% trans %}Date summary viewed{% endtrans %}</dt>
+                            <dd class="govuk-summary-list__value">{{ lpa_date('today') }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+
+
+            <p>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
+                    {% trans %}You cannot use a download or printout of this <abbr title="lasting power of attorney">LPA</abbr> summary. Always use the original paper <abbr title="lasting power of attorney">LPA</abbr> or give someone an access code.{% endtrans %}
+                </strong>
+            </div>
+            </p>
+
+        </main>
+    </div>
+{% endblock %}
