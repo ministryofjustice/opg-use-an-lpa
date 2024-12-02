@@ -42,7 +42,7 @@
 {% endfor %}
 
 {% for tc in lpa.trustCorporations %}
-    {% set i = loop.index + lpa.activeAttorneys | length %}
+    {% set i = loop.index + lpa.attorneys | length %}
     <h3 class="govuk-heading-m">{% trans count i with {'%attorneyOrdinal%': i | ordinal } %}%attorneyOrdinal% attorney|%attorneyOrdinal% attorney{% endtrans %}</h3>
     <dl class="govuk-summary-list govuk-summary-list--no-border">
         <div class="govuk-summary-list__row">
