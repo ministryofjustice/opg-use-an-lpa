@@ -10,11 +10,10 @@ use Throwable;
 class ForbiddenException extends AbstractApiException
 {
     public const TITLE = 'Forbidden';
-
-    protected $code = StatusCodeInterface::STATUS_FORBIDDEN;
+    public const CODE  = StatusCodeInterface::STATUS_FORBIDDEN;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {
-        parent::__construct(self::TITLE, $message, $additionalData, $previous);
+        parent::__construct(self::TITLE, $message, self::CODE, $additionalData, $previous);
     }
 }

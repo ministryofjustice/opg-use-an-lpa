@@ -10,12 +10,11 @@ class LpaActivationKeyAlreadyRequestedException extends AbstractApiException imp
 {
     public const MESSAGE = 'Activation key already requested for LPA';
     public const TITLE   = 'Bad Request';
-
-    protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {
-        parent::__construct(self::TITLE, self::MESSAGE, $additionalData);
+        parent::__construct(self::TITLE, self::MESSAGE, self::CODE, $additionalData);
     }
 
     public function getAdditionalDataForLogging(): array

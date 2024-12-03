@@ -4,37 +4,25 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 use Throwable;
 
 class ApiException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
-    // A safe bet for an exception is a 500 error response
-    public const DEFAULT_ERROR = 500;
-
     // The title is suitably generic, further details (from previous Throwables) will be
     // encapsulated in the stacktrace.
     public const DEFAULT_TITLE = 'An API exception has occurred';
+    public const DEFAULT_CODE  = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
 
-    /**
-     * ApiException constructor
-     *
-     * @param string                 $message
-     * @param int                    $code
-     * @param ResponseInterface|null $response
-     * @param Throwable|null         $previous
-     * @throws RuntimeException
-     */
     public function __construct(
         string $message,
-        int $code = self::DEFAULT_ERROR,
+        int $code = self::DEFAULT_CODE,
         protected ?ResponseInterface $response = null,
         ?Throwable $previous = null,
     ) {
-        $this->code = $code;
-
-        parent::__construct(self::DEFAULT_TITLE, $message, [], $previous);
+        parent::__construct(self::DEFAULT_TITLE, $message, $code, [], $previous);
     }
 
     public function getResponse(): ?ResponseInterface
@@ -66,7 +54,7 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
         ?ResponseInterface $response = null,
         ?Throwable $previous = null,
     ): ApiException {
-        $code = self::DEFAULT_ERROR;
+        $code = self::DEFAULT_CODE;
 
         if (! is_null($response)) {
             $body = json_decode($response->getBody()->getContents(), true);
@@ -78,15 +66,15 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
                 if (is_array($body) && isset($body['details'])) {
                     $message = $body['details'];
                 }
+            }
 
-                //  If there is still no message then compose a standard message
-                if (is_null($message)) {
-                    $message = sprintf(
-                        'HTTP: %d - %s',
-                        $response->getStatusCode(),
-                        is_array($body) ? print_r($body, true) : 'Unexpected API response'
-                    );
-                }
+            //  If there is still no message then compose a standard message
+            if (is_null($message)) {
+                $message = sprintf(
+                    'HTTP: %d - %s',
+                    $response->getStatusCode(),
+                    is_array($body) ? print_r($body, true) : 'Unexpected API response'
+                );
             }
         }
 

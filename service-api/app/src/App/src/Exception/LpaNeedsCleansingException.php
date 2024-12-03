@@ -10,12 +10,11 @@ class LpaNeedsCleansingException extends AbstractApiException implements Loggabl
 {
     public const MESSAGE = 'LPA needs cleansing';
     public const TITLE   = 'Bad Request';
-
-    protected $code = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {
-        parent::__construct(self::TITLE, self::MESSAGE, $additionalData);
+        parent::__construct(self::TITLE, self::MESSAGE, self::CODE, $additionalData);
     }
 
     public function getAdditionalDataForLogging(): array
