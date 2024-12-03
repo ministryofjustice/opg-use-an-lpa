@@ -328,7 +328,7 @@ class LpaContext implements Context
     public function iAmNavigatedToTheInstructionsAndPreferencesPage(): void
     {
         $this->ui->assertPageAddress('/lpa/instructions-preferences');
-        $this->ui->assertPageContainsText('Instructions and preferences');
+        $this->ui->assertPageContainsText('Preferences and instructions');
     }
 
     /**

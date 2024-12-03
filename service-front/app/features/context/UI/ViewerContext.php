@@ -818,7 +818,7 @@ class ViewerContext implements Context
      */
     public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
     {
-        $this->ui->assertPageContainsText('Preferences and Instructions');
+        $this->ui->assertPageContainsText('Preferences and instructions');
         $this->ui->assertElementContainsText(
             'dd[data-field-name="instructions_and_preferences"]',
             'Yes, the donor made preferences and/or instructions on their LPA.'
@@ -830,7 +830,7 @@ class ViewerContext implements Context
      */
     public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
     {
-        $this->ui->assertPageContainsText('Preferences and Instructions');
+        $this->ui->assertPageContainsText('Preferences and instructions');
         $this->ui->assertElementNotContainsText(
             'dd.govuk-summary-list__value',
             'Yes, the donor made preferences and/or instructions on their LPA.'
