@@ -6,6 +6,10 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
 use App\Exception\BadRequestException;
+use App\Exception\LpaActivationKeyAlreadyRequestedException;
+use App\Exception\LpaAlreadyAddedException;
+use App\Exception\LpaAlreadyHasActivationKeyException;
+use App\Exception\LpaDetailsDoNotMatchException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
@@ -146,7 +150,7 @@ class AddAccessForAllLpaTest extends TestCase
             'lpaActorToken' => 'qwerty-54321',
         ];
 
-        $expectedException = new BadRequestException('LPA already added', $alreadyAddedData);
+        $expectedException = new LpaAlreadyAddedException($alreadyAddedData);
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, (string) $this->lpaUid)
@@ -198,8 +202,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
             ->willReturn($createdDate);
 
-        $expectedException = new BadRequestException(
-            'Activation key already requested for LPA',
+        $expectedException = new LpaActivationKeyAlreadyRequestedException(
             [
                 'donor'                => $this->lpaData->getDonor(),
                 'caseSubtype'          => $this->lpaData['caseSubtype'],
@@ -378,7 +381,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->validateAccessForAllLpaRequirementsProphecy
             ->__invoke($this->lpaData->toArray());
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(LpaDetailsDoNotMatchException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->expectExceptionMessage('LPA details do not match');
 
@@ -414,8 +417,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->hasActivationCode((string) $this->lpaUid, $this->lpaData['attorneys'][1]['uId'])
             ->willReturn($createdDate);
 
-        $expectedException = new BadRequestException(
-            'LPA has an activation key already',
+        $expectedException = new LpaAlreadyHasActivationKeyException(
             [
                 'donor'                => $this->lpaData->getDonor(),
                 'caseSubtype'          => $this->lpaData['caseSubtype'],

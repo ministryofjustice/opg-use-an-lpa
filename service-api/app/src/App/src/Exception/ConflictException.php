@@ -9,20 +9,11 @@ use Throwable;
 
 class ConflictException extends AbstractApiException
 {
-    /**
-     * Exception title
-     */
     public const TITLE = 'Conflict';
+    public const CODE  = StatusCodeInterface::STATUS_CONFLICT;
 
-    protected $code = StatusCodeInterface::STATUS_CONFLICT;
-
-    /**
-     * @param string $message
-     * @param array $additionalData
-     * @param Throwable|null $previous
-     */
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {
-        parent::__construct(self::TITLE, $message, $additionalData, $previous);
+        parent::__construct(self::TITLE, $message, self::CODE, $additionalData, $previous);
     }
 }

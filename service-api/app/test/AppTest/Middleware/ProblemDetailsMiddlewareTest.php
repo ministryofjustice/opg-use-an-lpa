@@ -22,13 +22,10 @@ class ProblemDetailsMiddlewareTest extends TestCase
     #[Test]
     public function it_correctly_handles_a_successful_response(): void
     {
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
-
         $responseProphecy = $this->prophesize(ResponseInterface::class);
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $loggerProphecy   = $this->prophesize(LoggerInterface::class);
 
         $delegateProphecy->handle($requestProphecy->reveal())
             ->willReturn($responseProphecy->reveal());
@@ -42,11 +39,9 @@ class ProblemDetailsMiddlewareTest extends TestCase
     #[Test]
     public function it_correctly_handles_an_exception_thrown_by_its_delegate(): void
     {
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-
+        $requestProphecy  = $this->prophesize(ServerRequestInterface::class);
         $delegateProphecy = $this->prophesize(DelegateInterface::class);
-
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $loggerProphecy   = $this->prophesize(LoggerInterface::class);
 
         $exception = new NotFoundException('Exception message');
 
