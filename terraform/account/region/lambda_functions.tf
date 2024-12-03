@@ -15,6 +15,7 @@ data "aws_ecr_repository" "ingestion_repo" {
 
 data "aws_sqs_queue" "env" {
   name = "${var.environment_name}-receive-events-queue"
+  provider = aws.region 
 }
 
 module "ingestion_lambda" {
