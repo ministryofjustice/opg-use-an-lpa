@@ -61,7 +61,7 @@ Feature: View an LPA that I have added to my account
   Scenario Outline: The user can view a Combined LPA added to their account
     Given I have added a Combined LPA to my account
     And I am on the dashboard page
-    When I request to view an LPA which status is "<status>"
+    When I request to view a Combined LPA which status is "<status>"
     Then The full LPA is displayed with the correct <message>
     Examples:
       | status | message |
