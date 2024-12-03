@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
-use App\Exception\BadRequestException;
+use App\Exception\LpaNeedsCleansingException;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\SiriusLpaManager;
@@ -64,7 +64,7 @@ class CheckLpaCleansedTest extends TestCase
             ->getByUid($actorDetailsMatch->lpaUId)
             ->willReturn($lpa);
 
-        $this->expectException(BadRequestException::class);
+        $this->expectException(LpaNeedsCleansingException::class);
         $this->expectExceptionMessage('LPA needs cleansing');
 
         $this->checkLpaCleansed()($userId, $actorDetailsMatch);
