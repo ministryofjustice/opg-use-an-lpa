@@ -67,6 +67,11 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface
         return $this->applicationHasRestrictions;
     }
 
+    public function getAttorneys(): ?array
+    {
+        return $this->attorneys;
+    }
+
     public function getDonor(): Person
     {
         return $this->donor;

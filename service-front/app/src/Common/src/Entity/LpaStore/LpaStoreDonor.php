@@ -17,9 +17,9 @@ class LpaStoreDonor extends Person
     public function __construct(
         #[MapFrom('address')]
         #[ExtractAddressLine1FromLpaStore]
-        ?string $line1,
-        ?string $line2,
-        ?string $line3,
+        ?string $addressLine1,
+        ?string $addressLine2,
+        ?string $addressLine3,
         #[MapFrom('address')]
         #[ExtractCountryFromLpaStore]
         ?string $country,
@@ -47,9 +47,9 @@ class LpaStoreDonor extends Person
         ?string $uId,
     ) {
         parent::__construct(
-            $line1,
-            $line2,
-            $line3,
+            $addressLine1,
+            $addressLine2,
+            $addressLine3,
             $country,
             $county,
             $dob,

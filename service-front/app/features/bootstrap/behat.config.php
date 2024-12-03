@@ -35,10 +35,10 @@ return [
         //'debug'   => true,
     ],
     'feature_flags'                          => [
-        'delete_lpa_feature'                                         => true,
-        'instructions_and_preferences'                               => true,
-        'allow_gov_one_login'                                        => true,
-        'support_datastore_lpas'                                     => false,
+        'delete_lpa_feature'           => true,
+        'instructions_and_preferences' => true,
+        'allow_gov_one_login'          => true,
+        'support_datastore_lpas'       => false,
     ],
     'notify'                                 => [
         'api' => [
