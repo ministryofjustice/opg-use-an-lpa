@@ -37,6 +37,12 @@ variable "environment_name" {
   type        = string
 }
 
+variable "event_bus_enabled" {
+  description = "Whether to enable the event bus"
+  type        = bool
+  default     = false
+}
+
 variable "lambda_container_version" {
   description = "The version of the lambda container"
   type        = string

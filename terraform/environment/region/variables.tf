@@ -106,12 +106,6 @@ variable "environment_name" {
   type        = string
 }
 
-variable "event_bus_enabled" {
-  description = "Whether to enable the event bus"
-  type        = bool
-  default     = false
-}
-
 variable "feature_flags" {
   description = "The feature flags to use."
   type        = map(string)
