@@ -152,6 +152,12 @@ variable "iap_images_endpoint" {
   type        = string
 }
 
+variable "ingestion_lambda_enabled" {
+  description = "Whether to enable the ingestion lambda"
+  type        = bool
+  default     = false
+}
+
 variable "logging_level" {
   description = "The logging level to use for the applications."
   type        = string
