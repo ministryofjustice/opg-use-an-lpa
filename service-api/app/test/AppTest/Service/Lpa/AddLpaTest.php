@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Exception\BadRequestException;
+use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\AddLpa\AddLpa;
@@ -158,22 +159,15 @@ class AddLpaTest extends TestCase
                 ]
             );
 
-        try {
-            $this->addLpa()->validateAddLpaData(
-                [
-                    'actor-code' => $this->actorCode,
-                    'uid'        => $this->lpaUid,
-                    'dob'        => $this->dob,
-                ],
-                $this->userId
-            );
-        } catch (BadRequestException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertEquals('LPA status is not registered', $ex->getMessage());
-            return;
-        }
-
-        throw new ExpectationFailedException('A bad request exception should have been thrown');
+        $this->expectException(LpaNotRegisteredException::class);
+        $this->addLpa()->validateAddLpaData(
+            [
+                'actor-code' => $this->actorCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
+            ],
+            $this->userId
+        );
     }
 
     #[Test]

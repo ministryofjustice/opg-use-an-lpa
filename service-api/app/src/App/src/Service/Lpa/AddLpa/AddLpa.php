@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa\AddLpa;
 
 use App\Exception\BadRequestException;
+use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use Psr\Log\LoggerInterface;
@@ -22,6 +23,9 @@ class AddLpa
      * @param array  $data
      * @param string $userId
      * @return array
+     * @throws BadRequestException
+     * @throws LpaNotRegisteredException
+     * @throws NotFoundException
      */
     public function validateAddLpaData(array $data, string $userId): array
     {
@@ -68,6 +72,6 @@ class AddLpa
                 'uId' => $data['uid'],
             ]
         );
-        throw new BadRequestException('LPA status is not registered');
+        throw new LpaNotRegisteredException();
     }
 }
