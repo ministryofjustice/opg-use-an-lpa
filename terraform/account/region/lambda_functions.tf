@@ -15,8 +15,8 @@ data "aws_ecr_repository" "ingestion_repo" {
 
 module "ingestion_lambda" {
   count                               = var.ingestion_lambda_enabled ? 1 : 0
-  source                              = "../modules/lambda"
-  lambda_name                         = "ingestion-lambda-${var.environment_name_name}"
+  source                              = "./modules/lambda_function"
+  lambda_name                         = "ingestion-lambda-${var.account_name}"
   working_directory                   = "/"
   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
   ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn

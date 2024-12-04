@@ -27,7 +27,6 @@ module "eu_west_1" {
   gov_uk_onelogin_identity_private_key_secret_name = local.environment.gov_uk_onelogin_identity_private_key_secret_name
   gov_uk_onelogin_discovery_url                    = local.environment.gov_uk_onelogin_discovery_url
   iap_images_endpoint                              = local.environment.iap_images_endpoint
-  ingestion_lambda_enabled                         = local.environment.ingestion_lambda_enabled
   load_balancer_deletion_protection_enabled        = local.environment.load_balancer_deletion_protection_enabled
   logging_level                                    = local.environment.logging_level
   log_retention_days                               = local.environment.log_retention_in_days
@@ -116,7 +115,6 @@ module "eu_west_2" {
   gov_uk_onelogin_identity_private_key_secret_name = local.environment.gov_uk_onelogin_identity_private_key_secret_name
   gov_uk_onelogin_discovery_url                    = local.environment.gov_uk_onelogin_discovery_url
   iap_images_endpoint                              = local.environment.iap_images_endpoint
-  ingestion_lambda_enabled                         = local.environment.ingestion_lambda_enabled
   load_balancer_deletion_protection_enabled        = local.environment.load_balancer_deletion_protection_enabled
   logging_level                                    = local.environment.logging_level
   log_retention_days                               = local.environment.log_retention_in_days
