@@ -13,14 +13,13 @@ data "aws_ecr_repository" "ingestion_repo" {
   provider = aws.management
 }
 
-data "aws_sqs_queue" "env" {
-  name     = "${var.environment_name}-receive-events-queue"
-  provider = aws.region
+data "aws_sqs_queue" "account" {
+  name = "${var.account_name}-receive-events-queue"
 }
 
 module "ingestion_lambda" {
   source            = "./modules/lambda_function"
-  lambda_name       = "ingestion-lambda-${data.aws_region.current.name}"
+  lambda_name       = "ingestion-lambda-${var.account_name}"
   working_directory = "/"
 
   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
