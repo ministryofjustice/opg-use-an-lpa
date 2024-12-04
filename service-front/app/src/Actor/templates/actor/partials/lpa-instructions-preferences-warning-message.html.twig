@@ -1,6 +1,6 @@
 {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
     {% trans %}
-        This LPA has instructions or preferences. You might need to show organisations the paper LPA.
+        This LPA has preferences or instructions. You might need to show organisations the paper LPA.
     {% endtrans %}
 {% elseif not is_donor_signature_date_too_old(lpa) and lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
     {% trans %}
