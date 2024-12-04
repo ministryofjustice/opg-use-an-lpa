@@ -8,10 +8,10 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
   provider = aws.management
 }
 
-data "aws_ecr_repository" "ingestion_repo" {
-  name     = "use_an_lpa/ingestion_lambda"
-  provider = aws.management
-}
+# data "aws_ecr_repository" "ingestion_repo" {
+#   name     = "use_an_lpa/ingestion_lambda"
+#   provider = aws.management
+# }
 
 # data "aws_sqs_queue" "account" {
 #   name = "${var.account_name}-receive-events-queue"
