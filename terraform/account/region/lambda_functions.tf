@@ -15,7 +15,7 @@ data "aws_ecr_repository" "ingestion_repo" {
 }
 
 data "aws_sqs_queue" "account" {
-  name = "${var.environment_name}-receive-events-queue"
+  name = "${var.account_name}-receive-events-queue"
 }
 
 module "ingestion_lambda" {
