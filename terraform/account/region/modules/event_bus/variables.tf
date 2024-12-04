@@ -3,11 +3,6 @@ variable "environment_name" {
   type        = string
 }
 
-variable "account_name" {
-  description = "The name of the account"
-  type        = string
-}
-
 variable "event_bus_enabled" {
   description = "Whether to enable Event Bus"
   type        = bool
