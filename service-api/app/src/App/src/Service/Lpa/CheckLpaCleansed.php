@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Exception\BadRequestException;
+use App\Exception\LpaNeedsCleansingException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use DateTimeImmutable;
 use Exception;
@@ -22,7 +22,7 @@ class CheckLpaCleansed
     }
 
     /**
-     * @param array $actorDetailsMatch An LPA data structure
+     * @param ActorMatch $actorDetailsMatch An LPA data structure
      * @param string $userId
      * @throws Exception Thrown when LPA needs cleansed
      */
@@ -43,8 +43,7 @@ class CheckLpaCleansed
             );
 
             // TODO fix actor_id !== actor_uid
-            throw new BadRequestException(
-                'LPA needs cleansing',
+            throw new LpaNeedsCleansingException(
                 [
                     'actor_id' => $actorDetailsMatch->actor->getUid(),
                 ]

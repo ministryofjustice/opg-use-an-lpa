@@ -24,8 +24,8 @@ class RestrictSendingLpaForCleansing
 
     /**
      * @param ?ActorMatch $actorDetailsMatch
-     * @param array $lpaData An LPA data structure
-     * @throws Exception Thrown when LPA needs to restricted from cleansing
+     * @param array       $lpaData An LPA data structure
+     * @throws NotFoundException Thrown when LPA needs to restricted from cleansing
      */
     public function __invoke(array $lpaData, ?ActorMatch $actorDetailsMatch): void
     {
