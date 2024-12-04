@@ -14,10 +14,6 @@ data "aws_ecr_repository" "ingestion_repo" {
 
 }
 
-data "aws_sqs_queue" "account" {
-  name = "${var.account_name}-receive-events-queue"
-}
-
 module "ingestion_lambda" {
   count                               = var.ingestion_lambda_enabled ? 1 : 0
   source                              = "./modules/lambda_function"
@@ -25,23 +21,9 @@ module "ingestion_lambda" {
   working_directory                   = "/"
   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
   ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn
-  lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy.json
   aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
   providers = {
     aws = aws.region
-  }
-}
-
-data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
-  statement {
-    sid       = "AllowSQSAccess"
-    effect    = "Allow"
-    resources = [data.aws_sqs_queue.account.arn]
-    actions = [
-      "sqs:SendMessage",
-      "sqs:ReceiveMessage",
-      "sqs:DeleteMessage",
-    ]
   }
 }
 
