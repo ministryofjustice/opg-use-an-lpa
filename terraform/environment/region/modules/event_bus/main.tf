@@ -30,7 +30,7 @@ data "aws_kms_alias" "sqs" {
 
 resource "aws_sqs_queue" "receive_events_queue" {
   count                             = var.event_bus_enabled ? 1 : 0
-  name                              = "${var.account_name}-receive-events-queue"
+  name                              = "${var.environment_name}-receive-events-queue"
   kms_master_key_id                 = data.aws_kms_alias.sqs.target_key_id
   kms_data_key_reuse_period_seconds = 300
 
