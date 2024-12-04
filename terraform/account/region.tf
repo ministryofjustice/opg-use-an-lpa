@@ -8,7 +8,7 @@ module "eu_west_1" {
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
   vpc_flow_logs_iam_role   = aws_iam_role.vpc_flow_logs
-  ingestion_lambda_enabled = var.ingestion_lambda_enabled
+  ingestion_lambda_enabled = var.accounts.ingestion_lambda_enabled
 
   depends_on = [
     module.cloudwatch_mrk,
@@ -36,7 +36,7 @@ module "eu_west_2" {
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
   vpc_flow_logs_iam_role   = aws_iam_role.vpc_flow_logs
-  ingestion_lambda_enabled = var.ingestion_lambda_enabled
+  ingestion_lambda_enabled = var.accounts.ingestion_lambda_enabled
 
   depends_on = [
     module.cloudwatch_mrk,
