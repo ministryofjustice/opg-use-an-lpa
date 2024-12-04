@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
   statement {
     sid       = "AllowSQSAccess"
     effect    = "Allow"
-    resources = [data.aws_sqs_queue.env.arn]
+    resources = [data.aws_sqs_queue.account.arn]
     actions = [
       "sqs:SendMessage",
       "sqs:ReceiveMessage",
