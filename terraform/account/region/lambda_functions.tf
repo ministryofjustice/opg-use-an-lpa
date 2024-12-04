@@ -8,42 +8,42 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
   provider = aws.management
 }
 
-# data "aws_ecr_repository" "ingestion_repo" {
-#   name     = "use_an_lpa/ingestion_lambda"
-#   provider = aws.management
-# }
+data "aws_ecr_repository" "ingestion_repo" {
+  name     = "use_an_lpa/ingestion_lambda"
+  provider = aws.management
+}
 
-# data "aws_sqs_queue" "account" {
-#   name = "${var.account_name}-receive-events-queue"
-# }
+data "aws_sqs_queue" "account" {
+  name = "demo-receive-events-queue"
+}
 
-# module "ingestion_lambda" {
-#   source            = "./modules/lambda_function"
-#   lambda_name       = "ingestion-lambda-${var.account_name}"
-#   working_directory = "/"
+module "ingestion_lambda" {
+  source            = "./modules/lambda_function"
+  lambda_name       = "ingestion-lambda-${var.account_name}"
+  working_directory = "/"
 
-#   image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
-#   ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn
-#   lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy.json
-#   aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
+  image_uri                           = "${data.aws_ecr_repository.ingestion_repo.repository_url}:${var.lambda_container_version}"
+  ecr_arn                             = data.aws_ecr_repository.ingestion_repo.arn
+  lambda_role_policy_document         = data.aws_iam_policy_document.ingestion_lambda_function_policy.json
+  aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
 
-#   providers = {
-#     aws = aws.region
-#   }
-# }
+  providers = {
+    aws = aws.region
+  }
+}
 
-# data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
-#   statement {
-#     sid       = "AllowSQSAccess"
-#     effect    = "Allow"
-#     resources = [data.aws_sqs_queue.account.arn]
-#     actions = [
-#       "sqs:SendMessage",
-#       "sqs:ReceiveMessage",
-#       "sqs:DeleteMessage",
-#     ]
-#   }
-# }
+data "aws_iam_policy_document" "ingestion_lambda_function_policy" {
+  statement {
+    sid       = "AllowSQSAccess"
+    effect    = "Allow"
+    resources = [data.aws_sqs_queue.account.arn]
+    actions = [
+      "sqs:SendMessage",
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+    ]
+  }
+}
 
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
