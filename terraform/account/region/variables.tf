@@ -43,6 +43,12 @@ variable "event_bus_enabled" {
   default     = false
 }
 
+variable "ingestion_lambda_enabled" {
+  description = "Whether to enable the ingestion lambda"
+  type        = bool
+  default     = false
+}
+
 variable "lambda_container_version" {
   description = "The version of the lambda container"
   type        = string
