@@ -56,7 +56,7 @@ class ViewLpaHandler extends AbstractHandler
             'lpa' => $lpaData->lpa,
         ];
 
-        if (($this->featureEnabled)('instructions_and_preferences') && $lpaData->offsetExists('iap')) {
+        if ($lpaData->offsetExists('iap')) {
             $this->logger->info(
                 'Instructions and preferences images found for lpa {lpa_id} with state {state}',
                 [
