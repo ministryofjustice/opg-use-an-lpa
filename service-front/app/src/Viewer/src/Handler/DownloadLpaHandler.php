@@ -52,7 +52,7 @@ class DownloadLpaHandler implements RequestHandlerInterface
         $lpa    = $this->lpaService->getLpaByCode($code, $surname, null);
         $images = null;
 
-        if (($this->featureEnabled)('instructions_and_preferences') && $lpa->offsetExists('iap')) {
+        if ($lpa->offsetExists('iap')) {
             // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
             //      is later)
             // necessary for development. Do not uncomment for live environments.
