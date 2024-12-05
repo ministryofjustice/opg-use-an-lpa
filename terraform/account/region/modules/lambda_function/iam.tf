@@ -58,10 +58,10 @@ data "aws_iam_policy_document" "lambda_iam_role" {
 }
 
 data "aws_iam_policy_document" "combined_iam_role_policy" {
-  source_policy_documents = [
+  source_policy_documents = flatten([
     data.aws_iam_policy_document.lambda_iam_role.json,
-    var.lambda_role_policy_document
-  ]
+    var.lambda_role_policy_document != null ? var.lambda_role_policy_document : []
+  ])
 }
 resource "aws_iam_role_policy" "lambda" {
   name   = "${var.lambda_name}-policy"
