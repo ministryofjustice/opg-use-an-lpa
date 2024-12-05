@@ -11,7 +11,7 @@ This is pretty much all handled by the service-front image now with a handy `com
 composer run extract
 ```
 
-For the above to work, there needs to be in the top level of the opg-use-an-lpa project directory, a file named docker-compose-override.yml
+For the above to work, there needs to be in the top level of the opg-use-an-lpa project directory, a file named docker-compose.override.yml
 If this file doesn't exist, you need to make one, with a dummy single line in it such as :   version: "3.0"
 
 If you have the appropriate tooling on your system (`php` with `gettext` and `redis` extensions) you
