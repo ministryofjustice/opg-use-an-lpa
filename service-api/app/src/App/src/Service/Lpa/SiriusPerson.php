@@ -9,6 +9,7 @@ use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use ArrayAccess;
+use Exception;
 use DateTimeImmutable;
 use DateTimeInterface;
 use IteratorAggregate;
@@ -80,8 +81,15 @@ class SiriusPerson implements
         return (string)$this->person['addresses'][0]['postcode'];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getDob(): DateTimeInterface
     {
+        if (is_null($this->person['dob'])) {
+            throw new Exception('Actor DOB is not set');
+        }
+
         return new DateTimeImmutable($this->person['dob']);
     }
 

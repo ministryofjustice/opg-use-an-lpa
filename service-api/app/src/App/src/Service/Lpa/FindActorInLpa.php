@@ -8,6 +8,7 @@ use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
@@ -137,7 +138,22 @@ class FindActorInLpa
 
         $match = self::MATCH;
 
-        $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
+        try {
+            $actorDob = $actor->getDob();
+        } catch (Exception $e) {
+            $this->logger->warning(
+                'Actor DOB is null',
+                [
+                    'actor_id'   => $actor->getUid(),
+                    'actor_data' => $actorData,
+                    'error'      => $e->getMessage(),
+                ]
+            );
+
+            return self::NO_MATCH__DOB;
+        }
+
+        $match = $actorDob->format('Y-m-d') !== $matchData['dob']
             ? $match | self::NO_MATCH__DOB
             : $match;
         $match = $actorData['first_names'] !== $matchData['first_names']
