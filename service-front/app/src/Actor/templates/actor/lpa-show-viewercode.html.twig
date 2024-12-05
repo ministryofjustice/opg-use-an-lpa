@@ -55,11 +55,11 @@
                             <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                             {% if is_donor_signature_date_too_old(lpa) %}
                                 <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                        {% trans %}If there are preferences or instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
                                     </strong></p>
                             {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
                                 <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
+                                        {% trans %}As there are preferences and instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
                                     </strong></p>
                             {% elseif lpa.applicationHasRestrictions %}
                                 <p class="govuk-body"><strong class="govuk-warning-text__text">
