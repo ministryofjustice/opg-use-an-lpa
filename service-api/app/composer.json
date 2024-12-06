@@ -65,6 +65,7 @@
         "paragonie/hidden-string": "^1.0",
         "psr/clock": "^1.0",
         "ramsey/uuid": "^4.0",
+        "spatie/php-cloneable": "^1.0.2",
         "symfony/console": "^6.1",
         "web-token/jwt-signature-algorithm-ecdsa": "^3.2",
         "web-token/jwt-encryption-algorithm-aeskw": "^3.4.0"
