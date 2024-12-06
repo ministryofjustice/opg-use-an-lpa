@@ -8,6 +8,7 @@ use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetAttorneyStatus;
@@ -48,6 +49,7 @@ class FindActorInLpaTest extends TestCase
                     $this->ghostAttorneyFixtureOld(),
                     $this->multipleAddressAttorneyFixtureOld(),
                     $this->activeAttorneyFixtureOld(),
+                    $this->nullDOBAttorneyFixtureOld(),
                 ],
             ],
         );
@@ -68,10 +70,22 @@ class FindActorInLpaTest extends TestCase
             ->__invoke($this->activeAttorneyFixtureOld())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
         );
+
+        if ($expectedResponse !== null) {
+            if ($expectedResponse->actor->getDob() == new DateTimeImmutable('1975-10-05')) {
+                $this->expectException(ActorDateOfBirthNotSetException::class);
+            }
+        } else {
+            $this->expectException(ActorDateOfBirthNotSetException::class);
+        }
 
         $matchData = $sut($lpa, $userData);
         $this->assertEquals($expectedResponse, $matchData);
@@ -87,6 +101,7 @@ class FindActorInLpaTest extends TestCase
             $this->inactiveAttorneyFixture(),
             $this->ghostAttorneyFixture(),
             $this->activeAttorneyFixture(),
+            $this->nullDOBAttorneyFixture(),
         ];
 
         $lpa = new \App\Entity\Sirius\SiriusLpa(
@@ -129,11 +144,63 @@ class FindActorInLpaTest extends TestCase
             ->__invoke($this->activeAttorneyFixture())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixture())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
             $this->loggerProphecy->reveal()
         );
 
+        $matchData = $sut($lpa, $userData);
+        $this->assertEquals($expectedResponse, $matchData);
+    }
+
+    #[Test]
+    #[DataProvider('nullActorLookupDataProviderOldSiriusPerson')]
+    public function returns_exception_when_actor_dob_is_null(?ActorMatch $expectedResponse, array $userData): void
+    {
+        $lpa = new SiriusLpa(
+            [
+                'uId'       => '700000012346',
+                'donor'     => $this->nullDOBAttorneyFixtureOld(),
+                'attorneys' => [
+                    $this->inactiveAttorneyFixtureOld(),
+                    $this->ghostAttorneyFixtureOld(),
+                    $this->multipleAddressAttorneyFixtureOld(),
+                    $this->activeAttorneyFixtureOld(),
+                    $this->nullDOBAttorneyFixtureOld(),
+                ],
+            ],
+        );
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->inactiveAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->ghostAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->multipleAddressAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->activeAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
+        $sut = new FindActorInLpa(
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
+        );
+
+        $this->expectExceptionMessage('Actor DOB is not set');
         $matchData = $sut($lpa, $userData);
         $this->assertEquals($expectedResponse, $matchData);
     }
@@ -245,6 +312,60 @@ class FindActorInLpaTest extends TestCase
                     'first_names'      => 'Attorneytwo',
                     'last_name'        => 'Person',
                     'postcode'         => 'BB1 9ee',
+                ],
+            ],
+        ];
+    }
+
+    public static function nullActorLookupDataProviderOldSiriusPerson(): array
+    {
+        return self::nullActorLookupDataProvider(
+            FindActorInLpaTest::activeAttorneyFixtureOld(),
+            FindActorInLpaTest::donorFixtureOld()
+        );
+    }
+
+    private static function nullActorLookupDataProvider(
+        SiriusPerson|Person $attorneyFixture,
+        SiriusPerson|Person|LpaStoreDonor $donorFixture,
+    ): array {
+        return [
+            [
+                new ActorMatch(
+                    actor:  $attorneyFixture,
+                    role:   'attorney',
+                    lpaUId: '700000012346',
+                ),
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => null,
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'T’esting',
+                    'postcode'         => 'Ab1 2Cd',
+                ],
+            ],
+            [
+                new ActorMatch(
+                    actor:  $donorFixture,
+                    role:   'donor',
+                    lpaUId: '700000012346',
+                ),
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => null,
+                    'first_names'      => 'Donor',
+                    'last_name'        => 'Person',
+                    'postcode'         => 'PY1 3Kd',
+                ],
+            ],
+            [
+                null,
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => '1982-01-20', // dob will not match
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'Testing',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
         ];
@@ -414,6 +535,47 @@ class FindActorInLpaTest extends TestCase
             firstname:    'Donor',
             id:           '7',
             linked:       [],
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'PY1 3Kd',
+            surname:      'Person',
+            systemStatus: null,
+            town:         null,
+            type:         null,
+            uId:          '700000001111'
+        );
+    }
+
+    public static function nullDOBAttorneyFixtureOld(): SiriusPerson
+    {
+        return new SiriusPerson(
+            [
+                'uId'          => '7000000055555',
+                'dob'          => null,
+                'firstname'    => 'Testering',
+                'surname'      => 'Testing',
+                'addresses'    => [
+                    [
+                        'postcode' => 'Ab1 2Cd',
+                    ],
+                ],
+                'systemStatus' => true,
+            ]
+        );
+    }
+
+    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
+    {
+        return new SiriusLpaAttorney(
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country:      null,
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    'Testering',
+            id:           '7',
             middlenames:  null,
             otherNames:   null,
             postcode:     'PY1 3Kd',

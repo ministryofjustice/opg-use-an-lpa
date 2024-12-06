@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use ArrayAccess;
+use Exception;
 use DateTimeImmutable;
 use DateTimeInterface;
 use IteratorAggregate;
@@ -80,8 +82,16 @@ class SiriusPerson implements
         return (string)$this->person['addresses'][0]['postcode'];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getDob(): DateTimeInterface
     {
+        //print_r($this->person);
+        if (empty($this->person['dob'])) {
+            throw new ActorDateOfBirthNotSetException('Actor DOB is not set');
+        }
+
         return new DateTimeImmutable($this->person['dob']);
     }
 

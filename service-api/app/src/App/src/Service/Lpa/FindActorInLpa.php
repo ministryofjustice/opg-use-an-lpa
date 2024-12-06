@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
@@ -137,18 +138,30 @@ class FindActorInLpa
 
         $match = self::MATCH;
 
-        $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
-            ? $match | self::NO_MATCH__DOB
-            : $match;
-        $match = $actorData['first_names'] !== $matchData['first_names']
-            ? $match | self::NO_MATCH__FIRSTNAMES
-            : $match;
-        $match = $actorData['last_name'] !== $matchData['last_name']
-            ? $match | self::NO_MATCH__SURNAME
-            : $match;
-        $match = $actorData['postcode'] !== $matchData['postcode']
-            ? $match | self::NO_MATCH__POSTCODE
-            : $match;
+        try {
+            $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
+                ? $match | self::NO_MATCH__DOB
+                : $match;
+            $match = $actorData['first_names'] !== $matchData['first_names']
+                ? $match | self::NO_MATCH__FIRSTNAMES
+                : $match;
+            $match = $actorData['last_name'] !== $matchData['last_name']
+                ? $match | self::NO_MATCH__SURNAME
+                : $match;
+            $match = $actorData['postcode'] !== $matchData['postcode']
+                ? $match | self::NO_MATCH__POSTCODE
+                : $match;
+        } catch (ActorDateOfBirthNotSetException $exception) {
+            $this->logger->warning(
+                'Actor DOB is null',
+                [
+                    'actor_id' => $actor->getUid(),
+                    'error'    => $exception->getMessage(),
+                ]
+            );
+
+            return self::NO_MATCH__DOB;
+        }
 
         if ($match === self::MATCH) {
             $this->logger->info(
