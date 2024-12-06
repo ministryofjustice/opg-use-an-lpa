@@ -47,13 +47,13 @@
                         {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
                             <p class="govuk-!-font-size-24 govuk-!-font-weight-bold">
                                 {% if is_donor_signature_date_too_old(lpa) %}
-                                    {% trans %}This LPA has instructions and/or preferences{% endtrans %}
+                                    {% trans %}This LPA has preferences and/or instructions (sometimes known as “restrictions and conditions”){% endtrans %}
                                 {% elseif lpa.applicationHasGuidance and lpa.applicationHasRestrictions %}
-                                    {% trans %}This LPA has instructions and preferences{% endtrans %}
+                                    {% trans %}This LPA has preferences and instructions (sometimes known as “restrictions and conditions”){% endtrans %}
                                 {% elseif lpa.applicationHasGuidance %}
-                                    {% trans %}This LPA has preferences{% endtrans %}
+                                    {% trans %}This LPA has preferences (sometimes known as “restrictions and conditions”){% endtrans %}
                                 {% elseif lpa.applicationHasRestrictions %}
-                                    {% trans %}This LPA has instructions{% endtrans %}
+                                    {% trans %}This LPA has instructions (sometimes known as “restrictions and conditions”){% endtrans %}
                                 {% endif %}
                             </p>
                         {% endif %}
