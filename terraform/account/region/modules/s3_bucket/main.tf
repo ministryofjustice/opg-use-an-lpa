@@ -51,6 +51,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "bucket" {
   }
 }
 
+resource "aws_s3_bucket_lifecycle_configuration" "multi_part" {
+  bucket = aws_s3_bucket.bucket.id
+  rule {
+    id     = "abort-incomplete-multipart-upload"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
+    }
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "public_access_policy" {
   bucket = aws_s3_bucket.bucket.id
 
@@ -123,4 +135,3 @@ data "aws_iam_policy_document" "bucket" {
     }
   }
 }
-
