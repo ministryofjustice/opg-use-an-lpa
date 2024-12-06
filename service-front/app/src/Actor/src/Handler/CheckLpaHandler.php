@@ -37,6 +37,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Common\Service\Features\FeatureEnabled;
 
 /**
  * @codeCoverageIgnore
@@ -66,6 +67,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         private RateLimitService $rateLimitService,
         private TranslatorInterface $translator,
         private AddLpa $addLpa,
+        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
@@ -195,9 +197,14 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     $lpa->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance'
                 );
 
+                $templateName = 'actor::check-lpa';
+                if (($this->featureEnabled)('support_datastore_lpas')) {
+                    $templateName = 'actor::check-combined-lpa';
+                }
+
                 return new HtmlResponse(
                     $this->renderer->render(
-                        'actor::check-lpa',
+                        $templateName,
                         [
                             'form'     => $this->form,
                             'lpa'      => $lpa,
