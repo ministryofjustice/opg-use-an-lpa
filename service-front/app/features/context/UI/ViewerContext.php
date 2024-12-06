@@ -782,7 +782,7 @@ class ViewerContext implements Context
      */
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
-        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and preferences');
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and instructions');
         if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
             $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
             $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
@@ -818,10 +818,10 @@ class ViewerContext implements Context
      */
     public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
     {
-        $this->ui->assertPageContainsText('Instructions and preferences');
+        $this->ui->assertPageContainsText('Preferences and instructions');
         $this->ui->assertElementContainsText(
             'dd[data-field-name="instructions_and_preferences"]',
-            'Yes, the donor made instructions and/or preferences on their LPA.'
+            'Yes, the donor made preferences and/or instructions on their LPA.'
         );
     }
 
@@ -830,10 +830,10 @@ class ViewerContext implements Context
      */
     public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
     {
-        $this->ui->assertPageContainsText('Instructions and preferences');
+        $this->ui->assertPageContainsText('Preferences and instructions');
         $this->ui->assertElementNotContainsText(
             'dd.govuk-summary-list__value',
-            'Yes, the donor made instructions and/or preferences on their LPA.'
+            'Yes, the donor made preferences and/or instructions on their LPA.'
         );
         $this->ui->assertElementContainsText('dd[data-field-name="instructions_and_preferences"]', 'No');
     }
@@ -843,7 +843,7 @@ class ViewerContext implements Context
      */
     public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
     {
-        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions and/or preferences');
+        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and/or instructions');
         $this->ui->assertElementNotOnPage('.iap-loader');
         $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
         $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
