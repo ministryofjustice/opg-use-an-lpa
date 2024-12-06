@@ -157,6 +157,54 @@ class FindActorInLpaTest extends TestCase
         $this->assertEquals($expectedResponse, $matchData);
     }
 
+    #[Test]
+    #[DataProvider('nullActorLookupDataProviderOldSiriusPerson')]
+    public function returns_exception_when_actor_dob_is_null(?ActorMatch $expectedResponse, array $userData): void
+    {
+        $lpa = new SiriusLpa(
+            [
+                'uId'       => '700000012346',
+                'donor'     => $this->nullDOBAttorneyFixtureOld(),
+                'attorneys' => [
+                    $this->inactiveAttorneyFixtureOld(),
+                    $this->ghostAttorneyFixtureOld(),
+                    $this->multipleAddressAttorneyFixtureOld(),
+                    $this->activeAttorneyFixtureOld(),
+                    $this->nullDOBAttorneyFixtureOld(),
+                ],
+            ],
+        );
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->inactiveAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->ghostAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->multipleAddressAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->activeAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
+        $sut = new FindActorInLpa(
+            $this->getAttorneyStatusProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
+        );
+
+        $this->expectExceptionMessage('Actor DOB is not set');
+        $matchData = $sut($lpa, $userData);
+        $this->assertEquals($expectedResponse, $matchData);
+    }
+
     public static function actorLookupDataProviderOldSiriusPerson(): array
     {
         return self::actorLookupDataProvider(
@@ -264,6 +312,60 @@ class FindActorInLpaTest extends TestCase
                     'first_names'      => 'Attorneytwo',
                     'last_name'        => 'Person',
                     'postcode'         => 'BB1 9ee',
+                ],
+            ],
+        ];
+    }
+
+    public static function nullActorLookupDataProviderOldSiriusPerson(): array
+    {
+        return self::nullActorLookupDataProvider(
+            FindActorInLpaTest::activeAttorneyFixtureOld(),
+            FindActorInLpaTest::donorFixtureOld()
+        );
+    }
+
+    private static function nullActorLookupDataProvider(
+        SiriusPerson|Person $attorneyFixture,
+        SiriusPerson|Person|LpaStoreDonor $donorFixture,
+    ): array {
+        return [
+            [
+                new ActorMatch(
+                    actor:  $attorneyFixture,
+                    role:   'attorney',
+                    lpaUId: '700000012346',
+                ),
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => null,
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'T’esting',
+                    'postcode'         => 'Ab1 2Cd',
+                ],
+            ],
+            [
+                new ActorMatch(
+                    actor:  $donorFixture,
+                    role:   'donor',
+                    lpaUId: '700000012346',
+                ),
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => null,
+                    'first_names'      => 'Donor',
+                    'last_name'        => 'Person',
+                    'postcode'         => 'PY1 3Kd',
+                ],
+            ],
+            [
+                null,
+                [
+                    'reference_number' => '700000000001',
+                    'dob'              => '1982-01-20', // dob will not match
+                    'first_names'      => 'Test Tester',
+                    'last_name'        => 'Testing',
+                    'postcode'         => 'Ab1 2Cd',
                 ],
             ],
         ];
