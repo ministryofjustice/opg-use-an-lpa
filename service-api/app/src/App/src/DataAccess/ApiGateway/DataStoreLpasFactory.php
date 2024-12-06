@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\LpaDataFormatter;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
@@ -26,6 +27,7 @@ class DataStoreLpasFactory
             $container->get(RequestFactoryInterface::class),
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
+            $container->get(LpaDataFormatter::class),
             $config['lpa_data_store_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
         );
