@@ -8,6 +8,7 @@ use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetAttorneyStatus;
@@ -15,7 +16,6 @@ use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
 use DateTimeImmutable;
-use DateMalformedStringException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -49,6 +49,7 @@ class FindActorInLpaTest extends TestCase
                     $this->ghostAttorneyFixtureOld(),
                     $this->multipleAddressAttorneyFixtureOld(),
                     $this->activeAttorneyFixtureOld(),
+                    $this->nullDOBAttorneyFixtureOld(),
                 ],
             ],
         );
@@ -69,10 +70,22 @@ class FindActorInLpaTest extends TestCase
             ->__invoke($this->activeAttorneyFixtureOld())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
-            $this->loggerProphecy->reveal()
+            $this->loggerProphecy->reveal(),
         );
+
+        if ($expectedResponse !== null) {
+            if ($expectedResponse->actor->getDob() == new DateTimeImmutable('1975-10-05')) {
+                $this->expectException(ActorDateOfBirthNotSetException::class);
+            }
+        } else {
+            $this->expectException(ActorDateOfBirthNotSetException::class);
+        }
 
         $matchData = $sut($lpa, $userData);
         $this->assertEquals($expectedResponse, $matchData);
@@ -88,6 +101,7 @@ class FindActorInLpaTest extends TestCase
             $this->inactiveAttorneyFixture(),
             $this->ghostAttorneyFixture(),
             $this->activeAttorneyFixture(),
+            $this->nullDOBAttorneyFixture(),
         ];
 
         $lpa = new \App\Entity\Sirius\SiriusLpa(
@@ -139,34 +153,6 @@ class FindActorInLpaTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $matchData = $sut($lpa, $userData);
-        $this->assertEquals($expectedResponse, $matchData);
-    }
-
-    #[Test]
-    #[DataProvider('actorLookupDataProviderOldSiriusPerson')]
-    public function returns_exception_when_actor_dob_is_null(?ActorMatch $expectedResponse, array $userData): void
-    {
-        $lpa = new SiriusLpa(
-            [
-                'uId'       => '700000012346',
-                'donor'     => $this->donorFixtureOld(),
-                'attorneys' => [
-                    $this->nullDOBAttorneyFixtureOld(),
-                ],
-            ],
-        );
-
-        $this->getAttorneyStatusProphecy
-            ->__invoke($this->nullDOBAttorneyFixtureOld())
-            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
-
-        $sut = new FindActorInLpa(
-            $this->getAttorneyStatusProphecy->reveal(),
-            $this->loggerProphecy->reveal()
-        );
-
-        $this->expectException(\Exception::class);
         $matchData = $sut($lpa, $userData);
         $this->assertEquals($expectedResponse, $matchData);
     }

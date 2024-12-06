@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
@@ -86,8 +87,9 @@ class SiriusPerson implements
      */
     public function getDob(): DateTimeInterface
     {
-        if (is_null($this->person['dob'])) {
-            throw new Exception('Actor DOB is not set');
+        //print_r($this->person);
+        if (empty($this->person['dob'])) {
+            throw new ActorDateOfBirthNotSetException('Actor DOB is not set');
         }
 
         return new DateTimeImmutable($this->person['dob']);
