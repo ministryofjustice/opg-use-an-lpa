@@ -175,6 +175,10 @@ class FindActorInLpaTest extends TestCase
             ],
         );
 
+        $actor = $this->createMock(FindActorInLpa\ActorMatchingInterface::class);
+        $actor->method('getDob')
+            ->willThrowException(new ActorDateOfBirthNotSetException('Actor DOB is not set'));
+
         $this->getAttorneyStatusProphecy
             ->__invoke($this->inactiveAttorneyFixtureOld())
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
