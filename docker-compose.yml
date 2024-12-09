@@ -109,7 +109,7 @@ services:
       ALLOW_MERIS_LPAS: "false"
       INSTRUCTIONS_AND_PREFERENCES: "true"
       ALLOW_GOV_ONE_LOGIN: "true"
-      SUPPORT_DATASTORE_LPAS: "true"
+      SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only
       API_SERVICE_URL:
