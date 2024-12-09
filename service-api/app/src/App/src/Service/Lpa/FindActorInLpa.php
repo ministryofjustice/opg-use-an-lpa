@@ -127,30 +127,9 @@ class FindActorInLpa
             ]
         );
 
-        $this->logger->debug(
-            'Doing actor data comparison against actor with id {actor_id}',
-            [
-                'actor_id'   => $actor->getUid(),
-                'to_match'   => $matchData,
-                'actor_data' => array_merge($actorData, ['dob' => $actor->getDob()]),
-            ]
-        );
-
-        $match = self::MATCH;
-
+        $actorDob = null;
         try {
-            $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
-                ? $match | self::NO_MATCH__DOB
-                : $match;
-            $match = $actorData['first_names'] !== $matchData['first_names']
-                ? $match | self::NO_MATCH__FIRSTNAMES
-                : $match;
-            $match = $actorData['last_name'] !== $matchData['last_name']
-                ? $match | self::NO_MATCH__SURNAME
-                : $match;
-            $match = $actorData['postcode'] !== $matchData['postcode']
-                ? $match | self::NO_MATCH__POSTCODE
-                : $match;
+            $actorDob = $actor->getDob()->format('Y-m-d');
         } catch (ActorDateOfBirthNotSetException $exception) {
             $this->logger->warning(
                 'Actor DOB is null',
@@ -162,6 +141,33 @@ class FindActorInLpa
 
             return self::NO_MATCH__DOB;
         }
+
+        $this->logger->debug(
+            'Doing actor data comparison against actor with id {actor_id}',
+            [
+                'actor_id'   => $actor->getUid(),
+                'to_match'   => $matchData,
+                'actor_data' => array_merge($actorData, [
+                    'dob' => $actorDob
+                ]),
+            ]
+        );
+
+        $match = self::MATCH;
+
+        $match = $actorDob !== $matchData['dob']
+            ? $match | self::NO_MATCH__DOB
+            : $match;
+        $match = $actorData['first_names'] !== $matchData['first_names']
+            ? $match | self::NO_MATCH__FIRSTNAMES
+            : $match;
+        $match = $actorData['last_name'] !== $matchData['last_name']
+            ? $match | self::NO_MATCH__SURNAME
+            : $match;
+        $match = $actorData['postcode'] !== $matchData['postcode']
+            ? $match | self::NO_MATCH__POSTCODE
+            : $match;
+
 
         if ($match === self::MATCH) {
             $this->logger->info(

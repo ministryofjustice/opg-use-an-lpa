@@ -87,7 +87,7 @@ class SiriusPerson implements
      */
     public function getDob(): DateTimeInterface
     {
-        if (empty($this->person['dob'])) {
+        if (is_null($this->person['dob'])) {
             throw new ActorDateOfBirthNotSetException('Actor DOB is not set');
         }
 
