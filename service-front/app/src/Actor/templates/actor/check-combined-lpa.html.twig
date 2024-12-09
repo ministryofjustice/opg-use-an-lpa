@@ -1,0 +1,116 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Confirm this is the correct LPA{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('lpa.add-by-key') }}" class="govuk-back-link" id="back-link-navigation">
+                {% trans %}Back{% endtrans %}</a>
+        </div>
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <h1 class="govuk-heading-xl">{% trans %}Confirm this is the correct LPA{% endtrans %}</h1>
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Type of LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if lpa.caseSubtype.value|lower == "pfa" %}
+                                    {% trans %}Property and finance{% endtrans %}
+                                {% else %}
+                                    {% trans %}Health and welfare{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Donor name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ actor_name(lpa.donor) }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Your name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if userRole == "Trust corporation" %}
+                                    {{ actor.companyName }} {% trans %}(Trust corporation){% endtrans %}
+                                {% else %}
+                                    {{ actor_name(actor) }}
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Your role on this LPA{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {% if userRole == "Attorney" or userRole == "Trust corporation" %}
+                                    {% trans %}Attorney{% endtrans %}
+                                {% elseif userRole == "Donor" %}
+                                    {% trans %}Donor{% endtrans %}
+                                {% endif %}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
+                            {% trans %}Check that these details are correct before continuing{% endtrans %}
+                        </strong>
+                    </div>
+
+                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick"
+                             data-gaAction="Details" data-gaCategory="Wrong Details"
+                             data-gaLabel="What to do if the details are wrong">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}What to do if the details are wrong{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>
+                                {% trans %}If the information is wrong, or if a name is misspelt, please call us:{% endtrans %}
+                            </p>
+                            {{ include('@partials/contact-details/telephone.html.twig', {heading_level: 2 }) }}
+                        </div>
+                    </details>
+
+                    {{ govuk_form_open(form) }}
+
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+
+                            <button role="button" data-prevent-double-click="true" type="submit" draggable="false"
+                                    class="govuk-button moj-button-menu__item  " data-module="govuk-button">
+                                {% trans %}Confirm{% endtrans %}</button>
+                            </button>
+
+                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+
+
+                    {{ govuk_form_close() }}
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}
