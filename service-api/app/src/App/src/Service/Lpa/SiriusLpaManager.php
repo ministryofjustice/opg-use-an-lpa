@@ -106,7 +106,7 @@ class SiriusLpaManager implements LpaManagerInterface
         return [];
     }
 
-    public function getAllForUser(string $userId): array
+    public function getAllActiveForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -118,7 +118,7 @@ class SiriusLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getAllLpasAndRequestsForUser(string $userId): array
+    public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
