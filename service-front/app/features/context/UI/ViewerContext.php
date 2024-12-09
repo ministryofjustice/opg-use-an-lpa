@@ -357,11 +357,13 @@ class ViewerContext implements Context
             'expires' => (new DateTime('+30 days'))->format('c'),
         ];
 
-        $data['iap'] = [
-            'uId'        => (int) $this->lpaData['uId'],
-            'status'     => $this->imageCollectionStatus,
-            'signedUrls' => [],
-        ];
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $data['iap'] = [
+                'uId'        => (int) $this->lpaData['uId'],
+                'status'     => $this->imageCollectionStatus,
+                'signedUrls' => [],
+            ];
+        }
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
@@ -530,6 +532,7 @@ class ViewerContext implements Context
 
         if (
             ($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false)
+            && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
         ) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
@@ -780,8 +783,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and instructions');
-        $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
-        $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
+        }
     }
 
     /**
@@ -790,8 +795,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
-        $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
-        $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
+        }
     }
 
     /**
@@ -800,8 +807,10 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructions()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
-        $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
-        $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
+        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
+            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+            $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
+        }
     }
 
     /**
