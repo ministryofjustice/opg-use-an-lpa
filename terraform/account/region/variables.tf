@@ -37,8 +37,8 @@ variable "environment_name" {
   type        = string
 }
 
-variable "ingestion_lambda_enabled" {
-  description = "Enable the ingestion lambda"
+variable "event_receiver_enabled" {
+  description = "Enable the event receiver Lambda"
   type        = bool
 }
 variable "lambda_container_version" {
