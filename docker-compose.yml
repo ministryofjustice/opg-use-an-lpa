@@ -268,6 +268,26 @@ services:
     ports:
       - 9007:8080
 
+
+  # ---------------------------
+  # Lambda for ingestion from MLPA
+
+  event-reciever-lambda:
+    container_name: event-reciever
+    build:
+      context: ./lambda-functions/event-reciever
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: local
+      REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: 'devkey'
+      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
+    volumes:
+      - ./lambda-functions/event-reciever/app:/function/app
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
+    ports:
+      - 9008:8080
+
   proxy:
     container_name: proxy
     image: traefik:3.0
