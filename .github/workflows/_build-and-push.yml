@@ -75,8 +75,8 @@ jobs:
             run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
-          - svc_prefix: 'ingestion'
-            svc_suffix: 'lambda'
+          - svc_prefix: 'event'
+            svc_suffix: 'receiver'
             build_development_docker: 'false'
             run_unit_tests: 'false'
             run_integration_tests: 'false'
@@ -86,7 +86,7 @@ jobs:
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57
         env:
           cache-name: cache-node-modules
         with:
@@ -264,9 +264,10 @@ jobs:
           elif [[ "${SVC_PREFIX}" = "stats_upload" ]]; then
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
 
-          elif [[ "${SVC_PREFIX}" = "ingestion" ]]; then
-            docker build --file lambda-functions/ingestion-lambda/Dockerfile --tag ingestion_lambda:latest lambda-functions/ingestion-lambda
-
+          elif [[ "${SVC_PREFIX}" = "event" ]]; then
+            if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
+              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
+            fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
