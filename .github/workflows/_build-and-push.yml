@@ -265,7 +265,9 @@ jobs:
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
 
           elif [[ "${SVC_PREFIX}" = "event" ]]; then
-            docker build --file lambda-functions/${SVC_PREFIX}_${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}_${SVC_SUFFIX}
+            if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
+              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}_${SVC_SUFFIX}
+            fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
