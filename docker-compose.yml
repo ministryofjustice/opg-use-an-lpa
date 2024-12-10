@@ -290,7 +290,7 @@ services:
 
   proxy:
     container_name: proxy
-    image: traefik:3.0
+    image: traefik:v3.1
     ports:
       - "9001:9001"
       - "9041:9041"
