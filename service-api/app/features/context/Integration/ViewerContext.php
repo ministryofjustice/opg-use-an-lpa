@@ -173,22 +173,20 @@ class ViewerContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        if ($this->container->get(FeatureEnabled::class)('instructions_and_preferences')) {
-            $imageResponse             = new stdClass();
-            $imageResponse->uId        = (int) $this->lpa->uId;
-            $imageResponse->status     = 'COLLECTION_COMPLETE';
-            $imageResponse->signedUrls = [
-                'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
-                'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
-            ];
+        $imageResponse             = new stdClass();
+        $imageResponse->uId        = (int) $this->lpa->uId;
+        $imageResponse->status     = 'COLLECTION_COMPLETE';
+        $imageResponse->signedUrls = [
+            'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
+            'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
+        ];
 
-            $this->pactGetInteraction(
-                $this->iapImagesPactProvider,
-                '/v1/image-request/' . $this->lpa->uId,
-                StatusCodeInterface::STATUS_OK,
-                $imageResponse
-            );
-        }
+        $this->pactGetInteraction(
+            $this->iapImagesPactProvider,
+            '/v1/image-request/' . $this->lpa->uId,
+            StatusCodeInterface::STATUS_OK,
+            $imageResponse
+        );
 
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
@@ -196,11 +194,9 @@ class ViewerContext extends BaseIntegrationContext
         Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         Assert::assertEquals($lpaExpiry, $lpaData['expires']);
 
-        if ($this->container->get(FeatureEnabled::class)('instructions_and_preferences')) {
-            Assert::assertArrayHasKey('iap', $lpaData);
-            Assert::assertInstanceOf(InstructionsAndPreferencesImages::class, $lpaData['iap']);
-            Assert::assertEquals('COLLECTION_COMPLETE', $lpaData['iap']->status->value);
-        }
+        Assert::assertArrayHasKey('iap', $lpaData);
+        Assert::assertInstanceOf(InstructionsAndPreferencesImages::class, $lpaData['iap']);
+        Assert::assertEquals('COLLECTION_COMPLETE', $lpaData['iap']->status->value);
     }
 
     /**

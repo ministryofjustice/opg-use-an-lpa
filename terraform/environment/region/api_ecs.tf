@@ -538,10 +538,6 @@ locals {
           value = tostring(var.feature_flags.support_datastore_lpas)
         },
         {
-          name  = "INSTRUCTIONS_AND_PREFERENCES",
-          value = tostring(var.feature_flags.instructions_and_preferences)
-        },
-        {
           name  = "ALLOW_GOV_ONE_LOGIN",
           value = tostring(var.feature_flags.allow_gov_one_login)
         },

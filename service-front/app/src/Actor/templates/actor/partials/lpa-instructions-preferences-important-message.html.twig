@@ -3,11 +3,6 @@
         {% trans %}
             This LPA has instructions.<br>
         {% endtrans %}
-        {% if not feature_enabled('instructions_and_preferences') %}
-            {% trans %}
-                You might need to show organisations the paper LPA.
-            {% endtrans %}
-        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -21,11 +16,6 @@
         {% trans %}
             This LPA has preferences.<br>
         {% endtrans %}
-        {% if not feature_enabled('instructions_and_preferences') %}
-            {% trans %}
-                You might need to show organisations the paper LPA.
-            {% endtrans %}
-        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -39,11 +29,6 @@
         {% trans %}
             This LPA has preferences and instructions.<br>
         {% endtrans %}
-        {% if not feature_enabled('instructions_and_preferences') %}
-            {% trans %}
-                You might need to show organisations the paper LPA.
-            {% endtrans %}
-        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"
@@ -57,11 +42,6 @@
         {% trans %}
             This LPA has preferences and/or instructions.<br>
         {% endtrans %}
-        {% if not feature_enabled('instructions_and_preferences') %}
-            {% trans %}
-                You might need to show organisations the paper LPA.
-            {% endtrans %}
-        {% endif %}
         <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
            data-gaEventType="onClick"
            data-gaAction="Clicked Link"

@@ -144,23 +144,21 @@ class ViewerContext implements Context
         // SiriusLpas::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $imageResponse             = new stdClass();
-            $imageResponse->uId        = (int) $this->lpa->uId;
-            $imageResponse->status     = 'COLLECTION_COMPLETE';
-            $imageResponse->signedUrls = [
-                'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
-                'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
-            ];
+        $imageResponse             = new stdClass();
+        $imageResponse->uId        = (int) $this->lpa->uId;
+        $imageResponse->status     = 'COLLECTION_COMPLETE';
+        $imageResponse->signedUrls = [
+            'iap-' . $this->lpa->uId . '-instructions' => 'https://image_url',
+            'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
+        ];
 
-            $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($imageResponse),
-                )
-            );
-        }
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($imageResponse),
+            )
+        );
 
         $this->apiPost(
             '/v1/viewer-codes/summary',
