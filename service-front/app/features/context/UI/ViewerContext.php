@@ -805,31 +805,6 @@ class ViewerContext implements Context
     }
 
     /**
-     * @Then /^I can see the lpa has instructions and preferences set in summary$/
-     */
-    public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
-    {
-        $this->ui->assertPageContainsText('Preferences and instructions');
-        $this->ui->assertElementContainsText(
-            'dd[data-field-name="instructions_and_preferences"]',
-            'Yes, the donor made preferences and/or instructions on their LPA.'
-        );
-    }
-
-    /**
-     * @Then /^I can see the lpa has no instructions and preferences set in summary$/
-     */
-    public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
-    {
-        $this->ui->assertPageContainsText('Preferences and instructions');
-        $this->ui->assertElementNotContainsText(
-            'dd.govuk-summary-list__value',
-            'Yes, the donor made preferences and/or instructions on their LPA.'
-        );
-        $this->ui->assertElementContainsText('dd[data-field-name="instructions_and_preferences"]', 'No');
-    }
-
-    /**
      * @When /^I give an invalid (.*) and (.*)$/
      */
     public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
