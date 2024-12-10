@@ -266,7 +266,7 @@ jobs:
 
           elif [[ "${SVC_PREFIX}" = "event" ]]; then
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
-              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}_${SVC_SUFFIX}
+              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
             fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
