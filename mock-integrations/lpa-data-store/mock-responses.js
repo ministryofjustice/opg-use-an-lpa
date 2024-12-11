@@ -50,6 +50,7 @@
       address: {
         line1: "74 Cloob Close",
         town: "Mahhhhhhhhhh",
+        postcode: "TP6 8EX",
         country: "GB"
       },
       dateOfBirth: "1970-01-24",
@@ -68,6 +69,7 @@
         address: {
           line1: "81 NighOnTimeWeBuiltIt Street",
           town: "Mahhhhhhhhhh",
+          postcode: "PC4 6UZ",
           country: "GB"
         },
         dateOfBirth: "1982-07-24",
@@ -85,7 +87,7 @@
           country: "GB"
         },
         dateOfBirth: "1984-04-13",
-        status: "inactive",
+        status: "replacement",
         channel: "online",
         signedAt: "2024-01-10T23:00:00Z"
       }
