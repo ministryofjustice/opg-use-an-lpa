@@ -59,25 +59,9 @@
         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
     </div>
 
-    {% if is_donor_signature_date_too_old(lpa) and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences") %}
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}Preferences and instructions{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value" data-field-name="instructions_and_preferences">
-                {% trans %}Yes, the donor made preferences and/or instructions on their LPA.{% endtrans %}
-                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
-            </dd>
-        </div>
-    {% elseif is_donor_signature_date_too_old(lpa) and not (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) and not feature_enabled("instructions_and_preferences")  %}
-        <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}Preferences and Instructions{% endtrans %}</dt>
-            <dd class="govuk-summary-list__value" data-field-name="instructions_and_preferences">
-                {% trans %}No{% endtrans %}
-            </dd>
-        </div>
-    {% else %} {# Instructions and Preferences are split OR I&P images are enabled #}
-</dl>
+    </dl>
 
-        {% if feature_enabled('instructions_and_preferences') and (lpa.applicationHasGuidance or lpa.applicationHasRestrictions) %}
+        {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
             {% if lpa.hasSeveranceWarning %}
                 <div class="govuk-warning-text">
                     <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
@@ -99,7 +83,7 @@
                     <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         {% if lpa.applicationHasGuidance %}
-                            {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                            {% if iap_images is defined %}
                                 {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
                             {% else %}
                                 {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
@@ -112,7 +96,7 @@
                 </div>
             </dl>
 
-            {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasGuidance and iap_images is defined %}
+            {% if lpa.applicationHasGuidance and iap_images is defined %}
                 {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                     {{ iap.preferences_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
@@ -133,7 +117,7 @@
                     <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
                     <dd class="govuk-summary-list__value">
                         {% if lpa.applicationHasRestrictions %}
-                            {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                            {% if iap_images is defined %}
                                 {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
                             {% else %}
                                 {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
@@ -146,7 +130,7 @@
                 </div>
             </dl>
 
-            {% if feature_enabled("instructions_and_preferences") and lpa.applicationHasRestrictions and iap_images is defined %}
+            {% if lpa.applicationHasRestrictions and iap_images is defined %}
                 {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                     {{ iap.instructions_error() }}
                 {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
@@ -162,7 +146,7 @@
         </iap-instructions>
 
         <iap-unknown>
-            {% if feature_enabled("instructions_and_preferences") and iap_images is defined and
+            {% if iap_images is defined and
                     iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
                 {% set unknown_images = iap_images.getUnknownImageUrls %}
                 {% if (unknown_images | length) > 0 %}
@@ -172,4 +156,3 @@
                 {% endif %}
             {% endif %}
         </iap-unknown>
-    {% endif %}

@@ -236,14 +236,10 @@ class ViewerContext extends BaseIntegrationContext
 
         $pdfService = $this->container->get(PdfService::class);
 
-        if (($this->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $pdfService->getLpaAsPdf(
-                $this->viewedLpa,
-                new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []),
-            );
-        } else {
-            $pdfService->getLpaAsPdf($this->viewedLpa);
-        }
+        $pdfService->getLpaAsPdf(
+            $this->viewedLpa,
+            new Images(700000000001, ImagesStatus::COLLECTION_COMPLETE, []),
+        );
 
         $request = $this->apiFixtures->getLastRequest();
         Assert::assertStringContainsString('Mr Test Testable Testerson', $request->getBody()->getContents());
