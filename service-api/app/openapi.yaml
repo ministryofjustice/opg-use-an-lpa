@@ -161,6 +161,9 @@ components:
         uId:
           type: string
           format: uuid
+        whenTheLpaCanBeUsed:
+          type: string
+          enum: [ when-capacity-lost, when-has-capacity, '' ]
         withdrawnDate:
           type: string
           format: datetime
