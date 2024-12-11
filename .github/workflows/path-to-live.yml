@@ -285,7 +285,7 @@ jobs:
       - workflow_variables
       - slack_notify
     steps:
-      - name: workflow has ended successfully
+      - name: workflow has ended
         run: |
           if ${{ contains(needs.slack_notify.result, 'success') }}; then
             echo "Deployment to production successful"
