@@ -282,13 +282,18 @@ jobs:
     name: end of workflow
     runs-on: ubuntu-latest
     needs:
-      - code_coverage
-      - slack_notify
-      - production_health_check
       - workflow_variables
+      - slack_notify
     steps:
-      - name: workflow has ended without issue
+      - name: workflow has ended successfully
         run: |
-          echo "Deployment to production successful"
-          echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
-          echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
+          if ${{ contains(needs.slack_notify.result, 'success') }}; then
+            echo "Deployment to production successful"
+            echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
+            echo "URL: https://use-lasting-power-of-attorney.service.gov.uk
+            exit 0
+          else
+            echo "Deployment to production failed"
+            exit 1
+          fi
+    if: always()
