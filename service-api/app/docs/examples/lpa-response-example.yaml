@@ -90,5 +90,6 @@ value:
           type: null
           uId: 1d95993a-ffbb-484c-b2fe-f4cca51801da
       uId: M-789Q-P4DF-4UX3
+      whenCanLpaBeUsed: when-capacity-lost
       withdrawnDate: null
     added: 2024-09-18T12:23:45+00:00
