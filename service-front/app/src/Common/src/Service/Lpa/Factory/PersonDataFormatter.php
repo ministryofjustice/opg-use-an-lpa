@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Common\Service\Lpa\Factory;
 
-use Common\Entity\CombinedLpa;
+use Common\Entity\Person;
 use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 
-class LpaDataFormatter
+class PersonDataFormatter
 {
     private ObjectMapperUsingReflection $mapper;
 
@@ -26,11 +26,11 @@ class LpaDataFormatter
     /**
      * @throws UnableToHydrateObject
      */
-    public function __invoke(array $lpaJson)
+    public function __invoke(array $personJson)
     {
         return $this->mapper->hydrateObject(
-            CombinedLpa::class,
-            $lpaJson,
+            Person::class,
+            $personJson,
         );
     }
 }
