@@ -290,7 +290,7 @@ jobs:
           if ${{ contains(needs.slack_notify.result, 'success') }}; then
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
-            echo "URL: https://use-lasting-power-of-attorney.service.gov.uk
+            echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
             exit 0
           else
             echo "Deployment to production failed"
