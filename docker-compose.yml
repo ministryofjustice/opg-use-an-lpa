@@ -270,7 +270,7 @@ services:
   event-reciever-lambda:
     container_name: event-reciever
     build:
-      context: ./lambda-functions/event-reciever
+      context: ./lambda-functions/event-receiver
       dockerfile: Dockerfile
     environment:
       ENVIRONMENT: local
