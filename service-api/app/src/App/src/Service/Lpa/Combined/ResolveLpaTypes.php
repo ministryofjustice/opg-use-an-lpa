@@ -8,6 +8,8 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 
 /**
  * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
+ * @psalm-type SiriusUids = string[]
+ * @psalm-type DataStoreUids = string[]
  */
 class ResolveLpaTypes
 {
@@ -21,6 +23,10 @@ class ResolveLpaTypes
      * @return array{
      *     string[],
      *     string[]
+     * }
+     * @psalm-return array{
+     *     SiriusUids,
+     *     DataStoreUids,
      * }
      */
     public function __invoke(array $lpaActorMaps): array
