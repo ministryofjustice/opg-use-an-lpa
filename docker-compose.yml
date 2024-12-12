@@ -50,9 +50,6 @@ services:
       GOOGLE_ANALYTICS_ID: "UA-170469426-2"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
-      # Feature flags
-      INSTRUCTIONS_AND_PREFERENCES: "true"
-
       # Local only
       API_SERVICE_URL:
       PDF_SERVICE_URL:
@@ -107,7 +104,6 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      INSTRUCTIONS_AND_PREFERENCES: "true"
       ALLOW_GOV_ONE_LOGIN: "true"
       SUPPORT_DATASTORE_LPAS: "false"
 
@@ -194,7 +190,6 @@ services:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
-      INSTRUCTIONS_AND_PREFERENCES: "true"
       ALLOW_GOV_ONE_LOGIN: "true"
       SUPPORT_DATASTORE_LPAS: "false"
 
@@ -267,6 +262,26 @@ services:
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
+
+
+  # ---------------------------
+  # Lambda for ingestion from MLPA
+
+  event-reciever-lambda:
+    container_name: event-reciever
+    build:
+      context: ./lambda-functions/event-receiver
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: local
+      REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: 'devkey'
+      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
+    volumes:
+      - ./lambda-functions/event-reciever/app:/function/app
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
+    ports:
+      - 9008:8080
 
   proxy:
     container_name: proxy

@@ -71,11 +71,6 @@
                                 {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
                             {% endif %}
                         </p>
-                        {% if not feature_enabled("instructions_and_preferences") %}
-                            <p class="govuk-body body-alt-1">
-                                {{ include('@actor/partials/lpa-instructions-preferences-warning-message.html.twig') }}
-                            </p>
-                        {% endif %}
                     </div>
                 </div>
             {% endif %}
@@ -112,21 +107,19 @@
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> details{% endtrans %}
                     </h2>
 
-                    {% if feature_enabled("instructions_and_preferences") %}
-                        {% include '@partials/lpa-summary-details/iap-images-components.html.twig' %}
+                    {% include '@partials/lpa-summary-details/iap-images-components.html.twig' %}
 
-                        <iap-images
-                        {%- if (iap_images is defined
-                                and ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
-                                or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED')))) %}
-                            data-wait="{{ actorToken }}"
-                        {%- endif -%}
-                        >
-                    {% endif %}
+                    <iap-images
+                    {%- if (iap_images is defined
+                            and ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                            or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED')))) %}
+                        data-wait="{{ actorToken }}"
+                    {%- endif -%}
+                    >
 
                     {% include '@partials/lpa-summary-details/lpa-details-combined-lpa.html.twig' %}
 
-                    {% if feature_enabled("instructions_and_preferences") and iap_images is defined %}
+                    {% if iap_images is defined %}
                         {% if iap_images.status is not constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
                             <div id="images-guidance" class="govuk-inset-text">
                                 {% trans %}If any scanned images are not readable, organisations may ask to see the paper LPA so that
@@ -135,9 +128,7 @@
                         {% endif %}
                     {% endif %}
 
-                    {% if feature_enabled("instructions_and_preferences") %}
-                        </iap-images>
-                    {% endif %}
+                    </iap-images>
 
                     <p class="govuk-body">
                         <a class="govuk-link" href="{{ path('lpa.change-lpa-details', {}, {'lpa':  actorToken }) }}">

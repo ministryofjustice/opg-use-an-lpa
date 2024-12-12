@@ -357,13 +357,11 @@ class ViewerContext implements Context
             'expires' => (new DateTime('+30 days'))->format('c'),
         ];
 
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $data['iap'] = [
-                'uId'        => (int) $this->lpaData['uId'],
-                'status'     => $this->imageCollectionStatus,
-                'signedUrls' => [],
-            ];
-        }
+        $data['iap'] = [
+            'uId'        => (int) $this->lpaData['uId'],
+            'status'     => $this->imageCollectionStatus,
+            'signedUrls' => [],
+        ];
 
         // API call for lpa full fetch
         $this->apiFixtures->append(
@@ -532,7 +530,6 @@ class ViewerContext implements Context
 
         if (
             ($data['lpa']['applicationHasGuidance'] ?? false) || ($data['lpa']['applicationHasRestrictions'] ?? false)
-            && ($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')
         ) {
             $data['iap'] = [
                 'uId'        => (int) $this->lpaData['uId'],
@@ -783,10 +780,8 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and instructions');
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
-            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
-        }
+        $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+        $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
     }
 
     /**
@@ -795,10 +790,8 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasPreferences()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
-            $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
-        }
+        $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
+        $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
     }
 
     /**
@@ -807,46 +800,8 @@ class ViewerContext implements Context
     public function iCanClearlySeeTheLPAHasInstructions()
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
-        if (($this->base->container->get(FeatureEnabled::class))('instructions_and_preferences')) {
-            $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
-            $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
-        }
-    }
-
-    /**
-     * @Then /^I can see the lpa has instructions and preferences set in summary$/
-     */
-    public function iCanSeeTheLPAHasInstructionsAndPreferencesInSummary()
-    {
-        $this->ui->assertPageContainsText('Preferences and instructions');
-        $this->ui->assertElementContainsText(
-            'dd[data-field-name="instructions_and_preferences"]',
-            'Yes, the donor made preferences and/or instructions on their LPA.'
-        );
-    }
-
-    /**
-     * @Then /^I can see the lpa has no instructions and preferences set in summary$/
-     */
-    public function iCanSeeTheLPAHasNoInstructionsAndPreferencesInSummary()
-    {
-        $this->ui->assertPageContainsText('Preferences and instructions');
-        $this->ui->assertElementNotContainsText(
-            'dd.govuk-summary-list__value',
-            'Yes, the donor made preferences and/or instructions on their LPA.'
-        );
-        $this->ui->assertElementContainsText('dd[data-field-name="instructions_and_preferences"]', 'No');
-    }
-
-    /**
-     * @Then /^I can clearly see the lpa has instructions andor preferences$/
-     */
-    public function iCanClearlySeeTheLPAHasInstructionsAndOrPreferences()
-    {
-        $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and/or instructions');
-        $this->ui->assertElementNotOnPage('.iap-loader');
-        $this->ui->assertPageNotContainsText('A scanned image of the donor’s preferences will appear here soon');
-        $this->ui->assertPageNotContainsText('We cannot show the instructions for this LPA. Until we can fix this problem');
+        $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
+        $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
     }
 
     /**

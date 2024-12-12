@@ -4,14 +4,6 @@ Feature: View an LPA via sharecode
   I can enter that code and see the details of an LPA
   So that I can carry out business functions
 
-  @integration @acceptance @pact @ff:instructions_and_preferences:false
-  Scenario: View an LPA
-    Given I have been given access to an LPA via share code
-    And I access the viewer service
-    When I give a valid LPA share code
-    And I enter an organisation name and confirm the LPA is correct
-    Then I can see the full details of the valid LPA
-
   @integration @acceptance @pact
   Scenario: View a cancelled LPA
     Given I have been given access to a cancelled LPA via share code
@@ -33,21 +25,21 @@ Feature: View an LPA via sharecode
     When I give a valid LPA share code
     And I want to see an option to check another LPA
 
-  @acceptance @integration @pact @ff:instructions_and_preferences:true
+  @acceptance @integration @pact 
   Scenario: The user should be able to see instructions
     Given I have been given access to an LPA via share code
     And the LPA has instructions
     When I give a valid LPA share code
     Then I can see instructions images
 
-  @acceptance @integration @pact @ff:instructions_and_preferences:true
+  @acceptance @integration @pact 
   Scenario: The user should be able to see preferences
     Given I have been given access to an LPA via share code
     And the LPA has preferences
     When I give a valid LPA share code
     Then I can see preferences images
 
-  @acceptance @integration @pact @ff:instructions_and_preferences:true
+  @acceptance @integration @pact
   Scenario: The user should be able to see instructions and preferences
     Given I have been given access to an LPA via share code
     And the LPA has instructions and preferences
