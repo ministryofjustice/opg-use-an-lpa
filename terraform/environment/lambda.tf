@@ -100,5 +100,5 @@ module "event_receiver" {
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   timeout     = 900
-  memory      = 1024
+  memory      = 128
 }
