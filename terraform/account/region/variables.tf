@@ -37,10 +37,6 @@ variable "environment_name" {
   type        = string
 }
 
-variable "event_receiver_enabled" {
-  description = "Enable the event receiver Lambda"
-  type        = bool
-}
 variable "lambda_container_version" {
   description = "The version of the lambda container"
   type        = string

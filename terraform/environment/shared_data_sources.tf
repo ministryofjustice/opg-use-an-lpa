@@ -10,6 +10,11 @@ data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
   name     = "use_an_lpa/stats_upload_lambda"
 }
 
+data "aws_ecr_repository" "use_an_lpa_event_receiver" {
+  provider = aws.management
+  name     = "use_an_lpa/event_receiver"
+}
+
 data "aws_ecr_repository" "mock_onelogin" {
   provider = aws.management
   name     = "mock-onelogin"
@@ -18,4 +23,3 @@ data "aws_ecr_repository" "mock_onelogin" {
 module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v2.3.0"
 }
-
