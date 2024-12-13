@@ -95,7 +95,7 @@ module "event_receiver" {
     ENVIRONMENT = local.environment_name
     REGION      = data.aws_region.current.name
   }
-  image_uri   = "${data.aws_ecr_repository.use_an_lpa_upload_statistics.repository_url}:${var.container_version}"
+  image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
   ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
