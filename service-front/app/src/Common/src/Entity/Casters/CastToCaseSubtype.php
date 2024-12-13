@@ -17,9 +17,10 @@ class CastToCaseSubtype implements PropertyCaster
     {
         if (is_null(LpaType::tryFrom($value))) {
             $value = match ($value) {
-                'personal-welfare' => LpaType::PERSONAL_WELFARE,
-                'property-and-affairs' => LpaType::PROPERTY_AND_AFFAIRS,
-                default => throw new InvalidArgumentException('Invalid shorthand name: ' . $value),
+                'personal-welfare'     => LpaType::PERSONAL_WELFARE->value,
+                'property-and-affairs' => LpaType::PROPERTY_AND_AFFAIRS->value,
+                default                =>
+                    throw new InvalidArgumentException('Invalid shorthand name: ' . $value),
             };
         }
 
