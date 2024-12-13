@@ -23,8 +23,7 @@ class CastToCaseSubtypeTest extends TestCase
     #[Test]
     public function can_cast_case_subtype(): void
     {
-        $caseSubType = 'personal-welfare';
-
+        $caseSubType         = 'personal-welfare';
         $expectedCaseSubType = 'hw';
 
         $result = $this->castToCaseSubtype->cast($caseSubType, $this->mockHydrator);
