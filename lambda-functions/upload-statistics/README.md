@@ -13,7 +13,7 @@ By default the script uses a mock JSON response object instead of pulling from a
 Bring up the lambda locally
 
 ```
-make build_all
+make build
 ```
 
 # To test lambda

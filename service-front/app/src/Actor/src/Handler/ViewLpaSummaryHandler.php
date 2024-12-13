@@ -72,11 +72,8 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
         // to see if we should call it. Ideally these would live in the api layer but we
         // can't do that without a big refactor of how that works atm.
         if (
-            ($this->featureEnabled)('instructions_and_preferences') &&
-            (
                 ($lpaData->lpa->getApplicationHasGuidance() ?? false) ||
                 ($lpaData->lpa->getApplicationHasRestrictions() ?? false)
-            )
         ) {
             $renderData['iap_images'] = $this->instAndPrefImagesService->getImagesById($identity, $actorLpaToken);
         }

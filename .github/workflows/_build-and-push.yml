@@ -75,8 +75,8 @@ jobs:
             run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
-          - svc_prefix: 'ingestion'
-            svc_suffix: 'lambda'
+          - svc_prefix: 'event'
+            svc_suffix: 'receiver'
             build_development_docker: 'false'
             run_unit_tests: 'false'
             run_integration_tests: 'false'
@@ -119,7 +119,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@37b726ebcaba9d1c1838caf54540902bad814823 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@b06ccd195086ba5254c95c627ee1cbeab86c7432 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
@@ -264,9 +264,10 @@ jobs:
           elif [[ "${SVC_PREFIX}" = "stats_upload" ]]; then
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
 
-          elif [[ "${SVC_PREFIX}" = "ingestion" ]]; then
-            docker build --file lambda-functions/ingestion-lambda/Dockerfile --tag ingestion_lambda:latest lambda-functions/ingestion-lambda
-
+          elif [[ "${SVC_PREFIX}" = "event" ]]; then
+            if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
+              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
+            fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 

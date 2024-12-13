@@ -36,10 +36,10 @@ jobs:
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
-      
+
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@ef3b6f1fa5eccdc95d915ec0f87a16535a73d0ca
+        uses: tj-actions/changed-files@ac47125d2d05ea616734c7e19a125149a325d43f
         with:
           files: |
             **/*.md
@@ -268,9 +268,10 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - production_health_check
+      - update_documentation
     with:
       template: production_release.txt
-      workflow_status: ${{ needs.production_health_check.result }}
+      workflow_status: ${{ needs.production_health_check.result || needs.update_documentation.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
@@ -281,13 +282,18 @@ jobs:
     name: end of workflow
     runs-on: ubuntu-latest
     needs:
-      - code_coverage
-      - slack_notify
-      - production_health_check
       - workflow_variables
+      - slack_notify
     steps:
-      - name: workflow has ended without issue
+      - name: workflow has ended
         run: |
-          echo "Deployment to production successful"
-          echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
-          echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
+          if ${{ contains(needs.slack_notify.result, 'success') }}; then
+            echo "Deployment to production successful"
+            echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
+            echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
+            exit 0
+          else
+            echo "Deployment to production failed"
+            exit 1
+          fi
+    if: always()

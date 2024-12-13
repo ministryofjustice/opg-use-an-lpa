@@ -7,11 +7,12 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY app/ ./
-
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /go/bin/ingestion ./
 
 FROM scratch AS production
 
-COPY --from=base /go/bin/ingestion ingestion
+WORKDIR /var/task
 
-ENTRYPOINT ["./ingestion"]
+COPY --from=base /go/bin/ingestion ./main
+
+ENTRYPOINT ["./main"]
