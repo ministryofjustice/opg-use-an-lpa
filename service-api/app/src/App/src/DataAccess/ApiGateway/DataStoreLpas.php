@@ -49,9 +49,13 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
      */
     public function get(string $uid): ?LpaInterface
     {
-        $url = sprintf('%s/lpa/%s', $this->apiBaseUri, $uid);
+        $url = sprintf('%s/lpas/%s', $this->apiBaseUri, $uid);
 
-        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
+        // TODO this identifier needs to come from somewhere
+        $signer = ($this->requestSignerFactory)(
+            SignatureType::DataStoreLpas,
+            'UniqueUserIdentifier'
+        );
 
         $request = $this->requestFactory->createRequest('GET', $url);
         $request = $signer->sign($this->attachHeaders($request));

@@ -9,11 +9,13 @@ use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
+use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
+use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
 use Exception;
@@ -24,10 +26,11 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         ?bool $applicationHasGuidance,
         ?bool $applicationHasRestrictions,
         ?string $applicationType,
-        #[CastToWhenTheLpaCanBeUsed]
-        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(SiriusLpaAttorney::class)]
         ?array $attorneys,
+        ?bool $caseAttorneyJointly,
+        ?bool $caseAttorneyJointlyAndJointlyAndSeverally,
+        ?bool $caseAttorneyJointlyAndSeverally,
         ?LpaType $caseSubtype,
         ?string $channel,
         ?DateTimeImmutable $dispatchDate,
@@ -49,39 +52,44 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         #[CastListToType(SiriusLpaTrustCorporation::class)]
         ?array $trustCorporations,
         ?string $uId,
+        #[MapFrom('attorneyActDecisions')]
+        #[CastToWhenTheLpaCanBeUsed]
+        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
         ?DateTimeImmutable $withdrawnDate,
     ) {
-        parent::__construct(
-            $applicationHasGuidance,
-            $applicationHasRestrictions,
-            $applicationType,
-            $attorneyActDecisions,
-            $attorneys,
-            $caseSubtype,
-            $channel,
-            $dispatchDate,
-            $donor,
-            $hasSeveranceWarning,
-            $invalidDate,
-            $lifeSustainingTreatment,
-            $lpaDonorSignatureDate,
-            $lpaIsCleansed,
-            $onlineLpaId,
-            $receiptDate,
-            $registrationDate,
-            $rejectedDate,
-            $replacementAttorneys,
-            $status,
-            $statusDate,
-            $trustCorporations,
-            $uId,
-            $withdrawnDate
+        $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::fromDiscreteBooleans(
+            jointly:                    $caseAttorneyJointly,
+            jointlyAndSeverally:        $caseAttorneyJointlyAndSeverally,
+            jointlyForSomeAndSeverally: $caseAttorneyJointlyAndJointlyAndSeverally,
         );
-    }
 
-    public function getTrustCorporations(): array
-    {
-        return $this->trustCorporations ?? [];
+        parent::__construct(
+            applicationHasGuidance:     $applicationHasGuidance,
+            applicationHasRestrictions: $applicationHasRestrictions,
+            applicationType:            $applicationType,
+            attorneys:                  $attorneys,
+            caseSubtype:                $caseSubtype,
+            channel:                    $channel,
+            dispatchDate:               $dispatchDate,
+            donor:                      $donor,
+            hasSeveranceWarning:        $hasSeveranceWarning,
+            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
+            invalidDate:                $invalidDate,
+            lifeSustainingTreatment:    $lifeSustainingTreatment,
+            lpaDonorSignatureDate:      $lpaDonorSignatureDate,
+            lpaIsCleansed:              $lpaIsCleansed,
+            onlineLpaId:                $onlineLpaId,
+            receiptDate:                $receiptDate,
+            registrationDate:           $registrationDate,
+            rejectedDate:               $rejectedDate,
+            replacementAttorneys:       $replacementAttorneys,
+            status:                     $status,
+            statusDate:                 $statusDate,
+            trustCorporations:          $trustCorporations,
+            uId:                        $uId,
+            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
+            withdrawnDate:              $withdrawnDate,
+        );
     }
 
     public function getDonor(): ActorMatchingInterface&GetAttorneyStatusInterface&ResolveActorInterface
