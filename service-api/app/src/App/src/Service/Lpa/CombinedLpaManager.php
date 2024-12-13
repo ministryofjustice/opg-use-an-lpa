@@ -9,7 +9,12 @@ use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
+use App\Service\Lpa\Combined\FilterActiveActors;
 use App\Service\Lpa\Combined\ResolveLpaTypes;
+use DateTimeInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use RuntimeException;
 
 /**
  * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
@@ -21,19 +26,62 @@ class CombinedLpaManager implements LpaManagerInterface
         private readonly ResolveLpaTypes $resolveLpaTypes,
         private readonly SiriusLpas $siriusLpas,
         private readonly DataStoreLpas $dataStoreLpas,
-        private ResolveActor $resolveActor,
-        private IsValidLpa $isValidLpa,
+        private readonly ResolveActor $resolveActor,
+        private readonly IsValidLpa $isValidLpa,
+        private readonly FilterActiveActors $filterActiveActors,
     ) {
     }
 
     public function getByUid(string $uid): ?LpaInterface
     {
-        throw new ApiException('Not implemented');
+        $lpa = str_starts_with($uid, '7')
+            ? $this->siriusLpas->get($uid)
+            : $this->dataStoreLpas->get($uid);
+
+        if ($lpa === null) {
+            return null;
+        }
+
+        return ($this->filterActiveActors)($lpa);
     }
 
     public function getByUserLpaActorToken(string $token, string $userId): ?array
     {
-        throw new ApiException('Not implemented');
+        $lpaActorMap = $this->userLpaActorMapRepository->get($token);
+
+        // Ensure the passed userId matches the passed token
+        if ($userId !== $lpaActorMap['UserId']) {
+            return null;
+        }
+
+        $lpa = $this->lookupLpa($lpaActorMap);
+
+        if ($lpa === null) {
+            return null;
+        }
+
+        $lpaData = ($this->filterActiveActors)($lpa->getData());
+
+        $result = [
+            'user-lpa-actor-token' => $lpaActorMap['Id'],
+            'date'                 => $lpa->getLookupTime()->format(DateTimeInterface::ATOM),
+            'lpa'                  => $lpaData,
+            'activationKeyDueDate' => $lpaActorMap['DueBy'] ?? null,
+        ];
+
+        // If an actor has been stored against an LPA then attempt to resolve it from the API return
+        if (isset($lpaActorMap['ActorId'])) {
+            // If an active attorney is not found then this is null
+            $result['actor'] = ($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']);
+        }
+
+        // Extract and return only LPA's where status is Registered or Cancelled
+        if (($this->isValidLpa)($lpaData)) {
+            return $result;
+        }
+
+        // LPA was found but is not valid for use.
+        return [];
     }
 
     public function getAllActiveForUser(string $userId): array
@@ -65,29 +113,14 @@ class CombinedLpaManager implements LpaManagerInterface
      * @param $lpaActorMaps array Map of LPAs from Dynamo
      * @psalm-param $lpaActorMaps UserLpaActorMap[]
      * @return array an array with formatted LPA results
+     * @throws ApiException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
      */
     private function lookupAndFormatLpas(array $lpaActorMaps): array
     {
-        [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
-
-        /** @var LpaInterface[] $siriusLpas */
-        $siriusLpas = count($siriusUids) > 0
-            ? $this->siriusLpas->lookup($siriusUids)
-            : [];
-
-        /** @var LpaInterface[] $siriusLpas */
-        $dataStoreLpas = count($dataStoreUids) > 0
-            ? $this->dataStoreLpas->lookup($dataStoreUids)
-            : [];
-
-        $keyedDataStoreLpas = [];
-        array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
-            $keyedDataStoreLpas[$item->getData()->uId] = $item;
-        });
-
-        // unusual combination operation in order to preserve potential numeric keys
-        $lpas = $keyedDataStoreLpas + $siriusLpas;
-
+        $lpas   = $this->lookupLpas($lpaActorMaps);
         $result = [];
 
         foreach ($lpaActorMaps as $item) {
@@ -111,14 +144,70 @@ class CombinedLpaManager implements LpaManagerInterface
             if (($this->isValidLpa)($lpaData)) {
                 $result[$item['Id']] = [
                     'user-lpa-actor-token' => $item['Id'],
-                    'date'                 => $lpa->getLookupTime()->format('c'),
+                    'date'                 => $lpa->getLookupTime()->format(DateTimeInterface::ATOM),
                     'actor'                => $actor,
                     'lpa'                  => $lpaData,
-                    'added'                => $item['Added']->format('Y-m-d H:i:s'),
+                    'added'                => $item['Added']->format(DateTimeInterface::ATOM),
                 ];
             }
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $lpaActorMap
+     * @psalm-param UserLpaActorMap $lpaActorMap
+     * @return LpaInterface|null
+     * @throws ApiException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
+     */
+    private function lookupLpa(array $lpaActorMap): ?LpaInterface
+    {
+        [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)([$lpaActorMap]);
+
+        if (count($siriusUids) > 0) {
+            return $this->siriusLpas->get($siriusUids[0]);
+        }
+
+        if (count($dataStoreUids) > 0) {
+            return $this->dataStoreLpas->get($dataStoreUids[0]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param array $lpaActorMaps
+     * @psalm-param UserLpaActorMap[] $lpaActorMaps
+     * @return LpaInterface[]
+     * @throws ApiException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws RuntimeException
+     */
+    private function lookupLpas(array $lpaActorMaps): array
+    {
+        [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
+
+        /** @var LpaInterface[] $siriusLpas */
+        $siriusLpas = count($siriusUids) > 0
+            ? $this->siriusLpas->lookup($siriusUids)
+            : [];
+
+        /** @var LpaInterface[] $siriusLpas */
+        $dataStoreLpas = count($dataStoreUids) > 0
+            ? $this->dataStoreLpas->lookup($dataStoreUids)
+            : [];
+
+        $keyedDataStoreLpas = [];
+        array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
+            $keyedDataStoreLpas[$item->getData()->getUid()] = $item;
+        });
+
+        // unusual combination operation in order to preserve potential numeric keys
+        return $keyedDataStoreLpas + $siriusLpas;
     }
 }

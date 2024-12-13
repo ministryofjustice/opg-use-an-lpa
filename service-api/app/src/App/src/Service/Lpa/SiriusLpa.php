@@ -71,7 +71,7 @@ class SiriusLpa implements
             : new SiriusPerson($entity);
     }
 
-    private function getTrustCorporations(): array
+    public function getTrustCorporations(): array
     {
         return $this->lpa['trustCorporations'];
     }

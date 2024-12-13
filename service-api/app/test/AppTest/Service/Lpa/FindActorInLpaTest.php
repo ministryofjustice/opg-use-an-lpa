@@ -48,6 +48,7 @@ class FindActorInLpaTest extends TestCase
                     $this->ghostAttorneyFixtureOld(),
                     $this->multipleAddressAttorneyFixtureOld(),
                     $this->activeAttorneyFixtureOld(),
+                    $this->nullDOBAttorneyFixtureOld(),
                 ],
             ],
         );
@@ -68,6 +69,10 @@ class FindActorInLpaTest extends TestCase
             ->__invoke($this->activeAttorneyFixtureOld())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
 
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixtureOld())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
+
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
             $this->loggerProphecy->reveal()
@@ -87,14 +92,15 @@ class FindActorInLpaTest extends TestCase
             $this->inactiveAttorneyFixture(),
             $this->ghostAttorneyFixture(),
             $this->activeAttorneyFixture(),
+            $this->nullDOBAttorneyFixture(),
         ];
 
         $lpa = new \App\Entity\Sirius\SiriusLpa(
             applicationHasGuidance:     null,
             applicationHasRestrictions: null,
             applicationType:            null,
-            attorneyActDecisions:       null,
             attorneys:                  $attorneys,
+            attorneyActDecisions:       null,
             caseSubtype:                null,
             channel:                    null,
             dispatchDate:               null,
@@ -128,6 +134,10 @@ class FindActorInLpaTest extends TestCase
         $this->getAttorneyStatusProphecy
             ->__invoke($this->activeAttorneyFixture())
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // active attorney
+
+        $this->getAttorneyStatusProphecy
+            ->__invoke($this->nullDOBAttorneyFixture())
+            ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY); // null DoB
 
         $sut = new FindActorInLpa(
             $this->getAttorneyStatusProphecy->reveal(),
@@ -374,6 +384,47 @@ class FindActorInLpaTest extends TestCase
             dob:          new DateTimeImmutable('1980-03-01'),
             email:        null,
             firstname:    'Test',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'Ab1 2Cd',
+            surname:      'T’esting',
+            systemStatus: 'true',
+            town:         null,
+            type:         null,
+            uId:          '7000000055555'
+        );
+    }
+
+    public static function nullDOBAttorneyFixtureOld(): SiriusPerson
+    {
+        return new SiriusPerson(
+            [
+                'uId'          => '7000000055555',
+                'dob'          => null,
+                'firstname'    => 'Testering',
+                'surname'      => 'T’esting',
+                'addresses'    => [
+                    [
+                        'postcode' => 'Ab1 2Cd',
+                    ],
+                ],
+                'systemStatus' => true,
+            ]
+        );
+    }
+
+    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
+    {
+        return new SiriusLpaAttorney(
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country:      null,
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    'Testering',
             id:           '7',
             middlenames:  null,
             otherNames:   null,
