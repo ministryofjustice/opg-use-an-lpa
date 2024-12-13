@@ -103,8 +103,8 @@ class FindActorInLpaTest extends TestCase
             applicationHasGuidance:     null,
             applicationHasRestrictions: null,
             applicationType:            null,
-            attorneyActDecisions:       null,
             attorneys:                  $attorneys,
+            attorneyActDecisions:       null,
             caseSubtype:                null,
             channel:                    null,
             dispatchDate:               null,
@@ -400,6 +400,47 @@ class FindActorInLpaTest extends TestCase
             dob:          new DateTimeImmutable('1980-03-01'),
             email:        null,
             firstname:    'Test',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'Ab1 2Cd',
+            surname:      'T’esting',
+            systemStatus: 'true',
+            town:         null,
+            type:         null,
+            uId:          '7000000055555'
+        );
+    }
+
+    public static function nullDOBAttorneyFixtureOld(): SiriusPerson
+    {
+        return new SiriusPerson(
+            [
+                'uId'          => '7000000055555',
+                'dob'          => null,
+                'firstname'    => 'Testering',
+                'surname'      => 'T’esting',
+                'addresses'    => [
+                    [
+                        'postcode' => 'Ab1 2Cd',
+                    ],
+                ],
+                'systemStatus' => true,
+            ]
+        );
+    }
+
+    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
+    {
+        return new SiriusLpaAttorney(
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country:      null,
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    'Testering',
             id:           '7',
             middlenames:  null,
             otherNames:   null,

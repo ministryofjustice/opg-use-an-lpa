@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Person;
+use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
-use App\Entity\Sirius\Casters\{
+use App\Entity\Sirius\Casters\{CastToSiriusActorStatus,
     ExtractAddressLine1FromSiriusLpa,
     ExtractAddressLine2FromSiriusLpa,
     ExtractAddressLine3FromSiriusLpa,
@@ -50,37 +51,34 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
         #[LinkedDonorCaster]
         public readonly ?array $linked,
         public readonly ?string $middlenames,
-        public readonly ?string $otherNames,
+        ?string $otherNames,
         #[MapFrom('addresses')]
         #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
         ?string $surname,
-        #[CastToType('string')]
-        ?string $systemStatus,
+        #[CastToSiriusActorStatus]
+        ?ActorStatus $systemStatus,
         #[MapFrom('addresses')]
         #[ExtractTownFromSiriusLpa]
         ?string $town,
-        #[MapFrom('addresses')]
-        #[ExtractTypeFromSiriusLpa]
-        ?string $type,
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
-            $country,
-            $county,
-            $dob,
-            $email,
-            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
-            null,
-            $postcode,
-            $surname,
-            $systemStatus,
-            $town,
-            $type,
-            $uId,
+            addressLine1: $addressLine1,
+            addressLine2: $addressLine2,
+            addressLine3: $addressLine3,
+            country:      $country,
+            county:       $county,
+            dob:          $dob,
+            email:        $email,
+            firstnames:   isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            name:         null,
+            otherNames:   $otherNames,
+            postcode:     $postcode,
+            surname:      $surname,
+            systemStatus: $systemStatus,
+            town:         $town,
+            uId:          $uId,
         );
     }
 
