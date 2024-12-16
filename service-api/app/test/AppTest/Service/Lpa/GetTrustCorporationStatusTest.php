@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStoreTrustCorporation;
 use App\Entity\Sirius\SiriusLpaTrustCorporation;
+use App\Enum\ActorStatus;
 use App\Service\Lpa\GetTrustCorporationStatus;
 use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
@@ -49,20 +50,19 @@ class GetTrustCorporationStatusTest extends TestCase
     public function returns_0_if_trustCorporation_is_active_combined_format_lpastore(): void
     {
         $trustCorporation = new LpaStoreTrustCorporation(
-            addressLine1: '103 Line 1',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '103 Line 1',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          null,
+            dateOfBirth:          null,
             email:        null,
-            firstnames:   null,
+            firstNames:   null,
             name:         'ABC Ltd',
             postcode:     null,
-            surname:      null,
-            systemStatus: 'active',
+            lastName:      null,
+            status: ActorStatus::ACTIVE,
             town:         'Town',
-            type:         null,
             uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
@@ -94,20 +94,19 @@ class GetTrustCorporationStatusTest extends TestCase
     public function returns_1_if_trustCorporation_is_a_ghost_combined_format_lpastore(): void
     {
         $trustCorporation = new LpaStoreTrustCorporation(
-            addressLine1: '103 Line 1',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '103 Line 1',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          null,
+            dateOfBirth:          null,
             email:        null,
-            firstnames:   null,
+            firstNames:   null,
             name:         '',
             postcode:     null,
-            surname:      null,
-            systemStatus: 'active',
+            lastName:      null,
+            status: ActorStatus::ACTIVE,
             town:         'Town',
-            type:         null,
             uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
@@ -140,20 +139,19 @@ class GetTrustCorporationStatusTest extends TestCase
     public function returns_2_if_trustCorporation_is_inactive_combined_format_lpastore(): void
     {
         $trustCorporation = new LpaStoreTrustCorporation(
-            addressLine1: '103 Line 1',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '103 Line 1',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          null,
+            dateOfBirth:          null,
             email:        null,
-            firstnames:   null,
+            firstNames:   null,
             name:         'XYZ Ltd',
             postcode:     null,
-            surname:      null,
-            systemStatus: 'false',
+            lastName:      null,
+            status: ActorStatus::INACTIVE,
             town:         'Town',
-            type:         null,
             uId:          '1d95993a-ffbb-484c-b2fe-f4cca51801da',
         );
 
@@ -181,9 +179,8 @@ class GetTrustCorporationStatusTest extends TestCase
             otherNames:   null,
             postcode:     'ABC 123',
             surname:      'test',
-            systemStatus: 'false',
+            systemStatus: ActorStatus::INACTIVE,
             town:         'Town',
-            type:         'Primary',
             uId:          '700000151998',
         );
 
