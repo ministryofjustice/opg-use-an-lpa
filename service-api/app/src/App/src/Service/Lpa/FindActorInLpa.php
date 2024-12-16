@@ -145,11 +145,8 @@ class FindActorInLpa
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'   => $actor->getUid(),
-                'to_match'   => $matchData,
-                'actor_data' => array_merge($actorData, [
-                    'dob' => $actorDob
-                ]),
+                'actor_id' => $actor->getUid(),
+                'to_match' => $matchData,
             ]
         );
 
