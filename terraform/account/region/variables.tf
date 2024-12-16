@@ -37,10 +37,6 @@ variable "environment_name" {
   type        = string
 }
 
-variable "ingestion_lambda_enabled" {
-  description = "Enable the ingestion lambda"
-  type        = bool
-}
 variable "lambda_container_version" {
   description = "The version of the lambda container"
   type        = string

@@ -79,12 +79,11 @@ variable "environments" {
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
       application_flags = object({
-        allow_gov_one_login          = bool
-        use_older_lpa_journey        = bool
-        delete_lpa_feature           = bool
-        allow_meris_lpas             = bool
-        instructions_and_preferences = bool
-        support_datastore_lpas       = bool
+        allow_gov_one_login    = bool
+        use_older_lpa_journey  = bool
+        delete_lpa_feature     = bool
+        allow_meris_lpas       = bool
+        support_datastore_lpas = bool
       })
       dynamodb_tables = object({
         actor_codes = object({
