@@ -1,8 +1,6 @@
 # Event Receiver
 
-The stats table is uploaded with historical stats from csv by a one time run script.
-
-This uploads to the stats table,  the Cloudwatch Metric Statistics about the use of the Use a Lasting Power of Attorney service.
+This Lambda function will process events from the new Event Receiver EventBus which processes events from MLPAB.
 
 ### Testing the lambda image locally
 

@@ -87,3 +87,18 @@ resource "aws_lambda_permission" "cloudwatch_to_update_statistics_lambda" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.update_statistics.arn
 }
+
+module "event_receiver" {
+  source      = "./modules/lambda"
+  lambda_name = "event-receiver"
+  environment_variables = {
+    ENVIRONMENT = local.environment_name
+    REGION      = data.aws_region.current.name
+  }
+  image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
+  ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
+  environment = local.environment_name
+  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  timeout     = 900
+  memory      = 128
+}

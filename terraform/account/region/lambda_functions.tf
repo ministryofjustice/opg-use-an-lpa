@@ -8,25 +8,6 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
   provider = aws.management
 }
 
-data "aws_ecr_repository" "event_receiver_repo" {
-  name     = "use_an_lpa/event_receiver"
-  provider = aws.management
-}
-
-module "event_receiver" {
-  count                               = var.event_receiver_enabled ? 1 : 0
-  source                              = "./modules/lambda_function"
-  lambda_name                         = "event-receiver-${var.account_name}"
-  working_directory                   = "/"
-  image_uri                           = "${data.aws_ecr_repository.event_receiver_repo.repository_url}:${var.lambda_container_version}"
-  ecr_arn                             = data.aws_ecr_repository.event_receiver_repo.arn
-  aws_cloudwatch_log_group_kms_key_id = data.aws_kms_alias.cloudwatch_mrk.arn
-
-  providers = {
-    aws = aws.region
-  }
-}
-
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
