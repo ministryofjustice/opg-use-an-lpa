@@ -54,7 +54,7 @@ rebuild:
 .PHONY: rebuild
 
 reset: rebuild composer_install
-.PHONY: refresh
+.PHONY: reset
 
 down:
 	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
