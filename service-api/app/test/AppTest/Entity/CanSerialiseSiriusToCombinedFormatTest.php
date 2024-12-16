@@ -115,7 +115,7 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                 ],
             ],
             'uId'                        => '700000000047',
-            'whenTheLpaCanBeUsed'       => null,
+            'whenTheLpaCanBeUsed'        => null,
             'withdrawnDate'              => null,
         ];
     }
