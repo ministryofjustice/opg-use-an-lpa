@@ -14,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
     GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
+    GetTrustCorporationStatus\TrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
     ResolveActor\ActorType,
@@ -198,7 +199,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(0);
+            ->willReturn(TrustCorporationStatus::ACTIVE_TC);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
@@ -211,7 +212,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(2);
+            ->willReturn(TrustCorporationStatus::INACTIVE_TC);
 
         $result = $service->getByUid($testUid);
 
