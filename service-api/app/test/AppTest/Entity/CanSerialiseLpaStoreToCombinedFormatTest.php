@@ -4,26 +4,19 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
 {
     use ProphecyTrait;
 
     private LpaDataFormatter $lpaDataFormatter;
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->featureEnabled = $this->prophesize(FeatureEnabled::class);
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(false);
         $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
@@ -33,7 +26,6 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
             'applicationHasGuidance'     => null,
             'applicationHasRestrictions' => null,
             'applicationType'            => null,
-            'attorneyActDecisions'       => 'jointly',
             'attorneys'                  => [
                 [
                     'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
@@ -45,11 +37,11 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'email'        => null,
                     'firstnames'   => 'Herman',
                     'name'         => null,
+                    'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => 'Seakrest',
                     'systemStatus' => 'active',
                     'town'         => 'Mahhhhhhhhhh',
-                    'type'         => null,
                     'uId'          => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
                 ],
             ],
@@ -66,14 +58,15 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                 'email'        => 'nobody@not.a.real.domain',
                 'firstnames'   => 'Feeg',
                 'name'         => null,
+                'otherNames'   => null,
                 'postcode'     => null,
                 'surname'      => 'Bundlaaaa',
                 'systemStatus' => null,
                 'town'         => 'Mahhhhhhhhhh',
-                'type'         => null,
                 'uId'          => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             ],
             'hasSeveranceWarning'        => null,
+            'howAttorneysMakeDecisions'  => 'jointly',
             'invalidDate'                => null,
             'lifeSustainingTreatment'    => 'option-a',
             'lpaDonorSignatureDate'      => '2024-01-10T23:00:00Z',
@@ -82,9 +75,9 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
             'receiptDate'                => null,
             'registrationDate'           => '2024-01-12T00:00:00Z',
             'rejectedDate'               => null,
-            'replacementAttorneys'       => null,
+            'replacementAttorneys'       => [],
             'status'                     => 'registered',
-            'statusDate'                 => null,
+            'statusDate'                 => '2024-01-12T23:00:00Z',
             'trustCorporations'          => [
                 [
                     'addressLine1' => '103 Line 1',
@@ -96,15 +89,16 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'email'        => null,
                     'firstnames'   => null,
                     'name'         => 'Trust us Corp.',
+                    'otherNames'   => null,
                     'postcode'     => null,
                     'surname'      => null,
                     'systemStatus' => 'active',
                     'town'         => 'Town',
-                    'type'         => null,
                     'uId'          => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ],
             ],
             'uId'                        => 'M-789Q-P4DF-4UX3',
+            'whenTheLpaCanBeUsed'        => 'when-capacity-lost',
             'withdrawnDate'              => null,
         ];
     }
