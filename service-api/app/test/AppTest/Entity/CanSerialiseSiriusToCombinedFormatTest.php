@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CanSerialiseSiriusToCombinedFormatTest extends TestCase
 {
     use ProphecyTrait;
 
     private LpaDataFormatter $lpaDataFormatter;
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
         $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
@@ -30,7 +26,6 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
             'applicationHasGuidance'     => false,
             'applicationHasRestrictions' => false,
             'applicationType'            => 'Classic',
-            'attorneyActDecisions'       => null,
             'attorneys'                  => [
                 [
                     'addressLine1' => '9 high street',
@@ -42,11 +37,11 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'email'        => '',
                     'firstnames'   => 'jean',
                     'name'         => null,
+                    'otherNames'   => null,
                     'postcode'     => 'DN37 5SH',
                     'surname'      => 'sanderson',
-                    'systemStatus' => '1',
+                    'systemStatus' => 'active',
                     'town'         => '',
-                    'type'         => 'Primary',
                     'uId'          => '700000000815',
                 ],
                 [
@@ -59,11 +54,11 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'email'        => 'XXXXX',
                     'firstnames'   => 'Ann',
                     'name'         => null,
+                    'otherNames'   => null,
                     'postcode'     => '',
                     'surname'      => 'Summers',
-                    'systemStatus' => '1',
+                    'systemStatus' => 'active',
                     'town'         => '',
-                    'type'         => 'Primary',
                     'uId'          => '700000000849',
                 ],
             ],
@@ -80,14 +75,15 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                 'email'        => 'RachelSanderson@opgtest.com',
                 'firstnames'   => 'Rachel Emma',
                 'name'         => null,
+                'otherNames'   => null,
                 'postcode'     => 'DN37 5SH',
                 'surname'      => 'Sanderson',
                 'systemStatus' => null,
                 'town'         => '',
-                'type'         => 'Primary',
                 'uId'          => '700000000799',
             ],
             'hasSeveranceWarning'        => null,
+            'howAttorneysMakeDecisions'  => 'jointly-and-severally',
             'invalidDate'                => null,
             'lifeSustainingTreatment'    => 'option-a',
             'lpaDonorSignatureDate'      => '2012-12-12T00:00:00Z',
@@ -110,15 +106,16 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'email'        => null,
                     'firstnames'   => 'trust',
                     'name'         => 'trust corporation',
+                    'otherNames'   => null,
                     'postcode'     => 'ABC 123',
                     'surname'      => 'test',
-                    'systemStatus' => '1',
+                    'systemStatus' => 'active',
                     'town'         => 'Town',
-                    'type'         => 'Primary',
                     'uId'          => '700000151998',
                 ],
             ],
             'uId'                        => '700000000047',
+            'whenTheLpaCanBeUsed'       => null,
             'withdrawnDate'              => null,
         ];
     }
@@ -126,10 +123,6 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
     #[Test]
     public function can_serialise_sirius_lpa_to_combined_format(): void
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(false);
-
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
         $expectedLpa = $this->getExpectedLpa();
