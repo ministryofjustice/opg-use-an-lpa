@@ -40,7 +40,6 @@ class AccessForAllValidationTest extends TestCase
                 surname: 'Testerson',
                 systemStatus: null,
                 town: null,
-                type: null,
                 uId: '700000000011',
             ),
             'attorney',
@@ -54,7 +53,9 @@ class AccessForAllValidationTest extends TestCase
             attorneys:                  [
                                             $this->actorMatch->actor,
                                         ],
-            attorneyActDecisions:       null,
+            caseAttorneyJointly: true,
+            caseAttorneyJointlyAndJointlyAndSeverally: false,
+            caseAttorneyJointlyAndSeverally: false,
             caseSubtype:                LpaType::PERSONAL_WELFARE,
             channel:                    'online',
             dispatchDate:               null,
@@ -75,7 +76,6 @@ class AccessForAllValidationTest extends TestCase
                                             surname:      null,
                                             systemStatus: null,
                                             town:         null,
-                                            type:         null,
                                             uId:          '700000000012',
                                         ),
             hasSeveranceWarning:        null,
@@ -92,6 +92,7 @@ class AccessForAllValidationTest extends TestCase
             statusDate:                 null,
             trustCorporations:          [],
             uId:                        '700000000001',
+            whenTheLpaCanBeUsed: null,
             withdrawnDate:              null,
         );
     }
@@ -122,11 +123,11 @@ class AccessForAllValidationTest extends TestCase
                 "email" : null,
                 "firstnames" : "Test",
                 "name" : null,
+                "otherNames": null,
                 "postcode" : null,
                 "surname" : "Testerson",
                 "systemStatus" : null,
                 "town" : null,
-                "type" : null,
                 "uId" : "700000000011"
               },
               "role" : "attorney",
@@ -151,11 +152,11 @@ class AccessForAllValidationTest extends TestCase
                 "email": null,
                 "firstnames": "Test",
                 "name": null,
+                "otherNames": null,
                 "postcode": null,
                 "surname": "Testerson",
                 "systemStatus": null,
                 "town": null,
-                "type": null,
                 "uId": "700000000011"
             },
             "attorney": {
