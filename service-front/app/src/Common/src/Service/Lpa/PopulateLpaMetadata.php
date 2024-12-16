@@ -33,7 +33,7 @@ class PopulateLpaMetadata
         foreach ($lpas as $lpaKey => $lpaData) {
             $shareCodes = $this->viewerCodeService->getShareCodes(
                 $userToken,
-                $lpaKey,
+                (string) $lpaKey,
                 true
             );
 
