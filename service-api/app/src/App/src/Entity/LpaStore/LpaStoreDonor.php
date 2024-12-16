@@ -6,7 +6,6 @@ namespace App\Entity\LpaStore;
 
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
-use App\Enum\ActorStatus;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
@@ -36,7 +35,6 @@ class LpaStoreDonor extends Person
         #[ExtractAddressFieldFrom('postcode')]
         ?string $postcode,
         ?string $lastName,
-        ?ActorStatus $status,
         #[MapFrom('address')]
         #[ExtractAddressFieldFrom('town')]
         ?string $town,
@@ -56,7 +54,7 @@ class LpaStoreDonor extends Person
             otherNames:   $otherNamesKnownBy,
             postcode:     $postcode,
             surname:      $lastName,
-            systemStatus: $status,
+            systemStatus: null,
             town:         $town,
             uId:          $uId,
         );

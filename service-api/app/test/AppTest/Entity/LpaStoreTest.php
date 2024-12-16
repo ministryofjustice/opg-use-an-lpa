@@ -7,9 +7,9 @@ namespace AppTest\Entity;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\LpaStore\LpaStoreDonor;
+use App\Enum\LpaType;
 use DateTimeImmutable;
 use DateTimeZone;
-use App\Enum\LpaType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -50,7 +50,6 @@ class LpaStoreTest extends TestCase
                 otherNamesKnownBy: null,
                 postcode:          null,
                 lastName:          null,
-                status:            null,
                 town:              null,
                 uId:               '700000000012',
             ),

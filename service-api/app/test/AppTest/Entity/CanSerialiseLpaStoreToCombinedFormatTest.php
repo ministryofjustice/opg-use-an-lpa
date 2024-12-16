@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
-class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
+class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -110,7 +110,7 @@ class CanSerialiseLpaStoreToModerniseFormatTest extends TestCase
     }
 
     #[Test]
-    public function can_serialise_datastore_lpa_to_modernise_format(): void
+    public function can_serialise_datastore_lpa_to_combined_format(): void
     {
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
         $expectedLpa = $this->getExpectedLpa();
