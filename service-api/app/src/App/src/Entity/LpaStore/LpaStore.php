@@ -6,14 +6,12 @@ namespace App\Entity\LpaStore;
 
 use App\Entity\Casters\CastToCaseSubtype;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
-use App\Entity\Casters\CastToAttorneyActDecisions;
 use App\Entity\Lpa;
 use App\Enum\ActorStatus;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
@@ -31,7 +29,6 @@ class LpaStore extends Lpa
         LpaType $caseSubtype,
         string $channel,
         LpaStoreDonor $donor,
-        #[CastToAttorneyActDecisions]
         ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         #[MapFrom('lifeSustainingTreatmentOption')]
         #[CastToLifeSustainingTreatment]
