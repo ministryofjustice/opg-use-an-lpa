@@ -75,7 +75,7 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
             caseAttorneyJointly:                       false,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           true,
-            caseSubtype:                               LpaType::fromShortName('personal-welfare'),
+            caseSubtype:                               LpaType::PERSONAL_WELFARE,
             channel:                                   null,
             dispatchDate:                              null,
             donor:                                     new SiriusLpaDonor(
