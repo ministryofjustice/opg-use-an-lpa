@@ -82,7 +82,7 @@ class SiriusPerson implements
 
     public function getDob(): DateTimeInterface
     {
-        return new DateTimeImmutable($this->person['dob']);
+        return new DateTimeImmutable($this->person['dob'] ?? '1900-01-01');
     }
 
     public function offsetExists(mixed $offset): bool
