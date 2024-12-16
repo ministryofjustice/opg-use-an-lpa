@@ -94,7 +94,7 @@ class CombinedSiriusLpaTest extends TestCase
             ),
             hasSeveranceWarning:                       null,
             invalidDate:                               null,
-            lifeSustainingTreatment:                   LifeSustainingTreatment::fromShortName('Option A'),
+            lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
             lpaDonorSignatureDate:                     new DateTimeImmutable('2012-12-12'),
             lpaIsCleansed:                             true,
             onlineLpaId:                               'A33718377316',

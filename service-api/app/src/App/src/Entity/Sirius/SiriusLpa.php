@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
 use App\Enum\HowAttorneysMakeDecisions;
@@ -17,7 +18,6 @@ use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use App\Entity\Sirius\Casters\CastToSiriusLifeSustainingTreatment;
 use Exception;
 
 class SiriusLpa extends Lpa implements FindActorInLpaInterface
@@ -37,7 +37,7 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         ?SiriusLpaDonor $donor,
         ?bool $hasSeveranceWarning,
         ?DateTimeImmutable $invalidDate,
-        #[CastToSiriusLifeSustainingTreatment]
+        #[CastToLifeSustainingTreatment]
         ?LifeSustainingTreatment $lifeSustainingTreatment,
         ?DateTimeImmutable $lpaDonorSignatureDate,
         ?bool $lpaIsCleansed,
