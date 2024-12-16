@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
-use App\Entity\Sirius\Casters\{CastToSiriusActorStatus,
-    ExtractAddressLine1FromSiriusLpa,
-    ExtractAddressLine2FromSiriusLpa,
-    ExtractAddressLine3FromSiriusLpa,
-    ExtractCountryFromSiriusLpa,
-    ExtractCountyFromSiriusLpa,
-    ExtractPostcodeFromSiriusLpa,
-    ExtractTownFromSiriusLpa,
-    ExtractTypeFromSiriusLpa};
+use App\Entity\Sirius\Casters\CastToSiriusActorStatus;
 use App\Entity\Person;
 use EventSauce\ObjectHydrator\MapFrom;
 use DateTimeImmutable;
@@ -26,19 +19,19 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
 {
     public function __construct(
         #[MapFrom('addresses')]
-        #[ExtractAddressLine1FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine1')]
         ?string $addressLine1,
         #[MapFrom('addresses')]
-        #[ExtractAddressLine2FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine2')]
         ?string $addressLine2,
         #[MapFrom('addresses')]
-        #[ExtractAddressLine3FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine3')]
         ?string $addressLine3,
         #[MapFrom('addresses')]
-        #[ExtractCountryFromSiriusLpa]
+        #[ExtractAddressFieldFrom('country')]
         ?string $country,
         #[MapFrom('addresses')]
-        #[ExtractCountyFromSiriusLpa]
+        #[ExtractAddressFieldFrom('county')]
         ?string $county,
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
@@ -49,13 +42,13 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         public readonly ?string $middlenames,
         ?string $otherNames,
         #[MapFrom('addresses')]
-        #[ExtractPostcodeFromSiriusLpa]
+        #[ExtractAddressFieldFrom('postcode')]
         ?string $postcode,
         ?string $surname,
         #[CastToSiriusActorStatus]
         ?ActorStatus $systemStatus,
         #[MapFrom('addresses')]
-        #[ExtractTownFromSiriusLpa]
+        #[ExtractAddressFieldFrom('town')]
         ?string $town,
         ?string $uId,
     ) {
