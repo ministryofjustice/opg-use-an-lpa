@@ -21,6 +21,11 @@ class ExtractAddressFieldFrom implements PropertyCaster
             return $value[$this->fieldName];
         }
 
+        // little recursive magic to handle Sirius' multiple address structure.
+        if (is_array($value) && is_array($value = array_pop($value))) {
+            return $this->cast($value, $hydrator);
+        }
+
         return null;
     }
 }
