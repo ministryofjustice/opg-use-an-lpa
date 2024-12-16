@@ -53,6 +53,9 @@ rebuild:
 	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: rebuild
 
+reset: rebuild composer_install
+.PHONY: refresh
+
 down:
 	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: down
