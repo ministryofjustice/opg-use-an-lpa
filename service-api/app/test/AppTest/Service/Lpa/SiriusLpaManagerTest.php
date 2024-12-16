@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use Common\Service\Lpa\Factory\Sirius;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -15,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
     GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
+    GetTrustCorporationStatus\TrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
     ResolveActor\ActorType,
@@ -165,7 +165,7 @@ class SiriusLpaManagerTest extends TestCase
                     'systemStatus' => true,
                 ])
             )
-            ->willReturn(0);
+            ->willReturn(TrustCorporationStatus::ACTIVE_TC);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
@@ -175,7 +175,7 @@ class SiriusLpaManagerTest extends TestCase
                     'systemStatus' => true,
                 ])
             )
-            ->willReturn(2);
+            ->willReturn(TrustCorporationStatus::INACTIVE_TC);
 
         $result = $service->getByUid($testUid);
 

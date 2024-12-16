@@ -34,7 +34,7 @@ class FilterActiveActors
         $trustCorporations =
             array_filter($lpa->getTrustCorporations(), function ($trustCorporation) {
                 return ($this->getTrustCorporationStatus)($trustCorporation)
-                    === TrustCorporationStatus::ACTIVE_TC->value;
+                    === TrustCorporationStatus::ACTIVE_TC;
             });
 
         return $lpa

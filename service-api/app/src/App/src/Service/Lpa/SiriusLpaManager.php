@@ -59,7 +59,7 @@ class SiriusLpaManager implements LpaManagerInterface
                 $lpaData['trustCorporations'] = array_values(
                     array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
                         return ($this->getTrustCorporationStatus)($trustCorporation)
-                            === TrustCorporationStatus::ACTIVE_TC->value;
+                            === TrustCorporationStatus::ACTIVE_TC;
                     })
                 );
         }
