@@ -58,9 +58,9 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         ?DateTimeImmutable $withdrawnDate,
     ) {
         $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::fromDiscreteBooleans(
-            jointly:                    $caseAttorneyJointly,
-            jointlyAndSeverally:        $caseAttorneyJointlyAndSeverally,
-            jointlyForSomeAndSeverally: $caseAttorneyJointlyAndJointlyAndSeverally,
+            jointly:                    $caseAttorneyJointly ?? false,
+            jointlyAndSeverally:        $caseAttorneyJointlyAndSeverally ?? false,
+            jointlyForSomeAndSeverally: $caseAttorneyJointlyAndJointlyAndSeverally ?? false,
         );
 
         parent::__construct(
