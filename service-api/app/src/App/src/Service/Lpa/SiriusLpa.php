@@ -12,6 +12,7 @@ use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use ArrayAccess;
 use IteratorAggregate;
 use JsonSerializable;
+use Psr\Log\LoggerInterface;
 use Traversable;
 
 /**
@@ -29,7 +30,7 @@ class SiriusLpa implements
 {
     use SiriusHasActorTrait;
 
-    public function __construct(private array $lpa)
+    public function __construct(private array $lpa, private LoggerInterface $logger)
     {
         if ($this->lpa['donor'] !== null) {
             $donorAsSiriusPerson = $this->convertToSiriusPerson($this->lpa['donor']);
@@ -68,7 +69,7 @@ class SiriusLpa implements
     {
         return $entity instanceof SiriusPerson
             ? $entity
-            : new SiriusPerson($entity);
+            : new SiriusPerson($entity, $this->logger);
     }
 
     private function getTrustCorporations(): array
@@ -78,16 +79,34 @@ class SiriusLpa implements
 
     public function offsetExists(mixed $offset): bool
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusLpa object as array (exists) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return isset($this->lpa[$offset]);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusLpa object as array (getter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return $this->lpa[$offset];
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusLpa object as array (setter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         $this->lpa[$offset] = $value;
     }
 

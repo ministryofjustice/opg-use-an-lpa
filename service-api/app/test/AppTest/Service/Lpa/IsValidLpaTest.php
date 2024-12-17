@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\IsValidLpa;
+use App\Service\Lpa\SiriusLpa;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Service\Lpa\SiriusLpa;
 
 class IsValidLpaTest extends TestCase
 {
@@ -41,7 +41,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();
@@ -59,7 +60,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();
@@ -77,7 +79,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();

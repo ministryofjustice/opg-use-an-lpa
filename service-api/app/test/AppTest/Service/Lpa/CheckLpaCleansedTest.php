@@ -53,9 +53,12 @@ class CheckLpaCleansedTest extends TestCase
         );
 
         $actorDetailsMatch = new ActorMatch(
-            new SiriusPerson([
-                'uId' => '700000000002',
-            ]),
+            new SiriusPerson(
+                [
+                    'uId' => '700000000002',
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
             '',
             '700000000001',
         );
@@ -83,9 +86,12 @@ class CheckLpaCleansedTest extends TestCase
         );
 
         $actorDetailsMatch = new ActorMatch(
-            new SiriusPerson([
-                                 'uId' => '700000000002',
-                             ]),
+            new SiriusPerson(
+                [
+                    'uId' => '700000000002',
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
             '',
             '700000000001',
         );
@@ -111,9 +117,12 @@ class CheckLpaCleansedTest extends TestCase
         );
 
         $actorDetailsMatch = new ActorMatch(
-            new SiriusPerson([
-                 'uId' => '700000000002',
-             ]),
+            new SiriusPerson(
+                [
+                    'uId' => '700000000002',
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
             '',
             '700000000001',
         );
@@ -139,9 +148,12 @@ class CheckLpaCleansedTest extends TestCase
         );
 
         $actorDetailsMatch = new ActorMatch(
-            new SiriusPerson([
-                 'uId' => '700000000002',
-             ]),
+            new SiriusPerson(
+                [
+                    'uId' => '700000000002',
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
             '',
             '700000000001',
         );
