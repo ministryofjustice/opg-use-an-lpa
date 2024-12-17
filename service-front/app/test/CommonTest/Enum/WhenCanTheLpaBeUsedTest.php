@@ -20,10 +20,10 @@ class WhenCanTheLpaBeUsedTest extends TestCase
         $this->assertTrue($whenHasCapacity->isWhenHasCapacity());
         $this->assertFalse($whenHasCapacity->isUnknown());
 
-        $this->assertTrue($whenCapacityLost->isWhenCapacityLost());
+        $this->assertTrue($whenCapacityLost->isWhenHasLostCapacity());
         $this->assertFalse($whenCapacityLost->isUnknown());
 
         $this->assertTrue($unknown->isUnknown());
-        $this->assertFalse($unknown->isWhenCapacityLost());
+        $this->assertFalse($unknown->isWhenHasLostCapacity());
     }
 }
