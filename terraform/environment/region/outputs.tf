@@ -45,3 +45,8 @@ output "route53_fqdns" {
     mock_onelogin      = local.route53_fqdns.mock_onelogin
   }
 }
+
+output "event_bus_sqs_queue_name" {
+  description = "SQS queue name from the event_bus module"
+  value       = module.event_bus.receive_events_sqs_queue_name
+}
