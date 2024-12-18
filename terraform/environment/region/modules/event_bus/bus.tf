@@ -29,12 +29,13 @@ resource "aws_cloudwatch_event_rule" "receive_events_from_mlpa" {
 resource "aws_cloudwatch_event_bus_policy" "cross_account_receive" {
   count          = length(var.receive_account_ids) > 0 ? 1 : 0
   event_bus_name = aws_cloudwatch_event_bus.main[0].name
-  policy         = data.aws_iam_policy_document.cross_account_receive.json
+  policy         = data.aws_iam_policy_document.cross_account_receive[0].json
   provider       = aws.region
 }
 
 # Allow MLPA account to send messages
 data "aws_iam_policy_document" "cross_account_receive" {
+  count = var.event_bus_enabled ? 1 : 0
   statement {
     sid    = "CrossAccountAccess"
     effect = "Allow"
