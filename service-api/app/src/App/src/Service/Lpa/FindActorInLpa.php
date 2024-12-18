@@ -127,7 +127,6 @@ class FindActorInLpa
             ]
         );
 
-
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
