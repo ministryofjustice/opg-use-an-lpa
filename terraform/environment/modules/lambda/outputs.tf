@@ -12,3 +12,8 @@ output "lambda_role" {
   description = "The lambda role"
   value       = aws_iam_role.lambda_role
 }
+
+output "lambda_name" {
+  description = "The lambda name"
+  value       = aws_lambda_function.lambda_function.function_name
+}

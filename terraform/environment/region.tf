@@ -20,6 +20,7 @@ module "eu_west_1" {
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
+  event_receiver_lambda_name                       = module.event_receiver.lambda_name
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name
@@ -33,6 +34,7 @@ module "eu_west_1" {
   lpa_codes_endpoint                               = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                         = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                          = local.environment.lpa_data_store_endpoint
+  receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url
@@ -108,6 +110,7 @@ module "eu_west_2" {
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
   event_bus_enabled                                = local.environment.event_bus_enabled
+  event_receiver_lambda_name                       = module.event_receiver.lambda_name
   google_analytics_id_use                          = local.environment.google_analytics_id_use
   google_analytics_id_view                         = local.environment.google_analytics_id_view
   gov_uk_onelogin_client_id_secret_name            = local.environment.gov_uk_onelogin_client_id_secret_name
@@ -121,6 +124,7 @@ module "eu_west_2" {
   lpa_codes_endpoint                               = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                         = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                          = local.environment.lpa_data_store_endpoint
+  receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url
