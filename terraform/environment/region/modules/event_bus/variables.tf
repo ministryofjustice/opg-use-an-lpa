@@ -9,14 +9,17 @@ variable "event_bus_enabled" {
   default     = false
 }
 
-/*
-variable "ingress_lambda_name" {
+variable "lambda_function_name" {
   description = "The name of the ingress lambda"
   type        = string
 }
-*/
 
 variable "current_region" {
   description = "The current region"
   type        = string
+}
+
+variable "receive_account_ids" {
+  description = "The account ids that can send events to the event bus"
+  type        = list(string)
 }
