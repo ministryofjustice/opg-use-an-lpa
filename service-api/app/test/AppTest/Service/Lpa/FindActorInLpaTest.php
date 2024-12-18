@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Person;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Service\Lpa\FindActorInLpa;
@@ -15,6 +16,7 @@ use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
 use DateTimeImmutable;
+use Monolog\Logger;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -50,6 +52,7 @@ class FindActorInLpaTest extends TestCase
                     $this->activeAttorneyFixtureOld(),
                 ],
             ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->getAttorneyStatusProphecy
@@ -89,7 +92,7 @@ class FindActorInLpaTest extends TestCase
             $this->activeAttorneyFixture(),
         ];
 
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
+        $lpa = new CombinedSiriusLpa(
             applicationHasGuidance:     null,
             applicationHasRestrictions: null,
             applicationType:            null,
@@ -141,16 +144,16 @@ class FindActorInLpaTest extends TestCase
     public static function actorLookupDataProviderOldSiriusPerson(): array
     {
         return self::actorLookupDataProvider(
-            FindActorInLpaTest::activeAttorneyFixtureOld(),
-            FindActorInLpaTest::donorFixtureOld()
+            self::activeAttorneyFixtureOld(),
+            self::donorFixtureOld()
         );
     }
 
     public static function actorLookupDataProviderCombinedSirius(): array
     {
         return self::actorLookupDataProvider(
-            FindActorInLpaTest::activeAttorneyFixture(),
-            FindActorInLpaTest::donorFixture()
+            self::activeAttorneyFixture(),
+            self::donorFixture()
         );
     }
 
@@ -250,23 +253,26 @@ class FindActorInLpaTest extends TestCase
         ];
     }
 
-    public static function inactiveAttorneyFixtureOld(): SiriusPerson
+    private function inactiveAttorneyFixtureOld(): SiriusPerson
     {
-        return new SiriusPerson([
-            'uId'          => '700000002222',
-            'dob'          => '1977-11-21',
-            'firstname'    => 'Attorneyone',
-            'surname'      => 'Person',
-            'addresses'    => [
-                [
-                    'postcode' => 'Gg1 2ff',
+        return new SiriusPerson(
+            [
+                'uId'          => '700000002222',
+                'dob'          => '1977-11-21',
+                'firstname'    => 'Attorneyone',
+                'surname'      => 'Person',
+                'addresses'    => [
+                    [
+                        'postcode' => 'Gg1 2ff',
+                    ],
                 ],
+                'systemStatus' => false, // inactive attorney
             ],
-            'systemStatus' => false, // inactive attorney
-        ]);
+            $this->loggerProphecy->reveal(),
+        );
     }
 
-    public static function inactiveAttorneyFixture(): SiriusLpaAttorney
+    private function inactiveAttorneyFixture(): SiriusLpaAttorney
     {
         return new SiriusLpaAttorney(
             addressLine1: null,
@@ -289,23 +295,26 @@ class FindActorInLpaTest extends TestCase
         );
     }
 
-    public static function ghostAttorneyFixtureOld(): SiriusPerson
+    private function ghostAttorneyFixtureOld(): SiriusPerson
     {
-        return new SiriusPerson([
-            'uId'          => '700000003333',
-            'dob'          => '1960-05-05',
-            'firstname'    => '', // ghost attorney
-            'surname'      => '',
-            'addresses'    => [
-                [
-                    'postcode' => 'BB1 9ee',
+        return new SiriusPerson(
+            [
+                'uId'          => '700000003333',
+                'dob'          => '1960-05-05',
+                'firstname'    => '', // ghost attorney
+                'surname'      => '',
+                'addresses'    => [
+                    [
+                        'postcode' => 'BB1 9ee',
+                    ],
                 ],
+                'systemStatus' => true,
             ],
-            'systemStatus' => true,
-        ]);
+            $this->loggerProphecy->reveal(),
+        );
     }
 
-    public static function ghostAttorneyFixture(): Person
+    private function ghostAttorneyFixture(): Person
     {
         return new SiriusLpaAttorney(
             addressLine1: null,
@@ -328,42 +337,48 @@ class FindActorInLpaTest extends TestCase
         );
     }
 
-    public static function multipleAddressAttorneyFixtureOld(): SiriusPerson
+    private function multipleAddressAttorneyFixtureOld(): SiriusPerson
     {
-        return new SiriusPerson([
-            'uId'          => '700000004444',
-            'dob'          => '1980-03-01',
-            'firstname'    => 'Attorneythree',
-            'surname'      => 'Person',
-            'addresses'    => [ // multiple addresses
-                [
-                    'postcode' => 'Ab1 2Cd',
+        return new SiriusPerson(
+            [
+                'uId'          => '700000004444',
+                'dob'          => '1980-03-01',
+                'firstname'    => 'Attorneythree',
+                'surname'      => 'Person',
+                'addresses'    => [ // multiple addresses
+                    [
+                        'postcode' => 'Ab1 2Cd',
+                    ],
+                    [
+                        'postcode' => 'Bc2 3Df',
+                    ],
                 ],
-                [
-                    'postcode' => 'Bc2 3Df',
-                ],
+                'systemStatus' => true,
             ],
-            'systemStatus' => true,
-        ]);
+            $this->loggerProphecy->reveal(),
+        );
     }
 
-    public static function activeAttorneyFixtureOld(): SiriusPerson
+    private static function activeAttorneyFixtureOld(): SiriusPerson
     {
-        return new SiriusPerson([
-            'uId'          => '700000001234',
-            'dob'          => '1980-03-01',
-            'firstname'    => 'Test',
-            'surname'      => 'T’esting',
-            'addresses'    => [
-                [
-                    'postcode' => 'Ab1 2Cd',
+        return new SiriusPerson(
+            [
+                'uId'          => '700000001234',
+                'dob'          => '1980-03-01',
+                'firstname'    => 'Test',
+                'surname'      => 'T’esting',
+                'addresses'    => [
+                    [
+                        'postcode' => 'Ab1 2Cd',
+                    ],
                 ],
+                'systemStatus' => true,
             ],
-            'systemStatus' => true,
-        ]);
+            new Logger('test-output'),
+        );
     }
 
-    public static function activeAttorneyFixture(): SiriusLpaAttorney
+    private static function activeAttorneyFixture(): SiriusLpaAttorney
     {
         return new SiriusLpaAttorney(
             addressLine1: null,
@@ -386,22 +401,25 @@ class FindActorInLpaTest extends TestCase
         );
     }
 
-    public static function donorFixtureOld(): SiriusPerson
+    private static function donorFixtureOld(): SiriusPerson
     {
-        return new SiriusPerson([
-            'uId'       => '700000001111',
-            'dob'       => '1975-10-05',
-            'firstname' => 'Donor',
-            'surname'   => 'Person',
-            'addresses' => [
-                [
-                    'postcode' => 'PY1 3Kd',
+        return new SiriusPerson(
+            [
+                'uId'       => '700000001111',
+                'dob'       => '1975-10-05',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
+                'addresses' => [
+                    [
+                        'postcode' => 'PY1 3Kd',
+                    ],
                 ],
             ],
-        ]);
+            new Logger('test-output'),
+        );
     }
 
-    public static function donorFixture(): SiriusLpaDonor
+    private static function donorFixture(): SiriusLpaDonor
     {
         return new SiriusLpaDonor(
             addressLine1: null,
