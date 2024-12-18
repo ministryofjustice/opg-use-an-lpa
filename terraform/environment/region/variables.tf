@@ -112,6 +112,12 @@ variable "event_bus_enabled" {
   default     = false
 }
 
+variable "event_receiver_lambda_name" {
+  description = "The name of the event receiver lambda."
+  type        = string
+  default     = ""
+}
+
 variable "feature_flags" {
   description = "The feature flags to use."
   type        = map(string)
@@ -181,6 +187,11 @@ variable "load_balancer_deletion_protection_enabled" {
   description = "Whether or not deletion protection should be enabled for the load balancers."
   type        = bool
   default     = false
+}
+
+variable "receive_account_ids" {
+  description = "The account ID of the MLPA account."
+  type        = list(string)
 }
 
 variable "mock_onelogin_enabled" {

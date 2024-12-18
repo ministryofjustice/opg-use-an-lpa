@@ -28,7 +28,7 @@ resource "aws_cloudwatch_event_rule" "receive_events_from_mlpa" {
 
 resource "aws_cloudwatch_event_bus_policy" "cross_account_receive" {
   count          = length(var.receive_account_ids) > 0 ? 1 : 0
-  event_bus_name = aws_cloudwatch_event_bus.main.name
+  event_bus_name = aws_cloudwatch_event_bus.main[0].name
   policy         = data.aws_iam_policy_document.cross_account_receive.json
   provider       = aws.region
 }
@@ -42,7 +42,7 @@ data "aws_iam_policy_document" "cross_account_receive" {
       "events:PutEvents",
     ]
     resources = [
-      aws_cloudwatch_event_bus.main.arn
+      aws_cloudwatch_event_bus.main[0].arn
     ]
 
     principals {
@@ -55,5 +55,5 @@ data "aws_iam_policy_document" "cross_account_receive" {
 resource "aws_cloudwatch_event_target" "receive_events" {
   count = var.event_bus_enabled ? 1 : 0
   rule  = aws_cloudwatch_event_rule.receive_events_from_mlpa[0].name
-  arn   = aws_sqs_queue.receive_events_queue.arn
+  arn   = aws_sqs_queue.receive_events_queue[0].arn
 }
