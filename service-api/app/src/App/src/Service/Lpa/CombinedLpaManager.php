@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
@@ -42,7 +43,12 @@ class CombinedLpaManager implements LpaManagerInterface
             return null;
         }
 
-        return ($this->filterActiveActors)($lpa);
+        $lpaData = ($this->filterActiveActors)($lpa->getData());
+
+        return new Lpa(
+            $lpaData,
+            $lpa->getLookupTime(),
+        );
     }
 
     public function getByUserLpaActorToken(string $token, string $userId): ?array
