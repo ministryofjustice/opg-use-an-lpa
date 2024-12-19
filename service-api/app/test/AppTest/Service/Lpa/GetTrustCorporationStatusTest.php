@@ -30,13 +30,13 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_active_if_trustCorporation_is_active(): void
     {
-
         $trustCorporation = new SiriusPerson(
             [
                 'uId'          => 7,
                 'companyName'  => 'ABC Ltd',
                 'systemStatus' => true,
-            ]
+            ],
+            $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
         $status = new GetTrustCorporationStatus(
