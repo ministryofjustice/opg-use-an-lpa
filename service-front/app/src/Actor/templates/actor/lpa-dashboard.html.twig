@@ -72,7 +72,10 @@
                                 {% set actorActive = lpaData['actorActive'] %}
                                 {% set activeCodeCount = lpaData['activeCodeCount'] %}
                                 {% set shareCodes = lpaData['shareCodes'] %}
-                                {% set caseSubtype = lpa.caseSubtype == 'pfa' or lpa.caseSubtype.isPropertyAndAffairs ? 'Property and finance'|trans : 'Health and welfare'|trans %}
+                                {% set caseSubtype = lpa.caseSubtype == 'pfa' ? 'Property and finance'|trans : 'Health and welfare'|trans %}
+                                {% if feature_enabled("support_datastore_lpas") %}
+                                    {% set caseSubtype = lpa.caseSubtype.value == 'pfa' ? 'Property and finance'|trans : 'Health and welfare'|trans %}
+                                {% endif %}
                                 {% set applicationHasRestrictions = lpa.applicationHasRestrictions %}
                                 {% set applicationHasGuidance = lpa.applicationHasGuidance %}
                                 {% set lpaDonorSignatureDate = lpa.lpaDonorSignatureDate %}
