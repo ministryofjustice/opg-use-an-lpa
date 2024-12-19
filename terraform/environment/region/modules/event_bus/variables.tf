@@ -18,3 +18,8 @@ variable "receive_account_ids" {
   description = "The account ids that can send events to the event bus"
   type        = list(string)
 }
+
+variable "queue_visibility_timeout" {
+  description = "The visibility timeout for the SQS queue"
+  type        = number
+}
