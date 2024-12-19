@@ -10,7 +10,6 @@ use App\Enum\ActorStatus;
 use App\Service\Lpa\GetTrustCorporationStatus;
 use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
 use App\Service\Lpa\SiriusPerson;
-use Monolog\Logger;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -31,14 +30,13 @@ class GetTrustCorporationStatusTest extends TestCase
     #[Test]
     public function returns_active_if_trustCorporation_is_active(): void
     {
-
         $trustCorporation = new SiriusPerson(
             [
                 'uId'          => 7,
                 'companyName'  => 'ABC Ltd',
                 'systemStatus' => true,
             ],
-            new Logger('test-output'),
+            $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
         $status = new GetTrustCorporationStatus(
