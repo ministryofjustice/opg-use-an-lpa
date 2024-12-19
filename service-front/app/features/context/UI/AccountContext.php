@@ -1596,59 +1596,11 @@ class AccountContext implements Context
             )
         );
 
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
-
-        $userLpaActorToken = '12345789';
-        $lpaData           = [
-            'user-lpa-actor-token'       => $userLpaActorToken,
-            'date'                       => 'today',
-            'actor'                      => [
-                'type'    => 'primary-attorney',
-                'details' => [
-                    'addresses'    => [
-                        [
-                            'addressLine1' => '',
-                            'addressLine2' => '',
-                            'addressLine3' => '',
-                            'country'      => '',
-                            'county'       => '',
-                            'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => '',
-                            'type'         => 'Primary',
-                        ],
-                    ],
-                    'companyName'  => null,
-                    'dob'          => '1975-10-05',
-                    'email'        => 'string',
-                    'firstname'    => 'Ian',
-                    'id'           => 0,
-                    'middlenames'  => null,
-                    'salutation'   => 'Mr',
-                    'surname'      => 'Deputy',
-                    'systemStatus' => true,
-                    'uId'          => '700000000054',
-                ],
-            ],
-            'applicationHasRestrictions' => true,
-            'applicationHasGuidance'     => false,
-            'lpa'                        => $lpa,
-            'added'                      => '2021-10-5 12:00:00',
-        ];
-
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode([$userLpaActorToken => $lpaData]),
+                json_encode([]), // no LPAs
                 self::LPA_SERVICE_GET_LPAS
-            )
-        );
-
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
             )
         );
 
@@ -1661,6 +1613,7 @@ class AccountContext implements Context
         );
 
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
 
     /**
