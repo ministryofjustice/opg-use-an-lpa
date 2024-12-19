@@ -41,7 +41,7 @@
     <ul class="govuk-list govuk-list--inline">
         <li>
             <a class="govuk-link" href="{{ path('lpa.create-code', {}, {'lpa': actorToken }) }}">{% trans %}Give an organisation access{% endtrans %}</a>
-            <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
+            <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype }}</span>
         </li>
         <li>
             <a class="govuk-link" href="{{ path('lpa.access-codes', {}, {'lpa': actorToken }) }}">{% trans %}Check access codes{% endtrans %}</a><br>
@@ -49,7 +49,7 @@
         </li>
         <li>
             <a class="govuk-link" href="{{ path('lpa.view', {}, {'lpa': actorToken}) }}">{% trans %}View LPA summary{% endtrans %}</a>
-            <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype}}</span>
+            <span class="govuk-visually-hidden">{{ actor_name(lpa.donor, false) ~ " " ~ caseSubtype }}</span>
         </li>
     </ul>
 {% endif %}

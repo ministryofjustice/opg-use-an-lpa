@@ -65,6 +65,7 @@
         "paragonie/hidden-string": "^1.0",
         "psr/clock": "^1.0",
         "ramsey/uuid": "^4.0",
+        "spatie/php-cloneable": "^1.0.2",
         "symfony/console": "^6.1",
         "web-token/jwt-signature-algorithm-ecdsa": "^3.2",
         "web-token/jwt-encryption-algorithm-aeskw": "^3.4.0"
@@ -132,7 +133,7 @@
         "clear-config-cache": "php bin/clear-config-cache.php",
         "dc": [
             "Composer\\Config::disableProcessTimeout",
-            "docker-compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml"
+            "docker compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml  -f ../../docker-compose.testing.yml -f ../../docker-compose.override.yml"
         ],
         "dc-run": "@dc run --rm api-app",
         "dc-php": "@dc-run php",

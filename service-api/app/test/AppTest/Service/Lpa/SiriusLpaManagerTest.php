@@ -14,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
     GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
+    GetTrustCorporationStatus\TrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
     ResolveActor\ActorType,
@@ -198,7 +199,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(0);
+            ->willReturn(TrustCorporationStatus::ACTIVE_TC);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
@@ -211,7 +212,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(2);
+            ->willReturn(TrustCorporationStatus::INACTIVE_TC);
 
         $result = $service->getByUid($testUid);
 
@@ -635,7 +636,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActiveForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
@@ -667,7 +668,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllLpasAndRequestsForUser($t->UserId);
+        $result = $service->getAllForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
@@ -700,7 +701,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn([]);
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActiveForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(0, $result);
