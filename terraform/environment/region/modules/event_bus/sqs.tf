@@ -9,7 +9,7 @@ resource "aws_sqs_queue" "receive_events_queue" {
   kms_master_key_id                 = data.aws_kms_alias.sqs.target_key_id
   kms_data_key_reuse_period_seconds = 300
 
-  visibility_timeout_seconds = 300
+  visibility_timeout_seconds = var.queue_visibility_timeout
 
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.receive_events_deadletter[0].arn
