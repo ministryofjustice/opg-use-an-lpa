@@ -102,3 +102,37 @@ module "event_receiver" {
   timeout     = 900
   memory      = 128
 }
+
+resource "aws_iam_role_policy" "lambda_event_receiver" {
+  name   = "${local.environment_name}-lambda-event-receiver"
+  role   = module.event_receiver.lambda_role.name
+  policy = data.aws_iam_policy_document.lambda_event_receiver.json
+}
+
+
+data "aws_iam_policy_document" "lambda_event_receiver" {
+  statement {
+    sid    = "${local.environment_name}EventReceiverSQS"
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [module.eu_west_1[0].receive_events_sqs_queue_arn[0]]
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
+  event_source_arn = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+  function_name    = module.event_receiver.lambda_name
+  enabled          = true
+}
+
+resource "aws_lambda_permission" "receive_events_permission" {
+  statement_id  = "AllowExecutionFromSQS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.event_receiver.lambda_name
+  principal     = "sqs.amazonaws.com"
+  source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+}
