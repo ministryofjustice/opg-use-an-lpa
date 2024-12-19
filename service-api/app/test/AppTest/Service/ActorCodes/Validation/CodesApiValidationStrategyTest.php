@@ -71,6 +71,7 @@ class CodesApiValidationStrategyTest extends TestCase
                 [
                     'uId' => 'lpa-uid',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime('now')
         );
@@ -190,6 +191,7 @@ class CodesApiValidationStrategyTest extends TestCase
                 [
                     'uId' => 'lpa-uid',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime('now')
         );
@@ -230,6 +232,7 @@ class CodesApiValidationStrategyTest extends TestCase
                 [
                     'uId' => 'lpa-uid',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime('now')
         );
@@ -342,6 +345,7 @@ class CodesApiValidationStrategyTest extends TestCase
                     ],
                     'uId'   => 'lpa-uid',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime('now')
         );
