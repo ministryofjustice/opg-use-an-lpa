@@ -11,39 +11,68 @@ use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
 use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class SiriusHasActorTraitTest extends TestCase
 {
+    use ProphecyTrait;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
     private HasActorInterface $mock;
 
     public function setUp(): void
     {
-        $this->mock = new class () implements HasActorInterface {
+        $this->mock = new class (
+            $this->prophesize(LoggerInterface::class)->reveal()
+        ) implements HasActorInterface {
             use SiriusHasActorTrait;
+
+            public function __construct(private LoggerInterface $logger)
+            {
+            }
 
             private function getDonor(): SiriusPerson
             {
-                return new SiriusPerson([
-                    'id'     => 1,
-                    'uId'    => '123456789',
-                    'linked' => [['id' => 1, 'uId' => '123456789'], ['id' => 2, 'uId' => '234567890']],
-                ]);
+                return new SiriusPerson(
+                    [
+                        'id'     => 1,
+                        'uId'    => '123456789',
+                        'linked' => [['id' => 1, 'uId' => '123456789'], ['id' => 2, 'uId' => '234567890']],
+                    ],
+                    $this->logger,
+                );
             }
 
             private function getAttorneys(): array
             {
                 return [
-                    new SiriusPerson(['id' => 3, 'uId' => '345678901', 'firstname' => 'A', 'surname' => 'B']),
-                    new SiriusPerson(['id' => 4, 'uId' => '456789012', 'firstname' => 'B', 'surname' => 'C']),
-                    new SiriusPerson(['id' => 5, 'uId' => '567890123', 'firstname' => 'C', 'surname' => 'D']),
+                    new SiriusPerson(
+                        ['id' => 3, 'uId' => '345678901', 'firstname' => 'A', 'surname' => 'B'],
+                        $this->logger,
+                    ),
+                    new SiriusPerson(
+                        ['id' => 4, 'uId' => '456789012', 'firstname' => 'B', 'surname' => 'C'],
+                        $this->logger,
+                    ),
+                    new SiriusPerson(
+                        ['id' => 5, 'uId' => '567890123', 'firstname' => 'C', 'surname' => 'D'],
+                        $this->logger,
+                    ),
                 ];
             }
 
             private function getTrustCorporations(): array
             {
                 return [
-                    new SiriusPerson(['id' => 6, 'uId' => '678901234', 'companyName' => 'A']),
-                    new SiriusPerson(['id' => 7, 'uId' => '789012345', 'companyName' => 'B']),
+                    new SiriusPerson(
+                        ['id' => 6, 'uId' => '678901234', 'companyName' => 'A'],
+                        $this->logger,
+                    ),
+                    new SiriusPerson(
+                        ['id' => 7, 'uId' => '789012345', 'companyName' => 'B'],
+                        $this->logger,
+                    ),
                 ];
             }
         };

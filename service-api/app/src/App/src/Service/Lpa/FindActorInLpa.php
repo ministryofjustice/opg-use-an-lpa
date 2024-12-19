@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
@@ -129,17 +130,28 @@ class FindActorInLpa
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
-                'actor_id'   => $actor->getUid(),
-                'to_match'   => $matchData,
-                'actor_data' => array_merge($actorData, ['dob' => $actor->getDob()]),
+                'actor_id' => $actor->getUid(),
+                'to_match' => $matchData,
             ]
         );
 
         $match = self::MATCH;
+        try {
+            $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
+                ? $match | self::NO_MATCH__DOB
+                : $match;
+        } catch (ActorDateOfBirthNotSetException $exception) {
+            $this->logger->warning(
+                'Actor DOB is null',
+                [
+                    'actor_id' => $actor->getUid(),
+                    'error'    => $exception->getMessage(),
+                ]
+            );
 
-        $match = $actor->getDob()->format('Y-m-d') !== $matchData['dob']
-            ? $match | self::NO_MATCH__DOB
-            : $match;
+            return self::NO_MATCH__DOB;
+        }
+
         $match = $actorData['first_names'] !== $matchData['first_names']
             ? $match | self::NO_MATCH__FIRSTNAMES
             : $match;

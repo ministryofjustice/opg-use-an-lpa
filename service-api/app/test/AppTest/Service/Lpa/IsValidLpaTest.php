@@ -41,7 +41,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();
@@ -59,7 +60,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();
@@ -77,7 +79,8 @@ class IsValidLpaTest extends TestCase
                 'donor'  => [
                     'id' => 1,
                 ],
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $resolver = $this->isValidLpaResolver();

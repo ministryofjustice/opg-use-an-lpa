@@ -215,6 +215,7 @@ class ActorCodeServiceTest extends TestCase
             [
                 'uId' => $testUid,
             ],
+            $this->loggerProphecy->reveal(),
         );
 
         $mockActor = new LpaActor(
