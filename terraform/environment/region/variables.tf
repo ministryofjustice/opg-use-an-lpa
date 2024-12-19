@@ -112,12 +112,6 @@ variable "event_bus_enabled" {
   default     = false
 }
 
-variable "event_receiver_lambda_name" {
-  description = "The name of the event receiver lambda."
-  type        = string
-  default     = ""
-}
-
 variable "feature_flags" {
   description = "The feature flags to use."
   type        = map(string)

@@ -9,12 +9,6 @@ variable "event_bus_enabled" {
   default     = false
 }
 
-variable "event_receiver_lambda_name" {
-  description = "The name of the ingress from MLPA lambda"
-  type        = string
-}
-
-
 variable "current_region" {
   description = "The current region"
   type        = string
