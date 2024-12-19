@@ -13,4 +13,4 @@ awslocal secretsmanager create-secret --name gov-uk-onelogin-identity-private-ke
 awslocal secretsmanager create-secret --name lpa-data-store-secret \
     --region "eu-west-1" \
     --description "Local development lpa store secret" \
-    --secret-string "A shared secret string"
+    --secret-string "A shared secret string that needs to be at least 128 bits long"

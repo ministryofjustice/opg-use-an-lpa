@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\ActorStatus;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
@@ -27,11 +28,11 @@ class Person implements
         public readonly ?string $email,
         public readonly ?string $firstnames,
         public readonly ?string $name,
+        public readonly ?string $otherNames,
         public readonly ?string $postcode,
         public readonly ?string $surname,
-        public readonly ?string $systemStatus,
+        public readonly ?ActorStatus $systemStatus,
         public readonly ?string $town,
-        public readonly ?string $type,
         public readonly ?string $uId,
     ) {
     }
@@ -66,9 +67,9 @@ class Person implements
         return $this->surname ?? '';
     }
 
-    public function getStatus(): bool|string
+    public function getStatus(): ActorStatus
     {
-        return $this->systemStatus ?? '';
+        return $this->systemStatus ?? ActorStatus::INACTIVE;
     }
 
     public function getCompanyName(): ?string
