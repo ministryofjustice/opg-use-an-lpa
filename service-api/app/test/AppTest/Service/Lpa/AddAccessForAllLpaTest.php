@@ -238,7 +238,8 @@ class AddAccessForAllLpaTest extends TestCase
                     'firstname'   => 'Donor',
                     'middlenames' => 'Example',
                     'surname'     => 'Person',
-                ]
+                ],
+                $this->loggerProphecy->reveal(),
             ),
             'donor',
             (string) $this->lpaUid,
@@ -299,6 +300,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'registrationDate' => '2019-08-31',
                     'status'           => 'Registered',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );
@@ -333,6 +335,7 @@ class AddAccessForAllLpaTest extends TestCase
                     'registrationDate' => '2019-08-31',
                     'status'           => 'Registered',
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );
@@ -519,6 +522,7 @@ class AddAccessForAllLpaTest extends TestCase
                         $attorney2,
                     ],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );
