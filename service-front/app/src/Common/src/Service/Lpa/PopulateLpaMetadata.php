@@ -31,9 +31,11 @@ class PopulateLpaMetadata
     public function __invoke(ArrayObject $lpas, string $userToken): ArrayObject
     {
         foreach ($lpas as $lpaKey => $lpaData) {
+            $actorToken = $lpaData['user-lpa-actor-token'];
+
             $shareCodes = $this->viewerCodeService->getShareCodes(
                 $userToken,
-                (string) $lpaKey,
+                $actorToken,
                 true
             );
 
