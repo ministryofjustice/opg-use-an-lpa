@@ -11,7 +11,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.56.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.1
-	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/gorilla/mux v1.8.1
 	github.com/ministryofjustice/opg-go-common v1.42.0
 	github.com/pkg/errors v0.9.1
