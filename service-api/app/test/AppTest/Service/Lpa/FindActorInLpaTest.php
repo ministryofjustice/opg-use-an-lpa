@@ -412,24 +412,6 @@ class FindActorInLpaTest extends TestCase
         );
     }
 
-    public static function nullDOBAttorneyFixtureOld(): SiriusPerson
-    {
-        return new SiriusPerson(
-            [
-                'uId'          => '7000000055555',
-                'dob'          => null,
-                'firstname'    => 'Testering',
-                'surname'      => 'T’esting',
-                'addresses'    => [
-                    [
-                        'postcode' => 'Ab1 2Cd',
-                    ],
-                ],
-                'systemStatus' => true,
-            ]
-        );
-    }
-
     public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
     {
         return new SiriusLpaAttorney(
@@ -511,29 +493,6 @@ class FindActorInLpaTest extends TestCase
                 'systemStatus' => true,
             ],
             new Logger('test-output'),
-        );
-    }
-
-    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
-    {
-        return new SiriusLpaAttorney(
-            addressLine1: null,
-            addressLine2: null,
-            addressLine3: null,
-            country:      null,
-            county:       null,
-            dob:          null,
-            email:        null,
-            firstname:    'Testering',
-            id:           '7',
-            middlenames:  null,
-            otherNames:   null,
-            postcode:     'PY1 3Kd',
-            surname:      'Person',
-            systemStatus: null,
-            town:         null,
-            type:         null,
-            uId:          '700000001111'
         );
     }
 }
