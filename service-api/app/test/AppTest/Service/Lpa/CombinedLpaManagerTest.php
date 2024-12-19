@@ -16,6 +16,7 @@ use App\Service\Lpa\CombinedLpaManager;
 use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\ResolveActor;
+use DateInterval;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -50,17 +51,62 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_all_active_for_user()
     {
+        $testUserId = 'test-user-id';
+
+
+        $userLpaActorMapResponse = [
+            [
+                'Id'        => 'token-2',
+                'LpaUid' => 'M-789Q-P4DF-4UX3',
+                'ActorId'   => 2,
+                'Added'     => new DateTimeImmutable('now'),
+            ],
+            [
+                'Id'         => 'token-3',
+                'SiriusUid'  => '700012349892',
+                'ActorId'    => 3,
+                'ActivateBy' => (new DateTimeImmutable('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+                'Added'      => new DateTimeImmutable('now'),
+            ],
+        ];
+
+        $service = $this->getLpaService();
+        $result  = $service->getAllForUser($testUserId);
+
+        // $this->assertEquals($filteredLpa, $result->getData());
     }
 
     #[Test]
     public function can_get_all_for_user()
     {
+        $testUserId = 'test-user-id';
+
+
+        $userLpaActorMapResponse = [
+            [
+                'Id'        => 'token-1',
+                'SiriusUid' => '700000000047',
+                'ActorId'   => 1,
+                'Added'     => new DateTimeImmutable('now'),
+            ],
+            [
+                'Id'        => 'token-2',
+                'LpaUid' => 'M-789Q-P4DF-4UX3',
+                'ActorId'   => 2,
+                'Added'     => new DateTimeImmutable('now'),
+            ],
+        ];
+
+        $service = $this->getLpaService();
+        $result  = $service->getAllForUser($testUserId);
+
+       // $this->assertEquals($filteredLpa, $result->getData());
     }
 
     #[Test]
     public function can_get_by_sirius_uid()
     {
-        $testUid = '700012349874';
+        $testUid = '700000000047';
 
         $lpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(
@@ -163,6 +209,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_viewer_code()
     {
+        $this->markTestSkipped();
     }
 
     private function getLpaService(): CombinedLpaManager
