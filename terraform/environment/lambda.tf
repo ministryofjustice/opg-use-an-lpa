@@ -105,7 +105,7 @@ module "event_receiver" {
 
 resource "aws_iam_role_policy" "lambda_event_receiver" {
   name   = "${local.environment_name}-lambda-event-receiver"
-  role   = module.event_receiver.lambda_role.arn
+  role   = module.event_receiver.lambda_role
   policy = data.aws_iam_policy_document.lambda_event_receiver.json
 }
 
