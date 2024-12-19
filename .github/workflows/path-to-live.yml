@@ -130,30 +130,13 @@ jobs:
 
   code_coverage:
     name: upload to code coverage
+    uses: ./.github/workflows/_codecov.yml
     needs:
       - docker_build_scan_push
       - workflow_variables
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
-      - name: download artifact for front tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
-        with:
-          name: service-front
-          path: service-front
-      - name: download artifact for api tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
-        with:
-          name: service-api
-          path: service-api
-      - name: download artifact for api tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
-        with:
-          name: service-admin
-          path: service-admin
-      - uses: codecov/codecov-action@v5
-        with:
-          name: codecov-use-an-lpa
+    with:
+      specific_path: 'all'
+    secrets: inherit
 
   terraform_apply_shared_development:
     name: terraform apply shared development
