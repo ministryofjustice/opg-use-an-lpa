@@ -141,6 +141,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
                         $results[$uid] = new Lpa(
                             new SiriusLpa(
                                 $this->sanitiser->sanitise($response),
+                                $this->logger,
                             ),
                             new DateTimeImmutable($result->getHeaderLine('Date'))
                         );

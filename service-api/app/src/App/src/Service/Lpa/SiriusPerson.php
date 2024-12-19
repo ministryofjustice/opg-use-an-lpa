@@ -13,6 +13,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use IteratorAggregate;
 use JsonSerializable;
+use Psr\Log\LoggerInterface;
 use Traversable;
 
 /**
@@ -28,7 +29,7 @@ class SiriusPerson implements
     IteratorAggregate,
     JsonSerializable
 {
-    public function __construct(private array $person)
+    public function __construct(private array $person, private LoggerInterface $logger)
     {
     }
 
@@ -87,16 +88,34 @@ class SiriusPerson implements
 
     public function offsetExists(mixed $offset): bool
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (exists) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return isset($this->person[$offset]);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (getter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return $this->person[$offset];
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (setter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         $this->person[$offset] = $value;
     }
 
