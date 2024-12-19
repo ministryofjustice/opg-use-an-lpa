@@ -14,6 +14,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Acpr\I18n\TranslatorInterface;
+use Common\Service\Features\FeatureEnabled;
 
 class CheckLpaHandlerFactory
 {
@@ -29,7 +30,8 @@ class CheckLpaHandlerFactory
             $container->get(LpaService::class),
             $rateLimitFactory->factory('actor_code_failure'),
             $container->get(TranslatorInterface::class),
-            $container->get(AddLpa::class)
+            $container->get(AddLpa::class),
+            $container->get(FeatureEnabled::class),
         );
     }
 }

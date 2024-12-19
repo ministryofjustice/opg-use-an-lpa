@@ -74,7 +74,12 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
                 $lpaData   = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
                 $actorRole = $lpaData['actor']['type'] === 'donor' ? 'Donor' : 'Attorney';
 
-                return new HtmlResponse($this->renderer->render('actor::lpa-show-viewercode', [
+                $templateName = 'actor::lpa-show-viewercode';
+                if (($this->featureEnabled)('support_datastore_lpas')) {
+                    $templateName = 'actor::lpa-show-viewercode-combined-lpa';
+                }
+
+                return new HtmlResponse($this->renderer->render($templateName, [
                     'user'         => $user,
                     'actorToken'   => $validated['lpa_token'],
                     'code'         => $codeData['code'],
