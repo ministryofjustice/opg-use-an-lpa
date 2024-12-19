@@ -63,11 +63,3 @@ data "aws_iam_policy_document" "receive_events_queue_policy" {
     }
   }
 }
-
-resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
-  count            = var.event_bus_enabled ? 1 : 0
-  event_source_arn = aws_sqs_queue.receive_events_queue[0].arn
-  function_name    = var.event_receiver_lambda_name
-  enabled          = true
-  provider         = aws.region
-}
