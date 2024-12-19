@@ -56,10 +56,10 @@ class CombinedLpaManagerTest extends TestCase
 
         $userLpaActorMapResponse = [
             [
-                'Id'        => 'token-2',
-                'LpaUid' => 'M-789Q-P4DF-4UX3',
-                'ActorId'   => 2,
-                'Added'     => new DateTimeImmutable('now'),
+                'Id'      => 'token-2',
+                'LpaUid'  => 'M-789Q-P4DF-4UX3',
+                'ActorId' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                'Added'   => new DateTimeImmutable('now'),
             ],
             [
                 'Id'         => 'token-3',
@@ -81,21 +81,43 @@ class CombinedLpaManagerTest extends TestCase
     {
         $testUserId = 'test-user-id';
 
+        // TODO following methods need to now get id out of this data loaded from fixtures, instead of being hard-coded
+        $siriusLpaResponse = new Lpa(
+            $this->loadTestSiriusLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $dataStoreLpaResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
 
         $userLpaActorMapResponse = [
             [
                 'Id'        => 'token-1',
                 'SiriusUid' => '700000000047',
-                'ActorId'   => 1,
+                'ActorId'   => '700000000815',
                 'Added'     => new DateTimeImmutable('now'),
             ],
             [
-                'Id'        => 'token-2',
-                'LpaUid' => 'M-789Q-P4DF-4UX3',
-                'ActorId'   => 2,
-                'Added'     => new DateTimeImmutable('now'),
+                'Id'      => 'token-2',
+                'LpaUid'  => 'M-789Q-P4DF-4UX3',
+                'ActorId' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                'Added'   => new DateTimeImmutable('now'),
             ],
         ];
+
+
+        $this->userLpaActorMapInterfaceProphecy->getByUserId($testUserId)->willReturn($userLpaActorMapResponse);
+
+        $this->resolveLpaTypesProphecy->__invoke($userLpaActorMapResponse)->willReturn([['700000000047'],['M-789Q-P4DF-4UX3']]);
+
+        $this->siriusLpasProphecy->lookup(['700000000047'])->willReturn([$siriusLpaResponse]);
+
+        $this->dataStoreLpasProphecy->lookup(['M-789Q-P4DF-4UX3'])->willReturn([$dataStoreLpaResponse]);
+
+        $this->resolveActorProphecy->__invoke($siriusLpaResponse, $userLpaActorMapResponse[0]['ActorId']);
+        $this->resolveActorProphecy->__invoke($dataStoreLpaResponse), $userLpaActorMapResponse[1]['ActorId']);
 
         $service = $this->getLpaService();
         $result  = $service->getAllForUser($testUserId);
