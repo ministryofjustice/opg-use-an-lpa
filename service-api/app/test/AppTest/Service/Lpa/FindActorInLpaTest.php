@@ -468,7 +468,8 @@ class FindActorInLpaTest extends TestCase
                     ],
                 ],
                 'systemStatus' => true,
-            ]
+            ],
+            new Logger('test-output'),
         );
     }
 
