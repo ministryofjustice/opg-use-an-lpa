@@ -1,17 +1,30 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func Handler(ctx context.Context) (string, error) {
-	fmt.Println("Hello World")
-	return "Hello World!", nil
+func handler(event events.SQSEvent) error {
+	for _, record := range event.Records {
+		err := processMessage(record)
+		if err != nil {
+			return err
+		}
+	}
+	fmt.Println("done")
+	return nil
+}
+
+func processMessage(record events.SQSMessage) error {
+	fmt.Printf("Processed message %s\n", record.Body)
+	fmt.Printf("Hello, world!\n")
+	return nil
 }
 
 func main() {
-	lambda.Start(Handler)
+	lambda.Start(handler)
+	fmt.Printf("Hello, world!\n")
 }
