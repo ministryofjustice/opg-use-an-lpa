@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Enum\ActorStatus;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
@@ -22,9 +23,14 @@ class GetAttorneyStatus
         }
 
         $systemStatus = $attorney->getStatus();
-        if (!$systemStatus || $systemStatus === 'false') {
+        if (!$systemStatus || $systemStatus === ActorStatus::INACTIVE) {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $attorney->getUid()]);
             return AttorneyStatus::INACTIVE_ATTORNEY;
+        }
+
+        if ($systemStatus === ActorStatus::REPLACEMENT) {
+            $this->logger->debug('Looked up attorney {id} but is a replacement', ['id' => $attorney->getUid()]);
+            return AttorneyStatus::REPLACEMENT_ATTORNEY;
         }
 
         return AttorneyStatus::ACTIVE_ATTORNEY;

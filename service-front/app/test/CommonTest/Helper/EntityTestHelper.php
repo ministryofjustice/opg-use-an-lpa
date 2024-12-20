@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace CommonTest\Helper;
 
 use Common\Entity\CombinedLpa;
-use Common\Entity\LpaStore\LpaStore;
 use Common\Entity\Person;
-use Common\Entity\Sirius\SiriusLpa;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
-use Common\Enum\LpaStatus;
 use Common\Enum\LpaType;
 use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
@@ -25,7 +22,6 @@ class EntityTestHelper
         ?string $county = 'County',
         ?DateTimeImmutable $dob = new DateTimeImmutable(TestData::TESTDATESTRING),
         ?string $email = 'email@example.com',
-        ?string $firstname = 'Firstname',
         ?string $firstnames = 'Firstnames',
         ?string $name = 'Name',
         ?string $otherNames = 'Other names',
@@ -33,7 +29,6 @@ class EntityTestHelper
         ?string $surname = 'Surname',
         ?string $systemStatus = 'System status',
         ?string $town = 'Town',
-        ?string $type = 'Type',
         ?string $uId = 'UID',
     ): Person {
         return new Person(
@@ -44,7 +39,6 @@ class EntityTestHelper
             county:       $county,
             dob:          $dob,
             email:        $email,
-            firstname:    $firstname,
             firstnames:   $firstnames,
             name:         $name,
             otherNames:   $otherNames,
@@ -52,36 +46,35 @@ class EntityTestHelper
             surname:      $surname,
             systemStatus: $systemStatus,
             town:         $town,
-            type:         $type,
             uId:          $uId
         );
     }
 
     public static function makeCombinedLpa(
-        ?bool $applicationHasGuidance = true,
-        ?bool $applicationHasRestrictions = true,
-        ?string $applicationType = 'applicationType',
+        ?bool $applicationHasGuidance = false,
+        ?bool $applicationHasRestrictions = false,
+        ?string $applicationType = 'Classic',
         ?array $attorneys = [],
         ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
         ?string $channel = 'channel',
-        ?DateTimeImmutable $dispatchDate = new DateTimeImmutable(TestData::TESTDATESTRING),
+        ?DateTimeImmutable $dispatchDate = null,
         ?Person $donor = null,
-        ?bool $hasSeveranceWarning = true,
+        ?bool $hasSeveranceWarning = null,
         ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
-        ?DateTimeImmutable $invalidDate = new DateTimeImmutable(TestData::TESTDATESTRING),
+        ?DateTimeImmutable $invalidDate = null,
         ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
         ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::TESTDATESTRING),
         ?bool $lpaIsCleansed = true,
         ?string $onlineLpaId = 'onlineLpaId',
         ?DateTimeImmutable $receiptDate = new DateTimeImmutable(TestData::TESTDATESTRING),
         ?DateTimeImmutable $registrationDate = new DateTimeImmutable(TestData::TESTDATESTRING),
-        ?DateTimeImmutable $rejectedDate = new DateTimeImmutable(TestData::TESTDATESTRING),
+        ?DateTimeImmutable $rejectedDate = null,
         ?array $replacementAttorneys = [],
         ?string $status = 'Registered',
-        ?DateTimeImmutable $statusDate = new DateTimeImmutable(TestData::TESTDATESTRING),
+        ?DateTimeImmutable $statusDate = null,
         ?array $trustCorporations = [],
         ?string $uId = 'uId',
-        ?DateTimeImmutable $withdrawnDate = new DateTimeImmutable(TestData::TESTDATESTRING),
+        ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
     ): CombinedLpa {
         if (count($attorneys) === 0) {
@@ -97,31 +90,31 @@ class EntityTestHelper
         }
 
         return new CombinedLpa(
-            applicationHasGuidance: $applicationHasGuidance,
+            applicationHasGuidance:     $applicationHasGuidance,
             applicationHasRestrictions: $applicationHasRestrictions,
-            applicationType: $applicationType,
-            attorneys: $attorneys,
-            caseSubtype: $caseSubtype,
-            channel: $channel,
-            dispatchDate: $dispatchDate,
-            donor: $donor,
-            hasSeveranceWarning: $hasSeveranceWarning,
-            howAttorneysMakeDecisions: $howAttorneysMakeDecisions,
-            invalidDate: $invalidDate,
-            lifeSustainingTreatment: $lifeSustainingTreatment,
-            lpaDonorSignatureDate: $lpaDonorSignatureDate,
-            lpaIsCleansed: $lpaIsCleansed,
-            onlineLpaId: $onlineLpaId,
-            receiptDate: $receiptDate,
-            registrationDate: $registrationDate,
-            rejectedDate: $rejectedDate,
-            replacementAttorneys: $replacementAttorneys,
-            status: $status,
-            statusDate: $statusDate,
-            trustCorporations: $trustCorporations,
-            uId: $uId,
-            withdrawnDate: $withdrawnDate,
-            whenTheLpaCanBeUsed: $whenTheLpaCanBeUsed
+            applicationType:            $applicationType,
+            attorneys:                  $attorneys,
+            caseSubtype:                $caseSubtype,
+            channel:                    $channel,
+            dispatchDate:               $dispatchDate,
+            donor:                      $donor,
+            hasSeveranceWarning:        $hasSeveranceWarning,
+            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
+            invalidDate:                $invalidDate,
+            lifeSustainingTreatment:    $lifeSustainingTreatment,
+            lpaDonorSignatureDate:      $lpaDonorSignatureDate,
+            lpaIsCleansed:              $lpaIsCleansed,
+            onlineLpaId:                $onlineLpaId,
+            receiptDate:                $receiptDate,
+            registrationDate:           $registrationDate,
+            rejectedDate:               $rejectedDate,
+            replacementAttorneys:       $replacementAttorneys,
+            status:                     $status,
+            statusDate:                 $statusDate,
+            trustCorporations:          $trustCorporations,
+            uId:                        $uId,
+            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
+            withdrawnDate:              $withdrawnDate
         );
     }
 
@@ -151,8 +144,8 @@ class EntityTestHelper
         ?string $uId = 'uId',
         ?DateTimeImmutable $withdrawnDate = null,
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
-    ): SiriusLpa {
-        return new SiriusLpa(
+    ): CombinedLpa {
+        return new CombinedLpa(
             applicationHasGuidance:     $applicationHasGuidance,
             applicationHasRestrictions: $applicationHasRestrictions,
             applicationType:            $applicationType,
@@ -176,76 +169,8 @@ class EntityTestHelper
             statusDate:                 $statusDate,
             trustCorporations:          $trustCorporations,
             uId:                        $uId,
-            withdrawnDate:              $withdrawnDate,
-            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed
-        );
-    }
-
-    public static function makeLpaStoreLpa(
-        ?bool $applicationHasGuidance = null,
-        ?bool $applicationHasRestrictions = null,
-        ?string $applicationType = null,
-        ?array $attorneys = [],
-        ?LpaType $caseSubtype = LpaType::PERSONAL_WELFARE,
-        ?string $channel = 'online',
-        ?DateTimeImmutable $dispatchDate = null,
-        ?Person $donor = null,
-        ?bool $hasSeveranceWarning = null,
-        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::SINGULAR,
-        ?DateTimeImmutable $invalidDate = null,
-        ?LifeSustainingTreatment $lifeSustainingTreatment = LifeSustainingTreatment::OPTION_A,
-        ?DateTimeImmutable $lpaDonorSignatureDate = new DateTimeImmutable(TestData::TESTDATESTRING),
-        ?bool $lpaIsCleansed = null,
-        ?string $onlineLpaId = null,
-        ?DateTimeImmutable $receiptDate = null,
-        ?DateTimeImmutable $registrationDate = new DateTimeImmutable(TestData::TESTDATESTRING),
-        ?DateTimeImmutable $rejectedDate = null,
-        ?array $replacementAttorneys = null,
-        ?string $status = 'Registered',
-        ?DateTimeImmutable $statusDate = null,
-        ?array $trustCorporations = [],
-        ?string $uId = 'uId',
-        ?DateTimeImmutable $withdrawnDate = null,
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed = WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
-    ): LpaStore {
-        if (!is_null($attorneys) && count($attorneys) === 0) {
-            $attorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (!is_null($replacementAttorneys) && count($replacementAttorneys) === 0) {
-            $replacementAttorneys[] = EntityTestHelper::MakePerson();
-        }
-
-        if (!is_null($trustCorporations) && count($trustCorporations) === 0) {
-            $trustCorporations[] = EntityTestHelper::MakePerson();
-        }
-
-        return new LpaStore(
-            applicationHasGuidance     : $applicationHasGuidance,
-            applicationHasRestrictions : $applicationHasRestrictions,
-            applicationType            : $applicationType,
-            attorneys                  : $attorneys,
-            caseSubtype                : $caseSubtype,
-            channel                    : $channel,
-            dispatchDate               : $dispatchDate,
-            donor                      : $donor,
-            hasSeveranceWarning        : $hasSeveranceWarning,
-            howAttorneysMakeDecisions       : $howAttorneysMakeDecisions,
-            invalidDate                : $invalidDate,
-            lifeSustainingTreatment    : $lifeSustainingTreatment,
-            lpaDonorSignatureDate      : $lpaDonorSignatureDate,
-            lpaIsCleansed              : $lpaIsCleansed,
-            onlineLpaId                : $onlineLpaId,
-            receiptDate                : $receiptDate,
-            registrationDate           : $registrationDate,
-            rejectedDate               : $rejectedDate,
-            replacementAttorneys       : $replacementAttorneys,
-            status                     : $status,
-            statusDate                 : $statusDate,
-            trustCorporations          : $trustCorporations,
-            uId                        : $uId,
-            withdrawnDate              : $withdrawnDate,
-            whenTheLpaCanBeUsed        : $whenTheLpaCanBeUsed,
+            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
+            withdrawnDate:              $withdrawnDate
         );
     }
 }

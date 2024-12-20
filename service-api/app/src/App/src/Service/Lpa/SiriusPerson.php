@@ -88,11 +88,7 @@ class SiriusPerson implements
      */
     public function getDob(): DateTimeInterface
     {
-        if (is_null($this->person['dob'])) {
-            throw new ActorDateOfBirthNotSetException('Actor DOB is not set');
-        }
-
-        return new DateTimeImmutable($this->person['dob']);
+        return new DateTimeImmutable($this->person['dob'] ?? '1900-01-01');
     }
 
     public function offsetExists(mixed $offset): bool
