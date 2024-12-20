@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "receive_events_queue_policy" {
     }
 
     actions   = ["sqs:SendMessage"]
-    resources = ["*"]
+    resources = [aws_sqs_queue.receive_events_queue[0].arn]
 
     condition {
       test     = "ArnEquals"
