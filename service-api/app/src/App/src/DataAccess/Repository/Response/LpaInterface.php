@@ -8,10 +8,15 @@ use App\Entity\Lpa as CombinedFormatLpa;
 use App\Service\Lpa\SiriusLpa;
 use DateTimeInterface;
 
+/**
+ * @template T
+ */
 interface LpaInterface
 {
     /**
      * Returns the data the makes up the LPA.
+     *
+     * @psalm-return T|null
      */
     public function getData(): array|SiriusLpa|CombinedFormatLpa|null;
 
