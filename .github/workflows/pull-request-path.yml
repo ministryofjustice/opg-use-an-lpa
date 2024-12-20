@@ -298,6 +298,7 @@ jobs:
       - update_documentation
       - docker_build_scan_push
       - run_behat_suite
+      - terraform_preproduction_plan_environment
     steps:
       - uses: actions/checkout@v4
 
@@ -332,7 +333,7 @@ jobs:
 
       - name: workflow has ended without issue
         run: |
-          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.ecr_scan_results.result, 'success') }}; then
+          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.ecr_scan_results.result, 'success') && contains(needs.terraform_preproduction_plan_environment.result, 'success') }}; then
             echo "${{ needs.workflow_variables.outputs.safe_branch_name }} PR environment tested, built and deployed"
             echo "Tag Used: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
             echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"
