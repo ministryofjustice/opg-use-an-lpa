@@ -16,7 +16,13 @@ resource "aws_sqs_queue" "receive_events_queue" {
     maxReceiveCount     = 3
   })
 
-  policy = data.aws_iam_policy_document.receive_events_queue_policy[0].json
+  provider = aws.region
+}
+
+resource "aws_sqs_queue_policy" "receive_events_queue_policy" {
+  count     = var.event_bus_enabled ? 1 : 0
+  queue_url = aws_sqs_queue.receive_events_queue[0].id
+  policy    = data.aws_iam_policy_document.receive_events_queue_policy[0].json
 
   provider = aws.region
 }
