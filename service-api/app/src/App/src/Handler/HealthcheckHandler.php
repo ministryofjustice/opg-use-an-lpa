@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\ActorUsersInterface;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Psr7\Request;
 use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -19,13 +22,14 @@ use Throwable;
 final class HealthcheckHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private string $version,
-        private ActorUsersInterface $actorUsers,
-        private HttpClient $httpClient,
-        private RequestSigner $awsSignature,
-        private string $siriusApiUrl,
-        private string $codesApiUrl,
-        private string $iapImagesApiUrl,
+        private readonly ClientInterface $httpClient,
+        private readonly RequestFactoryInterface $requestFactory,
+        private readonly RequestSignerFactory $requestSignerFactory,
+        private readonly ActorUsersInterface $actorUsers,
+        private readonly string $version,
+        private readonly string $siriusApiUrl,
+        private readonly string $codesApiUrl,
+        private readonly string $iapImagesApiUrl,
     ) {
     }
 
@@ -52,18 +56,49 @@ final class HealthcheckHandler implements RequestHandlerInterface
             && $data['iap_images_api']['healthy'];
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function checkIapImagesApi(): array
     {
-        $url = sprintf('%s/v1/healthcheck', $this->iapImagesApiUrl);
+        $request = $this->requestFactory->createRequest(
+            'GET',
+            sprintf('%s/v1/healthcheck', $this->iapImagesApiUrl),
+        );
+        $request = ($this->requestSignerFactory)()->sign($request);
 
-        return $this->apiCall(new Request('GET', $url));
+        return $this->apiCall($request);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function checkApiEndpoint(): array
     {
-        $url = sprintf('%s/v1/healthcheck', $this->siriusApiUrl);
+        $request = $this->requestFactory->createRequest(
+            'GET',
+            sprintf('%s/v1/healthcheck', $this->siriusApiUrl),
+        );
+        $request = ($this->requestSignerFactory)()->sign($request);
 
-        return $this->apiCall(new Request('GET', $url));
+        return $this->apiCall($request);
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function checkCodesApiEndpoint(): array
+    {
+        $request = $this->requestFactory->createRequest(
+            'GET',
+            sprintf('%s/v1/healthcheck', $this->codesApiUrl),
+        );
+        $request = ($this->requestSignerFactory)(SignatureType::ActorCodes)->sign($request);
+
+        return $this->apiCall($request);
     }
 
     private function checkDynamoEndpoint(): array
@@ -86,24 +121,16 @@ final class HealthcheckHandler implements RequestHandlerInterface
         return $data;
     }
 
-    private function checkCodesApiEndpoint(): array
-    {
-        $url = sprintf('%s/v1/healthcheck', $this->codesApiUrl);
-
-        return $this->apiCall(new Request('GET', $url));
-    }
-
     /**
-     * @param RequestInterface $request
+     * @param RequestInterface $uri
      * @return array{healthy: bool}
      */
     private function apiCall(RequestInterface $request): array
     {
-        $data          = [];
-        $signedRequest = $this->awsSignature->sign($request);
+        $data = [];
 
         try {
-            $response = $this->httpClient->send($signedRequest);
+            $response = $this->httpClient->sendRequest($request);
 
             if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
