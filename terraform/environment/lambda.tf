@@ -122,6 +122,15 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     ]
     resources = [module.eu_west_1[0].receive_events_sqs_queue_arn[0]]
   }
+
+  statement {
+    sid    = "${local.environment_name}SQSKMSDecrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [data.aws_kms_alias.sqs.arn]
+  }
 }
 
 resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
