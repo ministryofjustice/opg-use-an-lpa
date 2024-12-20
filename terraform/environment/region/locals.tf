@@ -14,6 +14,8 @@ locals {
   admin_desired_count         = local.is_active_region ? 1 : 0
   mock_onelogin_desired_count = var.environment_name != "production" && var.mock_onelogin_enabled && local.is_active_region ? 1 : 0
 
+  queue_visibility_timeout = 900
+
   # Replace the region in the ARN of the DynamoDB tables with the region of the current stack as the tables are created in the primary region
   # and replicated to the secondary region. This allows use to grant access to the tables in the secondary region for applications running in the secondary region.
   dynamodb_tables_arns = {

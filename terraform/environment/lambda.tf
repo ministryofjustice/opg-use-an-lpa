@@ -14,6 +14,7 @@ module "lambda_update_statistics" {
   memory      = 1024
 }
 
+
 # Additional IAM permissions
 resource "aws_iam_role_policy" "lambda_update_statistics" {
   name   = "lambda-update-statistics-${local.environment_name}"
@@ -96,9 +97,52 @@ module "event_receiver" {
     REGION      = data.aws_region.current.name
   }
   image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
-  ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
+  ecr_arn     = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   timeout     = 900
   memory      = 128
+}
+
+resource "aws_iam_role_policy" "lambda_event_receiver" {
+  name   = "${local.environment_name}-lambda-event-receiver"
+  role   = module.event_receiver.lambda_role.name
+  policy = data.aws_iam_policy_document.lambda_event_receiver.json
+}
+
+
+data "aws_iam_policy_document" "lambda_event_receiver" {
+  statement {
+    sid    = "${local.environment_name}EventReceiverSQS"
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes"
+    ]
+    resources = [module.eu_west_1[0].receive_events_sqs_queue_arn[0]]
+  }
+
+  statement {
+    sid    = "${local.environment_name}SQSKMSDecrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt"
+    ]
+    resources = [data.aws_kms_alias.sqs.arn]
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
+  event_source_arn = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+  function_name    = module.event_receiver.lambda_name
+  enabled          = true
+}
+
+resource "aws_lambda_permission" "receive_events_permission" {
+  statement_id  = "AllowExecutionFromSQS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.event_receiver.lambda_name
+  principal     = "sqs.amazonaws.com"
+  source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
 }

@@ -183,6 +183,11 @@ variable "load_balancer_deletion_protection_enabled" {
   default     = false
 }
 
+variable "receive_account_ids" {
+  description = "The account ID of the MLPA account."
+  type        = list(string)
+}
+
 variable "mock_onelogin_enabled" {
   description = "Whether or not to enable the mock One Login service."
   type        = bool
