@@ -38,6 +38,7 @@ return [
         'delete_lpa_feature'           => true,
         'allow_gov_one_login'          => true,
         'support_datastore_lpas'       => false,
+        'paper_verification'           => false,
     ],
     'notify'                                 => [
         'api' => [
