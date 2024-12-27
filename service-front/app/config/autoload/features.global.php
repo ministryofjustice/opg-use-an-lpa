@@ -24,5 +24,9 @@ return [
             getenv('SUPPORT_DATASTORE_LPAS'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
+        'paper_verification'           => filter_var(
+            getenv('PAPER_VERIFICATION'),
+            FILTER_VALIDATE_BOOLEAN
+        ) ?: false,
     ],
 ];

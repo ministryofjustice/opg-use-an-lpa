@@ -333,6 +333,10 @@ locals {
       {
         name  = "SUPPORT_DATASTORE_LPAS",
         value = tostring(var.feature_flags.support_datastore_lpas)
+      },,
+      {
+        name  = "PAPER_VERIFICATION",
+        value = tostring(var.feature_flags.paper_verification)
       },
     ],
   )
