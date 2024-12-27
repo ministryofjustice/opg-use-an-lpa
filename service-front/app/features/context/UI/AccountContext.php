@@ -1617,6 +1617,83 @@ class AccountContext implements Context
     }
 
     /**
+     * @Then /^I have an account whose sub matches a local account with LPAs$/
+     * @Then /^I have an email address that matches a local account with LPAs$/
+     */
+    public function iHaveAMatchingLocalAccountWithLpas(): void
+    {
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $userLpaActorToken = '987654321';
+
+        $lpaData = [
+            'user-lpa-actor-token'       => $userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => $lpa->attorneys[0],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $lpa,
+            'added'                      => '2021-10-5 12:00:00',
+        ];
+
+        $dashboardLPAs = [$userLpaActorToken => $lpaData];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user'  => [
+                            'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                            'Identity'  => 'fakeSub',
+                            'Email'     => $this->userEmail,
+                            'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        ],
+                        'token' => 'users_login_token',
+                    ],
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+
+        if ($dashboardLPAs) {
+            //API call for getting all the users added LPAs
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($dashboardLPAs),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
+
+
+            foreach ($dashboardLPAs as $lpa) {
+                $this->apiFixtures->append(
+                    ContextUtilities::newResponse(
+                        StatusCodeInterface::STATUS_OK,
+                        json_encode([]),
+                        self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+                    )
+                );
+            }
+        }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
      * @Then /^I have an email address that does not match a local account$/
      */
     public function iHaveAnEmailAddressThatDoesNotMatchALocalAccount(): void
