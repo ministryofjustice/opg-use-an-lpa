@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
-      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # pin@v3.6.0
+      - uses: actions/setup-node@48b90677b6048efbc723b11a94acb950d3f1ac36 # pin@v3.6.0
         with:
           node-version-file: '.nvmrc'
       - name: cache node modules
@@ -33,7 +33,7 @@ jobs:
           cd service-front/web/
           npm run build
       - name: archive dist
-        uses: actions/upload-artifact@184d73b71b93c222403b2e7f1ffebe4508014249 # pin@v3.1.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # pin@v3.1.0
         with:
           name: dist-web
           path: service-front/web/dist/

@@ -119,7 +119,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@b06ccd195086ba5254c95c627ee1cbeab86c7432 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@292c88581676a2a6d95f1312c0517f24577eca53 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
@@ -228,7 +228,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@184d73b71b93c222403b2e7f1ffebe4508014249
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}

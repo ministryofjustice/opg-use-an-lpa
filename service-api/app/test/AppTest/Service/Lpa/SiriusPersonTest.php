@@ -7,16 +7,29 @@ namespace AppTest\Service\Lpa;
 use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class SiriusPersonTest extends TestCase
 {
+    use ProphecyTrait;
+
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+
+    protected function setUp(): void
+    {
+        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
+    }
+
     #[Test]
     public function it_can_be_instantiated(): void
     {
         $sut = new SiriusPerson(
             [
                 'uId' => 700000000000,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->assertInstanceOf(SiriusPerson::class, $sut);
@@ -28,7 +41,8 @@ class SiriusPersonTest extends TestCase
         $sut = new SiriusPerson(
             [
                 'uId' => 700000000000,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->assertEquals(700000000000, $sut['uId']);
@@ -46,7 +60,8 @@ class SiriusPersonTest extends TestCase
         $sut = new SiriusPerson(
             [
                 'uId' => 700000000000,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         foreach ($sut as $key => $value) {
@@ -60,7 +75,8 @@ class SiriusPersonTest extends TestCase
         $sut = new SiriusPerson(
             [
                 'uId' => 700000000000,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->assertEquals(
@@ -77,7 +93,8 @@ class SiriusPersonTest extends TestCase
         $sut = new SiriusPerson(
             [
                 'uId' => 700000000000,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->assertJsonStringEqualsJsonString(
@@ -94,7 +111,8 @@ class SiriusPersonTest extends TestCase
                 'uId' => 700000000000,
                 'systemStatus' => 1,
                 'companyName' => null,
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $this->assertSame('700000000000', $sut->getUid());

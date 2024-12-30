@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use ArrayAccess;
+use Exception;
 use DateTimeImmutable;
 use DateTimeInterface;
 use IteratorAggregate;
 use JsonSerializable;
+use Psr\Log\LoggerInterface;
 use Traversable;
 
 /**
@@ -28,7 +31,7 @@ class SiriusPerson implements
     IteratorAggregate,
     JsonSerializable
 {
-    public function __construct(private array $person)
+    public function __construct(private array $person, private LoggerInterface $logger)
     {
     }
 
@@ -80,23 +83,48 @@ class SiriusPerson implements
         return (string)$this->person['addresses'][0]['postcode'];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getDob(): DateTimeInterface
     {
+        if (is_null($this->person['dob'])) {
+            throw new ActorDateOfBirthNotSetException('Actor DOB is not set');
+        }
+
         return new DateTimeImmutable($this->person['dob']);
     }
 
     public function offsetExists(mixed $offset): bool
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (exists) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return isset($this->person[$offset]);
     }
 
     public function offsetGet(mixed $offset): mixed
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (getter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         return $this->person[$offset];
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+        $this->logger->debug(
+            'Use of SiriusPerson object as array (setter) in file '
+            . $trace[0]['file'] . ' on line ' . $trace[0]['line']
+        );
+
         $this->person[$offset] = $value;
     }
 
