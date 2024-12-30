@@ -58,7 +58,7 @@ server {
     server_name   _;
     server_tokens off;
 
-    error_log  /var/log/nginx/error.log {{ getv "/nginx/log/level" "warn" }};
+    error_log  /var/log/nginx/error.log "warn";
     access_log /var/log/nginx/access.log json_combined;
 
     gzip            on;
@@ -72,12 +72,12 @@ server {
     set $CSP_font    "font-src    'self'";
     set $CSP_form    "form-action 'self'";
     set $CSP_connect "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com";
-    set $CSP_report  "report-uri {{ getv "/web/domain" "http://localhost" }}/_csp";
+    set $CSP_report  "report-uri ${WEB_DOMAIN}/_csp";
 
     add_header Content-Security-Policy-Report-Only "default-src 'none'; ${CSP_image}; ${CSP_font}; ${CSP_connect}; ${CSP_script} '${CSP_nonce}'; ${CSP_style} '${CSP_nonce}'; ${CSP_form}; ${CSP_report};";
 
     # add CORS headers
-    add_header Access-Control-Allow-Origin {{ getv "/web/domain" "http://localhost" }} always;
+    add_header Access-Control-Allow-Origin ${WEB_DOMAIN} always;
     add_header Access-Control-Allow-Credentials 'true' always;
     add_header Access-Control-Allow-Methods "GET,POST,OPTIONS";
     add_header Access-Control-Allow-Headers "Authorization,Accept,Origin,DNT,User-Agent,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range";
@@ -188,5 +188,5 @@ server {
 }
 
 upstream @php {
-    server {{getv "/app/host" }}:{{getv "/app/port" }};
+    server ${APP_HOST}:${APP_PORT};
 }
