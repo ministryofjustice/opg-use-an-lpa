@@ -335,8 +335,65 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function can_get_by_user_lpa_actor_token()
+    public function can_get_by_user_lpa_actor_token_sirius()
     {
+        $testLpaToken = 'token-1';
+        $testUserId   = 'userId-1';
+
+        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
+        $siriusLpaResponse = new Lpa(
+            $this->loadTestSiriusLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $userLpaActorMapResponse = [
+            'Id'         => $testLpaToken,
+            'UserId'     => $testUserId,
+            'SiriusUid'  => $siriusLpaResponse->getData()->uId,
+            'ActorId'    => $siriusLpaResponse->getData()->attorneys[0]->uId,
+            'ActivateBy' => (new DateTimeImmutable('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+            'Added'      => new DateTimeImmutable('now'),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesProphecy
+            ->__invoke([$userLpaActorMapResponse])
+            ->willReturn(
+                [
+                    [$siriusLpaResponse->getData()->uId],
+                    [],
+                ]
+            );
+        $this->siriusLpasProphecy
+            ->get($siriusLpaResponse->getData()->uId ?? '')
+            ->willReturn($siriusLpaResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($siriusLpaResponse->getData())
+            ->willReturn($siriusLpaResponse->getData());
+        $this->resolveActorProphecy
+            ->__invoke(
+                $siriusLpaResponse->getData(),
+                $userLpaActorMapResponse['ActorId'],
+            )->willReturn(
+                new ResolveActor\LpaActor(
+                    $siriusLpaResponse->getData()->attorneys[0],
+                    ResolveActor\ActorType::ATTORNEY
+                )
+            );
+        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
+
+        $this->assertEquals($siriusLpaResponse->getData(), $result['lpa']);
+        $this->assertEquals($siriusLpaResponse->getLookupTime()->format(\DateTimeInterface::ATOM), $result['date']);
+    }
+
+    #[Test]
+    public function can_get_by_user_lpa_actor_token_lpastore()
+    {
+
     }
 
     #[Test]
