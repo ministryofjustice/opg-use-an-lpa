@@ -33,6 +33,7 @@ module "eu_west_1" {
   lpa_codes_endpoint                               = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                         = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                          = local.environment.lpa_data_store_endpoint
+  receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url
@@ -121,6 +122,7 @@ module "eu_west_2" {
   lpa_codes_endpoint                               = local.environment.lpa_codes_endpoint
   lpas_collection_endpoint                         = local.environment.lpas_collection_endpoint
   lpa_data_store_endpoint                          = local.environment.lpa_data_store_endpoint
+  receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url

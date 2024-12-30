@@ -73,6 +73,7 @@ variable "environments" {
       session_expiry_warning                           = number
       ship_metrics_queue_enabled                       = bool
       sirius_account_id                                = string
+      receive_account_ids                              = list(string)
       load_balancer_deletion_protection_enabled        = bool
       notify_key_secret_name                           = string
       associate_alb_with_waf_web_acl_enabled           = bool
