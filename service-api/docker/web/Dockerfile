@@ -14,6 +14,3 @@ COPY scripts/docker_hardening/harden-nginx.sh /harden-nginx.sh
 RUN /harden-nginx.sh && rm /harden-nginx.sh
 
 USER nginx
-
-CMD confd -onetime -backend env \
-  && nginx -g "daemon off;"
