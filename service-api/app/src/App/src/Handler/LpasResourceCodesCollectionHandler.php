@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\DataAccess\Repository;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -13,7 +12,6 @@ use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 /**
@@ -23,9 +21,6 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
 {
     public function __construct(
         private ViewerCodeService $viewerCodeService,
-        private Repository\ViewerCodeActivityInterface $viewerCodeActivityRepository,
-        private Repository\UserLpaActorMapInterface $userLpaActorMap,
-        private LoggerInterface $logger,
     ) {
     }
 
@@ -113,7 +108,7 @@ class LpasResourceCodesCollectionHandler implements RequestHandlerInterface
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws BadRequestException|NotFoundException|Exception
+     * @throws BadRequestException
      */
     private function handleGet(ServerRequestInterface $request): ResponseInterface
     {

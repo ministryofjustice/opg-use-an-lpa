@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
+use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
+use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
-use App\Entity\Sirius\Casters\{
-    ExtractAddressLine1FromSiriusLpa,
-    ExtractAddressLine2FromSiriusLpa,
-    ExtractAddressLine3FromSiriusLpa,
-    ExtractCountryFromSiriusLpa,
-    ExtractCountyFromSiriusLpa,
-    ExtractPostcodeFromSiriusLpa,
-    ExtractTownFromSiriusLpa,
-    ExtractTypeFromSiriusLpa,
-};
+use App\Entity\Sirius\Casters\CastToSiriusActorStatus;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 use DateTimeImmutable;
@@ -26,21 +19,20 @@ class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
-        #[ExtractAddressLine1FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine1')]
         ?string $addressLine1,
         #[MapFrom('addresses')]
-        #[ExtractAddressLine2FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine2')]
         ?string $addressLine2,
         #[MapFrom('addresses')]
-        #[ExtractAddressLine3FromSiriusLpa]
+        #[ExtractAddressFieldFrom('addressLine3')]
         ?string $addressLine3,
-        #[MapFrom('companyName')]
-        ?string $companyName,
+        public readonly ?string $companyName,
         #[MapFrom('addresses')]
-        #[ExtractCountryFromSiriusLpa]
+        #[ExtractAddressFieldFrom('country')]
         ?string $country,
         #[MapFrom('addresses')]
-        #[ExtractCountyFromSiriusLpa]
+        #[ExtractAddressFieldFrom('county')]
         ?string $county,
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
@@ -49,37 +41,34 @@ class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
         #[CastToType('string')]
         public readonly ?string $id,
         public readonly ?string $middlenames,
-        public readonly ?string $otherNames,
+        ?string $otherNames,
         #[MapFrom('addresses')]
-        #[ExtractPostcodeFromSiriusLpa]
+        #[ExtractAddressFieldFrom('postcode')]
         ?string $postcode,
         ?string $surname,
-        #[CastToType('string')]
-        ?string $systemStatus,
+        #[CastToSiriusActorStatus]
+        ?ActorStatus $systemStatus,
         #[MapFrom('addresses')]
-        #[ExtractTownFromSiriusLpa]
+        #[ExtractAddressFieldFrom('town')]
         ?string $town,
-        #[MapFrom('addresses')]
-        #[ExtractTypeFromSiriusLpa]
-        ?string $type,
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
-            $country,
-            $county,
-            $dob,
-            $email,
-            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
-            $companyName,
-            $postcode,
-            $surname,
-            $systemStatus,
-            $town,
-            $type,
-            $uId,
+            addressLine1: $addressLine1,
+            addressLine2: $addressLine2,
+            addressLine3: $addressLine3,
+            country:      $country,
+            county:       $county,
+            dob:          $dob,
+            email:        $email,
+            firstnames:   isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            name:         $companyName,
+            otherNames:   $otherNames,
+            postcode:     $postcode,
+            surname:      $surname,
+            systemStatus: $systemStatus,
+            town:         $town,
+            uId:          $uId,
         );
     }
 

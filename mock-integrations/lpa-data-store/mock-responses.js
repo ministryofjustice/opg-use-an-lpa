@@ -50,6 +50,7 @@
       address: {
         line1: "74 Cloob Close",
         town: "Mahhhhhhhhhh",
+        postcode: "TP6 8EX",
         country: "GB"
       },
       dateOfBirth: "1970-01-24",
@@ -68,11 +69,26 @@
         address: {
           line1: "81 NighOnTimeWeBuiltIt Street",
           town: "Mahhhhhhhhhh",
+          postcode: "PC4 6UZ",
           country: "GB"
         },
         dateOfBirth: "1982-07-24",
         status: "active",
         channel: "paper",
+        signedAt: "2024-01-10T23:00:00Z"
+      },
+      {
+        uid: "9201a0b8-70a2-47db-93f2-c7510b4210ae",
+        firstNames: "Jessica",
+        lastName: "Seakrest",
+        address: {
+          line1: "81 NighOnTimeWeBuiltIt Street",
+          town: "Mahhhhhhhhhh",
+          country: "GB"
+        },
+        dateOfBirth: "1984-04-13",
+        status: "replacement",
+        channel: "online",
         signedAt: "2024-01-10T23:00:00Z"
       }
     ],
@@ -120,7 +136,7 @@
     UX3_default
   ];
   var getLpa = (uid) => {
-    const lpas = self.getList([uid]);
+    const lpas = getList([uid]);
     return lpas.lpas.pop();
   };
   var getList = (uids) => {
