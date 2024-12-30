@@ -84,6 +84,7 @@ variable "environments" {
         delete_lpa_feature     = bool
         allow_meris_lpas       = bool
         support_datastore_lpas = bool
+        paper_verification     = bool
       })
       dynamodb_tables = object({
         actor_codes = object({

@@ -45,3 +45,12 @@ The following environment variables will need to be set:
 Run the proxy using the instructions in [the README](./proxy/README.md).
 
 You will be able to access the admin service at http://localhost:5000
+
+### Adding New users to the Admin Portal
+
+If you need to add a new user to the admin portal, this will need to be done within org-infra.
+
+Within `services/use-a-lasting-power-of-attorney/cognito_use_pool` find the locals block which contains the `ual_admin_team_members` list.
+Then add the new users email address to this list.
+
+The user will recieve an email with their username and a tempoary password. Which will need to be reset upon first login.

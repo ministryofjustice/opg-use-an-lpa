@@ -542,6 +542,10 @@ locals {
           value = tostring(var.feature_flags.allow_gov_one_login)
         },
         {
+          name  = "PAPER_VERIFICATION",
+          value = tostring(var.feature_flags.paper_verification)
+        },
+        {
           name  = "LOGIN_SERIAL_CACHE_URL",
           value = "tls://${data.aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address}"
         },
