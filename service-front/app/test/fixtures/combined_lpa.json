@@ -18,7 +18,7 @@
       "otherNames": null,
       "postcode": "DN37 5SH",
       "surname": "sanderson",
-      "systemStatus": "1",
+      "systemStatus": true,
       "town": "",
       "type": "Primary",
       "uId": "700000000815"
@@ -37,7 +37,7 @@
       "otherNames": null,
       "postcode": "",
       "surname": "Summers",
-      "systemStatus": "1",
+      "systemStatus": true,
       "town": "",
       "type": "Primary",
       "uId": "7000-0000-0849"
@@ -98,7 +98,7 @@
       "otherNames": null,
       "postcode": "ABC 123",
       "surname": "test",
-      "systemStatus": "1",
+      "systemStatus": true,
       "town": "Town",
       "type": "Primary",
       "uId": "7000-0015-1998"
