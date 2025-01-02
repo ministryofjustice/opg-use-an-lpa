@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@19ba822314c230a9039afce40e65d6c2b352ebfb # pin@v2.21.2
+        uses: shivammathur/setup-php@85a8dfd0c711cf13677391db4c529061ab491414 # pin@v2.21.2
         with:
           php-version: 8.3
 
@@ -94,7 +94,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@184d73b71b93c222403b2e7f1ffebe4508014249 # pin@v3.1.0
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # pin@v3.1.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots

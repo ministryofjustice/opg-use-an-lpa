@@ -22,6 +22,7 @@ use App\Service\Lpa\AddLpa\AddLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use App\Service\Lpa\RemoveLpa;
+use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use App\Service\ViewerCodes\ViewerCodeService;
@@ -41,6 +42,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\RequestInterface;
+use Psr\Log\LoggerInterface;
 use stdClass;
 
 use function PHPUnit\Framework\assertEquals;
@@ -386,13 +388,22 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->attorneys[0]), true)),
+                new SiriusPerson(
+                    json_decode(
+                        json_encode(
+                            $this->lpa->attorneys[0]
+                        ),
+                        true
+                    ),
+                    $this->container->get(LoggerInterface::class),
+                ),
                 'attorney',
-                $this->lpa->uId),
-                $expectedLpa,
+                $this->lpa->uId,
+            ),
+            $expectedLpa,
             null,
         );
 
@@ -1594,13 +1605,20 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($lpa->donor), true)),
+                new SiriusPerson(
+                    json_decode(
+                        json_encode($lpa->donor),
+                        true
+                    ),
+                    $this->container->get(LoggerInterface::class),
+                ),
                 'donor',
-                $lpa->uId),
-                $expectedLpa,
+                $lpa->uId,
+            ),
+            $expectedLpa,
             null,
         );
 
@@ -1824,68 +1842,6 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
-     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that match a valid paper document$/
-     */
-    public function iProvideDetailsThatMatchAValidPaperDocument($firstnames, $lastname, $postcode, $dob)
-    {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        $this->lpa->donor->firstname = 'Rachel';
-        $this->lpa->donor->surname   =  'S’anderson';
-
-        $data = [
-            'reference_number'     => (int) $this->lpaUid,
-            'dob'                  => $dob,
-            'postcode'             => $postcode,
-            'first_names'          => $firstnames,
-            'last_name'            => $lastname,
-            'force_activation_key' => false,
-        ];
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $codeExists          = new stdClass();
-        $codeExists->Created = null;
-
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $this->lpa->uId,
-                'actor' => $this->lpa->donor->uId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
-        );
-
-        $addAccessForAllLpa = $this->container->get(AddAccessForAllLpa::class);
-        $lpaMatchResponse   = $addAccessForAllLpa->validateRequest($this->userId, $data);
-
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-                'donor',
-                $this->lpa->uId),
-                $expectedLpa,
-        null
-        );
-
-        Assert::assertEquals($expectedResponse, $lpaMatchResponse);
-    }
-
-    /**
      * @When /^I provide the details from a valid paper LPA document$/
      */
     public function iProvideTheDetailsFromAValidPaperLPADocument(): void
@@ -1932,13 +1888,20 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                new SiriusPerson(
+                    json_decode(
+                        json_encode($this->lpa->donor),
+                        true
+                    ),
+                    $this->container->get(LoggerInterface::class)
+                ),
                 'donor',
-                    $this->lpa->uId),
-                    $expectedLpa,
+                $this->lpa->uId,
+            ),
+            $expectedLpa,
             null
         );
 
@@ -1971,7 +1934,7 @@ class LpaContext extends BaseIntegrationContext
             $this->lpa
         );
 
-        $codeExists = new stdClass();
+        $codeExists  = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
@@ -2001,11 +1964,19 @@ class LpaContext extends BaseIntegrationContext
             Assert::assertEquals('LPA has an activation key already', $ex->getMessage());
             Assert::assertEquals(
                 [
-                    'donor'                => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                    'donor'                => new SiriusPerson(
+                        json_decode(
+                            json_encode(
+                                $this->lpa->donor
+                            ),
+                            true
+                        ),
+                        $this->container->get(LoggerInterface::class),
+                    ),
                     'caseSubtype'          => $this->lpa->caseSubtype,
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ],
-                $ex->getAdditionalData()
+                $ex->getAdditionalData(),
             );
             return;
         }
@@ -2733,13 +2704,20 @@ class LpaContext extends BaseIntegrationContext
         $response    = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new \App\Service\Lpa\SiriusLpa($expectedLpaArray);
+        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
-                new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
+                new SiriusPerson(
+                    json_decode(
+                        json_encode($this->lpa->donor),
+                        true
+                    ),
+                    $this->container->get(LoggerInterface::class)
+                ),
                 'donor',
-                $this->lpa->uId),
-                $expectedLpa,
+                $this->lpa->uId,
+            ),
+            $expectedLpa,
             null
         );
 

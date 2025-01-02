@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use Common\Service\Lpa\Factory\Sirius;
 use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\LpasInterface,
     Repository\UserLpaActorMapInterface,
@@ -103,9 +102,12 @@ class SiriusLpaManagerTest extends TestCase
                              'id'           => 6,
                              'companyName'  => 'XYZ Ltd',
                              'systemStatus' => true,
-                            ]),
+                            ],
+                            $this->loggerProphecy->reveal(),
+                        ),
                     ],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );
@@ -113,20 +115,23 @@ class SiriusLpaManagerTest extends TestCase
         $expectedLpaResponse = new Lpa(
             new SiriusLpa(
                 [
-                    'attorneys'          => [
+                    'attorneys'         => [
                         ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
                         ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
                         ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
                     ],
-                    'trustCorporations'  => [
+                    'trustCorporations' => [
                         new SiriusPerson(
                             [
                                 'id'           => 6,
                                 'companyName'  => 'XYZ Ltd',
                                 'systemStatus' => true,
-                            ]),
+                            ],
+                            $this->loggerProphecy->reveal(),
+                        ),
                     ],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             $lpaResponse->getLookupTime()
         );
@@ -138,42 +143,73 @@ class SiriusLpaManagerTest extends TestCase
         $this->lpasInterfaceProphecy->get($testUid)->willReturn($lpaResponse);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(new SiriusPerson(['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true]))
+            ->__invoke(
+                new SiriusPerson(
+                    ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+                    $this->loggerProphecy->reveal(),
+                )
+            )
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(new SiriusPerson(['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false]))
+            ->__invoke(
+                new SiriusPerson(
+                    ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+                    $this->loggerProphecy->reveal(),
+                )
+            )
             ->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(new SiriusPerson(['id' => 3, 'firstname' => 'A', 'systemStatus' => true]))
+            ->__invoke(
+                new SiriusPerson(
+                    ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
+                    $this->loggerProphecy->reveal(),
+                )
+            )
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(new SiriusPerson(['id' => 4, 'surname' => 'B', 'systemStatus' => true]))
+            ->__invoke(
+                new SiriusPerson(
+                    ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                    $this->loggerProphecy->reveal(),
+                )
+            )
             ->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         $this->getAttorneyStatusProphecy
-            ->__invoke(new SiriusPerson(['id' => 5, 'systemStatus' => true]))
+            ->__invoke(
+                new SiriusPerson(
+                    ['id' => 5, 'systemStatus' => true],
+                    $this->loggerProphecy->reveal(),
+                )
+            )
             ->willReturn(AttorneyStatus::GHOST_ATTORNEY);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
-                new SiriusPerson([
-                    'id'           => 6,
-                    'companyName'  => 'XYZ Ltd',
-                    'systemStatus' => true,
-                ])
+                new SiriusPerson(
+                    [
+                        'id'           => 6,
+                        'companyName'  => 'XYZ Ltd',
+                        'systemStatus' => true,
+                    ],
+                    $this->loggerProphecy->reveal(),
+                )
             )
             ->willReturn(0);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
-                new SiriusPerson([
-                    'id'           => 7,
-                    'companyName'  => 'ABC Ltd',
-                    'systemStatus' => true,
-                ])
+                new SiriusPerson(
+                    [
+                        'id'           => 7,
+                        'companyName'  => 'ABC Ltd',
+                        'systemStatus' => true,
+                    ],
+                    $this->loggerProphecy->reveal(),
+                )
             )
             ->willReturn(2);
 
@@ -217,6 +253,7 @@ class SiriusLpaManagerTest extends TestCase
                     ],
                     'inactiveAttorneys' => [],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );
@@ -251,12 +288,17 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn($validState);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
-            'id'           => $t->ActorId,
-            'firstname'    => 'Test',
-            'surname'      => 'Test',
-            'systemStatus' => true,
-        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+        $this->getAttorneyStatusProphecy->__invoke(
+            new SiriusPerson(
+                [
+                'id'           => $t->ActorId,
+                'firstname'    => 'Test',
+                'surname'      => 'Test',
+                'systemStatus' => true,
+                ],
+                $this->loggerProphecy->reveal(),
+            )
+        )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -309,6 +351,7 @@ class SiriusLpaManagerTest extends TestCase
                         ],
                     ],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime(),
         );
@@ -344,19 +387,29 @@ class SiriusLpaManagerTest extends TestCase
         )->willReturn(true);
 
         // attorney status is active
-        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
-            'id'           => $t->ActorId,
-            'firstname'    => 'Test',
-            'surname'      => 'Test',
-            'systemStatus' => true,
-        ]))->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
+        $this->getAttorneyStatusProphecy->__invoke(
+            new SiriusPerson(
+                [
+                    'id'           => $t->ActorId,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => true,
+                ],
+                $this->loggerProphecy->reveal(),
+            )
+        )->willReturn(AttorneyStatus::ACTIVE_ATTORNEY);
 
-        $this->getAttorneyStatusProphecy->__invoke(new SiriusPerson([
-            'id'           => 2,
-            'firstname'    => 'Test',
-            'surname'      => 'Test',
-            'systemStatus' => false,
-        ]))->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
+        $this->getAttorneyStatusProphecy->__invoke(
+            new SiriusPerson(
+                [
+                    'id'           => 2,
+                    'firstname'    => 'Test',
+                    'surname'      => 'Test',
+                    'systemStatus' => false,
+                ],
+                $this->loggerProphecy->reveal(),
+            )
+        )->willReturn(AttorneyStatus::INACTIVE_ATTORNEY);
 
         return $t;
     }
@@ -414,6 +467,7 @@ class SiriusLpaManagerTest extends TestCase
                     ],
                     'inactiveAttorneys' => [],
                 ],
+                $this->loggerProphecy->reveal(),
             ),
             $result['lpa']
         );
@@ -521,7 +575,8 @@ class SiriusLpaManagerTest extends TestCase
                     [
                         'uId'    => 'uid-1',
                         'status' => 'Registered',
-                    ]
+                    ],
+                    $this->loggerProphecy->reveal(),
                 ),
                 new DateTime(),
             ),
@@ -531,6 +586,7 @@ class SiriusLpaManagerTest extends TestCase
                         'uId'    => 'uid-2',
                         'status' => 'Registered',
                     ],
+                    $this->loggerProphecy->reveal(),
                 ),
                 new DateTime()
             ),
@@ -557,6 +613,7 @@ class SiriusLpaManagerTest extends TestCase
                        'status' => 'Registered',
                         'uId'   => 'uid-3',
                     ],
+                    $this->loggerProphecy->reveal(),
                 ),
                 new DateTime(),
             );
@@ -675,7 +732,8 @@ class SiriusLpaManagerTest extends TestCase
                     'inactiveAttorneys'          => [],
                     'applicationHasGuidance'     => true,
                     'applicationHasRestrictions' => true,
-                ]
+                ],
+                $this->loggerProphecy->reveal(),
             ),
             new DateTime()
         );

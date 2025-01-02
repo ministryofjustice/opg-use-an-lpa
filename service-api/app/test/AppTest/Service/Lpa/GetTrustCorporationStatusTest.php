@@ -34,7 +34,8 @@ class GetTrustCorporationStatusTest extends TestCase
                 'uId' => 7,
                 'companyName' => 'ABC Ltd',
                 'systemStatus' => true
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $status = new GetTrustCorporationStatus(
@@ -79,7 +80,8 @@ class GetTrustCorporationStatusTest extends TestCase
                 'uId'          => 8,
                 'companyName'  => '',
                 'systemStatus' => false
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $status = new GetTrustCorporationStatus(
@@ -124,7 +126,8 @@ class GetTrustCorporationStatusTest extends TestCase
                 'uId' => 7,
                 'companyName' => 'XYZ Ltd',
                 'systemStatus' => false
-            ]
+            ],
+            $this->loggerProphecy->reveal(),
         );
 
         $status = new GetTrustCorporationStatus(
