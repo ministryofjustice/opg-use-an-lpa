@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace CommonTest\Middleware\Authentication;
 
 use PHPUnit\Framework\Attributes\Test;
-use Common\Middleware\Authentication\AuthenticationMiddleware;
 use Common\Middleware\Authentication\CredentialAuthenticationMiddleware;
 use Common\Middleware\Authentication\ForcedPasswordResetMiddleware;
 use Common\Middleware\Authentication\AuthenticationMiddlewareFactory;
@@ -51,7 +50,7 @@ class AuthenticationMiddlewareTest extends TestCase
             ->method('process')
             ->with($request, $handler)
             ->willReturn($response);
-        $matcher = $this->exactly(2);
+        $matcher = $this->exactly(1);
 
         $pipe->expects($matcher)
             ->method('pipe')->willReturnCallback(function ($parameter) use ($matcher, $credentialAuthenticationMiddleware, $forcedPasswordResetMiddleware) {
@@ -88,9 +87,7 @@ class AuthenticationMiddlewareTest extends TestCase
                                                      [
         'config',
         [
-                                                         'feature_flags' => [
-                                                             'allow_gov_one_login' => true,
-                                                         ],
+                                                         'feature_flags' => [],
                                                      ],
                                                      ],
                                                  ]);

@@ -172,15 +172,8 @@ class AccountContext implements Context
      */
     public function iAmCurrentlySignedIn(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->iHaveLoggedInToOneLogin('English');
-            $this->iHaveAMatchingLocalAccount();
-        } else {
-            // do all the steps to sign in
-            $this->iAccessTheLoginForm();
-            $this->iEnterCorrectCredentials();
-        }
-
+        $this->iHaveLoggedInToOneLogin('English');
+        $this->iHaveAMatchingLocalAccount();
         $this->iAmSignedIn();
     }
 
@@ -205,15 +198,6 @@ class AccountContext implements Context
     public function iAmDirectedToMyPersonalDashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-    }
-
-    /**
-     * @Then /^Then I am given instructions on how to change donor or attorney details$/
-     */
-    public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails(): void
-    {
-        $this->ui->assertPageAddress('/lpa/change-details');
-        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 
     /**
@@ -428,14 +412,10 @@ class AccountContext implements Context
         assert::assertTrue(isset($locationHeader));
         $this->ui->assertResponseStatus(302);
 
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            assert::assertStringContainsString(
-                'post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
-                $locationHeader,
-            );
-        } else {
-            assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
-        }
+        assert::assertStringContainsString(
+            'post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+            $locationHeader,
+        );
     }
 
     /**
@@ -563,22 +543,6 @@ class AccountContext implements Context
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // Not needed for this context
-    }
-
-    /**
-     * @When /^I ask for a change of donors or attorneys details$/
-     */
-    public function iAskForAChangeOfDonorsOrAttorneysDetails(): void
-    {
-        $this->ui->assertPageAddress('/settings');
-
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->ui->assertPageContainsText('Change your sign-in details in your GOV.UK One Login');
-            $this->ui->clickLink('Change your sign-in details in your GOV.UK One Login');
-        } else {
-            $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
-            $this->ui->clickLink('Change a donor or attorney\'s details');
-        }
     }
 
     /**
@@ -1393,17 +1357,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I have forgotten my password$/
-     */
-    public function iHaveForgottenMyPassword(): void
-    {
-        $this->iAccessTheLoginForm();
-        $this->ui->assertPageAddress('/login');
-
-        $this->ui->clickLink('Forgotten your password?');
-    }
-
-    /**
      * @Given /^I have logged in previously$/
      */
     public function iHaveLoggedInPreviously(): void
@@ -1501,21 +1454,19 @@ class AccountContext implements Context
      */
     public function iLogoutOfTheApplication(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'redirect_uri' => 'http://fake.url/logout'
-                                . '?id_token_hint=token'
-                                . '&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
-                        ]
-                    ),
-                    self::ONE_LOGIN_SERVICE_LOGOUT
-                )
-            );
-        }
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'redirect_uri' => 'http://fake.url/logout'
+                            . '?id_token_hint=token'
+                            . '&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_LOGOUT
+            )
+        );
 
         //We cannot follow redirects to external links, returns page not found
         $this->iDoNotFollowRedirects();
@@ -1639,26 +1590,8 @@ class AccountContext implements Context
      */
     public function iRequestLoginToMyAccountThatWasDeleted(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->iHaveLoggedInToOneLogin('English');
-            $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
-        } else {
-            $this->ui->visit('/login');
-
-            $this->ui->fillField('email', $this->userEmail);
-            $this->ui->fillField('password', $this->userPassword);
-
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_FORBIDDEN,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-
-            $this->ui->pressButton('Sign in');
-        }
+        $this->iHaveLoggedInToOneLogin('English');
+        $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
     }
 
     /**
@@ -1801,11 +1734,7 @@ class AccountContext implements Context
      */
     public function iRequestToSeeTheActorTermsOfUse(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
-        } else {
-            $this->ui->clickLink('terms of use');
-        }
+        $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
     }
 
     /**

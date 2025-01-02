@@ -11,93 +11,40 @@
                 <div class="govuk-grid-column-three-quarters">
                     <h1 class="govuk-heading-xl">{% trans %}Settings{% endtrans %}</h1>
 
-                    {% if feature_enabled("allow_gov_one_login") %}
-                        <div class="govuk-summary-card">
-                            <div class="govuk-summary-card__title-wrapper">
-                                <h2 class="govuk-summary-card__title">{% trans %}Your sign-in details{% endtrans %}</h2>
-                            </div>
-                            <div class="govuk-summary-card__content">
-                                <p class="govuk-body">{% trans %}You use GOV.UK One Login to sign in to the Use a lasting power of attorney service.{% endtrans %}</p>
-                                <p class="govuk-body">{% trans %}You can change these details in your GOV.UK One Login:{% endtrans %}</p>
-                                <ul class="govuk-list govuk-list--bullet">
-                                    <li>{% trans %}e-mail address{% endtrans %}</li>
-                                    <li>{% trans %}password{% endtrans %}</li>
-                                    <li>{% trans %}how you get security codes to sign in{% endtrans %}</li>
-                                </ul>
-                                <p class="govuk-body">
-                                <a href="https://home.account.gov.uk/security" target="_blank" class="govuk-link" id="govuk-settings-link">
-                                    {% trans %}Change your sign-in details in your GOV.UK One Login{% endtrans %}
-                                </a>
-                                </p>
-                            </div>
+                    <div class="govuk-summary-card">
+                        <div class="govuk-summary-card__title-wrapper">
+                            <h2 class="govuk-summary-card__title">{% trans %}Your sign-in details{% endtrans %}</h2>
                         </div>
-
-                        <div class="govuk-summary-card govuk-!-margin-top-2">
-                            <div class="govuk-summary-card__title-wrapper">
-                                <h2 class="govuk-summary-card__title">{% trans %}Delete your Use a lasting power of attorney account{% endtrans %}</h2>
-                            </div>
-                            <div class="govuk-summary-card__content">
-                                <p class="govuk-body">{% trans %}If you no longer use your Use a lasting power of attorney account, you can delete it.{% endtrans %}</p>
-                                <p class="govuk-body">
-                                <a href="{{ path('confirm-delete-account') }}" class="govuk-link" id="delete-account-link">
-                                    {% trans %}Find out more about deleting your account{% endtrans %}
-                                </a>
-                                </p>
-                            </div>
-                        </div>
-                    {% else %}
-
-                    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-                        <div class="govuk-notification-banner__content">
-                            <div class="govuk-warning-text">
-                                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                                <div class="govuk-warning-text__text">
-                                    <span class="govuk-visually-hidden">Warning</span>
-                                    <strong>{% trans %}You are not able to change your email address{% endtrans %}</strong>
-                                    <br><br>
-                                    <p class="govuk-body">
-                                        {% trans %} This is because, on 13 August 2024, we are changing the way you sign in to the Use a lasting power of attorney service.{% endtrans %}
-                                    </p>
-
-                                    <a href="{{ path('login-notification') }}" class="govuk-link">{% trans %}Find out more about this change{% endtrans %}</a>
-                                </div>
-                            </div>
+                        <div class="govuk-summary-card__content">
+                            <p class="govuk-body">{% trans %}You use GOV.UK One Login to sign in to the Use a lasting power of attorney service.{% endtrans %}</p>
+                            <p class="govuk-body">{% trans %}You can change these details in your GOV.UK One Login:{% endtrans %}</p>
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li>{% trans %}e-mail address{% endtrans %}</li>
+                                <li>{% trans %}password{% endtrans %}</li>
+                                <li>{% trans %}how you get security codes to sign in{% endtrans %}</li>
+                            </ul>
+                            <p class="govuk-body">
+                            <a href="https://home.account.gov.uk/security" target="_blank" class="govuk-link" id="govuk-settings-link">
+                                {% trans %}Change your sign-in details in your GOV.UK One Login{% endtrans %}
+                            </a>
+                            </p>
                         </div>
                     </div>
 
-                        <dl class="govuk-summary-list">
-
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    {% trans %}Email address{% endtrans %}
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    {{ user.getDetail('email') }}
-                                </dd>
-                            </div>
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    {% trans %}Password{% endtrans %}
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    ***********
-                                </dd>
-                                <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" href="change-password">
-                                        {% trans %}Change<span class="govuk-visually-hidden"> password</span>{% endtrans %}
-                                    </a>
-                                </dd>
-                            </div>
-                        </dl>
-
-                        <div class="govuk-inset-text">
-                            <span>{% trans %}Need to update the online <abbr title="lasting power of attorney">LPA</abbr> summary?{% endtrans %}</span><br>
-                            <span>
-                             <a class="govuk-link" href="{{ path('lpa.change-details') }}">{% trans %}Change a donor or attorney's details{% endtrans %}</a>
-                        </span>
+                    <div class="govuk-summary-card govuk-!-margin-top-2">
+                        <div class="govuk-summary-card__title-wrapper">
+                            <h2 class="govuk-summary-card__title">{% trans %}Delete your Use a lasting power of attorney account{% endtrans %}</h2>
                         </div>
-                        <a href="{{ path('confirm-delete-account') }}" class="govuk-body lpa-account-delete" id="delete-account-link">{% trans %}Delete account{% endtrans %}</a>
-                    {% endif %}
+                        <div class="govuk-summary-card__content">
+                            <p class="govuk-body">{% trans %}If you no longer use your Use a lasting power of attorney account, you can delete it.{% endtrans %}</p>
+                            <p class="govuk-body">
+                            <a href="{{ path('confirm-delete-account') }}" class="govuk-link" id="delete-account-link">
+                                {% trans %}Find out more about deleting your account{% endtrans %}
+                            </a>
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </main>

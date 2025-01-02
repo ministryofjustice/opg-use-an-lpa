@@ -1,4 +1,4 @@
-@actor @accountcreation @ff:allow_gov_one_login:false
+@actor @accountcreation
 Feature: Account creation
   As a new user
   I want to create an account

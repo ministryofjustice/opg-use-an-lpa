@@ -553,14 +553,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I have forgotten my password$/
-     */
-    public function iHaveForgottenMyPassword()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Given /^I have logged in previously$/
      */
     public function iHaveLoggedInPreviously()

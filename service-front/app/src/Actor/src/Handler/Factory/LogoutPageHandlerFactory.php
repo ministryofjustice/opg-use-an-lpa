@@ -18,11 +18,7 @@ class LogoutPageHandlerFactory
 {
     public function __invoke(ContainerInterface $container): LogoutPageHandler
     {
-        $logoutStrategy = $container->get(
-            ($container->get(FeatureEnabled::class))('allow_gov_one_login')
-                ? OneLoginService::class
-                : LocalAccountLogout::class,
-        );
+        $logoutStrategy = $container->get(OneLoginService::class);
 
         return new LogoutPageHandler(
             $container->get(TemplateRendererInterface::class),
