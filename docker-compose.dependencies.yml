@@ -130,7 +130,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: outofcoffee/imposter:4.0.3
+    image: outofcoffee/imposter:4.3.0
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -143,7 +143,7 @@ services:
 
   mock-lpa-data-store:
     container_name: mock-lpa-data-store
-    image: outofcoffee/imposter:4.0.3
+    image: outofcoffee/imposter:4.3.0
     command:
       - "-c"
       - "/opt/imposter/config"
