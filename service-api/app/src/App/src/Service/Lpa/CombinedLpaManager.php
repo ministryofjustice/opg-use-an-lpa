@@ -87,6 +87,7 @@ class CombinedLpaManager implements LpaManagerInterface
         }
 
         // LPA was found but is not valid for use.
+        // TODO UML-3777 Investigate why an empty array is returned here and not a null. Return a null if we can.
         return [];
     }
 
@@ -174,15 +175,9 @@ class CombinedLpaManager implements LpaManagerInterface
     {
         [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)([$lpaActorMap]);
 
-        if (count($siriusUids) > 0) {
-            return $this->siriusLpas->get($siriusUids[0]);
-        }
-
-        if (count($dataStoreUids) > 0) {
-            return $this->dataStoreLpas->get($dataStoreUids[0]);
-        }
-
-        return null;
+        return count($siriusUids) > 0
+            ? $this->siriusLpas->get($siriusUids[0])
+            : $this->dataStoreLpas->get($dataStoreUids[0]);
     }
 
     /**
