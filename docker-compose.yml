@@ -30,7 +30,6 @@ services:
       WEB_DOMAIN: http://localhost:9001
       APP_HOST: viewer-app
       APP_PORT: 9000
-      NGINX_LOG_LEVEL: warn
     depends_on:
       - esbuild
       - viewer-app
@@ -82,7 +81,6 @@ services:
       WEB_DOMAIN: http://localhost:9002
       APP_HOST: actor-app
       APP_PORT: 9000
-      NGINX_LOG_LEVEL: warn
     depends_on:
       - esbuild
       - actor-app
@@ -162,7 +160,6 @@ services:
     environment:
       APP_HOST: api-app
       APP_PORT: 9000
-      NGINX_LOG_LEVEL: warn
     depends_on:
       - api-app
 
