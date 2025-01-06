@@ -22,21 +22,3 @@ Feature: The application supports Welsh as a language
     When I access the service home page
     And I request to view the content in english
     Then I should be on the home page of the service
-
-  @ui @welsh @ff:allow_gov_one_login:false
-  Scenario: Users can expect to receive notification emails in the language they are viewing
-    Given I prefix a url with the welsh language code
-      And I am not a user of the lpa application
-      And I want to create a new account
-      And I access the account creation page
-      When I create an account
-      Then I receive unique instructions on how to activate my account in Welsh
-
-  @ui @welsh
-  Scenario: Users can expect to receive notification emails in the language they are viewing
-    Given I prefix a url with the welsh language code
-    And I am not a user of the lpa application
-    And I want to create a new account
-    And I access the account creation page
-    When I create an account
-    Then I receive unique instructions on how to activate my account in Welsh

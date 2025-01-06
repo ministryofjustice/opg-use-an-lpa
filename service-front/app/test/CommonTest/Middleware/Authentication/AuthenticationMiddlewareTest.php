@@ -38,9 +38,7 @@ class AuthenticationMiddlewareTest extends TestCase
                  [
             'config',
             [
-                     'feature_flags' => [
-                         'allow_gov_one_login' => false,
-                     ],
+                     'feature_flags' => [],
                  ],
                  ],
              ]

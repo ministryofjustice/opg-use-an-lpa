@@ -69,14 +69,6 @@ class AccountContext extends BaseIntegrationContext
     private NotifyService $notifyService;
 
     /**
-     * @Given /^I access the account creation page$/
-     */
-    public function iAccessTheAccountCreationPage()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Given /^I am a user of the lpa application$/
      */
     public function iAmAUserOfTheLpaApplication()
@@ -113,27 +105,11 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I am informed that there was a problem with that email address$/
-     */
-    public function iAmInformedThatThereWasAProblemWithThatEmailAddress()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Given /^I am logged out of the service and taken to the deleted account confirmation page$/
      */
     public function iAmLoggedOutOfTheServiceAndTakenToTheDeletedAccountConfirmationPage()
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^I am not a user of the lpa application$/
-     */
-    public function iAmNotAUserOfTheLpaApplication()
-    {
-        $this->userEmail = ' ';
     }
 
     /**
@@ -186,22 +162,6 @@ class AccountContext extends BaseIntegrationContext
         $lpas = $this->lpaService->getLpas($this->userIdentity);
 
         Assert::assertEmpty($lpas);
-    }
-
-    /**
-     * @Then /^I am told my current password is incorrect$/
-     */
-    public function iAmToldMyCurrentPasswordIsIncorrect()
-    {
-        // Not needed in this context
-    }
-
-    /**
-     * @Then /^I am told my password was changed$/
-     */
-    public function iAmToldMyPasswordWasChanged()
-    {
-        // Not needed in this context
     }
 
     /**
@@ -348,14 +308,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I confirm that I want to delete my account$/
-     */
-    public function iConfirmThatIWantToDeleteMyAccount()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @When /^I create an account$/
      */
     public function iCreateAnAccount()
@@ -387,41 +339,6 @@ class AccountContext extends BaseIntegrationContext
      * @When /^I create an account using duplicate details$/
      */
     public function iCreateAnAccountUsingDuplicateDetails()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @When /^I create an account using with an email address that has been requested for reset$/
-     */
-    public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset()
-    {
-        $this->userEmail    = 'test@test.com';
-        $this->userPassword = 'pa33W0rd!123';
-
-        // API call for creating an account
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_CONFLICT,
-                json_encode([]),
-                self::USER_SERVICE_CREATE
-            )
-        );
-
-        try {
-            $this->userService->create($this->userEmail, new HiddenString($this->userPassword));
-        } catch (ApiException $ex) {
-            Assert::assertEquals(409, $ex->getCode());
-            return;
-        }
-
-        throw new ExpectationFailedException('Conflict exception was not thrown');
-    }
-
-    /**
-     * @When /^I create an account with a password of (.*)$/
-     */
-    public function iCreateAnAccountWithAPasswordOf($password)
     {
         // Not needed for this context
     }
@@ -464,22 +381,6 @@ class AccountContext extends BaseIntegrationContext
         $request = $this->apiFixtures->getLastRequest();
         $query   = $request->getUri()->getQuery();
         Assert::assertStringContainsString($this->userPasswordResetToken, $query);
-    }
-
-    /**
-     * @When /^I follow my unique instructions after 24 hours$/
-     */
-    public function iFollowMyUniqueInstructionsAfter24Hours()
-    {
-        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_GONE));
-
-        $canActivate = $this->userService->activate($this->activationToken);
-        Assert::assertFalse($canActivate);
-
-        $request = $this->apiFixtures->getLastRequest();
-
-        $query = $request->getUri()->getQuery();
-        Assert::assertStringContainsString($this->activationToken, $query);
     }
 
     /**
@@ -553,27 +454,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Given /^I have logged in previously$/
-     */
-    public function iHaveLoggedInPreviously()
-    {
-        $this->iAmCurrentlySignedIn();
-    }
-
-    /**
-     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)(.*)(.*)$/
-     */
-    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs(
-        $email1,
-        $email2,
-        $password1,
-        $password2,
-        $terms,
-    ) {
-        // Not needed for this context
-    }
-
-    /**
      * @Given /^I have requested to change my email address$/
      */
     public function iHaveRequestedToChangeMyEmailAddress()
@@ -611,41 +491,6 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals($this->userIdentity, $params['user-id']);
         Assert::assertEquals($this->userPassword, $params['password']);
         Assert::assertEquals($expectedPassword, $params['new-password']);
-    }
-
-    /**
-     * @When /^I provided incorrect current password$/
-     */
-    public function iProvidedIncorrectCurrentPassword()
-    {
-        $expectedPassword = 'S0meS0rt0fPassw0rd';
-
-
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([]),
-                self::USER_SERVICE_CHANGE_PASSWORD
-            )
-        );
-
-        try {
-            $this->userService->changePassword(
-                '123',
-                new HiddenString('SomeWrongValue'),
-                new HiddenString($expectedPassword)
-            );
-        } catch (ApiException $exception) {
-            Assert::assertEquals($exception->getCode(), StatusCodeInterface::STATUS_FORBIDDEN);
-
-            $request = $this->apiFixtures->getLastRequest();
-            $params  = json_decode($request->getBody()->getContents(), true);
-
-            Assert::assertIsArray($params);
-            Assert::assertEquals($this->userIdentity, $params['user-id']);
-            Assert::assertNotEquals($this->userPassword, $params['password']);
-            Assert::assertEquals($expectedPassword, $params['new-password']);
-        }
     }
 
     /**
@@ -914,14 +759,6 @@ class AccountContext extends BaseIntegrationContext
     }
 
     /**
-     * @Then /^I should be told my account could not be created due to (.*)$/
-     */
-    public function iShouldBeToldMyAccountCouldNotBeCreatedDueTo()
-    {
-        // Not needed for this context
-    }
-
-    /**
      * @Then /^I should be told my email change request was successful$/
      */
     public function iShouldBeToldMyEmailChangeRequestWasSuccessful()
@@ -981,14 +818,6 @@ class AccountContext extends BaseIntegrationContext
      * @When /^I view my user details$/
      */
     public function iViewMyUserDetails()
-    {
-        // Not needed for this context
-    }
-
-    /**
-     * @Given /^I want to create a new account$/
-     */
-    public function iWantToCreateANewAccount()
     {
         // Not needed for this context
     }
