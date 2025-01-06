@@ -912,6 +912,146 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @Given /^I have added a Combined LPA to my account$/
+     */
+    public function iHaveAddedACombinedLPAToMyAccount()
+    {
+        $this->iHaveBeenGivenAccessToUseACombinedLPAViaCredentials();
+        $this->iAmOnTheAddAnLPAPage();
+        $this->iRequestToAddACombinedLPAWithValidDetailsUsing($this->activation_key, $this->activation_key);
+        $this->theCorrectLPAIsFoundAndICanConfirmToAddIt();
+        $this->theLPAIsSuccessfullyAdded();
+    }
+
+    /**
+     * @Given /^I have been given access to use a Combined LPA via credentials$/
+     */
+    public function iHaveBeenGivenAccessToUseACombinedLPAViaCredentials()
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+
+        $this->activation_key = 'XYUPHWQRECHV';
+        $this->referenceNo    = '700000000138';
+        $this->userDob        = '1975-10-05';
+        $this->actorLpaToken  = '24680';
+        $this->actorId        = 0;
+
+        $this->lpaData = [
+            'user-lpa-actor-token' => $this->actorLpaToken,
+            'date'                 => 'today',
+            'actor'                => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1975-10-05',
+                    'email'        => 'test@test.com',
+                    'firstname'    => 'Ian',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => 'Mr',
+                    'surname'      => 'Deputy',
+                    'systemStatus' => true,
+                    'uId'          => '700000000054',
+                ],
+            ],
+            'lpa'                  => $this->lpa,
+        ];
+    }
+
+    public function iRequestToAddACombinedLPAWithValidDetailsUsing(string $code, string $storedCode)
+    {
+        // API call for checking LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
+
+        $addLpa  = $this->container->get(AddLpa::class);
+        $lpaData = $addLpa->validate(
+            $this->userIdentity,
+            $storedCode,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        Assert::assertInstanceOf(AddLpaApiResult::class, $lpaData);
+        Assert::assertEquals(AddLpaApiResult::ADD_LPA_FOUND, $lpaData->getResponse());
+        Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa->uId);
+    }
+
+    /**
+     * @When /^I request to view a Combined LPA which status is "([^"]*)"$/
+     */
+    public function iRequestToViewACombinedLPAWhichStatusIs($status)
+    {
+        $this->lpa->status = $status;
+
+        if ($status === 'Revoked') {
+            // API call for getting the LPA by id
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date'                 => 'date',
+                            'lpa'                  => [],
+                            'actor'                => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+        } else {
+            // API call for getting the LPA by id
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->actorLpaToken,
+                            'date'                 => 'date',
+                            'lpa'                  => $this->lpa,
+                            'actor'                => $this->lpaData['actor'],
+                        ]
+                    ),
+                    self::LPA_SERVICE_GET_LPA_BY_ID
+                )
+            );
+
+            // InstAndPrefImagesService::getImagesById
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'uId'        => (int) $this->lpa->uId,
+                            'status'     => 'COLLECTION_COMPLETE',
+                            'signedUrls' => [],
+                        ]
+                    ),
+                    self::INPSERVICE_GET_BY_ID
+                )
+            );
+        }
+    }
+
+    /**
      * @Given /^I have been given access to use an LPA via a paper document$/
      */
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()

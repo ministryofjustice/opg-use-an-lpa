@@ -119,7 +119,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@292c88581676a2a6d95f1312c0517f24577eca53 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@7038bfba688e1aaf9ebe723b50b7519042f44c8e # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
@@ -127,7 +127,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
+        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
@@ -149,7 +149,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: install python
-        uses: actions/setup-python@55aad42e4674b58b2b2fb7d8e7552402d922b4e7 # pin@v4.2.0
+        uses: actions/setup-python@3fddbee7870211eda9047db10474808be43c71ec # pin@v4.2.0
         with:
           python-version: '3.12'
 

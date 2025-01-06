@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       - name: download artifact for front tests
         id: download-artifact-front-tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
+        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
         continue-on-error: true
         with:
           name: service-front
@@ -26,7 +26,7 @@ jobs:
         if: inputs.specific_path == 'all'
       - name: download artifact for api tests
         id: download-artifact-api-tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
+        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
         continue-on-error: true
         with:
           name: service-api
@@ -34,7 +34,7 @@ jobs:
         if: inputs.specific_path == 'all'
       - name: download artifact for admin tests
         id: download-artifact-admin-tests
-        uses: actions/download-artifact@d0ce8fd1167ed839810201de977912a090ab10a7
+        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
         continue-on-error: true
         with:
           name: service-admin
