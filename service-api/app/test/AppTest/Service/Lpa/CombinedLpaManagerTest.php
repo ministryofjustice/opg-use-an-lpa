@@ -18,6 +18,7 @@ use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -59,7 +60,7 @@ class CombinedLpaManagerTest extends TestCase
             new DateTimeImmutable('now'),
         );
 
-        /** @var Lpa<LpaStore> $siriusLpaResponse */
+        /** @var Lpa<LpaStore> $dataStoreLpaResponse */
         $dataStoreLpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -335,6 +336,19 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
+    public function get_by_sirius_uid_returns_null_when_no_lpa_data()
+    {
+        $testUid = '700000000047';
+
+        $this->siriusLpasProphecy->get($testUid)->willReturn(null);
+
+        $service = $this->getLpaService();
+        $result  = $service->getByUid($testUid);
+
+        $this->assertNull($result);
+    }
+
+    #[Test]
     public function can_get_by_user_lpa_actor_token_sirius()
     {
         $testLpaToken = 'token-1';
@@ -383,17 +397,120 @@ class CombinedLpaManagerTest extends TestCase
         $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
 
         $service = $this->getLpaService();
-
-        $result = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
+        $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
 
         $this->assertEquals($siriusLpaResponse->getData(), $result['lpa']);
-        $this->assertEquals($siriusLpaResponse->getLookupTime()->format(\DateTimeInterface::ATOM), $result['date']);
+        $this->assertEquals($siriusLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM), $result['date']);
     }
 
     #[Test]
     public function can_get_by_user_lpa_actor_token_lpastore()
     {
+        $testLpaToken = 'token-2';
+        $testUserId   = 'userId-1';
 
+        /** @var Lpa<LpaStore> $dataStoreLpaResponse */
+        $dataStoreLpaResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $userLpaActorMapResponse = [
+            'Id'         => $testLpaToken,
+            'UserId'     => $testUserId,
+            'SiriusUid'  => $dataStoreLpaResponse->getData()->uId,
+            'ActorId'    => $dataStoreLpaResponse->getData()->attorneys[0]->uId,
+            'ActivateBy' => (new DateTimeImmutable('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+            'Added'      => new DateTimeImmutable('now'),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesProphecy
+            ->__invoke([$userLpaActorMapResponse])
+            ->willReturn(
+                [
+                    [],
+                    [$dataStoreLpaResponse->getData()->uId],
+                ]
+            );
+        $this->dataStoreLpasProphecy
+            ->get($dataStoreLpaResponse->getData()->uId ?? '')
+            ->willReturn($dataStoreLpaResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($dataStoreLpaResponse->getData())
+            ->willReturn($dataStoreLpaResponse->getData());
+        $this->resolveActorProphecy
+            ->__invoke(
+                $dataStoreLpaResponse->getData(),
+                $userLpaActorMapResponse['ActorId'],
+            )->willReturn(
+                new ResolveActor\LpaActor(
+                    $dataStoreLpaResponse->getData()->attorneys[0],
+                    ResolveActor\ActorType::ATTORNEY
+                )
+            );
+        $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
+
+        $service = $this->getLpaService();
+        $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
+
+        $this->assertEquals($dataStoreLpaResponse->getData(), $result['lpa']);
+        $this->assertEquals($dataStoreLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM), $result['date']);
+    }
+
+    #[Test]
+    public function get_by_user_lpa_actor_token_sirius_returns_null_when_user_not_match()
+    {
+        $testLpaToken = 'token-1';
+        $testUserId   = 'userId-1';
+
+        $userLpaActorMapResponse = [
+            'Id'        => $testLpaToken,
+            'UserId'    => $testUserId,
+            'SiriusUid' => '700000000047',
+            'ActorId'   => '700000005123',
+            'Added'     => new DateTimeImmutable('now'),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+
+        $service = $this->getLpaService();
+        $result  = $service->getByUserLpaActorToken($testLpaToken, 'userId-2');
+
+        $this->assertNull($result);
+    }
+
+    #[Test]
+    public function get_by_user_lpa_actor_token_sirius_returns_null_when_lpa_data_missing()
+    {
+        $testLpaToken = 'token-1';
+        $testUserId   = 'userId-1';
+
+        $userLpaActorMapResponse = [
+            'Id'      => $testLpaToken,
+            'UserId'  => $testUserId,
+            'LpaUid'  => 'M-789Q-P4DF-4UX34',
+            'ActorId' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            'Added'   => new DateTimeImmutable('now'),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesProphecy
+            ->__invoke([$userLpaActorMapResponse])
+            ->willReturn(
+                [
+                    [],
+                    ['M-789Q-P4DF-4UX34'],
+                ]
+            );
+        $this->dataStoreLpasProphecy
+            ->get('M-789Q-P4DF-4UX34')
+            ->willReturn(null);
+
+        $service = $this->getLpaService();
+        $result  = $service->getByUserLpaActorToken($testLpaToken, 'userId-1');
+
+        $this->assertNull($result);
     }
 
     #[Test]
