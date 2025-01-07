@@ -59,13 +59,5 @@ data "aws_iam_policy_document" "receive_events_queue_policy" {
 
     actions   = ["sqs:SendMessage"]
     resources = [aws_sqs_queue.receive_events_queue[0].arn]
-
-    condition {
-      test     = "ArnEquals"
-      variable = "aws:SourceArn"
-      values = [
-        aws_cloudwatch_event_rule.receive_events_from_mlpa[0].arn
-      ]
-    }
   }
 }
