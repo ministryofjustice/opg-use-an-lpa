@@ -147,7 +147,6 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
   }
 }
 
-
 module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
@@ -203,6 +202,33 @@ data "aws_iam_policy_document" "event_receiver_kms" {
         "events.amazonaws.com",
         "lambda.amazonaws.com",
       ]
+    }
+  }
+
+  statement {
+    sid       = "Key Administrator"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion"
+    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
     }
   }
 }
