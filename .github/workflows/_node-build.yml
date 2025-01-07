@@ -17,7 +17,7 @@ jobs:
           node-version-file: '.nvmrc'
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # pin@v3.0.8
+        uses: actions/cache@53aa38c736a561b9c17b62df3fe885a17b78ee6d # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
