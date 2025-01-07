@@ -24,11 +24,11 @@ module "sessions_actor_mrk" {
   }
 }
 
-module "sqs_mrk" {
+module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
-  key_description         = "KMS key for sqs"
-  key_alias               = "sqs-mrk"
+  key_description         = "KMS key for received events"
+  key_alias               = "${local.environment}-event-receiver-mrk"
   deletion_window_in_days = 7
 
   providers = {
