@@ -90,6 +90,7 @@ resource "aws_lambda_permission" "cloudwatch_to_update_statistics_lambda" {
 }
 
 module "event_receiver" {
+  count       = local.environment.event_bus_enabled ? 1 : 0
   source      = "./modules/lambda"
   lambda_name = "event-receiver"
   environment_variables = {
@@ -105,13 +106,15 @@ module "event_receiver" {
 }
 
 resource "aws_iam_role_policy" "lambda_event_receiver" {
+  count  = local.environment.event_bus_enabled ? 1 : 0
   name   = "${local.environment_name}-lambda-event-receiver"
-  role   = module.event_receiver.lambda_role.name
-  policy = data.aws_iam_policy_document.lambda_event_receiver.json
+  role   = module.event_receiver[0].lambda_role.name
+  policy = data.aws_iam_policy_document.lambda_event_receiver[0].json
 }
 
 
 data "aws_iam_policy_document" "lambda_event_receiver" {
+  count = local.environment.event_bus_enabled ? 1 : 0
   statement {
     sid    = "${local.environment_name}EventReceiverSQS"
     effect = "Allow"
@@ -134,20 +137,17 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
 }
 
 resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
+  count            = local.environment.event_bus_enabled ? 1 : 0
   event_source_arn = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
-  function_name    = module.event_receiver.lambda_name
+  function_name    = module.event_receiver[0].lambda_name
   enabled          = true
 }
 
 resource "aws_lambda_permission" "receive_events_permission" {
-  count         = length(local.receive_events_sqs_queue_arn) > 0 ? 1 : 0
+  count         = local.environment.event_bus_enabled ? 1 : 0
   statement_id  = "AllowExecutionFromSQS"
   action        = "lambda:InvokeFunction"
-  function_name = module.event_receiver.lambda_name
+  function_name = module.event_receiver[0].lambda_name
   principal     = "sqs.amazonaws.com"
   source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
-}
-
-locals {
-  receive_events_sqs_queue_arn = try(module.eu_west_1[0].receive_events_sqs_queue_arn, [])
 }
