@@ -56,12 +56,6 @@ data "aws_kms_alias" "sessions_actor" {
   provider = aws.region
 }
 
-data "aws_kms_alias" "event_receiver" {
-  name = "alias/${var.environment_name}-event-receiver-mrk"
-
-  provider = aws.region
-}
-
 data "aws_kms_alias" "secrets_manager" {
   name = "alias/secrets_manager_encryption-mrk"
 

@@ -5,7 +5,7 @@ module "event_bus" {
   current_region             = data.aws_region.current.name
   receive_account_ids        = var.receive_account_ids
   queue_visibility_timeout   = local.queue_visibility_timeout
-  event_reciever_kms_key_arn = data.aws_kms_alias.event_receiver.target_key_arn
+  event_reciever_kms_key_arn = var.event_reciever_kms_key_arn
   providers = {
     aws.region = aws.region
   }

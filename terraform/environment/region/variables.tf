@@ -112,6 +112,11 @@ variable "event_bus_enabled" {
   default     = false
 }
 
+variable "event_reciever_kms_key_arn" {
+  description = "The KMS key to use for the event bus"
+  type        = string
+}
+
 variable "feature_flags" {
   description = "The feature flags to use."
   type        = map(string)
