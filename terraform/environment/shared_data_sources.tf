@@ -24,10 +24,6 @@ data "aws_ecr_repository" "mock_onelogin" {
   name     = "mock-onelogin"
 }
 
-data "aws_kms_alias" "sqs" {
-  name = "alias/sqs-mrk"
-}
-
 module "allow_list" {
   source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v2.3.0"
 }
