@@ -151,7 +151,7 @@ module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
   key_description         = "KMS key for received events"
-  key_alias               = "${local.environment}-event-receiver-mrk"
+  key_alias               = "event-receiver-mrk"
   key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
   deletion_window_in_days = 7
 
