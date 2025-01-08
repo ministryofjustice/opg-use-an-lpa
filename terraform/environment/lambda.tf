@@ -140,9 +140,14 @@ resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
 }
 
 resource "aws_lambda_permission" "receive_events_permission" {
+  count         = length(local.receive_events_sqs_queue_arn) > 0 ? 1 : 0
   statement_id  = "AllowExecutionFromSQS"
   action        = "lambda:InvokeFunction"
   function_name = module.event_receiver.lambda_name
   principal     = "sqs.amazonaws.com"
   source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+}
+
+locals {
+  receive_events_sqs_queue_arn = try(module.eu_west_1[0].receive_events_sqs_queue_arn, [])
 }
