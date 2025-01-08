@@ -1,7 +1,7 @@
 resource "aws_sqs_queue" "receive_events_queue" {
   count = var.event_bus_enabled ? 1 : 0
   name  = "${var.environment_name}-receive-events-queue"
-  //  kms_master_key_id                 = data.aws_kms_alias.event_receiver_mrk.target_key_id
+  //  kms_master_key_id                 = var.event_reciever_kms_key_arn
   //  kms_data_key_reuse_period_seconds = 300
 
   visibility_timeout_seconds = var.queue_visibility_timeout
@@ -25,7 +25,7 @@ resource "aws_sqs_queue_policy" "receive_events_queue_policy" {
 resource "aws_sqs_queue" "receive_events_deadletter" {
   count = var.event_bus_enabled ? 1 : 0
   name  = "${var.environment_name}-receive-events-deadletter"
-  //  kms_master_key_id                 = data.aws_kms_alias.event_receiver_mrk.target_key_id
+  //  kms_master_key_id                 = var.event_reciever_kms_key_arn
   //  kms_data_key_reuse_period_seconds = 300
   provider = aws.region
 }

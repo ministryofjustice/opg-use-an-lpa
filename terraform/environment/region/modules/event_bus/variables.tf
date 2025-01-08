@@ -23,3 +23,8 @@ variable "queue_visibility_timeout" {
   description = "The visibility timeout for the SQS queue"
   type        = number
 }
+
+variable "event_reciever_kms_key_arn" {
+  description = "The KMS key to use for the event bus"
+  type        = string
+}

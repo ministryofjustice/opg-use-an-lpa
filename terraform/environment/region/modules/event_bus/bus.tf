@@ -1,7 +1,8 @@
 resource "aws_cloudwatch_event_bus" "main" {
-  count    = var.event_bus_enabled ? 1 : 0
-  name     = var.environment_name
-  provider = aws.region
+  count              = var.event_bus_enabled ? 1 : 0
+  name               = var.environment_name
+  kms_key_identifier = var.event_reciever_kms_key_arn
+  provider           = aws.region
 }
 
 resource "aws_cloudwatch_event_archive" "main" {
