@@ -146,3 +146,76 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
     }
   }
 }
+
+module "event_receiver_mrk" {
+  source = "./modules/multi_region_kms"
+
+  key_description         = "KMS key for received events"
+  key_alias               = "${local.environment}-event-receiver-mrk"
+  key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
+  deletion_window_in_days = 7
+
+  providers = {
+    aws.primary   = aws.eu_west_1
+    aws.secondary = aws.eu_west_2
+  }
+}
+
+data "aws_iam_policy_document" "event_receiver_kms" {
+  statement {
+    sid    = "Allow Encryption by Service"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
+    actions = [
+      "kms:Encrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "events.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "Allow Decryption by Service"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "sqs.amazonaws.com",
+        "events.amazonaws.com",
+        "lambda.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Enable Root account permissions on Key"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+}
