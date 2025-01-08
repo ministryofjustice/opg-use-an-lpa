@@ -148,20 +148,6 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
   }
 }
 
-module "event_receiver_mrk" {
-  source = "./modules/multi_region_kms"
-
-  key_description         = "KMS key for received events"
-  key_alias               = "event-receiver-mrk"
-  key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
-  deletion_window_in_days = 7
-
-  providers = {
-    aws.primary   = aws.eu_west_1
-    aws.secondary = aws.eu_west_2
-  }
-}
-  
 data "aws_iam_policy_document" "event_receiver_kms" {
   statement {
     sid    = "Allow Encryption by Service"
