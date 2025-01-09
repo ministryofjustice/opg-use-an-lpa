@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     actions = [
       "kms:Decrypt"
     ]
-    resources = [data.aws_kms_alias.sqs.arn]
+    resources = [data.aws_kms_alias.event_receiver.arn]
   }
 }
 
