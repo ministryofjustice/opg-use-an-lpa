@@ -77,6 +77,7 @@ services:
       AWS_SECURITY_TOKEN: testing
       AWS_SESSION_TOKEN: testing
       AWS_DEFAULT_REGION: eu-west-1
+      LOGGER_LEVEL: DEBUG
 
   # ---------------------------
   # Cache service
