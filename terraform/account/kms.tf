@@ -207,6 +207,10 @@ data "aws_iam_policy_document" "event_receiver_kms" {
     sid       = "Allow Lambda Decrypt"
     effect    = "Allow"
     resources = ["*"]
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+    ]
     principals {
       type = "AWS"
       identifiers = [
