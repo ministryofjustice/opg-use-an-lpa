@@ -200,9 +200,20 @@ data "aws_iam_policy_document" "event_receiver_kms" {
       identifiers = [
         "sqs.amazonaws.com",
         "events.amazonaws.com",
-        "lambda.amazonaws.com",
       ]
     }
+  }
+  statement {
+    sid       = "Allow Lambda Decrypt"
+    effect    = "Allow"
+    resources = ["*"]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/event-receiver-${local.environment}"
+      ]
+    }
+
   }
 
   statement {
