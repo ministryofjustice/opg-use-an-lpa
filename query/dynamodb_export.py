@@ -321,15 +321,9 @@ class DynamoDBExporterAndQuerier:
         sql_string = f"SELECT countofLpasForUser as noOfLpas, count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
         self.run_athena_query(
             sql_string,
-            outputFileName="CountOfLpasForUsersWithSomeLpas",
+            outputFileName="CountOfLpasForUsers",
         )
 
-    def get_count_of_users_with_no_lpas(self):
-        sql_string = f"SELECT item.id.s from actor_users where item.id.s not in (select item.userid.s from user_lpa_actor_map)"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountOfUsersWithNoLpas",
-        )
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
     parser.add_argument(
@@ -396,7 +390,6 @@ def main():
     work.get_count_of_expired_access_codes()
     work.get_organisations_field()
     work.get_count_of_lpas_for_users()
-    work.get_count_of_users_with_no_lpas()
 
 
 if __name__ == "__main__":
