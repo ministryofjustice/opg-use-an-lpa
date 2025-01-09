@@ -127,10 +127,11 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
   }
 
   statement {
-    sid    = "${local.environment_name}SQSKMSDecrypt"
+    sid    = "${local.environment_name}KMSDecrypt"
     effect = "Allow"
     actions = [
-      "kms:Decrypt"
+      "kms:Decrypt",
+      "kms:DescribeKey"
     ]
     resources = [data.aws_kms_alias.event_receiver.arn]
   }
