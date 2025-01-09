@@ -6,7 +6,7 @@ namespace App\Service\Lpa\ResolveActor;
 
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\LpaStore\LpaStoreDonor;
-use App\Entity\LpaStore\LpaStoreTrustCorporations;
+use App\Entity\LpaStore\LpaStoreTrustCorporation;
 
 /**
  * @psalm-require-implements HasActorInterface
@@ -19,7 +19,7 @@ trait LpaStoreHasActorTrait
     /** @psalm-var ?LpaStoreDonor  */
     public readonly ?object $donor;
 
-    /** @var LpaStoreTrustCorporations[] */
+    /** @var LpaStoreTrustCorporation[] */
     public readonly ?array $trustCorporations;
 
     public function hasActor(string $uid): ?LpaActor

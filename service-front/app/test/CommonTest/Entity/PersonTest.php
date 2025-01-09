@@ -29,12 +29,14 @@ class PersonTest extends TestCase
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
-        $expectedSalutation  = '';
-        $expectedMiddlename  = '';
-        $expectedSurname     = 'Sanderson';
-        $expectedDob         = new DateTimeImmutable('1948-11-01');
-        $expectedCompanyName = 'trust corporation';
-        $expectedUid         = '700000000799';
+        $expectedSalutation   = '';
+        $expectedFirstname    = 'Rachel';
+        $expectedMiddlename   = '';
+        $expectedSurname      = 'Sanderson';
+        $expectedDob          = new DateTimeImmutable('1948-11-01');
+        $expectedCompanyName  = 'trust corporation';
+        $expectedUid          = '700000000799';
+        $expectedSystemStatus = true;
 
         $this->assertEquals($expectedSalutation, $combinedLpa->getDonor()->getSalutation());
         $this->assertEquals($expectedMiddlename, $combinedLpa->getDonor()->getMiddlenames());
@@ -43,6 +45,8 @@ class PersonTest extends TestCase
         $this->assertEquals($expectedCompanyName, $combinedLpa->trustCorporations[0]->getCompanyName());
         $this->assertEquals($expectedUid, $combinedLpa->getDonor()->getUId());
         $this->assertEquals($expectedUid, $combinedLpa->getDonor()->getId());
+        $this->assertEquals($expectedFirstname, $combinedLpa->getDonor()->getFirstname());
+        $this->assertEquals($expectedSystemStatus, $combinedLpa->getDonor()->getSystemStatus());
     }
 
     #[Test]

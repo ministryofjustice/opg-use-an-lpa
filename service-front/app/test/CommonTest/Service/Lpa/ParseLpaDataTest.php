@@ -138,10 +138,16 @@ class ParseLpaDataTest extends TestCase
     {
         $combinedFormat = json_decode(file_get_contents(__DIR__ . '../../../../fixtures/combined_lpa.json'), true);
 
+        $this->lpaData['actor']['details'] = $combinedFormat['donor'];
+
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
         $this->lpaDataFormatter->__invoke($combinedFormat)->willReturn($this->expectedLpa());
+        $this->personDataFormatter
+            ->__invoke($combinedFormat['donor'])
+            ->shouldBeCalled()
+            ->willReturn($this->getExpectedDonor());
 
         $sut = new ParseLpaData(
             $this->lpaFactory->reveal(),
@@ -242,6 +248,27 @@ class ParseLpaDataTest extends TestCase
             attorneys:         $attorneys,
             donor:             $donor,
             trustCorporations: $trustCorporations,
+        );
+    }
+
+    public function getExpectedDonor(): Person
+    {
+        return new Person(
+            addressLine1 : '81 Front Street',
+            addressLine2 : 'LACEBY',
+            addressLine3 : '',
+            country      : '',
+            county       : '',
+            dob          : new DateTimeImmutable('1948-11-01'),
+            email        : 'RachelSanderson@opgtest.com',
+            firstnames   : null,
+            name         : null,
+            otherNames   : null,
+            postcode     : 'DN37 5SH',
+            surname      : 'Sanderson',
+            systemStatus : null,
+            town         : '',
+            uId          : '700000000799'
         );
     }
 }
