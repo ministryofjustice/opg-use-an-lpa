@@ -121,7 +121,7 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     actions = [
       "sqs:ReceiveMessage",
       "sqs:DeleteMessage",
-      "sqs:GetQueueAttributes"
+      "sqs:GetQueueAttributes",
     ]
     resources = [module.eu_west_1[0].receive_events_sqs_queue_arn[0]]
   }
@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
       "kms:Decrypt",
       "kms:DescribeKey"
     ]
-    resources = [data.aws_kms_alias.event_receiver.arn]
+    resources = ["*"]
   }
 }
 
