@@ -11,7 +11,6 @@ resource "aws_cloudwatch_event_archive" "main" {
   provider         = aws.region
 }
 
-
 resource "aws_cloudwatch_event_rule" "receive_events_from_mlpa" {
   count          = var.event_bus_enabled ? 1 : 0
   name           = "${var.environment_name}-mlpa-events-to-use"
