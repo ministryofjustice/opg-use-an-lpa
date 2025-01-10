@@ -28,7 +28,7 @@ module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
   key_description         = "KMS key for received events"
-  key_alias               = "${local.environment}-event-receiver-mrk"
+  key_alias               = "event-receiver-mrk"
   key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
   deletion_window_in_days = 7
 
@@ -183,6 +183,19 @@ data "aws_iam_policy_document" "event_receiver_kms" {
       identifiers = [
         "sqs.amazonaws.com",
         "events.amazonaws.com"
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Enable Root account permissions on Key"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
       ]
     }
   }
