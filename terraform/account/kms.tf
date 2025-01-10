@@ -150,11 +150,9 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
 
 data "aws_iam_policy_document" "event_receiver_kms" {
   statement {
-    sid    = "Allow Encryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Encryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Encrypt",
       "kms:ReEncrypt*",
@@ -171,23 +169,20 @@ data "aws_iam_policy_document" "event_receiver_kms" {
   }
 
   statement {
-    sid    = "Allow Decryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Decryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Decrypt",
       "kms:GenerateDataKey*",
-      "kms:DescribeKey",
+      "kms:DescribeKey"
     ]
 
     principals {
       type = "Service"
       identifiers = [
         "sqs.amazonaws.com",
-        "events.amazonaws.com",
-        "lambda.amazonaws.com",
+        "events.amazonaws.com"
       ]
     }
   }
