@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
       "kms:Decrypt",
       "kms:DescribeKey"
     ]
-    resources = ["*"]
+    resources = [data.aws_kms_alias.event_receiver.target_key_arn]
   }
 }
 
