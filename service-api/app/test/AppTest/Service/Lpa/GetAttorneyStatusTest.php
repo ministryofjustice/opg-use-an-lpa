@@ -232,4 +232,30 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
+
+    #[Test]
+    public function returns_3_if_attorney_is_replacement_combined_format_lpastore(): void
+    {
+        $attorney = new LpaStoreAttorney(
+            line1: '81 NighOnTimeWeBuiltIt Street',
+            line2: null,
+            line3: null,
+            country:      'GB',
+            county:       null,
+            dateOfBirth:          new DateTimeImmutable('1982-07-24'),
+            email:        null,
+            firstNames:   'A',
+            postcode:     null,
+            lastName:      'B',
+            status: ActorStatus::REPLACEMENT,
+            town:         'Mahhhhhhhhhh',
+            uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+        );
+
+        $status = new GetAttorneyStatus(
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->assertEquals(AttorneyStatus::REPLACEMENT_ATTORNEY, ($status)($attorney));
+    }
 }

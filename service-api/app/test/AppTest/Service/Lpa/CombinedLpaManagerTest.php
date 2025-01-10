@@ -324,6 +324,7 @@ class CombinedLpaManagerTest extends TestCase
         // the replacement attorneys in the object manually.
         $filteredLpa = $this->loadTestLpaStoreLpaFixture();
         $filteredLpa = $lpaResponse->getData()->withAttorneys($filteredLpa->attorneys);
+        $filteredLpa = $lpaResponse->getData()->withTrustCorporations($filteredLpa->trustCorporations);
 
         $this->dataStoreLpasProphecy->get($testUid)->willReturn($lpaResponse);
         $this->siriusLpasProphecy->get(Argument::any())->shouldNotBeCalled();
