@@ -186,18 +186,4 @@ data "aws_iam_policy_document" "event_receiver_kms" {
       ]
     }
   }
-
-  statement {
-    sid       = "Enable Root account permissions on Key"
-    effect    = "Allow"
-    actions   = ["kms:*"]
-    resources = ["*"]
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-      ]
-    }
-  }
 }
