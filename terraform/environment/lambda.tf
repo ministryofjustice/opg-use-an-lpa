@@ -14,6 +14,7 @@ module "lambda_update_statistics" {
   memory      = 1024
 }
 
+
 # Additional IAM permissions
 resource "aws_iam_role_policy" "lambda_update_statistics" {
   name   = "lambda-update-statistics-${local.environment_name}"
@@ -89,6 +90,7 @@ resource "aws_lambda_permission" "cloudwatch_to_update_statistics_lambda" {
 }
 
 module "event_receiver" {
+  count       = local.environment.event_bus_enabled ? 1 : 0
   source      = "./modules/lambda"
   lambda_name = "event-receiver"
   environment_variables = {
@@ -96,9 +98,57 @@ module "event_receiver" {
     REGION      = data.aws_region.current.name
   }
   image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
-  ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
+  ecr_arn     = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   timeout     = 900
   memory      = 128
+}
+
+resource "aws_iam_role_policy" "lambda_event_receiver" {
+  count  = local.environment.event_bus_enabled ? 1 : 0
+  name   = "${local.environment_name}-lambda-event-receiver"
+  role   = module.event_receiver[0].lambda_role.name
+  policy = data.aws_iam_policy_document.lambda_event_receiver[0].json
+}
+
+
+data "aws_iam_policy_document" "lambda_event_receiver" {
+  count = local.environment.event_bus_enabled ? 1 : 0
+  statement {
+    sid    = "${local.environment_name}EventReceiverSQS"
+    effect = "Allow"
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:DeleteMessage",
+      "sqs:GetQueueAttributes",
+    ]
+    resources = [module.eu_west_1[0].receive_events_sqs_queue_arn[0]]
+  }
+
+  statement {
+    sid    = "${local.environment_name}KMSDecrypt"
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey"
+    ]
+    resources = [data.aws_kms_alias.event_receiver.target_key_arn]
+  }
+}
+
+resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
+  count            = local.environment.event_bus_enabled ? 1 : 0
+  event_source_arn = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+  function_name    = module.event_receiver[0].lambda_name
+  enabled          = true
+}
+
+resource "aws_lambda_permission" "receive_events_permission" {
+  count         = local.environment.event_bus_enabled ? 1 : 0
+  statement_id  = "AllowExecutionFromSQS"
+  action        = "lambda:InvokeFunction"
+  function_name = module.event_receiver[0].lambda_name
+  principal     = "sqs.amazonaws.com"
+  source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
 }
