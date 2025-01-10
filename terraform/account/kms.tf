@@ -24,11 +24,12 @@ module "sessions_actor_mrk" {
   }
 }
 
-module "sqs_mrk" {
+module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
-  key_description         = "KMS key for sqs"
-  key_alias               = "sqs-mrk"
+  key_description         = "KMS key for received events"
+  key_alias               = "${local.environment}-event-receiver-mrk"
+  key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
   deletion_window_in_days = 7
 
   providers = {
@@ -147,27 +148,11 @@ data "aws_iam_policy_document" "cloudwatch_kms" {
   }
 }
 
-module "event_receiver_mrk" {
-  source = "./modules/multi_region_kms"
-
-  key_description         = "KMS key for received events"
-  key_alias               = "event-receiver-mrk"
-  key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
-  deletion_window_in_days = 7
-
-  providers = {
-    aws.primary   = aws.eu_west_1
-    aws.secondary = aws.eu_west_2
-  }
-}
-
 data "aws_iam_policy_document" "event_receiver_kms" {
   statement {
-    sid    = "Allow Encryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Encryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Encrypt",
       "kms:ReEncrypt*",
@@ -184,48 +169,20 @@ data "aws_iam_policy_document" "event_receiver_kms" {
   }
 
   statement {
-    sid    = "Allow Decryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Decryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Decrypt",
       "kms:GenerateDataKey*",
-      "kms:DescribeKey",
+      "kms:DescribeKey"
     ]
 
     principals {
       type = "Service"
       identifiers = [
         "sqs.amazonaws.com",
-        "events.amazonaws.com",
-      ]
-    }
-  }
-  statement {
-    sid       = "Allow Lambda Decrypt"
-    effect    = "Allow"
-    resources = ["*"]
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/event-receiver-${local.environment}"
-      ]
-    }
-
-  }
-
-  statement {
-    sid       = "Enable Root account permissions on Key"
-    effect    = "Allow"
-    actions   = ["kms:*"]
-    resources = ["*"]
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "events.amazonaws.com"
       ]
     }
   }
