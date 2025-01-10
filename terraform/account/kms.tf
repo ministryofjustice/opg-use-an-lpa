@@ -151,7 +151,7 @@ module "event_receiver_mrk" {
   source = "./modules/multi_region_kms"
 
   key_description         = "KMS key for received events"
-  key_alias               = "${local.environment}-event-receiver-mrk"
+  key_alias               = "event-receiver-mrk"
   key_policy              = data.aws_iam_policy_document.event_receiver_kms.json
   deletion_window_in_days = 7
 
@@ -163,11 +163,9 @@ module "event_receiver_mrk" {
 
 data "aws_iam_policy_document" "event_receiver_kms" {
   statement {
-    sid    = "Allow Encryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Encryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Encrypt",
       "kms:ReEncrypt*",
@@ -184,23 +182,20 @@ data "aws_iam_policy_document" "event_receiver_kms" {
   }
 
   statement {
-    sid    = "Allow Decryption by Service"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+    sid       = "Allow Decryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
     actions = [
       "kms:Decrypt",
       "kms:GenerateDataKey*",
-      "kms:DescribeKey",
+      "kms:DescribeKey"
     ]
 
     principals {
       type = "Service"
       identifiers = [
         "sqs.amazonaws.com",
-        "events.amazonaws.com",
-        "lambda.amazonaws.com",
+        "events.amazonaws.com"
       ]
     }
   }
