@@ -20,6 +20,7 @@ use App\Service\Lpa\GetTrustCorporationStatus;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
 use DateTimeImmutable;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -148,6 +149,7 @@ class FilterActiveActorsTest extends TestCase
         );
     }
 
+    #[Test]
     public function test_filter_active_actors(): void
     {
         $this->getAttorneyStatus
