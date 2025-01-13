@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Entity;
 
-use App\Entity\Casters\castToWhenTheLpaCanBeUsed;
+use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,7 +18,7 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
     public function setUp(): void
     {
         $this->mockHydrator              = $this->createMock(ObjectMapper::class);
-        $this->castToWhenTheLpaCanBeUsed = new castToWhenTheLpaCanBeUsed();
+        $this->castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
     }
 
     #[DataProvider('whenTheLpaCanBeUsedProvider')]
@@ -45,6 +45,10 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
                 '',
                 '',
             ],
+            [
+                'invalid value',
+                '',
+            ]
         ];
     }
 }
