@@ -55,7 +55,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
         id: semver_tag
         with:
           with_v: true
