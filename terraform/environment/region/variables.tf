@@ -112,6 +112,11 @@ variable "event_bus_enabled" {
   default     = false
 }
 
+variable "event_reciever_kms_key_arn" {
+  description = "The KMS key to use for the event bus"
+  type        = string
+}
+
 variable "feature_flags" {
   description = "The feature flags to use."
   type        = map(string)
@@ -181,6 +186,11 @@ variable "load_balancer_deletion_protection_enabled" {
   description = "Whether or not deletion protection should be enabled for the load balancers."
   type        = bool
   default     = false
+}
+
+variable "receive_account_ids" {
+  description = "The account ID of the MLPA account."
+  type        = list(string)
 }
 
 variable "mock_onelogin_enabled" {

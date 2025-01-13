@@ -317,6 +317,12 @@ class DynamoDBExporterAndQuerier:
             outputFileName="OrganisationsField",
         )
 
+    def get_count_of_lpas_for_users(self):
+        sql_string = f"SELECT countofLpasForUser as noOfLpas, count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="CountOfLpasForUsers",
+        )
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -383,6 +389,7 @@ def main():
     work.get_count_of_created_access_codes()
     work.get_count_of_expired_access_codes()
     work.get_organisations_field()
+    work.get_count_of_lpas_for_users()
 
 
 if __name__ == "__main__":
