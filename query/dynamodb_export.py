@@ -325,7 +325,7 @@ class DynamoDBExporterAndQuerier:
         )
 
     def get_count_of_users_with_no_lpas(self):
-        sql_string = f"SELECT COUNT(item.id.s) from actor_users where item.id.s not in (select item.userid.s from user_lpa_actor_map)"
+        sql_string = f"SELECT COUNT(item.id.s) from actor_users where item.id.s not in (select item.userid.s from user_lpa_actor_map where item.userid is not null)"
         self.run_athena_query(
             sql_string,
             outputFileName="CountOfUsersWithNoLpas",
