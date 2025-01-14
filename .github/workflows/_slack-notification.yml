@@ -40,7 +40,7 @@ jobs:
         run: pip install -r scripts/pipeline/requirements.txt
 
       - name: download cluster_config
-        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: /tmp
