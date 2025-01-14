@@ -39,7 +39,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@515a6b35d1d0948f7da6d5cdb347ed1600859795
+        uses: tj-actions/changed-files@467e54813892b0cf302b0bba54d233c861b97f1a
         with:
           files: |
             **/*.md
@@ -55,7 +55,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
         id: semver_tag
         with:
           with_v: true
