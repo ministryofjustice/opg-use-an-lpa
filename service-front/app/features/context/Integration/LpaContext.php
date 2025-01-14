@@ -968,7 +968,7 @@ class LpaContext extends BaseIntegrationContext
 
         Assert::assertInstanceOf(AddLpaApiResult::class, $lpaData);
         Assert::assertEquals(AddLpaApiResult::ADD_LPA_FOUND, $lpaData->getResponse());
-        Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa['uId']);
+        Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa->uId);
     }
 
     /**
@@ -976,7 +976,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function iRequestToViewACombinedLPAWhichStatusIs($status)
     {
-        $this->lpa['status'] = $status;
+        $this->lpa->status = $status;
 
         if ($status === 'Revoked') {
             // API call for getting the LPA by id
@@ -1016,7 +1016,7 @@ class LpaContext extends BaseIntegrationContext
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
                         [
-                            'uId'        => (int) $this->lpa['uId'],
+                            'uId'        => (int) $this->lpa->uId,
                             'status'     => 'COLLECTION_COMPLETE',
                             'signedUrls' => [],
                         ]
