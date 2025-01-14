@@ -127,7 +127,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
-        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
