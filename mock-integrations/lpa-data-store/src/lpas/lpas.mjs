@@ -5,7 +5,7 @@ const lpaData = [
 ]
 
 const getLpa = uid => {
-  const lpas = self.getList([uid])
+  const lpas = getList([uid])
 
   return lpas.lpas.pop()
 }
