@@ -6,7 +6,6 @@ namespace BehatTest\Context\Integration;
 
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
-use BehatTest\Context\UI\BaseUiContext;
 use Common\Exception\ApiException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaFactory;
@@ -16,11 +15,9 @@ use Common\Service\Notify\NotifyService;
 use Common\Service\User\UserService;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\Psr7\Response;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * A behat context that encapsulates user account steps
