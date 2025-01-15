@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
-use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -40,7 +42,6 @@ class AccountContext implements Context
     private const USER_SERVICE_COMPLETE_CHANGE_EMAIL   = 'UserService::completeChangeEmail';
     private const USER_SERVICE_AUTHENTICATE            = 'UserService::authenticate';
     private const LPA_SERVICE_GET_LPAS                 = 'LpaService::getLpas';
-    private const USER_SERVICE_CHANGE_PASSWORD         = 'UserService::changePassword';
     private const USER_SERVICE_REQUEST_PASSWORD_RESET  = 'UserService::requestPasswordReset';
     private const USER_SERVICE_CAN_PASSWORD_RESET      = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
@@ -51,18 +52,14 @@ class AccountContext implements Context
     private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES  = 'SystemMessageService::getMessages';
 
-    /**
-     * @Given /^another user logs in$/
-     */
+    #[Given('/^another user logs in$/')]
     public function anotherUserLogsIn(): void
     {
         $this->userEmail = 'anotheruser@test.com';
         $this->iAmCurrentlySignedIn();
     }
 
-    /**
-     * @Given /^I access the login form$/
-     */
+    #[Given('/^I access the login form$/')]
     public function iAccessTheLoginForm(): void
     {
         $this->ui->visit('/login');
@@ -70,25 +67,19 @@ class AccountContext implements Context
         $this->ui->assertElementContainsText('button[name=sign-in]', 'Sign in');
     }
 
-    /**
-     * @When /^I access the login page$/
-     */
+    #[When('/^I access the login page$/')]
     public function iAccessTheLoginPage(): void
     {
         $this->ui->visit('/login');
     }
 
-    /**
-     * @When /^I access the use a lasting power of attorney web page$/
-     */
+    #[When('/^I access the use a lasting power of attorney web page$/')]
     public function iAccessTheUseALastingPowerOfAttorneyWebPage(): void
     {
         $this->iAmOnTheTriagePage();
     }
 
-    /**
-     * @Given /^I am a user of the lpa application$/
-     */
+    #[Given('/^I am a user of the lpa application$/')]
     public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userEmail    = 'test@test.com';
@@ -97,20 +88,16 @@ class AccountContext implements Context
         $this->userId       = '123';
     }
 
-    /**
-     * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
-     */
+    #[Then('/^I am asked to confirm whether I am sure if I want to delete my account$/')]
     public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
         $this->ui->assertPageContainsText('What happens if you delete your account');
     }
 
-    /**
-     * @Given /^I am currently signed in$/
-     * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
-     * @When /^I sign in$/
-     */
+    #[Given('/^I am currently signed in$/')]
+    #[Given('/^I chose to ignore setting cookies and I am on the dashboard page$/')]
+    #[When('/^I sign in$/')]
     public function iAmCurrentlySignedIn(): void
     {
         $this->iHaveLoggedInToOneLogin('English');
@@ -118,10 +105,8 @@ class AccountContext implements Context
         $this->iAmSignedIn();
     }
 
-    /**
-     * @Then /^I am directed to logout of one login$/
-     */
-    public function iAmDirectedToLogoutOfOneLogin()
+    #[Then('/^I am directed to logout of one login$/')]
+    public function iAmDirectedToLogoutOfOneLogin(): void
     {
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
         assert::assertTrue(isset($locationHeader));
@@ -133,61 +118,47 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @Then /^I am informed that there was a problem with that email address$/
-     */
+    #[Then('/^I am informed that there was a problem with that email address$/')]
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress(): void
     {
         $this->ui->assertPageAddress('/create-account-success');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
+        $this->ui->assertPageContainsText("We've emailed a link to " . $this->userEmail);
     }
 
-    /**
-     * @Given /^I am logged out of the service and taken to the deleted account confirmation page$/
-     */
+    #[Given('/^I am logged out of the service and taken to the deleted account confirmation page$/')]
     public function iAmLoggedOutOfTheServiceAndTakenToTheDeletedAccountConfirmationPage(): void
     {
         $this->ui->assertPageAddress('/delete-account');
         $this->ui->assertPageContainsText("We've deleted your account");
     }
 
-    /**
-     * @Given /^I am not a user of the lpa application$/
-     */
+    #[Given('/^I am not a user of the lpa application$/')]
     public function iAmNotAUserOfTheLpaApplication(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I am not signed in to the use a lasting power of attorney service at this point$/
-     */
+    #[When('/^I am not signed in to the use a lasting power of attorney service at this point$/')]
     public function iAmNotSignedInToTheUseALastingPowerOfAttorneyServiceAtThisPoint(): void
     {
         $this->ui->assertPageAddress('/login');
     }
 
-    /**
-     * @Given /^I am on the actor privacy notice page$/
-     */
+    #[Given('/^I am on the actor privacy notice page$/')]
     public function iAmOnTheActorPrivacyNoticePage(): void
     {
         $this->ui->visit('/privacy-notice');
         $this->ui->assertPageAddress('/privacy-notice');
     }
 
-    /**
-     * @Given /^I am on the actor terms of use page$/
-     */
+    #[Given('/^I am on the actor terms of use page$/')]
     public function iAmOnTheActorTermsOfUsePage(): void
     {
         $this->ui->visit('/terms-of-use');
         $this->ui->assertPageAddress('/terms-of-use');
     }
 
-    /**
-     * @Given /^I am on the change email page$/
-     */
+    #[Given('/^I am on the change email page$/')]
     public function iAmOnTheChangeEmailPage(): void
     {
         $this->newUserEmail        = 'newEmail@test.com';
@@ -209,26 +180,20 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/change-email');
     }
 
-    /**
-     * @Given /^I am on the confirm account deletion page$/
-     */
+    #[Given('/^I am on the confirm account deletion page$/')]
     public function iAmOnTheConfirmAccountDeletionPage(): void
     {
         $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
     }
 
-    /**
-     * @Given /^I am on the stats page$/
-     */
+    #[Given('/^I am on the stats page$/')]
     public function iAmOnTheStatsPage(): void
     {
         $this->ui->visit('/stats');
     }
 
-    /**
-     * @Given /^I am on the triage page$/
-     */
+    #[Given('/^I am on the triage page$/')]
     public function iAmOnTheTriagePage(): void
     {
         $this->apiFixtures->append(
@@ -242,41 +207,31 @@ class AccountContext implements Context
         $this->ui->visit('/home');
     }
 
-    /**
-     * @Given /^I am on the settings page$/
-     */
+    #[Given('/^I am on the settings page$/')]
     public function iAmOnTheSettingsPage(): void
     {
         $this->ui->clickLink('Settings');
     }
 
-    /**
-     * @Then /^I am redirected to the one login page$/
-     */
+    #[Then('/^I am redirected to the one login page$/')]
     public function iAmRedirectedToTheOneLoginPage(): void
     {
         $this->ui->assertPageAddress('/home');
     }
 
-    /**
-     * @When /^I visit the homepage$/
-     */
+    #[When('/^I visit the homepage$/')]
     public function iVisitTheHomepage(): void
     {
         $this->ui->visit('/home');
     }
 
-    /**
-     * @Then /^I am redirected to the LPA dashboard page$/
-     */
+    #[Then('/^I am redirected to the LPA dashboard page$/')]
     public function iAmRedirectedToTheDashboardPage(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
-    /**
-     * @Given /^I am signed in$/
-     */
+    #[Given('/^I am signed in$/')]
     public function iAmSignedIn(): void
     {
         $link = $this->ui->getSession()->getPage()->find('css', 'a[href="/logout"]');
@@ -285,34 +240,26 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^I am taken back to the dashboard page$/
-     */
+    #[Then('/^I am taken back to the dashboard page$/')]
     public function iAmTakenBackToTheDashboardPage(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
-    /**
-     * @Then /^I am taken back to the terms of use page$/
-     */
+    #[Then('/^I am taken back to the terms of use page$/')]
     public function iAmTakenBackToTheTermsOfUsePage(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
     }
 
-    /**
-     * @Then /^I am taken back to the settings page$/
-     */
+    #[Then('/^I am taken back to the settings page$/')]
     public function iAmTakenBackToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/settings');
         $this->ui->assertPageContainsText('Settings');
     }
 
-    /**
-     * @Then /^I am taken to complete a satisfaction survey$/
-     */
+    #[Then('/^I am taken to complete a satisfaction survey$/')]
     public function iAmTakenToCompleteASatisfactionSurvey(): void
     {
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
@@ -325,53 +272,41 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @Then /^I am taken to the actor cookies page$/
-     */
+    #[Then('/^I am taken to the actor cookies page$/')]
     public function iAmTakenToTheActorCookiesPage(): void
     {
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText('Use a lasting power of attorney service');
     }
 
-    /**
-     * @Then /^I am taken to the create account page$/
-     */
+    #[Then('/^I am taken to the create account page$/')]
     public function iAmTakenToTheCreateAccountPage(): void
     {
         $this->ui->assertPageAddress('/create-account');
         $this->ui->assertPageContainsText('Create an account');
     }
 
-    /**
-     * @Then /^I am taken to the dashboard page$/
-     */
+    #[Then('/^I am taken to the dashboard page$/')]
     public function iAmTakenToTheDashboardPage(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
-    /**
-     * @Then /^I am taken to the session expired page$/
-     */
+    #[Then('/^I am taken to the session expired page$/')]
     public function iAmTakenToTheSessionExpiredPage(): void
     {
         $this->ui->assertPageAddress('/session-expired');
-        $this->ui->assertPageContainsText('We\'ve signed you out');
+        $this->ui->assertPageContainsText("We've signed you out");
     }
 
-    /**
-     * @Then /^I am told my credentials are incorrect$/
-     */
+    #[Then('/^I am told my credentials are incorrect$/')]
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
         $this->ui->assertPageContainsText('Check your details and try again. We could not find a Use a lasting ' .
                                           'power of attorney account with that email address and password.');
     }
 
-    /**
-     * @Then /^I am told that my instructions have expired$/
-     */
+    #[Then('/^I am told that my instructions have expired$/')]
     public function iAmToldThatMyInstructionsHaveExpired(): void
     {
         $this->ui->assertPageAddress('/reset-password/123456');
@@ -379,9 +314,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('invalid or has expired');
     }
 
-    /**
-     * @Then /^I am told that my password is invalid because it needs at least (.*)$/
-     */
+    #[Then('/^I am told that my password is invalid because it needs at least (.*)$/')]
     public function iAmToldThatMyPasswordIsInvalidBecauseItNeedsAtLeast($reason): void
     {
         $this->ui->assertPageAddress('/reset-password/123456');
@@ -389,17 +322,13 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText($reason);
     }
 
-    /**
-     * @Given /^I am unable to continue to reset my password$/
-     */
+    #[Given('/^I am unable to continue to reset my password$/')]
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I ask for my password to be reset on an account that doesn't exist$/
-     */
+    #[When('/^I ask for my password to be reset on an account that doesn\'t exist$/')]
     public function iAskForMyPasswordToBeResetWithAccountThatDoesntExist(
         $email = 'test@example.com',
         $email_confirmation = 'test@example.com',
@@ -423,10 +352,8 @@ class AccountContext implements Context
         $this->ui->pressButton('Email me the link');
     }
 
-    /**
-     * @When /^I ask for my password to be reset$/
-     * @When /^I ask for my password to be reset with below correct (.*) and (.*) details$/
-     */
+    #[When('/^I ask for my password to be reset$/')]
+    #[When('/^I ask for my password to be reset with below correct (.*) and (.*) details$/')]
     public function iAskForMyPasswordToBeReset(
         $email = 'test@example.com',
         $email_confirmation = 'test@example.com',
@@ -455,9 +382,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Email me the link');
     }
 
-    /**
-     * @When /^I ask for my password to be reset with below incorrect (.*) and (.*) details$/
-     */
+    #[When('/^I ask for my password to be reset with below incorrect (.*) and (.*) details$/')]
     public function iAskForMyPasswordToBeResetWithBelowInCorrectEmailAndConfirmationEmailDetails(
         $email,
         $email_confirmation,
@@ -477,9 +402,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Email me the link');
     }
 
-    /**
-     * @Given /^I ask to change my password$/
-     */
+    #[Given('/^I ask to change my password$/')]
     public function iAskToChangeMyPassword(): void
     {
         $session = $this->ui->getSession();
@@ -502,9 +425,7 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^I can change my email if required$/
-     */
+    #[Then('/^I can change my email if required$/')]
     public function iCanChangeMyEmailIfRequired(): void
     {
         $this->ui->assertPageAddress('/settings');
@@ -522,9 +443,7 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^I can change my passcode if required$/
-     */
+    #[Then('/^I can change my passcode if required$/')]
     public function iCanChangeMyPasscodeIfRequired(): void
     {
         $this->ui->assertPageAddress('/settings');
@@ -541,26 +460,20 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^I can see the accessibility statement for the Use service$/
-     */
+    #[Then('/^I can see the accessibility statement for the Use service$/')]
     public function iCanSeeTheAccessibilityStatementForTheUseService(): void
     {
         $this->ui->assertPageContainsText('Accessibility statement for Use a lasting power of attorney');
     }
 
-    /**
-     * @Then /^I can see the actor privacy notice$/
-     */
+    #[Then('/^I can see the actor privacy notice$/')]
     public function iCanSeeTheActorPrivacyNotice(): void
     {
         $this->ui->assertPageAddress('/privacy-notice');
         $this->ui->assertPageContainsText('Privacy notice');
     }
 
-    /**
-     * @Then /^I can see the actor terms of use$/
-     */
+    #[Then('/^I can see the actor terms of use$/')]
     public function iCanSeeTheActorTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
@@ -568,18 +481,14 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
     }
 
-    /**
-     * @Then /^I can see user accounts table$/
-     */
+    #[Then('/^I can see user accounts table$/')]
     public function iCanSeeUserAccountsTable(): void
     {
         $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of user accounts created and deleted');
     }
 
-    /**
-     * @Given /^I choose a new invalid password of "(.*)"$/
-     */
+    #[Given('/^I choose a new invalid password of "(.*)"$/')]
     public function iChooseANewInvalid($password): void
     {
         $this->ui->assertPageAddress('/reset-password/123456');
@@ -597,9 +506,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Change password');
     }
 
-    /**
-     * @Given /^I choose a new password$/
-     */
+    #[Given('/^I choose a new password$/')]
     public function iChooseANewPassword(): void
     {
         $this->ui->assertPageAddress('/reset-password/123456');
@@ -633,25 +540,19 @@ class AccountContext implements Context
         Assert::assertArrayHasKey('password', $params);
     }
 
-    /**
-     * @When /^I click the (.*) link on the page$/
-     */
+    #[When('/^I click the (.*) link on the page$/')]
     public function iClickTheBackLinkOnThePage($backLink): void
     {
         $this->ui->clickLink($backLink);
     }
 
-    /**
-     * @When /^I click the I already have an account link$/
-     */
+    #[When('/^I click the I already have an account link$/')]
     public function iClickTheIAlreadyHaveAnAccountLink(): void
     {
         $this->ui->clickLink('I already have an account');
     }
 
-    /**
-     * @When /^I click the link to verify my new email address$/
-     */
+    #[When('/^I click the link to verify my new email address$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddress(): void
     {
         // API fixture for email reset token check
@@ -679,10 +580,8 @@ class AccountContext implements Context
         $this->ui->visit('/verify-new-email/' . $this->userEmailResetToken);
     }
 
-    /**
-     * @When /^I click the link to verify my new email address after my token has expired$/
-     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
-     */
+    #[When('/^I click the link to verify my new email address after my token has expired$/')]
+    #[When('/^I click an old link to verify my new email address containing a token that no longer exists$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired(): void
     {
         $this->userEmailResetToken = 'exp1r3dT0k3n';
@@ -698,9 +597,7 @@ class AccountContext implements Context
         $this->ui->visit('/verify-new-email/' . $this->userEmailResetToken);
     }
 
-    /**
-     * @Given /^I confirm that I want to delete my account$/
-     */
+    #[Given('/^I confirm that I want to delete my account$/')]
     public function iConfirmThatIWantToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
@@ -723,9 +620,7 @@ class AccountContext implements Context
         $this->ui->clickLink('Delete my account');
     }
 
-    /**
-     * @When /^I create an account$/
-     */
+    #[When('/^I create an account$/')]
     public function iCreateAnAccount(): void
     {
         $this->userEmail       = 'test@example.com';
@@ -770,9 +665,7 @@ class AccountContext implements Context
         $button->press();
     }
 
-    /**
-     * @When /^I create an account using duplicate details$/
-     */
+    #[When('/^I create an account using duplicate details$/')]
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $this->userEmail       = 'test@example.com';
@@ -804,9 +697,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Create account');
     }
 
-    /**
-     * @When /^I create an account using with an email address that has been requested for reset$/
-     */
+    #[When('/^I create an account using with an email address that has been requested for reset$/')]
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset(): void
     {
         $this->userEmail    = 'test@test.com';
@@ -838,9 +729,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Create account');
     }
 
-    /**
-     * @When /^I create an account with a password of (.*)$/
-     */
+    #[When('/^I create an account with a password of (.*)$/')]
     public function iCreateAnAccountWithAPasswordOf($password): void
     {
         $this->ui->assertPageAddress('/create-account');
@@ -857,9 +746,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Create account');
     }
 
-    /**
-     * @When /^I enter correct credentials$/
-     */
+    #[When('/^I enter correct credentials$/')]
     public function iEnterCorrectCredentials(): void
     {
         $this->ui->fillField('email', $this->userEmail);
@@ -912,9 +799,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Sign in');
     }
 
-    /**
-     * @When I enter incorrect login email
-     */
+    #[When('I enter incorrect login email')]
     public function iEnterIncorrectLoginEmail(): void
     {
         $this->ui->fillField('email', $this->userEmail);
@@ -928,9 +813,7 @@ class AccountContext implements Context
         $this->ui->pressButton('Sign in');
     }
 
-    /**
-     * @When /^I follow my unique expired instructions on how to reset my password$/
-     */
+    #[When('/^I follow my unique expired instructions on how to reset my password$/')]
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword(): void
     {
         // remove successful reset token and add failure state
@@ -941,9 +824,7 @@ class AccountContext implements Context
         $this->ui->visit('/reset-password/123456');
     }
 
-    /**
-     * @When /^I follow my unique instructions on how to reset my password$/
-     */
+    #[When('/^I follow my unique instructions on how to reset my password$/')]
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword(): void
     {
         // API fixture for reset token check
@@ -964,9 +845,7 @@ class AccountContext implements Context
         $this->ui->assertPageContainsText('Change your password');
     }
 
-    /**
-     * @When /^I follow the instructions on how to activate my account$/
-     */
+    #[When('/^I follow the instructions on how to activate my account$/')]
     public function iFollowTheInstructionsOnHowToActivateMyAccount(): void
     {
         $this->activationToken = 'abcd2345';
@@ -994,21 +873,17 @@ class AccountContext implements Context
 
         //Test reset token check
         $request = $this->base->mockClientHistoryContainer[0]['request'];
-        $params  = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode((string) $request->getBody()->getContents(), true);
         Assert::assertEquals('abcd2345', $params['activation_token']);
     }
 
-    /**
-     * @Given /^I have asked for my password to be reset$/
-     */
+    #[Given('/^I have asked for my password to be reset$/')]
     public function iHaveAskedForMyPasswordToBeReset(): void
     {
         //Not used
     }
 
-    /**
-     * @Given I have asked to create a new account
-     */
+    #[Given('I have asked to create a new account')]
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->email           = 'test@example.com';
@@ -1016,9 +891,7 @@ class AccountContext implements Context
         $this->activationToken = 'activate1234567890';
     }
 
-    /**
-     * @Given /^I have deleted my account$/
-     */
+    #[Given('/^I have deleted my account$/')]
     public function iHaveDeletedMyAccount(): void
     {
         $this->iAmOnTheSettingsPage();
@@ -1026,17 +899,13 @@ class AccountContext implements Context
         $this->iConfirmThatIWantToDeleteMyAccount();
     }
 
-    /**
-     * @Given /^I have not activated my account$/
-     */
+    #[Given('/^I have not activated my account$/')]
     public function iHaveNotActivatedMyAccount(): void
     {
         $this->userActive = false;
     }
 
-    /**
-     * @Given /^I have requested to change my email address$/
-     */
+    #[Given('/^I have requested to change my email address$/')]
     public function iHaveRequestedToChangeMyEmailAddress(): void
     {
         // Not needed for this context
@@ -1052,9 +921,7 @@ class AccountContext implements Context
         $this->ui->getSession()->getDriver()->getClient()->followRedirects(true);
     }
 
-    /**
-     * @When /^I logout of the application$/
-     */
+    #[When('/^I logout of the application$/')]
     public function iLogoutOfTheApplication(): void
     {
         $this->apiFixtures->append(
@@ -1078,25 +945,19 @@ class AccountContext implements Context
         $this->iDoFollowRedirects();
     }
 
-    /**
-     * @When /^I navigate to the actor cookies page$/
-     */
+    #[When('/^I navigate to the actor cookies page$/')]
     public function iNavigateToTheActorCookiesPage(): void
     {
         $this->ui->clickLink('cookie policy');
     }
 
-    /**
-     * @Given /^I provide my current password$/
-     */
+    #[Given('/^I provide my current password$/')]
     public function iProvideMyCurrentPassword(): void
     {
         $this->ui->fillField('current_password', $this->userPassword);
     }
 
-    /**
-     * @When /^I provide my new password$/
-     */
+    #[When('/^I provide my new password$/')]
     public function iProvideMyNewPassword(): void
     {
         $newPassword = 'Password123!$';
@@ -1120,54 +981,44 @@ class AccountContext implements Context
         $this->ui->pressButton('Change password');
     }
 
-    /**
-     * @Then /^I receive unique instructions on how to activate my account$/
-     */
+    #[Then('/^I receive unique instructions on how to activate my account$/')]
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount(): void
     {
         $this->ui->assertPageAddress('/create-account-success');
 
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
+        $this->ui->assertPageContainsText("We've emailed a link to " . $this->userEmail);
 
         Assert::assertIsString($this->activationToken);
         assert($this->apiFixtures->count() === 0);
     }
 
-    /**
-     * @Then /^I receive unique instructions on how to reset my password$/
-     * @Then /^I receive an email telling me I do not have an account$/
-     */
+    #[Then('/^I receive unique instructions on how to reset my password$/')]
+    #[Then('/^I receive an email telling me I do not have an account$/')]
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword(): void
     {
         $this->ui->assertPageAddress('/reset-password');
 
-        $this->ui->assertPageContainsText('We\'ve emailed a link to test@example.com');
+        $this->ui->assertPageContainsText("We've emailed a link to test@example.com");
 
         Assert::assertEquals(0, $this->apiFixtures->count());
     }
 
-    /**
-     * @Then /^I receive unique instructions on how to reset my password to my provided (.*)$/
-     */
+    #[Then('/^I receive unique instructions on how to reset my password to my provided (.*)$/')]
     public function iReceiveUniqueInstructionsOnHowToResetMyPasswordToMyProvidedEmail($email): void
     {
         $this->ui->assertPageAddress('/reset-password');
-        $this->ui->assertPageContainsText('emailed a link to ' . strtolower($email));
+        $this->ui->assertPageContainsText('emailed a link to ' . strtolower((string) $email));
     }
 
-    /**
-     * @When /^I attempt to login to my deleted account$/
-     */
+    #[When('/^I attempt to login to my deleted account$/')]
     public function iRequestLoginToMyAccountThatWasDeleted(): void
     {
         $this->iHaveLoggedInToOneLogin('English');
         $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
     }
 
-    /**
-     * @When /^I request to change my email to one that another user has an expired request for$/
-     * @When /^I request to change my email to a unique email address$/
-     */
+    #[When('/^I request to change my email to one that another user has an expired request for$/')]
+    #[When('/^I request to change my email to a unique email address$/')]
     public function iRequestToChangeMyEmailToAUniqueEmailAddress(): void
     {
         $this->apiFixtures->append(
@@ -1199,10 +1050,8 @@ class AccountContext implements Context
         $this->ui->pressButton('Save new email address');
     }
 
-    /**
-     * @When /^I request to change my email to an email address that is taken by another user on the service$/
-     * @When /^I request to change my email to one that another user has requested$/
-     */
+    #[When('/^I request to change my email to an email address that is taken by another user on the service$/')]
+    #[When('/^I request to change my email to one that another user has requested$/')]
     public function iRequestToChangeMyEmailToAnEmailAddressThatIsTakenByAnotherUserOnTheService(): void
     {
         //request change email call
@@ -1223,7 +1072,7 @@ class AccountContext implements Context
 
         //Test for request change email
         $request = $this->base->mockClientHistoryContainer[3]['request'];
-        $params  = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode((string) $request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('user-id', $params);
@@ -1231,9 +1080,7 @@ class AccountContext implements Context
         Assert::assertArrayHasKey('password', $params);
     }
 
-    /**
-     * @When /^I request to change my email with an incorrect password$/
-     */
+    #[When('/^I request to change my email with an incorrect password$/')]
     public function iRequestToChangeMyEmailWithAnIncorrectPassword(): void
     {
         $this->apiFixtures->append(
@@ -1256,17 +1103,13 @@ class AccountContext implements Context
         Assert::assertArrayHasKey('password', $params);
     }
 
-    /**
-     * @When /^I request to create an account$/
-     */
+    #[When('/^I request to create an account$/')]
     public function iRequestToCreateAnAccount(): void
     {
         $this->ui->clickLink('Create account');
     }
 
-    /**
-     * @When /^I request to delete my account$/
-     */
+    #[When('/^I request to delete my account$/')]
     public function iRequestToDeleteMyAccount(): void
     {
         $this->ui->assertPageAddress('/settings');
@@ -1274,43 +1117,33 @@ class AccountContext implements Context
         $this->ui->clickLink('delete-account-link');
     }
 
-    /**
-     * @When /^I request to go back to the terms of use page$/
-     */
+    #[When('/^I request to go back to the terms of use page$/')]
     public function iRequestToGoBackToTheSpecifiedPage(): void
     {
         $this->ui->clickLink('Back');
     }
 
-    /**
-     * @When /^I request to return to the settings page$/
-     */
+    #[When('/^I request to return to the settings page$/')]
     public function iRequestToReturnToTheSettingsPage(): void
     {
         $this->ui->assertPageAddress('/confirm-delete-account');
         $this->ui->clickLink('Return to settings');
     }
 
-    /**
-     * @When /^I request to see the actor privacy notice$/
-     */
+    #[When('/^I request to see the actor privacy notice$/')]
     public function iRequestToSeeTheActorPrivacyNoticePage(): void
     {
         $this->ui->clickLink('privacy notice');
     }
 
-    /**
-     * @When /^I request to see the actor terms of use$/
-     */
+    #[When('/^I request to see the actor terms of use$/')]
     public function iRequestToSeeTheActorTermsOfUse(): void
     {
         $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
     }
 
-    /**
-     * @Given /^I should be able to login with my new email address$/
-     * @Then /^I see a flash message confirming my email address has been changed$/
-     */
+    #[Given('/^I should be able to login with my new email address$/')]
+    #[Then('/^I see a flash message confirming my email address has been changed$/')]
     public function iShouldBeAbleToLoginWithMyNewEmailAddress(): void
     {
         $this->ui->assertPageAddress('/login');
@@ -1318,17 +1151,13 @@ class AccountContext implements Context
         // Login test is not needed since we already have one
     }
 
-    /**
-     * @Then /^I should be sent an email to both my current and new email$/
-     */
+    #[Then('/^I should be sent an email to both my current and new email$/')]
     public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I should be taken to the (.*) page$/
-     */
+    #[When('/^I should be taken to the (.*) page$/')]
     public function iShouldBeTakenToThePreviousPage($page): void
     {
         if ($page === 'triage') {
@@ -1346,62 +1175,48 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^I should be told my account could not be created due to (.*)$/
-     */
-    public function iShouldBeToldMyAccountCouldNotBeCreatedDueTo($reasons): void
+    #[Then('/^I should be told my account could not be created due to (.*)$/')]
+    public function iShouldBeToldMyAccountCouldNotBeCreatedDueTo(string $reasons): void
     {
         $this->ui->assertPageAddress('/create-account');
 
         $this->ui->assertPageContainsText('' . $reasons);
     }
 
-    /**
-     * @Then /^I should be told my email change request was successful$/
-     */
+    #[Then('/^I should be told my email change request was successful$/')]
     public function iShouldBeToldMyEmailChangeRequestWasSuccessful(): void
     {
         $this->ui->assertPageContainsText('Updating your email address');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
+        $this->ui->assertPageContainsText("We've emailed a link to " . $this->newUserEmail);
     }
 
-    /**
-     * @Then /^I should be told that I could not change my email because my password is incorrect$/
-     */
+    #[Then('/^I should be told that I could not change my email because my password is incorrect$/')]
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect(): void
     {
         $this->ui->assertPageContainsText('The password you entered is incorrect');
     }
 
-    /**
-     * @Then /^I should be told that my email could not be changed$/
-     */
+    #[Then('/^I should be told that my email could not be changed$/')]
     public function iShouldBeToldThatMyEmailCouldNotBeChanged(): void
     {
         $this->ui->assertPageContainsText('We cannot change your email address');
     }
 
-    /**
-     * @Given /^I should be told that my request was successful$/
-     */
+    #[Given('/^I should be told that my request was successful$/')]
     public function iShouldBeToldThatMyRequestWasSuccessful(): void
     {
         $this->ui->assertPageContainsText('Updating your email address');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->newUserEmail);
+        $this->ui->assertPageContainsText("We've emailed a link to " . $this->newUserEmail);
     }
 
-    /**
-     * @Then /^I should see the (.*) message$/
-     */
+    #[Then('/^I should see the (.*) message$/')]
     public function iShouldSeeTheErrorMessage($error): void
     {
         $this->ui->assertPageAddress('/reset-password');
         $this->ui->assertPageContainsText($error);
     }
 
-    /**
-     * @When /^I view my dashboard$/
-     */
+    #[When('/^I view my dashboard$/')]
     public function iViewMyDashboard(): void
     {
         // Dashboard page checks for all LPA's for a user
@@ -1416,26 +1231,20 @@ class AccountContext implements Context
         $this->ui->visit('/lpa/dashboard');
     }
 
-    /**
-     * @When /^I view my user details$/
-     */
+    #[When('/^I view my user details$/')]
     public function iViewMyUserDetails(): void
     {
         $this->ui->visit('/settings');
         $this->ui->assertPageContainsText('Settings');
     }
 
-    /**
-     * @Given /^I want to create a new account$/
-     */
+    #[Given('/^I want to create a new account$/')]
     public function iWantToCreateANewAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I want to ensure cookie attributes are set$/
-     */
+    #[Then('/^I want to ensure cookie attributes are set$/')]
     public function iWantToEnsureCookieAttributesAreSet(): void
     {
         $session = $this->ui->getSession();
@@ -1455,33 +1264,25 @@ class AccountContext implements Context
         }
     }
 
-    /**
-     * @Then /^My account email address should be reset$/
-     */
+    #[Then('/^My account email address should be reset$/')]
     public function myAccountEmailAddressShouldBeReset(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^My account is deleted$/
-     */
+    #[Then('/^My account is deleted$/')]
     public function myAccountIsDeleted(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^My email reset token is still valid$/
-     */
+    #[Given('/^My email reset token is still valid$/')]
     public function myEmailResetTokenIsStillValid(): void
     {
         $this->userEmailResetToken = '12345abcde';
     }
 
-    /**
-     * @Given /^I am on the one login page$/
-     */
+    #[Given('/^I am on the one login page$/')]
     public function iAmOnTheOneLoginPage(): void
     {
         $this->language = 'en';
@@ -1490,9 +1291,7 @@ class AccountContext implements Context
         $this->ui->assertElementOnPage('button[name=sign-in-one-login]');
     }
 
-    /**
-     * @When /^I click the one login button$/
-     */
+    #[When('/^I click the one login button$/')]
     public function iClickTheOneLoginButton(): void
     {
         $this->apiFixtures->append(
@@ -1514,9 +1313,7 @@ class AccountContext implements Context
         $this->iDoFollowRedirects();
     }
 
-    /**
-     * @When /^I have logged in to one login in (English|Welsh)$/
-     */
+    #[When('/^I have logged in to one login in (English|Welsh)$/')]
     public function iHaveLoggedInToOneLogin($language): void
     {
         $this->userEmail = 'test@test.com';
@@ -1529,9 +1326,7 @@ class AccountContext implements Context
         $this->iClickTheOneLoginButton();
     }
 
-    /**
-     * @Then /^I am redirected to the redirect page in (English|Welsh)$/
-     */
+    #[Then('/^I am redirected to the redirect page in (English|Welsh)$/')]
     public function iAmRedirectedToTheRedirectPage($language): void
     {
         $locationHeader = $this->ui->getSession()->getResponseHeader('Location');
@@ -1545,37 +1340,29 @@ class AccountContext implements Context
         assert::assertStringContainsString('ui_locale=' . $this->language, $params);
     }
 
-    /**
-     * @When /^I select the Welsh language$/
-     */
+    #[When('/^I select the Welsh language$/')]
     public function iSelectTheWelshLanguage(): void
     {
         $this->language = 'cy';
         $this->ui->clickLink('Cymraeg');
     }
 
-    /**
-     * @When /^One Login returns a "(.*)" error$/
-     */
-    public function oneLoginReturnsAError($errorType): void
+    #[When('/^One Login returns a "(.*)" error$/')]
+    public function oneLoginReturnsAError(string $errorType): void
     {
         $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
     }
 
-    /**
-     * @Then /^I am redirected to the login page with a "(.*)" error and "(.*)"$/
-     */
-    public function iAmRedirectedToTheLanguageErrorPage($errorType, $errorMessage): void
+    #[Then('/^I am redirected to the login page with a "(.*)" error and "(.*)"$/')]
+    public function iAmRedirectedToTheLanguageErrorPage(string $errorType, $errorMessage): void
     {
         $basePath = $this->language === 'cy' ? '/cy' : '';
         $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
         $this->ui->assertPageContainsText($errorMessage);
     }
 
-    /**
-     * @Then /^I have an account whose sub matches a local account$/
-     * @Then /^I have an email address that matches a local account$/
-     */
+    #[Then('/^I have an account whose sub matches a local account$/')]
+    #[Then('/^I have an email address that matches a local account$/')]
     public function iHaveAMatchingLocalAccount(): void
     {
         $this->apiFixtures->append(
@@ -1693,9 +1480,7 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
 
-    /**
-     * @Then /^I have an email address that does not match a local account$/
-     */
+    #[Then('/^I have an email address that does not match a local account$/')]
     public function iHaveAnEmailAddressThatDoesNotMatchALocalAccount(): void
     {
         $this->apiFixtures->append(
@@ -1735,22 +1520,17 @@ class AccountContext implements Context
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
     }
 
-    /**
-     * @Then /^I see the LPA dashboard with any LPAs that are in the account$/
-     */
+    #[Then('/^I see the LPA dashboard with any LPAs that are in the account$/')]
     public function iSeeTheLPADashboardWithAnyLPAsInAccount(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->clickLink('Add another LPA');
     }
 
-    /**
-     * @Then /I see an empty LPA dashboard$/
-     */
+    #[Then('/I see an empty LPA dashboard$/')]
     public function iSeeAnEmptyLPADashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->clickLink('Add your first LPA');
     }
-
 }
