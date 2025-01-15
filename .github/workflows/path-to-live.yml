@@ -39,7 +39,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@ef7202db4d23bd79d2fb79d667a7a43ddb08b783
+        uses: tj-actions/changed-files@467e54813892b0cf302b0bba54d233c861b97f1a
         with:
           files: |
             **/*.md
@@ -55,7 +55,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
         id: semver_tag
         with:
           with_v: true
@@ -232,7 +232,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
         with:
           name: environment_config_file_production
           path: terraform/environment

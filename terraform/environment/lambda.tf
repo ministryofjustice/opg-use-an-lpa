@@ -135,6 +135,27 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     ]
     resources = [data.aws_kms_alias.event_receiver.target_key_arn]
   }
+
+  statement {
+    sid    = "DynamoDBTableAccess"
+    effect = "Allow"
+    resources = [
+      aws_dynamodb_table.user_lpa_actor_map.arn,
+      aws_dynamodb_table.use_users_table.arn
+    ]
+    actions = [
+      "dynamodb:BatchGetItem",
+      "dynamodb:BatchWriteItem",
+      "dynamodb:ConditionCheckItem",
+      "dynamodb:PutItem",
+      "dynamodb:DescribeTable",
+      "dynamodb:DeleteItem",
+      "dynamodb:GetItem",
+      "dynamodb:Scan",
+      "dynamodb:Query",
+      "dynamodb:UpdateItem"
+    ]
+  }
 }
 
 resource "aws_lambda_event_source_mapping" "receive_events_mapping" {
