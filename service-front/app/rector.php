@@ -1,14 +1,22 @@
 <?php
 
+/**
+ * Rector script file to fix up parts of the code base as and when needed.
+ *
+ * To run:
+ * composer run dc-php -- vendor/bin/rector
+ */
+
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 
-/**
- * Test Upgrades
- */
+///**
+// * Test Upgrades
+// */
+//
 //return RectorConfig::configure()
 //    ->withPaths(
 //        [
@@ -34,6 +42,7 @@ use Rector\Config\RectorConfig;
 /**
  * Behat Upgrades
  */
+
 return RectorConfig::configure()
     ->withPaths(
         [
