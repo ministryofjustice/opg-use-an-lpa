@@ -45,6 +45,9 @@ abstract class BaseIntegrationContext implements Context, Psr11AwareContext
 
     /**
      * Called after the PSR11 Container has been set into this Context
+     *
+     * WARNING: do not use this method to initialise global context variables of services
+     * pulled from the container as this breaks Feature Flag in subtle ways.
      */
     abstract protected function prepareContext(): void;
 }

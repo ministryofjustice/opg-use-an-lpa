@@ -35,6 +35,11 @@ class ViewerContext extends BaseIntegrationContext
         // tests wouldn't normally touch but the container expects
         $this->container->set(RequestTracing::TRACE_PARAMETER_NAME, 'Root=1-1-11');
 
+        // DO NOT use this method as below to create context global services out of the container
+        // it breaks feature flag testing.
+        // $this->lpaService = $this->container->get(LpaService::class); // DONT DO THIS
+
+        // $apiFixtures and $awsFixtures are the exception
         $this->apiFixtures = $this->container->get(MockHandler::class);
     }
 

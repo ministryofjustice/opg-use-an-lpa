@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API Integration" type="PhpBehatConfigurationType" singleton="true">
-    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" scenario="" scope="Yml" options="--profile=integration --tags=integration&amp;&amp;wip,integration" use_alternative_configuration_file="true" />
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" scenario="" scope="Yml" options="--profile=integration --tags=integration&amp;&amp;wip,integration --xdebug" use_alternative_configuration_file="true" />
     <CommandLine>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="test-api-app" />
