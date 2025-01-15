@@ -25,6 +25,7 @@ use Mezzio\Authentication\{AuthenticationInterface, Session\PhpSession, UserInte
 use Mezzio\Csrf\CsrfGuardFactoryInterface;
 use Mezzio\Session\{SessionMiddleware, SessionMiddlewareFactory, SessionPersistenceInterface};
 use Psr\Http\Client\ClientInterface;
+use Twig\RuntimeLoader\ContainerRuntimeLoader;
 
 /**
  * The configuration provider for the Common module
@@ -150,7 +151,7 @@ class ConfigProvider
     public function getTwig(): array
     {
         return [
-            'extensions' => [
+            'extensions'      => [
                 TranslationExtension::class,
                 View\Twig\LpaExtension::class,
                 View\Twig\OrdinalNumberExtension::class,
@@ -160,6 +161,9 @@ class ConfigProvider
                 View\Twig\GenericGlobalVariableExtension::class,
                 View\Twig\TranslationSwitchExtension::class,
                 View\Twig\FeatureFlagExtension::class,
+            ],
+            'runtime_loaders' => [
+                ContainerRuntimeLoader::class,
             ],
         ];
     }

@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Acpr\Behat\Psr\Context\Psr11AwareContext;
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
+use Behat\Testwork\Environment\Environment;
 use BehatTest\Context\ActorContextTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
@@ -15,9 +19,7 @@ class FeatureFlagContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function setFeatureFlag(BeforeScenarioScope $scope): void
     {
         $tags = array_merge($scope->getScenario()->getTags(), $scope->getFeature()->getTags());
@@ -34,17 +36,38 @@ class FeatureFlagContext extends BaseIntegrationContext
                     throw new Exception('Feature flag values must be boolean');
                 }
 
-                $lpaContextContainer = $scope->getEnvironment()->getContext(LpaContext::class)->container;
-
-                $config                                = $lpaContextContainer->get('config');
-                $config['feature_flags'][$tagParts[1]] = $flagValue;
-
-                $lpaContextContainer->set('config', $config);
-                $lpaContextContainer->set(
-                    FeatureEnabled::class,
-                    new FactoryDefinitionHelper($this->container->get(FeatureEnabledFactory::class))
-                );
+                $this->updateContexts($scope->getEnvironment(), $tagParts[1], $flagValue);
             }
+        }
+    }
+
+    /**
+     * @param InitializedContextEnvironment $contextEnvironment
+     * @param string                        $flagName
+     * @param bool                          $flagValue
+     * @return void
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    protected function updateContexts(
+        Environment $contextEnvironment,
+        string $flagName,
+        bool $flagValue,
+    ): void {
+        /** @var Psr11AwareContext $context */
+        foreach ($contextEnvironment->getContexts() as $context) {
+            $container = $context->container;
+
+            $config                             = $container->get('config');
+            $config['feature_flags'][$flagName] = $flagValue;
+
+            $container->set('config', $config);
+            $container->set(
+                FeatureEnabled::class,
+                new FactoryDefinitionHelper($this->container->get(FeatureEnabledFactory::class))
+            );
         }
     }
 
