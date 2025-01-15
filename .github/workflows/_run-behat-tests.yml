@@ -81,7 +81,6 @@ jobs:
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
           public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-          ff_allow_gov_one_login=$(cat ./terraform/environment/cluster_config.json | jq .ff_allow_gov_one_login | xargs)
 
           ln -sf ../features tests/smoke/features
 
@@ -90,7 +89,6 @@ jobs:
             BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
             BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
             BEHAT_OLD_ACTOR_URL=https://$use_fqdn \
-            BEHAT_FF_ALLOW_GOV_ONE_LOGIN=$ff_allow_gov_one_login \
             vendor/bin/behat
 
       - name: archive failed test screenshots

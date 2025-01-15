@@ -327,10 +327,6 @@ locals {
         value = "60"
       },
       {
-        name  = "ALLOW_GOV_ONE_LOGIN",
-        value = tostring(var.feature_flags.allow_gov_one_login)
-      },
-      {
         name  = "SUPPORT_DATASTORE_LPAS",
         value = tostring(var.feature_flags.support_datastore_lpas)
       },

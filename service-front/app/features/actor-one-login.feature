@@ -1,4 +1,4 @@
-@actor @onelogin @ff:allow_gov_one_login:true
+@actor @onelogin
 Feature: Authenticate One Login
   As a user of the application
   I can login using GovUK OneLogin
