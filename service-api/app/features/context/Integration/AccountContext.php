@@ -13,6 +13,9 @@ use App\Service\Log\RequestTracing;
 use App\Service\User\UserService;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\SetupEnv;
 use Exception;
 use ParagonIE\HiddenString\HiddenString;
@@ -20,10 +23,6 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 
 /**
- * Class AccountContext
- *
- * @package BehatTest\Context\Integration
- *
  * @property $userAccountId
  * @property $userAccountEmail
  * @property $passwordResetData
@@ -42,31 +41,25 @@ class AccountContext extends BaseIntegrationContext
     private AwsMockHandler $awsFixtures;
     private array $createUserResponse;
 
-    /**
-     * @Given /^I access the login form$/
-     */
+    #[Given('/^I access the login form$/')]
     public function iAccessTheLoginForm(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given I am a user of the lpa application
-     */
+    #[Given('I am a user of the lpa application')]
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userAccountId = '123456789';
-        $this->userAccountEmail = 'test@example.com';
+        $this->userAccountId       = '123456789';
+        $this->userAccountEmail    = 'test@example.com';
         $this->userAccountPassword = 'pa33w0rd';
     }
 
-    /**
-     * @Given I am currently signed in
-     * @Then /^I am signed in$/
-     */
+    #[Given('I am currently signed in')]
+    #[Then('/^I am signed in$/')]
     public function iAmCurrentlySignedIn(): void
     {
-        $this->password = 'pa33w0rd';
+        $this->password            = 'pa33w0rd';
         $this->userAccountPassword = 'n3wPassWord';
 
         // ActorUsers::getByEmail
@@ -76,9 +69,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->password, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'Id'        => $this->userAccountId,
+                                'Email'     => $this->userAccountEmail,
+                                'Password'  => password_hash($this->password, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -94,7 +87,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'        => $this->userAccountId,
                                 'LastLogin' => null,
                             ]
                         ),
@@ -111,78 +104,60 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals($this->userAccountEmail, $user['Email']);
     }
 
-    /**
-     * @Then I am informed about an existing account
-     * @Then I send the activation email again
-     */
+    #[Then('I am informed about an existing account')]
+    #[Then('I send the activation email again')]
     public function iAmInformedAboutAnExistingAccount(): void
     {
         Assert::assertEquals('activate1234567890', $this->actorAccountCreateData['ActivationToken']);
     }
 
-    /**
-     * @Then /^I am informed that there was a problem with that email address$/
-     */
+    #[Then('/^I am informed that there was a problem with that email address$/')]
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I am logged out of the service and taken to the index page$/
-     */
+    #[Given('/^I am logged out of the service and taken to the index page$/')]
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given I am not a user of the lpa application
-     */
+    #[Given('I am not a user of the lpa application')]
     public function iAmNotaUserOftheLpaApplication(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I am on the change email page$/
-     */
+    #[Given('/^I am on the change email page$/')]
     public function iAmOnTheChangeEmailPage(): void
     {
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
     }
 
-    /**
-     * @Given /^I am on the dashboard page$/
-     * @Given /^I am on the user dashboard page$/
-     * @Then /^I cannot see the added LPA$/
-     */
+    #[Given('/^I am on the dashboard page$/')]
+    #[Given('/^I am on the user dashboard page$/')]
+    #[Then('/^I cannot see the added LPA$/')]
     public function iAmOnTheDashboardPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I am on the settings page$/
-     */
+    #[Given('/^I am on the settings page$/')]
     public function iAmOnTheSettingsPage(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Then /^I am taken back to the dashboard page$/
-     * @Then /^I cannot see my access codes and their details$/
-     */
+    #[Then('/^I am taken back to the dashboard page$/')]
+    #[Then('/^I cannot see my access codes and their details$/')]
     public function iAmTakenBackToTheDashboardPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am told my account has not been activated$/
-     */
+    #[Then('/^I am told my account has not been activated$/')]
     public function iAmToldMyAccountHasNotBeenActivated(): void
     {
         // ActorUsers::getByEmail
@@ -192,10 +167,10 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                                'LastLogin' => null,
+                                'Id'              => $this->userAccountId,
+                                'Email'           => $this->userAccountEmail,
+                                'Password'        => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'LastLogin'       => null,
                                 'ActivationToken' => 'a12b3c4d5e',
                             ]
                         ),
@@ -208,21 +183,19 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->authenticate($this->userAccountEmail, new HiddenString($this->userAccountPassword));
-        } catch (UnauthorizedException $ex) {
+        } catch (UnauthorizedException $unauthorizedException) {
             Assert::assertEquals(
                 'Authentication attempted against inactive account with Id ' . $this->userAccountId,
-                $ex->getMessage()
+                $unauthorizedException->getMessage()
             );
-            Assert::assertEquals(401, $ex->getCode());
+            Assert::assertEquals(401, $unauthorizedException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('Expected unauthorized exception was not thrown');
     }
 
-    /**
-     * @Then /^I am told my credentials are incorrect$/
-     */
+    #[Then('/^I am told my credentials are incorrect$/')]
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
         // ActorUsers::getByEmail
@@ -232,9 +205,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
-                                'Email' => $this->userAccountEmail,
-                                'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                                'Id'        => $this->userAccountId,
+                                'Email'     => $this->userAccountEmail,
+                                'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                                 'LastLogin' => null,
                             ]
                         ),
@@ -247,58 +220,46 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->authenticate($this->userAccountEmail, new HiddenString('1nc0rr3ctPa33w0rd'));
-        } catch (ForbiddenException $fe) {
-            Assert::assertEquals('Authentication failed for email ' . $this->userAccountEmail, $fe->getMessage());
-            Assert::assertEquals(403, $fe->getCode());
+        } catch (ForbiddenException $forbiddenException) {
+            Assert::assertEquals('Authentication failed for email ' . $this->userAccountEmail, $forbiddenException->getMessage());
+            Assert::assertEquals(403, $forbiddenException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('Expected forbidden exception was not thrown');
     }
 
-    /**
-     * @Then /^I am told my current password is incorrect$/
-     */
+    #[Then('/^I am told my current password is incorrect$/')]
     public function iAmToldMyCurrentPasswordIsIncorrect(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Then /^I am told my password was changed$/
-     */
+    #[Then('/^I am told my password was changed$/')]
     public function iAmToldMyPasswordWasChanged(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then I am told my unique instructions to activate my account have expired
-     */
+    #[Then('I am told my unique instructions to activate my account have expired')]
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then I am told that my instructions have expired
-     */
+    #[Then('I am told that my instructions have expired')]
     public function iAmToldThatMyInstructionsHaveExpired(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then I am unable to continue to reset my password
-     */
+    #[Then('I am unable to continue to reset my password')]
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @When I ask for my password to be reset
-     */
+    #[When('I ask for my password to be reset')]
     public function iAskForMyPasswordToBeReset(): void
     {
         $resetToken = 'AAAABBBBCCCC';
@@ -310,7 +271,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -325,9 +286,9 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Attributes' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'PasswordResetToken' => $resetToken,
-                            'PasswordResetExpiry' => time() + (60 * 60 * 24) // 24 hours in the future
+                            'Id'                  => $this->userAccountId,
+                            'PasswordResetToken'  => $resetToken,
+                            'PasswordResetExpiry' => time() + (60 * 60 * 24), // 24 hours in the future
                         ]
                     ),
                 ]
@@ -339,21 +300,17 @@ class AccountContext extends BaseIntegrationContext
         $this->passwordResetData = $us->requestPasswordReset($this->userAccountEmail);
     }
 
-    /**
-     * @When /^I ask to change my password$/
-     */
+    #[When('/^I ask to change my password$/')]
     public function iAskToChangeMyPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I cannot enter my current password$/
-     */
+    #[Given('/^I cannot enter my current password$/')]
     public function iCannotEnterMyCurrentPassword(): void
     {
         $failedPassword = 'S0meS0rt0fPassw0rd';
-        $newPassword = 'Successful-Raid-on-the-Cooki3s!';
+        $newPassword    = 'Successful-Raid-on-the-Cooki3s!';
 
         // ActorUsers::get
         $this->awsFixtures->append(
@@ -361,7 +318,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
+                            'Id'       => $this->userAccountId,
                             'Password' => password_hash($failedPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -387,9 +344,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals('UpdateItem', $command->getName());
     }
 
-    /**
-     * @When I choose a new password
-     */
+    #[When('I choose a new password')]
     public function iChooseANewPassword(): void
     {
         $password = 'newPass0rd';
@@ -401,7 +356,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -416,8 +371,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -433,9 +388,7 @@ class AccountContext extends BaseIntegrationContext
         $us->completePasswordReset($this->passwordResetData['PasswordResetToken'], new HiddenString($password));
     }
 
-    /**
-     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
-     */
+    #[When('/^I click an old link to verify my new email address containing a token that no longer exists$/')]
     public function iClickAnOldLinkToVerifyMyNewEmailAddressContainingATokenThatNoLongerExists(): void
     {
         // ActorUsers::getIdByEmailResetToken
@@ -445,17 +398,15 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $userService->canResetEmail($this->userEmailResetToken);
-        } catch (GoneException $ex) {
-            Assert::assertEquals(410, $ex->getCode());
+        } catch (GoneException $goneException) {
+            Assert::assertEquals(410, $goneException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('');
     }
 
-    /**
-     * @When /^I click the link to verify my new email address$/
-     */
+    #[When('/^I click the link to verify my new email address$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddress(): void
     {
         // canResetEmail
@@ -486,13 +437,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'EmailResetExpiry' => time() + (60 * 60),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -533,13 +484,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                            'EmailResetExpiry' => (time() + (60 * 60)),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'EmailResetExpiry' => time() + (60 * 60),
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -554,9 +505,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertNull($reset);
     }
 
-    /**
-     * @When /^I click the link to verify my new email address after my token has expired$/
-     */
+    #[When('/^I click the link to verify my new email address after my token has expired$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired(): void
     {
         // ActorUsers::getIdByEmailResetToken
@@ -585,13 +534,13 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
-                            'EmailResetExpiry' => (time() - (60 * 60)),
-                            'LastLogin' => null,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
+                            'Id'               => $this->userAccountId,
+                            'Email'            => $this->userAccountEmail,
+                            'Password'         => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'EmailResetExpiry' => time() - (60 * 60),
+                            'LastLogin'        => null,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
                         ]
                     ),
                 ]
@@ -602,28 +551,24 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $userService->canResetEmail($this->userEmailResetToken);
-        } catch (GoneException $ex) {
-            Assert::assertEquals(410, $ex->getCode());
+        } catch (GoneException $goneException) {
+            Assert::assertEquals(410, $goneException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('');
     }
 
-    /**
-     * @Given /^I confirm that I want to delete my account$/
-     */
+    #[Given('/^I confirm that I want to delete my account$/')]
     public function iConfirmThatIWantToDeleteMyAccount(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When I create an account
-     */
+    #[When('I create an account')]
     public function iCreateAnAccount(): void
     {
-        $this->userAccountEmail = 'hello@test.com';
+        $this->userAccountEmail    = 'hello@test.com';
         $this->userAccountPassword = 'n3wPassWord!';
 
         // ActorUsers::getByEmail
@@ -647,7 +592,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Email' => $this->userAccountEmail,
+                            'Email'           => $this->userAccountEmail,
                             'ActivationToken' => '123456789',
                         ]
                     ),
@@ -659,19 +604,17 @@ class AccountContext extends BaseIntegrationContext
 
         $this->createUserResponse = $us->add(
             [
-                'email' => $this->userAccountEmail,
+                'email'    => $this->userAccountEmail,
                 'password' => new HiddenString($this->userAccountPassword),
             ]
         );
     }
 
-    /**
-     * @When I create an account using duplicate details
-     */
+    #[When('I create an account using duplicate details')]
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $userAccountCreateData = [
-            'email' => 'hello@test.com',
+            'email'    => 'hello@test.com',
             'password' => 'n3wPassWord!',
         ];
 
@@ -684,7 +627,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Email' => $userAccountCreateData['email'],
+                                'Email'    => $userAccountCreateData['email'],
                                 'Password' => $userAccountCreateData['password'],
                             ]
                         ),
@@ -699,9 +642,9 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Email' => $userAccountCreateData['email'],
+                                'Email'    => $userAccountCreateData['email'],
                                 'Password' => $userAccountCreateData['password'],
-                                'Id' => $id,
+                                'Id'       => $id,
                             ]
                         ),
                     ],
@@ -713,25 +656,23 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->add(['email' => $userAccountCreateData['email'], 'password' => $userAccountCreateData['password']]);
-        } catch (ConflictException $ex) {
-            Assert::assertEquals(409, $ex->getCode());
+        } catch (ConflictException $conflictException) {
+            Assert::assertEquals(409, $conflictException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('');
     }
 
-    /**
-     * @When I create an account using duplicate details not yet activated
-     */
+    #[When('I create an account using duplicate details not yet activated')]
     public function iCreateAnAccountUsingDuplicateDetailsNotActivated(): void
     {
         $userAccountCreateData = [
-            'Id' => '1234567890abcdef',
+            'Id'              => '1234567890abcdef',
             'ActivationToken' => 'activate1234567890',
-            'ExpiresTTL' => '232424232244',
-            'Email' => 'test@test.com',
-            'Password' => 'Pa33w0rd',
+            'ExpiresTTL'      => '232424232244',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
@@ -742,10 +683,10 @@ class AccountContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
-                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
+                                'ExpiresTTL'      => $userAccountCreateData['ExpiresTTL'],
                             ]
                         ),
                     ],
@@ -761,10 +702,10 @@ class AccountContext extends BaseIntegrationContext
                         $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'ExpiresTTL' => $userAccountCreateData['ExpiresTTL'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
+                                'ExpiresTTL'      => $userAccountCreateData['ExpiresTTL'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
                             ]
                         ),
                     ],
@@ -776,13 +717,13 @@ class AccountContext extends BaseIntegrationContext
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Item' =>
-                        $this->marshalAwsResultData(
+                    'Item'
+                        => $this->marshalAwsResultData(
                             [
                                 'ActivationToken' => $userAccountCreateData['ActivationToken'],
-                                'Email' => $userAccountCreateData['Email'],
-                                'Password' => $userAccountCreateData['Password'],
-                                'Id' => $userAccountCreateData['Id'],
+                                'Email'           => $userAccountCreateData['Email'],
+                                'Password'        => $userAccountCreateData['Password'],
+                                'Id'              => $userAccountCreateData['Id'],
                             ]
                         ),
                 ]
@@ -794,23 +735,21 @@ class AccountContext extends BaseIntegrationContext
 
         $result = $us->add(
             [
-                'email' => $userAccountCreateData['Email'],
+                'email'    => $userAccountCreateData['Email'],
                 'password' => new HiddenString($userAccountCreateData['Password']),
             ]
         );
         Assert::assertEquals($result['Email'], $userAccountCreateData['Email']);
     }
 
-    /**
-     * @When /^I create an account using with an email address that has been requested for reset$/
-     */
+    #[When('/^I create an account using with an email address that has been requested for reset$/')]
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset(): void
     {
         $userAccountCreateData = [
-            'Id' => 1,
+            'Id'              => 1,
             'ActivationToken' => 'activate1234567890',
-            'Email' => 'test@test.com',
-            'Password' => 'Pa33w0rd',
+            'Email'           => 'test@test.com',
+            'Password'        => 'Pa33w0rd',
         ];
 
         // ActorUsers::getByEmail
@@ -829,13 +768,13 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => '123456789',
-                                'Email' => 'other@user.co.uk',
-                                'Password' => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
-                                'EmailResetExpiry' => (time() + (60 * 60)),
-                                'LastLogin' => null,
-                                'NewEmail' => 'test@test.com',
-                                'EmailResetToken' => 'abc1234567890',
+                                'Id'               => '123456789',
+                                'Email'            => 'other@user.co.uk',
+                                'Password'         => password_hash('passW0rd', PASSWORD_DEFAULT, ['cost' => 13]),
+                                'EmailResetExpiry' => time() + (60 * 60),
+                                'LastLogin'        => null,
+                                'NewEmail'         => 'test@test.com',
+                                'EmailResetToken'  => 'abc1234567890',
                             ]
                         ),
                     ],
@@ -847,41 +786,33 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->add(['email' => $userAccountCreateData['Email'], 'password' => $userAccountCreateData['Password']]);
-        } catch (ConflictException $ex) {
-            Assert::assertEquals(409, $ex->getCode());
+        } catch (ConflictException $conflictException) {
+            Assert::assertEquals(409, $conflictException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('');
     }
 
-    /**
-     * @When /^I enter correct credentials$/
-     */
+    #[When('/^I enter correct credentials$/')]
     public function iEnterCorrectCredentials(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I enter incorrect login email$/
-     */
+    #[When('/^I enter incorrect login email$/')]
     public function iEnterIncorrectLoginEmail(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I enter incorrect login password$/
-     */
+    #[When('/^I enter incorrect login password$/')]
     public function iEnterIncorrectLoginPassword(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When I follow my instructions on how to activate my account after 24 hours
-     */
+    #[When('I follow my instructions on how to activate my account after 24 hours')]
     public function iFollowMyInstructionsOnHowToActivateMyAccountAfter24Hours(): void
     {
         // ActorUsers::activate
@@ -912,14 +843,12 @@ class AccountContext extends BaseIntegrationContext
         $us = $this->container->get(UserService::class);
         try {
             $us->activate($this->actorAccountCreateData['ActivationToken']);
-        } catch (Exception $ex) {
-            Assert::assertEquals('User not found for token', $ex->getMessage());
+        } catch (Exception $exception) {
+            Assert::assertEquals('User not found for token', $exception->getMessage());
         }
     }
 
-    /**
-     * @When I follow my unique expired instructions on how to reset my password
-     */
+    #[When('I follow my unique expired instructions on how to reset my password')]
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
@@ -929,7 +858,7 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
                             ]
                         ),
@@ -944,8 +873,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -957,14 +886,12 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->canResetPassword($this->passwordResetData['PasswordResetToken']);
-        } catch (GoneException $gex) {
-            Assert::assertEquals('Reset token not found', $gex->getMessage());
+        } catch (GoneException $goneException) {
+            Assert::assertEquals('Reset token not found', $goneException->getMessage());
         }
     }
 
-    /**
-     * @When I follow my unique instructions on how to reset my password
-     */
+    #[When('I follow my unique instructions on how to reset my password')]
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword(): void
     {
         // ActorUsers::activate
@@ -974,9 +901,8 @@ class AccountContext extends BaseIntegrationContext
                     'Items' => [
                         $this->marshalAwsResultData(
                             [
-                                'Id' => $this->userAccountId,
+                                'Id'    => $this->userAccountId,
                                 'Email' => $this->userAccountEmail,
-
                             ]
                         ),
                     ],
@@ -990,8 +916,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'                  => $this->userAccountId,
+                            'Email'               => $this->userAccountEmail,
                             'PasswordResetExpiry' => $this->passwordResetData['PasswordResetExpiry'],
                         ]
                     ),
@@ -1006,9 +932,7 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals($this->userAccountId, $userId);
     }
 
-    /**
-     * @When I follow the instructions on how to activate my account
-     */
+    #[When('I follow the instructions on how to activate my account')]
     public function iFollowTheInstructionsOnHowToActivateMyAccount(): void
     {
         // ActorUsers::activate
@@ -1049,77 +973,61 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertNotNull($userData);
     }
 
-    /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     * @When /^I request to return to the dashboard page/
-     */
+    #[When('/^I do not confirm cancellation of the chosen viewer code/')]
+    #[When('/^I request to return to the dashboard page/')]
     public function iDoNotConfirmCancellationOfTheChosenViewerCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given I have asked for my password to be reset
-     */
+    #[Given('I have asked for my password to be reset')]
     public function iHaveAskedForMyPasswordToBeReset(): void
     {
         $this->passwordResetData = [
-            'Id' => $this->userAccountId,
-            'PasswordResetToken' => 'AAAABBBBCCCC',
-            'PasswordResetExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                  => $this->userAccountId,
+            'PasswordResetToken'  => 'AAAABBBBCCCC',
+            'PasswordResetExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
-    /**
-     * @Given I have asked to create a new account
-     */
+    #[Given('I have asked to create a new account')]
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->actorAccountCreateData = [
-            'Id' => '123456789',
-            'Email' => 'hello@test.com',
-            'Password' => 'Pa33w0rd',
-            'ActivationToken' => 'activate1234567890',
-            'ActivationTokenExpiry' => time() + (60 * 60 * 12) // 12 hours in the future
+            'Id'                    => '123456789',
+            'Email'                 => 'hello@test.com',
+            'Password'              => 'Pa33w0rd',
+            'ActivationToken'       => 'activate1234567890',
+            'ActivationTokenExpiry' => time() + (60 * 60 * 12), // 12 hours in the future
         ];
     }
 
-    /**
-     * @Given I have forgotten my password
-     */
+    #[Given('I have forgotten my password')]
     public function iHaveForgottenMyPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I have not activated my account$/
-     */
+    #[Given('/^I have not activated my account$/')]
     public function iHaveNotActivatedMyAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I have requested to change my email address$/
-     */
+    #[Given('/^I have requested to change my email address$/')]
     public function iHaveRequestedToChangeMyEmailAddress(): void
     {
         $this->userEmailResetToken = '12345abcde';
-        $this->newEmail = 'newEmail@test.com';
+        $this->newEmail            = 'newEmail@test.com';
     }
 
-    /**
-     * @Given /^I provide my current password$/
-     */
+    #[Given('/^I provide my current password$/')]
     public function iProvideMyCurrentPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I provide my new password$/
-     */
+    #[Given('/^I provide my new password$/')]
     public function iProvideMyNewPassword(): void
     {
         $newPassword = 'Successful-Raid-on-the-Cooki3s!';
@@ -1130,7 +1038,7 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
+                            'Id'       => $this->userAccountId,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1156,28 +1064,21 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals('UpdateItem', $command->getName());
     }
 
-    /**
-     * @Then I receive unique instructions on how to activate my account
-     */
+    #[Then('I receive unique instructions on how to activate my account')]
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount(): void
     {
         Assert::assertArrayHasKey('Id', $this->createUserResponse);
         Assert::assertArrayHasKey('ActivationToken', $this->createUserResponse);
         Assert::assertArrayHasKey('ExpiresTTL', $this->createUserResponse);
-
     }
 
-    /**
-     * @Then I receive unique instructions on how to reset my password
-     */
+    #[Then('I receive unique instructions on how to reset my password')]
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword(): void
     {
         Assert::assertArrayHasKey('PasswordResetToken', $this->passwordResetData);
     }
 
-    /**
-     * @When /^I request to change my email to a unique email address$/
-     */
+    #[When('/^I request to change my email to a unique email address$/')]
     public function iRequestToChangeMyEmailToAUniqueEmailAddress(): void
     {
         // ActorUsers::get
@@ -1186,8 +1087,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1208,12 +1109,12 @@ class AccountContext extends BaseIntegrationContext
                     'Item' => $this->marshalAwsResultData(
                         [
                             'EmailResetExpiry' => time() + (60 * 60 * 48),
-                            'Email' => $this->userAccountEmail,
-                            'LastLogin' => null,
-                            'Id' => $this->userAccountId,
-                            'NewEmail' => $this->newEmail,
-                            'EmailResetToken' => $this->userEmailResetToken,
-                            'Password' => $this->userAccountPassword,
+                            'Email'            => $this->userAccountEmail,
+                            'LastLogin'        => null,
+                            'Id'               => $this->userAccountId,
+                            'NewEmail'         => $this->newEmail,
+                            'EmailResetToken'  => $this->userEmailResetToken,
+                            'Password'         => $this->userAccountPassword,
                         ]
                     ),
                 ]
@@ -1221,10 +1122,8 @@ class AccountContext extends BaseIntegrationContext
         );
     }
 
-    /**
-     * @When /^I request to change my email to an email address that (.*)$/
-     */
-    public function iRequestToChangeMyEmailToAnEmailAddressThat($context)
+    #[When('/^I request to change my email to an email address that (.*)$/')]
+    public function iRequestToChangeMyEmailToAnEmailAddressThat($context): void
     {
         // ActorUsers::get
         $this->awsFixtures->append(
@@ -1232,8 +1131,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1249,7 +1148,7 @@ class AccountContext extends BaseIntegrationContext
                         'Items' => [
                             $this->marshalAwsResultData(
                                 [
-                                    'Email' => $this->userAccountEmail,
+                                    'Email'    => $this->userAccountEmail,
                                     'Password' => $this->userAccountPassword,
                                 ]
                             ),
@@ -1271,12 +1170,12 @@ class AccountContext extends BaseIntegrationContext
                                 $this->marshalAwsResultData(
                                     [
                                         'EmailResetExpiry' => time() + (60 * 60),
-                                        'Email' => 'another@user.com',
-                                        'LastLogin' => null,
-                                        'Id' => 'aaaaaa1111111',
-                                        'NewEmail' => $this->newEmail,
-                                        'EmailResetToken' => 't0ken12345',
-                                        'Password' => 'otherU53rsPa55w0rd',
+                                        'Email'            => 'another@user.com',
+                                        'LastLogin'        => null,
+                                        'Id'               => 'aaaaaa1111111',
+                                        'NewEmail'         => $this->newEmail,
+                                        'EmailResetToken'  => 't0ken12345',
+                                        'Password'         => 'otherU53rsPa55w0rd',
                                     ]
                                 ),
                             ],
@@ -1293,12 +1192,12 @@ class AccountContext extends BaseIntegrationContext
                                 $this->marshalAwsResultData(
                                     [
                                         'EmailResetExpiry' => time() - (60),
-                                        'Email' => 'another@user.com',
-                                        'LastLogin' => null,
-                                        'Id' => 'aaaaaa1111111',
-                                        'NewEmail' => $this->newEmail,
-                                        'EmailResetToken' => 't0ken12345',
-                                        'Password' => 'otherU53rsPa55w0rd',
+                                        'Email'            => 'another@user.com',
+                                        'LastLogin'        => null,
+                                        'Id'               => 'aaaaaa1111111',
+                                        'NewEmail'         => $this->newEmail,
+                                        'EmailResetToken'  => 't0ken12345',
+                                        'Password'         => 'otherU53rsPa55w0rd',
                                     ]
                                 ),
                             ],
@@ -1313,12 +1212,12 @@ class AccountContext extends BaseIntegrationContext
                             'Item' => $this->marshalAwsResultData(
                                 [
                                     'EmailResetExpiry' => time() + (60 * 60 * 48),
-                                    'Email' => $this->userAccountEmail,
-                                    'LastLogin' => null,
-                                    'Id' => $this->userAccountId,
-                                    'NewEmail' => $this->newEmail,
-                                    'EmailResetToken' => $this->userEmailResetToken,
-                                    'Password' => $this->userAccountPassword,
+                                    'Email'            => $this->userAccountEmail,
+                                    'LastLogin'        => null,
+                                    'Id'               => $this->userAccountId,
+                                    'NewEmail'         => $this->newEmail,
+                                    'EmailResetToken'  => $this->userEmailResetToken,
+                                    'Password'         => $this->userAccountPassword,
                                 ]
                             ),
                         ]
@@ -1327,7 +1226,7 @@ class AccountContext extends BaseIntegrationContext
                 break;
         }
 
-        if (!str_contains($context, 'has expired')) {
+        if (!str_contains((string) $context, 'has expired')) {
             $userService = $this->container->get(UserService::class);
 
             try {
@@ -1345,9 +1244,7 @@ class AccountContext extends BaseIntegrationContext
         }
     }
 
-    /**
-     * @When /^I request to change my email with an incorrect password$/
-     */
+    #[When('/^I request to change my email with an incorrect password$/')]
     public function iRequestToChangeMyEmailWithAnIncorrectPassword(): void
     {
         $password = 'inc0rr3cT';
@@ -1357,8 +1254,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1370,73 +1267,59 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $userService->requestChangeEmail($this->userAccountId, $this->newEmail, new HiddenString($password));
-        } catch (ForbiddenException $ex) {
-            Assert::assertEquals(403, $ex->getCode());
+        } catch (ForbiddenException $forbiddenException) {
+            Assert::assertEquals(403, $forbiddenException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('Forbidden exception was not thrown for incorrect password');
     }
 
-    /**
-     * @When /^I request to delete my account$/
-     * @When /^I request to remove an LPA$/
-     * @Then /^I cannot see my LPA on the dashboard$/
-     * @Then /^I can see a flash message confirming that my LPA has been removed$/
-     * @Then /^I confirm that I want to remove the LPA$/
-     */
+    #[When('/^I request to delete my account$/')]
+    #[When('/^I request to remove an LPA$/')]
+    #[Then('/^I cannot see my LPA on the dashboard$/')]
+    #[Then('/^I can see a flash message confirming that my LPA has been removed$/')]
+    #[Then('/^I confirm that I want to remove the LPA$/')]
     public function iRequestToDeleteMyAccount(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given /^I should be able to login with my new email address$/
-     */
+    #[Given('/^I should be able to login with my new email address$/')]
     public function iShouldBeAbleToLoginWithMyNewEmailAddress(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be sent an email to both my current and new email$/
-     */
+    #[Then('/^I should be sent an email to both my current and new email$/')]
     public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be told my email change request was successful$/
-     */
+    #[Then('/^I should be told my email change request was successful$/')]
     public function iShouldBeToldMyEmailChangeRequestWasSuccessful(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be told that I could not change my email because my password is incorrect$/
-     */
+    #[Then('/^I should be told that I could not change my email because my password is incorrect$/')]
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be told that my email could not be changed$/
-     */
+    #[Then('/^I should be told that my email could not be changed$/')]
     public function iShouldBeToldThatMyEmailCouldNotBeChanged(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I should be told that my request was successful$/
-     */
+    #[Given('/^I should be told that my request was successful$/')]
     public function iShouldBeToldThatMyRequestWasSuccessful(): void
     {
         $userService = $this->container->get(UserService::class);
-        $response = $userService->requestChangeEmail(
+        $response    = $userService->requestChangeEmail(
             $this->userAccountId,
             $this->newEmail,
             new HiddenString($this->userAccountPassword)
@@ -1450,17 +1333,13 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('EmailResetExpiry', $response);
     }
 
-    /**
-     * @Given I want to create a new account
-     */
+    #[Given('I want to create a new account')]
     public function iWantToCreateANewAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^my account cannot be found$/
-     */
+    #[Then('/^my account cannot be found$/')]
     public function myAccountCannotBeFound(): void
     {
         // ActorUsers::getByEmail
@@ -1470,34 +1349,28 @@ class AccountContext extends BaseIntegrationContext
 
         try {
             $us->authenticate('incorrect@email.com', new HiddenString($this->userAccountPassword));
-        } catch (NotFoundException $ex) {
-            Assert::assertEquals('User not found for email', $ex->getMessage());
-            Assert::assertEquals(404, $ex->getCode());
+        } catch (NotFoundException $notFoundException) {
+            Assert::assertEquals('User not found for email', $notFoundException->getMessage());
+            Assert::assertEquals(404, $notFoundException->getCode());
             return;
         }
 
         throw new ExpectationFailedException('Expected not found exception was not thrown');
     }
 
-    /**
-     * @Then /^My account email address should be reset$/
-     */
+    #[Then('/^My account email address should be reset$/')]
     public function myAccountEmailAddressShouldBeReset(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @then my account is activated
-     */
+    #[Then('my account is activated')]
     public function myAccountIsActivated(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^My account is deleted$/
-     */
+    #[Then('/^My account is deleted$/')]
     public function myAccountIsDeleted(): void
     {
         // ActorUsers::get
@@ -1506,8 +1379,8 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
                             'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                         ]
                     ),
@@ -1521,9 +1394,9 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id' => $this->userAccountId,
-                            'Email' => $this->userAccountEmail,
-                            'Password' => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                            'Id'        => $this->userAccountId,
+                            'Email'     => $this->userAccountEmail,
+                            'Password'  => password_hash($this->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
                             'LastLogin' => null,
                         ]
                     ),
@@ -1539,17 +1412,13 @@ class AccountContext extends BaseIntegrationContext
         Assert::assertEquals($this->userAccountEmail, $deletedUser['Email']);
     }
 
-    /**
-     * @Given /^My email reset token is still valid$/
-     */
+    #[Given('/^My email reset token is still valid$/')]
     public function myEmailResetTokenIsStillValid(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then my password has been associated with my user account
-     */
+    #[Then('my password has been associated with my user account')]
     public function myPasswordHasBeenAssociatedWithMyUserAccount(): void
     {
         $command = $this->awsFixtures->getLastCommand();

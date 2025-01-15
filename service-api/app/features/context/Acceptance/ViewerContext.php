@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
-use App\Service\Features\FeatureEnabled;
 use Aws\Result;
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
@@ -26,9 +28,7 @@ class ViewerContext implements Context
     private string $viewerCodeOrganisation;
     private string $lpaViewedBy;
 
-    /**
-     * @Given I have been given access to an LPA via share code
-     */
+    #[Given('I have been given access to an LPA via share code')]
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
         $this->viewerCode             = '1111-1111-1111';
@@ -41,26 +41,20 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Given I have been given access to a cancelled LPA via share code
-     */
+    #[Given('I have been given access to a cancelled LPA via share code')]
     public function iHaveBeenGivenAccessToUseACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaShareCode();
         $this->lpa->status = 'Cancelled';
     }
 
-    /**
-     * @Given I access the viewer service
-     */
+    #[Given('I access the viewer service')]
     public function iAccessTheViewerService(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @When I give a share code that's been cancelled
-     */
+    #[When('I give a share code that\'s been cancelled')]
     public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
         $lpaExpiry = (new DateTime('+20 days'))->format('c');
@@ -93,9 +87,7 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Then I can see a message the LPA has been cancelled
-     */
+    #[Then('I can see a message the LPA has been cancelled')]
     public function iCanSeeAMessageTheLPAHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
@@ -104,9 +96,7 @@ class ViewerContext implements Context
         Assert::assertEquals($lpaData['details'], 'Share code cancelled');
     }
 
-    /**
-     * @Given /^I can see (.*) images$/
-     */
+    #[Given('/^I can see (.*) images$/')]
     public function iCanSeeInstructionsImages(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -117,9 +107,7 @@ class ViewerContext implements Context
         Assert::assertEquals('COLLECTION_COMPLETE', $lpaData['iap']['status']);
     }
 
-    /**
-     * @When I give a valid LPA share code
-     */
+    #[When('I give a valid LPA share code')]
     public function iGiveAValidLPAShareCode(): void
     {
         $lpaExpiry = (new DateTime('+20 days'))->format('c');
@@ -169,9 +157,7 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @When /^I enter an organisation name and confirm the LPA is correct$/
-     */
+    #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -219,9 +205,7 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Then I can see the full details of the valid LPA
-     */
+    #[Then('I can see the full details of the valid LPA')]
     public function iCanSeeTheFullDetailsOfTheValidLPA(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -235,9 +219,7 @@ class ViewerContext implements Context
         Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
     }
 
-    /**
-     * @Then /^I see a message that LPA has been cancelled$/
-     */
+    #[Then('/^I see a message that LPA has been cancelled$/')]
     public function iSeeAMessageThatLPAHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
@@ -252,33 +234,25 @@ class ViewerContext implements Context
         Assert::assertEquals('Cancelled', $lpaData['lpa']['status']);
     }
 
-    /**
-     * @When /^I realise the LPA is incorrect$/
-     */
+    #[When('/^I realise the LPA is incorrect$/')]
     public function iRealiseTheLPAIsCorrect(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to re-enter code$/
-     */
+    #[Then('/^I want to see an option to re-enter code$/')]
     public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to check another LPA$/
-     */
+    #[Then('/^I want to see an option to check another LPA$/')]
     public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Given /^the LPA has (.*)$/
-     */
+    #[Given('/^the LPA has (.*)$/')]
     public function theLPAHasDirective(string $directive): void
     {
         $this->lpa->applicationHasRestrictions = false;
