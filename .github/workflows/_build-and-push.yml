@@ -119,7 +119,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@645ec63cfb34efd4350b15425f6bdb7d2e8c71f7 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@3f64f3a5dacf4ce037e42ebf3ecf9a58bda7a6af # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
