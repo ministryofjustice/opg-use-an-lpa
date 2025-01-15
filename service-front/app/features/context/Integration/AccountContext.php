@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Exception\ApiException;
@@ -302,6 +303,12 @@ class AccountContext extends BaseIntegrationContext
 
         $tokenValid = $this->container->get(UserService::class)->canResetEmail($this->userEmailResetToken);
         Assert::assertFalse($tokenValid);
+    }
+
+    #[When('/^I confirm that I want to delete my account$/')]
+    public function iConfirmThatIWantToDeleteMyAccount(): void
+    {
+        // Not needed for this context
     }
 
     /**
