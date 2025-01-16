@@ -15,7 +15,6 @@ use App\Handler\CompleteDeleteAccountHandler;
 use App\Handler\CompletePasswordResetHandler;
 use App\Handler\HealthcheckHandler;
 use App\Handler\LpasCollectionHandler;
-use App\Handler\LpasCollectionV2Handler;
 use App\Handler\LpasResourceCodesCollectionHandler;
 use App\Handler\LpasResourceHandler;
 use App\Handler\LpasResourceImagesCollectionHandler;
