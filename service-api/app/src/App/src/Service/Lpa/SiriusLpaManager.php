@@ -218,7 +218,7 @@ class SiriusLpaManager implements LpaManagerInterface
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
-            $lpa = $lpas[$item['SiriusUid']] ?? null;
+            $lpa = $lpas[$item['SiriusUid'] ?? 'ERROR'] ?? null;
 
             if ($lpa === null) {
                 continue;
