@@ -27,7 +27,7 @@ func main() {
 
     appFactory := NewFactory(cfg, logger)
 
-    handler := NewCloudWatchHandler(appFactory, logger)
+    handler := NewSQSEventHandler(appFactory, logger)
 
     lambda.Start(handler)
 }
