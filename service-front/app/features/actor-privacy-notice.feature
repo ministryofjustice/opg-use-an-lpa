@@ -4,14 +4,7 @@ Feature: View privacy notice from the terms of use page
   I want to check the privacy notice
   So that I can understand how my private data will be handled by the service
 
-  @ui @ff:allow_gov_one_login:false
-  Scenario: user wants to see the privacy notice
-    Given I am on the create account page
-    When I request to see the actor terms of use
-    And I request to see the actor privacy notice
-    Then I can see the actor privacy notice
-
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: user wants to see the privacy notice
     Given I am on the one login page
     When I request to see the actor terms of use

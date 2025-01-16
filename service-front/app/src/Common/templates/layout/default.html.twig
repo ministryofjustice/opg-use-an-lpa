@@ -47,11 +47,7 @@
 
 {{  include('@partials/cookie-banner.html.twig') }}
 
-{% if feature_enabled('allow_gov_one_login') %}
-    {{ include("@partials/header/one-login.html.twig") }}
-{% else %}
-    {{ include("@partials/header/default.html.twig") }}
-{% endif %}
+{{ include("@partials/header/one-login.html.twig") }}
 
 {% block content %}{% endblock %}
 

@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # pin@v2.21.2
+        uses: shivammathur/setup-php@21e092a3e0c2fabb77bf641337eced34a4bcd3cc # pin@v2.21.2
         with:
           php-version: 8.3
 
@@ -47,7 +47,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@533298bc57c27f112a2c04a74a04a4d43e2866fd
+        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
@@ -81,7 +81,6 @@ jobs:
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
           public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-          ff_allow_gov_one_login=$(cat ./terraform/environment/cluster_config.json | jq .ff_allow_gov_one_login | xargs)
 
           ln -sf ../features tests/smoke/features
 
@@ -90,11 +89,10 @@ jobs:
             BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
             BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
             BEHAT_OLD_ACTOR_URL=https://$use_fqdn \
-            BEHAT_FF_ALLOW_GOV_ONE_LOGIN=$ff_allow_gov_one_login \
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # pin@v3.1.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # pin@v3.1.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots

@@ -63,22 +63,10 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $DELETE_LPA_FEATURE = 'delete_lpa_feature';
-    $ALLOW_GOV_ONE_LOGIN = 'allow_gov_one_login';
 
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
-    $config = $container->get("config");
-    $feature_flags = $config["feature_flags"];
-
-    $app->route('/home', [
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Actor\Handler\AuthenticateOneLoginHandler::class,
-            Actor\Handler\ActorTriagePageHandler::class
-        )
-    ], ['GET', 'POST'], 'home');
+    $app->route('/home', Actor\Handler\AuthenticateOneLoginHandler::class, ['GET', 'POST'], 'home');
     $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
@@ -94,64 +82,22 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     // User creation
-    $app->route(
-        '/create-account',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\CreateAccountHandler::class,
-        ),
-        ['GET', 'POST'],
-        'create-account'
-    );
-    $app->get(
-        '/create-account-success',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\CreateAccountSuccessHandler::class,
-        ),
-        'create-account-success'
-    );
+    $app->route('/create-account',Common\Handler\GoneHandler::class,['GET', 'POST'],'create-account');
+
+    $app->get('/create-account-success',Common\Handler\GoneHandler::class,'create-account-success');
     $app->get(
         '/activate-account/{token}',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
-            Actor\Handler\ActivateAccountHandler::class,
-        ),
+        fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
         'activate-account'
     );
 
     // User auth
-    $app->route('/login', [
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
-            Actor\Handler\LoginPageHandler::class
-        )
-    ], ['GET', 'POST'], 'login');
+    $app->route('/login', fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'), ['GET', 'POST'], 'login');
 
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
-    $app->get('/home/login', [
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Actor\Handler\OneLoginCallbackHandler::class,
-            Common\Handler\GoneHandler::class
-        )
-    ], 'auth-redirect');
+    $app->get('/home/login', Actor\Handler\OneLoginCallbackHandler::class, 'auth-redirect');
 
     $app->get(
         '/logout',
@@ -163,42 +109,19 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     );
 
     // User management
-    $app->route(
-        '/reset-password',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\PasswordResetRequestPageHandler::class
-        ),
-        ['GET', 'POST'],
-        'password-reset'
-    );
+    $app->route('/reset-password', Common\Handler\GoneHandler::class, ['GET', 'POST'], 'password-reset');
 
 
     $app->route(
         '/reset-password/{token}',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\PasswordResetPageHandler::class
-        ),
+        Common\Handler\GoneHandler::class,
         ['GET', 'POST'],
         'password-reset-token'
     );
 
     $app->get(
         '/verify-new-email/{token}',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\CompleteChangeEmailHandler::class
-        ),
+        Common\Handler\GoneHandler::class,
         'verify-new-email'
     );
 
@@ -217,29 +140,8 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Actor\Handler\SettingsHandler::class,
     ], 'settings');
 
-    $app->route('/change-password',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\ChangePasswordHandler::class
-        ),
-        ['GET','POST'],
-  'change-password'
-    );
-
-    $app->route('/change-email',
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $ALLOW_GOV_ONE_LOGIN,
-            Common\Handler\GoneHandler::class,
-            Actor\Handler\RequestChangeEmailHandler::class
-        ),
-        ['GET','POST'],
- 'change-email'
-    );
+    $app->route('/change-password', Common\Handler\GoneHandler::class, ['GET','POST'], 'change-password');
+    $app->route('/change-email', Common\Handler\GoneHandler::class, ['GET','POST'], 'change-email');
 
     $app->get('/lpa/change-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,

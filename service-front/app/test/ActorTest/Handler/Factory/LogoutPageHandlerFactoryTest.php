@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Actor\Handler\Factory\LogoutPageHandlerFactory;
-use Common\Service\Authentication\LocalAccountLogout;
-use Common\Service\Authentication\LogoutStrategy;
-use Common\Service\Features\FeatureEnabled;
 use Common\Service\OneLogin\OneLoginService;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
@@ -47,44 +43,12 @@ class LogoutPageHandlerFactoryTest extends TestCase
             ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
     }
 
-    public static function featureFlagStrategies(): array
-    {
-        return [
-            'one-login disabled' => [
-                false,
-                LocalAccountLogout::class,
-            ],
-            'one-login enabled'  => [
-                true,
-                OneLoginService::class,
-            ],
-        ];
-    }
-
-    /**
-     * @psalm-param class-string<LogoutStrategy> $strategyClass
-     */
-    #[DataProvider('featureFlagStrategies')]
     #[Test]
-    public function it_creates_an_appropriate_logout_page_handler(
-        bool $allowGovOneLogin,
-        string $strategyClass,
-    ): void {
-        $featureProphecy = $this->prophesize(FeatureEnabled::class);
-        $featureProphecy
-            ->__invoke('allow_gov_one_login')
-            ->willReturn($allowGovOneLogin);
-
+    public function it_creates_an_appropriate_logout_page_handler(): void {
         $this->container
-            ->get($strategyClass)
+            ->get(OneLoginService::class)
             ->shouldBeCalled()
-            ->willReturn($this->prophesize($strategyClass)->reveal());
-
-        $this->container
-            ->get(FeatureEnabled::class)
-            ->willReturn(
-                $featureProphecy->reveal(),
-            );
+            ->willReturn($this->prophesize(OneLoginService::class)->reveal());
 
         $factory = new LogoutPageHandlerFactory();
 

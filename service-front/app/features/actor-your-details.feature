@@ -8,13 +8,7 @@ Feature: Settings dashboard
     Given I am a user of the lpa application
     And I am currently signed in
 
-  @ui @ff:allow_gov_one_login:false
-  Scenario: The user can request login details reset
-    Given I view my user details
-    When I ask for a change of donors or attorneys details
-    Then Then I am given instructions on how to change donor or attorney details
-
-  @ui @ff:allow_gov_one_login:true
+  @ui
     Scenario: The user sees a link to GOV.UK One Login settings when logged in via One Login
     Given I view my user details
     When I click the govuk-settings-link link on the page

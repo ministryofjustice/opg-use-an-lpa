@@ -54,12 +54,8 @@ class AccountContext implements Context
      */
     public function iAccessTheLoginForm(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            $this->ui->visit('/home');
-            $this->ui->pressButton('sign-in-one-login');
-        } else {
-            $this->ui->visit('/login');
-        }
+        $this->ui->visit('/home');
+        $this->ui->pressButton('sign-in-one-login');
     }
 
     /**
@@ -67,42 +63,35 @@ class AccountContext implements Context
      */
     public function iEnterCorrectCredentials(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            switch ($this->detectOneLoginImplementation()) {
-                case OneLoginImplementation::Mock:
-                    $this->ui->assertPageAddress('/authorize');
-                    $this->ui->fillField('email', $this->userEmail);
-                    break;
-                case OneLoginImplementation::Integration:
-                case OneLoginImplementation::Production:
-                    $this->ui->pressButton('sign-in-button');
+        switch ($this->detectOneLoginImplementation()) {
+            case OneLoginImplementation::Mock:
+                $this->ui->assertPageAddress('/authorize');
+                $this->ui->fillField('email', $this->userEmail);
+                break;
+            case OneLoginImplementation::Integration:
+            case OneLoginImplementation::Production:
+                $this->ui->pressButton('sign-in-button');
 
-                    $this->ui->fillField('email', $this->userEmail);
-                    $this->ui->pressButton('Continue');
+                $this->ui->fillField('email', $this->userEmail);
+                $this->ui->pressButton('Continue');
 
-                    $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
-                        ? getenv('ONE_LOGIN_USER_PASSWORD')
-                        : throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
+                $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
+                    ? getenv('ONE_LOGIN_USER_PASSWORD')
+                    : throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
 
-                    $this->ui->fillField('password', $this->userPassword);
-                    $this->ui->pressButton('Continue');
+                $this->ui->fillField('password', $this->userPassword);
+                $this->ui->pressButton('Continue');
 
-                    // Generate a 2fa secret just before use.
-                    // There is a non-zero chance it will be incorrect if generated at the end of its 30-second window
-                    $secret = getenv('ONE_LOGIN_OTP_SECRET')
-                        ? getenv('ONE_LOGIN_OTP_SECRET')
-                        : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
+                // Generate a 2fa secret just before use.
+                // There is a non-zero chance it will be incorrect if generated at the end of its 30-second window
+                $secret = getenv('ONE_LOGIN_OTP_SECRET')
+                    ? getenv('ONE_LOGIN_OTP_SECRET')
+                    : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
 
-                    $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
-            }
-
-            $this->ui->pressButton('Continue');
-        } else {
-            $this->ui->assertPageAddress('/login');
-            $this->ui->fillField('email', $this->userEmail);
-            $this->ui->fillField('password', $this->userPassword);
-            $this->ui->pressButton('Sign in');
+                $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
         }
+
+        $this->ui->pressButton('Continue');
     }
 
     private function detectOneLoginImplementation(): OneLoginImplementation
@@ -138,11 +127,7 @@ class AccountContext implements Context
      */
     public function iAmSignedIn(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            $this->ui->assertElementOnPage('nav.one-login-header__nav');
-        } else {
-            $this->ui->assertElementOnPage('nav.signin');
-        }
+        $this->ui->assertElementOnPage('nav.one-login-header__nav');
     }
 
     /**
