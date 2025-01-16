@@ -3,8 +3,13 @@ package main
 import (
 	"context"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
+    "github.com/aws/aws-sdk-go-v2/config"
+    "github.com/aws/aws-sdk-go-v2/aws"
+)
+
+var (
+	cfg        aws.Config
 )
 
 func main() {
@@ -16,13 +21,11 @@ func main() {
 
 	cfg, err = config.LoadDefaultConfig(ctx)
 	if err != nil {
-		logger.ErrorContext(ctx, "failed to load default config", slog.Any("err", err))
+		logger.Error("failed to load default config", err)
 		return
 	}
 
-    appConfig := LoadConfig()
-
-    appFactory := NewFactory(cfg, logger, appConfig)
+    appFactory := NewFactory(cfg, logger)
 
     handler := NewCloudWatchHandler(appFactory, logger)
 

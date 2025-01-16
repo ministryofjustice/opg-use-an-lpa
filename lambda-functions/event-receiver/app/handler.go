@@ -8,8 +8,8 @@ import (
     "github.com/aws/aws-lambda-go/events"
 )
 
-type CloudWatchHandler interfact {
-    Handle(ctx context.Context, event events.CloudWatchHandler) error
+type CloudWatchHandler interface {
+    Handle(ctx context.Context, event events.CloudWatchEvent) error
 }
 
 type cloudWatchHandler struct {
@@ -24,17 +24,22 @@ func NewCloudWatchHandler(factory Factory, logger Logger) CloudWatchHandler {
     }
 }
 
-func (h *cloudWatchHandler) Handle(ctx context.Context, event events.CloudWatchHandler) error {
+func (h *cloudWatchHandler) Handle(ctx context.Context, event events.CloudWatchEvent) error {
+    var parsedEvent events.CloudWatchEvent
+
     h.logger.Info("Received CloudWatch event", "source", event.Source)
 
-    switch event.Source {
-    case "opg.poas.makeregister":
-        h.logger.Info("Handling 'makeregister' event", "detailType", event.DetailType)
+    err := json.Unmarshal(event.Detail, &parsedEvent)
+    if err != nil {
+        h.logger.Error("Failed to unmarshal event detail", err)
+        return fmt.Errorf("failed to unmarshal event: %w", err)
+    }
 
+    switch parsedEvent.Source {
+    case "opg.poas.makeregister":
+        h.logger.Info("Handling 'makeregister' event", "detailType", parsedEvent.DetailType)
     default:
-        eventData, _ := json.Marshal(event)
-        h.logger.Warn("Unhandled event source", fmt.Errorf("unknown source: %s", event.Source), "event", string(eventData))
-        return fmt.Errorf("unknown event source: %s", event.Source)
+        h.logger.Warn("Unhandled event source: " + parsedEvent.Source, err)
     }
 
     return nil

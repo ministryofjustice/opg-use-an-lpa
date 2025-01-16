@@ -5,22 +5,19 @@ import (
 )
 
 type Factory interface {
-    GetAWSConfig() aws.GetAWSConfig
+    GetAWSConfig() aws.Config
     GetLogger() Logger
-    GetConfig() AppConfig
 }
 
 type factory struct {
-    awsConfig aws.GetAWSConfig
+    awsConfig aws.Config
     logger Logger
-    config AppConfig
 }
 
-func NewFactory(cfg aws.Config, logger Logger, config AppConfig) Factory {
+func NewFactory(cfg aws.Config, logger Logger) Factory {
     return &factory{
         awsConfig: cfg,
         logger: logger,
-        config: config,
     }
 }
 
@@ -30,8 +27,4 @@ func (f *factory) GetAWSConfig() aws.Config {
 
 func (f *factory) GetLogger() Logger {
     return f.logger
-}
-
-func (f *factory) GetConfig() AppConfig {
-    return f.config
 }

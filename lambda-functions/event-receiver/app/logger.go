@@ -5,9 +5,9 @@ import (
 )
 
 type Logger interface {
-    Info(message String, args ...interface{})
-    Warn(message String, err error, args ...interface{})
-    Error(message String, err error)
+    Info(message string, args ...interface{})
+    Warn(message string, err error, args ...interface{})
+    Error(message string, err error)
 }
 
 type defaultLogger struct{}
