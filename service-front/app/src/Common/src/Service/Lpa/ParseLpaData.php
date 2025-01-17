@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
+use Common\Entity\CaseActor;
+use Common\Entity\CombinedLpa;
+use Common\Entity\Lpa;
+use Common\Entity\Person;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use Common\Service\Lpa\Factory\PersonDataFormatter;
+use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Exception;
+use RuntimeException;
 
 /**
  * Single action invokeable class that transforms incoming LPA data arrays from the API into ones containing
@@ -48,20 +54,12 @@ class ParseLpaData
         foreach ($data as $dataItemName => $dataItem) {
             switch ($dataItemName) {
                 case 'lpa':
-                    //introduce feature flag here #3551
-                    //the lpaData array converted to object using hydrator
-                    if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $data['lpa'] = ($this->lpaDataFormatter)($dataItem);
-                    } else {
-                        $data['lpa'] = $this->lpaFactory->createLpaFromData($dataItem);
-                    }
+                    $data['lpa'] = $this->getLpa($dataItem);
                     break;
                 case 'actor':
-                    if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $data['actor']['details'] = ($this->personDataFormatter)($dataItem['details']);
-                    } else {
-                        $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
-                    }
+                    $data['actor'] = is_array($data['actor'])
+                        ? $this->getActor($dataItem)
+                        : $data['actor'];
                     break;
                 case 'iap':
                     $data['iap'] = $this->imagesFactory->createFromData($dataItem);
@@ -74,5 +72,40 @@ class ParseLpaData
         }
 
         return new ArrayObject($data, ArrayObject::ARRAY_AS_PROPS);
+    }
+
+    /**
+     * @param array $details
+     * @return array{
+     *     type: string,
+     *     details: Person|CaseActor,
+     * }
+     * @throws UnableToHydrateObject
+     * @throws RuntimeException
+     */
+    public function getActor(array $details): array
+    {
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            $details['details'] = ($this->personDataFormatter)($details['details']);
+        } else {
+            $details['details'] = $this->lpaFactory->createCaseActorFromData($details['details']);
+        }
+
+        return $details;
+    }
+
+    /**
+     * @param mixed $dataItem
+     * @return array|Lpa
+     * @throws UnableToHydrateObject
+     * @throws RuntimeException
+     */
+    public function getLpa(array $dataItem): Lpa|CombinedLpa
+    {
+        if (($this->featureEnabled)('support_datastore_lpas')) {
+            return ($this->lpaDataFormatter)($dataItem);
+        } else {
+            return $this->lpaFactory->createLpaFromData($dataItem);
+        }
     }
 }
