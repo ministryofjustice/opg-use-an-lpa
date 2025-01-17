@@ -30,12 +30,12 @@ class FilterActiveActorsTest extends TestCase
 {
     use ProphecyTrait;
 
+    private GetAttorneyStatusInterface $attorney;
     private FilterActiveActors $filterActiveActors;
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatus;
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatus;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
     private FilterActiveActorsInterface $lpa;
-    private GetAttorneyStatusInterface $attorney;
     private GetTrustCorporationStatusInterface $trustCorporation;
 
     public function setUp(): void
@@ -49,23 +49,23 @@ class FilterActiveActorsTest extends TestCase
         );
 
         $this->attorney = new SiriusLpaAttorney(
-                addressLine1: '9 high street',
-                addressLine2: '',
-                addressLine3: '',
-                country:      '',
-                county:       '',
-                dob:          null,
-                email:        '',
-                firstname:    'A',
-                id:           '345678901',
-                middlenames:  null,
-                otherNames:   null,
-                postcode:     'DN37 5SH',
-                surname:      'B',
-                systemStatus: ActorStatus::ACTIVE,
-                town:         '',
-                uId:          '7345678901',
-            );
+            addressLine1: '9 high street',
+            addressLine2: '',
+            addressLine3: '',
+            country:      '',
+            county:       '',
+            dob:          null,
+            email:        '',
+            firstname:    'A',
+            id:           '345678901',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'DN37 5SH',
+            surname:      'B',
+            systemStatus: ActorStatus::ACTIVE,
+            town:         '',
+            uId:          '7345678901',
+        );
 
         $this->trustCorporation = new SiriusLpaTrustCorporation(
             addressLine1: 'Street 1',
@@ -92,8 +92,8 @@ class FilterActiveActorsTest extends TestCase
             applicationHasRestrictions:                false,
             applicationType:                           'Classic',
             attorneys:                                 [
-                $this->attorney
-           ],
+                                                           $this->attorney,
+                                                       ],
             caseAttorneyJointly:                       true,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           false,
@@ -101,33 +101,33 @@ class FilterActiveActorsTest extends TestCase
             channel:                                   null,
             dispatchDate:                              null,
             donor:                                     new SiriusLpaDonor(
-               addressLine1: '81 Front Street',
-               addressLine2: 'LACEBY',
-               addressLine3: '',
-               country:      '',
-               county:       '',
-               dob:          null,
-               email:        'RachelSanderson@opgtest.com',
-               firstname:    'Rachel',
-               id:           '123456789',
-               linked:       [
+                addressLine1: '81 Front Street',
+                addressLine2: 'LACEBY',
+                addressLine3: '',
+                country:      '',
+                county:       '',
+                dob:          null,
+                email:        'RachelSanderson@opgtest.com',
+                firstname:    'Rachel',
+                id:           '123456789',
+                linked:       [
                                  [
-                                     'id' => '123456789',
+                                     'id'  => '123456789',
                                      'uId' => '7123456789',
                                  ],
                                  [
-                                     'id' => '234567890',
+                                     'id'  => '234567890',
                                      'uId' => '7234567890',
                                  ],
                              ],
-               middlenames:  null,
-               otherNames:   null,
-               postcode:     'DN37 5SH',
-               surname:      'Sanderson',
-               systemStatus: null,
-               town:         '',
-               uId:          '7123456789',
-           ),
+                middlenames:  null,
+                otherNames:   null,
+                postcode:     'DN37 5SH',
+                surname:      'Sanderson',
+                systemStatus: null,
+                town:         '',
+                uId:          '7123456789',
+            ),
             hasSeveranceWarning:                       null,
             invalidDate:                               null,
             lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
@@ -141,8 +141,8 @@ class FilterActiveActorsTest extends TestCase
             status:                                    'Registered',
             statusDate:                                null,
             trustCorporations:                         [
-               $this->trustCorporation,
-           ],
+                                                           $this->trustCorporation,
+                                                       ],
             uId:                                       '700000000047',
             whenTheLpaCanBeUsed:                       null,
             withdrawnDate:                             null
