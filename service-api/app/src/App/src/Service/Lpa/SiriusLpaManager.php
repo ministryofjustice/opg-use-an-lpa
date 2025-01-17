@@ -21,8 +21,6 @@ use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class SiriusLpaManager implements LpaManagerInterface
 {
-    private const ACTIVE_TC         = 0;
-
     public function __construct(
         private UserLpaActorMapInterface $userLpaActorMapRepository,
         private LpasInterface $lpaRepository,

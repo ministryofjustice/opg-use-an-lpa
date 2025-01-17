@@ -21,9 +21,9 @@ use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
 use App\Service\Lpa\AddLpa\AddLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpa;
-use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use App\Service\ViewerCodes\ViewerCodeService;
 use Aws\CommandInterface;
@@ -74,7 +74,7 @@ class LpaContext extends BaseIntegrationContext
     private string $codesApiPactProvider;
     private string $iapImagesApiPactProvider;
     private RemoveLpa $deleteLpa;
-    private SiriusLpaManager $lpaService;
+    private LpaManagerInterface $lpaService;
 
     /**
      * @Given I have previously requested the addition of a paper LPA to my account
@@ -602,7 +602,7 @@ class LpaContext extends BaseIntegrationContext
 
         Assert::assertArrayHasKey('actor', $validatedLpa);
         Assert::assertArrayHasKey('lpa', $validatedLpa);
-        Assert::assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+        Assert::assertEquals($validatedLpa['lpa']->getUid(), $this->lpaUid);
     }
 
     /**
@@ -1280,8 +1280,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('date', $lpaData);
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
 
         // Get the share codes
 
@@ -2031,7 +2031,7 @@ class LpaContext extends BaseIntegrationContext
 
         Assert::assertArrayHasKey('actor', $validatedLpa);
         Assert::assertArrayHasKey('lpa', $validatedLpa);
-        Assert::assertEquals($validatedLpa['lpa']['uId'], $this->lpaUid);
+        Assert::assertEquals($validatedLpa['lpa']->getUid(), $this->lpaUid);
     }
 
     /**
@@ -2397,7 +2397,7 @@ class LpaContext extends BaseIntegrationContext
      */
     public function theLPAIsSuccessfullyAdded(): void
     {
-        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+        $now                     = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
         $this->userLpaActorToken = '13579';
 
         // UserLpaActorMap::getUsersLpas
@@ -2463,7 +2463,7 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures = $this->container->get(MockHandler::class);
         $this->awsFixtures = $this->container->get(AwsMockHandler::class);
-        $this->lpaService  = $this->container->get(SiriusLpaManager::class);
+        $this->lpaService  = $this->container->get(LpaManagerInterface::class);
         $this->deleteLpa   = $this->container->get(RemoveLpa::class);
 
         $config                         = $this->container->get('config');
