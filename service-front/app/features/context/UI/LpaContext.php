@@ -2454,6 +2454,32 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to remove an LPA from my account that has no active attorney on it$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccountThatHasNoActiveAttorneysOnIt(): void
+    {
+        $this->lpa->status = 'Registered';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => null,
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+        $this->ui->clickLink('Remove LPA');
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
+    }
+
+    /**
      * @When /^I request to view an LPA which has a donor signature before 2016$/
      * @When /^I request to view an LPA which has a trust corporation added$/
      */

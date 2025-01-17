@@ -58,7 +58,9 @@ class ParseLpaData
                     }
                     break;
                 case 'actor':
-                    $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    if ($data['actor'] !== null) {
+                        $data['actor']['details'] = $this->lpaFactory->createCaseActorFromData($dataItem['details']);
+                    }
                     break;
                 case 'iap':
                     $data['iap'] = $this->imagesFactory->createFromData($dataItem);
