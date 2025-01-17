@@ -77,7 +77,6 @@ class SiriusLpaManagerTest extends TestCase
             $this->getAttorneyStatusProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
             $this->getTrustCorporationStatusProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
@@ -568,6 +567,12 @@ class SiriusLpaManagerTest extends TestCase
                 'ActivateBy' => (new DateTime('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
                 'Added'      => new DateTime('now'),
             ],
+            [
+                'Id'      => 'token-4',
+                'LpaUid'  => 'M-uid-1',
+                'ActorId' => 4,
+                'Added'   => new DateTime('now'),
+            ],
         ];
 
         $t->lpaResults = [
@@ -652,7 +657,8 @@ class SiriusLpaManagerTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
 
         $lpa = array_pop($t->lpaResults);
-        array_pop($t->mapResults); //discard the first lpa with TTL
+        array_pop($t->mapResults); //discard the first modernise lpa (No Sirius uid)
+        array_pop($t->mapResults); //discard the second lpa with TTL
         $map = array_pop($t->mapResults);
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
@@ -684,6 +690,7 @@ class SiriusLpaManagerTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
 
         $lpa = array_pop($t->lpaResults);
+        array_pop($t->mapResults); //discard the first modernise lpa (No Sirius uid)
         $map = array_pop($t->mapResults);
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);

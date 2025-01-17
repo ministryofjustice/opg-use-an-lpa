@@ -20,7 +20,7 @@ class LpaAlreadyAddedTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LpaService|ObjectProphecy $lpaManagerProphecy;
+    private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     private string $userId;
@@ -137,6 +137,66 @@ class LpaAlreadyAddedTest extends TestCase
             ->getByUserId($this->userId)
             ->willReturn(
                 [
+                    [
+                        'Id'        => $this->userLpaActorToken,
+                        'SiriusUid' => $this->lpaUid,
+                    ],
+                ]
+            );
+
+        $this->lpaManagerProphecy
+            ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
+            ->willReturn(
+                [
+                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                    'lpa'                  => [
+                        'uId'         => $this->lpaUid,
+                        'caseSubtype' => 'hw',
+                        'donor'       => [
+                            'uId'         => '700000000444',
+                            'firstname'   => 'Another',
+                            'middlenames' => '',
+                            'surname'     => 'Person',
+                        ],
+                    ],
+                ]
+            );
+
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $this->assertEquals(
+            [
+                'donor'                => [
+                    'uId'         => '700000000444',
+                    'firstname'   => 'Another',
+                    'middlenames' => '',
+                    'surname'     => 'Person',
+                ],
+                'caseSubtype'          => 'hw',
+                'lpaActorToken'        => $this->userLpaActorToken,
+                'activationKeyDueDate' => null,
+            ],
+            $lpaAddedData
+        );
+    }
+
+    /**
+     * In the interim period before the feature flag for combined format goes live we need to ensure that
+     * Modernise records in the database don't blow up code that can't handle them. This shouldn't happen
+     * on production at all but causes issues in PR environments and local dev.
+     *
+     * TODO: This test will likely disappear when this code is touched as a part of UML-3784
+     */
+    #[Test]
+    public function correctly_handles_records_without_sirius_uids_if_lpa_already_added(): void
+    {
+        $this->userLpaActorMapProphecy
+            ->getByUserId($this->userId)
+            ->willReturn(
+                [
+                    [
+                        'Id'     => '0123-01-01-01-01234',
+                        'LpaUid' => 'M-1234-1234-1234',
+                    ],
                     [
                         'Id'        => $this->userLpaActorToken,
                         'SiriusUid' => $this->lpaUid,
