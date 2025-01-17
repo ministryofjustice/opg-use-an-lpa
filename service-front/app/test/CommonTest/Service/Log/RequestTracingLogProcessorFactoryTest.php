@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Log;
+namespace CommonTest\Service\Log;
 
-use PHPUnit\Framework\Attributes\Test;
+use Common\Service\Log\RequestTracingLogProcessor;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
-use Common\Service\Log\RequestTracingLogProcessor;
 
 class RequestTracingLogProcessorFactoryTest extends TestCase
 {

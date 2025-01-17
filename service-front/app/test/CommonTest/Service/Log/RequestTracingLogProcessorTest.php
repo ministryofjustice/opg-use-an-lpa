@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AppTest\Service\Log;
+namespace CommonTest\Service\Log;
 
-use PHPUnit\Framework\Attributes\Test;
-use DI\NotFoundException;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Log\RequestTracingLogProcessor;
+use DI\NotFoundException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
