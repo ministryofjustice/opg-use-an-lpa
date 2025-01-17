@@ -36,12 +36,12 @@ class CanHydrateCombinedLpaTest extends TestCase
             county       : '',
             dob          : new DateTimeImmutable('1948-11-01'),
             email        : 'RachelSanderson@opgtest.com',
-            firstnames   : null,
+            firstnames   : 'Rachel',
             name         : null,
             otherNames   : 'Ezra',
             postcode     : 'DN37 5SH',
             surname      : 'Sanderson',
-            systemStatus : null,
+            systemStatus : 'true',
             town         : '',
             uId          : '700000000799'
         );
