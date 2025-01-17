@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\Repository;
+namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\DataStoreLpasFactory;
