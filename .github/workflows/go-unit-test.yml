@@ -1,5 +1,7 @@
 name: "[Job] Run Go unit tests"
 
+on:
+  workflow_call:
 
 jobs:
   run:

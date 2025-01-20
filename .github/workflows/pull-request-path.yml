@@ -117,6 +117,17 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path != 'docs'
 
+    go-unit_test:
+      name: test node dependencies
+      uses: ./.github/workflows/go-unit-test.yml
+      needs:
+        - workflow_variables
+      if: |
+        always() &&
+        needs.workflow_variables.result == 'success' &&
+        needs.workflow_variables.outputs.specific_path == 'all'
+
+
   node_test:
     name: test node dependencies
     uses: ./.github/workflows/_node-test.yml
