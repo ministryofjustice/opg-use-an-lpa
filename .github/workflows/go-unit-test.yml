@@ -18,4 +18,4 @@ jobs:
       - name: Run tests
         run: |
           cd lambda-functions/event-receiver/app
-          make go-test
+          go test
