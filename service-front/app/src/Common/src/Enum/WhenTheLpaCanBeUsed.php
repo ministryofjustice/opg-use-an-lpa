@@ -10,7 +10,7 @@ enum WhenTheLpaCanBeUsed: string
     case WHEN_HAS_CAPACITY  = 'when-has-capacity';
     case UNKNOWN            = '';
 
-    public function isWhenHasLostCapacity(): bool
+    public function isWhenCapacityLost(): bool
     {
         return $this === WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST;
     }

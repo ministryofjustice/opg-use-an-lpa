@@ -6,13 +6,11 @@ namespace App\Entity\LpaStore;
 
 use App\Entity\Casters\CastToCaseSubtype;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
+use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
-use App\Enum\ActorStatus;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
-use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -22,62 +20,66 @@ use Exception;
 class LpaStore extends Lpa
 {
     public function __construct(
+        ?bool $applicationHasGuidance,
+        ?bool $applicationHasRestrictions,
+        ?string $applicationType,
+        #[MapFrom('howAttorneysMakeDecisions')]
+        #[CastToWhenTheLpaCanBeUsed]
+        ?HowAttorneysMakeDecisions $attorneyActDecisions,
         #[CastListToType(LpaStoreAttorney::class)]
-        array $attorneys,
+        ?array $attorneys,
         #[MapFrom('lpaType')]
         #[CastToCaseSubtype]
-        LpaType $caseSubtype,
-        string $channel,
-        LpaStoreDonor $donor,
-        ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
+        ?LpaType $caseSubtype,
+        ?string $channel,
+        ?DateTimeImmutable $dispatchDate,
+        ?LpaStoreDonor $donor,
+        ?bool $hasSeveranceWarning,
+        ?DateTimeImmutable $invalidDate,
         #[MapFrom('lifeSustainingTreatmentOption')]
         #[CastToLifeSustainingTreatment]
         ?LifeSustainingTreatment $lifeSustainingTreatment,
-        DateTimeImmutable $signedAt,
-        DateTimeImmutable $registrationDate,
-        string $status,
+        #[MapFrom('signedAt')]
+        ?DateTimeImmutable $lpaDonorSignatureDate,
+        ?bool $lpaIsCleansed,
+        ?string $onlineLpaId,
+        ?DateTimeImmutable $receiptDate,
+        ?DateTimeImmutable $registrationDate,
+        ?DateTimeImmutable $rejectedDate,
+        ?array $replacementAttorneys,
+        ?string $status,
+        ?DateTimeImmutable $statusDate,
         #[CastListToType(LpaStoreTrustCorporation::class)]
         ?array $trustCorporations,
         #[MapFrom('uid')]
-        string $uId,
-        DateTimeImmutable $updatedAt,
-        ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
+        ?string $uId,
+        ?DateTimeImmutable $withdrawnDate,
     ) {
-        // Attorneys will still contain replacement and inactive variants. These will be filtered out
-        // by /App/Service/Lpa/Combined/FilterActiveActors
-        $replacementAttorneys = array_filter(
-            $attorneys,
-            function (GetAttorneyStatusInterface $attorney): bool {
-                return $attorney->getStatus() === ActorStatus::REPLACEMENT;
-            },
-        );
-
         parent::__construct(
-            applicationHasGuidance:     null,
-            applicationHasRestrictions: null,
-            applicationType:            null,
-            attorneys:                  $attorneys,
-            caseSubtype:                $caseSubtype,
-            channel:                    $channel,
-            dispatchDate:               null,
-            donor:                      $donor,
-            hasSeveranceWarning:        null,
-            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
-            invalidDate:                null,
-            lifeSustainingTreatment:    $lifeSustainingTreatment,
-            lpaDonorSignatureDate:      $signedAt,
-            lpaIsCleansed:              null,
-            onlineLpaId:                null,
-            receiptDate:                null,
-            registrationDate:           $registrationDate,
-            rejectedDate:               null,
-            replacementAttorneys:       $replacementAttorneys,
-            status:                     $status,
-            statusDate:                 $updatedAt,
-            trustCorporations:          $trustCorporations,
-            uId:                        $uId,
-            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
-            withdrawnDate:              null,
+            $applicationHasGuidance,
+            $applicationHasRestrictions,
+            $applicationType,
+            $attorneyActDecisions,
+            $attorneys,
+            $caseSubtype,
+            $channel,
+            $dispatchDate,
+            $donor,
+            $hasSeveranceWarning,
+            $invalidDate,
+            $lifeSustainingTreatment,
+            $lpaDonorSignatureDate,
+            $lpaIsCleansed,
+            $onlineLpaId,
+            $receiptDate,
+            $registrationDate,
+            $rejectedDate,
+            $replacementAttorneys,
+            $status,
+            $statusDate,
+            $trustCorporations,
+            $uId,
+            $withdrawnDate
         );
     }
 

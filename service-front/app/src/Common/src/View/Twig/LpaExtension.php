@@ -6,8 +6,8 @@ namespace Common\View\Twig;
 
 use Common\Entity\Person;
 use Common\Entity\CaseActor;
-use Common\Entity\Lpa;
 use Common\Entity\CombinedLpa;
+use Common\Entity\Lpa;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -40,29 +40,27 @@ class LpaExtension extends AbstractExtension
 
     public function actorAddress(CaseActor|Person $actor): string
     {
-        // Multiple addresses can appear for an actor - just use the first one
-        if ($actor instanceof CaseActor && $actor->getAddresses() > 0) {
-            $addressObj = $actor->getAddresses()[0];
-        } elseif ($actor instanceof Person) {
-            $addressObj = $actor; // combined Person's have address data flattened
-        } else {
-            return '';
+        //  Multiple addresses can appear for an actor - just use the first one
+        if (count($actor->getAddresses()) > 0) {
+            $address = $actor->getAddresses()[0];
+
+            return implode(
+                ', ',
+                array_filter(
+                    [
+                    $address->getAddressLine1(),
+                    $address->getAddressLine2(),
+                    $address->getAddressLine3(),
+                    $address->getTown(),
+                    $address->getCounty(),
+                    $address->getPostcode(),
+                    $address->getCountry(),
+                    ]
+                )
+            );
         }
 
-        return implode(
-            ', ',
-            array_filter(
-                [
-                    $addressObj->getAddressLine1(),
-                    $addressObj->getAddressLine2(),
-                    $addressObj->getAddressLine3(),
-                    $addressObj->getTown(),
-                    $addressObj->getCounty(),
-                    $addressObj->getPostcode(),
-                    $addressObj->getCountry(),
-                ]
-            )
-        );
+        return '';
     }
 
     /**

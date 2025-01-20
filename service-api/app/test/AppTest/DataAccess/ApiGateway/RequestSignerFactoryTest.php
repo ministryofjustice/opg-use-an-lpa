@@ -90,10 +90,10 @@ class RequestSignerFactoryTest extends TestCase
             ->get('config')
             ->willReturn([]);
         $containerProphecy
-            ->get(LpaDataStoreSecretManager::class)
+            ->get('LpaDataStoreSecretManager')
             ->willReturn($this->prophesize(LpaDataStoreSecretManager::class)->reveal());
         $containerProphecy
-            ->get(GenerateJWT::class)
+            ->get('GenerateJWT')
             ->willReturn($jwtGenerator->reveal());
 
         $factory = new RequestSignerFactory($containerProphecy->reveal());

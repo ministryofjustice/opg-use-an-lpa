@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
-use Common\Service\Lpa\ServiceInterfaces\ProcessPersonsInterface;
 use DateTimeImmutable;
-use DateTimeInterface;
-use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
+use EventSauce\ObjectHydrator\DoNotSerialize;
 
-class Person implements ProcessPersonsInterface
+class Person
 {
     public function __construct(
         public readonly ?string $addressLine1,
@@ -17,9 +15,9 @@ class Person implements ProcessPersonsInterface
         public readonly ?string $addressLine3,
         public readonly ?string $country,
         public readonly ?string $county,
-        #[CastToDateTimeImmutable('!Y-m-d')]
         public readonly ?DateTimeImmutable $dob,
         public readonly ?string $email,
+        public readonly ?string $firstname,
         public readonly ?string $firstnames,
         public readonly ?string $name,
         public readonly ?string $otherNames,
@@ -27,28 +25,9 @@ class Person implements ProcessPersonsInterface
         public readonly ?string $surname,
         public readonly ?string $systemStatus,
         public readonly ?string $town,
+        public readonly ?string $type,
         public readonly ?string $uId,
     ) {
-    }
-
-    public function getDob(): DateTimeInterface
-    {
-        return $this->dob ?? new DateTimeImmutable('1900-01-01');
-    }
-
-    public function getFirstname(): string
-    {
-        return $this->firstnames ?? '';
-    }
-
-    public function getMiddlenames(): string
-    {
-        return '';
-    }
-
-    public function getSurname(): string
-    {
-        return $this->surname ?? '';
     }
 
     public function getSalutation(): ?string
@@ -56,17 +35,37 @@ class Person implements ProcessPersonsInterface
         return '';
     }
 
-    public function getAddressLine1(): ?string
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function getMiddlenames(): ?string
+    {
+        return $this->otherNames;
+    }
+
+    public function getSurname(): ?string
+    {
+        return $this->surname;
+    }
+
+    public function getDob(): ?DateTimeImmutable
+    {
+        return $this->dob;
+    }
+
+    public function getLine1(): ?string
     {
         return $this->addressLine1;
     }
 
-    public function getAddressLine2(): ?string
+    public function getLine2(): ?string
     {
         return $this->addressLine2;
     }
 
-    public function getAddressLine3(): ?string
+    public function getLine3(): ?string
     {
         return $this->addressLine3;
     }
@@ -81,7 +80,7 @@ class Person implements ProcessPersonsInterface
         return $this->county;
     }
 
-    public function getPostcode(): ?string
+    public function getPostCode(): ?string
     {
         return $this->postcode;
     }
@@ -91,9 +90,24 @@ class Person implements ProcessPersonsInterface
         return $this->country;
     }
 
+
     public function getCompanyName(): ?string
     {
         return $this->name;
+    }
+
+    public function getAddresses(): array
+    {
+        return [
+        (new Address())
+            ->setAddressLine1($this->getLine1())
+            ->setAddressLine2($this->getLine2())
+            ->setAddressLine3($this->getLine3())
+            ->setTown($this->getTown())
+            ->setCounty($this->getCounty())
+            ->setPostcode($this->getPostCode())
+            ->setCountry($this->getCountry()),
+        ];
     }
 
     public function getUid(): ?string
@@ -102,15 +116,10 @@ class Person implements ProcessPersonsInterface
     }
 
     /**
-     * @return ?string The id (or uid) of the person
+     * @return string The id (or uid) of the person
      */
     public function getId(): ?string
     {
         return $this->uId;
-    }
-
-    public function getSystemStatus(): bool
-    {
-        return (bool) $this->systemStatus;
     }
 }

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
-use App\Service\Lpa\IsValid\IsValidInterface;
-use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
+    Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
+use App\Service\Features\FeatureEnabled;
 use DateTime;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
@@ -21,6 +21,8 @@ use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class SiriusLpaManager implements LpaManagerInterface
 {
+    private const ACTIVE_TC         = 0;
+
     public function __construct(
         private UserLpaActorMapInterface $userLpaActorMapRepository,
         private LpasInterface $lpaRepository,
@@ -31,6 +33,7 @@ class SiriusLpaManager implements LpaManagerInterface
         private GetAttorneyStatus $getAttorneyStatus,
         private IsValidLpa $isValidLpa,
         private GetTrustCorporationStatus $getTrustCorporationStatus,
+        private FeatureEnabled $featureEnabled,
         private LoggerInterface $logger,
     ) {
     }
@@ -53,12 +56,12 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         if ($lpaData['trustCorporations'] !== null) {
-            $lpaData['trustCorporations'] = array_values(
-                array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
-                    return ($this->getTrustCorporationStatus)($trustCorporation)
-                        === TrustCorporationStatus::ACTIVE_TC;
-                })
-            );
+                $lpaData['trustCorporations'] = array_values(
+                    array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
+                        return ($this->getTrustCorporationStatus)($trustCorporation)
+                            === TrustCorporationStatuses::ACTIVE_TC->value;
+                    })
+                );
         }
 
         return $lpa;
@@ -103,7 +106,7 @@ class SiriusLpaManager implements LpaManagerInterface
         return [];
     }
 
-    public function getAllActiveForUser(string $userId): array
+    public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -115,7 +118,7 @@ class SiriusLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getAllForUser(string $userId): array
+    public function getAllLpasAndRequestsForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -178,7 +181,7 @@ class SiriusLpaManager implements LpaManagerInterface
         ];
 
         if (
-            ($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)
+            (($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false))
         ) {
             $this->logger->info('The LPA has instructions and/or preferences. Fetching images');
             $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
@@ -215,12 +218,7 @@ class SiriusLpaManager implements LpaManagerInterface
 
         // Map the results...
         foreach ($lpaActorMaps as $item) {
-            /**
-             * Handle the case where the DB contains modernise records but we're running
-             * with the combined flag off.
-             * @var LpaInterface<IsValidInterface&HasActorInterface> $lpa
-             */
-            $lpa = $lpas[$item['SiriusUid'] ?? 'ERROR'] ?? null;
+            $lpa = $lpas[$item['SiriusUid']] ?? null;
 
             if ($lpa === null) {
                 continue;

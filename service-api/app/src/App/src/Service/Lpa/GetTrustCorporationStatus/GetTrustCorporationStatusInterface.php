@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\GetTrustCorporationStatus;
 
-use App\Enum\ActorStatus;
-
 interface GetTrustCorporationStatusInterface
 {
     public function getCompanyName(): ?string;
 
-    public function getStatus(): bool|ActorStatus;
+    public function getStatus(): bool|string;
 
     public function getUid(): string;
 }

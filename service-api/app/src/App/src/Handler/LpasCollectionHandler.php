@@ -30,7 +30,7 @@ class LpasCollectionHandler implements RequestHandlerInterface
     {
         $user = $request->getAttribute('actor-id');
 
-        $result = $this->lpaManager->getAllActiveForUser($user);
+        $result = $this->lpaManager->getAllForUser($user);
 
         return new JsonResponse($result);
     }

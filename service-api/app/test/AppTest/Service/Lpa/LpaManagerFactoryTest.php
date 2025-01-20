@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\CombinedLpaManager;
 use App\Service\Lpa\LpaManagerFactory;
 use App\Service\Lpa\SiriusLpaManager;
 use PHPUnit\Framework\Attributes\Test;
@@ -44,16 +43,11 @@ class LpaManagerFactoryTest extends TestCase
 
         $mockContainer = $this->createMock(ContainerInterface::class);
         $mockContainer->method('get')
-            ->willReturnMap(
-                [
-                    [FeatureEnabled::class, $mockFeatureEnabled],
-                    [CombinedLpaManager::class, $this->createMock(CombinedLpaManager::class)],
-                ]
-            );
+            ->willReturn($mockFeatureEnabled);
 
         $sut = new LpaManagerFactory($mockContainer);
 
+        $this->expectExceptionMessage('Datastore LPA support is enabled but not implemented yet.');
         $manager = ($sut)();
-        $this->assertInstanceOf(CombinedLpaManager::class, $manager);
     }
 }

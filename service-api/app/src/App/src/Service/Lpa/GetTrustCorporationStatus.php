@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\Enum\ActorStatus;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
+use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatuses;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use Psr\Log\LoggerInterface;
 
@@ -15,7 +14,7 @@ class GetTrustCorporationStatus
     {
     }
 
-    public function __invoke(GetTrustCorporationStatusInterface $trustCorporation): TrustCorporationStatus
+    public function __invoke(GetTrustCorporationStatusInterface $trustCorporation): int
     {
 
         if (empty($trustCorporation->getCompanyName())) {
@@ -23,15 +22,15 @@ class GetTrustCorporationStatus
                 'Looked up attorney {id} but company name not found',
                 ['id' => $trustCorporation->getUid()]
             );
-            return TrustCorporationStatus::GHOST_TC;
+            return TrustCorporationStatuses::GHOST_TC->value;
         }
 
         $systemStatus = $trustCorporation->getStatus();
-        if (!$systemStatus || $systemStatus === ActorStatus::INACTIVE) {
+        if (!$systemStatus || $systemStatus === 'false') {
             $this->logger->debug('Looked up attorney {id} but is inactive', ['id' => $trustCorporation->getUid()]);
-            return TrustCorporationStatus::INACTIVE_TC;
+            return TrustCorporationStatuses::INACTIVE_TC->value;
         }
 
-        return TrustCorporationStatus::ACTIVE_TC;
+        return TrustCorporationStatuses::ACTIVE_TC->value;
     }
 }

@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\OneLogin;
+namespace AppTest\Service\OneLogin;
 
+use PHPUnit\Framework\Attributes\Test;
 use Closure;
 use Common\Entity\User;
 use Common\Service\ApiClient\Client as ApiClient;
@@ -11,7 +12,6 @@ use Common\Service\OneLogin\OneLoginService;
 use DateTime;
 use DateTimeInterface;
 use Facile\OpenIDClient\Session\AuthSession;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

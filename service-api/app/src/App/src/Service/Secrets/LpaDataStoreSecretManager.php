@@ -24,7 +24,7 @@ class LpaDataStoreSecretManager implements SecretManagerInterface
     {
         try {
             $response = $this->secretsManagerClient->getSecretValue([
-                'SecretId' => self::SECRET_NAME,
+                'SecretName' => self::SECRET_NAME,
             ])->get('SecretString');
 
             if ($response === null) {

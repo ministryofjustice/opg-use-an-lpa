@@ -30,6 +30,7 @@ services:
         condition: service_healthy
       mock-one-login:
         condition: service_started
+        restart: true
     environment:
       SIRIUS_API_ENDPOINT: http://api-gateway:5000
       LPA_CODES_API_ENDPOINT: http://codes-gateway:4343

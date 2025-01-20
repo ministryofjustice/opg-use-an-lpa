@@ -14,7 +14,7 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.isPropertyAndAffairs ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.propertyAndAffairs ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
                     <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">
                         {% trans %}<abbr title="lasting power of attorney">LPA</abbr> summary{% endtrans %}
                     </h1>
@@ -35,7 +35,7 @@
             {% else %}
                 <div class="govuk-grid-row lpa-valid-border">
                     <div class="govuk-grid-column-full column-full-alt-1">
-                        {% if lpa.caseSubtype.propertyAndAffairs and lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.isWhenHasCapacity %}
+                        {% if lpa.caseSubtype.propertyAndAffairs and lpa.whenTheLpaCanBeUsed.isWhenHasCapacity %}
                             <h2 class="govuk-heading-m heading-m-alt-1">
                                 {% trans %}This <abbr
                                         title="lasting power of attorney">LPA</abbr> is registered and can be used now{% endtrans %}
@@ -48,7 +48,7 @@
                         {% endif %}
                         <p class="govuk-body body-alt-1">
                             {% if (lpa.caseSubtype and lpa.caseSubtype.propertyAndAffairs) %}
-                                {% if (lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.isWhenHasCapacity) %}
+                                {% if (lpa.whenTheLpaCanBeUsed.isWhenHasCapacity) %}
                                     {% if actor.type == 'donor' %}
                                         {% trans %}While you have mental capacity, your attorneys must get your permission to use this
                                             <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
@@ -56,7 +56,7 @@
                                         {% trans %}While the donor has mental capacity, you must get their permission to use this
                                             <abbr title="lasting power of attorney">LPA</abbr>.{% endtrans %}
                                     {% endif %}
-                                {% elseif (lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.isWhenHasLostCapacity) %}
+                                {% elseif (lpa.whenTheLpaCanBeUsed.isWhenCapacityLost) %}
                                     {% trans %}This <abbr
                                             title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity.{% endtrans %}
                                 {% elseif lpa.whenTheLpaCanBeUsed == null or lpa.whenTheLpaCanBeUsed.isUnknown %}
@@ -65,9 +65,9 @@
                                 {% endif %}
                             {% endif %}
 
-                            {% if lpa.lifeSustainingTreatment != null and lpa.lifeSustainingTreatment.OptionA %}
+                            {% if lpa.lifeSustainingTreatment.OptionA %}
                                 {% trans %}The attorneys have the authority to make decisions about life-sustaining treatment{% endtrans %}
-                            {% elseif lpa.lifeSustainingTreatment != null and lpa.lifeSustainingTreatment.OptionB %}
+                            {% elseif lpa.lifeSustainingTreatment.OptionB %}
                                 {% trans %}The attorneys do NOT have the authority to make decisions about life-sustaining treatment{% endtrans %}
                             {% endif %}
                         </p>

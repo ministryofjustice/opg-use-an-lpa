@@ -2475,11 +2475,8 @@ class LpaContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_ID
             )
         );
-
         $this->ui->clickLink('Remove LPA');
-
         $this->ui->assertPageAddress('/lpa/remove-lpa');
-        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
 
     /**

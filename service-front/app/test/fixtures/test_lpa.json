@@ -67,7 +67,7 @@
           "addressLine3": ""
         }
       ],
-      "systemStatus": "true",
+      "systemStatus": true,
       "companyName": ""
     },
     {
@@ -92,7 +92,7 @@
           "addressLine3": ""
         }
       ],
-      "systemStatus": "true",
+      "systemStatus": true,
       "companyName": ""
     }
   ],
@@ -121,7 +121,7 @@
       "middlenames": null,
       "surname": "test",
       "otherNames": null,
-      "systemStatus": "true",
+      "systemStatus": true,
       "companyName": "trust corporation"
     }
   ],
