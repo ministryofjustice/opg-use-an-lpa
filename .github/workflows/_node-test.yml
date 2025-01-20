@@ -9,7 +9,7 @@ on:
 
 jobs:
   unit-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
       - uses: actions/setup-node@48b90677b6048efbc723b11a94acb950d3f1ac36 # pin@v3.6.0

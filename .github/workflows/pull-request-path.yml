@@ -31,7 +31,7 @@ jobs:
       always()
 
   workflow_variables:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: output workflow variables
     outputs:
       safe_branch_name: ${{ steps.safe_branch_name.outputs.safe }}
@@ -95,7 +95,7 @@ jobs:
 
   update_documentation:
     name: update documentation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - workflow_variables
     steps:
@@ -291,7 +291,7 @@ jobs:
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - ecr_scan_results
       - workflow_variables

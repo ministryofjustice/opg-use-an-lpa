@@ -32,7 +32,7 @@ on:
 
 jobs:
   docker_build_scan_push:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       matrix_job_names: ${{ steps.output_names.outputs.MATRIX_JOB_NAMES }}
     strategy:

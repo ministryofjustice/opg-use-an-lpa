@@ -36,7 +36,7 @@ permissions:
 jobs:
   validate_input:
     name: check environment
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: prohibit production deployments from this workflow
         run: |
@@ -46,7 +46,7 @@ jobs:
             exit 1
           fi
   workflow_variables:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: output workflow variables
     outputs:
       parsed_branch: ${{ inputs.git_ref }}
@@ -253,7 +253,7 @@ jobs:
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - ecr_scan_results
       - slack_notify

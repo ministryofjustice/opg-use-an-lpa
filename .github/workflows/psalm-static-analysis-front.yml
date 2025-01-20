@@ -24,7 +24,7 @@ env:
 jobs:
   psalm:
     name: Psalm
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         working-directory: ${{ env.SERVICE-PATH }}/app

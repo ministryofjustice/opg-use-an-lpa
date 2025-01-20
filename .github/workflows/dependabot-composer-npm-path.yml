@@ -51,7 +51,7 @@ jobs:
 
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - docker_build_scan_push
       - branch_name

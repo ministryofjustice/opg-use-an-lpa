@@ -62,7 +62,7 @@ jobs:
 
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - branch_name
       - terraform_plan_shared_development

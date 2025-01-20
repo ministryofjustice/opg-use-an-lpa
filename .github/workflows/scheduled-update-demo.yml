@@ -40,7 +40,7 @@ jobs:
 
   force_redeployment:
     name: force redeployment
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs:
       - terraform_apply_environment
       - seed_dynamodb

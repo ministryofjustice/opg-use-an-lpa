@@ -21,7 +21,7 @@ permissions:
 jobs:
   tfsec:
     name: TFSec Static analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         terraform_path: [ 'terraform/environment', 'terraform/account' ]
