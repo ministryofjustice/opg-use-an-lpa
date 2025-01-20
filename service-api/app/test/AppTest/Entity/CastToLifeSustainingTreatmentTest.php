@@ -6,6 +6,8 @@ namespace AppTest\Entity;
 
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,15 +22,35 @@ class CastToLifeSustainingTreatmentTest extends TestCase
         $this->castToLifeSustainingTreatment = new CastToLifeSustainingTreatment();
     }
 
+    #[DataProvider('lifeSustainingTreatmentProvider')]
     #[Test]
-    public function can_cast_life_sustaining_treatment(): void
+    public function can_cast_life_sustaining_treatment($lifeSustainingTreatment, $expectedLifeSustainingTreatment): void
     {
-        $lifeSustainingTreatment = 'option-a';
-
-        $expectedLifeSustainingTreatment = 'option-a';
-
         $result = $this->castToLifeSustainingTreatment->cast($lifeSustainingTreatment, $this->mockHydrator);
 
         $this->assertEquals($expectedLifeSustainingTreatment, $result);
+    }
+
+    #[Test]
+    public function throws_exception_for_invalid_value(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid shorthand name: invalid-value');
+
+        $this->castToLifeSustainingTreatment->cast('invalid-value', $this->mockHydrator);
+    }
+
+    public static function lifeSustainingTreatmentProvider(): array
+    {
+        return [
+            [
+                'Option A',
+                'option-a',
+            ],
+            [
+                'Option B',
+                'option-b',
+            ],
+        ];
     }
 }

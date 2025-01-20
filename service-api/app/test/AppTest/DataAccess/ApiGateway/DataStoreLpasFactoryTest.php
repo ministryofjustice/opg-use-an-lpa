@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AppTest\DataAccess\Repository;
+namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\DataStoreLpasFactory;
@@ -10,6 +10,7 @@ use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\Sanitisers\SiriusLpaSanitiser;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\Service\Log\RequestTracing;
+use App\Service\Lpa\LpaDataFormatter;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Test;
@@ -50,6 +51,12 @@ class DataStoreLpasFactoryTest extends TestCase
         $containerProphecy->get(RequestSignerFactory::class)->willReturn(
             $requestSignerFactory->reveal()
         );
+
+        $containerProphecy
+            ->get(LpaDataFormatter::class)
+            ->willReturn(
+                $this->prophesize(LpaDataFormatter::class)->reveal()
+            );
 
         $containerProphecy->get('config')->willReturn(
             [

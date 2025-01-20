@@ -7,9 +7,9 @@ namespace AppTest\Entity;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\LpaStore\LpaStoreDonor;
+use App\Enum\LpaType;
 use DateTimeImmutable;
 use DateTimeZone;
-use App\Enum\LpaType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -19,64 +19,49 @@ class LpaStoreTest extends TestCase
     public function it_can_be_instantiated(): void
     {
         $sut = new LpaStore(
-            applicationHasGuidance: null,
-            applicationHasRestrictions: null,
-            applicationType: null,
-            attorneyActDecisions: null,
             attorneys: [
             new LpaStoreAttorney(
-                addressLine1: null,
-                addressLine2: null,
-                addressLine3: null,
+                line1:        null,
+                line2:        null,
+                line3:        null,
                 country:      null,
                 county:       null,
-                dob:          new DateTimeImmutable('1962-4-18', new DateTimeZone('UTC')),
+                dateOfBirth:  null,
                 email:        null,
-                firstnames:   null,
-                name:         null,
+                firstNames:   null,
                 postcode:     null,
-                surname:      null,
-                systemStatus: null,
+                lastName:     null,
+                status:       null,
                 town:         null,
-                type:         null,
                 uId:          '700000000012',
             ),
             ],
             caseSubtype: LpaType::PERSONAL_WELFARE,
             channel: 'online',
-            dispatchDate: null,
             donor: new LpaStoreDonor(
-                addressLine1: null,
-                addressLine2: null,
-                addressLine3: null,
-                country:      null,
-                county:       null,
-                dob:          new DateTimeImmutable('1962-4-18', new DateTimeZone('UTC')),
-                email:        null,
-                firstnames:   null,
-                name:         null,
-                postcode:     null,
-                surname:      null,
-                systemStatus: null,
-                town:         null,
-                type:         null,
-                uId:          '700000000012',
+                line1:             null,
+                line2:             null,
+                line3:             null,
+                country:           null,
+                county:            null,
+                dateOfBirth:       null,
+                email:             null,
+                firstNames:        null,
+                otherNamesKnownBy: null,
+                postcode:          null,
+                lastName:          null,
+                town:              null,
+                uId:               '700000000012',
             ),
-            hasSeveranceWarning: null,
-            invalidDate: null,
+            howAttorneysMakeDecisions: null,
             lifeSustainingTreatment: null,
-            lpaDonorSignatureDate: null,
-            lpaIsCleansed: null,
-            onlineLpaId: null,
-            receiptDate: null,
-            registrationDate: null,
-            rejectedDate: null,
-            replacementAttorneys: [],
-            status: null,
-            statusDate: null,
+            signedAt: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
+            registrationDate: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
+            status: '',
             trustCorporations: [],
             uId: '700000000001',
-            withdrawnDate: null,
+            updatedAt: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
+            whenTheLpaCanBeUsed: null,
         );
 
         $this->assertInstanceOf(LpaStore::class, $sut);

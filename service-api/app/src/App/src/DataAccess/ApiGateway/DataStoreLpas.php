@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
+use App\Service\Lpa\LpaDataFormatter;
 use App\DataAccess\Repository\{LpasInterface, Response, Response\LpaInterface};
 use DateTimeImmutable;
 use Exception;
@@ -21,6 +22,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         RequestFactoryInterface $requestFactory,
         StreamFactoryInterface $streamFactory,
         RequestSignerFactory $requestSignerFactory,
+        private LpaDataFormatter $lpaDataFormatter,
         string $apiBaseUri,
         string $traceId,
     ) {
@@ -47,9 +49,13 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
      */
     public function get(string $uid): ?LpaInterface
     {
-        $url = sprintf('%s/lpa/%s', $this->apiBaseUri, $uid);
+        $url = sprintf('%s/lpas/%s', $this->apiBaseUri, $uid);
 
-        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
+        // TODO this identifier needs to come from somewhere
+        $signer = ($this->requestSignerFactory)(
+            SignatureType::DataStoreLpas,
+            'UniqueUserIdentifier'
+        );
 
         $request = $this->requestFactory->createRequest('GET', $url);
         $request = $signer->sign($this->attachHeaders($request));
@@ -67,9 +73,11 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         return match ($response->getStatusCode()) {
             StatusCodeInterface::STATUS_OK =>
                 new Response\Lpa(
-                    json_decode(
-                        $response->getBody()->getContents(),
-                        true
+                    ($this->lpaDataFormatter)(
+                        json_decode(
+                            $response->getBody()->getContents(),
+                            true,
+                        ),
                     ),
                     new DateTimeImmutable($response->getHeaderLine('Date'))
                 ),
@@ -96,7 +104,11 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
     {
         $url = sprintf('%s/lpas', $this->apiBaseUri);
 
-        $signer = ($this->requestSignerFactory)(SignatureType::DataStoreLpas);
+        // TODO this identifier needs to come from somewhere
+        $signer = ($this->requestSignerFactory)(
+            SignatureType::DataStoreLpas,
+            'UniqueUserIdentifier'
+        );
 
         $request = $this->requestFactory
             ->createRequest('POST', $url)
@@ -121,13 +133,13 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
             StatusCodeInterface::STATUS_OK =>
                 array_map(
                     fn ($lpaData) => new Response\Lpa(
-                        $lpaData,
+                        ($this->lpaDataFormatter)($lpaData),
                         new DateTimeImmutable($response->getHeaderLine('Date'))
                     ),
                     json_decode(
                         $response->getBody()->getContents(),
                         true
-                    )['lpas']
+                    )['lpas'],
                 ),
             default => throw ApiException::create(
                 'LPA data store returned non-ok response',

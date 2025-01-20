@@ -14,6 +14,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
     GetAttorneyStatus\AttorneyStatus,
     GetTrustCorporationStatus,
+    GetTrustCorporationStatus\TrustCorporationStatus,
     IsValidLpa,
     ResolveActor,
     ResolveActor\ActorType,
@@ -76,7 +77,6 @@ class SiriusLpaManagerTest extends TestCase
             $this->getAttorneyStatusProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
             $this->getTrustCorporationStatusProphecy->reveal(),
-            $this->featureEnabledProphecy->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
@@ -198,7 +198,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(0);
+            ->willReturn(TrustCorporationStatus::ACTIVE_TC);
 
         $this->getTrustCorporationStatusProphecy
             ->__invoke(
@@ -211,7 +211,7 @@ class SiriusLpaManagerTest extends TestCase
                     $this->loggerProphecy->reveal(),
                 )
             )
-            ->willReturn(2);
+            ->willReturn(TrustCorporationStatus::INACTIVE_TC);
 
         $result = $service->getByUid($testUid);
 
@@ -567,6 +567,12 @@ class SiriusLpaManagerTest extends TestCase
                 'ActivateBy' => (new DateTime('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
                 'Added'      => new DateTime('now'),
             ],
+            [
+                'Id'      => 'token-4',
+                'LpaUid'  => 'M-uid-1',
+                'ActorId' => 4,
+                'Added'   => new DateTime('now'),
+            ],
         ];
 
         $t->lpaResults = [
@@ -635,7 +641,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActiveForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
@@ -651,7 +657,8 @@ class SiriusLpaManagerTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
 
         $lpa = array_pop($t->lpaResults);
-        array_pop($t->mapResults); //discard the first lpa with TTL
+        array_pop($t->mapResults); //discard the first modernise lpa (No Sirius uid)
+        array_pop($t->mapResults); //discard the second lpa with TTL
         $map = array_pop($t->mapResults);
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
@@ -667,7 +674,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getAllLpasAndRequestsForUser($t->UserId);
+        $result = $service->getAllForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
@@ -683,6 +690,7 @@ class SiriusLpaManagerTest extends TestCase
         $this->assertArrayHasKey('lpa', $result);
 
         $lpa = array_pop($t->lpaResults);
+        array_pop($t->mapResults); //discard the first modernise lpa (No Sirius uid)
         $map = array_pop($t->mapResults);
 
         $this->assertEquals($map['Id'], $result['user-lpa-actor-token']);
@@ -700,7 +708,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId($t->UserId)->willReturn([]);
 
-        $result = $service->getAllForUser($t->UserId);
+        $result = $service->getAllActiveForUser($t->UserId);
 
         $this->assertIsArray($result);
         $this->assertCount(0, $result);

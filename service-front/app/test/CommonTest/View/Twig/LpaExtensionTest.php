@@ -110,7 +110,6 @@ class LpaExtensionTest extends TestCase
             county: 'County',
             dob: new DateTimeImmutable('22-12-1997'),
             email: 'email@email.com',
-            firstname: 'John',
             firstnames: 'Jonathan',
             name: 'name',
             otherNames: 'Maverick',
@@ -118,7 +117,6 @@ class LpaExtensionTest extends TestCase
             surname: 'Doe',
             systemStatus: 'true',
             town: 'Town',
-            type: 'Primary',
             uId: '700000012345',
         );
 

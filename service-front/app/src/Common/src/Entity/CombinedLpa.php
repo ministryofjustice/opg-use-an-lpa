@@ -4,30 +4,39 @@ declare(strict_types=1);
 
 namespace Common\Entity;
 
+use Common\Entity\Casters\CastToCaseSubtype;
+use Common\Entity\Casters\CastToHowAttorneysMakeDecisions;
+use Common\Entity\Casters\CastToLifeSustainingTreatment;
+use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
 use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
+use Common\Service\Lpa\ServiceInterfaces\ProcessLpasInterface;
 use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
 use Common\Enum\WhenTheLpaCanBeUsed;
 use DateTimeImmutable;
-use JsonSerializable;
+use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 
-class CombinedLpa implements SortLpasInterface, GroupLpasInterface
+class CombinedLpa implements SortLpasInterface, GroupLpasInterface, ProcessLpasInterface
 {
     public function __construct(
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
         /** @var Person[] $attorneys */
+        #[CastListToType(Person::class)]
         public readonly ?array $attorneys,
+        #[CastToCaseSubtype]
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
         public readonly ?DateTimeImmutable $dispatchDate,
         public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
+        #[CastToHowAttorneysMakeDecisions]
         public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?DateTimeImmutable $invalidDate,
+        #[CastToLifeSustainingTreatment]
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,
         public readonly ?bool $lpaIsCleansed,
@@ -36,14 +45,17 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface
         public readonly ?DateTimeImmutable $registrationDate,
         public readonly ?DateTimeImmutable $rejectedDate,
         /** @var Person[] $replacementAttorneys */
+        #[CastListToType(Person::class)]
         public readonly ?array $replacementAttorneys,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */
+        #[CastListToType(Person::class)]
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
-        public readonly ?DateTimeImmutable $withdrawnDate,
+        #[CastToWhenTheLpaCanBeUsed]
         public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
+        public readonly ?DateTimeImmutable $withdrawnDate,
     ) {
     }
 

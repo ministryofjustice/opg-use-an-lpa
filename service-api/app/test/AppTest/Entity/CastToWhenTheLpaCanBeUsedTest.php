@@ -6,6 +6,7 @@ namespace AppTest\Entity;
 
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,15 +21,34 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
         $this->castToWhenTheLpaCanBeUsed = new CastToWhenTheLpaCanBeUsed();
     }
 
+    #[DataProvider('whenTheLpaCanBeUsedProvider')]
     #[Test]
-    public function can_when_lpa_can_be_used(): void
+    public function can_cast_to_when_lpa_can_be_used($whenLpaCanBeUsed, $expectedWhenLpaCanBeUsed): void
     {
-        $whenTheLpaCanBeUsed = 'singular';
+        $result = $this->castToWhenTheLpaCanBeUsed->cast($whenLpaCanBeUsed, $this->mockHydrator);
 
-        $expectedWhenTheLpaCanBeUsed = 'singular';
+        $this->assertEquals($expectedWhenLpaCanBeUsed, $result);
+    }
 
-        $result = $this->castToWhenTheLpaCanBeUsed->cast($whenTheLpaCanBeUsed, $this->mockHydrator);
-
-        $this->assertEquals($expectedWhenTheLpaCanBeUsed, $result);
+    public static function whenTheLpaCanBeUsedProvider(): array
+    {
+        return [
+            [
+                'when registered',
+                'when-has-capacity',
+            ],
+            [
+                'loss of capacity',
+                'when-capacity-lost',
+            ],
+            [
+                '',
+                '',
+            ],
+            [
+                'invalid value',
+                '',
+            ]
+        ];
     }
 }
