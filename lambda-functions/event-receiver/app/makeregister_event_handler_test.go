@@ -1,33 +1,18 @@
 package main
 
 import (
-    "context"
-	"fmt"
+	"context"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMakeRegisterEventHandlerHandleUnknownEvent(t *testing.T) {
-    ctx := context.Background()
-
+func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
+	ctx := context.Background()
 	handler := &makeregisterEventHandler{}
 
-	err := handler.Handle(ctx, nil, &events.CloudWatchEvent{DetailType: "some-event"})
-
-	if err != nil {
-	    t.Logf("Actual error: %v", err)
-    }
-
-	assert.Equal(t, fmt.Errorf("unknown lpastore event"), err)
-}
-
-func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
-    ctx := context.Background()
-    handler := &makeregisterEventHandler{}
-
-    payload := `{
+	payload := `{
           "uid": "M-1234-5678-9012",
           "lpaType": "personal-welfare",
           "actors" : [
@@ -42,12 +27,12 @@ func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
           ]
     }`
 
-    cloudWatchEvent := &events.CloudWatchEvent{
-        DetailType: "lpa-access-granted",
-        Detail: []byte(payload),
-    }
+	sqsMessage := &events.SQSMessage{
+		MessageId: "1",
+		Body:      payload,
+	}
 
-    err := handler.Handle(ctx, nil, cloudWatchEvent)
+	err := handler.Handle(ctx, sqsMessage)
 
-    assert.NoError(t, err)
+	assert.NoError(t, err)
 }

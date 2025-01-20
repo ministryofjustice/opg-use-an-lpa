@@ -15,7 +15,7 @@ type Handler struct {
 }
 
 // Handle provides a mock function with given fields: _a0, _a1, _a2
-func (_m *Handler) Handle(_a0 context.Context, _a1 factory, _a2 *events.CloudWatchEvent) error {
+func (_m *Handler) Handle(_a0 context.Context, _a1 factory, _a2 *events.SQSEvent) error {
 	ret := _m.Called(_a0, _a1, _a2)
 
 	if len(ret) == 0 {
@@ -23,7 +23,7 @@ func (_m *Handler) Handle(_a0 context.Context, _a1 factory, _a2 *events.CloudWat
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, factory, *events.CloudWatchEvent) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, factory, *events.SQSEvent) error); ok {
 		r0 = rf(_a0, _a1, _a2)
 	} else {
 		r0 = ret.Error(0)
