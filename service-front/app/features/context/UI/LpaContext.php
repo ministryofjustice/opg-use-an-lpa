@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
+use Amp\Http\Server\RequestHandler;
 use Behat\Behat\Context\Context;
 use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
-use Common\Service\Features\FeatureEnabled;
 use DateTime;
+use DateTimeImmutable;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
@@ -46,10 +47,9 @@ class LpaContext implements Context
     private const VIEWER_CODE_SERVICE_CANCEL_SHARE_CODE = 'ViewerCodeService::cancelShareCode';
     private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
-
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
-    private $dashboardLPAs;
+    private array $dashboardLPAs;
 
     /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
     private RequestHandler $requestDashboardLPAs;
@@ -389,7 +389,7 @@ class LpaContext implements Context
      */
     public function iAmOnTheDashboardPage(): void
     {
-        if ($this->dashboardLPAs) {
+        if (isset($this->dashboardLPAs)) {
             //API call for getting all the users added LPAs
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
@@ -2454,6 +2454,35 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to remove an LPA from my account that has no active attorney on it$/
+     */
+    public function iRequestToRemoveAnLPAFromMyAccountThatHasNoActiveAttorneysOnIt(): void
+    {
+        $this->lpa->status = 'Registered';
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => null,
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        $this->ui->clickLink('Remove LPA');
+
+        $this->ui->assertPageAddress('/lpa/remove-lpa');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
      * @When /^I request to view an LPA which has a donor signature before 2016$/
      * @When /^I request to view an LPA which has a trust corporation added$/
      */
@@ -2468,6 +2497,35 @@ class LpaContext implements Context
      * @When /^I request to view an LPA which status is "([^"]*)"$/
      */
     public function iRequestToViewAnLPAWhichStatusIs($status): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+        $this->lpa->status = $status;
+
+        if ($status === 'Revoked') {
+            // API call for get LpaById
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'user-lpa-actor-token' => $this->userLpaActorToken,
+                            'date'                 => 'date',
+                            'lpa'                  => [],
+                            'actor'                => $this->lpaData['actor'],
+                        ]
+                    )
+                )
+            );
+        } else {
+            // API call for get LpaById
+            $this->mockApiGetLpaByIdAndGetImagesById();
+        }
+    }
+
+    /**
+     * @When /^I request to view a Combined LPA which status is "([^"]*)"$/
+     */
+    public function iRequestToViewACombinedLPAWhichStatusIs($status): void
     {
         $this->ui->assertPageContainsText('View LPA summary');
         $this->lpa->status = $status;
@@ -3269,40 +3327,14 @@ class LpaContext implements Context
         $this->actorId           = 9;
 
         $this->lpaData = [
-            'user-lpa-actor-token'       => $this->userLpaActorToken,
-            'date'                       => 'today',
-            'actor'                      => [
+            'user-lpa-actor-token' => $this->userLpaActorToken,
+            'date'                 => new DateTimeImmutable('now'),
+            'actor'                => [
                 'type'    => 'primary-attorney',
-                'details' => [
-                    'addresses'    => [
-                        [
-                            'addressLine1' => '',
-                            'addressLine2' => '',
-                            'addressLine3' => '',
-                            'country'      => '',
-                            'county'       => '',
-                            'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => '',
-                            'type'         => 'Primary',
-                        ],
-                    ],
-                    'companyName'  => null,
-                    'dob'          => '1975-10-05',
-                    'email'        => 'string',
-                    'firstname'    => 'Ian',
-                    'id'           => 0,
-                    'middlenames'  => null,
-                    'salutation'   => 'Mr',
-                    'surname'      => 'Deputy',
-                    'systemStatus' => true,
-                    'uId'          => '700000000054',
-                ],
+                'details' => $this->lpa->attorneys[0],
             ],
-            'applicationHasRestrictions' => true,
-            'applicationHasGuidance'     => false,
-            'lpa'                        => $this->lpa,
-            'added'                      => '2021-10-5 12:00:00',
+            'lpa'                  => $this->lpa,
+            'added'                => '2021-10-5 12:00:00',
         ];
     }
 }

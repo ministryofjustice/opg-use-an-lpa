@@ -6,29 +6,23 @@ namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
 use BehatTest\Context\BaseUiContextTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
-use Common\View\Twig\FeatureFlagExtension;
-use DI\Definition\Helper\CreateDefinitionHelper;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use Exception;
-use Mezzio\Template\TemplateRendererInterface;
-use Mezzio\Twig\TwigEnvironmentFactory;
-use Mezzio\Twig\TwigRenderer;
-use Mezzio\Twig\TwigRendererFactory;
-use Twig\Environment;
 
 class FeatureFlagContext implements Context
 {
     use BaseUiContextTrait;
 
-    /**
-     * @BeforeScenario
-     */
-    public function setFeatureFlag(BeforeScenarioScope $scope)
+    #[BeforeScenario]
+    public function setFeatureFlag(BeforeScenarioScope $scope): void
     {
+        // ensure that the BaseUIContext upon which all Context work is initialised.
         $this->gatherContexts($scope);
+
         $tags = array_merge($scope->getScenario()->getTags(), $scope->getFeature()->getTags());
         foreach ($tags as $tag) {
             if (str_contains($tag, 'ff:')) {
@@ -45,41 +39,13 @@ class FeatureFlagContext implements Context
 
                 $config                                = $this->base->container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
-                $this->base->container->set('config', $config);
 
+                $this->base->container->set('config', $config);
                 $this->base->container->set(
                     FeatureEnabled::class,
                     new FactoryDefinitionHelper($this->base->container->get(FeatureEnabledFactory::class))
                 );
-
-                $featureFlagExtensionHandler = new CreateDefinitionHelper(FeatureFlagExtension::class);
-                $featureFlagExtensionHandler->constructor($this->base->container->get(FeatureEnabled::class));
-
-                $this->base->container->set(
-                    FeatureFlagExtension::class,
-                    $featureFlagExtensionHandler
-                );
-
-                $this->resetTwigEnvironments();
             }
         }
-    }
-
-    private function resetTwigEnvironments(): void
-    {
-        $this->base->container->set(
-            Environment::class,
-            new FactoryDefinitionHelper($this->base->container->get(TwigEnvironmentFactory::class))
-        );
-
-        $this->base->container->set(
-            TwigRenderer::class,
-            new FactoryDefinitionHelper($this->base->container->get(TwigRendererFactory::class))
-        );
-
-        $this->base->container->set(
-            TemplateRendererInterface::class,
-            new FactoryDefinitionHelper($this->base->container->get(TwigRendererFactory::class))
-        );
     }
 }

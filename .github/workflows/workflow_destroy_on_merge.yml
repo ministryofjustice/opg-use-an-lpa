@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@v3.1.1
 
       - name: Set workspace name
         id: set_workspace_name
@@ -56,7 +56,7 @@ jobs:
 
       - name: Set terraform version
         id: set-terraform-version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.0
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@v3.1.1
         with:
           terraform_directory: "./terraform/environment"
           terraform_versions_file: ".terraform-version"
@@ -73,7 +73,7 @@ jobs:
           ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: configure AWS credentials for getting pagerduty token
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@f171d5c895855a39c1ef93ab625499424407e172 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -90,7 +90,7 @@ jobs:
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@f171d5c895855a39c1ef93ab625499424407e172 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

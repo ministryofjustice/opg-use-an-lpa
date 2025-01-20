@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity\LpaStore;
 
-use App\Entity\Casters\ExtractAddressLine1FromLpaStore;
-use App\Entity\Casters\ExtractCountryFromLpaStore;
-use App\Entity\Casters\ExtractTownFromLpaStore;
+use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -16,49 +14,49 @@ class LpaStoreDonor extends Person
 {
     public function __construct(
         #[MapFrom('address')]
-        #[ExtractAddressLine1FromLpaStore]
-        ?string $addressLine1,
-        ?string $addressLine2,
-        ?string $addressLine3,
+        #[ExtractAddressFieldFrom('line1')]
+        ?string $line1,
         #[MapFrom('address')]
-        #[ExtractCountryFromLpaStore]
+        #[ExtractAddressFieldFrom('line2')]
+        ?string $line2,
+        #[MapFrom('address')]
+        #[ExtractAddressFieldFrom('line3')]
+        ?string $line3,
+        #[MapFrom('address')]
+        #[ExtractAddressFieldFrom('country')]
         ?string $country,
         ?string $county,
-        #[MapFrom('dateOfBirth')]
         #[CastToDateTimeImmutable('!Y-m-d')]
-        ?DateTimeImmutable $dob,
+        ?DateTimeImmutable $dateOfBirth,
         ?string $email,
-        #[MapFrom('firstNames')]
-        ?string $firstnames,
-        ?string $name,
-        ?string $postcode,
-        #[MapFrom('lastName')]
-        ?string $surname,
-        #[MapFrom('status')]
-        ?string $systemStatus,
+        ?string $firstNames,
+        ?string $otherNamesKnownBy, // only found on donors
         #[MapFrom('address')]
-        #[ExtractTownFromLpaStore]
+        #[ExtractAddressFieldFrom('postcode')]
+        ?string $postcode,
+        ?string $lastName,
+        #[MapFrom('address')]
+        #[ExtractAddressFieldFrom('town')]
         ?string $town,
-        ?string $type,
         #[MapFrom('uid')]
         ?string $uId,
     ) {
         parent::__construct(
-            $addressLine1,
-            $addressLine2,
-            $addressLine3,
-            $country,
-            $county,
-            $dob,
-            $email,
-            $firstnames,
-            $name,
-            $postcode,
-            $surname,
-            $systemStatus,
-            $town,
-            $type,
-            $uId,
+            addressLine1: $line1,
+            addressLine2: $line2,
+            addressLine3: $line3,
+            country:      $country,
+            county:       $county,
+            dob:          $dateOfBirth,
+            email:        $email,
+            firstnames:   $firstNames,
+            name:         null,
+            otherNames:   $otherNamesKnownBy,
+            postcode:     $postcode,
+            surname:      $lastName,
+            systemStatus: null,
+            town:         $town,
+            uId:          $uId,
         );
     }
 }

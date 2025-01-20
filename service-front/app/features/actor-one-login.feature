@@ -1,4 +1,4 @@
-@actor @onelogin @ff:allow_gov_one_login:true
+@actor @onelogin
 Feature: Authenticate One Login
   As a user of the application
   I can login using GovUK OneLogin
@@ -47,7 +47,7 @@ Feature: Authenticate One Login
   @ui
   Scenario: I am redirected to the dashboard when local account does exist
     Given I have logged in to one login in English
-    When I have an email address that matches a local account
+    When I have an email address that matches a local account with LPAs
     Then I see the LPA dashboard with any LPAs that are in the account
 
   @ui
@@ -66,7 +66,7 @@ Feature: Authenticate One Login
   @ui
   Scenario: I am redirected to the dashboard when local account already flagged as one-login
     Given I have logged in to one login in English
-    When I have an account whose sub matches a local account
+    When I have an account whose sub matches a local account with LPAs
     Then I see the LPA dashboard with any LPAs that are in the account
 
   @ui

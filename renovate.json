@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
@@ -12,10 +12,19 @@
   "packageRules": [
     {
       "description": "Terraform: bundle all updates together",
-      "labels": ["devDependencies", "Renovate", "Terraform"],
+      "labels": [
+        "devDependencies",
+        "Renovate",
+        "Terraform"
+      ],
       "groupName": "Terraform",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchManagers": ["terraform"]
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "terraform"
+      ]
     },
     {
       "groupName": "Patch & Minor Updates",
@@ -24,18 +33,16 @@
         "Dependencies",
         "Renovate"
       ],
-      "matchPackagePatterns": [
-        "*"
-      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
       "prCreation": "immediate",
       "prPriority": 0,
-      "stabilityDays": 3,
-      "excludePackageNames": [
-        "php"
+      "minimumReleaseAge": "3 days",
+      "matchPackageNames": [
+        "*",
+        "!php"
       ]
     },
     {
@@ -43,9 +50,6 @@
         "Github Actions: bundle all updates together"
       ],
       "groupName": "GitHub Actions",
-      "matchPackagePatterns": [
-        "actions/*"
-      ],
       "automerge": true,
       "dependencyDashboardApproval": true,
       "labels": [
@@ -58,28 +62,55 @@
       "schedule": [
         "after 6am and before 9am on Monday"
       ],
-      "stabilityDays": 3,
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"]
+      "minimumReleaseAge": "3 days",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchPackageNames": [
+        "/actions/*/"
+      ]
     },
     {
       "description": [
         "Docker: group all updates together"
       ],
-      "labels": ["Dependencies", "Renovate", "Docker"],
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "Docker"
+      ],
       "groupName": "Docker Updates",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose"
+      ],
       "automerge": false
     },
     {
       "description": [
         "Golang: group all updates together"
       ],
-      "labels": ["Dependencies", "Renovate", "Golang"],
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "Golang"
+      ],
       "groupName": "Golang Updates",
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchManagers": ["gomod"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "gomod"
+      ],
       "automerge": false
     },
     {
@@ -90,24 +121,47 @@
       "automerge": false,
       "groupName": "minor and patch updates (npm)",
       "groupSlug": "all-minor-patch-updates-npm",
-      "labels": ["Dependencies", "Renovate", "nodejs"],
-      "matchManagers": ["npm"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchFiles": [
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "nodejs"
+      ],
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchFileNames": [
         "package.json",
         "service-front/package.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
-      "stabilityDays": 3
+      "minimumReleaseAge": "3 days"
     },
     {
-      "description": ["AWS SDK"],
-      "labels": ["Renovate", "AWS SDK"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "matchManagers": ["composer"],
-      "matchPackageNames": ["aws/aws-sdk-php"],
-      "extends": ["schedule:monthly"],
+      "description": [
+        "AWS SDK"
+      ],
+      "labels": [
+        "Renovate",
+        "AWS SDK"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchManagers": [
+        "composer"
+      ],
+      "matchPackageNames": [
+        "aws/aws-sdk-php"
+      ],
+      "extends": [
+        "schedule:monthly"
+      ],
       "automerge": false
     },
     {
@@ -118,16 +172,27 @@
       "automerge": false,
       "groupName": "front minor and patch updates (PHP 8.2)",
       "groupSlug": "front-minor-patch-updates-php82",
-      "labels": ["Dependencies", "Renovate", "PHP 8.2"],
-      "matchManagers": ["composer"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "excludePackageNames": ["php"],
-      "matchFiles": [
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "PHP 8.2"
+      ],
+      "matchManagers": [
+        "composer"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchFileNames": [
         "service-front/composer.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
-      "stabilityDays": 3
+      "minimumReleaseAge": "3 days",
+      "matchPackageNames": [
+        "!php"
+      ]
     },
     {
       "description": [
@@ -137,22 +202,33 @@
       "automerge": false,
       "groupName": "api minor and patch updates (PHP 8.2)",
       "groupSlug": "api-minor-patch-updates-php82",
-      "labels": ["Dependencies", "Renovate", "PHP 8.2"],
-      "matchManagers": ["composer"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "excludePackageNames": ["php"],
-      "matchFiles": [
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "PHP 8.2"
+      ],
+      "matchManagers": [
+        "composer"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchFileNames": [
         "service-api/composer.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
-      "stabilityDays": 3
+      "minimumReleaseAge": "3 days",
+      "matchPackageNames": [
+        "!php"
+      ]
     }
   ],
   "major": {
     "labels": [
-        "Dependencies",
-        "Renovate"
+      "Dependencies",
+      "Renovate"
     ],
     "prCreation": "immediate",
     "rangeStrategy": "pin"
@@ -167,7 +243,7 @@
       "Renovate"
     ],
     "dependencyDashboardApproval": false,
-    "stabilityDays": 0,
+    "minimumReleaseAge": null,
     "rangeStrategy": "pin",
     "commitMessagePrefix": "[SECURITY]",
     "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",

@@ -16,11 +16,7 @@ return [
             getenv('ALLOW_MERIS_LPAS'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,
-        'allow_gov_one_login'          => filter_var(
-            getenv('ALLOW_GOV_ONE_LOGIN'),
-            FILTER_VALIDATE_BOOLEAN
-        ) ?: false,
-        'support_datastore_lpas'                                     => filter_var(
+        'support_datastore_lpas'       => filter_var(
             getenv('SUPPORT_DATASTORE_LPAS'),
             FILTER_VALIDATE_BOOLEAN
         ) ?: false,

@@ -72,7 +72,5 @@ return [
         'discovery_url'   => 'http://one-login-mock/.well-known/openid-configuration',
         'identity_issuer' => 'http://identity.one-login-mock/',
     ],
-    'feature_flags'                          => [
-        'allow_gov_one_login' => true,
-    ],
+    'feature_flags'                          => [],
 ];

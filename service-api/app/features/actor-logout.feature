@@ -8,7 +8,7 @@ Feature: A user of the system is able to logout
     Given I am a user of the lpa application
     And I have been given access to use an LPA via credentials
 
-  @acceptance @ff:allow_gov_one_login:true
+  @acceptance
   Scenario: A user can logout
     Given I am currently signed in
     When I logout of the application

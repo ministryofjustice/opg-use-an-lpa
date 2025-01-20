@@ -68,7 +68,6 @@ module "eu_west_1" {
   }
 
   feature_flags = {
-    "allow_gov_one_login"          = local.environment.application_flags.allow_gov_one_login
     "allow_meris_lpas"             = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar" = local.environment.deploy_opentelemetry_sidecar
     "delete_lpa_feature"           = local.environment.application_flags.delete_lpa_feature
@@ -158,7 +157,6 @@ module "eu_west_2" {
   }
 
   feature_flags = {
-    "allow_gov_one_login"          = local.environment.application_flags.allow_gov_one_login
     "allow_meris_lpas"             = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar" = local.environment.deploy_opentelemetry_sidecar
     "delete_lpa_feature"           = local.environment.application_flags.delete_lpa_feature

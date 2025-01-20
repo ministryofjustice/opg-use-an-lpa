@@ -16,14 +16,7 @@ class AuthenticationMiddlewareFactory
     {
         $pipe                               = $container->get(MiddlewarePipeInterface::class);
         $credentialAuthenticationMiddleware = $container->get(CredentialAuthenticationMiddleware::class);
-        $forcedPasswordResetMiddleware      = $container->get(ForcedPasswordResetMiddleware::class);
-
-        $feature_flags = $container->get('config')['feature_flags'];
         $middlewares   = [$credentialAuthenticationMiddleware];
-
-        if (!($feature_flags['allow_gov_one_login'] ?? false)) {
-            $middlewares[] = $forcedPasswordResetMiddleware;
-        }
 
         return new AuthenticationMiddleware($pipe, ...$middlewares);
     }

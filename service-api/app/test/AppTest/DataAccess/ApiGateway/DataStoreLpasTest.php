@@ -9,7 +9,9 @@ use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\LpaInterface;
+use App\Entity\Lpa;
 use App\Exception\ApiException;
+use App\Service\Lpa\LpaDataFormatter;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -29,12 +31,14 @@ class DataStoreLpasTest extends TestCase
     private ClientInterface|ObjectProphecy $httpClientProphecy;
     private RequestSigner|ObjectProphecy $requestSignerProphecy;
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
+    private LpaDataFormatter|ObjectProphecy $lpaDataFormatterProphecy;
 
     protected function setUp(): void
     {
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerProphecy        = $this->prophesize(RequestSigner::class);
         $this->httpClientProphecy           = $this->prophesize(ClientInterface::class);
+        $this->lpaDataFormatterProphecy     = $this->prophesize(LpaDataFormatter::class);
     }
 
     #[Test]
@@ -55,11 +59,11 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpa/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
-            ->__invoke(SignatureType::DataStoreLpas)
+            ->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willReturn($this->requestSignerProphecy->reveal());
 
         $this->requestSignerProphecy
@@ -70,11 +74,16 @@ class DataStoreLpasTest extends TestCase
             ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
 
+        $this->lpaDataFormatterProphecy
+            ->__invoke(['uid' => $uid])
+            ->willReturn($this->prophesize(Lpa::class)->reveal());
+
         $moderniseLpas = new DataStoreLpas(
             $this->httpClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
+            $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
         );
@@ -82,7 +91,7 @@ class DataStoreLpasTest extends TestCase
         $shouldBeAnLPA = $moderniseLpas->get($uid);
 
         $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
-        $this->assertEquals($uid, $shouldBeAnLPA->getData()['uid']);
+        $this->assertInstanceOf(Lpa::class, $shouldBeAnLPA->getData());
     }
     #[Test]
     public function can_lookup_multiple_lpas(): void
@@ -121,7 +130,7 @@ class DataStoreLpasTest extends TestCase
         $this->streamFactoryProphecy->createStream(json_encode(['uids' => $uids]))
             ->willReturn($this->prophesize(StreamInterface::class)->reveal());
 
-        $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas)
+        $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willReturn($this->requestSignerProphecy->reveal());
 
         $this->requestSignerProphecy->sign(Argument::type(RequestInterface::class))
@@ -131,11 +140,17 @@ class DataStoreLpasTest extends TestCase
             ->sendRequest(Argument::type(RequestInterface::class))
             ->willReturn($responseProphecy->reveal());
 
+        $this->lpaDataFormatterProphecy
+            ->__invoke(Argument::type('array'))
+            ->shouldBeCalledTimes(2)
+            ->willReturn($this->prophesize(Lpa::class)->reveal());
+
         $moderniseLpas = new DataStoreLpas(
             $this->httpClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
+            $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
         );
@@ -145,7 +160,7 @@ class DataStoreLpasTest extends TestCase
         $this->assertCount(2, $lpas);
         foreach ($lpas as $lpa) {
             $this->assertInstanceOf(LpaInterface::class, $lpa);
-            $this->assertContains($lpa->getData()['uid'], $uids);
+            $this->assertInstanceOf(Lpa::class, $lpa->getData());
         }
     }
 
@@ -164,11 +179,11 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpa/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
-            ->__invoke(SignatureType::DataStoreLpas)
+            ->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willReturn($this->requestSignerProphecy->reveal());
 
         $this->requestSignerProphecy
@@ -179,11 +194,16 @@ class DataStoreLpasTest extends TestCase
             ->sendRequest(Argument::type(RequestInterface::class))
             ->willThrow($this->prophesize(ClientExceptionInterface::class)->reveal());
 
+        $this->lpaDataFormatterProphecy
+            ->__invoke(['uid' => $uid])
+            ->willReturn($this->prophesize(Lpa::class)->reveal());
+
         $moderniseLpas = new DataStoreLpas(
             $this->httpClientProphecy->reveal(),
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
+            $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
         );
@@ -213,7 +233,7 @@ class DataStoreLpasTest extends TestCase
         $this->streamFactoryProphecy->createStream(json_encode(['uids' => $uids]))
             ->willReturn($this->prophesize(StreamInterface::class)->reveal());
 
-        $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas)
+        $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willReturn($this->requestSignerProphecy->reveal());
 
         $this->requestSignerProphecy->sign(Argument::type(RequestInterface::class))
@@ -228,6 +248,7 @@ class DataStoreLpasTest extends TestCase
             $this->requestFactoryProphecy->reveal(),
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
+            $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
         );

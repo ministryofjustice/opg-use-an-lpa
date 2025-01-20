@@ -51,39 +51,6 @@ class AccountContext implements Context
     private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES  = 'SystemMessageService::getMessages';
 
-
-
-    /**
-     * @Then /^An account is created using (.*) (.*) (.*)$/
-     */
-    public function anAccountIsCreatedUsingEmailPasswordTerms($email, $password, $terms): void
-    {
-        $this->activationToken = 'activate1234567890';
-        $this->ui->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'Id'              => '123',
-                        'Email'           => $email,
-                        'ActivationToken' => $this->activationToken,
-                    ]
-                )
-            )
-        );
-
-        // API call for Notify
-        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-
-        $this->ui->fillField('email', $email);
-        $this->ui->fillField('password', $password);
-        $this->ui->fillField('terms', $terms);
-        $this->ui->pressButton('Create account');
-    }
-
     /**
      * @Given /^another user logs in$/
      */
@@ -91,15 +58,6 @@ class AccountContext implements Context
     {
         $this->userEmail = 'anotheruser@test.com';
         $this->iAmCurrentlySignedIn();
-    }
-
-    /**
-     * @Given /^I access the account creation page$/
-     */
-    public function iAccessTheAccountCreationPage(): void
-    {
-        $this->ui->visit($this->sharedState()->basePath . '/create-account');
-        $this->ui->assertPageAddress($this->sharedState()->basePath . '/create-account');
     }
 
     /**
@@ -140,15 +98,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am allowed to create an account$/
-     */
-    public function iAmAllowedToCreateAnAccount(): void
-    {
-        $this->ui->assertPageAddress('/create-account');
-        $this->ui->assertPageContainsText('Create an account');
-    }
-
-    /**
      * @Then /^I am asked to confirm whether I am sure if I want to delete my account$/
      */
     public function iAmAskedToConfirmWhetherIAmSureIfIWantToDeleteMyAccount(): void
@@ -158,29 +107,14 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I can see the system message$/
-     */
-    public function iCanSeeTheSystemMessage(): void
-    {
-        $this->ui->assertPageContainsText('Use system message English');
-    }
-
-    /**
      * @Given /^I am currently signed in$/
      * @Given /^I chose to ignore setting cookies and I am on the dashboard page$/
      * @When /^I sign in$/
      */
     public function iAmCurrentlySignedIn(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->iHaveLoggedInToOneLogin('English');
-            $this->iHaveAMatchingLocalAccount();
-        } else {
-            // do all the steps to sign in
-            $this->iAccessTheLoginForm();
-            $this->iEnterCorrectCredentials();
-        }
-
+        $this->iHaveLoggedInToOneLogin('English');
+        $this->iHaveAMatchingLocalAccount();
         $this->iAmSignedIn();
     }
 
@@ -197,23 +131,6 @@ class AccountContext implements Context
             'http://fake.url/logout?id_token_hint=token',
             $locationHeader,
         );
-    }
-
-    /**
-     * @Then /^I am directed to my dashboard$/
-     */
-    public function iAmDirectedToMyPersonalDashboard(): void
-    {
-        $this->ui->assertPageAddress('/lpa/dashboard');
-    }
-
-    /**
-     * @Then /^Then I am given instructions on how to change donor or attorney details$/
-     */
-    public function iAmGivenInstructionOnHowToChangeDonorOrAttorneyDetails(): void
-    {
-        $this->ui->assertPageAddress('/lpa/change-details');
-        $this->ui->assertPageContainsText('Let us know if a donor or attorney\'s details change');
     }
 
     /**
@@ -240,15 +157,6 @@ class AccountContext implements Context
     public function iAmNotAUserOfTheLpaApplication(): void
     {
         // Not needed for this context
-    }
-
-    /**
-     * @Given /^I am not allowed to progress$/
-     */
-    public function iAmNotAllowedToProgress(): void
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Select yes if you have a Use a lasting power of attorney account');
     }
 
     /**
@@ -308,23 +216,6 @@ class AccountContext implements Context
     {
         $this->iAmOnTheSettingsPage();
         $this->iRequestToDeleteMyAccount();
-    }
-
-    /**
-     * @Given /^I am on the create account page$/
-     */
-    public function iAmOnTheCreateAccountPage(): void
-    {
-        $this->ui->visit('/create-account');
-        $this->ui->assertPageAddress('/create-account');
-    }
-
-    /**
-     * @When /^I am on the password reset page$/
-     */
-    public function iAmOnThePasswordResetPage(): void
-    {
-        $this->ui->assertPageContainsText('Reset your password');
     }
 
     /**
@@ -428,14 +319,10 @@ class AccountContext implements Context
         assert::assertTrue(isset($locationHeader));
         $this->ui->assertResponseStatus(302);
 
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            assert::assertStringContainsString(
-                'post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
-                $locationHeader,
-            );
-        } else {
-            assert::assertEquals($locationHeader, 'https://www.gov.uk/done/use-lasting-power-of-attorney');
-        }
+        assert::assertStringContainsString(
+            'post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+            $locationHeader,
+        );
     }
 
     /**
@@ -465,37 +352,12 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am allowed to login$/
-     */
-    public function iAmTakenToTheLoginPage(): void
-    {
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Sign in to your Use a lasting power of attorney account');
-    }
-
-    /**
      * @Then /^I am taken to the session expired page$/
      */
     public function iAmTakenToTheSessionExpiredPage(): void
     {
         $this->ui->assertPageAddress('/session-expired');
         $this->ui->assertPageContainsText('We\'ve signed you out');
-    }
-
-    /**
-     * @Then /^I am taken to the triage page of the service$/
-     */
-    public function iAmTakenToTheTriagePage(): void
-    {
-        $this->ui->assertPageAddress('/home');
-    }
-
-    /**
-     * @Then /^I am told my account has not been activated$/
-     */
-    public function iAmToldMyAccountHasNotBeenActivated(): void
-    {
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ' . $this->userEmail);
     }
 
     /**
@@ -508,26 +370,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I am told my current password is incorrect$/
-     */
-    public function iAmToldMyCurrentPasswordIsIncorrect(): void
-    {
-        $this->ui->assertPageAddress('change-password');
-
-        $this->ui->assertPageContainsText('Current password is incorrect');
-    }
-
-    /**
-     * @Then /^I am told my unique instructions to activate my account have expired$/
-     */
-    public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired(): void
-    {
-        $this->activationToken = 'activate1234567890';
-        $this->ui->assertPageAddress('/activate-account/' . $this->activationToken);
-        $this->ui->assertPageContainsText('We could not activate that account');
-    }
-
-    /**
      * @Then /^I am told that my instructions have expired$/
      */
     public function iAmToldThatMyInstructionsHaveExpired(): void
@@ -535,16 +377,6 @@ class AccountContext implements Context
         $this->ui->assertPageAddress('/reset-password/123456');
 
         $this->ui->assertPageContainsText('invalid or has expired');
-    }
-
-    /**
-     * @Then /^I am told that my new password is invalid because it needs at least (.*)$/
-     */
-    public function iAmToldThatMyNewPasswordIsInvalidBecauseItNeedsAtLeast($reason): void
-    {
-        $this->ui->assertPageAddress('/change-password');
-
-        $this->ui->assertPageContainsText($reason);
     }
 
     /**
@@ -563,22 +395,6 @@ class AccountContext implements Context
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // Not needed for this context
-    }
-
-    /**
-     * @When /^I ask for a change of donors or attorneys details$/
-     */
-    public function iAskForAChangeOfDonorsOrAttorneysDetails(): void
-    {
-        $this->ui->assertPageAddress('/settings');
-
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->ui->assertPageContainsText('Change your sign-in details in your GOV.UK One Login');
-            $this->ui->clickLink('Change your sign-in details in your GOV.UK One Login');
-        } else {
-            $this->ui->assertPageContainsText('Change a donor or attorney\'s details');
-            $this->ui->clickLink('Change a donor or attorney\'s details');
-        }
     }
 
     /**
@@ -684,23 +500,6 @@ class AccountContext implements Context
         if ($passwordInput === null) {
             throw new Exception('no password input box found');
         }
-    }
-
-    /**
-     * @When /^I attempt to sign in again$/
-     */
-    public function iAttemptToSignInAgain(): void
-    {
-        // Dashboard page checks for all LPA's for a user
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                self::LPA_SERVICE_GET_LPAS
-            )
-        );
-
-        $this->ui->visit('/login');
     }
 
     /**
@@ -832,25 +631,6 @@ class AccountContext implements Context
         Assert::assertIsArray($params);
         Assert::assertArrayHasKey('token', $params);
         Assert::assertArrayHasKey('password', $params);
-    }
-
-    /**
-     * @Given /^I choose a new (.*) from below$/
-     */
-    public function iChooseANewPasswordFromGiven($password): void
-    {
-        // API call for password reset request
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([])
-            )
-        );
-
-        $this->ui->fillField('current_password', $this->userPassword);
-        $this->ui->fillField('new_password', $password);
-
-        $this->ui->pressButton('Change password');
     }
 
     /**
@@ -1078,15 +858,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I do not provide any options and continue$/
-     */
-    public function iDoNotProvideAnyOptionsAndContinue(): void
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
      * @When /^I enter correct credentials$/
      */
     public function iEnterCorrectCredentials(): void
@@ -1142,80 +913,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I enter correct email with '(.*)' and (.*) below$/
-     */
-    public function iEnterCorrectEmailWithEmailFormatAndPasswordBelow($email_format, $password): void
-    {
-        $this->ui->fillField('email', $email_format);
-        $this->ui->fillField('password', $password);
-
-        if ($this->userActive) {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'Id'        => $this->userId,
-                            'Email'     => $email_format,
-                            'LastLogin' => '2020-01-01',
-                        ]
-                    ),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-
-            // Dashboard page checks for all LPA's for a user
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode([]),
-                    self::LPA_SERVICE_GET_LPAS
-                )
-            );
-        } else {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_UNAUTHORIZED,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-        }
-
-        $this->ui->assertPageContainsText('Sign in');
-        $this->ui->pressButton('Sign in');
-    }
-
-    /**
-     * @When /^I hack the CSRF value with '(.*)'$/
-     */
-    public function iEnterDetailsButHackTheCSRFTokenWith($csrfToken): void
-    {
-        $this->ui->getSession()->getPage()->find('css', '#__csrf')->setValue($csrfToken);
-
-        $this->ui->assertPageContainsText('Sign in');
-        $this->ui->pressButton('Sign in');
-    }
-
-    /**
-     * @When /^I enter incorrect login details with (.*) and (.*) below$/
-     */
-    public function iEnterInCorrectLoginDetailsWithEmailFormatAndPasswordBelow($emailFormat, $password): void
-    {
-        $this->ui->fillField('email', $emailFormat);
-        $this->ui->fillField('password', $password);
-
-        // API call for authentication
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(StatusCodeInterface::STATUS_FORBIDDEN, json_encode([]))
-        );
-
-        $this->ui->pressButton('Sign in');
-    }
-
-    /**
      * @When I enter incorrect login email
      */
     public function iEnterIncorrectLoginEmail(): void
@@ -1232,26 +929,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When I enter incorrect login password
-     */
-    public function iEnterIncorrectLoginPassword(): void
-    {
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', 'inoc0rrectPassword');
-
-        // API call for authentication
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([]),
-                self::USER_SERVICE_AUTHENTICATE
-            )
-        );
-
-        $this->ui->pressButton('Sign in');
-    }
-
-    /**
      * @When /^I follow my unique expired instructions on how to reset my password$/
      */
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword(): void
@@ -1262,23 +939,6 @@ class AccountContext implements Context
         );
 
         $this->ui->visit('/reset-password/123456');
-    }
-
-    /**
-     * @When /^I follow my unique instructions after 24 hours$/
-     */
-    public function iFollowMyUniqueInstructionsAfter24Hours(): void
-    {
-        // remove successful reset token and add failure state
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_NOT_FOUND,
-                '',
-                self::USER_SERVICE_ACTIVATE
-            )
-        );
-
-        $this->ui->visit('/activate-account/' . $this->activationToken);
     }
 
     /**
@@ -1339,32 +999,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I hack the request id of the CSRF value$/
-     */
-    public function iHackTheRequestIdOfTheCSRFValue(): void
-    {
-        $value        = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
-        $separated    = explode('-', $value);
-        $separated[1] = 'youhazbeenhaaxed'; //this is the requestid.
-        $hackedValue  = implode('-', $separated);
-        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
-    }
-
-    /**
-     * @When /^I hack the token of the CSRF value$/
-     */
-    public function iHackTheTokenOfTheCSRFValue(): void
-    {
-        $value = $this->ui->getSession()->getPage()->find('css', '#__csrf')->getValue();
-
-        $separated    = explode('-', $value);
-        $separated[0] = 'youhazbeenhaaxed'; //this is the token part.
-        $hackedValue  = implode('-', $separated);
-
-        $this->iEnterDetailsButHackTheCSRFTokenWith($hackedValue);
-    }
-
-    /**
      * @Given /^I have asked for my password to be reset$/
      */
     public function iHaveAskedForMyPasswordToBeReset(): void
@@ -1393,89 +1027,11 @@ class AccountContext implements Context
     }
 
     /**
-     * @Given /^I have forgotten my password$/
-     */
-    public function iHaveForgottenMyPassword(): void
-    {
-        $this->iAccessTheLoginForm();
-        $this->ui->assertPageAddress('/login');
-
-        $this->ui->clickLink('Forgotten your password?');
-    }
-
-    /**
-     * @Given /^I have logged in previously$/
-     */
-    public function iHaveLoggedInPreviously(): void
-    {
-        // do all the steps to sign in
-        $this->iAccessTheLoginForm();
-
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-
-        if ($this->userActive) {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'Id'        => $this->userId,
-                            'Email'     => $this->userEmail,
-                            'LastLogin' => null,
-                        ]
-                    ),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-        } else {
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_UNAUTHORIZED,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-        }
-
-        $this->ui->pressButton('Sign in');
-
-        $this->iAmSignedIn();
-        $this->iLogoutOfTheApplication();
-    }
-
-    /**
      * @Given /^I have not activated my account$/
      */
     public function iHaveNotActivatedMyAccount(): void
     {
         $this->userActive = false;
-    }
-
-    /**
-     * @When /^I have provided required information for account creation such as (.*)(.*)(.*)$/
-     */
-    public function iHaveProvidedRequiredInformationForAccountCreationSuchAs($email, $password, $terms): void
-    {
-        $this->ui->assertPageAddress('/create-account');
-
-        // API call for password reset request
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([]), self::USER_SERVICE_CREATE)
-        );
-
-        // API call for Notify
-        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-
-        $this->ui->fillField('email', $email);
-        $this->ui->fillField('show_hide_password', $password);
-        if ($terms === 1) {
-            $this->ui->checkOption('terms');
-        }
-
-        $this->ui->pressButton('Create account');
     }
 
     /**
@@ -1501,21 +1057,19 @@ class AccountContext implements Context
      */
     public function iLogoutOfTheApplication(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_OK,
-                    json_encode(
-                        [
-                            'redirect_uri' => 'http://fake.url/logout'
-                                . '?id_token_hint=token'
-                                . '&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
-                        ]
-                    ),
-                    self::ONE_LOGIN_SERVICE_LOGOUT
-                )
-            );
-        }
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'redirect_uri' => 'http://fake.url/logout'
+                            . '?id_token_hint=token'
+                            . '&post_logout_redirect_uri=https://www.gov.uk/done/use-lasting-power-of-attorney',
+                    ]
+                ),
+                self::ONE_LOGIN_SERVICE_LOGOUT
+            )
+        );
 
         //We cannot follow redirects to external links, returns page not found
         $this->iDoNotFollowRedirects();
@@ -1567,28 +1121,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @When /^I provided incorrect current password$/
-     */
-    public function iProvidedIncorrectCurrentPassword(): void
-    {
-        $newPassword = 'Password123!';
-
-        // API call for password reset request
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_FORBIDDEN,
-                json_encode([]),
-                self::USER_SERVICE_CHANGE_PASSWORD
-            )
-        );
-
-        $this->ui->fillField('current_password', 'wrongPassword');
-        $this->ui->fillField('new_password', $newPassword);
-
-        $this->ui->pressButton('Change password');
-    }
-
-    /**
      * @Then /^I receive unique instructions on how to activate my account$/
      */
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount(): void
@@ -1599,17 +1131,6 @@ class AccountContext implements Context
 
         Assert::assertIsString($this->activationToken);
         assert($this->apiFixtures->count() === 0);
-    }
-
-    /**
-     * @Then /^I receive unique instructions on how to activate my account in Welsh$/
-     */
-    public function iReceiveUniqueInstructionsOnHowToActivateMyAccountInWelsh(): void
-    {
-        $request = $this->apiFixtures->getLastRequest();
-
-        $requestBody = $request->getBody()->getContents();
-        Assert::assertStringContainsString('"locale":"cy_GB"', $requestBody);
     }
 
     /**
@@ -1639,26 +1160,8 @@ class AccountContext implements Context
      */
     public function iRequestLoginToMyAccountThatWasDeleted(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->iHaveLoggedInToOneLogin('English');
-            $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
-        } else {
-            $this->ui->visit('/login');
-
-            $this->ui->fillField('email', $this->userEmail);
-            $this->ui->fillField('password', $this->userPassword);
-
-            // API call for authentication
-            $this->apiFixtures->append(
-                ContextUtilities::newResponse(
-                    StatusCodeInterface::STATUS_FORBIDDEN,
-                    json_encode([]),
-                    self::USER_SERVICE_AUTHENTICATE
-                )
-            );
-
-            $this->ui->pressButton('Sign in');
-        }
+        $this->iHaveLoggedInToOneLogin('English');
+        $this->iHaveAnEmailAddressThatDoesNotMatchALocalAccount();
     }
 
     /**
@@ -1801,32 +1304,7 @@ class AccountContext implements Context
      */
     public function iRequestToSeeTheActorTermsOfUse(): void
     {
-        if (($this->base->container->get(FeatureEnabled::class))('allow_gov_one_login')) {
-            $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
-        } else {
-            $this->ui->clickLink('terms of use');
-        }
-    }
-
-    /**
-     * @Given /^I select the option to create a new account$/
-     */
-    public function iSelectTheOptionToCreateNewAccount(): void
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->fillField('triageEntry', 'no');
-        $this->ui->pressButton('Continue');
-    }
-
-    /**
-     * @When /^I select the option to sign in to my existing account$/
-     */
-    public function iSelectTheOptionToSignInToMyExistingAccount(): void
-    {
-        $this->ui->assertPageAddress('/home');
-        $this->ui->assertPageContainsText('Use a lasting power of attorney');
-        $this->ui->fillField('triageEntry', 'yes');
-        $this->ui->pressButton('Continue');
+        $this->ui->clickLink('terms of the Use a lasting power of attorney service.');
     }
 
     /**
@@ -1913,15 +1391,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should see relevant (.*) message$/
-     */
-    public function iShouldSeeRelevantErrorMessage($error): void
-    {
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText($error);
-    }
-
-    /**
      * @Then /^I should see the (.*) message$/
      */
     public function iShouldSeeTheErrorMessage($error): void
@@ -1995,16 +1464,6 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^my account is activated and I receive a confirmation email$/
-     */
-    public function myAccountIsActivatedAndIReceiveAConfirmationEmail(): void
-    {
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Account activated successfully');
-        $this->ui->assertPageContainsText('sign in');
-    }
-
-    /**
      * @Then /^My account is deleted$/
      */
     public function myAccountIsDeleted(): void
@@ -2018,108 +1477,6 @@ class AccountContext implements Context
     public function myEmailResetTokenIsStillValid(): void
     {
         $this->userEmailResetToken = '12345abcde';
-    }
-
-    /**
-     * @Then /^my password has been associated with my user account$/
-     * @Then /^I am told my password was changed$/
-     */
-    public function myPasswordHasBeenAssociatedWithMyUserAccount(): void
-    {
-        $this->ui->assertPageAddress('/login');
-        $this->ui->assertPageContainsText('Password changed successfully');
-
-        Assert::assertEquals(0, $this->apiFixtures->count());
-    }
-
-    /**
-     * @When /^I sign successfully$/
-     */
-    public function iSignInSuccessfully(): void
-    {
-        $this->ui->fillField('email', $this->userEmail);
-        $this->ui->fillField('password', $this->userPassword);
-
-
-        // API call for authentication
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'Id'         => $this->userId,
-                        'Email'      => $this->userEmail,
-                        'LastLogin'  => '2020-01-01',
-                        'NeedsReset' => '2020-10-10',
-                    ]
-                ),
-                self::USER_SERVICE_AUTHENTICATE
-            )
-        );
-    }
-
-    /**
-     * @Then /^I am requested to reset my password$/
-     */
-    public function iAmRequestedToResetMyPassword(): void
-    {
-        $this->ui->pressButton('Sign in');
-        $this->ui->assertPageAddress('/lpa/dashboard');
-
-        //Using first line of body to make sure this step is distinguished from other change password pages
-        $this->ui->assertPageContainsText('Keeping our online services secure is very important to us');
-    }
-
-    /**
-     * @Then /^My password security is compromised and requested to reset my password on login$/
-     */
-    public function myPasswordSecurityIsCompromisedAndRequestedToReset(): void
-    {
-        $this->iAccessTheLoginForm();
-        $this->iSignInSuccessfully();
-        $this->iAmRequestedToResetMyPassword();
-    }
-
-    /**
-     * @Then /^I request for my password to be reset$/
-     */
-    public function iRequestForMyPasswordToBeReset(
-        $email = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
-        $email_confirmation = 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
-    ) {
-        // API call for password reset request
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'Id'                 => $this->userId,
-                        'PasswordResetToken' => '123456',
-                    ]
-                ),
-                self::USER_SERVICE_REQUEST_PASSWORD_RESET
-            )
-        );
-
-        // API call for Notify
-        $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
-        $this->ui->pressButton('Email me the link');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to');
-
-        $request = $this->apiFixtures->getLastRequest();
-        $params  = json_decode($request->getBody()->getContents(), true);
-
-        Assert::assertArrayHasKey('passwordResetUrl', $params);
-        Assert::assertArrayHasKey('recipient', $params);
-    }
-
-    /**
-     * @Then /^I receive an email and shown unique instructions on how to reset my password$/
-     */
-    public function iReceiveAnEmailAndShownUniqueInstructionsOnHowToResetMyPassword(): void
-    {
-        $this->ui->assertPageAddress('/reset-password');
-        $this->ui->assertPageContainsText('We\'ve emailed a link to ');
     }
 
     /**
@@ -2239,59 +1596,11 @@ class AccountContext implements Context
             )
         );
 
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
-
-        $userLpaActorToken = '12345789';
-        $lpaData           = [
-            'user-lpa-actor-token'       => $userLpaActorToken,
-            'date'                       => 'today',
-            'actor'                      => [
-                'type'    => 'primary-attorney',
-                'details' => [
-                    'addresses'    => [
-                        [
-                            'addressLine1' => '',
-                            'addressLine2' => '',
-                            'addressLine3' => '',
-                            'country'      => '',
-                            'county'       => '',
-                            'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => '',
-                            'type'         => 'Primary',
-                        ],
-                    ],
-                    'companyName'  => null,
-                    'dob'          => '1975-10-05',
-                    'email'        => 'string',
-                    'firstname'    => 'Ian',
-                    'id'           => 0,
-                    'middlenames'  => null,
-                    'salutation'   => 'Mr',
-                    'surname'      => 'Deputy',
-                    'systemStatus' => true,
-                    'uId'          => '700000000054',
-                ],
-            ],
-            'applicationHasRestrictions' => true,
-            'applicationHasGuidance'     => false,
-            'lpa'                        => $lpa,
-            'added'                      => '2021-10-5 12:00:00',
-        ];
-
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode([$userLpaActorToken => $lpaData]),
+                json_encode([]), // no LPAs
                 self::LPA_SERVICE_GET_LPAS
-            )
-        );
-
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode([]),
-                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
             )
         );
 
@@ -2304,6 +1613,84 @@ class AccountContext implements Context
         );
 
         $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+    }
+
+    /**
+     * @Then /^I have an account whose sub matches a local account with LPAs$/
+     * @Then /^I have an email address that matches a local account with LPAs$/
+     */
+    public function iHaveAMatchingLocalAccountWithLpas(): void
+    {
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        $userLpaActorToken = '987654321';
+
+        $lpaData = [
+            'user-lpa-actor-token'       => $userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => $lpa->attorneys[0],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $lpa,
+            'added'                      => '2021-10-5 12:00:00',
+        ];
+
+        $dashboardLPAs = [$userLpaActorToken => $lpaData];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user'  => [
+                            'Id'        => 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+                            'Identity'  => 'fakeSub',
+                            'Email'     => $this->userEmail,
+                            'LastLogin' => (new DateTime('-1 day'))->format(DateTimeInterface::ATOM),
+                        ],
+                        'token' => 'users_login_token',
+                    ],
+                ),
+                self::ONE_LOGIN_SERVICE_CALLBACK
+            )
+        );
+
+        if ($dashboardLPAs) {
+            //API call for getting all the users added LPAs
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode($dashboardLPAs),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
+
+
+            foreach ($dashboardLPAs as $lpa) {
+                $this->apiFixtures->append(
+                    ContextUtilities::newResponse(
+                        StatusCodeInterface::STATUS_OK,
+                        json_encode([]),
+                        self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+                    )
+                );
+            }
+        }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->ui->visit('/home/login?code=FakeCode&state=FakeState');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
 
     /**
@@ -2366,13 +1753,4 @@ class AccountContext implements Context
         $this->ui->clickLink('Add your first LPA');
     }
 
-    /**
-     * @When /^An actor system message is set$/
-     */
-    public function aSystemMessageIsSet(): void {
-        $this->systemMessages = [
-            'use/en' => 'Use system message English',
-            'use/cy' => 'Use system message Welsh'
-        ];
-    }
 }
