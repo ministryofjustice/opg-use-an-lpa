@@ -9,7 +9,7 @@ use App\Entity\Person;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
-use App\Enum\ActorStatus;
+use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\GetAttorneyStatus;
@@ -100,33 +100,30 @@ class FindActorInLpaTest extends TestCase
         ];
 
         $lpa = new CombinedSiriusLpa(
-            applicationHasGuidance:                    null,
-            applicationHasRestrictions:                null,
-            applicationType:                           null,
-            attorneys:                                 $attorneys,
-            caseAttorneyJointly:                       false,
-            caseAttorneyJointlyAndJointlyAndSeverally: null,
-            caseAttorneyJointlyAndSeverally:           true,
-            caseSubtype:                               null,
-            channel:                                   null,
-            dispatchDate:                              null,
-            donor:                                     $this->donorFixture(),
-            hasSeveranceWarning:                       null,
-            invalidDate:                               null,
-            lifeSustainingTreatment:                   null,
-            lpaDonorSignatureDate:                     null,
-            lpaIsCleansed:                             null,
-            onlineLpaId:                               null,
-            receiptDate:                               null,
-            registrationDate:                          null,
-            rejectedDate:                              null,
-            replacementAttorneys:                      null,
-            status:                                    null,
-            statusDate:                                null,
-            trustCorporations:                         null,
-            uId:                                       '700000012346',
-            whenTheLpaCanBeUsed:                       null,
-            withdrawnDate:                             null
+            applicationHasGuidance:     null,
+            applicationHasRestrictions: null,
+            applicationType:            null,
+            attorneyActDecisions:       null,
+            attorneys:                  $attorneys,
+            caseSubtype:                null,
+            channel:                    null,
+            dispatchDate:               null,
+            donor:                      $this->donorFixture(),
+            hasSeveranceWarning:        null,
+            invalidDate:                null,
+            lifeSustainingTreatment:    null,
+            lpaDonorSignatureDate:      null,
+            lpaIsCleansed:              null,
+            onlineLpaId:                null,
+            receiptDate:                null,
+            registrationDate:           null,
+            rejectedDate:               null,
+            replacementAttorneys:       null,
+            status:                     null,
+            statusDate:                 null,
+            trustCorporations:          null,
+            uId:                        '700000012346',
+            withdrawnDate:              null
         );
 
 
@@ -302,8 +299,9 @@ class FindActorInLpaTest extends TestCase
             otherNames:   null,
             postcode:     'Gg1 2ff',
             surname:      'Person',
-            systemStatus: ActorStatus::INACTIVE,
+            systemStatus: 'false',
             town:         null,
+            type:         null,
             uId:          '7000000002222'
         );
     }
@@ -343,8 +341,9 @@ class FindActorInLpaTest extends TestCase
             otherNames:   null,
             postcode:     'BB1 9ee',
             surname:      '',
-            systemStatus: ActorStatus::ACTIVE,
+            systemStatus: 'true',
             town:         null,
+            type:         null,
             uId:          '700000003333'
         );
     }
@@ -406,30 +405,9 @@ class FindActorInLpaTest extends TestCase
             otherNames:   null,
             postcode:     'Ab1 2Cd',
             surname:      'T’esting',
-            systemStatus: ActorStatus::ACTIVE,
+            systemStatus: 'true',
             town:         null,
-            uId:          '7000000055555'
-        );
-    }
-
-    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
-    {
-        return new SiriusLpaAttorney(
-            addressLine1: null,
-            addressLine2: null,
-            addressLine3: null,
-            country:      null,
-            county:       null,
-            dob:          null,
-            email:        null,
-            firstname:    'Testering',
-            id:           '7',
-            middlenames:  null,
-            otherNames:   null,
-            postcode:     'Ab1 2Cd',
-            surname:      'T’esting',
-            systemStatus: ActorStatus::ACTIVE,
-            town:         null,
+            type:         null,
             uId:          '700000001234'
         );
     }
@@ -471,6 +449,7 @@ class FindActorInLpaTest extends TestCase
             surname:      'Person',
             systemStatus: null,
             town:         null,
+            type:         null,
             uId:          '700000001111'
         );
     }
@@ -491,6 +470,29 @@ class FindActorInLpaTest extends TestCase
                 'systemStatus' => true,
             ],
             new Logger('test-output'),
+        );
+    }
+
+    public static function nullDOBAttorneyFixture(): SiriusLpaAttorney
+    {
+        return new SiriusLpaAttorney(
+            addressLine1: null,
+            addressLine2: null,
+            addressLine3: null,
+            country:      null,
+            county:       null,
+            dob:          null,
+            email:        null,
+            firstname:    'Testering',
+            id:           '7',
+            middlenames:  null,
+            otherNames:   null,
+            postcode:     'PY1 3Kd',
+            surname:      'Person',
+            systemStatus: null,
+            town:         null,
+            type:         null,
+            uId:          '700000001111'
         );
     }
 }

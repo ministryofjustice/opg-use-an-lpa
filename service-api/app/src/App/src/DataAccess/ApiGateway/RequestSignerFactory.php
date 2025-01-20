@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\JWSPayload\DataStoreLpas;
-use App\Service\Secrets\LpaDataStoreSecretManager;
 use Aws\Signature\SignatureV4;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -72,12 +71,12 @@ class RequestSignerFactory
      */
     private function dataStoreLpasHeaders(string $userIdentifier): array
     {
-        $secretManager = $this->container->get(LpaDataStoreSecretManager::class);
-        $jwtGenerator  = $this->container->get(GenerateJWT::class);
+        $secretManager = $this->container->get('LpaDataStoreSecretManager');
+        $jwtGenerator  = $this->container->get('GenerateJWT');
         $jwsPayload    = new DataStoreLpas($userIdentifier);
 
         return [
-            'X-Jwt-Authorization' => 'Bearer ' . ($jwtGenerator)($secretManager, $jwsPayload),
+            'X-Jwt-Authorization' => ($jwtGenerator)($secretManager, $jwsPayload),
         ];
     }
 }

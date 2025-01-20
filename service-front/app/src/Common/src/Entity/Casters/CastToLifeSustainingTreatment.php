@@ -9,8 +9,6 @@ use Attribute;
 use Common\Enum\LpaType;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
-use InvalidArgumentException;
-use Rector\Configuration\Option;
 
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class CastToLifeSustainingTreatment implements PropertyCaster
@@ -18,15 +16,7 @@ class CastToLifeSustainingTreatment implements PropertyCaster
     public function cast(mixed $value, ObjectMapper $hydrator): mixed
     {
         if (is_null(LifeSustainingTreatment::tryFrom($value))) {
-            $value = match ($value) {
-                'Option A' => LifeSustainingTreatment::OPTION_A,
-                'Option B' => LifeSustainingTreatment::OPTION_B,
-                default => throw new InvalidArgumentException('Invalid shorthand name: ' . $value),
-            };
-        }
-
-        if ($value instanceof LifeSustainingTreatment) {
-            return $value->value;
+            return LifeSustainingTreatment::fromShortName($value)->value;
         }
 
         return LifeSustainingTreatment::from($value)->value;

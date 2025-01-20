@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use Common\Entity\CombinedLpa;
 use Common\Entity\LpaStore\LpaStore;
 use Common\Entity\LpaStore\LpaStoreAttorney;
 use Common\Entity\LpaStore\LpaStoreDonor;
 use Common\Entity\LpaStore\LpaStoreTrustCorporations;
-use Common\Entity\Person;
 use Common\Entity\Sirius\SiriusLpa;
 use Common\Entity\Sirius\SiriusLpaAttorney;
 use Common\Entity\Sirius\SiriusLpaDonor;
 use Common\Entity\Sirius\SiriusLpaTrustCorporations;
 use Common\Service\Features\FeatureEnabled;
-use Common\Service\Lpa\Factory\PersonDataFormatter;
 use CommonTest\Helper\EntityTestHelper;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -53,7 +50,6 @@ class ParseLpaDataTest extends TestCase
 
     private ObjectProphecy|LpaDataFormatter $lpaDataFormatter;
     private ObjectProphecy|FeatureEnabled $featureEnabled;
-    private ObjectProphecy|PersonDataFormatter $personDataFormatter;
 
     public function setUp(): void
     {
@@ -94,7 +90,6 @@ class ParseLpaDataTest extends TestCase
         $this->lpaFactory               = $this->prophesize(LpaFactory::class);
         $this->instAndPrefImagesFactory = $this->prophesize(InstAndPrefImagesFactory::class);
         $this->lpaDataFormatter         = $this->prophesize(LpaDataFormatter::class);
-        $this->personDataFormatter      = $this->prophesize(PersonDataFormatter::class);
         $this->featureEnabled           = $this->prophesize(FeatureEnabled::class);
     }
 
@@ -113,7 +108,6 @@ class ParseLpaDataTest extends TestCase
             $this->lpaFactory->reveal(),
             $this->instAndPrefImagesFactory->reveal(),
             $this->lpaDataFormatter->reveal(),
-            $this->personDataFormatter->reveal(),
             $this->featureEnabled->reveal()
         );
 
@@ -136,24 +130,16 @@ class ParseLpaDataTest extends TestCase
     #[Test]
     public function it_correctly_parses_an_combined_lpa_api_response(): void
     {
-        $combinedFormat = json_decode(file_get_contents(__DIR__ . '../../../../fixtures/combined_lpa.json'), true);
-
-        $this->lpaData['actor']['details'] = $combinedFormat['donor'];
-
+        $combinedFormat = ParseLpaData::getMockedCombinedFormat(false);
         $this->lpaFactory->createLpaFromData($this->lpaData['lpa'])->willReturn($combinedFormat);
         $this->lpaFactory->createCaseActorFromData($this->lpaData['actor']['details'])->willReturn($this->actor);
         $this->instAndPrefImagesFactory->createFromData($this->lpaData['iap'])->willReturn($this->iapImages);
-        $this->lpaDataFormatter->__invoke($combinedFormat)->willReturn($this->expectedLpa());
-        $this->personDataFormatter
-            ->__invoke($combinedFormat['donor'])
-            ->shouldBeCalled()
-            ->willReturn($this->getExpectedDonor());
+        $this->lpaDataFormatter->__invoke($combinedFormat)->willReturn($this->expectedSiriusLpa());
 
         $sut = new ParseLpaData(
             $this->lpaFactory->reveal(),
             $this->instAndPrefImagesFactory->reveal(),
             $this->lpaDataFormatter->reveal(),
-            $this->personDataFormatter->reveal(),
             $this->featureEnabled->reveal()
         );
 
@@ -164,13 +150,13 @@ class ParseLpaDataTest extends TestCase
         $this->lpaData['lpa'] = $combinedFormat;
         $result               = $sut($this->lpaData);
 
-        $this->assertEquals($this->expectedLpa(), $result->lpa);
+        $this->assertEquals($this->expectedSiriusLpa(), $result->lpa);
     }
 
-    public function expectedLpa(): CombinedLpa
+    public function expectedSiriusLpa(): SiriusLpa
     {
         $attorneys = [
-            new Person(
+            new SiriusLpaAttorney(
                 addressLine1 : '9 high street',
                 addressLine2 : '',
                 addressLine3 : '',
@@ -178,6 +164,7 @@ class ParseLpaDataTest extends TestCase
                 county       : '',
                 dob          : new DateTimeImmutable('1990-05-04'),
                 email        : '',
+                firstname    : 'jean',
                 firstnames   : null,
                 name         : null,
                 otherNames   : null,
@@ -185,9 +172,10 @@ class ParseLpaDataTest extends TestCase
                 surname      : 'sanderson',
                 systemStatus : '1',
                 town         : '',
+                type         : 'Primary',
                 uId          : '700000000815'
             ),
-            new Person(
+            new SiriusLpaAttorney(
                 addressLine1       : '',
                 addressLine2       : '',
                 addressLine3       : '',
@@ -195,6 +183,7 @@ class ParseLpaDataTest extends TestCase
                 county             : '',
                 dob                : new DateTimeImmutable('1975-10-05'),
                 email              : 'XXXXX',
+                firstname          : 'Ann',
                 firstnames         : null,
                 name               : null,
                 otherNames         : null,
@@ -202,11 +191,12 @@ class ParseLpaDataTest extends TestCase
                 surname            : 'Summers',
                 systemStatus       : '1',
                 town               : '',
+                type               : 'Primary',
                 uId                : '7000-0000-0849'
             ),
         ];
 
-        $donor = new Person(
+        $donor = new SiriusLpaDonor(
             addressLine1 : '81 Front Street',
             addressLine2 : 'LACEBY',
             addressLine3 : '',
@@ -214,18 +204,26 @@ class ParseLpaDataTest extends TestCase
             county       : '',
             dob          : new DateTimeImmutable('1948-11-01'),
             email        : 'RachelSanderson@opgtest.com',
+            firstname    : 'Rachel',
             firstnames   : null,
+            linked       : [
+                               [
+                                   'id'  => 7,
+                                   'uId' => '700000000799',
+                               ],
+                           ],
             name         : null,
             otherNames   : null,
             postcode     : 'DN37 5SH',
             surname      : 'Sanderson',
             systemStatus : null,
             town         : '',
+            type         : 'Primary',
             uId          : '700000000799'
         );
 
         $trustCorporations = [
-            new Person(
+            new SiriusLpaTrustCorporations(
                 addressLine1 : 'Street 1',
                 addressLine2 : 'Street 2',
                 addressLine3 : 'Street 3',
@@ -233,6 +231,7 @@ class ParseLpaDataTest extends TestCase
                 county       : 'County',
                 dob          : null,
                 email        : null,
+                firstname    : 'trust',
                 firstnames   : null,
                 name         : null,
                 otherNames   : null,
@@ -240,6 +239,7 @@ class ParseLpaDataTest extends TestCase
                 surname      : 'test',
                 systemStatus : '1',
                 town         : 'Town',
+                type         : 'Primary',
                 uId          : '7000-0015-1998',
             ),
         ];
@@ -248,27 +248,6 @@ class ParseLpaDataTest extends TestCase
             attorneys:         $attorneys,
             donor:             $donor,
             trustCorporations: $trustCorporations,
-        );
-    }
-
-    public function getExpectedDonor(): Person
-    {
-        return new Person(
-            addressLine1 : '81 Front Street',
-            addressLine2 : 'LACEBY',
-            addressLine3 : '',
-            country      : '',
-            county       : '',
-            dob          : new DateTimeImmutable('1948-11-01'),
-            email        : 'RachelSanderson@opgtest.com',
-            firstnames   : null,
-            name         : null,
-            otherNames   : null,
-            postcode     : 'DN37 5SH',
-            surname      : 'Sanderson',
-            systemStatus : null,
-            town         : '',
-            uId          : '700000000799'
         );
     }
 }

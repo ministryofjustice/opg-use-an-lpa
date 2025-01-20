@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CommonTest\Service\OneLogin;
+namespace Service\OneLogin;
 
+use PHPUnit\Framework\Attributes\Test;
 use Common\Service\ApiClient\Client;
 use Common\Service\OneLogin\OneLoginService;
 use Common\Service\OneLogin\OneLoginServiceFactory;
 use Mezzio\Authentication\UserInterface;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;

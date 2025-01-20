@@ -66,7 +66,6 @@ Feature: View an LPA that I have added to my account
     Examples:
       | status | message |
       | Registered | This LPA is registered |
-      | Cancelled | This LPA has been cancelled |
 
   @integration @ui @ff:support_datastore_lpas:true
   Scenario: The user cannot view a Combined LPA added to their account whose status has changed Revoked

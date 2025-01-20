@@ -39,7 +39,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
 
         $this->secretsManagerClient->getSecretValue(
             [
-                'SecretId' => LpaDataStoreSecretManager::SECRET_NAME,
+                'SecretName' => LpaDataStoreSecretManager::SECRET_NAME,
             ]
         )
             ->willReturn($mockSecretKeyResult->reveal());
@@ -63,7 +63,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
 
         $this->secretsManagerClient->getSecretValue(
             [
-                'SecretId' => LpaDataStoreSecretManager::SECRET_NAME,
+                'SecretName' => LpaDataStoreSecretManager::SECRET_NAME,
             ]
         )
             ->willReturn($mockSecretKeyResult->reveal());
@@ -84,7 +84,7 @@ class LpaDataStoreSecretManagerTest extends TestCase
     {
         $this->secretsManagerClient->getSecretValue(
             [
-                'SecretId' => LpaDataStoreSecretManager::SECRET_NAME,
+                'SecretName' => LpaDataStoreSecretManager::SECRET_NAME,
             ]
         )
             ->willThrow(SecretsManagerException::class);

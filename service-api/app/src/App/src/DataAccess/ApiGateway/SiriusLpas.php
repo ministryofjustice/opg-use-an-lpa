@@ -136,10 +136,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
                     );
                     # TODO: We can some more error checking around this.
                     if (($this->featureEnabled)('support_datastore_lpas')) {
-                        $results[$uid] = new Lpa(
-                            ($this->lpaDataFormatter)($response),
-                            new DateTimeImmutable($result->getHeaderLine('Date'))
-                        );
+                        $results[$uid] = ($this->lpaDataFormatter)($response);
                     } else {
                         $results[$uid] = new Lpa(
                             new SiriusLpa(

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\ViewerCodes;
 
-use App\DataAccess\DynamoDb\UserLpaActorMap;
-use DateTimeInterface;
 use App\DataAccess\Repository\{KeyCollisionException,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
@@ -16,10 +14,7 @@ use DateTimeZone;
 use Psr\Log\LoggerInterface;
 
 /**
- * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
  * @psalm-import-type ViewerCode from ViewerCodesInterface
- * @psalm-import-type ViewerCodeActivity from ViewerCodeActivityInterface
- * @psalm-import-type ViewerCodeWithActivity from ViewerCodeActivityInterface
  */
 class ViewerCodeService
 {
@@ -35,11 +30,9 @@ class ViewerCodeService
      * @param string $token
      * @param string $userId
      * @param string $organisation
-     * @return null|array {
-     *     code: string,
-     *     expires: string,
-     *     organisation: string,
-     * }
+     *
+     * @psalm-return ViewerCode
+     * @return array|null
      */
     public function addCode(string $token, string $userId, string $organisation): ?array
     {
@@ -52,7 +45,6 @@ class ViewerCodeService
 
         //---
 
-        $uid     = $map['SiriusUid'] ?? $map['LpaUid'];
         $expires = new DateTime(
             '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London') // Ensures we compensate for GMT vs BST.
@@ -67,7 +59,7 @@ class ViewerCodeService
                 $this->viewerCodesRepository->add(
                     $code,
                     $map['Id'],
-                    $uid,
+                    $map['SiriusUid'],
                     $expires,
                     $organisation,
                     $map['ActorId']
@@ -81,7 +73,7 @@ class ViewerCodeService
 
         return [
             'code'         => $code,
-            'expires'      => $expires->format(DateTimeInterface::ATOM),
+            'expires'      => $expires->format('c'),
             'organisation' => $organisation,
         ];
     }
@@ -89,8 +81,8 @@ class ViewerCodeService
     /**
      * @param string $token
      * @param string $userId
+     * @psalm-return ViewerCode[]
      * @return array|null
-     * @psalm-return ViewerCodeWithActivity[]|null
      */
     public function getCodes(string $token, string $userId): ?array
     {
@@ -101,8 +93,9 @@ class ViewerCodeService
             return null;
         }
 
-        $uid   = $map['SiriusUid'] ?? $map['LpaUid'];
-        $codes = $this->viewerCodesRepository->getCodesByLpaId($uid);
+        $siriusUid = $map['SiriusUid'];
+
+        $codes = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
 
         if (!empty($codes)) {
             $codes = $this->populateCodeStatuses($codes);
@@ -137,13 +130,18 @@ class ViewerCodeService
         );
     }
 
+    /**
+     * @param array $codes
+     * @return array
+     */
     private function populateCodeStatuses(array $codes): array
     {
         $viewerCodesAndStatuses = $this->viewerCodeActivityRepository->getStatusesForViewerCodes($codes);
 
-        // Get the actor id for the respective viewer code from either CreatedBy or using UserLpaActor
-        // A viewer record will have either UserLpaActor data or CreatedBy data.
-        // Around 49 viewer code records missing both and will not be able to show the code creator name on UI
+        /* Get the actor id for the respective viewer code from either CreatedBy or using UserLpaActor
+           A viewer record will have either UserLpaActor data or CreatedBy data.
+           Around 49 viewer code records missing both and will not be able to show the code creator name on UI
+        */
         foreach ($viewerCodesAndStatuses as $key => $viewerCode) {
             if (empty($viewerCode['UserLpaActor'])) {
                 if (!empty($viewerCode['CreatedBy'])) {
@@ -160,11 +158,6 @@ class ViewerCodeService
         return $viewerCodesAndStatuses;
     }
 
-    /**
-     * @param string $userLpaActor
-     * @return array|null
-     * @psalm-return ?UserLpaActorMap
-     */
     private function getCodeOwner(string $userLpaActor): ?array
     {
         $codeOwner = $this->userLpaActorMapRepository->get($userLpaActor);

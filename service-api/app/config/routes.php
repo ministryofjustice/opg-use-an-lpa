@@ -30,6 +30,7 @@ use App\Handler\UserActivateHandler;
 use App\Handler\UserHandler;
 use App\Handler\ViewerCodeFullHandler;
 use App\Handler\ViewerCodeSummaryHandler;
+use App\Handler\LpasCollectionV2Handler;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -64,6 +65,8 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/healthcheck', HealthcheckHandler::class, 'healthcheck');
 
     $app->get('/v1/lpas', LpasCollectionHandler::class, 'lpa.collection');
+    
+    $app->get('/v2/lpas', LpasCollectionV2Handler::class, 'lpa.collection.v2');
 
     $app->post(
         '/v1/older-lpa/validate',

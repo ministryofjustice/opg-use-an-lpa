@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace App\Entity\Sirius;
 
-use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
-use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
-use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, LinkedDonorCaster};
+use App\Entity\Sirius\Casters\{
+    ExtractAddressLine1FromSiriusLpa,
+    ExtractAddressLine2FromSiriusLpa,
+    ExtractAddressLine3FromSiriusLpa,
+    ExtractCountryFromSiriusLpa,
+    ExtractCountyFromSiriusLpa,
+    ExtractPostcodeFromSiriusLpa,
+    ExtractTownFromSiriusLpa,
+    ExtractTypeFromSiriusLpa,
+    LinkedDonorCaster};
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
@@ -19,19 +26,19 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
 {
     public function __construct(
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('addressLine1')]
+        #[ExtractAddressLine1FromSiriusLpa]
         ?string $addressLine1,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('addressLine2')]
+        #[ExtractAddressLine2FromSiriusLpa]
         ?string $addressLine2,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('addressLine3')]
+        #[ExtractAddressLine3FromSiriusLpa]
         ?string $addressLine3,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('country')]
+        #[ExtractCountryFromSiriusLpa]
         ?string $country,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('county')]
+        #[ExtractCountyFromSiriusLpa]
         ?string $county,
         #[CastToDateTimeImmutable('!Y-m-d')]
         ?DateTimeImmutable $dob,
@@ -39,37 +46,41 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
         public readonly ?string $firstname,
         #[CastToType('string')]
         public readonly ?string $id,
+        #[MapFrom('linked')]
         #[LinkedDonorCaster]
         public readonly ?array $linked,
         public readonly ?string $middlenames,
-        ?string $otherNames,
+        public readonly ?string $otherNames,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('postcode')]
+        #[ExtractPostcodeFromSiriusLpa]
         ?string $postcode,
         ?string $surname,
-        #[CastToSiriusActorStatus]
-        ?ActorStatus $systemStatus,
+        #[CastToType('string')]
+        ?string $systemStatus,
         #[MapFrom('addresses')]
-        #[ExtractAddressFieldFrom('town')]
+        #[ExtractTownFromSiriusLpa]
         ?string $town,
+        #[MapFrom('addresses')]
+        #[ExtractTypeFromSiriusLpa]
+        ?string $type,
         ?string $uId,
     ) {
         parent::__construct(
-            addressLine1: $addressLine1,
-            addressLine2: $addressLine2,
-            addressLine3: $addressLine3,
-            country:      $country,
-            county:       $county,
-            dob:          $dob,
-            email:        $email,
-            firstnames:   isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
-            name:         null,
-            otherNames:   $otherNames,
-            postcode:     $postcode,
-            surname:      $surname,
-            systemStatus: $systemStatus,
-            town:         $town,
-            uId:          $uId,
+            $addressLine1,
+            $addressLine2,
+            $addressLine3,
+            $country,
+            $county,
+            $dob,
+            $email,
+            isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            null,
+            $postcode,
+            $surname,
+            $systemStatus,
+            $town,
+            $type,
+            $uId,
         );
     }
 
