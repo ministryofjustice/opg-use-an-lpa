@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
 
       - name: configure AWS credentials ECR scan results
-        uses: aws-actions/configure-aws-credentials@97834a484a5ab3c40fa9e2eb40fcf8041105a573 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@f171d5c895855a39c1ef93ab625499424407e172 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
