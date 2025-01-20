@@ -13,7 +13,8 @@ use DateInterval;
  * @psalm-type UserLpaActorMap = array{
  *     Id: string,
  *     UserId: string,
- *     SiriusUid: string,
+ *     SiriusUid?: string,
+ *     LpaUid?: string,
  *     Added: string,
  *     ActorId?: int,
  *     ActivationCode?: string,

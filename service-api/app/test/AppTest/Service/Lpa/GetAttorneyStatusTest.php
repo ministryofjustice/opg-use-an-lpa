@@ -6,6 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Entity\Sirius\SiriusLpaAttorney;
+use App\Enum\ActorStatus;
 use App\Service\Lpa\GetAttorneyStatus;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 use App\Service\Lpa\SiriusPerson;
@@ -46,20 +47,18 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_0_if_attorney_is_active_combined_format_lpastore(): void
     {
         $attorney = new LpaStoreAttorney(
-            addressLine1: '81 NighOnTimeWeBuiltIt Street',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '81 NighOnTimeWeBuiltIt Street',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          new DateTimeImmutable('1982-07-24'),
+            dateOfBirth:  new DateTimeImmutable('1982-07-24'),
             email:        null,
-            firstnames:   'Herman',
-            name:         null,
+            firstNames:   'Herman',
             postcode:     null,
-            surname:      'Seakrest',
-            systemStatus: 'active',
+            lastName:      'Seakrest',
+            status: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
         );
 
@@ -86,9 +85,8 @@ class GetAttorneyStatusTest extends TestCase
             otherNames:   null,
             postcode:     null,
             surname:      'Seakrest',
-            systemStatus: 'active',
+            systemStatus: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '712345678',
         );
 
@@ -116,20 +114,18 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_1_if_attorney_is_a_ghost_combined_format_lpastore(): void
     {
         $attorney = new LpaStoreAttorney(
-            addressLine1: '81 NighOnTimeWeBuiltIt Street',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '81 NighOnTimeWeBuiltIt Street',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          new DateTimeImmutable('1982-07-24'),
+            dateOfBirth:          new DateTimeImmutable('1982-07-24'),
             email:        null,
-            firstnames:   '',
-            name:         null,
+            firstNames:   '',
             postcode:     null,
-            surname:      '',
-            systemStatus: 'true',
+            lastName:      '',
+            status: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
         );
 
@@ -157,9 +153,8 @@ class GetAttorneyStatusTest extends TestCase
             otherNames:   null,
             postcode:     null,
             surname:      '',
-            systemStatus: 'true',
+            systemStatus: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '7',
         );
 
@@ -188,20 +183,18 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_2_if_attorney_is_inactive_combined_format_lpastore(): void
     {
         $attorney = new LpaStoreAttorney(
-            addressLine1: '81 NighOnTimeWeBuiltIt Street',
-            addressLine2: null,
-            addressLine3: null,
+            line1: '81 NighOnTimeWeBuiltIt Street',
+            line2: null,
+            line3: null,
             country:      'GB',
             county:       null,
-            dob:          new DateTimeImmutable('1982-07-24'),
+            dateOfBirth:          new DateTimeImmutable('1982-07-24'),
             email:        null,
-            firstnames:   'A',
-            name:         null,
+            firstNames:   'A',
             postcode:     null,
-            surname:      'B',
-            systemStatus: 'false',
+            lastName:      'B',
+            status: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
         );
 
@@ -228,9 +221,8 @@ class GetAttorneyStatusTest extends TestCase
             otherNames:   null,
             postcode:     null,
             surname:      'B',
-            systemStatus: 'false',
+            systemStatus: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
-            type:         null,
             uId:          '7',
         );
 
@@ -239,5 +231,31 @@ class GetAttorneyStatusTest extends TestCase
         );
 
         $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+    }
+
+    #[Test]
+    public function returns_3_if_attorney_is_replacement_combined_format_lpastore(): void
+    {
+        $attorney = new LpaStoreAttorney(
+            line1: '81 NighOnTimeWeBuiltIt Street',
+            line2: null,
+            line3: null,
+            country:      'GB',
+            county:       null,
+            dateOfBirth:          new DateTimeImmutable('1982-07-24'),
+            email:        null,
+            firstNames:   'A',
+            postcode:     null,
+            lastName:      'B',
+            status: ActorStatus::REPLACEMENT,
+            town:         'Mahhhhhhhhhh',
+            uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+        );
+
+        $status = new GetAttorneyStatus(
+            $this->loggerProphecy->reveal()
+        );
+
+        $this->assertEquals(AttorneyStatus::REPLACEMENT_ATTORNEY, ($status)($attorney));
     }
 }

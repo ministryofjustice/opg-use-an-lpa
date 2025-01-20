@@ -6,7 +6,7 @@
             <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
                         title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
-                {% if lpa.whenTheLpaCanBeUsed.whenHasCapacity %}
+                {% if lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasCapacity %}
                     {% if actor is defined and actor.type == 'donor' %}
                         {% trans %}You have said that this <abbr
                                 title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
@@ -16,10 +16,10 @@
                                 title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
                             <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
                     {% endif %}
-                {% elseif lpa.whenTheLpaCanBeUsed.whenHasLostCapacity %}
+                {% elseif lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasLostCapacity %}
                     {% trans %}This <abbr
                             title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
-                {% elseif lpa.whenTheLpaCanBeUsed.unknown %}
+                {% elseif lpa.whenTheLpaCanBeUsed == null or lpa.whenTheLpaCanBeUsed.unknown %}
                     {% trans %}This <abbr
                             title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
                 {% endif %}
