@@ -2,32 +2,132 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log/slog"
+	"net/http"
+	"os"
+    "time"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-    "github.com/aws/aws-sdk-go-v2/config"
-    "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
 )
 
 var (
 	cfg        aws.Config
+	httpClient *http.Client
+	logger     *slog.Logger
+
 )
+
+type factory interface {
+}
+
+type Handler interface {
+	Handle(context.Context, factory, *events.CloudWatchEvent) error
+}
+
+type Event struct {
+	S3Event  *events.S3Event
+	SQSEvent *events.SQSEvent
+}
+
+func (e *Event) UnmarshalJSON(data []byte) error {
+	var sqs events.SQSEvent
+	if err := json.Unmarshal(data, &sqs); err == nil && len(sqs.Records) > 0 && sqs.Records[0].MessageId != "" {
+		e.SQSEvent = &sqs
+		return nil
+	}
+
+	return errors.New("unknown event type")
+}
+
+func handler(ctx context.Context, event Event) (map[string]any, error) {
+	result := map[string]any{}
+
+	factory := &Factory{
+		logger:                logger,
+		cfg:                   cfg,
+		httpClient:            httpClient,
+	}
+
+	if event.SQSEvent != nil {
+		batchItemFailures := []map[string]any{}
+		for _, record := range event.SQSEvent.Records {
+			var cloud *events.CloudWatchEvent
+			if err := json.Unmarshal([]byte(record.Body), &cloud); err != nil {
+				logger.ErrorContext(ctx, "could not unmarshal event", slog.String("messageID", record.MessageId), slog.Any("err", err))
+				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
+				continue
+			}
+
+			if err := handleCloudWatchEvent(ctx, factory, cloud); err != nil {
+				logger.ErrorContext(ctx, "error processing event", slog.String("messageID", record.MessageId), slog.Any("err", err))
+				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
+				continue
+			}
+		}
+
+		result["batchItemFailures"] = batchItemFailures
+		return result, nil
+	}
+
+	return result, nil
+}
+
+func handleCloudWatchEvent(ctx context.Context, factory *Factory, event *events.CloudWatchEvent) error {
+	var handler Handler
+	switch event.Source {
+	case "opg.poas.makeregister":
+		handler = &makeregisterEventHandler{}
+	}
+
+	if handler == nil {
+		eJson, _ := json.Marshal(event)
+		return fmt.Errorf("unknown event received: %s", string(eJson))
+	}
+
+	logger.InfoContext(ctx, "handling event", slog.String("source", event.Source), slog.String("detailType", event.DetailType))
+	if err := handler.Handle(ctx, factory, event); err != nil {
+		return fmt.Errorf("%s: %w", event.DetailType, err)
+	}
+	logger.InfoContext(ctx, "successfully handled event", slog.String("source", event.Source), slog.String("detailType", event.DetailType))
+
+	return nil
+}
 
 func main() {
 	ctx := context.Background()
 
-	logger := NewLogger()
+    httpClient = &http.Client{Timeout: 30 * time.Second}
+
+	logger = slog.New(slog.
+		NewJSONHandler(os.Stdout, &slog.HandlerOptions{
+			ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
+				switch a.Value.Kind() {
+				case slog.KindAny:
+					switch v := a.Value.Any().(type) {
+					case *http.Request:
+						return slog.Group(a.Key,
+							slog.String("method", v.Method),
+							slog.String("uri", v.URL.String()))
+					}
+				}
+
+				return a
+			},
+		}))
 
 	var err error
-
 	cfg, err = config.LoadDefaultConfig(ctx)
 	if err != nil {
-		logger.Error("failed to load default config", err)
+		logger.ErrorContext(ctx, "failed to load default config", slog.Any("err", err))
 		return
 	}
 
-    appFactory := NewFactory(cfg, logger)
-
-    handler := NewSQSEventHandler(appFactory, logger)
-
     lambda.Start(handler)
+
 }
