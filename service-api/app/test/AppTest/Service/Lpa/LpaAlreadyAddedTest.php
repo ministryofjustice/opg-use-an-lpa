@@ -238,4 +238,26 @@ class LpaAlreadyAddedTest extends TestCase
             $lpaAddedData
         );
     }
+
+    #[Test]
+    public function returns_null_if_different_lpa_added(): void
+    {
+        $this->userLpaActorMapProphecy
+            ->getByUserId($this->userId)
+            ->willReturn(
+                [
+                    [
+                        'Id'        => $this->userLpaActorToken,
+                        'SiriusUid' => $this->lpaUid,
+                    ],
+                ]
+            );
+
+        $this->lpaManagerProphecy
+            ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
+            ->shouldNotBeCalled();
+
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '712312341234');
+        $this->assertNull($lpaAddedData);
+    }
 }
