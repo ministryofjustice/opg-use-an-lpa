@@ -26,7 +26,7 @@ type factory interface {
 }
 
 type Handler interface {
-	Handle(context.Context, factory, *events.SQSEvent) error
+	Handle(context.Context, *events.SQSEvent) error
 }
 
 type Event struct {
@@ -47,11 +47,6 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 func handler(ctx context.Context, event Event) (map[string]any, error) {
 	result := map[string]any{}
 
-	factory := &Factory{
-		logger:     logger,
-		cfg:        cfg,
-		httpClient: httpClient,
-	}
 
 	if event.SQSEvent != nil {
 		batchItemFailures := []map[string]any{}
@@ -63,7 +58,7 @@ func handler(ctx context.Context, event Event) (map[string]any, error) {
 				continue
 			}
 
-			if err := handleSQSEvent(ctx, factory, sqsEvent); err != nil {
+			if err := handleSQSEvent(ctx, sqsEvent); err != nil {
 				logger.ErrorContext(ctx, "error processing event", slog.String("messageID", record.MessageId), slog.Any("err", err))
 				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
 				continue
@@ -77,7 +72,7 @@ func handler(ctx context.Context, event Event) (map[string]any, error) {
 	return result, nil
 }
 
-func handleSQSEvent(ctx context.Context, factory *Factory, sqsEvent *events.SQSEvent) error {
+func handleSQSEvent(ctx context.Context, sqsEvent *events.SQSEvent) error {
 	handler := &makeregisterEventHandler{}
 
 	for _, record := range sqsEvent.Records {
