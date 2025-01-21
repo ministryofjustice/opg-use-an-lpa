@@ -143,6 +143,19 @@ class CommonContext implements Context
 
         // default, highly restrictive, policy
         Assert::assertStringContainsString("default-src 'none';", $header);
+
+        // check our nonce has been correctly set
+        // this has to be fetched via script evaluation as attribute access via the DOM is forbidden.
+        // https://html.spec.whatwg.org/multipage/urls-and-fetching.html#nonce-attributes%3Aattr-nonce
+        $nonce = $session->evaluateScript('document.getElementsByTagName("script")[0].nonce;');
+        if ($nonce === null || $nonce === '') {
+            throw new ExpectationException(
+                'Nonce not found on expected script tag in document head',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
+
+        Assert::assertMatchesRegularExpression('/script-src[^;]*\'nonce-' . $nonce . '\'[^;]*;/', $header);
     }
 
     /**
