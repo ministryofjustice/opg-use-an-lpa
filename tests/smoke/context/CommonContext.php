@@ -145,7 +145,7 @@ class CommonContext implements Context
         Assert::assertStringContainsString("default-src 'none';", $header);
 
         // check our nonce has been correctly set
-        // this has to be fetched via script evaluation as attribute access via the DOM is forbidden.
+        // this has to be fetched via script evaluation as nonce attribute access via the DOM is forbidden.
         // https://html.spec.whatwg.org/multipage/urls-and-fetching.html#nonce-attributes%3Aattr-nonce
         $nonce = $session->evaluateScript('document.getElementsByTagName("script")[0].nonce;');
         if ($nonce === null || $nonce === '') {
