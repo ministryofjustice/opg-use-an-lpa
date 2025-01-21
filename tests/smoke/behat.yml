@@ -13,7 +13,7 @@ default:
         default:
           chrome:
             # If you start a chrome instance like this
-            # /Applications/Google Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-address=0.0.0.0 \
+            # /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-address=0.0.0.0 \
             #     --remote-debugging-port=9222 --ignore-certificate-errors --disable-extensions \
             #     --window-size="1920,1080" --no-startup-window --no-first-run
             #
