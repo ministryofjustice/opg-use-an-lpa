@@ -15,7 +15,7 @@ jobs:
   code_coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v3
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
       - name: download artifact for front tests
         id: download-artifact-front-tests
         uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
