@@ -132,6 +132,7 @@ server {
     location ~ \.php$ {
         proxy_cookie_flags __Host-session $samesite_strip;
         proxy_set_header Host $host;
+        proxy_hide_header X-Csp-Nonce;
         proxy_pass http://127.0.0.1:8000$request_uri;
     }
 
@@ -168,8 +169,6 @@ server {
         include fastcgi_params;
         fastcgi_param HTTP_X_AMZN_TRACE_ID $trace_id;
         fastcgi_param SCRIPT_FILENAME      /app/public$fastcgi_script_name;
-
-        fastcgi_hide_header X-Csp-Nonce;
 
         fastcgi_pass @php;
     }

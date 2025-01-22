@@ -33,7 +33,7 @@
     "esbuild": "^0.21.0",
     "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "govuk-one-login-service-header": "github:govuk-one-login/service-header#a7cf88002f4c3c2f6b8f372bd62737c6c44119a5",
     "jest": "^29.2.0",
