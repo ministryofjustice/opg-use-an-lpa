@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Twig\Extension\DebugExtension;
 
 // Configuration details found here
-// https://docs.zendframework.com/zend-expressive/v3/features/template/twig/
+// https://docs.mezzio.dev/mezzio/v3/features/template/twig/#configuration
 
 return [
     'twig' => [
