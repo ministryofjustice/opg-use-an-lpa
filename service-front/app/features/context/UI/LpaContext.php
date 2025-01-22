@@ -1929,9 +1929,9 @@ class LpaContext implements Context
     #[When('/^I request to add an LPA with the code "([^"]*)" that is for "([^"]*)" "([^"]*)" and I will have an Id of ([^"]*)$/')]
     public function iRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
         string $activation_key,
-        string $firstName,
-        string $secondName,
-        string $id,
+        $firstName,
+        $secondName,
+        $id,
     ): void {
         $this->userId        = (int)$id;
         $this->actorId       = (int)$id;
@@ -1990,8 +1990,8 @@ class LpaContext implements Context
     #[When('/^I as trust corporation request to add an LPA with the code "([^"]*)" that is for "([^"]*)" and I will have an Id of ([^"]*)$/')]
     public function iAsTrustCorporationRequestToAddAnLPAWithTheCodeThatIsForAndIWillHaveAnIdOf(
         string $activation_key,
-        string $companyName,
-        string $id,
+        $companyName,
+        $id,
     ): void {
         $this->userId      = (int)$id;
         $this->actorId     = (int)$id;

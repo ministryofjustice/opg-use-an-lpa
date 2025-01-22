@@ -1403,10 +1403,8 @@ class AccountContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
     }
 
-    /**
-     * @Then /^I have an account whose sub matches a local account with LPAs$/
-     * @Then /^I have an email address that matches a local account with LPAs$/
-     */
+    #[Then('/^I have an account whose sub matches a local account with LPAs$/')]
+    #[Then('/^I have an email address that matches a local account with LPAs$/')]
     public function iHaveAMatchingLocalAccountWithLpas(): void
     {
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
@@ -1445,27 +1443,22 @@ class AccountContext implements Context
                 self::ONE_LOGIN_SERVICE_CALLBACK
             )
         );
-
-        if ($dashboardLPAs) {
-            //API call for getting all the users added LPAs
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($dashboardLPAs),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+        foreach ($dashboardLPAs as $lpa) {
             $this->apiFixtures->append(
                 ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
-                    json_encode($dashboardLPAs),
-                    self::LPA_SERVICE_GET_LPAS
+                    json_encode([]),
+                    self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
                 )
             );
-
-
-            foreach ($dashboardLPAs as $lpa) {
-                $this->apiFixtures->append(
-                    ContextUtilities::newResponse(
-                        StatusCodeInterface::STATUS_OK,
-                        json_encode([]),
-                        self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
-                    )
-                );
-            }
         }
 
         $this->apiFixtures->append(

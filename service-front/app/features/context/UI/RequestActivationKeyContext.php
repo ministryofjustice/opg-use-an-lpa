@@ -658,7 +658,7 @@ class RequestActivationKeyContext implements Context
                 'Current postal address: %s, %s, %s\n',
                 $this->lpa->donor->addresses[0]->addressLine1,
                 $this->lpa->donor->addresses[0]->town,
-                strtoupper($this->lpa->donor->addresses[0]->postcode)
+                strtoupper((string) $this->lpa->donor->addresses[0]->postcode)
             ),
             $requests[0]['request']->getBody()->getContents()
         );

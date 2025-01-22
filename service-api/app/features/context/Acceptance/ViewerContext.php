@@ -54,7 +54,7 @@ class ViewerContext implements Context
         // Not used in this context
     }
 
-    #[When('I give a share code that\'s been cancelled')]
+    #[When("I give a share code that's been cancelled")]
     public function iGiveAShareCodeThatHasBeenCancelled(): void
     {
         $lpaExpiry = (new DateTime('+20 days'))->format('c');
