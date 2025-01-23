@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
-use Common\Service\Features\FeatureEnabled;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
@@ -28,13 +30,11 @@ class ViewerContext implements Context
     use BaseUiContextTrait;
     use ViewerContextTrait;
 
-    private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
+    private const LPA_SERVICE_GET_LPA_BY_CODE         = 'LpaService::getLpaByCode';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
-    /**
-     * @Then /^a PDF is downloaded$/
-     */
-    public function aPDFIsDownloaded()
+    #[Then('/^a PDF is downloaded$/')]
+    public function aPDFIsDownloaded(): void
     {
         // We can't actually check the content of the PDF but we can check that the response
         // we're given has the headers we want the PDF file to have.
@@ -47,11 +47,9 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Given /^I access the viewer service$/
-     * @Then /^I am taken to viewer service home page$/
-     */
-    public function iAccessTheViewerService()
+    #[Given('/^I access the viewer service$/')]
+    #[Then('/^I am taken to viewer service home page$/')]
+    public function iAccessTheViewerService(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -64,10 +62,8 @@ class ViewerContext implements Context
         $this->ui->visit('/home');
     }
 
-    /**
-     * @Given /^A system message is set$/
-     */
-    public function aSystemMessageIsSet()
+    #[Given('/^A system message is set$/')]
+    public function aSystemMessageIsSet(): void
     {
         $this->systemMessageData = [
             'view/en' => 'System Message View English',
@@ -75,20 +71,16 @@ class ViewerContext implements Context
         ];
     }
 
-    /**
-     * @Given /^A system message is not set$/
-     */
-    public function aSystemMessageIsNotSet()
+    #[Given('/^A system message is not set$/')]
+    public function aSystemMessageIsNotSet(): void
     {
         $this->systemMessageData = [];
     }
 
-    /**
-     * @Given /^I am on the enter code page$/
-     * @Given /^I am on the triage page$/
-     * @Then /^I am taken back to the enter code page$/
-     */
-    public function iAmOnTheEnterCodePage()
+    #[Given('/^I am on the enter code page$/')]
+    #[Given('/^I am on the triage page$/')]
+    #[Then('/^I am taken back to the enter code page$/')]
+    public function iAmOnTheEnterCodePage(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -103,37 +95,29 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
-    /**
-     * @Given /^I am on the stats page$/
-     */
-    public function iAmOnTheStatsPage()
+    #[Given('/^I am on the stats page$/')]
+    public function iAmOnTheStatsPage(): void
     {
         $this->ui->visit('/stats');
     }
 
-    /**
-     * @Given /^I am on the viewer privacy notice page$/
-     */
-    public function iAmOnTheViewerPrivacyNoticePage()
+    #[Given('/^I am on the viewer privacy notice page$/')]
+    public function iAmOnTheViewerPrivacyNoticePage(): void
     {
         $this->ui->visit('/privacy-notice');
         $this->ui->assertPageContainsText('View a lasting power of attorney');
         $this->ui->assertPageAddress('/privacy-notice');
     }
 
-    /**
-     * @Given /^I am on the viewer terms of use page$/
-     */
-    public function iAmOnTheViewerTermsOfUsePage()
+    #[Given('/^I am on the viewer terms of use page$/')]
+    public function iAmOnTheViewerTermsOfUsePage(): void
     {
         $this->ui->visit('/terms-of-use');
         $this->ui->assertPageAddress('/terms-of-use');
     }
 
-    /**
-     * @Given /^I am shown the LPA summary found with valid credentials$/
-     */
-    public function iAmShownTheLPASummaryFoundWithValidCredentials()
+    #[Given('/^I am shown the LPA summary found with valid credentials$/')]
+    public function iAmShownTheLPASummaryFoundWithValidCredentials(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
         $this->iAccessTheViewerService();
@@ -142,71 +126,55 @@ class ViewerContext implements Context
         $this->iAmViewingAValidLPA();
     }
 
-    /**
-     * @Then /^I am taken back to the terms of use page$/
-     */
-    public function iAmTakenBackToTheTermsOfUsePage()
+    #[Then('/^I am taken back to the terms of use page$/')]
+    public function iAmTakenBackToTheTermsOfUsePage(): void
     {
         $this->iAmOnTheViewerTermsOfUsePage();
     }
 
-    /**
-     * @Then /^I am taken to the session expired page$/
-     */
-    public function iAmTakenToTheSessionExpiredPage()
+    #[Then('/^I am taken to the session expired page$/')]
+    public function iAmTakenToTheSessionExpiredPage(): void
     {
         $this->ui->assertPageAddress('/session-expired');
-        $this->ui->assertPageContainsText('You\'ll have to start again');
+        $this->ui->assertPageContainsText("You'll have to start again");
     }
 
-    /**
-     * @Then /^I am taken to the viewer cookies page$/
-     */
-    public function iAmTakenToTheViewerCookiesPage()
+    #[Then('/^I am taken to the viewer cookies page$/')]
+    public function iAmTakenToTheViewerCookiesPage(): void
     {
         $this->ui->assertPageAddress('/cookies');
         $this->ui->assertPageContainsText('View a lasting power of attorney service');
     }
 
-    /**
-     * @Then /^I am told that I must enter my organisation name$/
-     */
-    public function iAmToldThatIMustEnterMyOrganisationName()
+    #[Then('/^I am told that I must enter my organisation name$/')]
+    public function iAmToldThatIMustEnterMyOrganisationName(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Enter your organisation name');
     }
 
-    /**
-     * @Then /^I am told that I must enter the donor's last name$/
-     */
-    public function iAmToldThatIMustEnterTheDonorSLastName()
+    #[Then('/^I am told that I must enter the donor\'s last name$/')]
+    public function iAmToldThatIMustEnterTheDonorSLastName(): void
     {
         $this->ui->assertPageContainsText("Enter the donor's last name");
     }
 
-    /**
-     * @Then /^I am told that my input is invalid because (.*)$/
-     */
-    public function iAmToldThatMyInputIsInvalidBecause($reason)
+    #[Then('/^I am told that my input is invalid because (.*)$/')]
+    public function iAmToldThatMyInputIsInvalidBecause($reason): void
     {
         $this->ui->assertPageAddress('/home');
         $this->ui->assertPageContainsText($reason);
     }
 
-    /**
-     * @Then /^I am told that the share code is invalid because (.*)$/
-     */
-    public function iAmToldThatTheShareCodeIsInvalidBecause($reason)
+    #[Then('/^I am told that the share code is invalid because (.*)$/')]
+    public function iAmToldThatTheShareCodeIsInvalidBecause($reason): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText($reason);
     }
 
-    /**
-     * @Given /^I am told that we cannot currently get the instructions and preferences images$/
-     */
-    public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages()
+    #[Given('/^I am told that we cannot currently get the instructions and preferences images$/')]
+    public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages(): void
     {
         $this->ui->assertElementNotOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementNotContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
@@ -217,10 +185,8 @@ class ViewerContext implements Context
         $this->ui->assertElementContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
-    /**
-     * @Given /^I am told to wait for instructions and preferences images$/
-     */
-    public function iAmToldToWaitForInstructionsAndPreferencesImages()
+    #[Given('/^I am told to wait for instructions and preferences images$/')]
+    public function iAmToldToWaitForInstructionsAndPreferencesImages(): void
     {
         $this->ui->assertElementOnPage('iap-preferences .iap-loader');
         $this->ui->assertElementContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
@@ -231,11 +197,9 @@ class ViewerContext implements Context
         $this->ui->assertElementNotContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
-    /**
-     * @Given /^I am viewing a cancelled LPA$/
-     * @Then /^I can see the full details of the cancelled LPA$/
-     */
-    public function iAmViewingACancelledLPA()
+    #[Given('/^I am viewing a cancelled LPA$/')]
+    #[Then('/^I can see the full details of the cancelled LPA$/')]
+    public function iAmViewingACancelledLPA(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText(
@@ -247,11 +211,9 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Given /^I am viewing a revoked LPA$/
-     * @Then /^I can see the full details of the revoked LPA$/
-     */
-    public function iAmViewingARevokedLPA()
+    #[Given('/^I am viewing a revoked LPA$/')]
+    #[Then('/^I can see the full details of the revoked LPA$/')]
+    public function iAmViewingARevokedLPA(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText(
@@ -263,27 +225,21 @@ class ViewerContext implements Context
         );
     }
 
-    /**
-     * @Then /^I can see the message (.*)$/
-     */
+    #[Then('/^I can see the message (.*)$/')]
     public function iCanSeeTheMessage($message): void
     {
         $this->ui->assertPageContainsText($message);
     }
 
-    /**
-     * @Then /^I cannot see the message (.*)$/
-     */
+    #[Then('/^I cannot see the message (.*)$/')]
     public function iCanNotSeeTheMessage($message): void
     {
         $this->ui->assertPageNotContainsText($message);
     }
 
-    /**
-     * @Given /^I am viewing a valid LPA$/
-     * @Then /^I can see the full details of the valid LPA$/
-     */
-    public function iAmViewingAValidLPA()
+    #[Given('/^I am viewing a valid LPA$/')]
+    #[Then('/^I can see the full details of the valid LPA$/')]
+    public function iAmViewingAValidLPA(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText(
@@ -292,63 +248,49 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('LPA is valid');
     }
 
-    /**
-     * @Given /^I attempted an invalid share codes$/
-     */
-    public function iAttemptedAnInvalidShareCodes()
+    #[Given('/^I attempted an invalid share codes$/')]
+    public function iAttemptedAnInvalidShareCodes(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
         $this->iAccessTheViewerService();
         $this->iGiveAShareCodeThatHasExpired();
     }
 
-    /**
-     * @Then /^I can see the accessibility statement for the View service$/
-     */
-    public function iCanSeeTheAccessibilityStatementForTheViewService()
+    #[Then('/^I can see the accessibility statement for the View service$/')]
+    public function iCanSeeTheAccessibilityStatementForTheViewService(): void
     {
         $this->ui->assertPageContainsText('Accessibility statement for View a lasting power of attorney');
     }
 
-    /**
-     * @Then /^I can see the viewer privacy notice$/
-     */
-    public function iCanSeeTheViewerPrivacyNotice()
+    #[Then('/^I can see the viewer privacy notice$/')]
+    public function iCanSeeTheViewerPrivacyNotice(): void
     {
         $this->ui->assertPageAddress('/privacy-notice');
         $this->ui->assertPageContainsText('Privacy notice');
     }
 
-    /**
-     * @Given /^I can see the viewer\-specific text for the error message$/
-     */
-    public function iCanSeeTheViewerSpecificTextForTheErrorMessage()
+    #[Given('/^I can see the viewer\-specific text for the error message$/')]
+    public function iCanSeeTheViewerSpecificTextForTheErrorMessage(): void
     {
         $this->ui->assertPageContainsText('you’ll need to ask the person who gave you the access code');
     }
 
-    /**
-     * @Then /^I can see the viewer terms of use$/
-     */
-    public function iCanSeeTheViewerTermsOfUse()
+    #[Then('/^I can see the viewer terms of use$/')]
+    public function iCanSeeTheViewerTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
         $this->ui->assertPageContainsText('Terms of use');
     }
 
-    /**
-     * @Then /^I can see user LPA codes table$/
-     */
-    public function iCanSeeUserLPACodesTable()
+    #[Then('/^I can see user LPA codes table$/')]
+    public function iCanSeeUserLPACodesTable(): void
     {
         $this->ui->assertPageAddress('/stats');
         $this->ui->assertPageContainsText('Number of LPA codes viewed');
     }
 
-    /**
-     * @When /^I choose to download a document version of the LPA$/
-     */
-    public function iChooseToDownloadADocumentVersionOfTheLPA()
+    #[When('/^I choose to download a document version of the LPA$/')]
+    public function iChooseToDownloadADocumentVersionOfTheLPA(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
 
@@ -379,7 +321,7 @@ class ViewerContext implements Context
 
         //Full lpa fetch assertions
         $request = $this->base->mockClientHistoryContainer[3]['request'];
-        $params  = json_decode($request->getBody()->getContents(), true);
+        $params  = json_decode((string) $request->getBody()->getContents(), true);
 
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
@@ -390,19 +332,15 @@ class ViewerContext implements Context
         Assert::assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
     }
 
-    /**
-     * @When /^I click the (.*) link on the page$/
-     */
-    public function iClickTheBackLinkOnThePage($backLink)
+    #[When('/^I click the (.*) link on the page$/')]
+    public function iClickTheBackLinkOnThePage($backLink): void
     {
         $this->ui->assertPageContainsText($backLink);
         $this->ui->clickLink($backLink);
     }
 
-    /**
-     * @When /^I confirm the cancelled LPA is correct/
-     */
-    public function iConfirmTheCancelledLPAIsCorrect()
+    #[When('/^I confirm the cancelled LPA is correct/')]
+    public function iConfirmTheCancelledLPAIsCorrect(): void
     {
         $this->lpaData['status']           = 'Cancelled';
         $this->lpaData['cancellationDate'] = (new DateTime('-1 day'))->format('Y-m-d');
@@ -439,10 +377,8 @@ class ViewerContext implements Context
         Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
-    /**
-     * @When /^I confirm the revoked LPA is correct/
-     */
-    public function iConfirmTheRevokedLPAIsCorrect()
+    #[When('/^I confirm the revoked LPA is correct/')]
+    public function iConfirmTheRevokedLPAIsCorrect(): void
     {
         $this->lpaData['status'] = 'Revoked';
 
@@ -465,7 +401,7 @@ class ViewerContext implements Context
             )
         )
             ->inspectRequest(
-                function (RequestInterface $request) {
+                function (RequestInterface $request): void {
                     $params = json_decode($request->getBody()->getContents(), true);
 
                     Assert::assertIsArray($params);
@@ -479,10 +415,8 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
     }
 
-    /**
-     * @When /^I enter an organisation name$/
-     */
-    public function iEnterAnOrganisationName()
+    #[When('/^I enter an organisation name$/')]
+    public function iEnterAnOrganisationName(): void
     {
         $this->lpaData['status'] = 'Registered';
 
@@ -510,10 +444,8 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
     }
 
-    /**
-     * @When /^I enter an organisation name and confirm the LPA is correct$/
-     */
-    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect()
+    #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
+    public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->lpaData['status'] = 'Registered';
 
@@ -569,10 +501,8 @@ class ViewerContext implements Context
         Assert::assertEquals($params['organisation'], $this->lpaViewedBy);
     }
 
-    /**
-     * @When /^I give a share code that has expired$/
-     */
-    public function iGiveAShareCodeThatHasExpired()
+    #[When('/^I give a share code that has expired$/')]
+    public function iGiveAShareCodeThatHasExpired(): void
     {
         $this->lpaData['status'] = 'Expired';
         $this->ui->assertPageAddress('/home');
@@ -596,10 +526,8 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I give a share code that's been cancelled$/
-     */
-    public function iGiveAShareCodeThatsBeenCancelled()
+    #[When('/^I give a share code that\'s been cancelled$/')]
+    public function iGiveAShareCodeThatsBeenCancelled(): void
     {
         $this->lpaData['status'] = 'Cancelled';
         $this->ui->assertPageAddress('/home');
@@ -623,20 +551,16 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I give a valid LPA share code on a cancelled LPA$/
-     */
-    public function iGiveAValidCancelledLPAShareCode()
+    #[When('/^I give a valid LPA share code on a cancelled LPA$/')]
+    public function iGiveAValidCancelledLPAShareCode(): void
     {
         $this->lpaData['status'] = 'Cancelled';
 
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @Given /^The LPA has instructions and preferences$/
-     */
-    public function theLPAHasInstructionsAndPreferences()
+    #[Given('/^The LPA has instructions and preferences$/')]
+    public function theLPAHasInstructionsAndPreferences(): void
     {
         $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
         $this->lpaData['applicationHasGuidance']     = true;
@@ -647,10 +571,8 @@ class ViewerContext implements Context
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @Given /^The LPA has instructions$/
-     */
-    public function theLPAHasInstructions()
+    #[Given('/^The LPA has instructions$/')]
+    public function theLPAHasInstructions(): void
     {
         $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
         $this->lpaData['applicationHasGuidance']     = false;
@@ -661,40 +583,32 @@ class ViewerContext implements Context
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @Given /^The LPA has instructions and preferences for which image collection is not yet started$/
-     */
-    public function theLPAHasInstructionsAndPreferencesForWhichImageCollectionIsNotYetStarted()
+    #[Given('/^The LPA has instructions and preferences for which image collection is not yet started$/')]
+    public function theLPAHasInstructionsAndPreferencesForWhichImageCollectionIsNotYetStarted(): void
     {
         $this->theLPAHasInstructionsAndPreferences();
 
         $this->imageCollectionStatus = 'COLLECTION_NOT_STARTED';
     }
 
-    /**
-     * @Given /^The LPA has instructions and preferences for which images aren't yet ready$/
-     */
-    public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady()
+    #[Given('/^The LPA has instructions and preferences for which images aren\'t yet ready$/')]
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesArenTYetReady(): void
     {
         $this->theLPAHasInstructionsAndPreferences();
 
         $this->imageCollectionStatus = 'COLLECTION_IN_PROGRESS';
     }
 
-    /**
-     * @Given /^The LPA has instructions and preferences for which images will fail to load$/
-     */
-    public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad()
+    #[Given('/^The LPA has instructions and preferences for which images will fail to load$/')]
+    public function theLPAHasInstructionsAndPreferencesForWhichImagesWillFailToLoad(): void
     {
         $this->theLPAHasInstructionsAndPreferences();
 
         $this->imageCollectionStatus = 'COLLECTION_ERROR';
     }
 
-    /**
-     * @Given /^The LPA has preferences$/
-     */
-    public function theLPAHasPreferences()
+    #[Given('/^The LPA has preferences$/')]
+    public function theLPAHasPreferences(): void
     {
         $this->lpaData['lpaDonorSignatureDate']      = '2016-01-01';
         $this->lpaData['applicationHasGuidance']     = true;
@@ -705,10 +619,8 @@ class ViewerContext implements Context
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @Given /^The LPA has no instructions or preferences and is signed before 2016$/
-     */
-    public function theLPAHasNoInstructionsOrPreferences()
+    #[Given('/^The LPA has no instructions or preferences and is signed before 2016$/')]
+    public function theLPAHasNoInstructionsOrPreferences(): void
     {
         $this->lpaData['lpaDonorSignatureDate']      = '2014-01-01';
         $this->lpaData['applicationHasGuidance']     = false;
@@ -719,10 +631,8 @@ class ViewerContext implements Context
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @Given /^The LPA has instructions and preferences and is signed before 2016$/
-     */
-    public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016()
+    #[Given('/^The LPA has instructions and preferences and is signed before 2016$/')]
+    public function theLPAHasInstructionsAndPreferencesAndIsSignedBefore2016(): void
     {
         $this->lpaData['applicationHasGuidance']     = true;
         $this->lpaData['applicationHasRestrictions'] = true;
@@ -734,20 +644,16 @@ class ViewerContext implements Context
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @When /^I give a valid LPA share code$/
-     */
-    public function iGiveAValidLPAShareCode()
+    #[When('/^I give a valid LPA share code$/')]
+    public function iGiveAValidLPAShareCode(): void
     {
         $this->lpaData['status'] = 'Registered';
 
         $this->giveAValidLpaShareCode();
     }
 
-    /**
-     * @When /^I give a valid LPA share code when my session is timed out$/
-     */
-    public function iGiveAValidLPAShareCodeWhenMySessionIsTimedOut()
+    #[When('/^I give a valid LPA share code when my session is timed out$/')]
+    public function iGiveAValidLPAShareCodeWhenMySessionIsTimedOut(): void
     {
         $this->ui->assertPageAddress('/home');
 
@@ -764,50 +670,40 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I give a valid LPA share code of (.*) which matches (.*)$/
-     */
-    public function iGiveAValidLPAShareCodeOf(string $code, string $storedCode)
+    #[When('/^I give a valid LPA share code of (.*) which matches (.*)$/')]
+    public function iGiveAValidLPAShareCodeOf(string $code, string $storedCode): void
     {
         $this->lpaShareCode  = $code;
         $this->lpaStoredCode = $storedCode;
         $this->iGiveAValidLPAShareCode();
     }
 
-    /**
-     * @Then /^I can clearly see the lpa has instructions and preferences$/
-     */
-    public function iCanClearlySeeTheLPAHasInstructionsAndPreferences()
+    #[Then('/^I can clearly see the lpa has instructions and preferences$/')]
+    public function iCanClearlySeeTheLPAHasInstructionsAndPreferences(): void
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences and instructions');
         $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
         $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
     }
 
-    /**
-     * @Then /^I can clearly see the lpa has preferences$/
-     */
-    public function iCanClearlySeeTheLPAHasPreferences()
+    #[Then('/^I can clearly see the lpa has preferences$/')]
+    public function iCanClearlySeeTheLPAHasPreferences(): void
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has preferences');
         $this->ui->assertElementNotOnPage('iap-instructions img.opg-ip__image');
         $this->ui->assertElementOnPage('iap-preferences img.opg-ip__image');
     }
 
-    /**
-     * @Then /^I can clearly see the lpa has instructions$/
-     */
-    public function iCanClearlySeeTheLPAHasInstructions()
+    #[Then('/^I can clearly see the lpa has instructions$/')]
+    public function iCanClearlySeeTheLPAHasInstructions(): void
     {
         $this->ui->assertElementContainsText('div.govuk-panel', 'This LPA has instructions');
         $this->ui->assertElementOnPage('iap-instructions img.opg-ip__image');
         $this->ui->assertElementNotOnPage('iap-preferences img.opg-ip__image');
     }
 
-    /**
-     * @When /^I give an invalid (.*) and (.*)$/
-     */
-    public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname)
+    #[When('/^I give an invalid (.*) and (.*)$/')]
+    public function iGiveAnInvalidShareCodeAndSurname($shareCode, $surname): void
     {
         $this->ui->assertPageAddress('/home');
 
@@ -825,41 +721,33 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @Then /^I have an error message informing me to try again\.$/
-     */
-    public function iHaveAnErrorMessageInformingMeToTryAgain()
+    #[Then('/^I have an error message informing me to try again\.$/')]
+    public function iHaveAnErrorMessageInformingMeToTryAgain(): void
     {
         $this->ui->assertPageContainsText(
-            'As you have not used this service for over 20 minutes, the page has timed out. We\'ve now ' .
+            "As you have not used this service for over 20 minutes, the page has timed out. We've now " .
                 'refreshed the page - please try to sign in again'
         );
     }
 
-    /**
-     * @Given /^I have been given access to a cancelled LPA via share code$/
-     */
-    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode()
+    #[Given('/^I have been given access to a cancelled LPA via share code$/')]
+    public function iHaveBeenGivenAccessToACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Cancelled';
     }
 
-    /**
-     * @Given /^I have been given access to an expired LPA via share code$/
-     */
-    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode()
+    #[Given('/^I have been given access to an expired LPA via share code$/')]
+    public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
 
         $this->lpaData['status'] = 'Expired';
     }
 
-    /**
-     * @Given /^I have been given access to an LPA via share code$/
-     */
-    public function iHaveBeenGivenAccessToAnLPAViaShareCode()
+    #[Given('/^I have been given access to an LPA via share code$/')]
+    public function iHaveBeenGivenAccessToAnLPAViaShareCode(): void
     {
         $this->lpaSurname    = 'Testerson';
         $this->lpaShareCode  = '1111-1111-1111';
@@ -900,10 +788,8 @@ class ViewerContext implements Context
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
     }
 
-    /**
-     * @When /^I leave the organisation name blank and confirm the LPA is correct$/
-     */
-    public function iLeaveTheOrganisationNameBlankAndConfirmTheLPAIsCorrect()
+    #[When('/^I leave the organisation name blank and confirm the LPA is correct$/')]
+    public function iLeaveTheOrganisationNameBlankAndConfirmTheLPAIsCorrect(): void
     {
         $this->lpaData['status'] = 'Registered';
 
@@ -936,71 +822,55 @@ class ViewerContext implements Context
         Assert::assertEquals($params['code'], $this->lpaStoredCode);
     }
 
-    /**
-     * @When /^I navigate to the viewer cookies page$/
-     */
-    public function iNavigateToTheViewerCookiesPage()
+    #[When('/^I navigate to the viewer cookies page$/')]
+    public function iNavigateToTheViewerCookiesPage(): void
     {
         $this->ui->clickLink('cookie policy');
     }
 
-    /**
-     * @Given /^I navigate to the viewer privacy notice page$/
-     */
-    public function iNavigateToTheViewerPrivacyNoticePage()
+    #[Given('/^I navigate to the viewer privacy notice page$/')]
+    public function iNavigateToTheViewerPrivacyNoticePage(): void
     {
         $this->ui->clickLink('privacy notice');
         $this->ui->assertPageContainsText('View a lasting power of attorney');
         $this->ui->assertPageAddress('/privacy-notice');
     }
 
-    /**
-     * @When /^I realise the LPA is incorrect$/
-     */
-    public function iRealiseTheLPAIsCorrect()
+    #[When('/^I realise the LPA is incorrect$/')]
+    public function iRealiseTheLPAIsCorrect(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Try another access code');
     }
 
-    /**
-     * @When /^I request to go back and try again$/
-     */
-    public function iRequestToGoBackAndTryAgain()
+    #[When('/^I request to go back and try again$/')]
+    public function iRequestToGoBackAndTryAgain(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
         $this->ui->assertPageContainsText('I want to check another LPA');
         $this->ui->clickLink('I want to check another LPA');
     }
 
-    /**
-     * @When /^I request to go back to the terms of use page$/
-     */
-    public function iRequestToGoBackToTheRequiredPage()
+    #[When('/^I request to go back to the terms of use page$/')]
+    public function iRequestToGoBackToTheRequiredPage(): void
     {
         $this->ui->clickLink('Back');
     }
 
-    /**
-     * @When /^I request to see the viewer privacy notice$/
-     */
-    public function iRequestToSeeTheViewerPrivacyNotice()
+    #[When('/^I request to see the viewer privacy notice$/')]
+    public function iRequestToSeeTheViewerPrivacyNotice(): void
     {
         $this->ui->clickLink('privacy notice');
     }
 
-    /**
-     * @When /^I request to see the viewer terms of use$/
-     */
-    public function iRequestToSeeTheViewerTermsOfUse()
+    #[When('/^I request to see the viewer terms of use$/')]
+    public function iRequestToSeeTheViewerTermsOfUse(): void
     {
         $this->ui->clickLink('terms of use');
     }
 
-    /**
-     * @When /^I request to view an LPA with an invalid access code of "([^"]*)"$/
-     */
-    public function iRequestToViewAnLPAWithAnInvalidAccessCodeOf($accessCode)
+    #[When('/^I request to view an LPA with an invalid access code of "([^"]*)"$/')]
+    public function iRequestToViewAnLPAWithAnInvalidAccessCodeOf($accessCode): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1009,26 +879,22 @@ class ViewerContext implements Context
                 self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
             )
         );
-        
+
         $this->ui->fillField('lpa_code', $accessCode);
         $this->ui->fillField('donor_surname', 'TestSurname');
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I request to view an LPA with an invalid donor's surname of "([^"]*)"$/
-     */
-    public function iRequestToViewAnLPAWithAnInvalidDonorSSurnameOf($surname)
+    #[When('/^I request to view an LPA with an invalid donor\'s surname of "([^"]*)"$/')]
+    public function iRequestToViewAnLPAWithAnInvalidDonorSSurnameOf($surname): void
     {
         $this->ui->fillField('lpa_code', 'T32TAC3SCOD3');
         $this->ui->fillField('donor_surname', $surname);
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I request to view an LPA without entering a donor's surname$/
-     */
-    public function iRequestToViewAnLPAWithoutEnteringADonorSSurname()
+    #[When('/^I request to view an LPA without entering a donor\'s surname$/')]
+    public function iRequestToViewAnLPAWithoutEnteringADonorSSurname(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1042,28 +908,22 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @Then /^I see a message that the share code has been cancelled$/
-     */
-    public function iSeeAMessageThatTheShareCodeHasBeenCancelled()
+    #[Then('/^I see a message that the share code has been cancelled$/')]
+    public function iSeeAMessageThatTheShareCodeHasBeenCancelled(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('The access code you entered has been cancelled');
     }
 
-    /**
-     * @Then /^I see a message that the share code has expired$/
-     */
-    public function iSeeAMessageThatTheShareCodeHasBeenExpired()
+    #[Then('/^I see a message that the share code has expired$/')]
+    public function iSeeAMessageThatTheShareCodeHasBeenExpired(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('The access code you entered has expired');
     }
 
-    /**
-     * @Given /^I view an LPA successfully$/
-     */
-    public function iViewAnLPASuccessfully()
+    #[Given('/^I view an LPA successfully$/')]
+    public function iViewAnLPASuccessfully(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
         $this->iAccessTheViewerService();
@@ -1072,18 +932,14 @@ class ViewerContext implements Context
         $this->iAmViewingAValidLPA();
     }
 
-    /**
-     * @Given /^I waited too long to enter the share code$/
-     */
-    public function iWaitedTooLongToEnterTheShareCode()
+    #[Given('/^I waited too long to enter the share code$/')]
+    public function iWaitedTooLongToEnterTheShareCode(): void
     {
         $this->ui->getSession()->setCookie('__Host-session');
     }
 
-    /**
-     * @When /^I want to make an attempt to enter another share code$/
-     */
-    public function iWantToMakeAnAttemptToEnterAnotherShareCode()
+    #[When('/^I want to make an attempt to enter another share code$/')]
+    public function iWantToMakeAnAttemptToEnterAnotherShareCode(): void
     {
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Enter another code');
@@ -1099,10 +955,8 @@ class ViewerContext implements Context
         $this->ui->clickLink('Enter another code');
     }
 
-    /**
-     * @Then /^I want to see an option to check another LPA$/
-     */
-    public function iWantToSeeAnOptionToCheckAnotherLPA()
+    #[Then('/^I want to see an option to check another LPA$/')]
+    public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         $this->ui->assertPageContainsText('I want to check another LPA');
 
@@ -1118,10 +972,8 @@ class ViewerContext implements Context
         $this->iGiveAValidLPAShareCode();
     }
 
-    /**
-     * @Then /^I want to see an option to re-enter code$/
-     */
-    public function iWantToSeeAnOptionToReEnterCode()
+    #[Then('/^I want to see an option to re-enter code$/')]
+    public function iWantToSeeAnOptionToReEnterCode(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1135,26 +987,20 @@ class ViewerContext implements Context
         $this->iGiveAValidLPAShareCode();
     }
 
-    /**
-     * @Then /^I want to see page to enter another share code$/
-     */
-    public function iWantToSeePageToEnterAnotherShareCode()
+    #[Then('/^I want to see page to enter another share code$/')]
+    public function iWantToSeePageToEnterAnotherShareCode(): void
     {
         $this->ui->assertPageAddress('/home');
     }
 
-    /**
-     * @When /^I click on the Read more link$/
-     */
-    public function iClickOnTheReadMoreLink()
+    #[When('/^I click on the Read more link$/')]
+    public function iClickOnTheReadMoreLink(): void
     {
         $this->ui->clickLink('Read more');
     }
 
-    /**
-     * @Then /^I am taken to a page explaining why instructions and preferences are not available$/
-     */
-    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable()
+    #[Then('/^I am taken to a page explaining why instructions and preferences are not available$/')]
+    public function iAmTakenToAPageExplainingWhyInstructionsAndPreferencesAreNotAvailable(): void
     {
         $this->ui->assertPageContainsText('Preferences and instructions cannot be shown for this LPA');
     }

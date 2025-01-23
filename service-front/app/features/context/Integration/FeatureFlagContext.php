@@ -13,7 +13,11 @@ use BehatTest\Context\ActorContextTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Features\FeatureEnabledFactory;
 use DI\Definition\Helper\FactoryDefinitionHelper;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class FeatureFlagContext extends BaseIntegrationContext
 {
@@ -27,7 +31,7 @@ class FeatureFlagContext extends BaseIntegrationContext
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);
 
-                if (!preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches)) {
+                if (in_array(preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches), [0, false], true)) {
                     throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 
@@ -43,13 +47,10 @@ class FeatureFlagContext extends BaseIntegrationContext
 
     /**
      * @param InitializedContextEnvironment $contextEnvironment
-     * @param string                        $flagName
-     * @param bool                          $flagValue
-     * @return void
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function updateContexts(
         Environment $contextEnvironment,
