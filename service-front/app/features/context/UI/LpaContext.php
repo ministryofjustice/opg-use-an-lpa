@@ -2242,7 +2242,7 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/remove-lpa');
     }
 
-    #[When('I request to remove an LPA from my account that has no active attorney on it']
+    #[When('I request to remove an LPA from my account that has no active attorney on it')]
     public function iRequestToRemoveAnLPAFromMyAccountThatHasNoActiveAttorneysOnIt(): void
     {
         $this->lpa->status = 'Registered';
