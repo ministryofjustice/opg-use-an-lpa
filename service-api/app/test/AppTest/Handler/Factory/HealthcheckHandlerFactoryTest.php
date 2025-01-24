@@ -30,14 +30,17 @@ class HealthcheckHandlerFactoryTest extends TestCase
 
         $container->get('config')->willReturn(
             [
-                'version'        => 'dev',
-                'sirius_api'     => [
+                'version'            => 'dev',
+                'sirius_api'         => [
                     'endpoint' => 'localhost',
                 ],
-                'codes_api'      => [
+                'codes_api'          => [
                     'endpoint' => 'localhost',
                 ],
-                'iap_images_api' => [
+                'iap_images_api'     => [
+                    'endpoint' => 'localhost',
+                ],
+                'lpa_data_store_api' => [
                     'endpoint' => 'localhost',
                 ],
             ]
