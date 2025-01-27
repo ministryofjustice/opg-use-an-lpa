@@ -62,6 +62,7 @@ variable "environments" {
       logging_level                                    = number
       lpa_codes_endpoint                               = string
       lpa_data_store_endpoint                          = string
+      lpa_data_store_secret_name                       = string
       iap_images_endpoint                              = string
       lpas_collection_endpoint                         = string
       mock_onelogin_enabled                            = bool
