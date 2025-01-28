@@ -25,6 +25,11 @@ if (opId === 'getLpa') {
 
     logger.info(uids.length + ' lpas requested')
   }
+} else if (opId === 'healthCheck') {
+  code = 200
+  response = JSON.stringify({'status': 'OK'})
+
+  logger.info('healthcheck requested')
 }
 
 if (response === '') {
