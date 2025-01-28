@@ -145,12 +145,12 @@ data "aws_secretsmanager_secret" "lpa_data_store_secret" {
 }
 
 data "aws_kms_alias" "jwt_key" {
-  name     = "alias/opg-data-lpa-store/${data.aws_default_tags.current.tags.account-name}/jwt-key"
-  provider = aws.management
+  name     = "alias/opg-data-lpa-store/${data.aws_default_tags.current.tags.environment-name}/jwt-key"
+  provider = aws.management 
 }
 
 data "aws_secretsmanager_secret" "lpa_store_jwt_key" {
-  name     = "opg-data-lpa-store/${data.aws_default_tags.current.tags.account-name}/jwt-key"
+  name     = "opg-data-lpa-store/${data.aws_default_tags.current.tags.environment-name}/jwt-key"
   provider = aws.management
 }
 
