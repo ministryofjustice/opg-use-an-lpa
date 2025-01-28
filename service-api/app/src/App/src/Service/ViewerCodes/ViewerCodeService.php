@@ -49,10 +49,10 @@ class ViewerCodeService
         if ($userId !== $map['UserId']) {
             return null;
         }
-
         //---
 
-        $uid     = $map['SiriusUid'] ?? $map['LpaUid'];
+        $uid = $map['SiriusUid'] ?? $map['LpaUid'];
+
         $expires = new DateTime(
             '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London') // Ensures we compensate for GMT vs BST.

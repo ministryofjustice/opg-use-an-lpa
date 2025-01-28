@@ -67,7 +67,7 @@ class ViewerCodes implements ViewerCodesInterface
         string $siriusUid,
         DateTime $expires,
         string $organisation,
-        ?int $actorId,
+        ?string $actorId,
     ): void {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
@@ -83,7 +83,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'Expires'      => ['S' => $expires->format('c')],
                     // We use 'c' so not to assume UTC.
                     'Organisation' => ['S' => $organisation],
-                    'CreatedBy'    => ['N' => (string)$actorId],
+                    'CreatedBy'    => ['S' => $actorId],
                     ],
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);

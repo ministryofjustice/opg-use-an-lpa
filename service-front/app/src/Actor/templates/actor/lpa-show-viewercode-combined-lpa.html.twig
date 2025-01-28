@@ -49,29 +49,6 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-three-quarters">
-                    {% if not feature_enabled("instructions_and_preferences") %}
-                        <div class="govuk-warning-text">
-                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
-                            {% if is_donor_signature_date_too_old(lpa) %}
-                                <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}If there are instructions or preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                    </strong></p>
-                            {% elseif lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-                                <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}As there are instructions and preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                    </strong></p>
-                            {% elseif lpa.applicationHasRestrictions %}
-                                <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}As there are instructions on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                    </strong></p>
-                            {% elseif lpa.applicationHasGuidance %}
-                                <p class="govuk-body"><strong class="govuk-warning-text__text">
-                                        {% trans %}As there are preferences on this LPA, you may also be asked to show the paper LPA.{% endtrans %}
-                                    </strong></p>
-                            {% endif %}
-                        </div>
-                    {% endif %}
 
                     <h2 class="govuk-body-l govuk-!-font-weight-bold">{% trans %}What to do next{% endtrans %}</h2>
 
@@ -88,7 +65,6 @@
 
                     </p>
 
-                    {% if feature_enabled('instructions_and_preferences') %}
                         {% if not is_donor_signature_date_too_old(lpa) %}
                             <p class="govuk-body">
                                 {% if lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
@@ -105,15 +81,6 @@
                                     {% endtrans %}
                                 {% endif %}
                             </p>
-                        {% elseif is_donor_signature_date_too_old(lpa) %}
-                            {% if lpa.applicationHasRestrictions or lpa.applicationHasGuidance %}
-                                <p class="govuk-body">
-                                    {% trans %}
-                                        Scanned copies of the donor’s preferences or instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly.
-                                    {% endtrans %}
-                                </p>
-                            {% endif %}
-                        {% endif %}
                     {% endif %}
 
                     {% if lpa.caseSubtype.value == 'pfa' %}

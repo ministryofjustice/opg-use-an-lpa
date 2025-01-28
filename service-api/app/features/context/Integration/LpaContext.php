@@ -2052,7 +2052,7 @@ class LpaContext extends BaseIntegrationContext
                             'SiriusUid' => $this->lpaUid,
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $actorLpaId,
+                            'ActorId'   => (string)$actorLpaId,
                             'UserId'    => $this->userId,
                         ]
                     ),

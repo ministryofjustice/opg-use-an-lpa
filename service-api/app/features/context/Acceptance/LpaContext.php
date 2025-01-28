@@ -1731,7 +1731,7 @@ class LpaContext implements Context
                             'SiriusUid' => $this->lpaUid,
                             'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
                             'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => $actorId,
+                            'ActorId'   => (string)$actorId,
                             'UserId'    => $this->userId,
                         ]
                     ),

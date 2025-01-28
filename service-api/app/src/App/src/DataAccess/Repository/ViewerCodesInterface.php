@@ -51,7 +51,7 @@ interface ViewerCodesInterface
      * @param string   $siriusUid
      * @param DateTime $expires
      * @param string   $organisation
-     * @param int|null $actorId
+     * @param string|null $actorId
      * @return void
      */
     public function add(
@@ -60,7 +60,7 @@ interface ViewerCodesInterface
         string $siriusUid,
         DateTime $expires,
         string $organisation,
-        ?int $actorId,
+        ?string $actorId,
     ): void;
 
     /**
