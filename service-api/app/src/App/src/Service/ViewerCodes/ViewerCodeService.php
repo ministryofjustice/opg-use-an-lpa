@@ -14,6 +14,7 @@ use App\DataAccess\Repository\{KeyCollisionException,
 use DateTime;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
+use App\Enum\LpaSource;
 
 /**
  * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
@@ -51,7 +52,17 @@ class ViewerCodeService
         }
         //---
 
-        $uid = $map['SiriusUid'] ?? $map['LpaUid'];
+        //$uid = $map['SiriusUid'] ?? $map['LpaUid'];
+
+        //
+        if (isset($map['SiriusUid'])) {
+            $SiriusUid = $map['SiriusUid'];
+            $LpaUid    = null;
+        } else {
+            $LpaUid    = $map['LpaUid'];
+            $SiriusUid = null;
+        }
+        //
 
         $expires = new DateTime(
             '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
@@ -67,10 +78,11 @@ class ViewerCodeService
                 $this->viewerCodesRepository->add(
                     $code,
                     $map['Id'],
-                    $uid,
+                    $SiriusUid,
+                    $LpaUid,
                     $expires,
                     $organisation,
-                    $map['ActorId']
+                    (string)$map['ActorId']
                 );
 
                 $added = true;

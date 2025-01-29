@@ -64,7 +64,8 @@ class ViewerCodes implements ViewerCodesInterface
     public function add(
         string $code,
         string $userLpaActorToken,
-        string $siriusUid,
+        ?string $siriusUid,
+        ?string $lpaUid,
         DateTime $expires,
         string $organisation,
         ?string $actorId,
@@ -72,19 +73,27 @@ class ViewerCodes implements ViewerCodesInterface
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
+        $array = [
+            'ViewerCode'   => ['S' => $code],
+            'UserLpaActor' => ['S' => $userLpaActorToken],
+            'Added'        => ['S' => $now],
+            'Expires'      => ['S' => $expires->format('c')],
+            // We use 'c' so not to assume UTC.
+            'Organisation' => ['S' => $organisation],
+            'CreatedBy'    => ['S' => $actorId],
+        ];
+
+        if ($siriusUid !== null) {
+            $array['SiriusUid'] = ['S' => $siriusUid];
+        }
+        if ($lpaUid !== null) {
+            $array['LpaUid'] = ['S' => $lpaUid];
+        }
+
         try {
             $this->client->putItem([
                 'TableName'           => $this->viewerCodesTable,
-                'Item'                => [
-                    'ViewerCode'   => ['S' => $code],
-                    'UserLpaActor' => ['S' => $userLpaActorToken],
-                    'SiriusUid'    => ['S' => $siriusUid],
-                    'Added'        => ['S' => $now],
-                    'Expires'      => ['S' => $expires->format('c')],
-                    // We use 'c' so not to assume UTC.
-                    'Organisation' => ['S' => $organisation],
-                    'CreatedBy'    => ['S' => $actorId],
-                    ],
+                'Item'                => $array,
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
         } catch (DynamoDbException $e) {
