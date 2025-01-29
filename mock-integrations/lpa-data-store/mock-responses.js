@@ -171,6 +171,10 @@
       response = JSON.stringify(getList(uids));
       import_types.logger.info(uids.length + " lpas requested");
     }
+  } else if (opId === "healthCheck") {
+    code = 200;
+    response = JSON.stringify({ "status": "OK" });
+    import_types.logger.info("healthcheck requested");
   }
   if (response === "") {
     (0, import_types.respond)().withStatusCode(code).usingDefaultBehaviour();
