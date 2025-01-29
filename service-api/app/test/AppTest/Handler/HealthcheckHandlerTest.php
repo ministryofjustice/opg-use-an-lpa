@@ -42,6 +42,7 @@ class HealthcheckHandlerTest extends TestCase
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->version                      = 'dev';
         $this->siriusApiUrl                 = 'localhost';
+        $this->lpaStoreApiUrl               = 'localhost';
         $this->codesApiUrl                  = 'localhost';
         $this->iapImagesApiUrl              = 'localhost';
     }
@@ -55,7 +56,7 @@ class HealthcheckHandlerTest extends TestCase
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
 
         $this->clientProphecy->sendRequest(Argument::any())
-            ->shouldBeCalledTimes(3)
+            ->shouldBeCalledTimes(4)
             ->willReturn($responseProphecy->reveal());
 
         $this->requestFactoryProphecy
@@ -78,6 +79,7 @@ class HealthcheckHandlerTest extends TestCase
             $this->actorUsersProphecy->reveal(),
             $this->version,
             $this->siriusApiUrl,
+            $this->lpaStoreApiUrl,
             $this->codesApiUrl,
             $this->iapImagesApiUrl
         );
@@ -92,12 +94,14 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertArrayHasKey('healthy', $json);
 
-        $this->assertArrayHasKey('lpa_api', $json);
+        $this->assertArrayHasKey('sirius_api', $json);
+        $this->assertArrayHasKey('lpa_store_api', $json);
         $this->assertArrayHasKey('dynamo', $json);
         $this->assertArrayHasKey('lpa_codes_api', $json);
         $this->assertArrayHasKey('iap_images_api', $json);
 
-        $this->assertTrue($json['lpa_api']['healthy']);
+        $this->assertTrue($json['sirius_api']['healthy']);
+        $this->assertTrue($json['lpa_store_api']['healthy']);
         $this->assertTrue($json['dynamo']['healthy']);
         $this->assertTrue($json['lpa_codes_api']['healthy']);
         $this->assertTrue($json['iap_images_api']['healthy']);
