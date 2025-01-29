@@ -14,23 +14,36 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/ministryofjustice/opg-modernising-lpa/internal/dynamo"
+	"github.com/ministryofjustice/opg-modernising-lpa/internal/random"
 )
 
 var (
+	tableName    = os.Getenv("LPAS_TABLE")
+	appPublicURL = os.Getenv("APP_PUBLIC_URL")
+	awsBaseURL   = os.Getenv("AWS_BASE_URL")
+
 	cfg        aws.Config
 	httpClient *http.Client
 	logger     *slog.Logger
 )
 
 type factory interface {
+	Now() func() time.Time
+	DynamoClient() dynamodbClient
+	UuidString() func() string
+}
+
+type dynamodbClient interface {
+	OneByUID(ctx context.Context, uid string, v any) error
+	Put(ctx context.Context, v any) error
 }
 
 type Handler interface {
-	Handle(context.Context, *events.SQSEvent) error
+	Handle(context.Context, factory, *events.SQSEvent) error
 }
 
 type Event struct {
-	S3Event  *events.S3Event
 	SQSEvent *events.SQSEvent
 }
 
@@ -44,9 +57,23 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	return errors.New("unknown event type")
 }
 
-func handler(ctx context.Context, event Event) (map[string]any, error) {
+func handler(ctx context.Context, event Event, factory *Factory) (map[string]any, error) {
 	result := map[string]any{}
 
+	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	if err != nil {
+		return result, fmt.Errorf("failed to create dynamodb client: %w", err)
+	}
+
+	factory = &Factory{
+		logger:       logger,
+		now:          time.Now,
+		uuidString:   random.UuidString,
+		cfg:          cfg,
+		dynamoClient: dynamoClient,
+		appPublicURL: appPublicURL,
+		httpClient:   httpClient,
+	}
 
 	if event.SQSEvent != nil {
 		batchItemFailures := []map[string]any{}
@@ -58,7 +85,7 @@ func handler(ctx context.Context, event Event) (map[string]any, error) {
 				continue
 			}
 
-			if err := handleSQSEvent(ctx, sqsEvent); err != nil {
+			if err := handleSQSEvent(ctx, sqsEvent, factory); err != nil {
 				logger.ErrorContext(ctx, "error processing event", slog.String("messageID", record.MessageId), slog.Any("err", err))
 				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
 				continue
@@ -72,13 +99,13 @@ func handler(ctx context.Context, event Event) (map[string]any, error) {
 	return result, nil
 }
 
-func handleSQSEvent(ctx context.Context, sqsEvent *events.SQSEvent) error {
+func handleSQSEvent(ctx context.Context, sqsEvent *events.SQSEvent, factory *Factory) error {
 	handler := &makeregisterEventHandler{}
 
 	for _, record := range sqsEvent.Records {
 		logger.InfoContext(ctx, "handling message", slog.String("MessageId", record.MessageId))
 
-		if err := handler.Handle(ctx, &record); err != nil {
+		if err := handler.Handle(ctx, &record, factory); err != nil {
 			return fmt.Errorf("%s: %w", record.MessageId, err)
 		}
 
@@ -109,13 +136,19 @@ func main() {
 
 				return a
 			},
-		}))
+		},
+		),
+	)
 
 	var err error
-	cfg, err = config.LoadDefaultConfig(ctx)
+	cfg, err = config.LoadDefaultConfig(ctx, config.WithHTTPClient(http.DefaultClient))
 	if err != nil {
-		logger.ErrorContext(ctx, "failed to load default config", slog.Any("err", err))
+		logger.ErrorContext(ctx, "failed to load config", slog.Any("err", err))
 		return
+	}
+
+	if len(awsBaseURL) > 0 {
+		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
 	lambda.Start(handler)
