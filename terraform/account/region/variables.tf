@@ -1,7 +1,3 @@
-locals {
-  region = var.account.region[data.aws_region.current.name]
-}
-
 variable "account" {
   description = "The account object"
   type = object({
@@ -10,7 +6,6 @@ variable "account" {
     shared_account_id                       = number
     is_production                           = bool
     retention_in_days                       = number
-    region                                  = string
     pagerduty_service_name                  = string
     pagerduty_service_id                    = string
     opg_metrics = object({
@@ -30,6 +25,11 @@ variable "account" {
     })
     s3_access_log_bucket_name = string
   })
+}
+
+variable "region" {
+  description = "The region"
+  type        = string
 }
 
 variable "account_name" {
