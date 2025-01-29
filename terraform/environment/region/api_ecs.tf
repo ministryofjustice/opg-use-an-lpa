@@ -282,34 +282,6 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "${local.policy_region_prefix}LpaStoreKmsAccess"
-    effect = "Allow"
-
-    actions = [
-      "kms:Decrypt",
-      "kms:GenerateDataKey",
-    ]
-
-    resources = [
-      data.aws_kms_alias.jwt_key.target_key_arn,
-    ]
-  }
-
-  statement {
-    sid    = "${local.policy_region_prefix}LpaStoreSecretAccess"
-    effect = "Allow"
-
-    actions = [
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret",
-    ]
-
-    resources = [
-      data.aws_secretsmanager_secret.lpa_store_jwt_key.arn,
-    ]
-  }
-
-  statement {
     sid    = "${local.policy_region_prefix}KMSAccess"
     effect = "Allow"
 
@@ -503,10 +475,6 @@ locals {
         {
           name      = "ONE_LOGIN_CLIENT_ID"
           valueFrom = data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
-        },
-        {
-          name      = "LPA_STORE_JWT_SECRET",
-          valueFrom = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
         }
       ],
       environment = [
@@ -593,7 +561,7 @@ locals {
         {
           name  = "ENVIRONMENT_NAME",
           value = var.environment_name
-        }
+        },
       ]
   })
 }
