@@ -30,7 +30,6 @@ type Handler interface {
 }
 
 type Event struct {
-	S3Event  *events.S3Event
 	SQSEvent *events.SQSEvent
 }
 
@@ -46,7 +45,6 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 
 func handler(ctx context.Context, event Event) (map[string]any, error) {
 	result := map[string]any{}
-
 
 	if event.SQSEvent != nil {
 		batchItemFailures := []map[string]any{}
