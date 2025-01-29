@@ -163,14 +163,14 @@ resource "aws_s3_bucket_public_access_block" "access_log" {
 # Old version of the access log bucket. The new version is suffixed with the region name. We're keeping this around for a while to ensure we don't lose any logs.
 # TODO: Remove all of these resources after 400 days (the retention period for the logs)
 resource "aws_s3_bucket" "old_access_log" {
-  count  = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count  = provider.aws.region == "eu-west-1" ? 1 : 0
   bucket = "opg-ual-${var.environment_name}-lb-access-logs"
 
   provider = aws.region
 }
 
 resource "aws_s3_bucket_public_access_block" "old_access_log" {
-  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count = provider.aws.region == "eu-west-1" ? 1 : 0
 
   bucket                  = aws_s3_bucket.old_access_log[0].id
   block_public_acls       = true
