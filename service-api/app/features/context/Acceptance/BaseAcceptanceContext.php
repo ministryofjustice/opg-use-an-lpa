@@ -8,8 +8,10 @@ use Acpr\Behat\Psr\Context\Psr11MinkAwareContext;
 use Acpr\Behat\Psr\Context\RuntimeMinkContext;
 use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
+use Behat\Step\Given;
 use DI\Container;
 use GuzzleHttp\Handler\MockHandler;
 use Psr\Container\ContainerInterface;
@@ -37,18 +39,14 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
         $this->awsFixtures = $container->get(AwsMockHandler::class);
     }
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->ui    = $environment->getContext(MinkContext::class);
     }
 
-    /**
-     * @Given I am a user of the lpa application
-     */
+    #[Given('I am a user of the lpa application')]
     public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userAccountId       = '123456789';

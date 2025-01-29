@@ -28,7 +28,7 @@ class FeatureFlagContext implements Context
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);
 
-                if (!preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches)) {
+                if (in_array(preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches), [0, false], true)) {
                     throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 

@@ -49,7 +49,6 @@ trait BaseContextTrait
     /**
      * Checks for an exact url match (including scheme, domain, path, fragments and queries)
      *
-     * @param string $expected
      * @throws ExpectationException
      * @throws DriverException
      * @throws UnsupportedDriverActionException
@@ -79,7 +78,7 @@ trait BaseContextTrait
 
         $body = $this->ui->getSession()->getPage()->getText();
 
-        $json = json_decode($body, true);
+        $json = json_decode((string) $body, true);
 
         if ($json === null) {
             throw new ExpectationException(
@@ -102,7 +101,7 @@ trait BaseContextTrait
     {
         $actual = $this->ui->getSession()->getDriver()->getCurrentUrl();
 
-        $scheme = parse_url($actual, PHP_URL_SCHEME);
+        $scheme = parse_url((string) $actual, PHP_URL_SCHEME);
 
         if ($scheme !== 'https') {
             throw new ExpectationException(

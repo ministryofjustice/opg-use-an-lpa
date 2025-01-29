@@ -13,7 +13,7 @@ final class SharedState
 
     public static function getInstance(): SharedState
     {
-        if (self::$instance === null) {
+        if (!self::$instance instanceof SharedState) {
             self::$instance = new SharedState();
             self::$instance->reset();
         }

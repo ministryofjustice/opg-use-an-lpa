@@ -9,6 +9,8 @@ use Acpr\Behat\Psr\Context\RuntimeMinkContext;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\AfterScenario;
+use Behat\Hook\BeforeScenario;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\MinkExtension\Context\RawMinkContext;
 use Common\Service\Pdf\StylesService;
@@ -41,6 +43,7 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         $mockHandler  = $container->get(MockHandler::class);
         $handlerStack = new HandlerStack($mockHandler);
         $handlerStack->push(Middleware::prepareBody(), 'prepare_body');
+
         $history = Middleware::history($this->mockClientHistoryContainer);
         $handlerStack->push($history);
         $container->set(HandlerStack::class, $handlerStack);
@@ -54,19 +57,15 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         );
     }
 
-    /**
-     * @BeforeScenario
-     */
-    public function gatherContexts(BeforeScenarioScope $scope)
+    #[BeforeScenario]
+    public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
         $this->ui    = $environment->getContext(MinkContext::class);
     }
 
-    /**
-     * @BeforeScenario
-     */
-    public function seedFixtures()
+    #[BeforeScenario]
+    public function seedFixtures(): void
     {
         // KMS is polled for encryption data on first page load
         $this->awsFixtures->append(
@@ -79,9 +78,7 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
         );
     }
 
-    /**
-     * @AfterScenario
-     */
+    #[AfterScenario]
     public function resetSharedState(): void
     {
         SharedState::getInstance()->reset();
