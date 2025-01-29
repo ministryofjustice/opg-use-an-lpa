@@ -27,6 +27,11 @@ variable "account" {
   })
 }
 
+variable "region" {
+  description = "The region"
+  type        = string
+}
+
 variable "account_name" {
   description = "The account name"
   type        = string
