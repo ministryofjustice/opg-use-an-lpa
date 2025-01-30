@@ -6,20 +6,28 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
 type Factory struct {
 	logger       *slog.Logger
 	now          func() time.Time
+	uuidString   func() string
 	cfg          aws.Config
-	dynamoClient *dynamodb.Client
+	dynamoClient DynamodbClient
 	appPublicURL string
 	httpClient   *http.Client
 }
 
-func (f *Factory) DynamoClient() *dynamodb.Client {
+func (f *Factory) Now() func() time.Time {
+	return f.now
+}
+
+func (f *Factory) DynamoClient() DynamodbClient {
 	return f.dynamoClient
+}
+
+func (f *Factory) UuidString() func() string {
+	return f.uuidString
 }
 
 func (f *Factory) Logger() *slog.Logger {

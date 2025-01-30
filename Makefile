@@ -116,6 +116,10 @@ enable_development_mode:
 	$(COMPOSE) run --rm api-composer development-enable
 .PHONY: enable_development_mode
 
+
+generate_event_receiver_mocks:
+	mockery --all --recursive --output=./mocks --outpkg=mocks
+
 development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
 

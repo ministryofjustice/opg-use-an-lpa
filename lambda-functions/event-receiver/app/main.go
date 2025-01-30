@@ -14,8 +14,9 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/ministryofjustice/opg-modernising-lpa/internal/dynamo"
-	"github.com/ministryofjustice/opg-modernising-lpa/internal/random"
+
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/random"
 )
 
 var (
@@ -30,11 +31,11 @@ var (
 
 type factory interface {
 	Now() func() time.Time
-	DynamoClient() dynamodbClient
+	DynamoClient() DynamodbClient
 	UuidString() func() string
 }
 
-type dynamodbClient interface {
+type DynamodbClient interface {
 	OneByUID(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, v any) error
 }

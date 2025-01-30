@@ -2,13 +2,36 @@ package main
 
 import (
 	"context"
+	"github.com/stretchr/testify/mock"
 	"testing"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
+type MockDynamoDbClient struct {
+	mock.Mock
+}
+
+func (m *MockDynamoDbClient) OneByUID(ctx context.Context, subjectID string, v interface{}) error {
+	args := m.Called(ctx, subjectID, v)
+	return args.Error(0)
+}
+
+func (m *MockDynamoDbClient) Put(ctx context.Context, v interface{}) error {
+	args := m.Called(ctx, v)
+	return args.Error(0)
+}
+
+type MockFactory struct {
+	mock.Mock
+}
+
+func (m *MockFactory) DynamoClient() *DynamodbClient {
+	return m.Called().Get(0).(*DynamodbClient)
+}
+
+func TestMakeRegisterEventHandler_Handle(t *testing.T) {
 	ctx := context.Background()
 	handler := &makeregisterEventHandler{}
 
@@ -32,7 +55,18 @@ func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
 		Body:      payload,
 	}
 
-	err := handler.Handle(ctx, sqsMessage)
+	mockDynamo := new(MockDynamoDbClient)
+	mockFactory := new(MockFactory)
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+
+	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+
+	err := handler.Handle(ctx, sqsMessage, mockFactory)
 
 	assert.NoError(t, err)
+
+	mockDynamo.AssertExpectations(t)
+	mockFactory.AssertExpectations(t)
+
 }

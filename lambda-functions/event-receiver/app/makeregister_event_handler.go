@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/random"
+	"log/slog"
 )
 
 type makeregisterEventHandler struct{}
@@ -46,40 +46,28 @@ func (h *makeregisterEventHandler) Handle(ctx context.Context, record *events.SQ
 	return nil
 }
 
-func handleUsers(ctx context.Context, actor Actor, dynamoClient *dynamodb.Client) error {
+func handleUsers(ctx context.Context, actor Actor, dynamoClient DynamodbClient) error {
 	// receive data, with data.ActorUID, using dynamo, try and get the row with that id from ActorUsers table and "identity" col
 	// new entry to Actor users of Id (v4 guid) and identity
-	getInput := &dynamodb.GetItemInput{
-		TableName: aws.String(tableName),
-		Key: map[string]types.AttributeValue{
-			"Identity": &types.AttributeValueMemberS{Value: actor.ActorUID},
-		},
-	}
 
-	result, err := dynamoClient.GetItem(ctx, getInput)
+	var existingUser Actor
+
+	err := dynamoClient.OneByUID(ctx, actor.SubjectID, &existingUser)
+
 	if err != nil {
-		return fmt.Errorf("failed to get row for user %s: %w", actor.ActorUID, err)
+		logger.ErrorContext(ctx, "Failed to find existing user: %+v", slog.String("actorUID", actor.ActorUID))
 	}
 
-	if result.Item != nil {
-		fmt.Printf("User %s is already registered\n", actor.ActorUID)
-	}
-
-	putItem := map[string]types.AttributeValue{
-		"Id":       &types.AttributeValueMemberS{Value: actor.ActorUID},
+	newUser := map[string]types.AttributeValue{
+		"Id":       &types.AttributeValueMemberS{Value: random.UuidString()},
 		"Identity": &types.AttributeValueMemberS{Value: actor.SubjectID},
 	}
 
-	putInput := &dynamodb.PutItemInput{
-		TableName: &tableName,
-		Item:      putItem,
-	}
-
-	_, err = dynamoClient.PutItem(ctx, putInput)
+	err = dynamoClient.Put(ctx, newUser)
 	if err != nil {
-		return fmt.Errorf("failed to insert actor %s: %w", actor.ActorUID, err)
+		return fmt.Errorf("failed to put actor: %+v", err)
 	}
 
-	fmt.Printf("Successfully inserted actor: %s\n", actor.ActorUID)
+	fmt.Printf("Successfully put actor: %+v\n", actor.ActorUID)
 	return nil
 }
