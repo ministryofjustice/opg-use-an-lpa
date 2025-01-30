@@ -14,7 +14,6 @@ locals {
 
   optional_tags = {
     infrastructure-support = "OPG Webops: opgteam+use-an-lpa-prod@digital.justice.gov.uk"
-    account-name           = local.environment.account_name
   }
 
   mock_onelogin_version = "latest"
