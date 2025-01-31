@@ -1,4 +1,4 @@
-// Generate mock files using: mockery --all --recursive --output=./mocks --outpkg=mocks
+//go:generate mockery --all --recursive --output=./mocks --outpkg=mocks
 package main
 
 import (
