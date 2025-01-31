@@ -55,7 +55,7 @@ jobs:
           files: |
             service-admin/**
       - name: get changed files in the event-receiver folder
-        id: changed-files-event-receiver
+        id: changed-files-event
         uses: tj-actions/changed-files@065e671731666959f9ea1bbbb7ddb8363a8ae9cd
         with:
           files: |
