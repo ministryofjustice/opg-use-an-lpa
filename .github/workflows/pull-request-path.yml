@@ -82,9 +82,9 @@ jobs:
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo admin)" >> $GITHUB_OUTPUT
-          elif [[ ${{ steps.changed-files-event-receiver.outputs.only_changed }} = "true" ]]
+          elif [[ ${{ steps.changed-files-event.outputs.only_changed }} = "true" ]]
           then
-            echo "path=$(echo event-receiver)" >> $GITHUB_OUTPUT
+            echo "path=$(echo event)" >> $GITHUB_OUTPUT
           elif [[ ${{ steps.changed-files-docs.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo docs)" >> $GITHUB_OUTPUT
@@ -125,7 +125,6 @@ jobs:
       always() &&
       needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path != 'docs'
-
 
   node_test:
     name: test node dependencies
