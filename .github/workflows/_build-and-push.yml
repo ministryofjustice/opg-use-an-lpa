@@ -174,7 +174,7 @@ jobs:
             python -m unittest -v
           elif [ ${SVC_PREFIX} == 'event-receiver' ]; then
             mkdir -p build/service-${SVC_PREFIX}
-            cd lambda-functions/${SVC_PREFIX}
+            cd lambda-functions/${SVC_PREFIX}/app
             go mod tidy
             go test
           else
@@ -261,6 +261,8 @@ jobs:
 
             if [[ "${SVC_PREFIX}" = "admin" ]]; then
               docker build --target production --file service-${SVC_PREFIX}/Dockerfile --tag ${SVC_PREFIX}_app:latest service-${SVC_PREFIX}/
+            elif [[ "${SVC_PREFIX}" = "event-receiver" ]]; then
+              docker build --file lambda-functions/${SVC_PREFIX}/Dockerfile --tag ${SVC_PREFIX}:latest lambda-functions/${SVC_PREFIX}
             else
               docker build --target production --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}_app:latest .
             fi
