@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@a99dd2408ee49ad5ec08301260877b88a87e6a03 # pin@v2.21.2
+        uses: shivammathur/setup-php@ad03a92562b96b77b640b366a2b379a4971d1107 # pin@v2.21.2
         with:
           php-version: 8.3
 
