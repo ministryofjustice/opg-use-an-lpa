@@ -56,7 +56,7 @@ class ViewerCodeServiceTest extends TestCase
                 'id',
                 '700000000047',
                 null,
-                Argument::exact($codeExpiry),
+                $codeExpiry,
                 'token name',
                 '1234'
             )
@@ -111,7 +111,7 @@ class ViewerCodeServiceTest extends TestCase
                 'id',
                 null,
                 'M-XXXX-1212-ZZZZ',
-                Argument::exact($codeExpiry),
+                $codeExpiry,
                 'token name',
                 '1234'
             )

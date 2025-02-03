@@ -10,6 +10,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
+use Exception;
 
 class ViewerCodes implements ViewerCodesInterface
 {
@@ -72,6 +73,11 @@ class ViewerCodes implements ViewerCodesInterface
     ): void {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+
+        //Throw exception if one of siriusUid/lpaUid not set
+        if (is_null($siriusUid and $lpaUid)) {
+            throw new Exception('siriusUid and lpaUid not set');
+        }
 
         $array = [
             'ViewerCode'   => ['S' => $code],
