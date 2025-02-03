@@ -127,7 +127,7 @@ class ViewerCodeServiceTest extends TestCase
                 [
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
-                    'LpaUid' => 'M-XXXX-1212-ZZZZ',
+                    'LpaUid'    => 'M-XXXX-1212-ZZZZ',
                     'ActorId'   => '1234',
                 ]
             );
