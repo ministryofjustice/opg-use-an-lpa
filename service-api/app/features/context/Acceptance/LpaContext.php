@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace BehatTest\Context\Acceptance;
 
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
-use App\Service\Features\FeatureEnabled;
 use Aws\Result;
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateInterval;
@@ -38,26 +40,20 @@ class LpaContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
-    /**
-     * @Given I have previously requested the addition of a paper LPA to my account
-     */
+    #[Given('I have previously requested the addition of a paper LPA to my account')]
     public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
     {
         // Not necessary for this context
     }
 
-    /**
-     * @Given /^A record of my activation key request is not saved$/
-     */
+    #[Given('/^A record of my activation key request is not saved$/')]
     public function aRecordOfMyActivationKeyRequestIsNotSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
         Assert::assertNotEquals($lastCommand->getName(), 'PutItem');
     }
 
-    /**
-     * @Then /^A record of my activation key request is saved$/
-     */
+    #[Then('/^A record of my activation key request is saved$/')]
     public function aRecordOfMyActivationKeyRequestIsSaved(): void
     {
         $lastCommand = $this->awsFixtures->getLastCommand();
@@ -67,12 +63,10 @@ class LpaContext implements Context
         Assert::assertArrayHasKey('ActivateBy', $lastCommand->toArray()['Item']);
     }
 
-    /**
-     * @Then /^a record of my activation key request is updated/
-     */
+    #[Then('/^a record of my activation key request is updated/')]
     public function aRecordOfMyActivationKeyRequestIsUpdated(): void
     {
-        $dt = (new DateTime('now'))->add(new \DateInterval('P1Y'));
+        $dt = (new DateTime('now'))->add(new DateInterval('P1Y'));
 
         $lastCommand = $this->awsFixtures->getLastCommand();
         Assert::assertEquals($lastCommand->getName(), 'UpdateItem');
@@ -81,22 +75,17 @@ class LpaContext implements Context
         Assert::assertEquals(
             intval($lastCommand->toArray()['ExpressionAttributeValues'][':a']['N']),
             $dt->getTimestamp(),
-            '',
-            5
+            ''
         );
     }
 
-    /**
-     * @Then /^A record of the LPA requested is saved to the database$/
-     */
+    #[Then('/^A record of the LPA requested is saved to the database$/')]
     public function aRecordOfTheLPARequestedIsSavedToTheDatabase(): void
     {
         //Not used in this context
     }
 
-    /**
-     * @Given /^I have been given access to use an LPA via a paper document$/
-     */
+    #[Given('/^I have been given access to use an LPA via a paper document$/')]
     public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument(): void
     {
         // sets up the normal properties needed for an lpa
@@ -109,9 +98,7 @@ class LpaContext implements Context
         $this->userDob               = '1975-10-05';
     }
 
-    /**
-     * @Given /^A malformed confirm request is sent which is missing actor code$/
-     */
+    #[Given('/^A malformed confirm request is sent which is missing actor code$/')]
     public function aMalformedConfirmRequestIsSentWhichIsMissingActorCode(): void
     {
         $this->userLpaActorToken = '13579';
@@ -129,9 +116,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @Given /^A malformed confirm request is sent which is missing date of birth$/
-     */
+    #[Given('/^A malformed confirm request is sent which is missing date of birth$/')]
     public function aMalformedConfirmRequestIsSentWhichIsMissingDateOfBirth(): void
     {
         $this->userLpaActorToken = '13579';
@@ -149,9 +134,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @Given /^A malformed confirm request is sent which is missing user id$/
-     */
+    #[Given('/^A malformed confirm request is sent which is missing user id$/')]
     public function aMalformedConfirmRequestIsSentWhichIsMissingUserId(): void
     {
         $this->userLpaActorToken = '13579';
@@ -169,9 +152,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @Then /^I am given a unique access code$/
-     */
+    #[Then('/^I am given a unique access code$/')]
     public function iAmGivenAUniqueAccessCode(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -190,45 +171,35 @@ class LpaContext implements Context
         Assert::assertEquals($response['organisation'], $this->organisation);
     }
 
-    /**
-     * @Given /^I am on the add an LPA page$/
-     */
+    #[Given('/^I am on the add an LPA page$/')]
     public function iAmOnTheAddAnLPAPage(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Given /^I am on the create viewer code page$/
-     */
+    #[Given('/^I am on the create viewer code page$/')]
     public function iAmOnTheCreateViewerCodePage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I am on the dashboard page$/
-     * @Given /^I am on the user dashboard page$/
-     * @Then /^I cannot see the added LPA$/
-     * @Then /^I am taken to the remove an LPA confirmation page for (.*) lpa$/
-     */
+    #[Given('/^I am on the dashboard page$/')]
+    #[Given('/^I am on the user dashboard page$/')]
+    #[Then('/^I cannot see the added LPA$/')]
+    #[Then('/^I am taken to the remove an LPA confirmation page for (.*) lpa$/')]
     public function iAmOnTheDashboardPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am taken back to the dashboard page$/
-     * @Then /^I cannot see my access codes and their details$/
-     */
+    #[Then('/^I am taken back to the dashboard page$/')]
+    #[Then('/^I cannot see my access codes and their details$/')]
     public function iAmTakenBackToTheDashboardPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I attempt to add the same LPA again$/
-     */
+    #[When('/^I attempt to add the same LPA again$/')]
     public function iAttemptToAddTheSameLPAAgain(): void
     {
         //UserLpaActorMap: getAllForUser
@@ -287,10 +258,8 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
-    /**
-     * @When /^I make an additional request for the same LPA$/
-     */
-    public function iMakeAnAdditionalRequestForTheSameLPA()
+    #[When('/^I make an additional request for the same LPA$/')]
+    public function iMakeAnAdditionalRequestForTheSameLPA(): void
     {
         // lpaService: getByUid
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
@@ -378,9 +347,7 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
-     */
+    #[When('/^I provide the details from a valid paper LPA which I have already added to my account$/')]
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
@@ -472,9 +439,7 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
-    /**
-     * @When /^I request to add an LPA that I have requested an activation key for$/
-     */
+    #[When('/^I request to add an LPA that I have requested an activation key for$/')]
     public function iRequestToAddAnLPAThatIHaveRequestedAnActivationKeyFor(): void
     {
         //UserLpaActorMap: getUsersLpas
@@ -549,27 +514,15 @@ class LpaContext implements Context
         Assert::assertEquals($this->lpaUid, $response['lpa']['uId']);
     }
 
-    /**
-     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
-     */
-    public function myLPAWasRegistered1stSeptember2019AndLPAIsAsClean($regDate, $cleanseStatus)
+    #[Given('/^My LPA was registered \\\'([^\\\']*)\\\' 1st September 2019 and LPA is \\\'([^\\\']*)\\\' as clean$/')]
+    public function myLPAWasRegistered1stSeptember2019AndLPAIsAsClean($regDate, $cleanseStatus): void
     {
-        if ($cleanseStatus === 'not marked') {
-            $this->lpa->lpaIsCleansed = false;
-        } else {
-            $this->lpa->lpaIsCleansed = true;
-        }
+        $this->lpa->lpaIsCleansed = $cleanseStatus !== 'not marked';
 
-        if ($regDate === 'before') {
-            $this->lpa->registrationDate = '2018-08-31';
-        } else {
-            $this->lpa->registrationDate = '2019-09-01';
-        }
+        $this->lpa->registrationDate = $regDate === 'before' ? '2018-08-31' : '2019-09-01';
     }
 
-    /**
-     * @Given /^The activateBy TTL is removed from the record in the DB$/
-     */
+    #[Given('/^The activateBy TTL is removed from the record in the DB$/')]
     public function theActivateByTTLIsRemovedFromTheRecordInTheDB(): void
     {
         // codes api service call
@@ -642,9 +595,7 @@ class LpaContext implements Context
         Assert::assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
     }
 
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
-     */
+    #[When('/^I provide the details from a valid paper LPA which I have already requested an activation key for$/')]
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
@@ -751,18 +702,14 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
-    /**
-     * @Then /^I should be told that I have already added this LPA$/
-     * @Then /^I am told an activation key is being sent$/
-     */
+    #[Then('/^I should be told that I have already added this LPA$/')]
+    #[Then('/^I am told an activation key is being sent$/')]
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to add an LPA which has a status other than registered$/
-     */
+    #[When('/^I request to add an LPA which has a status other than registered$/')]
     public function iRequestToAddAnLPAWhichHasAStatusOtherThanRegistered(): void
     {
         $this->lpa->status = 'Cancelled';
@@ -797,18 +744,14 @@ class LpaContext implements Context
         $this->ui->assertSession()->responseContains('LPA status is not registered');
     }
 
-    /**
-     * @Then /^I can see all of my access codes and their details$/
-     */
+    #[Then('/^I can see all of my access codes and their details$/')]
     public function iCanSeeAllOfMyAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
-     */
-    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
+    #[Then('/^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/')]
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry): void
     {
         $code1 = [
             'SiriusUid'    => $this->lpaUid,
@@ -976,9 +919,7 @@ class LpaContext implements Context
         Assert::assertEquals($response[1]['Expires'], (new DateTime())->modify($code2Expiry)->format('Y-m-d'));
     }
 
-    /**
-     * @Then /^I can see that no organisations have access to my LPA$/
-     */
+    #[Then('/^I can see that no organisations have access to my LPA$/')]
     public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA(): void
     {
         // UserLpaActorMap::getUsersLpas
@@ -1063,9 +1004,7 @@ class LpaContext implements Context
         Assert::assertEmpty($response);
     }
 
-    /**
-     * @When /^I cancel the organisation access code/
-     */
+    #[When('/^I cancel the organisation access code/')]
     public function iCancelTheOrganisationAccessCode(): void
     {
         // UserLpaActorMap::get
@@ -1191,9 +1130,7 @@ class LpaContext implements Context
         Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
     }
 
-    /**
-     * @When /^I click to check my access code now expired/
-     */
+    #[When('/^I click to check my access code now expired/')]
     public function iClickToCheckMyAccessCodeNowExpired(): void
     {
         // Get the LPA
@@ -1321,14 +1258,12 @@ class LpaContext implements Context
         Assert::assertNotEquals($response[0]['Expires'], (new DateTime('now'))->format('Y-m-d'));
         //check if the code expiry date is in the past
         Assert::assertGreaterThan(
-            strtotime($response[0]['Expires']),
+            strtotime((string) $response[0]['Expires']),
             strtotime((new DateTime('now'))->format('Y-m-d'))
         );
     }
 
-    /**
-     * @When /^I check my access codes$/
-     */
+    #[When('/^I check my access codes$/')]
     public function iClickToCheckMyAccessCodes(): void
     {
         $this->organisation = 'TestOrg';
@@ -1461,13 +1396,11 @@ class LpaContext implements Context
         //check if the code expiry date is in the past
         Assert::assertGreaterThan(
             strtotime((new DateTime('now'))->format('Y-m-d')),
-            strtotime($response[0]['Expires'])
+            strtotime((string) $response[0]['Expires'])
         );
     }
 
-    /**
-     * @When /^I confirm cancellation of the chosen viewer code/
-     */
+    #[When('/^I confirm cancellation of the chosen viewer code/')]
     public function iConfirmCancellationOfTheChosenViewerCode(): void
     {
         $shareCode = [
@@ -1516,9 +1449,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @When /^I fill in the form and click the cancel button$/
-     */
+    #[When('/^I fill in the form and click the cancel button$/')]
     public function iFillInTheFormAndClickTheCancelButton(): void
     {
         // UserLpaActorMap::getUsersLpas
@@ -1541,19 +1472,15 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @Given /^I have 2 codes for one of my LPAs$/
-     */
+    #[Given('/^I have 2 codes for one of my LPAs$/')]
     public function iHave2CodesForOneOfMyLPAs(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iHaveCreatedAnAccessCode();
     }
 
-    /**
-     * @Given /^I have been given access to use an LPA via credentials$/
-     * @Given /^I have added an LPA to my account$/
-     */
+    #[Given('/^I have been given access to use an LPA via credentials$/')]
+    #[Given('/^I have added an LPA to my account$/')]
     public function iHaveBeenGivenAccessToUseAnLPAViaCredentials(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/example_lpa.json'));
@@ -1566,19 +1493,15 @@ class LpaContext implements Context
         $this->userLpaActorToken = '111222333444';
     }
 
-    /**
-     * @Given /^I have created an access code$/
-     * @Given /^I have generated an access code for an organisation and can see the details$/
-     */
+    #[Given('/^I have created an access code$/')]
+    #[Given('/^I have generated an access code for an organisation and can see the details$/')]
     public function iHaveCreatedAnAccessCode(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
         $this->iAmGivenAUniqueAccessCode();
     }
 
-    /**
-     * @When /^I request to add an LPA that does not exist$/
-     */
+    #[When('/^I request to add an LPA that does not exist$/')]
     public function iRequestToAddAnLPAThatDoesNotExist(): void
     {
         //UserLpaActorMap: getAllForUser
@@ -1617,9 +1540,7 @@ class LpaContext implements Context
         $this->ui->assertSession()->responseContains('Code validation failed');
     }
 
-    /**
-     * @When /^I request to add an LPA with a missing actor code$/
-     */
+    #[When('/^I request to add an LPA with a missing actor code$/')]
     public function iRequestToAddAnLPAWithAMissingActorCode(): void
     {
         $this->apiPost(
@@ -1635,9 +1556,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to add an LPA with a missing date of birth$/
-     */
+    #[When('/^I request to add an LPA with a missing date of birth$/')]
     public function iRequestToAddAnLPAWithAMissingDateOfBirth(): void
     {
         $this->apiPost(
@@ -1655,9 +1574,7 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
-    /**
-     * @When /^I request to add an LPA with a missing user id$/
-     */
+    #[When('/^I request to add an LPA with a missing user id$/')]
     public function iRequestToAddAnLPAWithAMissingUserId(): void
     {
         $this->apiPost(
@@ -1673,10 +1590,8 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to add an LPA with valid details$/
-     * @When /^I confirmed to add an LPA to my account$/
-     */
+    #[When('/^I request to add an LPA with valid details$/')]
+    #[When('/^I confirmed to add an LPA to my account$/')]
     public function iRequestToAddAnLPAWithValidDetails(): void
     {
         //UserLpaActorMap: getAllForUser
@@ -1713,9 +1628,7 @@ class LpaContext implements Context
         Assert::assertEquals($this->lpaUid, $response['lpa']['uId']);
     }
 
-    /**
-     * @When /^I request to give an organisation access to one of my LPAs$/
-     */
+    #[When('/^I request to give an organisation access to one of my LPAs$/')]
     public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs(): void
     {
         $this->organisation = 'TestOrg';
@@ -1792,17 +1705,13 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @Given /^I request to go back and try again$/
-     */
+    #[Given('/^I request to go back and try again$/')]
     public function iRequestToGoBackAndTryAgain(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to view an LPA which has instructions and preferences$/
-     */
+    #[When('/^I request to view an LPA which has instructions and preferences$/')]
     public function iRequestToViewAnLPAWhichHasInstructionsAndPreferences(): void
     {
         // UserLpaActorMap::get
@@ -1842,11 +1751,9 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to view an LPA which status is "([^"]*)"$/
-     * @When /^I request to remove an LPA from my account that is (.*)$/
-     */
-    public function iRequestToViewAnLPAWhichStatusIs($status)
+    #[When('/^I request to view an LPA which status is "([^"]*)"$/')]
+    #[When('/^I request to remove an LPA from my account that is (.*)$/')]
+    public function iRequestToViewAnLPAWhichStatusIs($status): void
     {
         $this->lpa->status = $status;
 
@@ -1882,7 +1789,7 @@ class LpaContext implements Context
 
         $response = $this->getResponseAsJson();
 
-        if ($status == 'Revoked') {
+        if ($status === 'Revoked') {
             Assert::assertEmpty($response);
         } else {
             Assert::assertEquals($this->userLpaActorToken, $response['user-lpa-actor-token']);
@@ -1891,17 +1798,13 @@ class LpaContext implements Context
         }
     }
 
-    /**
-     * @Then /^I should be able to click a link to go and create the access codes$/
-     */
+    #[Then('/^I should be able to click a link to go and create the access codes$/')]
     public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
     }
 
-    /**
-     * @Then /^I should be shown the details of the cancelled viewer code with cancelled status/
-     */
+    #[Then('/^I should be shown the details of the cancelled viewer code with cancelled status/')]
     public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -1910,33 +1813,25 @@ class LpaContext implements Context
         Assert::assertArrayHasKey('Cancelled', $response);
     }
 
-    /**
-     * @Then /^I should be shown the details of the viewer code with status(.*)/
-     */
+    #[Then('/^I should be shown the details of the viewer code with status(.*)/')]
     public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be taken back to the access code summary page/
-     */
+    #[Then('/^I should be taken back to the access code summary page/')]
     public function iShouldBeTakenBackToTheAccessCodeSummaryPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be told that I have not created any access codes yet$/
-     */
+    #[Then('/^I should be told that I have not created any access codes yet$/')]
     public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I view my dashboard$/
-     */
+    #[When('/^I view my dashboard$/')]
     public function iViewMyDashboard(): void
     {
         // UserLpaActorMap::getUsersLpas
@@ -1972,65 +1867,49 @@ class LpaContext implements Context
         $this->setLastRequest($this->apiFixtures->getLastRequest());
     }
 
-    /**
-     * @Then /^I want to be asked for confirmation prior to cancellation/
-     */
+    #[Then('/^I want to be asked for confirmation prior to cancellation/')]
     public function iWantToBeAskedForConfirmationPriorToCancellation(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I want to cancel the access code for an organisation$/
-     */
+    #[When('/^I want to cancel the access code for an organisation$/')]
     public function iWantToCancelTheAccessCodeForAnOrganisation(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I want to see the option to cancel the code$/
-     */
+    #[Then('/^I want to see the option to cancel the code$/')]
     public function iWantToSeeTheOptionToCancelTheCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^One of the generated access code has expired$/
-     */
+    #[When('/^One of the generated access code has expired$/')]
     public function oneOfTheGeneratedAccessCodeHasExpired(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^The correct LPA is found and I can confirm to add it$/
-     */
+    #[Then('/^The correct LPA is found and I can confirm to add it$/')]
     public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
     {
         // not needed for this context
     }
 
-    /**
-     * @Given /^The details I provided resulted in a partial match$/
-     */
-    public function theDetailsIProvidedResultedInAPartialMatch()
+    #[Given('/^The details I provided resulted in a partial match$/')]
+    public function theDetailsIProvidedResultedInAPartialMatch(): void
     {
         // not needed for this context
     }
 
-    /**
-     * @Then /^The full LPA is displayed with the correct (.*)$/
-     */
-    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    #[Then('/^The full LPA is displayed with the correct (.*)$/')]
+    public function theFullLPAIsDisplayedWithTheCorrect($message): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^The LPA has not been added$/
-     */
+    #[Given('/^The LPA has not been added$/')]
     public function theLPAHasNotBeenAdded(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -2040,9 +1919,7 @@ class LpaContext implements Context
         Assert::assertEmpty($response);
     }
 
-    /**
-     * @Then /^The LPA is not found$/
-     */
+    #[Then('/^The LPA is not found$/')]
     public function theLPAIsNotFound(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
@@ -2052,9 +1929,7 @@ class LpaContext implements Context
         Assert::assertEmpty($response['data']);
     }
 
-    /**
-     * @Then /^The LPA is not found and I am told it was a bad request$/
-     */
+    #[Then('/^The LPA is not found and I am told it was a bad request$/')]
     public function theLPAIsNotFoundAndIAmToldItWasABadRequest(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -2064,9 +1939,7 @@ class LpaContext implements Context
         Assert::assertEmpty($response['data']);
     }
 
-    /**
-     * @Given /^The LPA is successfully added$/
-     */
+    #[Given('/^The LPA is successfully added$/')]
     public function theLPAIsSuccessfullyAdded(): void
     {
         $this->userLpaActorToken = '13579';
@@ -2122,17 +1995,13 @@ class LpaContext implements Context
         Assert::assertNotNull($response['user-lpa-actor-token']);
     }
 
-    /**
-     * @Then /^The LPA should not be found$/
-     */
+    #[Then('/^The LPA should not be found$/')]
     public function theLPAShouldNotBeFound(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I click to check the access codes$/
-     */
+    #[When('/^I click to check the access codes$/')]
     public function iClickToCheckTheAccessCodes(): void
     {
         $code1 = [
@@ -2300,41 +2169,31 @@ class LpaContext implements Context
         Assert::assertEquals($response[1]['ActorId'], '4455');
     }
 
-    /**
-     * @Given /^Co\-actors have also created access codes for the same LPA$/
-     */
+    #[Given('/^Co\-actors have also created access codes for the same LPA$/')]
     public function coActorsHaveAlsoCreatedAccessCodesForTheSameLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see all of the access codes and their details$/
-     */
+    #[Then('/^I can see all of the access codes and their details$/')]
     public function iCanSeeAllOfTheAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see the name of the organisation that viewed the LPA$/
-     */
+    #[Then('/^I can see the name of the organisation that viewed the LPA$/')]
     public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I have shared the access code with organisations to view my LPA$/
-     */
+    #[Given('/^I have shared the access code with organisations to view my LPA$/')]
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I click to check my access codes that is used to view LPA$/
-     */
+    #[When('/^I click to check my access codes that is used to view LPA$/')]
     public function iClickToCheckMyAccessCodesThatIsUsedToViewLPA(): void
     {
         $code1 = [
@@ -2490,10 +2349,8 @@ class LpaContext implements Context
         Assert::assertEquals($response[1]['ViewedBy'], 'TestOrg2');
     }
 
-    /**
-     * @Then /^The LPA is removed$/
-     * @Then /^The LPA is removed and I am taken back to dashboard page$/
-     */
+    #[Then('/^The LPA is removed$/')]
+    #[Then('/^The LPA is removed and I am taken back to dashboard page$/')]
     public function theLPAIsRemoved(): void
     {
         $actorId = 700000000054;
@@ -2657,18 +2514,14 @@ class LpaContext implements Context
         Assert::assertEquals($this->lpa->uId, $response['lpa']['uId']);
     }
 
-    /**
-     * @Given /^I am on the add an older LPA page$/
-     * @Given /^I am on the Check we've found the right LPA page$/
-     */
+    #[Given('/^I am on the add an older LPA page$/')]
+    #[Given('/^I am on the Check we\'ve found the right LPA page$/')]
     public function iAmOnTheAddAnOlderLPAPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^a repeat request for a letter containing a one time use code is made$/
-     */
+    #[Then('/^a repeat request for a letter containing a one time use code is made$/')]
     public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade(): void
     {
         //UserLpaActorMap: getByUserId
@@ -2683,7 +2536,7 @@ class LpaContext implements Context
                                 'SiriusUid'  => $this->lpaUid,
                                 'ActorId'    => $this->actorId,
                                 'Added'      => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                                'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp(),
+                                'ActivateBy' => (new DateTime())->add(new DateInterval('P1Y'))->getTimestamp(),
                             ]
                         ),
                     ],
@@ -2702,7 +2555,7 @@ class LpaContext implements Context
                             'SiriusUid'  => $this->lpaUid,
                             'ActorId'    => $this->actorId,
                             'Added'      => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                            'ActivateBy' => (new DateTime())->add(new \DateInterval('P1Y'))->getTimestamp(),
+                            'ActivateBy' => (new DateTime())->add(new DateInterval('P1Y'))->getTimestamp(),
                         ]
                     ),
                 ]
@@ -2774,9 +2627,7 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-    /**
-     * @Then /^a letter is requested containing a one time use code$/
-     */
+    #[Then('/^a letter is requested containing a one time use code$/')]
     public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
         // In some way which I am not able to understand *at all* when this step is hit on Circle CI
@@ -2860,26 +2711,20 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-    /**
-     * @Given /^I confirm the details I provided are correct$/
-     * @When /^I confirm details shown to me of the found LPA are correct$/
-     */
+    #[Given('/^I confirm the details I provided are correct$/')]
+    #[When('/^I confirm details shown to me of the found LPA are correct$/')]
     public function iConfirmTheDetailsIProvidedAreCorrect(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide the details from a valid paper LPA document$/
-     */
+    #[When('/^I provide the details from a valid paper LPA document$/')]
     public function iProvideTheDetailsFromAValidPaperLPADocument(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide details of an LPA that does not exist$/
-     */
+    #[When('/^I provide details of an LPA that does not exist$/')]
     public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
         //UserLpaActorMap: getAllForUser
@@ -2915,10 +2760,8 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
-    /**
-     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/
-     */
-    public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
+    #[When('/^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/')]
+    public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob): void
     {
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -2953,10 +2796,8 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
-    /**
-     * @When /^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that match a valid paper document$/
-     */
-    public function iProvideDetailsThatMatchThePaperDocument($firstnames, $lastname, $postcode, $dob)
+    #[When('/^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that match a valid paper document$/')]
+    public function iProvideDetailsThatMatchThePaperDocument($firstnames, $lastname, $postcode, $dob): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
 
@@ -3019,18 +2860,14 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
-    /**
-     * @Then /^I am informed that an LPA could not be found with these details$/
-     * @Then /^I am asked for my role on the LPA$/
-     */
+    #[Then('/^I am informed that an LPA could not be found with these details$/')]
+    #[Then('/^I am asked for my role on the LPA$/')]
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide details from an LPA registered before Sept 2019$/
-     */
+    #[When('/^I provide details from an LPA registered before Sept 2019$/')]
     public function iProvideDetailsFromAnLPARegisteredBeforeSept2019(): void
     {
         $this->lpa->registrationDate = '2019-08-31';
@@ -3068,17 +2905,13 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
-    /**
-     * @Then /^I am told that I cannot request an activation key$/
-     */
+    #[Then('/^I am told that I cannot request an activation key$/')]
     public function iAmToldThatICannotRequestAnActivationKey(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide the details from a valid paper document that already has an activation key$/
-     */
+    #[When('/^I provide the details from a valid paper document that already has an activation key$/')]
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
@@ -3138,7 +2971,7 @@ class LpaContext implements Context
                 'middlenames' => $this->lpa->donor->middlenames,
                 'surname'     => $this->lpa->donor->surname,
                 'companyName' => $this->lpa->donor->companyName,
-                'addresses'   => json_decode(json_encode($this->lpa->donor->addresses), true)
+                'addresses'   => json_decode(json_encode($this->lpa->donor->addresses), true),
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
@@ -3146,20 +2979,16 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         $this->ui->assertSession()->responseContains('LPA has an activation key already');
 
-        Assert::assertEquals($expectedResponse,$this->getResponseAsJson()['data']);
+        Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
-    /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     */
+    #[Then('/^I am told that I have an activation key for this LPA and where to find it$/')]
     public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^A malformed request is sent which is missing a data attribute$/
-     */
+    #[Given('/^A malformed request is sent which is missing a data attribute$/')]
     public function aMalformedRequestIsSentWhichIsMissingADataAttribute(): void
     {
         $dataAttributes = [
@@ -3171,7 +3000,7 @@ class LpaContext implements Context
             'force_activation_key' => false,
         ];
 
-        foreach ($dataAttributes as $name => $value) {
+        foreach (array_keys($dataAttributes) as $name) {
             $dataAttributes[$name] = null;
 
             // API call to request an activation key
@@ -3187,17 +3016,13 @@ class LpaContext implements Context
         }
     }
 
-    /**
-     * @Then /^I am told that something went wrong$/
-     */
+    #[Then('/^I am told that something went wrong$/')]
     public function iAmToldThatSomethingWentWrong(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^The status of the LPA changed from Registered to Suspended$/
-     */
+    #[Given('/^The status of the LPA changed from Registered to Suspended$/')]
     public function theStatusOfTheLPAChangedFromRegisteredToSuspended(): void
     {
         $this->lpa->status = 'Suspended';
@@ -3245,10 +3070,8 @@ class LpaContext implements Context
         Assert::assertEmpty($response);
     }
 
-    /**
-     * @When /^I check my access codes of the status changed LPA$/
-     * @When /^I request to give an organisation access to the LPA whose status changed to Revoked$/
-     */
+    #[When('/^I check my access codes of the status changed LPA$/')]
+    #[When('/^I request to give an organisation access to the LPA whose status changed to Revoked$/')]
     public function iCheckMyAccessCodesOfTheStatusChangedLpa(): void
     {
         $this->lpa->status = 'Revoked';
@@ -3296,36 +3119,28 @@ class LpaContext implements Context
         Assert::assertEmpty($response);
     }
 
-    /**
-     * @When /^The status of the LPA got Revoked$/
-     */
+    #[When('/^The status of the LPA got Revoked$/')]
     public function theStatusOfTheLpaGotRevoked(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I already have a valid activation key for my LPA$/
-     * @Given /^I provide the additional details asked$/
-     * @Given /^I am asked to consent and confirm my details$/
-     */
+    #[Given('/^I already have a valid activation key for my LPA$/')]
+    #[Given('/^I provide the additional details asked$/')]
+    #[Given('/^I am asked to consent and confirm my details$/')]
     public function iAlreadyHaveAValidActivationKeyForMyLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I lost the letter containing my activation key$/
-     */
+    #[Given('/^I lost the letter containing my activation key$/')]
     public function iLostTheLetterContainingMyActivationKey(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request for a new activation key again$/
-     * @When /^I repeat my request for an activation key$/
-     */
+    #[When('/^I request for a new activation key again$/')]
+    #[When('/^I repeat my request for an activation key$/')]
     public function iRequestForANewActivationKeyAgain(): void
     {
         $this->lpa->lpaIsCleansed = true;
@@ -3389,19 +3204,15 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-    /**
-     * @Then /^I am told a new activation key is posted to the provided postcode$/
-     * @Then /^I am asked for my contact details$/
-     * @Then /^I should expect it within 4 time$/
-     */
+    #[Then('/^I am told a new activation key is posted to the provided postcode$/')]
+    #[Then('/^I am asked for my contact details$/')]
+    #[Then('/^I should expect it within 4 time$/')]
     public function iAmToldANewActivationKeyIsPostedToTheProvidedPostcode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide the attorney details from a valid paper LPA document$/
-     */
+    #[When('/^I provide the attorney details from a valid paper LPA document$/')]
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
@@ -3458,10 +3269,8 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
-    /**
-     * @Then /^I am shown the details of an LPA$/
-     * @Then /^I being the donor on the LPA I am not shown the attorney details$/
-     */
+    #[Then('/^I am shown the details of an LPA$/')]
+    #[Then('/^I being the donor on the LPA I am not shown the attorney details$/')]
     public function iAmShownDetailsOfAnLpa(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
@@ -3523,9 +3332,7 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
-    /**
-     * @Then /^I being the attorney on the LPA I am shown the donor details$/
-     */
+    #[Then('/^I being the attorney on the LPA I am shown the donor details$/')]
     public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
@@ -3591,9 +3398,7 @@ class LpaContext implements Context
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
     }
 
-    /**
-     * @When I provide details of an LPA that is not registered
-     */
+    #[When('I provide details of an LPA that is not registered')]
     public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered(): void
     {
         $this->lpa->status = 'Pending';
@@ -3631,10 +3436,8 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
-    /**
-     * @When /^I confirm details of the found LPA are correct$/
-     * @Then /^I am told my activation key is being sent$/
-     */
+    #[When('/^I confirm details of the found LPA are correct$/')]
+    #[Then('/^I am told my activation key is being sent$/')]
     public function iConfirmDetailsOfTheFoundLPAAreCorrect(): void
     {
         $earliestRegDate = '2019-09-01';
@@ -3702,9 +3505,7 @@ class LpaContext implements Context
         }
     }
 
-    /**
-     * @When /^I confirm that the data is correct and click the confirm and submit button$/
-     */
+    #[When('/^I confirm that the data is correct and click the confirm and submit button$/')]
     public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton(): void
     {
         //UserLpaActorMap: getAllForUser
@@ -3758,21 +3559,17 @@ class LpaContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 
-    /**
-     * @When /^I am told my activation key request has been received$/
-     * @Then /^I should expect it within 2 weeks time$/
-     * @Then /^I should expect it within 4 weeks time$/
-     * @Then /^I will receive an email confirming this information$/
-     */
+    #[When('/^I am told my activation key request has been received$/')]
+    #[Then('/^I should expect it within 2 weeks time$/')]
+    #[Then('/^I should expect it within 4 weeks time$/')]
+    #[Then('/^I will receive an email confirming this information$/')]
     public function iAmToldMyActivationKeyRequestHasBeenReceived(): void
     {
         //Not needed for this context
     }
 
-    /**
-     * @When I confirm the incorrect details of the found LPA and flag is turned :flagStatus
-     */
-    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus)
+    #[When('I confirm the incorrect details of the found LPA and flag is turned :flagStatus')]
+    public function iConfirmDetailsOfTheFoundLPAAreCorrectAndFlagIsTurned($flagStatus): void
     {
         $this->lpa->status = 'Registered';
 
@@ -3813,9 +3610,7 @@ class LpaContext implements Context
         }
     }
 
-    /**
-     * @Then /^my LPA is shown with instructions and preferences images$/
-     */
+    #[Then('/^my LPA is shown with instructions and preferences images$/')]
     public function myLPAIsShownWithInstructionsAndPreferencesImages(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);

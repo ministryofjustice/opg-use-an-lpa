@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Handler\HealthcheckHandler;
 use Fig\Http\Message\StatusCodeInterface;
-use GuzzleHttp\Client as HttpClient;
 use Laminas\Diactoros\Response\JsonResponse;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,9 +24,10 @@ class HealthcheckHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy $actorUsersProphecy;
-    private ObjectProphecy $httpClientProphecy;
-    private ObjectProphecy $requestSignerProphecy;
+    private ObjectProphecy|ActorUsersInterface $actorUsersProphecy;
+    private ObjectProphecy|ClientInterface $clientProphecy;
+    private ObjectProphecy|RequestFactoryInterface $requestFactoryProphecy;
+    private ObjectProphecy|RequestFactoryInterface $requestSignerFactoryProphecy;
 
     private string $version;
     private string $siriusApiUrl;
@@ -33,13 +36,15 @@ class HealthcheckHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->version               = 'dev';
-        $this->actorUsersProphecy    = $this->prophesize(ActorUsersInterface::class);
-        $this->httpClientProphecy    = $this->prophesize(HttpClient::class);
-        $this->requestSignerProphecy = $this->prophesize(RequestSigner::class);
-        $this->siriusApiUrl          = 'localhost';
-        $this->codesApiUrl           = 'localhost';
-        $this->iapImagesApiUrl       = 'localhost';
+        $this->actorUsersProphecy           = $this->prophesize(ActorUsersInterface::class);
+        $this->clientProphecy               = $this->prophesize(ClientInterface::class);
+        $this->requestFactoryProphecy       = $this->prophesize(RequestFactoryInterface::class);
+        $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
+        $this->version                      = 'dev';
+        $this->siriusApiUrl                 = 'localhost';
+        $this->lpaStoreApiUrl               = 'localhost';
+        $this->codesApiUrl                  = 'localhost';
+        $this->iapImagesApiUrl              = 'localhost';
     }
 
     public function testReturnsExpectedJsonResponse(): void
@@ -50,29 +55,31 @@ class HealthcheckHandlerTest extends TestCase
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
 
-        $this->httpClientProphecy->send(
-            Argument::that(function (RequestInterface $request) {
-                $this->assertEquals('GET', $request->getMethod());
-                $this->assertEquals('localhost/v1/healthcheck', $request->getUri());
-
-                return true;
-            })
-        )
-            ->shouldBeCalledTimes(3)
+        $this->clientProphecy->sendRequest(Argument::any())
+            ->shouldBeCalledTimes(4)
             ->willReturn($responseProphecy->reveal());
 
-        $this->requestSignerProphecy
-            ->sign(Argument::type(RequestInterface::class))
-            ->will(function ($args) {
-                return $args[0];
-            });
+        $this->requestFactoryProphecy
+            ->createRequest('GET', Argument::any())
+            ->willReturn($this->prophesize(RequestInterface::class)->reveal());
+
+        $requestSignerProphecy = $this->prophesize(RequestSigner::class);
+        $requestSignerProphecy
+            ->sign(Argument::any())
+            ->willReturnArgument(0);
+
+        $this->requestSignerFactoryProphecy
+            ->__invoke(Argument::any(), Argument::any())
+            ->willReturn($requestSignerProphecy->reveal());
 
         $healthcheck = new HealthcheckHandler(
-            $this->version,
+            $this->clientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
             $this->actorUsersProphecy->reveal(),
-            $this->httpClientProphecy->reveal(),
-            $this->requestSignerProphecy->reveal(),
+            $this->version,
             $this->siriusApiUrl,
+            $this->lpaStoreApiUrl,
             $this->codesApiUrl,
             $this->iapImagesApiUrl
         );
@@ -87,12 +94,14 @@ class HealthcheckHandlerTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertArrayHasKey('healthy', $json);
 
-        $this->assertArrayHasKey('lpa_api', $json);
+        $this->assertArrayHasKey('sirius_api', $json);
+        $this->assertArrayHasKey('lpa_store_api', $json);
         $this->assertArrayHasKey('dynamo', $json);
         $this->assertArrayHasKey('lpa_codes_api', $json);
         $this->assertArrayHasKey('iap_images_api', $json);
 
-        $this->assertTrue($json['lpa_api']['healthy']);
+        $this->assertTrue($json['sirius_api']['healthy']);
+        $this->assertTrue($json['lpa_store_api']['healthy']);
         $this->assertTrue($json['dynamo']['healthy']);
         $this->assertTrue($json['lpa_codes_api']['healthy']);
         $this->assertTrue($json['iap_images_api']['healthy']);

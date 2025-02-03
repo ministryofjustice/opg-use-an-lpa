@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 
 class ViewerContext implements Context
 {
@@ -14,9 +17,7 @@ class ViewerContext implements Context
     public string $donorSurname;
     public string $organisation;
 
-    /**
-     * @Given I have been given access to an LPA via share code
-     */
+    #[Given('I have been given access to an LPA via share code')]
     public function iHaveBeenGivenAccessToAnLpaViaShareCode(): void
     {
         $this->shareCode    = 'P9H8A6MLD3AM';
@@ -24,9 +25,7 @@ class ViewerContext implements Context
         $this->organisation = 'Test organisation';
     }
 
-    /**
-     * @Given I give a valid LPA share code
-     */
+    #[Given('I give a valid LPA share code')]
     public function iGiveAValidLpaShareCode(): void
     {
         $this->ui->assertPageAddress('/home');
@@ -37,9 +36,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('Continue');
     }
 
-    /**
-     * @When /^I enter an organisation name and confirm the LPA is correct$/
-     */
+    #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->ui->assertPageAddress('/check-code');
@@ -49,9 +46,7 @@ class ViewerContext implements Context
         $this->ui->pressButton('View this LPA');
     }
 
-    /**
-     * @Then I can see the full details of the valid LPA
-     */
+    #[Then('I can see the full details of the valid LPA')]
     public function iCanSeeTheFullDetailsOfTheValidLpa(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
@@ -60,9 +55,7 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('This health and welfare LPA is valid');
     }
 
-    /**
-     * @When I click Download this LPA summary
-     */
+    #[When('I click Download this LPA summary')]
     public function IClickDownloadThisLPASummary(): void
     {
         $this->ui->assertPageAddress('/view-lpa');

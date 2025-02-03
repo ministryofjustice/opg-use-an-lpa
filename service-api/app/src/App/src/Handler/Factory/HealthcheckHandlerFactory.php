@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Handler\Factory;
 
-use App\DataAccess\ApiGateway\RequestSigner;
+use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Handler\HealthcheckHandler;
-use GuzzleHttp\Client as HttpClient;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestFactoryInterface;
 
 class HealthcheckHandlerFactory
 {
@@ -22,11 +23,13 @@ class HealthcheckHandlerFactory
         $config = $container->get('config');
 
         return new HealthcheckHandler(
-            $config['version'],
+            $container->get(ClientInterface::class),
+            $container->get(RequestFactoryInterface::class),
+            $container->get(RequestSignerFactory::class),
             $container->get(ActorUsersInterface::class),
-            $container->get(HttpClient::class),
-            $container->get(RequestSigner::class),
+            $config['version'],
             $config['sirius_api']['endpoint'],
+            $config['lpa_data_store_api']['endpoint'],
             $config['codes_api']['endpoint'],
             $config['iap_images_api']['endpoint']
         );

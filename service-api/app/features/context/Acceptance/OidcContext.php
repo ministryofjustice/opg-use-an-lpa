@@ -9,6 +9,9 @@ use Aws\Command;
 use Aws\Result;
 use Aws\ResultInterface;
 use Behat\Behat\Context\Context;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTimeImmutable;
@@ -138,12 +141,10 @@ class OidcContext implements Context
 
         Assert::assertTrue($jwsVerifier->verifyWithKey($jws, $jwk, 0));
 
-        return json_decode($jws->getPayload(), true);
+        return json_decode((string) $jws->getPayload(), true);
     }
 
-    /**
-     * @Then /^I am redirected to the one login service$/
-     */
+    #[Then('/^I am redirected to the one login service$/')]
     public function iAmRedirectedToTheOneLoginService(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -157,7 +158,7 @@ class OidcContext implements Context
         Assert::assertIsString($response['state']);
         Assert::assertIsString($response['nonce']);
 
-        $url = parse_url($response['url']);
+        $url = parse_url((string) $response['url']);
         Assert::assertSame(
             'https://one-login-mock/authorize',
             sprintf(
@@ -179,9 +180,7 @@ class OidcContext implements Context
         Assert::assertSame('en', $query['ui_locales']);
     }
 
-    /**
-     * @When /^I am returned to the use an lpa service$/
-     */
+    #[When('/^I am returned to the use an lpa service$/')]
     public function iAmReturnedToTheUseAnLpaService(): void
     {
         $this->oidcFixtureSetup();
@@ -303,9 +302,7 @@ class OidcContext implements Context
         );
     }
 
-    /**
-     * @Then /^I am taken to complete a satisfaction survey$/
-     */
+    #[Then('/^I am taken to complete a satisfaction survey$/')]
     public function iAmTakenToCompleteASatisfactionSurvey(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -315,9 +312,7 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('redirect_uri', $response);
     }
 
-    /**
-     * @Then /^I am taken to my dashboard$/
-     */
+    #[Then('/^I am taken to my dashboard$/')]
     public function iAmTakenToMyDashboard(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -339,25 +334,19 @@ class OidcContext implements Context
         Assert::assertSame($user['Email'], $this->email);
     }
 
-    /**
-     * @Given /^I have an existing local account$/
-     */
+    #[Given('/^I have an existing local account$/')]
     public function iHaveAnExistingLocalAccount(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given /^I have completed a successful one login sign\-in process$/
-     */
+    #[Given('/^I have completed a successful one login sign\-in process$/')]
     public function iHaveCompletedASuccessfulOneLoginSignInProcess(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I logout of the application$/
-     */
+    #[When('/^I logout of the application$/')]
     public function iLogoutOfTheApplication(): void
     {
         $this->oidcFixtureSetup();
@@ -376,9 +365,7 @@ class OidcContext implements Context
         );
     }
 
-    /**
-     * @When /^I start the login process$/
-     */
+    #[When('/^I start the login process$/')]
     public function iStartTheLoginProcess(): void
     {
         $this->oidcFixtureSetup();
@@ -386,9 +373,7 @@ class OidcContext implements Context
         $this->apiGet('/v1/auth/start?redirect_url=http://sut&ui_locale=en');
     }
 
-    /**
-     * @Given /^I wish to login to the use an lpa service$/
-     */
+    #[Given('/^I wish to login to the use an lpa service$/')]
     public function iWishToLoginToTheUseAnLpaService(): void
     {
         // Not needed in this context

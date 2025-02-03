@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\ActorContextTrait;
 use BehatTest\Context\ContextUtilities;
 use Common\Entity\CaseActor;
@@ -74,10 +77,8 @@ class LpaContext extends BaseIntegrationContext
     private NotifyService $notifyService;
     private InstAndPrefImagesService $instAndPrefImagesService;
 
-    /**
-     * @Given /^I am told that I have already requested an activation key for this LPA$/
-     */
-    public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA()
+    #[Given('/^I am told that I have already requested an activation key for this LPA$/')]
+    public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA(): void
     {
         // API call for requesting activation code
         $this->apiFixtures->append(
@@ -130,26 +131,20 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @Given /^I cannot see my LPA on the dashboard$/
-     */
-    public function iCannotSeeMyLPAOnTheDashboard()
+    #[Given('/^I cannot see my LPA on the dashboard$/')]
+    public function iCannotSeeMyLPAOnTheDashboard(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I can see a flash message confirming that my LPA has been removed$/
-     */
-    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved()
+    #[Given('/^I can see a flash message confirming that my LPA has been removed$/')]
+    public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^The LPA is removed/
-     */
-    public function theLPAIsRemoved()
+    #[Then('/^The LPA is removed/')]
+    public function theLPAIsRemoved(): void
     {
         $this->apiFixtures->reset();
         $this->apiFixtures->append(
@@ -167,31 +162,25 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($this->lpa['uId'], $result['lpa']->getUId());
     }
 
-    /**
-     * @Given /^My active codes are cancelled$/
-     */
-    public function myActiveCodesAreCancelled()
+    #[Given('/^My active codes are cancelled$/')]
+    public function myActiveCodesAreCancelled(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I confirm that I want to remove the LPA from my account$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Revoked lpa$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Cancelled lpa$/
-     * @Then /^I am taken to the remove an LPA confirmation page for Registered lpa$/
-     */
-    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount()
+    #[Given('/^I confirm that I want to remove the LPA from my account$/')]
+    #[Then('/^I am taken to the remove an LPA confirmation page for Revoked lpa$/')]
+    #[Then('/^I am taken to the remove an LPA confirmation page for Cancelled lpa$/')]
+    #[Then('/^I am taken to the remove an LPA confirmation page for Registered lpa$/')]
+    public function iConfirmThatIWantToRemoveTheLPAFromMyAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to remove an LPA from my account that is (.*)$/
-     */
-    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status)
+    #[When('/^I request to remove an LPA from my account that is (.*)$/')]
+    public function iRequestToRemoveAnLPAFromMyAccountThatIs($status): void
     {
-        if ($status === 'Registered' or  $status === 'Cancelled') {
+        if ($status === 'Registered' || $status === 'Cancelled') {
             $this->lpa['status'] = $status;
 
             // API call for get LpaById (when give organisation access is clicked)
@@ -226,12 +215,10 @@ class LpaContext extends BaseIntegrationContext
         }
     }
 
-    /**
-     * @Then /^a letter is requested containing a one time use code$/
-     * @When /^I request for a new activation key again$/
-     * @Then  /^I am told my activation key is being sent$/
-     */
-    public function aLetterIsRequestedContainingAOneTimeUseCode()
+    #[Then('/^a letter is requested containing a one time use code$/')]
+    #[When('/^I request for a new activation key again$/')]
+    #[Then('/^I am told my activation key is being sent$/')]
+    public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -257,19 +244,15 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @Given /^I already have a valid activation key for my LPA$/
-     */
-    public function iAlreadyHaveAValidActivationKeyForMyLPA()
+    #[Given('/^I already have a valid activation key for my LPA$/')]
+    public function iAlreadyHaveAValidActivationKeyForMyLPA(): void
     {
         $this->activation_key  = 'XYUPHWQRECHV';
         $this->codeCreatedDate = (new DateTime())->modify('-15 days')->format('Y-m-d');
     }
 
-    /**
-     * @Then /^I am given a unique access code$/
-     */
-    public function iAmGivenAUniqueAccessCode()
+    #[Then('/^I am given a unique access code$/')]
+    public function iAmGivenAUniqueAccessCode(): void
     {
         $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
 
@@ -284,11 +267,9 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($this->organisation, $codeData['organisation']);
     }
 
-    /**
-     * @Then /^I am informed that an LPA could not be found with these details$/
-     * @Then /^I am informed that an LPA could not be found$/
-     */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails()
+    #[Then('/^I am informed that an LPA could not be found with these details$/')]
+    #[Then('/^I am informed that an LPA could not be found$/')]
+    public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails(): void
     {
         $allowedErrorMessages = [
             AccessForAllResult::DOES_NOT_MATCH,
@@ -309,29 +290,23 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertTrue(in_array($result->getResponse(), $allowedErrorMessages));
     }
 
-    /**
-     * @Given /^I am on the add an LPA page$/
-     * @Given /^I provide the additional details asked$/
-     * @Given /^I am asked to consent and confirm my details$/
-     * @Given /^I have provided my current address$/
-     */
-    public function iAmOnTheAddAnLPAPage()
+    #[Given('/^I am on the add an LPA page$/')]
+    #[Given('/^I provide the additional details asked$/')]
+    #[Given('/^I am asked to consent and confirm my details$/')]
+    #[Given('/^I have provided my current address$/')]
+    public function iAmOnTheAddAnLPAPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I am on the add an older LPA page$/
-     */
-    public function iAmOnTheAddAnOlderLPAPage()
+    #[Given('/^I am on the add an older LPA page$/')]
+    public function iAmOnTheAddAnOlderLPAPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am told that I cannot request an activation key$/
-     */
-    public function iAmToldThatICannotRequestAnActivationKey()
+    #[Then('/^I am told that I cannot request an activation key$/')]
+    public function iAmToldThatICannotRequestAnActivationKey(): void
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
@@ -364,34 +339,26 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @Given /^I can see a flash message for the added LPA$/
-     */
-    public function iCanSeeAFlashMessageForTheAddedLPA()
+    #[Given('/^I can see a flash message for the added LPA$/')]
+    public function iCanSeeAFlashMessageForTheAddedLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see all of my access codes and their details$/
-     */
-    public function iCanSeeAllOfMyAccessCodesAndTheirDetails()
+    #[Then('/^I can see all of my access codes and their details$/')]
+    public function iCanSeeAllOfMyAccessCodesAndTheirDetails(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see the relevant (.*) and (.*) of my access codes and their details$/
-     */
-    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle)
+    #[Then('/^I can see the relevant (.*) and (.*) of my access codes and their details$/')]
+    public function iCanSeeAllOfMyActiveAndInactiveAccessCodesAndTheirDetails($activeTitle, $inactiveTitle): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/
-     */
-    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry)
+    #[Then('/^I can see that my LPA has (.*) with expiry dates (.*) (.*)$/')]
+    public function iCanSeeThatMyLPAHasWithExpiryDates($noActiveCodes, $code1Expiry, $code2Expiry): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode   = 'XYZ321ABC987';
@@ -453,10 +420,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($shareCodes[1], $code2);
     }
 
-    /**
-     * @Then /^I can see that no organisations have access to my LPA$/
-     */
-    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA()
+    #[Then('/^I can see that no organisations have access to my LPA$/')]
+    public function iCanSeeThatNoOrganisationsHaveAccessToMyLPA(): void
     {
         //API call for getting all the users added LPAs
         $this->apiFixtures->append(
@@ -487,34 +452,26 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($shareCodes['activeCodeCount'], 0);
     }
 
-    /**
-     * @Then /^I can see the code has not been used to view the LPA$/
-     */
-    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA()
+    #[Then('/^I can see the code has not been used to view the LPA$/')]
+    public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I can see the name of the organisation that viewed the LPA$/
-     */
-    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA()
+    #[Then('/^I can see the name of the organisation that viewed the LPA$/')]
+    public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I cancel the organisation access code/
-     */
-    public function iCancelTheOrganisationAccessCode()
+    #[When('/^I cancel the organisation access code/')]
+    public function iCancelTheOrganisationAccessCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I check my access codes$/
-     */
-    public function iCheckMyAccessCodes()
+    #[When('/^I check my access codes$/')]
+    public function iCheckMyAccessCodes(): void
     {
 
         // API call to make code
@@ -546,10 +503,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEmpty($shareCodes);
     }
 
-    /**
-     * @When /^I click to check my access code now expired/
-     */
-    public function iClickToCheckMyAccessCodeNowExpired()
+    #[When('/^I click to check my access code now expired/')]
+    public function iClickToCheckMyAccessCodeNowExpired(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -602,16 +557,14 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals(false, $shareCodes[0]['Viewed']);
         //check if the code expiry date is in the past
         Assert::assertGreaterThan(
-            strtotime($shareCodes[0]['Expires']),
+            strtotime((string) $shareCodes[0]['Expires']),
             strtotime((new DateTime('now'))->format('Y-m-d'))
         );
-        Assert::assertGreaterThan(strtotime($shareCodes[0]['Added']), strtotime($shareCodes[0]['Expires']));
+        Assert::assertGreaterThan(strtotime((string) $shareCodes[0]['Added']), strtotime((string) $shareCodes[0]['Expires']));
     }
 
-    /**
-     * @When /^I click to check my access codes that is used to view LPA/
-     */
-    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA()
+    #[When('/^I click to check my access codes that is used to view LPA/')]
+    public function iClickToCheckMyAccessCodeThatIsUsedToViewLPA(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -678,10 +631,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals('Another Organisation', $shareCodes[0]['Viewed'][1]['ViewedBy']);
     }
 
-    /**
-     * @When /^I click to check my access codes$/
-     */
-    public function iClickToCheckMyAccessCodes()
+    #[When('/^I click to check my access codes$/')]
+    public function iClickToCheckMyAccessCodes(): void
     {
 
         // API call for get LpaById
@@ -735,10 +686,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals(false, $shareCodes[0]['Viewed']);
     }
 
-    /**
-     * @When /^I click to check my active and inactive codes$/
-     */
-    public function iClickToCheckMyActiveAndInactiveCodes()
+    #[When('/^I click to check my active and inactive codes$/')]
+    public function iClickToCheckMyActiveAndInactiveCodes(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -802,10 +751,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals('ABC321ABCXYZ', $shareCodes[1]['ViewerCode']);
     }
 
-    /**
-     * @When /^I confirm cancellation of the chosen viewer code/
-     */
-    public function iConfirmCancellationOfTheChosenViewerCode()
+    #[When('/^I confirm cancellation of the chosen viewer code/')]
+    public function iConfirmCancellationOfTheChosenViewerCode(): void
     {
         // API call for cancelShareCode in CancelCodeHandler
         $this->apiFixtures->append(
@@ -873,36 +820,28 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($shareCodes[0]['Cancelled'], '2021-01-01T23:59:59+00:00');
     }
 
-    /**
-     * @When /^I confirm the details I provided are correct$/
-     * @Then /^I confirm details shown to me of the found LPA are correct$/
-     * @Then /^I confirm details of the found LPA are correct$/
-     */
-    public function iConfirmTheDetailsIProvidedAreCorrect()
+    #[When('/^I confirm the details I provided are correct$/')]
+    #[Then('/^I confirm details shown to me of the found LPA are correct$/')]
+    #[Then('/^I confirm details of the found LPA are correct$/')]
+    public function iConfirmTheDetailsIProvidedAreCorrect(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     */
-    public function iDoNotConfirmCancellationOfTheChosenViewerCode()
+    #[When('/^I do not confirm cancellation of the chosen viewer code/')]
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I have 2 codes for one of my LPAs$/
-     */
-    public function iHave2CodesForOneOfMyLPAs()
+    #[Given('/^I have 2 codes for one of my LPAs$/')]
+    public function iHave2CodesForOneOfMyLPAs(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I have added an LPA to my account$/
-     */
-    public function iHaveAddedAnLPAToMyAccount()
+    #[Given('/^I have added an LPA to my account$/')]
+    public function iHaveAddedAnLPAToMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
@@ -911,10 +850,8 @@ class LpaContext extends BaseIntegrationContext
         $this->theLPAIsSuccessfullyAdded();
     }
 
-    /**
-     * @Given /^I have added a Combined LPA to my account$/
-     */
-    public function iHaveAddedACombinedLPAToMyAccount()
+    #[Given('/^I have added a Combined LPA to my account$/')]
+    public function iHaveAddedACombinedLPAToMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseACombinedLPAViaCredentials();
         $this->iAmOnTheAddAnLPAPage();
@@ -923,10 +860,8 @@ class LpaContext extends BaseIntegrationContext
         $this->theLPAIsSuccessfullyAdded();
     }
 
-    /**
-     * @Given /^I have been given access to use a Combined LPA via credentials$/
-     */
-    public function iHaveBeenGivenAccessToUseACombinedLPAViaCredentials()
+    #[Given('/^I have been given access to use a Combined LPA via credentials$/')]
+    public function iHaveBeenGivenAccessToUseACombinedLPAViaCredentials(): void
     {
         $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
 
@@ -947,7 +882,7 @@ class LpaContext extends BaseIntegrationContext
         ];
     }
 
-    public function iRequestToAddACombinedLPAWithValidDetailsUsing(string $code, string $storedCode)
+    public function iRequestToAddACombinedLPAWithValidDetailsUsing(string $code, string $storedCode): void
     {
         // API call for checking LPA
         $this->apiFixtures->append(
@@ -971,10 +906,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa->uId);
     }
 
-    /**
-     * @When /^I request to view a Combined LPA which status is "([^"]*)"$/
-     */
-    public function iRequestToViewACombinedLPAWhichStatusIs($status)
+    #[When('/^I request to view a Combined LPA which status is "([^"]*)"$/')]
+    public function iRequestToViewACombinedLPAWhichStatusIs($status): void
     {
         $this->lpa->status = $status;
 
@@ -1027,10 +960,8 @@ class LpaContext extends BaseIntegrationContext
         }
     }
 
-    /**
-     * @Given /^I have been given access to use an LPA via a paper document$/
-     */
-    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument()
+    #[Given('/^I have been given access to use an LPA via a paper document$/')]
+    public function iHaveBeenGivenAccessToUseAnLPAViaAPaperDocument(): void
     {
         $this->userPostCode    = 'string';
         $this->userFirstname   = 'Ian Deputy';
@@ -1043,10 +974,8 @@ class LpaContext extends BaseIntegrationContext
         $this->activation_key = ''; // reset this to blank as we won't have one normally
     }
 
-    /**
-     * @Given /^I have been given access to use an LPA via credentials$/
-     */
-    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials()
+    #[Given('/^I have been given access to use an LPA via credentials$/')]
+    public function iHaveBeenGivenAccessToUseAnLPAViaCredentials(): void
     {
         $this->lpaJson = file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json');
         $this->lpa     = json_decode($this->lpaJson, true);
@@ -1092,46 +1021,36 @@ class LpaContext extends BaseIntegrationContext
         ];
     }
 
-    /**
-     * @Given /^I have created an access code$/
-     */
-    public function iHaveCreatedAnAccessCode()
+    #[Given('/^I have created an access code$/')]
+    public function iHaveCreatedAnAccessCode(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
         $this->iAmGivenAUniqueAccessCode();
     }
 
-    /**
-     * @Given /^I have generated an access code for an organisation and can see the details$/
-     */
-    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails()
+    #[Given('/^I have generated an access code for an organisation and can see the details$/')]
+    public function iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails(): void
     {
         $this->iHaveCreatedAnAccessCode();
         $this->iClickToCheckMyAccessCodes();
         $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
     }
 
-    /**
-     * @When /^I have shared the access code with organisations to view my LPA$/
-     * @Given /^I have shared the access code with organisations and they have viewed my LPA$/
-     */
-    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA()
+    #[When('/^I have shared the access code with organisations to view my LPA$/')]
+    #[Given('/^I have shared the access code with organisations and they have viewed my LPA$/')]
+    public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide details from an LPA registered before Sept 2019$/
-     */
-    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019()
+    #[When('/^I provide details from an LPA registered before Sept 2019$/')]
+    public function iProvideDetailsFromAnLPARegisteredBeforeSept2019(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I provide details that do not match a valid paper document$/
-     */
-    public function iProvideDetailsThatDoNotMatchAValidPaperDocument()
+    #[When('/^I provide details that do not match a valid paper document$/')]
+    public function iProvideDetailsThatDoNotMatchAValidPaperDocument(): void
     {
         // Setup fixture for success response
         $this->apiFixtures->append(
@@ -1149,18 +1068,14 @@ class LpaContext extends BaseIntegrationContext
         );
     }
 
-    /**
-     * @Given /^My LPA has been found but my details did not match$/
-     */
-    public function myLPAHasBeenFoundButMyDetailsDidNotMatch()
+    #[Given('/^My LPA has been found but my details did not match$/')]
+    public function myLPAHasBeenFoundButMyDetailsDidNotMatch(): void
     {
         // not used
     }
 
-    /**
-     * @When /^I provide an LPA number that does not exist$/
-     */
-    public function iProvideAnLPANumberThatDoesNotExist()
+    #[When('/^I provide an LPA number that does not exist$/')]
+    public function iProvideAnLPANumberThatDoesNotExist(): void
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
@@ -1172,10 +1087,8 @@ class LpaContext extends BaseIntegrationContext
         );
     }
 
-    /**
-     * @Then /^I am informed that an LPA could not be found with this reference number$/
-     */
-    public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber()
+    #[Then('/^I am informed that an LPA could not be found with this reference number$/')]
+    public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber(): void
     {
         $allowedErrorMessages = [AccessForAllResult::NOT_FOUND, AccessForAllResult::NOT_ELIGIBLE];
 
@@ -1192,26 +1105,20 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertTrue(in_array($result->getResponse(), $allowedErrorMessages));
     }
 
-    /**
-     * @When /^I provide the details from a valid paper document$/
-     */
-    public function iProvideTheDetailsFromAValidPaperDocument()
+    #[When('/^I provide the details from a valid paper document$/')]
+    public function iProvideTheDetailsFromAValidPaperDocument(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to add an LPA that does not exist$/
-     */
-    public function iRequestToAddAnLPAThatDoesNotExist()
+    #[When('/^I request to add an LPA that does not exist$/')]
+    public function iRequestToAddAnLPAThatDoesNotExist(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to add an LPA with valid details using (.*) which matches (.*)$/
-     */
-    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode)
+    #[When('/^I request to add an LPA with valid details using (.*) which matches (.*)$/')]
+    public function iRequestToAddAnLPAWithValidDetailsUsing(string $code, string $storedCode): void
     {
         // API call for checking LPA
         $this->apiFixtures->append(
@@ -1235,10 +1142,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa['uId']);
     }
 
-    /**
-     * @When /^I request to give an organisation access to one of my LPAs$/
-     */
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs()
+    #[When('/^I request to give an organisation access to one of my LPAs$/')]
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyLPAs(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode   = 'XYZ321ABC987';
@@ -1275,10 +1180,8 @@ class LpaContext extends BaseIntegrationContext
         );
     }
 
-    /**
-     * @When /^I request to view an LPA which status is "([^"]*)"$/
-     */
-    public function iRequestToViewAnLPAWhichStatusIs($status)
+    #[When('/^I request to view an LPA which status is "([^"]*)"$/')]
+    public function iRequestToViewAnLPAWhichStatusIs($status): void
     {
         $this->lpa['status'] = $status;
 
@@ -1333,34 +1236,26 @@ class LpaContext extends BaseIntegrationContext
         }
     }
 
-    /**
-     * @Then /^I should be able to click a link to go and create the access codes$/
-     */
-    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes()
+    #[Then('/^I should be able to click a link to go and create the access codes$/')]
+    public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
         $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
     }
 
-    /**
-     * @Then /^I should be shown the details of the viewer code with status(.*)/
-     */
-    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus()
+    #[Then('/^I should be shown the details of the viewer code with status(.*)/')]
+    public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithStatus(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be shown the details of the expired viewer code with expired status $/
-     */
-    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus()
+    #[Then('/^I should be shown the details of the expired viewer code with expired status $/')]
+    public function iShouldBeShownTheDetailsOfTheExpiredViewerCodeWithExpiredStatus(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be taken back to the access code summary page/
-     */
-    public function iShouldBeTakenBackToTheAccessCodeSummaryPage()
+    #[Then('/^I should be taken back to the access code summary page/')]
+    public function iShouldBeTakenBackToTheAccessCodeSummaryPage(): void
     {
         // API call for get LpaById
         $this->apiFixtures->append(
@@ -1413,87 +1308,67 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($shareCodes[0]['Organisation'], $this->organisation);
     }
 
-    /**
-     * @Then /^I should be told that I have not created any access codes yet$/
-     */
-    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet()
+    #[Then('/^I should be told that I have not created any access codes yet$/')]
+    public function iShouldBeToldThatIHaveNotCreatedAnyAccessCodesYet(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I should not see a flash message to confirm the code that I have cancelled$/
-     */
-    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    #[Given('/^I should not see a flash message to confirm the code that I have cancelled$/')]
+    public function iShouldNotSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I should see a flash message to confirm the code that I have cancelled$/
-     */
-    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled()
+    #[Given('/^I should see a flash message to confirm the code that I have cancelled$/')]
+    public function iShouldSeeAFlashMessageToConfirmTheCodeThatIHaveCancelled(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I want to be asked for confirmation prior to cancellation/
-     */
-    public function iWantToBeAskedForConfirmationPriorToCancellation()
+    #[Then('/^I want to be asked for confirmation prior to cancellation/')]
+    public function iWantToBeAskedForConfirmationPriorToCancellation(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I want to cancel the access code for an organisation$/
-     */
-    public function iWantToCancelTheAccessCodeForAnOrganisation()
+    #[When('/^I want to cancel the access code for an organisation$/')]
+    public function iWantToCancelTheAccessCodeForAnOrganisation(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I want to see the option to cancel the code$/
-     */
-    public function iWantToSeeTheOptionToCancelTheCode()
+    #[Then('/^I want to see the option to cancel the code$/')]
+    public function iWantToSeeTheOptionToCancelTheCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^The correct LPA is found and I can confirm to add it$/
-     */
-    public function theCorrectLPAIsFoundAndICanConfirmToAddIt()
+    #[Then('/^The correct LPA is found and I can confirm to add it$/')]
+    public function theCorrectLPAIsFoundAndICanConfirmToAddIt(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^The full LPA is displayed with the correct (.*)$/
-     */
-    public function theFullLPAIsDisplayedWithTheCorrect($message)
+    #[Then('/^The full LPA is displayed with the correct (.*)$/')]
+    public function theFullLPAIsDisplayedWithTheCorrect($message): void
     {
         $lpa = $this->container->get(LpaService::class)->getLpaById($this->userIdentity, $this->actorLpaToken);
 
         Assert::assertNotNull($lpa->lpa);
         Assert::assertNotNull($lpa->actor);
 
-        $images = $this->container->get(InstAndPrefImagesService::class)->getImagesById($this->userIdentity, $this->actorLpaToken);
+        $this->container->get(InstAndPrefImagesService::class)->getImagesById($this->userIdentity, $this->actorLpaToken);
     }
 
-    /**
-     * @Given /^The LPA has not been added$/
-     */
-    public function theLPAHasNotBeenAdded()
+    #[Given('/^The LPA has not been added$/')]
+    public function theLPAHasNotBeenAdded(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^The LPA is not found$/
-     */
-    public function theLPAIsNotFound()
+    #[Then('/^The LPA is not found$/')]
+    public function theLPAIsNotFound(): void
     {
         // API call for checking LPA
         $this->apiFixtures->append(
@@ -1522,10 +1397,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals(AddLpaApiResult::ADD_LPA_NOT_FOUND, $response->getResponse());
     }
 
-    /**
-     * @Given /^The LPA is successfully added$/
-     */
-    public function theLPAIsSuccessfullyAdded()
+    #[Given('/^The LPA is successfully added$/')]
+    public function theLPAIsSuccessfullyAdded(): void
     {
         $this->actorLpaToken = '24680';
         $this->actorId       = 9;
@@ -1567,19 +1440,15 @@ class LpaContext extends BaseIntegrationContext
         $this->userIdentity = '123';
     }
 
-    /**
-     * @Then /^I receive an email confirming activation key request$/
-     * @Then /^I am told a new activation key is posted to the provided postcode$/
-     */
-    public function iReceiveAnEmailConfirmingActivationKeyRequest()
+    #[Then('/^I receive an email confirming activation key request$/')]
+    #[Then('/^I am told a new activation key is posted to the provided postcode$/')]
+    public function iReceiveAnEmailConfirmingActivationKeyRequest(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am told that I have an activation key for this LPA and where to find it$/
-     */
-    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt()
+    #[Then('/^I am told that I have an activation key for this LPA and where to find it$/')]
+    public function iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -1636,10 +1505,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already added to my account$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount()
+    #[When('/^I provide the details from a valid paper LPA which I have already added to my account$/')]
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
         // API call for requesting activation code
         $this->apiFixtures->append(
@@ -1696,18 +1563,14 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @Then /^I should be told that I have already added this LPA$/
-     */
-    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA()
+    #[Then('/^I should be told that I have already added this LPA$/')]
+    public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I attempt to add the same LPA again$/
-     */
-    public function iAttemptToAddTheSameLPAAgain()
+    #[When('/^I attempt to add the same LPA again$/')]
+    public function iAttemptToAddTheSameLPAAgain(): void
     {
         // API call for checking add LPA data
         $this->apiFixtures->append(
@@ -1756,11 +1619,9 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($alreadyAddedDTO, $response->getData());
     }
 
-    /**
-     * @Then /^I am shown the details of an LPA$/
-     * @Given /^I am on the check LPA details page$/
-     */
-    public function iAmShownTheDetailsOfAnLPA()
+    #[Then('/^I am shown the details of an LPA$/')]
+    #[Given('/^I am on the check LPA details page$/')]
+    public function iAmShownTheDetailsOfAnLPA(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1810,18 +1671,14 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @When /^I provide the details from a valid paper LPA which I have already requested an activation key for$/
-     */
-    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor()
+    #[When('/^I provide the details from a valid paper LPA which I have already requested an activation key for$/')]
+    public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When I provide details of an LPA that is not registered
-     */
-    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered()
+    #[When('I provide details of an LPA that is not registered')]
+    public function iProvideDetailsDetailsOfAnLpaThatIsNotRegistered(): void
     {
         // API call for getLpaById call happens inside of the check access codes handler
         $this->apiFixtures->append(
@@ -1833,10 +1690,8 @@ class LpaContext extends BaseIntegrationContext
         );
     }
 
-    /**
-     * @Given  /^I have confirmed the details of an older paper LPA after requesting access previously$/
-     */
-    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously()
+    #[Given('/^I have confirmed the details of an older paper LPA after requesting access previously$/')]
+    public function iHaveConfirmedTheDetailsOfAnOlderLpaAfterRequestingAccessPreviously(): void
     {
         $this->iAmOnTheAddAnOlderLPAPage();
         $this->iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor();
@@ -1844,42 +1699,28 @@ class LpaContext extends BaseIntegrationContext
         $this->iAmToldThatIHaveAnActivationKeyForThisLPAAndWhereToFindIt();
     }
 
-    /**
-     * @Given /^My LPA was registered \'([^\']*)\' 1st September 2019 and LPA is \'([^\']*)\' as clean$/
-     */
-    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus)
+    #[Given('/^My LPA was registered \\\'([^\\\']*)\\\' 1st September 2019 and LPA is \\\'([^\\\']*)\\\' as clean$/')]
+    public function myLPAWasRegistered1stSeptemberAndLPAIsAsClean($regDate, $cleanseStatus): void
     {
-        if ($cleanseStatus === 'not marked') {
-            $this->lpa['lpaIsCleansed'] = false;
-        } else {
-            $this->lpa['lpaIsCleansed'] = true;
-        }
+        $this->lpa['lpaIsCleansed'] = $cleanseStatus !== 'not marked';
 
-        if ($regDate === 'before') {
-            $this->lpa['registrationDate'] = '2019-08-31';
-        } else {
-            $this->lpa['registrationDate'] = '2019-09-01';
-        }
+        $this->lpa['registrationDate'] = $regDate === 'before' ? '2019-08-31' : '2019-09-01';
     }
 
-    /**
-     * @Given /^I am on the Check we've found the right LPA page$/
-     * @Given /^I have provided valid details that match the Lpa$/
-     * @Then /^I should expect it within 2 weeks time$/
-     * @Then /^I will receive an email confirming this information$/
-     * @Then /^I am told my activation key request has been received$/
-     * @Then /^I should expect it within 4 weeks time$/
-     * @Given /^I provide my contact details$/
-     */
-    public function iAmOnTheCheckWeHaveFoundTheRightLpaPage()
+    #[Given('/^I am on the Check we\'ve found the right LPA page$/')]
+    #[Given('/^I have provided valid details that match the Lpa$/')]
+    #[Then('/^I should expect it within 2 weeks time$/')]
+    #[Then('/^I will receive an email confirming this information$/')]
+    #[Then('/^I am told my activation key request has been received$/')]
+    #[Then('/^I should expect it within 4 weeks time$/')]
+    #[Given('/^I provide my contact details$/')]
+    public function iAmOnTheCheckWeHaveFoundTheRightLpaPage(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am asked for my contact details$/
-     */
-    public function iAmAskedForMyContactDetails()
+    #[Then('/^I am asked for my contact details$/')]
+    public function iAmAskedForMyContactDetails(): void
     {
         $earliestRegDate = '2019-09-01';
 
@@ -1941,10 +1782,8 @@ class LpaContext extends BaseIntegrationContext
         }
     }
 
-    /**
-     * @Given /^I confirm that the data is correct and click the confirm and submit button$/
-     */
-    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton()
+    #[Given('/^I confirm that the data is correct and click the confirm and submit button$/')]
+    public function iConfirmThatTheDataIsCorrectAndClickTheConfirmAndSubmitButton(): void
     {
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1967,28 +1806,22 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($response, $result);
     }
 
-    /**
-     * @Then /^The Revoked LPA details are not displayed$/
-     */
-    public function theRevokedLPADetailsAreNotDisplayed()
+    #[Then('/^The Revoked LPA details are not displayed$/')]
+    public function theRevokedLPADetailsAreNotDisplayed(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^The LPA has been revoked$/
-     * @Then /^I cannot see my access codes and their details$/
-     */
-    public function theStatusOfTheLpaGotRevoked()
+    #[When('/^The LPA has been revoked$/')]
+    #[Then('/^I cannot see my access codes and their details$/')]
+    public function theStatusOfTheLpaGotRevoked(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I request to give an organisation access to the LPA whose status changed to Revoked$/
-     * @Then /^I request to view an LPA whose status changed to Revoked$/
-     */
-    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked()
+    #[Then('/^I request to give an organisation access to the LPA whose status changed to Revoked$/')]
+    #[Then('/^I request to view an LPA whose status changed to Revoked$/')]
+    public function iRequestToGiveAnOrganisationAccessToTheLPAWhoseStatusChangedToRevoked(): void
     {
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
