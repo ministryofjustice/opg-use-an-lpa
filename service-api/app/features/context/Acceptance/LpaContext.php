@@ -1753,6 +1753,46 @@ class LpaContext implements Context
     }
 
     /**
+     * @When /^I request to give an organisation access to one of my new LPA$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
+    {
+        $this->organisation = 'TestOrg';
+        $this->accessCode   = 'XYZ321ABC987';
+        $actorId            = 700000000054;
+        $lpaUid             = 'M-XXXX-1111-YYYY';
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'LpaUid'    => $lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => (string)$actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::add
+        $this->awsFixtures->append(new Result());
+
+        // ViewerCodeService::createShareCode
+        $this->apiPost(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            ['organisation' => $this->organisation],
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+    }
+
+    /**
      * @Given /^I request to go back and try again$/
      */
     public function iRequestToGoBackAndTryAgain(): void

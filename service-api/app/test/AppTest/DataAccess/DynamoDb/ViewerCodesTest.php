@@ -187,22 +187,25 @@ class ViewerCodesTest extends TestCase
     }
 
     #[Test]
-    public function add_unique_code(): void
+    public function add_unique_code_for_Sirius_LPA(): void
     {
         $testCode              = 'test-code';
         $testUserLpaActorToken = 'test-token';
         $testSiriusUid         = 'test-uid';
+        $testLpaUid            = 'null';
         $testExpires           = new DateTime();
         $testOrganisation      = 'test-organisation';
-        $testActorId           = 123;
+        $testActorId           = '123';
 
         $this->dynamoDbClientProphecy->putItem(
             Argument::that(function (array $data) use (
                 $testCode,
                 $testUserLpaActorToken,
                 $testSiriusUid,
+                $testLpaUid,
                 $testExpires,
-                $testOrganisation
+                $testOrganisation,
+                $testActorId
             ) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -230,7 +233,61 @@ class ViewerCodesTest extends TestCase
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $repo->add($testCode, $testUserLpaActorToken, $testSiriusUid, $testExpires, $testOrganisation, $testActorId);
+        $repo->add(
+            $testCode,
+            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
+    }
+
+    #[Test]
+    public function add_unique_code_for_data_store_LPA(): void
+    {
+        $testCode              = 'test-code';
+        $testUserLpaActorToken = 'test-token';
+        $testSiriusUid         = null;
+        $testLpaUid            = 'M-test-uid';
+        $testExpires           = new DateTime();
+        $testOrganisation      = 'test-organisation';
+        $testActorId           = '123';
+
+        $this->dynamoDbClientProphecy->putItem(
+            Argument::that(function (array $data) use (
+                $testCode,
+                $testUserLpaActorToken,
+                $testSiriusUid,
+                $testLpaUid,
+                $testExpires,
+                $testOrganisation,
+                $testActorId
+            ) {
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+                //---
+
+                $this->assertArrayHasKey('TableName', $data);
+                $this->assertArrayHasKey('Item', $data);
+                $this->assertArrayHasKey('ConditionExpression', $data);
+
+                $this->assertEquals('attribute_not_exists(ViewerCode)', $data['ConditionExpression']);
+
+                $this->assertEquals(['S' => $testCode], $data['Item']['ViewerCode']);
+                $this->assertEquals(['S' => $testUserLpaActorToken], $data['Item']['UserLpaActor']);
+                $this->assertEquals(['S' => $testLpaUid], $data['Item']['LpaUid']);
+                $this->assertEquals(['S' => $testExpires->format('c')], $data['Item']['Expires']);
+                $this->assertEquals(['S' => $testOrganisation], $data['Item']['Organisation']);
+
+                // Checks 'now' is correct, we a little bit of leeway
+                $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
+
+                return true;
+            })
+        )->shouldBeCalled();
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $repo->add(
+            $testCode,
+            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
     }
 
     #[Test]
@@ -257,9 +314,10 @@ class ViewerCodesTest extends TestCase
             'test-val',
             'test-val',
             'test-val',
+            'test-val',
             new DateTime(),
             'test-val',
-            123
+            '123'
         );
     }
 
@@ -281,9 +339,10 @@ class ViewerCodesTest extends TestCase
             'test-val',
             'test-val',
             'test-val',
+            'test-val',
             new DateTime(),
             'test-val',
-            123
+            '123'
         );
     }
 

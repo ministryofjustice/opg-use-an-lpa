@@ -2065,6 +2065,37 @@ class LpaContext extends BaseIntegrationContext
     }
 
     /**
+     * @When /^I request to give an organisation access to one of my new LPA$/
+     */
+    public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
+    {
+        $this->organisation = 'TestOrg';
+        $this->accessCode   = 'XYZ321ABC987';
+        $actorLpaId         = 700000000054;
+        $lpaUid             = 'M-XXXX-1111-YYYY';
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'LpaUid'    => $lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => (string)$actorLpaId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::add
+        $this->awsFixtures->append(new Result());
+    }
+
+    /**
      * @Given /^I request to go back and try again$/
      * @Then /^I am asked for my role on the LPA$/
      */

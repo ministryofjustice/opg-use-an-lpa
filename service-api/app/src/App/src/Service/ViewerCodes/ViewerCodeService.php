@@ -44,25 +44,21 @@ class ViewerCodeService
      */
     public function addCode(string $token, string $userId, string $organisation): ?array
     {
+        $lpaUid    = null;
+        $siriusUid = null;
+
         $map = $this->userLpaActorMapRepository->get($token);
 
         // Ensure the passed userId matches the passed token
         if ($userId !== $map['UserId']) {
             return null;
         }
-        //---
 
-        //$uid = $map['SiriusUid'] ?? $map['LpaUid'];
-
-        //
         if (isset($map['SiriusUid'])) {
-            $SiriusUid = $map['SiriusUid'];
-            $LpaUid    = null;
+            $siriusUid = $map['SiriusUid'];
         } else {
-            $LpaUid    = $map['LpaUid'];
-            $SiriusUid = null;
+            $lpaUid = $map['LpaUid'];
         }
-        //
 
         $expires = new DateTime(
             '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
@@ -78,8 +74,8 @@ class ViewerCodeService
                 $this->viewerCodesRepository->add(
                     $code,
                     $map['Id'],
-                    $SiriusUid,
-                    $LpaUid,
+                    $siriusUid,
+                    $lpaUid,
                     $expires,
                     $organisation,
                     (string)$map['ActorId']
