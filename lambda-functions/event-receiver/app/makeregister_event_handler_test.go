@@ -1,7 +1,9 @@
+//go:generate mockery --all --recursive
 package main
 
 import (
 	"context"
+	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
 	"github.com/stretchr/testify/mock"
 	"testing"
 
@@ -55,8 +57,8 @@ func TestMakeRegisterEventHandler_Handle(t *testing.T) {
 		Body:      payload,
 	}
 
-	mockDynamo := new(MockDynamoDbClient)
-	mockFactory := new(MockFactory)
+	mockDynamo := new(mocks.DynamoClient)
+	mockFactory := new(mocks.Factory)
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
 	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)

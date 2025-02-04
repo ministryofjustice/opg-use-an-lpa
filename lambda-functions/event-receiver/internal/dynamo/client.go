@@ -15,7 +15,7 @@ const (
 	lpaUIDIndex = "LpaUIDIndex"
 )
 
-type dynamoDB interface {
+type DynamoDB interface {
 	Query(context.Context, *dynamodb.QueryInput, ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 	GetItem(context.Context, *dynamodb.GetItemInput, ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 	PutItem(context.Context, *dynamodb.PutItemInput, ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error)
@@ -23,7 +23,7 @@ type dynamoDB interface {
 
 type Client struct {
 	table string
-	svc   dynamoDB
+	svc   DynamoDB
 }
 
 type NotFoundError struct{}

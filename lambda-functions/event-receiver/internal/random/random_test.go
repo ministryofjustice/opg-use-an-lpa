@@ -1,4 +1,4 @@
-package random
+package random_test
 
 import (
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/random"
