@@ -41,7 +41,7 @@ class ViewerCodeServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_will_make_a_new_viewer_code_for_an_lpa(): void
+    public function it_will_make_a_new_viewer_code_for_a_Sirius_lpa(): void
     {
         // code will expire 30 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
@@ -55,9 +55,10 @@ class ViewerCodeServiceTest extends TestCase
                 Argument::type('string'),
                 'id',
                 '700000000047',
-                Argument::exact($codeExpiry),
+                null,
+                $codeExpiry,
                 'token name',
-                1234
+                '1234'
             )
             ->shouldBeCalled();
 
@@ -93,6 +94,62 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertArrayHasKey('organisation', $result);
         $this->assertEquals('token name', $result['organisation']);
     }
+
+    #[Test]
+    public function it_will_make_a_new_viewer_code_for_a_data_store_lpa(): void
+    {
+        // code will expire 30 days from midnight of the day the test runs
+        $codeExpiry = new DateTime(
+            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
+            new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
+        );
+
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy
+            ->add(
+                Argument::type('string'),
+                'id',
+                null,
+                'M-XXXX-1212-ZZZZ',
+                $codeExpiry,
+                'token name',
+                '1234'
+            )
+            ->shouldBeCalled();
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+
+        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $userActorLpaRepoProphecy
+            ->get('user_actor_lpa_token')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'Id'        => 'id',
+                    'UserId'    => 'user_id',
+                    'LpaUid'    => 'M-XXXX-1212-ZZZZ',
+                    'ActorId'   => '1234',
+                ]
+            );
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new ViewerCodeService(
+            $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
+            $userActorLpaRepoProphecy->reveal(),
+            $loggerProphecy->reveal(),
+        );
+
+        $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertArrayHasKey('expires', $result);
+        $this->assertArrayHasKey('organisation', $result);
+        $this->assertEquals('token name', $result['organisation']);
+    }
+
 
     #[Test]
     public function it_wont_create_a_code_if_user_does_not_match(): void
@@ -136,9 +193,10 @@ class ViewerCodeServiceTest extends TestCase
                 Argument::type('string'),
                 'id',
                 '700000000047',
+                null,
                 Argument::type(DateTime::class),
                 'token name',
-                1234
+                '1234'
             )
             ->shouldBeCalledTimes(2)
             ->will(function () use (&$callCount) {
@@ -161,7 +219,7 @@ class ViewerCodeServiceTest extends TestCase
                     'Id'        => 'id',
                     'UserId'    => 'user_id',
                     'SiriusUid' => '700000000047',
-                    'ActorId'   => 1234,
+                    'ActorId'   => '1234',
                 ]
             );
 
