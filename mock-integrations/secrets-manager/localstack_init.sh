@@ -53,7 +53,7 @@ awslocal lambda create-function \
 echo "Creating event source mapping"
 
 awslocal lambda create-event-source-mapping \
-         --function-name function \
+         --function-name event-receiver-lambda \
          --batch-size 1 \
          --event-source-arn arn:aws:sqs:eu-west-1:000000000000:local-notifications \
          --region "eu-west-1" 
