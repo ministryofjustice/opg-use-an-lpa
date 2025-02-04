@@ -75,7 +75,7 @@ class ViewerCodes implements ViewerCodesInterface
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
         //Throw exception if one of siriusUid/lpaUid not set
-        if (is_null($siriusUid and $lpaUid)) {
+        if (is_null($siriusUid) and is_null($lpaUid)) {
             throw new Exception('siriusUid and lpaUid not set');
         }
 

@@ -291,6 +291,26 @@ class ViewerCodesTest extends TestCase
     }
 
     #[Test]
+    public function throw_exception_when_add_unique_code_called_wih_null_uid(): void
+    {
+        $testCode              = 'test-code';
+        $testUserLpaActorToken = 'test-token';
+        $testSiriusUid         = null;
+        $testLpaUid            = null;
+        $testExpires           = new DateTime();
+        $testOrganisation      = 'test-organisation';
+        $testActorId           = '123';
+
+        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $this->expectException(\Exception::class);
+
+        $repo->add(
+            $testCode,
+            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
+    }
+
+    #[Test]
     public function add_conflicting_code(): void
     {
         $this->dynamoDbClientProphecy->putItem(Argument::any())
