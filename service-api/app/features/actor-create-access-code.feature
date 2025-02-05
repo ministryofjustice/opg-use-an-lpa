@@ -29,3 +29,9 @@ Feature: The user is able to create access codes for organisations
     And The status of the LPA got Revoked
     When I request to give an organisation access to the LPA whose status changed to Revoked
     Then I am taken back to the dashboard page
+
+  @acceptance @integration
+  Scenario: As a user I can generate an access code for an organisation to one of my new LPA
+    Given I am on the dashboard page
+    When I request to give an organisation access to one of my new LPA
+    Then I am given a unique access code
