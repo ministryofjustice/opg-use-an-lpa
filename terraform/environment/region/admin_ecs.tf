@@ -225,11 +225,12 @@ data "aws_iam_policy_document" "admin_permissions_role" {
 locals {
   admin_app = jsonencode(
     {
-      cpu         = 1,
-      essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.admin_container_version}",
-      mountPoints = [],
-      name        = "app",
+      cpu                    = 1,
+      essential              = true,
+      image                  = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.admin_container_version}",
+      mountPoints            = [],
+      readonlyRootFilesystem = true,
+      name                   = "app",
       portMappings = [
         {
           containerPort = 8080,
@@ -282,5 +283,4 @@ locals {
       ]
     }
   )
-
 }
