@@ -50,7 +50,7 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@364748aaa8a1ba2cd0a06c35e27f0b736cce57d1
+        uses: tj-actions/changed-files@b1ba699b304f2083b602164e06a89b868c84f076
         with:
           files: |
             service-admin/**
@@ -62,13 +62,13 @@ jobs:
             lambda-functions/event-receiver/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@364748aaa8a1ba2cd0a06c35e27f0b736cce57d1
+        uses: tj-actions/changed-files@b1ba699b304f2083b602164e06a89b868c84f076
         with:
           files: |
             terraform/**
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@364748aaa8a1ba2cd0a06c35e27f0b736cce57d1
+        uses: tj-actions/changed-files@b1ba699b304f2083b602164e06a89b868c84f076
         with:
           files: |
             **/*.md
