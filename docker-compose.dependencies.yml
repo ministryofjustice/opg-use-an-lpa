@@ -162,10 +162,8 @@ services:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
-      - ./lambda-functions/event-receiver/app/event-receiver.zip:/event-receiver.zip
       - "/var/run/docker.sock:/var/run/docker.sock"
 
   mock-one-login:

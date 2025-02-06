@@ -6,7 +6,7 @@ WORKDIR /app
 
 #RUN go mod download
 
-COPY --link cmd/event-received ./cmd/event-received
+COPY --link lambda-functions/event-receiver ./event-receiver
 
 RUN GOOS=linux GOARCH=arm64 go build -tags lambda.norpc -o bootstrap main.go \
   && chmod 755 event-receiver/bootstrap \
@@ -14,7 +14,7 @@ RUN GOOS=linux GOARCH=arm64 go build -tags lambda.norpc -o bootstrap main.go \
 
 FROM localstack/localstack:4.1.0 AS localstack
 
-COPY --from=build /app/event-received.zip /etc/event-receiver.zip
+COPY --from=build /app/event-receiver.zip /etc/event-receiver.zip
 
 COPY ./localstack/localstack-init.sh /etc/localstack/init/ready.d/localstack-init.sh
 
