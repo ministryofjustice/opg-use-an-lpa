@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Exception\ApiException;
 use App\Exception\BadRequestException;
+use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaManagerInterface;
-use Exception;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,7 +27,10 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
-     * @throws BadRequestException|NotFoundException|Exception
+     * @throws BadRequestException
+     * @throws NotFoundException
+     * @throws GoneException
+     * @throws ApiException
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -37,10 +41,6 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
         }
 
         $data = $this->lpaManager->getByViewerCode($params['code'], $params['name'], null);
-
-        if (is_null($data)) {
-            throw new NotFoundException();
-        }
 
         return new JsonResponse($data);
     }
