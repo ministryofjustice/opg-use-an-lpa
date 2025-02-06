@@ -6,14 +6,15 @@ namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
 use App\Service\Lpa\LpaDataFormatter;
+use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use App\DataAccess\Repository\{LpasInterface, Response, Response\LpaInterface};
 use DateTimeImmutable;
-use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
 use Psr\Http\Client\{ClientExceptionInterface, ClientInterface};
-use Psr\Http\Message\{RequestFactoryInterface, StreamFactoryInterface};
+use Psr\Http\Message\{RequestFactoryInterface, ResponseInterface, StreamFactoryInterface};
 use RuntimeException;
+use Throwable;
 
 class DataStoreLpas extends AbstractApiClient implements LpasInterface
 {
@@ -36,29 +37,14 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         );
     }
 
-    /**
-     * Looks up a Modernise LPA based on its uid.
-     *
-     * @param string $uid A modernise LPA uid of the format M-XXXX-XXXX-XXXX
-     * @return LpaInterface|null
-     * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
-     * @throws Exception The response date header could not be transformed into a DateTimeInterface
-     */
     public function get(string $uid): ?LpaInterface
     {
         $url = sprintf('%s/lpas/%s', $this->apiBaseUri, $uid);
 
-        // TODO this identifier needs to come from somewhere
-        $signer = ($this->requestSignerFactory)(
-            SignatureType::DataStoreLpas,
-            'UniqueUserIdentifier'
-        );
-
         $request = $this->requestFactory->createRequest('GET', $url);
-        $request = $signer->sign($this->attachHeaders($request));
+        $request = $this->createRequestSigner(
+            /* TODO this identifier needs to come from somewhere */
+        )->sign($this->attachHeaders($request));
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -71,16 +57,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         }
 
         return match ($response->getStatusCode()) {
-            StatusCodeInterface::STATUS_OK =>
-                new Response\Lpa(
-                    ($this->lpaDataFormatter)(
-                        json_decode(
-                            $response->getBody()->getContents(),
-                            true,
-                        ),
-                    ),
-                    new DateTimeImmutable($response->getHeaderLine('Date'))
-                ),
+            StatusCodeInterface::STATUS_OK => $this->formatSingleLpaResponse($response),
             StatusCodeInterface::STATUS_NOT_FOUND => null,
             default => throw ApiException::create(
                 'LPA data store returned non-ok response',
@@ -89,26 +66,9 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         };
     }
 
-    /**
-     * Looks up multiple LPAs based on an array of uids.
-     *
-     * @param string[] $uids
-     * @return LpaInterface[]
-     * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
-     * @throws Exception The response date header could not be transformed into a DateTimeInterface
-     */
     public function lookup(array $uids): array
     {
         $url = sprintf('%s/lpas', $this->apiBaseUri);
-
-        // TODO this identifier needs to come from somewhere
-        $signer = ($this->requestSignerFactory)(
-            SignatureType::DataStoreLpas,
-            'UniqueUserIdentifier'
-        );
 
         $request = $this->requestFactory
             ->createRequest('POST', $url)
@@ -117,7 +77,9 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
                     json_encode(['uids' => $uids])
                 )
             );
-        $request = $signer->sign($this->attachHeaders($request));
+        $request = $this->createRequestSigner(
+            /* TODO this identifier needs to come from somewhere */
+        )->sign($this->attachHeaders($request));
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -130,21 +92,90 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         }
 
         return match ($response->getStatusCode()) {
-            StatusCodeInterface::STATUS_OK =>
-                array_map(
-                    fn ($lpaData) => new Response\Lpa(
-                        ($this->lpaDataFormatter)($lpaData),
-                        new DateTimeImmutable($response->getHeaderLine('Date'))
-                    ),
-                    json_decode(
-                        $response->getBody()->getContents(),
-                        true
-                    )['lpas'],
-                ),
+            StatusCodeInterface::STATUS_OK => $this->formatMultipleLpaResponse($response),
             default => throw ApiException::create(
                 'LPA data store returned non-ok response',
                 $response,
             ),
         };
+    }
+
+    /**
+     * @param string $uniqueUserIdentifier
+     * @return RequestSigner
+     * @throws ApiException
+     */
+    private function createRequestSigner(string $uniqueUserIdentifier = 'UniqueUserIdentifier'): RequestSigner
+    {
+        try {
+            return ($this->requestSignerFactory)(SignatureType::DataStoreLpas, $uniqueUserIdentifier);
+        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $exception) {
+            throw ApiException::create(
+                'Unable to build a request signer instance',
+                null,
+                $exception,
+            );
+        }
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return Response\Lpa
+     * @throws ApiException
+     */
+    private function formatSingleLpaResponse(ResponseInterface $response): Response\Lpa
+    {
+        try {
+            return new Response\Lpa(
+                ($this->lpaDataFormatter)(
+                    json_decode(
+                        $response->getBody()->getContents(),
+                        true,
+                    ),
+                ),
+                new DateTimeImmutable($response->getHeaderLine('Date'))
+            );
+        } catch (UnableToHydrateObject | RuntimeException | Throwable $exception) {
+            throw ApiException::create(
+                'Not possible to create LPA from response data',
+                $response,
+                $exception,
+            );
+        }
+    }
+
+    /**
+     * @param ResponseInterface $response
+     * @return Response\Lpa[]
+     * @throws ApiException
+     */
+    private function formatMultipleLpaResponse(ResponseInterface $response): array
+    {
+        try {
+            $lpas = json_decode(
+                $response->getBody()->getContents(),
+                true
+            )['lpas'];
+        } catch (RuntimeException $exception) {
+            throw ApiException::create(
+                'Not possible to create LPA from response data',
+                $response,
+                $exception,
+            );
+        }
+
+        $result = [];
+        foreach ($lpas as $lpa) {
+            try {
+                $result[] = new Response\Lpa(
+                    ($this->lpaDataFormatter)($lpa),
+                    new DateTimeImmutable($response->getHeaderLine('Date'))
+                );
+            } catch (UnableToHydrateObject | Throwable) {
+                // if one lpa out of many breaks we should still attempt to return those unbroken ones
+            }
+        }
+
+        return $result;
     }
 }
