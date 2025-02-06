@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\Exception\NotFoundException;
 use DateTime;
+use DateTimeInterface;
 
 /**
  * Interface for Data relating to Viewer Codes
  *
  * @psalm-type ViewerCode = array{
  *     ViewerCode: string,
- *     Added: string,
- *     Expires: string,
+ *     Added: DateTimeInterface,
+ *     Expires: DateTimeInterface,
  *     Organisation: string,
  *     SiriusUid?: string,
  *     LpaUid?: string,
  *     UserLpaActor: string,
  *     CreatedBy?: string,
- *     Cancelled?: string,
+ *     Cancelled?: DateTimeInterface,
  * }
  */
 interface ViewerCodesInterface
@@ -54,7 +54,6 @@ interface ViewerCodesInterface
      * @param DateTime      $expires
      * @param string        $organisation
      * @param string|null   $actorId
-     *
      * @return void
      */
     public function add(
