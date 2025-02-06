@@ -6,11 +6,20 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\DynamoDb\ViewerCodes;
+use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\DataAccess\Repository\ViewerCodeActivityInterface;
+use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
+use App\Exception\ApiException;
+use App\Exception\MissingCodeExpiryException;
+use App\Exception\NotFoundException;
 use App\Service\Lpa\Combined\FilterActiveActors;
+use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Service\Lpa\Combined\ResolveLpaTypes;
 use App\Service\Lpa\CombinedLpaManager;
 use App\Service\Lpa\IsValidLpa;
@@ -22,31 +31,48 @@ use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Exception\Doubler\DoubleException;
+use Prophecy\Exception\Doubler\InterfaceNotFoundException;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 class CombinedLpaManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private CombinedLpaManager $combinedLpaManager;
     private DataStoreLpas|ObjectProphecy $dataStoreLpasProphecy;
     private FilterActiveActors|ObjectProphecy $filterActiveActorsProphecy;
+    private ObjectProphecy|InstructionsAndPreferencesImagesInterface $instructionsAndPreferencesImagesProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
+    private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private ResolveLpaTypes|ObjectProphecy $resolveLpaTypesProphecy;
     private SiriusLpas|ObjectProphecy $siriusLpasProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+    private ObjectProphecy|ViewerCodes $viewerCodesActivityProphecy;
+    private ObjectProphecy|ViewerCodes $viewerCodesProphecy;
 
+    /**
+     * @throws InterfaceNotFoundException
+     * @throws DoubleException
+     */
     public function setUp(): void
     {
-        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->resolveLpaTypesProphecy          = $this->prophesize(ResolveLpaTypes::class);
-        $this->siriusLpasProphecy               = $this->prophesize(SiriusLpas::class);
-        $this->dataStoreLpasProphecy            = $this->prophesize(DataStoreLpas::class);
-        $this->resolveActorProphecy             = $this->prophesize(ResolveActor::class);
-        $this->isValidLpaProphecy               = $this->prophesize(IsValidLpa::class);
-        $this->filterActiveActorsProphecy       = $this->prophesize(FilterActiveActors::class);
+        $this->userLpaActorMapInterfaceProphecy         = $this->prophesize(UserLpaActorMapInterface::class);
+        $this->siriusLpasProphecy                       = $this->prophesize(SiriusLpas::class);
+        $this->dataStoreLpasProphecy                    = $this->prophesize(DataStoreLpas::class);
+        $this->viewerCodesProphecy                      = $this->prophesize(ViewerCodesInterface::class);
+        $this->viewerCodesActivityProphecy              = $this->prophesize(ViewerCodeActivityInterface::class);
+        $this->instructionsAndPreferencesImagesProphecy
+            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
+        $this->resolveLpaTypesProphecy                  = $this->prophesize(ResolveLpaTypes::class);
+        $this->resolveActorProphecy                     = $this->prophesize(ResolveActor::class);
+        $this->isValidLpaProphecy                       = $this->prophesize(IsValidLpa::class);
+        $this->filterActiveActorsProphecy               = $this->prophesize(FilterActiveActors::class);
+        $this->rejectInvalidLpaProphecy                 = $this->prophesize(RejectInvalidLpa::class);
+        $this->loggerProphecy                           = $this->prophesize(LoggerInterface::class);
     }
 
     #[Test]
@@ -524,12 +550,17 @@ class CombinedLpaManagerTest extends TestCase
     {
         return new CombinedLpaManager(
             $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->resolveLpaTypesProphecy->reveal(),
             $this->siriusLpasProphecy->reveal(),
             $this->dataStoreLpasProphecy->reveal(),
+            $this->viewerCodesProphecy->reveal(),
+            $this->viewerCodesActivityProphecy->reveal(),
+            $this->instructionsAndPreferencesImagesProphecy->reveal(),
+            $this->resolveLpaTypesProphecy->reveal(),
             $this->resolveActorProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
             $this->filterActiveActorsProphecy->reveal(),
+            $this->rejectInvalidLpaProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
         );
     }
 
@@ -539,6 +570,7 @@ class CombinedLpaManagerTest extends TestCase
         $lpaData = json_decode($file, true);
         $lpaData = array_merge($lpaData, $overwrite);
 
+        /** @var SiriusLpa */
         return (new LpaDataFormatter())->hydrateObject($lpaData);
     }
 
@@ -547,6 +579,7 @@ class CombinedLpaManagerTest extends TestCase
         $lpaData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/4UX3.json'), true);
         $lpaData = array_merge($lpaData, $overwrite);
 
+        /** @var LpaStore */
         return (new LpaDataFormatter())->hydrateObject($lpaData);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Exception\ApiException;
+use App\Exception\NotFoundException;
 use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
@@ -16,7 +18,6 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class SiriusLpaManager implements LpaManagerInterface
@@ -123,13 +124,13 @@ class SiriusLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
+    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): array
     {
         $viewerCodeData = $this->viewerCodesRepository->get($viewerCode);
 
         if (is_null($viewerCodeData)) {
             $this->logger->info('The code entered by user to view LPA is not found in the database.');
-            return null;
+            throw new NotFoundException();
         }
 
         $lpa = $this->getByUid($viewerCodeData['SiriusUid']);
@@ -143,7 +144,7 @@ class SiriusLpaManager implements LpaManagerInterface
             || !isset($lpa->getData()['donor']['surname'])
             || strtolower($lpa->getData()['donor']['surname']) !== strtolower($donorSurname)
         ) {
-            return null;
+            throw new NotFoundException();
         }
 
         //---
@@ -155,7 +156,7 @@ class SiriusLpaManager implements LpaManagerInterface
                 'The code {code} entered by user to view LPA does not have an expiry date set.',
                 ['code' => $viewerCode]
             );
-            throw new RuntimeException("'Expires' field missing or invalid.");
+            throw ApiException::create('Missing code expiry data in Dynamo response');
         }
 
         if (new DateTime() > $viewerCodeData['Expires']) {

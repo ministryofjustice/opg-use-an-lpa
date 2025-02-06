@@ -10,6 +10,8 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\ViewerCodeActivityInterface,
     Repository\ViewerCodesInterface};
 use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
+use App\Exception\ApiException;
+use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{GetAttorneyStatus,
     GetAttorneyStatus\AttorneyStatus,
@@ -774,10 +776,6 @@ class SiriusLpaManagerTest extends TestCase
     {
         $t = $this->init_valid_get_by_viewer_account();
 
-        $this->featureEnabledProphecy
-            ->__invoke('instructions_and_preferences')
-            ->willReturn(false);
-
         $service = $this->getLpaService();
 
         //---
@@ -808,10 +806,6 @@ class SiriusLpaManagerTest extends TestCase
     public function can_get_lpa_by_viewer_code_with_logging(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
-
-        $this->featureEnabledProphecy
-            ->__invoke('instructions_and_preferences')
-            ->willReturn(false);
 
         $service = $this->getLpaService();
 
@@ -850,9 +844,8 @@ class SiriusLpaManagerTest extends TestCase
         // Change this to return null
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn(null)->shouldBeCalled();
 
+        $this->expectException(NotFoundException::class);
         $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
-
-        $this->assertNull($result);
     }
 
     #[Test]
@@ -865,9 +858,8 @@ class SiriusLpaManagerTest extends TestCase
         // Change this to return null
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn(null)->shouldBeCalled();
 
+        $this->expectException(NotFoundException::class);
         $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
-
-        $this->assertNull($result);
     }
 
     #[Test]
@@ -877,9 +869,8 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
+        $this->expectException(NotFoundException::class);
         $result = $service->getByViewerCode($t->ViewerCode, 'different-donor-name', null);
-
-        $this->assertNull($result);
     }
 
     #[Test]
@@ -900,8 +891,8 @@ class SiriusLpaManagerTest extends TestCase
 
         //---
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("'Expires' field missing or invalid.");
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Missing code expiry data in Dynamo response');
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
@@ -959,10 +950,6 @@ class SiriusLpaManagerTest extends TestCase
     public function lpa_fetched_by_viewer_code_contains_instructions_and_preferences_data(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
-
-        $this->featureEnabledProphecy
-            ->__invoke('instructions_and_preferences')
-            ->willReturn(true);
 
         $service = $this->getLpaService();
 
