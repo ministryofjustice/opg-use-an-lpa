@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-lambda-go/events"
+	"log/slog"
 )
 
 type makeregisterEventHandler struct{}
@@ -20,15 +20,22 @@ type lpaAccessGranted struct {
 	Actors  []Actor `json:"actors"`
 }
 
-func (h *makeregisterEventHandler) Handle(ctx context.Context, record *events.SQSMessage) error {
+func (h *makeregisterEventHandler) Handle(ctx context.Context, record *events.CloudWatchEvent) error {
 
 	var data lpaAccessGranted
 
-	if err := json.Unmarshal([]byte(record.Body), &data); err != nil {
-		return fmt.Errorf("failed to unmarshal SQS message: %w", err)
-	}
+	if err := json.Unmarshal(record.Detail, &data); err != nil {
+		errMsg := "failed to unmarshal CloudWatch detail :" + record.ID + " - Error: " + err.Error()
 
-	fmt.Printf("Successfully unmarshalled LPA Access Granted: %+v\n", data.UID)
+		logger.ErrorContext(
+			ctx,
+			errMsg,
+			slog.Group("location",
+				slog.String("file", "makeregister_event_handler.go"),
+			),
+		)
+		return err
+	}
 
 	return nil
 }
