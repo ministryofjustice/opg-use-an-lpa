@@ -129,9 +129,63 @@ class CombinedLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
+    /**
+     * @inheritDoc
+     */
+    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): array
     {
-        throw new ApiException('Not implemented');
+        $viewerCodeData = $this->viewerCodes->get($viewerCode);
+
+        if (is_null($viewerCodeData)) {
+            $this->logger->info('The code entered by user to view LPA is not found in the database.');
+            throw new NotFoundException();
+        }
+
+        $lpaId = $viewerCodeData['LpaUid'] ?? $viewerCodeData['SiriusUid'];
+        $lpa   = $this->getByUid($lpaId);
+
+        if ($lpa === null) {
+            throw new NotFoundException();
+        }
+
+        // Whilst the checks in this invokable could be done before we look up the LPA, they are done
+        // at this point as we only want to acknowledge if a code has expired if the donor surname matched.
+        try {
+            ($this->rejectInvalidLpa)($lpa, $viewerCode, $donorSurname, $viewerCodeData);
+        } catch (MissingCodeExpiryException) {
+            throw ApiException::create('Missing code expiry data in Dynamo response');
+        }
+
+        /** @var \App\Entity\Lpa $lpaObj */
+        $lpaObj = $lpa->getData();
+
+        $result = [
+            'date'         => $lpa->getLookupTime()->format(DateTimeInterface::ATOM),
+            'expires'      => $viewerCodeData['Expires']->format(DateTimeInterface::ATOM),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa'          => $lpaObj,
+        ];
+
+        // As this method is only ever really hit by the viewer side of the app we'll always need the images
+        // if there are any so we skip that extra round trip and do that fetch now.
+        if (
+            ($lpaObj->applicationHasGuidance ?? false) || ($lpaObj->applicationHasRestrictions ?? false)
+        ) {
+            $this->logger->info('The LPA has instructions and/or preferences. Fetching images');
+            $result['iap'] =
+                $this->instructionsAndPreferencesImages->getInstructionsAndPreferencesImages((int) $lpaObj->uId);
+        }
+
+        if ($organisation !== null) {
+            // Record the lookup in the activity table
+            // We only do this if the organisation is provided
+            $this->viewerCodeActivity->recordSuccessfulLookupActivity(
+                $viewerCodeData['ViewerCode'],
+                $organisation
+            );
+        }
+
+        return $result;
     }
 
     /**
