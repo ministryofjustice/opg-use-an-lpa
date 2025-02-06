@@ -541,9 +541,234 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function can_get_by_viewer_code()
+    public function cannot_get_by_viewer_code_when_not_in_database()
     {
-        $this->markTestSkipped();
+        $service = $this->getLpaService();
+
+        $this->expectException(NotFoundException::class);
+        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+    }
+
+    #[Test]
+    public function cannot_get_siriuslpa_by_viewer_code_when_lpa_no_longer_available()
+    {
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode'   => 'code',
+                    'SiriusUid'    => '700000000000',
+                    'Expires'      => new DateTimeImmutable('+1 hour'),
+                    'Organisation' => 'bank',
+                ]
+            );
+
+        $this->siriusLpasProphecy
+            ->get('700000000000')
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $service = $this->getLpaService();
+
+        $this->expectException(NotFoundException::class);
+        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+    }
+
+    #[Test]
+    public function cannot_get_lpastore_by_viewer_code_when_lpa_no_longer_available()
+    {
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode'   => 'code',
+                    'LpaUid'       => 'M-XXXX-XXXX-XXXX',
+                    'Expires'      => new DateTimeImmutable('+1 hour'),
+                    'Organisation' => 'bank',
+                ]
+            );
+
+        $this->dataStoreLpasProphecy
+            ->get('M-XXXX-XXXX-XXXX')
+            ->shouldBeCalled()
+            ->willReturn(null);
+
+        $service = $this->getLpaService();
+
+        $this->expectException(NotFoundException::class);
+        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+    }
+
+    #[Test]
+    public function cannot_get_viewercode_as_expires_missing(): void
+    {
+        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
+        $siriusLpaResponse = new Lpa(
+            $this->loadTestSiriusLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode' => 'code',
+                    'SiriusUid'  => $siriusLpaResponse->getData()->uId,
+                    //'Expires'    => new DateTimeImmutable('+1 hour'), <- Expires is removed
+                    'Organisation' => 'bank',
+                ]
+            );
+        $this->siriusLpasProphecy
+            ->get($siriusLpaResponse->getData()->uId)
+            ->shouldBeCalled()
+            ->willReturn($siriusLpaResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($siriusLpaResponse->getData())
+            ->willReturn($siriusLpaResponse->getData());
+        $this->rejectInvalidLpaProphecy
+            ->__invoke(
+                $siriusLpaResponse,
+                'code',
+                $siriusLpaResponse->getData()->getDonor()->getSurname(),
+                Argument::type('array'),
+            )
+            ->willThrow(new MissingCodeExpiryException());
+
+        $service = $this->getLpaService();
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Missing code expiry data in Dynamo response');
+        $result = $service->getByViewerCode(
+            'code',
+            $siriusLpaResponse->getData()->getDonor()->getSurname(),
+            'organisation'
+        );
+    }
+
+    #[Test]
+    public function matched_viewercode_loads_images_if_required(): void
+    {
+        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
+        $siriusLpaResponse = new Lpa(
+            $this->loadTestSiriusLpaFixture(
+                [
+                    'applicationHasGuidance' => true,
+                ]
+            ),
+            new DateTimeImmutable('now'),
+        );
+
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode'   => 'code',
+                    'SiriusUid'    => $siriusLpaResponse->getData()->uId,
+                    'Expires'      => new DateTimeImmutable('+1 hour'),
+                    'Organisation' => 'bank',
+                ]
+            );
+        $this->siriusLpasProphecy
+            ->get($siriusLpaResponse->getData()->uId)
+            ->shouldBeCalled()
+            ->willReturn($siriusLpaResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($siriusLpaResponse->getData())
+            ->willReturn($siriusLpaResponse->getData());
+        $this->instructionsAndPreferencesImagesProphecy
+            ->getInstructionsAndPreferencesImages((int) $siriusLpaResponse->getData()->uId)
+            ->shouldBeCalled()
+            ->willReturn($this->prophesize(InstructionsAndPreferencesImages::class)->reveal());
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByViewerCode(
+            'code',
+            $siriusLpaResponse->getData()->getDonor()->getSurname(),
+            'organisation'
+        );
+
+        $this->assertArrayHasKey('iap', $result);
+    }
+
+    #[Test]
+    public function matched_viewercode_records_successful_lookup(): void
+    {
+        /** @var Lpa<LpaStore> $lpaStoreResponse */
+        $lpaStoreResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode'   => 'code',
+                    'LpaUid'       => $lpaStoreResponse->getData()->uId,
+                    'Expires'      => new DateTimeImmutable('+1 hour'),
+                    'Organisation' => 'bank',
+                ]
+            );
+        $this->dataStoreLpasProphecy
+            ->get($lpaStoreResponse->getData()->uId)
+            ->shouldBeCalled()
+            ->willReturn($lpaStoreResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($lpaStoreResponse->getData())
+            ->willReturn($lpaStoreResponse->getData());
+        $this->viewerCodesActivityProphecy
+            ->recordSuccessfulLookupActivity('code', 'organisation')
+            ->shouldBeCalled();
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByViewerCode(
+            'code',
+            $lpaStoreResponse->getData()->getDonor()->getSurname(),
+            'organisation'
+        );
+    }
+
+    #[Test]
+    public function matched_viewercode_returns_viewercode_record(): void
+    {
+        /** @var Lpa<LpaStore> $lpaStoreResponse */
+        $lpaStoreResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $this->viewerCodesProphecy
+            ->get('code')
+            ->willReturn(
+                [
+                    'ViewerCode'   => 'code',
+                    'LpaUid'       => $lpaStoreResponse->getData()->uId,
+                    'Expires'      => new DateTimeImmutable('+1 hour'),
+                    'Organisation' => 'bank',
+                ]
+            );
+        $this->dataStoreLpasProphecy
+            ->get($lpaStoreResponse->getData()->uId)
+            ->shouldBeCalled()
+            ->willReturn($lpaStoreResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($lpaStoreResponse->getData())
+            ->willReturn($lpaStoreResponse->getData());
+
+        $service = $this->getLpaService();
+
+        $result = $service->getByViewerCode(
+            'code',
+            $lpaStoreResponse->getData()->getDonor()->getSurname(),
+            'organisation'
+        );
+
+        $this->assertArrayHasKey('date', $result);
+        $this->assertArrayHasKey('expires', $result);
+        $this->assertArrayHasKey('organisation', $result);
+        $this->assertArrayHasKey('lpa', $result);
     }
 
     private function getLpaService(): CombinedLpaManager
