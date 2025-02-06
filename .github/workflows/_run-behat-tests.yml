@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@d0b4fc497a1daddb64da40799d80949aa3a0c559 # pin@v4.2.0
+        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@a99dd2408ee49ad5ec08301260877b88a87e6a03 # pin@v2.21.2
+        uses: shivammathur/setup-php@ad03a92562b96b77b640b366a2b379a4971d1107 # pin@v2.21.2
         with:
           php-version: 8.3
 
@@ -53,7 +53,7 @@ jobs:
           path: terraform/environment
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@f171d5c895855a39c1ef93ab625499424407e172 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@3478c15aa1cf2543c22efcbbd3e483d49c3a31d7 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

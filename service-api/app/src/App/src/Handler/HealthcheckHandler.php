@@ -28,6 +28,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
         private readonly ActorUsersInterface $actorUsers,
         private readonly string $version,
         private readonly string $siriusApiUrl,
+        private readonly string $lpaStoreApiUrl,
         private readonly string $codesApiUrl,
         private readonly string $iapImagesApiUrl,
     ) {
@@ -37,7 +38,8 @@ final class HealthcheckHandler implements RequestHandlerInterface
     {
         $data = [
             'version'        => $this->version,
-            'lpa_api'        => $this->stopwatch($this->checkApiEndpoint(...)),
+            'sirius_api'     => $this->stopwatch($this->checkSiriusEndpoint(...)),
+            'lpa_store_api'  => $this->stopwatch($this->checkLpaStoreEndpoint(...)),
             'dynamo'         => $this->stopwatch($this->checkDynamoEndpoint(...)),
             'lpa_codes_api'  => $this->stopwatch($this->checkCodesApiEndpoint(...)),
             'iap_images_api' => $this->stopwatch($this->checkIapImagesApi(...)),
@@ -50,8 +52,9 @@ final class HealthcheckHandler implements RequestHandlerInterface
 
     private function isHealthy(array $data): bool
     {
-        return $data['lpa_api']['healthy']
+        return $data['sirius_api']['healthy']
             && $data['dynamo']['healthy']
+            && $data['lpa_store_api']['healthy']
             && $data['lpa_codes_api']['healthy']
             && $data['iap_images_api']['healthy'];
     }
@@ -75,7 +78,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function checkApiEndpoint(): array
+    private function checkSiriusEndpoint(): array
     {
         $request = $this->requestFactory->createRequest(
             'GET',
@@ -101,6 +104,24 @@ final class HealthcheckHandler implements RequestHandlerInterface
         return $this->apiCall($request);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function checkLpaStoreEndpoint(): array
+    {
+        $request = $this->requestFactory->createRequest(
+            'GET',
+            sprintf('%s/health-check', $this->lpaStoreApiUrl),
+        );
+        $request = ($this->requestSignerFactory)(
+            SignatureType::DataStoreLpas,
+            'use-an-lpa-api-healthcheck'
+        )->sign($request);
+
+        return $this->apiCall($request);
+    }
+
     private function checkDynamoEndpoint(): array
     {
         $data = [];
@@ -122,15 +143,15 @@ final class HealthcheckHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param RequestInterface $uri
+     * @param RequestInterface $signedRequest
      * @return array{healthy: bool}
      */
-    private function apiCall(RequestInterface $request): array
+    private function apiCall(RequestInterface $signedRequest): array
     {
         $data = [];
 
         try {
-            $response = $this->httpClient->sendRequest($request);
+            $response = $this->httpClient->sendRequest($signedRequest);
 
             if ($response->getStatusCode() === StatusCodeInterface::STATUS_OK) {
                 $data['healthy'] = true;
