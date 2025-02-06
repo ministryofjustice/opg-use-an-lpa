@@ -155,7 +155,9 @@ services:
 
   localstack:
     container_name: localstack
-    image: localstack/localstack
+    build:
+      context: .
+      dockerfile: localstack/Dockerfile
     ports:
       - "4566:4566"
     environment:

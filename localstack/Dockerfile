@@ -1,20 +1,22 @@
 FROM golang:1.23.5-alpine AS build
 
-RUN apk add --no-cache zip=3.0-r13 #unzip=6.0-r15
-
 WORKDIR /app
 
-#RUN go mod download
+RUN apk add --no-cache zip=3.0-r13 
 
-COPY --link lambda-functions/event-receiver ./event-receiver
+COPY lambda-functions/event-receiver/go.mod lambda-functions/event-receiver/go.sum ./
 
-RUN GOOS=linux GOARCH=arm64 go build -tags lambda.norpc -o bootstrap main.go \
-  && chmod 755 event-receiver/bootstrap \
+RUN go mod download
+
+COPY lambda-functions/event-receiver/app/ ./
+
+RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap main.go \
+  && chmod 755 bootstrap \
   && zip event-receiver.zip bootstrap
 
 FROM localstack/localstack:4.1.0 AS localstack
 
-COPY --from=build /app/event-receiver.zip /etc/event-receiver.zip
+COPY --from=build /app/event-receiver.zip /event-receiver.zip
 
 COPY ./localstack/localstack-init.sh /etc/localstack/init/ready.d/localstack-init.sh
 
