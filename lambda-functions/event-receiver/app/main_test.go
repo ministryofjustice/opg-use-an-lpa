@@ -29,91 +29,95 @@ var (
 	}
 )
 
-func TestHandler(t *testing.T) {
+func TestValidCloudWatchEvent(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
-	t.Run("Success - Valid CloudWatch Event", func(t *testing.T) {
-		cloudWatchPayload, err := json.Marshal(payload)
-		assert.NoError(t, err)
+	cloudWatchPayload, err := json.Marshal(payload)
+	assert.NoError(t, err)
 
-		cloudWatchEvent := &events.CloudWatchEvent{
-			ID:         "1",
-			DetailType: "lpa-access-granted",
-			Source:     "opg.poas.makeregister",
-			AccountID:  "123",
-			Time:       time.Now(),
-			Region:     "us-east-1",
-			Resources:  []string{},
-			Detail:     json.RawMessage(cloudWatchPayload),
-		}
+	cloudWatchEvent := &events.CloudWatchEvent{
+		ID:         "1",
+		DetailType: "lpa-access-granted",
+		Source:     "opg.poas.makeregister",
+		AccountID:  "123",
+		Time:       time.Now(),
+		Region:     "us-east-1",
+		Resources:  []string{},
+		Detail:     json.RawMessage(cloudWatchPayload),
+	}
 
-		sqsBody, err := json.Marshal(cloudWatchEvent)
-		assert.NoError(t, err)
+	sqsBody, err := json.Marshal(cloudWatchEvent)
+	assert.NoError(t, err)
 
-		sqsEvent := events.SQSEvent{
-			Records: []events.SQSMessage{
-				{
-					MessageId: "1",
-					Body:      string(sqsBody),
-				},
+	sqsEvent := events.SQSEvent{
+		Records: []events.SQSMessage{
+			{
+				MessageId: "1",
+				Body:      string(sqsBody),
 			},
-		}
+		},
+	}
 
-		result, err := handler(ctx, sqsEvent)
-		assert.Nil(t, err)
-		assert.Empty(t, result["batchItemFailures"])
-	})
+	result, err := handler(ctx, sqsEvent)
+	assert.Nil(t, err)
+	assert.Empty(t, result["batchItemFailures"])
+}
 
-	t.Run("Failure - Invalid JSON in SQS Message Body", func(t *testing.T) {
-		sqsEvent := events.SQSEvent{
-			Records: []events.SQSMessage{
-				{
-					MessageId: "1",
-					Body:      `invalid-json`,
-				},
+func TestInvalidJsonInSQSBody(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+
+	sqsEvent := events.SQSEvent{
+		Records: []events.SQSMessage{
+			{
+				MessageId: "1",
+				Body:      `invalid-json`,
 			},
-		}
+		},
+	}
 
-		result, err := handler(ctx, sqsEvent)
+	result, err := handler(ctx, sqsEvent)
 
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "invalid character 'i'")
-		assert.Len(t, result["batchItemFailures"], 1)
-	})
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "invalid character 'i'")
+	assert.Len(t, result["batchItemFailures"], 1)
+}
 
-	t.Run("Failure - Unsupported CloudWatch Event Type", func(t *testing.T) {
-		cloudWatchPayload, err := json.Marshal(payload)
-		assert.NoError(t, err)
+func TestUnsupportedCloudWatchEventType(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
-		unsupportedDetailType := "unsupported-detail-type"
-		cloudWatchEvent := &events.CloudWatchEvent{
-			ID:         "1",
-			DetailType: unsupportedDetailType,
-			Source:     "opg.poas.makeregister",
-			AccountID:  "123",
-			Time:       time.Now(),
-			Region:     "us-east-1",
-			Resources:  []string{},
-			Detail:     json.RawMessage(cloudWatchPayload),
-		}
+	cloudWatchPayload, err := json.Marshal(payload)
+	assert.NoError(t, err)
 
-		sqsBody, err := json.Marshal(cloudWatchEvent)
-		assert.NoError(t, err)
+	unsupportedDetailType := "unsupported-detail-type"
+	cloudWatchEvent := &events.CloudWatchEvent{
+		ID:         "1",
+		DetailType: unsupportedDetailType,
+		Source:     "opg.poas.makeregister",
+		AccountID:  "123",
+		Time:       time.Now(),
+		Region:     "us-east-1",
+		Resources:  []string{},
+		Detail:     json.RawMessage(cloudWatchPayload),
+	}
 
-		sqsEvent := events.SQSEvent{
-			Records: []events.SQSMessage{
-				{
-					MessageId: "1",
-					Body:      string(sqsBody),
-				},
+	sqsBody, err := json.Marshal(cloudWatchEvent)
+	assert.NoError(t, err)
+
+	sqsEvent := events.SQSEvent{
+		Records: []events.SQSMessage{
+			{
+				MessageId: "1",
+				Body:      string(sqsBody),
 			},
-		}
+		},
+	}
 
-		result, err := handler(ctx, sqsEvent)
+	result, err := handler(ctx, sqsEvent)
 
-		assert.NotNil(t, err)
-		assert.Contains(t, err.Error(), "Unhandled event type: "+unsupportedDetailType)
-		assert.Len(t, result["batchItemFailures"], 1)
-	})
+	assert.NotNil(t, err)
+	assert.Contains(t, err.Error(), "Unhandled event type: "+unsupportedDetailType)
+	assert.Len(t, result["batchItemFailures"], 1)
 }
