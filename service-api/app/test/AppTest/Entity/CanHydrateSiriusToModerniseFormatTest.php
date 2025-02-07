@@ -8,37 +8,33 @@ use App\Entity\Sirius\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Entity\Sirius\SiriusLpaTrustCorporation;
+use App\Enum\ActorStatus;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CanHydrateSiriusToModerniseFormatTest extends TestCase
 {
     use ProphecyTrait;
 
     private LpaDataFormatter $lpaDataFormatter;
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
 
     public function setUp(): void
     {
-        $this->featureEnabled   = $this->prophesize(FeatureEnabled::class);
         $this->lpaDataFormatter = new LpaDataFormatter();
     }
 
     public function expectedSiriusLpa(): SiriusLpa
     {
         return new SiriusLpa(
-            applicationHasGuidance:     false,
-            applicationHasRestrictions: false,
-            applicationType:            'Classic',
-            attorneyActDecisions:       null,
-            attorneys:                  [
+            applicationHasGuidance:                    false,
+            applicationHasRestrictions:                false,
+            applicationType:                           'Classic',
+            attorneys:                                 [
                 new SiriusLpaAttorney(
                     addressLine1: '9 high street',
                     addressLine2: '',
@@ -49,13 +45,12 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                     email:        '',
                     firstname:    'jean',
                     id:           '9',
-                    middlenames:  null,
+                    middlenames:  '',
                     otherNames:   null,
                     postcode:     'DN37 5SH',
                     surname:      'sanderson',
-                    systemStatus: '1',
+                    systemStatus: ActorStatus::ACTIVE,
                     town:         '',
-                    type:         'Primary',
                     uId:          '700000000815'
                 ),
                 new SiriusLpaAttorney(
@@ -72,16 +67,18 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                     otherNames:   null,
                     postcode:     '',
                     surname:      'Summers',
-                    systemStatus: '1',
+                    systemStatus: ActorStatus::ACTIVE,
                     town:         '',
-                    type:         'Primary',
                     uId:          '700000000849'
                 ),
             ],
-            caseSubtype:      LpaType::fromShortName('personal-welfare'),
-            channel:          null,
-            dispatchDate:     null,
-            donor:            new SiriusLpaDonor(
+            caseAttorneyJointly:                       false,
+            caseAttorneyJointlyAndJointlyAndSeverally: false,
+            caseAttorneyJointlyAndSeverally:           true,
+            caseSubtype:                               LpaType::PERSONAL_WELFARE,
+            channel:                                   null,
+            dispatchDate:                              null,
+            donor:                                     new SiriusLpaDonor(
                 addressLine1: '81 Front Street',
                 addressLine2: 'LACEBY',
                 addressLine3: '',
@@ -103,22 +100,21 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                 surname:      'Sanderson',
                 systemStatus: null,
                 town:         '',
-                type:         'Primary',
                 uId:          '700000000799'
             ),
-            hasSeveranceWarning:     null,
-            invalidDate:             null,
-            lifeSustainingTreatment: LifeSustainingTreatment::fromShortName('Option A'),
-            lpaDonorSignatureDate:   new DateTimeImmutable('2012-12-12'),
-            lpaIsCleansed:           true,
-            onlineLpaId:             'A33718377316',
-            receiptDate:             new DateTimeImmutable('2014-09-26'),
-            registrationDate:        new DateTimeImmutable('2019-10-10'),
-            rejectedDate:            null,
-            replacementAttorneys:    [],
-            status:                  'Registered',
-            statusDate:              null,
-            trustCorporations:       [
+            hasSeveranceWarning:                       null,
+            invalidDate:                               null,
+            lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
+            lpaDonorSignatureDate:                     new DateTimeImmutable('2012-12-12'),
+            lpaIsCleansed:                             true,
+            onlineLpaId:                               'A33718377316',
+            receiptDate:                               new DateTimeImmutable('2014-09-26'),
+            registrationDate:                          new DateTimeImmutable('2019-10-10'),
+            rejectedDate:                              null,
+            replacementAttorneys:                      [],
+            status:                                    'Registered',
+            statusDate:                                null,
+            trustCorporations:                         [
                 new SiriusLpaTrustCorporation(
                     addressLine1: 'Street 1',
                     addressLine2: 'Street 2',
@@ -134,31 +130,25 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                     otherNames:   null,
                     postcode:     'ABC 123',
                     surname:      'test',
-                    systemStatus: '1',
+                    systemStatus: ActorStatus::ACTIVE,
                     town:         'Town',
-                    type:         'Primary',
                     uId:          '700000151998',
                 ),
             ],
-            uId:               '700000000047',
-            withdrawnDate:     null
+            uId:                                       '700000000047',
+            whenTheLpaCanBeUsed:                       null,
+            withdrawnDate:                             null
         );
     }
 
     #[Test]
     public function can_hydrate_sirius_lpa_to_modernise_format(): void
     {
-        $this->featureEnabled
-            ->__invoke('support_datastore_lpas')
-            ->willReturn(true);
-
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
         $expectedSiriusLpa = $this->expectedSiriusLpa();
 
         $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
-
-        $this->assertIsObject($combinedSiriusLpa);
 
         $this->assertEquals($expectedSiriusLpa, $combinedSiriusLpa);
     }

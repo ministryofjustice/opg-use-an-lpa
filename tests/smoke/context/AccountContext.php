@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Test\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ExpectationException;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use OTPHP\TOTP;
@@ -26,18 +30,14 @@ class AccountContext implements Context
      */
     public array $userDob;
 
-    /**
-     * @Given I am a user of the lpa application
-     */
+    #[Given('I am a user of the lpa application')]
     public function iAmAUserOfTheLpaApplication(): void
     {
         $this->userEmail    = 'opg-use-an-lpa+test-user@digital.justice.gov.uk';
         $this->userPassword = 'umlTest1';
     }
 
-    /**
-     * @Given I have been given access to use an LPA via credentials
-     */
+    #[Given('I have been given access to use an LPA via credentials')]
     public function iHaveBeenGivenAccessToUseAnLpaViaCredentials(): void
     {
         $this->lpaReference     = '700000000047';
@@ -49,60 +49,43 @@ class AccountContext implements Context
         ];
     }
 
-    /**
-     * @Given I access the login form
-     */
+    #[Given('I access the login form')]
     public function iAccessTheLoginForm(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            $this->ui->visit('/home');
-            $this->ui->pressButton('sign-in-one-login');
-        } else {
-            $this->ui->visit('/login');
-        }
+        $this->ui->visit('/home');
+        $this->ui->pressButton('sign-in-one-login');
     }
 
-    /**
-     * @When I enter correct credentials
-     */
+    #[When('I enter correct credentials')]
     public function iEnterCorrectCredentials(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            switch ($this->detectOneLoginImplementation()) {
-                case OneLoginImplementation::Mock:
-                    $this->ui->assertPageAddress('/authorize');
-                    $this->ui->fillField('email', $this->userEmail);
-                    break;
-                case OneLoginImplementation::Integration:
-                case OneLoginImplementation::Production:
-                    $this->ui->pressButton('sign-in-button');
+        switch ($this->detectOneLoginImplementation()) {
+            case OneLoginImplementation::Mock:
+                $this->ui->assertPageAddress('/authorize');
+                $this->ui->fillField('email', $this->userEmail);
+                break;
+            case OneLoginImplementation::Integration:
+            case OneLoginImplementation::Production:
+                $this->ui->pressButton('sign-in-button');
 
-                    $this->ui->fillField('email', $this->userEmail);
-                    $this->ui->pressButton('Continue');
+                $this->ui->fillField('email', $this->userEmail);
+                $this->ui->pressButton('Continue');
 
-                    $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD')
-                        ? getenv('ONE_LOGIN_USER_PASSWORD')
-                        : throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
+                $this->userPassword = getenv('ONE_LOGIN_USER_PASSWORD') ?:
+                throw new Exception('ONE_LOGIN_USER_PASSWORD is needed for testing against One Login');
 
-                    $this->ui->fillField('password', $this->userPassword);
-                    $this->ui->pressButton('Continue');
+                $this->ui->fillField('password', $this->userPassword);
+                $this->ui->pressButton('Continue');
 
-                    // Generate a 2fa secret just before use.
-                    // There is a non-zero chance it will be incorrect if generated at the end of its 30-second window
-                    $secret = getenv('ONE_LOGIN_OTP_SECRET')
-                        ? getenv('ONE_LOGIN_OTP_SECRET')
-                        : throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
+                // Generate a 2fa secret just before use.
+                // There is a non-zero chance it will be incorrect if generated at the end of its 30-second window
+                $secret = getenv('ONE_LOGIN_OTP_SECRET') ?:
+                    throw new Exception('ONE_LOGIN_OTP_SECRET is needed for testing against One Login');
 
-                    $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
-            }
-
-            $this->ui->pressButton('Continue');
-        } else {
-            $this->ui->assertPageAddress('/login');
-            $this->ui->fillField('email', $this->userEmail);
-            $this->ui->fillField('password', $this->userPassword);
-            $this->ui->pressButton('Sign in');
+                $this->ui->fillField('code', TOTP::createFromSecret($secret)->now());
         }
+
+        $this->ui->pressButton('Continue');
     }
 
     private function detectOneLoginImplementation(): OneLoginImplementation
@@ -113,9 +96,8 @@ class AccountContext implements Context
             $this->ui->getSession()->getStatusCode() === StatusCodeInterface::STATUS_UNAUTHORIZED
             && $this->ui->getSession()->getResponseHeader('www-authenticate') !== null
         ) {
-            $credentials           = getenv('ONE_LOGIN_CREDENTIALS')
-                ? getenv('ONE_LOGIN_CREDENTIALS')
-                : throw new Exception('ONE_LOGIN_CREDENTIALS is needed for testing against One Login');
+            $credentials           = getenv('ONE_LOGIN_CREDENTIALS') ?:
+                throw new Exception('ONE_LOGIN_CREDENTIALS is needed for testing against One Login');
             [$username, $password] = explode(':', $credentials, 2);
 
             $this->ui->getSession()->setBasicAuth($username, $password);
@@ -133,25 +115,16 @@ class AccountContext implements Context
         return OneLoginImplementation::Mock;
     }
 
-    /**
-     * @Then I am signed in
-     */
+    #[Then('I am signed in')]
     public function iAmSignedIn(): void
     {
-        if ($this->featureFlags['allow_gov_one_login'] ?? false) {
-            $this->ui->assertElementOnPage('nav.one-login-header__nav');
-        } else {
-            $this->ui->assertElementOnPage('nav.signin');
-        }
+        $this->ui->assertElementOnPage('nav.one-login-header__nav');
     }
 
-    /**
-     * @Then the javascript is working
-     */
-
+    #[Then('the javascript is working')]
     public function scriptsWork(): void
     {
-        if(!$this->ui->getSession()->evaluateScript("return window.useAnLPALoaded")){
+        if (!$this->ui->getSession()->evaluateScript('return window.useAnLPALoaded')) {
             throw new ExpectationException(
                 'Javascript did not parse without errors',
                 $this->ui->getMink()->getSession()->getDriver()

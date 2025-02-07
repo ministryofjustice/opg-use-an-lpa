@@ -12,7 +12,6 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
 
-
 class LpaService
 {
     public function __construct(
@@ -72,7 +71,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
-        $lpaData = isset($lpaData['actor']) ? ($this->parseLpaData)($lpaData) : null;
+        $lpaData = ($this->parseLpaData)($lpaData);
 
         if ($lpaData['lpa'] !== null) {
             $this->logger->info(

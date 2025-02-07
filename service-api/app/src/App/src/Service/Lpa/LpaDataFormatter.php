@@ -30,7 +30,7 @@ class LpaDataFormatter
      * @throws UnableToHydrateObject
      * @throws RuntimeException
      */
-    public function __invoke(array $lpa)
+    public function __invoke(array $lpa): Lpa
     {
         $lpaObject = $this->hydrateObject($lpa);
 

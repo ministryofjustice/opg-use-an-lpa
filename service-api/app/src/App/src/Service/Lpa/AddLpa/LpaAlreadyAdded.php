@@ -30,7 +30,7 @@ class LpaAlreadyAdded
         $savedLpaRecords = $this->userLpaActorMapRepository->getByUserId($userId);
 
         foreach ($savedLpaRecords as $record) {
-            if ($record['SiriusUid'] === $lpaUid) {
+            if (($record['SiriusUid'] ?? 'ERROR') === $lpaUid) {
                 return $this->populateLpaRecord($record, $userId);
             }
         }

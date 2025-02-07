@@ -53,20 +53,20 @@ jobs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@cbb722410c2e876e24abbe8de2cc27693e501dcb # pin@v4
+      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v4
         with:
           fetch-depth: 2
           ref: ${{ inputs.git_ref }}
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@467e54813892b0cf302b0bba54d233c861b97f1a
+        uses: tj-actions/changed-files@b1ba699b304f2083b602164e06a89b868c84f076
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@467e54813892b0cf302b0bba54d233c861b97f1a
+        uses: tj-actions/changed-files@b1ba699b304f2083b602164e06a89b868c84f076
         with:
           files: |
             terraform/**

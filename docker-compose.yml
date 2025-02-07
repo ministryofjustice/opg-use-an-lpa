@@ -102,7 +102,6 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      ALLOW_GOV_ONE_LOGIN: "true"
       SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only
@@ -178,6 +177,7 @@ services:
       DYNAMODB_TABLE_STATS: "Stats"
 
       SIRIUS_API_ENDPOINT:
+      LPA_DATA_STORE_API_ENDPOINT:
       LPA_CODES_API_ENDPOINT:
       IAP_IMAGES_API_ENDPOINT:
 
@@ -186,7 +186,6 @@ services:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
-      ALLOW_GOV_ONE_LOGIN: "true"
       SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only

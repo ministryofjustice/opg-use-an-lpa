@@ -30,16 +30,15 @@ services:
         condition: service_healthy
       mock-one-login:
         condition: service_started
-        restart: true
     environment:
       SIRIUS_API_ENDPOINT: http://api-gateway:5000
       LPA_CODES_API_ENDPOINT: http://codes-gateway:4343
       IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
+      LPA_DATA_STORE_API_ENDPOINT: http://mock-lpa-data-store:4014
       ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
       AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
-      LPA_DATA_STORE_ENDPOINT: http://mock-lpa-data-store:4014
 
   api-seeding:
     depends_on:
@@ -156,15 +155,18 @@ services:
 
   localstack:
     container_name: localstack
-    image: localstack/localstack
+    build:
+      context: .
+      dockerfile: localstack/Dockerfile
     ports:
       - "4566:4566"
     environment:
       - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - ./mock-integrations/secrets-manager/localstack_init.sh:/etc/localstack/init/ready.d/init-aws.sh
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
+      - "/var/run/docker.sock:/var/run/docker.sock"
 
   mock-one-login:
     container_name: mock-one-login

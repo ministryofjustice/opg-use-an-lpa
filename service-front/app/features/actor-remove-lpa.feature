@@ -42,3 +42,15 @@ Feature: Remove an LPA from my account
     Given I am on the dashboard page
     When I request to remove an LPA from my account without the lpa actor token
     Then I should be shown an error page
+
+  @ui
+  Scenario: The user can remove their LPA from their account when no active attorneys on LPA
+    Given I am on the dashboard page
+    When I request to remove an LPA from my account that has no active attorney on it
+    And I confirm that I want to remove the LPA from my account
+    Then The LPA is removed
+    And I am taken back to the dashboard page
+    And I cannot see my LPA on the dashboard
+    And I can see a flash message confirming that my LPA has been removed
+
+

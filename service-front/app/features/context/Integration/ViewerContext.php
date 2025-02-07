@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Integration;
 
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use Common\Entity\InstructionsAndPreferences\Images;
 use Common\Entity\InstructionsAndPreferences\ImagesStatus;
-use Common\Service\Features\FeatureEnabled;
 use Common\Service\Log\RequestTracing;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfService;
@@ -43,9 +45,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->apiFixtures = $this->container->get(MockHandler::class);
     }
 
-    /**
-     * @Given /^I have been given access to an LPA via share code$/
-     */
+    #[Given('/^I have been given access to an LPA via share code$/')]
     public function iHaveBeenGivenAccessToAnLPAViaShareCode(): void
     {
         $this->lpaShareCode = '1111-1111-1111';
@@ -81,9 +81,7 @@ class ViewerContext extends BaseIntegrationContext
         ];
     }
 
-    /**
-     * @Given /^I have been given access to a cancelled LPA via share code$/
-     */
+    #[Given('/^I have been given access to a cancelled LPA via share code$/')]
     public function iHaveBeenGivenAccessToACancelledLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
@@ -91,9 +89,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpaData['status'] = 'Cancelled';
     }
 
-    /**
-     * @Given /^I have been given access to a revoked LPA via share code$/
-     */
+    #[Given('/^I have been given access to a revoked LPA via share code$/')]
     public function iHaveBeenGivenAccessToARevokedLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToAnLPAViaShareCode();
@@ -101,9 +97,7 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpaData['status'] = 'Revoked';
     }
 
-    /**
-     * @Given /^I have been given access to an expired LPA via share code$/
-     */
+    #[Given('/^I have been given access to an expired LPA via share code$/')]
     public function iHaveBeenGivenAccessToAnExpiredLPAViaShareCode(): void
     {
         $this->iHaveBeenGivenAccessToAnExpiredLPAViaShareCode();
@@ -111,67 +105,51 @@ class ViewerContext extends BaseIntegrationContext
         $this->lpaData['status'] = 'Expired';
     }
 
-    /**
-     * @Given /^I access the viewer service$/
-     */
+    #[Given('/^I access the viewer service$/')]
     public function iAccessTheViewerService(): void
     {
         // not used in this context
     }
 
-    /**
-     * @When /^I give a valid LPA share code$/
-     */
+    #[When('/^I give a valid LPA share code$/')]
     public function iGiveAValidLPAShareCode(): void
     {
         // not used in this context
     }
 
-    /**
-    * @When /^I give a valid LPA share code on a cancelled LPA$/
-    */
+    #[When('/^I give a valid LPA share code on a cancelled LPA$/')]
     public function iGiveAValidLPAShareCodeOnACancelledLPA(): void
     {
         // not used in this context
     }
 
-    /**
-     * @When /^I enter an organisation name and confirm the LPA is correct$/
-     */
+    #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         // not used in this context
     }
 
-    /**
-     * @When /^I confirm the cancelled LPA is correct$/
-     */
+    #[When('/^I confirm the cancelled LPA is correct$/')]
     public function iConfirmTheCancelledLPAIsCorrect(): void
     {
         // not used in this context
     }
 
-    /**
-     * @When /^I give a share code that's been cancelled$/
-     */
+    #[When('/^I give a share code that\'s been cancelled$/')]
     public function iGiveAShareCodeThatsBeenCancelled(): void
     {
         // not used in this context
     }
 
-    /**
-    * @When /^I give a share code that's been revoked$/
-    */
+    #[When('/^I give a share code that\'s been revoked$/')]
     public function iGiveAShareCodeThatsBeenRevoked(): void
     {
         // not used in this context
     }
 
-    /**
-     * @Given /^I am viewing a valid LPA$/
-     * @Then /^I can see the full details of the valid LPA$/
-     * @Then /^I see a message that LPA has been cancelled$/
-     */
+    #[Given('/^I am viewing a valid LPA$/')]
+    #[Then('/^I can see the full details of the valid LPA$/')]
+    #[Then('/^I see a message that LPA has been cancelled$/')]
     public function iAmViewingAValidLPA(): void
     {
         $this->apiFixtures->append(
@@ -200,9 +178,7 @@ class ViewerContext extends BaseIntegrationContext
         Assert::assertEquals($this->lpaViewedBy, $body->organisation);
     }
 
-    /**
-     * @Then /^I can see the full details of the cancelled LPA$/
-     */
+    #[Then('/^I can see the full details of the cancelled LPA$/')]
     public function iAmViewingACancelledLPA(): void
     {
         $this->lpaData['status'] = 'Cancelled';
@@ -232,9 +208,7 @@ class ViewerContext extends BaseIntegrationContext
         Assert::assertEquals($this->lpaViewedBy, $body->organisation);
     }
 
-    /**
-     * @When /^I choose to download a document version of the LPA$/
-     */
+    #[When('/^I choose to download a document version of the LPA$/')]
     public function iChooseToDownloadADocumentVersionOfTheLPA(): void
     {
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, ''));
@@ -250,33 +224,25 @@ class ViewerContext extends BaseIntegrationContext
         Assert::assertStringContainsString('Mr Test Testable Testerson', $request->getBody()->getContents());
     }
 
-    /**
-     * @Then /^a PDF is downloaded$/
-     */
+    #[Then('/^a PDF is downloaded$/')]
     public function aPDFIsDownloaded(): void
     {
         // not used in this context
     }
 
-    /**
-     * @When /^I realise the LPA is incorrect$/
-     */
+    #[When('/^I realise the LPA is incorrect$/')]
     public function iRealiseTheLPAIsCorrect(): void
     {
         // not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to re-enter code$/
-     */
+    #[Then('/^I want to see an option to re-enter code$/')]
     public function iWantToSeeAnOptionToReEnterCode(): void
     {
         // not used in this context
     }
 
-    /**
-     * @Then /^I want to see an option to check another LPA$/
-     */
+    #[Then('/^I want to see an option to check another LPA$/')]
     public function iWantToSeeAnOptionToCheckAnotherLPA(): void
     {
         // not used in this context

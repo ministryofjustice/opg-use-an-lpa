@@ -1,6 +1,5 @@
 module "sessions_viewer_mrk" {
-  source = "./modules/multi_region_kms"
-
+  source                  = "./modules/multi_region_kms"
   key_description         = "Managers keys for sessions in Viewer"
   key_alias               = "sessions-viewer-mrk"
   deletion_window_in_days = 7

@@ -7,15 +7,21 @@ namespace App\Service\Lpa;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\GoneException;
+use App\Service\Lpa\ResolveActor\LpaActor;
 use RuntimeException;
 
+/**
+ * @psalm-type Lpa = array{
+ *     uId: string,
+ * }
+ */
 interface LpaManagerInterface
 {
     /**
      * Get an LPA using the ID value
      *
-     * @param string $uid    Unique ID of LPA to fetch
-     * @return ?LpaInterface A processed LPA data transfer object
+     * @param string $uid        Unique ID of LPA to fetch
+     * @return LpaInterface|null A processed LPA data transfer object
      */
     public function getByUid(string $uid): ?LpaInterface;
 
@@ -24,25 +30,32 @@ interface LpaManagerInterface
      *
      * @param string $token  UserLpaActorToken that map an LPA to a user account
      * @param string $userId The user account ID that must correlate to the $token
-     * @return ?array        A structure that contains processed LPA data and metadata
+     * @psalm-return array{
+     *     user-lpa-actor-token: string,
+     *     date: string,
+     *     lpa: Lpa,
+     *     activationKeyDueDate: ?string,
+     *     actor: LpaActor
+     * }|null A structure that contains processed LPA data and metadata
+     * @return array|null
      */
     public function getByUserLpaActorToken(string $token, string $userId): ?array;
 
     /**
-     * Return all LPAs for the given user_id
+     * Return all activated LPAs for the given user_id
      *
      * @param string $userId User account ID to fetch LPAs for
      * @return array         An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllForUser(string $userId): array;
+    public function getAllActiveForUser(string $userId): array;
 
     /**
-     * Return all LPAs and LPA requests for the given user_id
+     * Return all LPAs (including not activated) for the given user_id
      *
      * @param string $userId User account ID to fetch LPA and Requests for
      * @return array         An array of LPA data structures containing processed LPA data and metadata
      */
-    public function getAllLpasAndRequestsForUser(string $userId): array;
+    public function getAllForUser(string $userId): array;
 
     /**
      * Get an LPA using the share code.

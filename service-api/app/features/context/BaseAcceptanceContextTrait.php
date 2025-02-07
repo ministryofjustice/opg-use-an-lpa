@@ -8,6 +8,8 @@ use Aws\DynamoDb\Marshaler;
 use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\AfterScenario;
+use Behat\Hook\BeforeScenario;
 use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\Acceptance\BaseAcceptanceContext;
@@ -26,22 +28,18 @@ trait BaseAcceptanceContextTrait
     protected MockHandler $apiFixtures;
     protected AwsMockHandler $awsFixtures;
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
 
-        $this->base = $environment->getContext(BaseAcceptanceContext::class);
-        $this->ui = $this->base->ui; // MinkContext gathered in BaseUiContext
+        $this->base        = $environment->getContext(BaseAcceptanceContext::class);
+        $this->ui          = $this->base->ui; // MinkContext gathered in BaseUiContext
         $this->apiFixtures = $this->base->apiFixtures;
         $this->awsFixtures = $this->base->awsFixtures;
     }
 
-    /**
-     * @AfterScenario
-     */
+    #[AfterScenario]
     public function outputLogsOnFailure(AfterScenarioScope $scope): void
     {
         $logger = $this->base->container->get(LoggerInterface::class);
@@ -50,7 +48,7 @@ trait BaseAcceptanceContextTrait
             /** @var TestHandler $testHandler */
             $testHandler = array_filter(
                 $logger->getHandlers(),
-                fn ($handler) => $handler instanceof TestHandler
+                fn ($handler): bool => $handler instanceof TestHandler
             )[0];
 
             if (!$scope->getTestResult()->isPassed()) {
@@ -74,9 +72,6 @@ trait BaseAcceptanceContextTrait
      *
      * AwsResult data is in a special array format that tells you
      * what datatype things are. This function creates that data structure.
-     *
-     * @param array $input
-     * @return array
      */
     protected function marshalAwsResultData(array $input): array
     {
@@ -150,7 +145,7 @@ trait BaseAcceptanceContextTrait
         $presetHeaders = $driverHeaders();
 
         $serverParams = [];
-        foreach (($headers ?: []) as $headerName => $value) {
+        foreach (($headers !== null && $headers !== [] ? $headers : []) as $headerName => $value) {
             $serverParams['HTTP_' . $headerName] = $value;
         }
 
@@ -160,8 +155,6 @@ trait BaseAcceptanceContextTrait
     /**
      * Allows context steps to optionally store an api request as made to guzzle and fetched
      * with {@link getLastRequest()}
-     *
-     * @param RequestInterface $request
      */
     public function setLastRequest(RequestInterface $request): void
     {
@@ -174,8 +167,6 @@ trait BaseAcceptanceContextTrait
      *
      * This function may not return the request you're expecting so ensure your feature test steps
      * set the value you want before use.
-     *
-     * @return RequestInterface
      */
     public function getLastRequest(): RequestInterface
     {

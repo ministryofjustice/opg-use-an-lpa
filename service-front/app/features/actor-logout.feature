@@ -7,13 +7,7 @@ Feature: A user of the system is able to logout
   Background:
     Given I am a user of the lpa application
 
-  @ui @ff:allow_gov_one_login:false
-  Scenario: A user can logout
-    Given I am currently signed in
-    When I logout of the application
-    Then I am taken to complete a satisfaction survey
-
-  @ui @ff:allow_gov_one_login:true
+  @ui
   Scenario: A user can logout using one login
     Given I am currently signed in
     When I logout of the application

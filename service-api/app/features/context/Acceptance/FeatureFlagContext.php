@@ -8,6 +8,7 @@ use App\Service\Features\FeatureEnabled;
 use App\Service\Features\FeatureEnabledFactory;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\BeforeScenario;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use DI\Definition\Helper\FactoryDefinitionHelper;
 use Exception;
@@ -16,9 +17,7 @@ class FeatureFlagContext implements Context
 {
     use BaseAcceptanceContextTrait;
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function setFeatureFlag(BeforeScenarioScope $scope): void
     {
         $this->gatherContexts($scope);
@@ -27,7 +26,7 @@ class FeatureFlagContext implements Context
             if (str_contains($tag, 'ff:')) {
                 $tagParts = explode(':', $tag);
 
-                if (!preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches)) {
+                if (in_array(preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches), [0, false], true)) {
                     throw new Exception('Bad tag name. All tags must be in snake case');
                 }
 
@@ -36,7 +35,7 @@ class FeatureFlagContext implements Context
                     throw new Exception('Feature flag values must be boolean');
                 }
 
-                $config = $this->base->container->get('config');
+                $config                                = $this->base->container->get('config');
                 $config['feature_flags'][$tagParts[1]] = $flagValue;
                 $this->base->container->set('config', $config);
                 $this->base->container->set(

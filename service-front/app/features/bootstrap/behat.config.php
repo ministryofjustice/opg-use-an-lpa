@@ -35,10 +35,9 @@ return [
         //'debug'   => true,
     ],
     'feature_flags'                          => [
-        'delete_lpa_feature'           => true,
-        'allow_gov_one_login'          => true,
-        'support_datastore_lpas'       => false,
-        'paper_verification'           => false,
+        'delete_lpa_feature'     => true,
+        'support_datastore_lpas' => false,
+        'paper_verification'     => false,
     ],
     'notify'                                 => [
         'api' => [

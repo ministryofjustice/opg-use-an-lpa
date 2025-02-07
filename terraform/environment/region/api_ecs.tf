@@ -277,6 +277,7 @@ data "aws_iam_policy_document" "api_permissions_role" {
       data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn,
       data.aws_secretsmanager_secret.gov_uk_onelogin_identity_public_key.arn,
       data.aws_secretsmanager_secret.gov_uk_onelogin_identity_private_key.arn,
+      data.aws_secretsmanager_secret.lpa_data_store_secret.arn
     ]
   }
 
@@ -536,10 +537,6 @@ locals {
         {
           name  = "SUPPORT_DATASTORE_LPAS",
           value = tostring(var.feature_flags.support_datastore_lpas)
-        },
-        {
-          name  = "ALLOW_GOV_ONE_LOGIN",
-          value = tostring(var.feature_flags.allow_gov_one_login)
         },
         {
           name  = "PAPER_VERIFICATION",
