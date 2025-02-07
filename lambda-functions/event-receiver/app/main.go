@@ -74,7 +74,7 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
-			"Failed to unmarshal CloudWatch Event",
+			"Failed to unmarshal CloudWatch Event. Error - "+err.Error(),
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
@@ -99,13 +99,13 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 	} else {
 		logger.ErrorContext(
 			ctx,
-			"Unhandled event type",
+			"Unhandled event type: "+cloudWatchEvent.DetailType,
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
 		)
 
-		return errors.New("Unhandled event type")
+		return errors.New("Unhandled event type: " + cloudWatchEvent.DetailType)
 	}
 	return nil
 }
