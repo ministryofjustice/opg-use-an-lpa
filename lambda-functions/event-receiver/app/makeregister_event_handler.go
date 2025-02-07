@@ -7,7 +7,7 @@ import (
 	"log/slog"
 )
 
-type makeregisterEventHandler struct{}
+type MakeRegisterEventHandler struct{}
 
 type Actor struct {
 	ActorUID  string `json:"actorUid"`
@@ -20,7 +20,7 @@ type lpaAccessGranted struct {
 	Actors  []Actor `json:"actors"`
 }
 
-func (h *makeregisterEventHandler) Handle(ctx context.Context, record *events.CloudWatchEvent) error {
+func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *events.CloudWatchEvent) error {
 
 	var data lpaAccessGranted
 

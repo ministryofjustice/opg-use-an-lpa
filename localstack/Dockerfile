@@ -10,7 +10,7 @@ RUN go mod download
 
 COPY lambda-functions/event-receiver/app/ ./
 
-RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap main.go \
+RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap . \
   && chmod 755 bootstrap \
   && zip event-receiver.zip bootstrap
 

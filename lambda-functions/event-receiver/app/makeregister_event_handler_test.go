@@ -59,7 +59,7 @@ func TestMakeRegisterEventHandlerLpaAccessGranted(t *testing.T) {
 	}
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
-	result, err := handler(ctx, sqsEvent, logger)
+	result, err := handler(ctx, sqsEvent)
 
 	assert.NoError(t, err)
 	assert.Empty(t, result["batchItemFailures"])
@@ -84,7 +84,7 @@ func TestHandleSQSEvent_UnmarshalFailure(t *testing.T) {
 
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
-	result, err := handler(ctx, sqsEvent, logger)
+	result, err := handler(ctx, sqsEvent)
 	assert.Error(t, err)
 	assert.Len(t, result["batchItemFailures"], 1)
 }
@@ -119,7 +119,7 @@ func TestHandleCloudWatchEvent_MissingDetailType(t *testing.T) {
 	}
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
-	result, err := handler(ctx, sqsEvent, logger)
+	result, err := handler(ctx, sqsEvent)
 
 	assert.Error(t, err)
 	assert.Equal(t, "Unhandled event type", err.Error())

@@ -25,7 +25,7 @@ type factory interface {
 }
 
 type Handler interface {
-	Handle(context.Context, *events.SQSEvent) error
+	EventHandler(context.Context, *events.CloudWatchEvent) error
 }
 
 type Event struct {
@@ -43,7 +43,8 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	return errors.New("unknown event type")
 }
 
-func handler(ctx context.Context, event events.SQSEvent, logger *slog.Logger) (map[string]any, error) {
+func handler(ctx context.Context, event events.SQSEvent) (map[string]any, error) {
+
 	result := map[string]any{}
 	var err error
 	batchItemFailures := []map[string]any{}
@@ -69,8 +70,6 @@ func handler(ctx context.Context, event events.SQSEvent, logger *slog.Logger) (m
 func handleCloudWatchEvent(ctx context.Context, body string) error {
 	var cloudWatchEvent events.CloudWatchEvent
 
-	handler := &makeregisterEventHandler{}
-
 	err := json.Unmarshal([]byte(body), &cloudWatchEvent)
 	if err != nil {
 		logger.ErrorContext(
@@ -84,7 +83,10 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 	}
 
 	if cloudWatchEvent.DetailType == "lpa-access-granted" {
-		if err := handler.Handle(ctx, &cloudWatchEvent); err != nil {
+		var eventHandler Handler
+		eventHandler = &MakeRegisterEventHandler{}
+
+		if err := eventHandler.EventHandler(ctx, &cloudWatchEvent); err != nil {
 			logger.ErrorContext(
 				ctx,
 				"Failed to handle cloudwatch event",
