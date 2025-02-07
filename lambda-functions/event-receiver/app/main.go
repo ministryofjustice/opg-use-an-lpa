@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -39,7 +40,7 @@ type DynamodbClient interface {
 }
 
 type Handler interface {
-	EventHandler(context.Context, factory, *events.CloudWatchEvent) error
+	EventHandler(context.Context, factory, *events.CloudWatchEvent, factory) error
 }
 
 type Event struct {
@@ -57,12 +58,21 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	return errors.New("unknown event type")
 }
 
-func handler(ctx context.Context, factory *Factory, event events.SQSEvent) (map[string]any, error) {
+func handler(ctx context.Context, factory *Factory, event Event) (map[string]any, error) {
 	result := map[string]any{}
+	batchItemFailures := []map[string]any{}
 
 	dynamoClient, err := dynamo.NewClient(cfg, tableName)
 	if err != nil {
-		return result, fmt.Errorf("failed to create dynamodb client: %w", err)
+		logger.ErrorContext(
+			ctx,
+			"Failed to create dynamodb client: "+err.Error(),
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
+
+		return result, err
 	}
 
 	factory = &Factory{
@@ -75,22 +85,20 @@ func handler(ctx context.Context, factory *Factory, event events.SQSEvent) (map[
 		httpClient:   httpClient,
 	}
 
-	if event.SQSEvent != nil {
-		batchItemFailures := []map[string]any{}
-		for _, record := range event.SQSEvent.Records {
-			var sqsEvent *events.SQSEvent
-			if err := json.Unmarshal([]byte(record.Body), &sqsEvent); err != nil {
-				logger.ErrorContext(ctx, "could not unmarshal event", slog.String("messageID", record.MessageId), slog.Any("err", err))
-				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
-				continue
-			}
+	for _, record := range event.SQSEvent.Records {
+		if err = handleCloudWatchEvent(ctx, record.Body, factory); err != nil {
+			logger.ErrorContext(
+				ctx,
+				err.Error(),
+				slog.Group("location",
+					slog.String("file", "main.go"),
+				),
+			)
 
-			if err := handleSQSEvent(ctx, sqsEvent, factory); err != nil {
-				logger.ErrorContext(ctx, "error processing event", slog.String("messageID", record.MessageId), slog.Any("err", err))
-				batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
-				continue
-			}
+			batchItemFailures = append(batchItemFailures, map[string]any{"itemIdentifier": record.MessageId})
+			continue
 		}
+	}
 
 	result["batchItemFailures"] = batchItemFailures
 	return result, err
@@ -103,7 +111,7 @@ func handleCloudWatchEvent(ctx context.Context, body string, factory *Factory) e
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
-			"Failed to unmarshal CloudWatch Event",
+			"Failed to Unmarshal CloudWatch Event",
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
@@ -112,13 +120,12 @@ func handleCloudWatchEvent(ctx context.Context, body string, factory *Factory) e
 	}
 
 	if cloudWatchEvent.DetailType == "lpa-access-granted" {
-		var eventHandler Handler
-		eventHandler = &MakeRegisterEventHandler{}
+		eventHandler := &MakeRegisterEventHandler{}
 
-		if err := eventHandler.EventHandler(ctx, &cloudWatchEvent); err != nil {
+		if err := eventHandler.EventHandler(ctx, &cloudWatchEvent, factory); err != nil {
 			logger.ErrorContext(
 				ctx,
-				"Failed to handle cloudwatch event",
+				"Failed to handle cloudwatch event: "+err.Error(),
 				slog.Group("location",
 					slog.String("file", "main.go"),
 				),
@@ -134,14 +141,9 @@ func handleCloudWatchEvent(ctx context.Context, body string, factory *Factory) e
 			),
 		)
 
-		if err := handler.Handle(ctx, &record, factory); err != nil {
-			return fmt.Errorf("%s: %w", record.MessageId, err)
-		}
-
-		logger.InfoContext(ctx, "successfully handled message", slog.String("MessageId", record.MessageId))
-		return nil
-		return errors.New("Unhandled event type")
+		return errors.New("unhandled Event Type")
 	}
+
 	return nil
 }
 
@@ -162,7 +164,7 @@ func main() {
 				slog.String("file", "main.go"),
 			),
 		)
-    return err
+		return
 	}
 
 	if len(awsBaseURL) > 0 {

@@ -40,10 +40,14 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *eve
 	}
 
 	for _, actor := range data.Actors {
-		fmt.Printf("Successfully unmarshalled LPA Access Granted: %+v\n", actor.ActorUID)
-
 		if err := handleUsers(ctx, actor, factory.DynamoClient()); err != nil {
-			fmt.Printf("could not find actor: %+v\n", data.Actors)
+			logger.ErrorContext(
+				ctx,
+				err.Error(),
+				slog.Group("location",
+					slog.String("file", "makeregister_event_handler.go"),
+				),
+			)
 		}
 
 		return nil
@@ -61,7 +65,15 @@ func handleUsers(ctx context.Context, actor Actor, dynamoClient DynamodbClient) 
 	err := dynamoClient.OneByUID(ctx, actor.SubjectID, &existingUser)
 
 	if err != nil {
-		logger.ErrorContext(ctx, "Failed to find existing user: %+v", slog.String("actorUID", actor.ActorUID))
+		logger.ErrorContext(
+			ctx,
+			"Failed to find existing user: "+actor.ActorUID+" - Error: "+err.Error(),
+			slog.Group("location",
+				slog.String("file", "makeregister_event_handler.go"),
+			),
+		)
+
+		return err
 	}
 
 	newUser := map[string]types.AttributeValue{
@@ -71,9 +83,16 @@ func handleUsers(ctx context.Context, actor Actor, dynamoClient DynamodbClient) 
 
 	err = dynamoClient.Put(ctx, newUser)
 	if err != nil {
-		return fmt.Errorf("failed to put actor: %+v", err)
+		logger.ErrorContext(
+			ctx,
+			"Failed to put actor: "+actor.ActorUID+" - Error: "+err.Error(),
+			slog.Group("location",
+				slog.String("file", "makeregister_event_handler.go"),
+			),
+		)
+
+		return err
 	}
 
-	fmt.Printf("Successfully put actor: %+v\n", actor.ActorUID)
 	return nil
 }
