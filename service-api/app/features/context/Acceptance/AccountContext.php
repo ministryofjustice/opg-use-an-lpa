@@ -7,16 +7,17 @@ namespace BehatTest\Context\Acceptance;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ExpectationException;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
-
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\ExpectationFailedException;
 
 use function PHPUnit\Framework\assertArrayHasKey;
-use function PHPUnit\Framework\assertEquals;
 
 /**
  * @property array passwordResetData
@@ -29,26 +30,20 @@ class AccountContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
-    /**
-     * @Given /^I access the login form$/
-     */
+    #[Given('/^I access the login form$/')]
     public function iAccessTheLoginForm(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I enter correct credentials$/
-     */
+    #[When('/^I enter correct credentials$/')]
     public function iEnterCorrectCredentials(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given I am currently signed in
-     * @Then /^I am signed in$/
-     */
+    #[Given('I am currently signed in')]
+    #[Then('/^I am signed in$/')]
     public function iAmCurrentlySignedIn(): void
     {
         $this->base->userAccountPassword = 'pa33w0rd';
@@ -86,25 +81,19 @@ class AccountContext implements Context
         Assert::assertEquals($this->base->userAccountId, $response['Id']);
     }
 
-    /**
-     * @When /^I enter incorrect login password$/
-     */
+    #[When('/^I enter incorrect login password$/')]
     public function iEnterIncorrectLoginPassword(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I enter incorrect login email$/
-     */
+    #[When('/^I enter incorrect login email$/')]
     public function iEnterIncorrectLoginEmail(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Then /^my account cannot be found$/
-     */
+    #[Then('/^my account cannot be found$/')]
     public function myAccountCannotBeFound(): void
     {
         // ActorUsers::getByEmail
@@ -118,9 +107,7 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NOT_FOUND);
     }
 
-    /**
-     * @Then /^I am told my credentials are incorrect$/
-     */
+    #[Then('/^I am told my credentials are incorrect$/')]
     public function iAmToldMyCredentialsAreIncorrect(): void
     {
         // ActorUsers::getByEmail
@@ -143,17 +130,13 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
     }
 
-    /**
-     * @Given /^I have not activated my account$/
-     */
+    #[Given('/^I have not activated my account$/')]
     public function iHaveNotActivatedMyAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I am told my account has not been activated$/
-     */
+    #[Then('/^I am told my account has not been activated$/')]
     public function iAmToldMyAccountHasNotBeenActivated(): void
     {
         // ActorUsers::getByEmail
@@ -177,17 +160,13 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_UNAUTHORIZED);
     }
 
-    /**
-     * @Given I have forgotten my password
-     */
+    #[Given('I have forgotten my password')]
     public function iHaveForgottenMyPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When I ask for my password to be reset
-     */
+    #[When('I ask for my password to be reset')]
     public function iAskForMyPasswordToBeReset(): void
     {
         $this->passwordResetData = [
@@ -217,9 +196,7 @@ class AccountContext implements Context
         $this->apiPatch('/v1/request-password-reset', ['email' => $this->base->userAccountEmail], []);
     }
 
-    /**
-     * @Then I receive unique instructions on how to reset my password
-     */
+    #[Then('I receive unique instructions on how to reset my password')]
     public function iReceiveUniqueInstructionsOnHowToResetMyPassword(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -229,9 +206,7 @@ class AccountContext implements Context
         Assert::assertEquals($this->passwordResetData['PasswordResetToken'], $response['PasswordResetToken']);
     }
 
-    /**
-     * @Given I have asked for my password to be reset
-     */
+    #[Given('I have asked for my password to be reset')]
     public function iHaveAskedForMyPasswordToBeReset(): void
     {
         $this->passwordResetData = [
@@ -241,9 +216,7 @@ class AccountContext implements Context
         ];
     }
 
-    /**
-     * @When I follow my unique instructions on how to reset my password
-     */
+    #[When('I follow my unique instructions on how to reset my password')]
     public function iFollowMyUniqueInstructionsOnHowToResetMyPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
@@ -273,9 +246,7 @@ class AccountContext implements Context
         Assert::assertEquals($this->base->userAccountId, $response['Id']);
     }
 
-    /**
-     * @When I choose a new password
-     */
+    #[When('I choose a new password')]
     public function iChooseANewPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
@@ -306,9 +277,7 @@ class AccountContext implements Context
         ], []);
     }
 
-    /**
-     * @Then my password has been associated with my user account
-     */
+    #[Then('my password has been associated with my user account')]
     public function myPasswordHasBeenAssociatedWithMyUserAccount(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -317,9 +286,7 @@ class AccountContext implements Context
         Assert::assertIsArray($response); // empty array response
     }
 
-    /**
-     * @When I follow my unique expired instructions on how to reset my password
-     */
+    #[When('I follow my unique expired instructions on how to reset my password')]
     public function iFollowMyUniqueExpiredInstructionsOnHowToResetMyPassword(): void
     {
         // expire the password reset token
@@ -347,21 +314,18 @@ class AccountContext implements Context
         $this->apiGet('/v1/can-password-reset?token=' . $this->passwordResetData['PasswordResetToken'], []);
     }
 
-    /**
-     * @Then I am told that my instructions have expired
-     */
+    #[Then('I am told that my instructions have expired')]
     public function iAmToldThatMyInstructionsHaveExpired(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_GONE);
     }
 
     /**
-     * @Then I am unable to continue to reset my password
-     *
      * Typically this endpoint wouldn't be called as we stop at the previous step, in this
      * case though we're using it to test that the endpoint still denies an expired token
      * when directly calling the reset
      */
+    #[Then('I am unable to continue to reset my password')]
     public function iAmUnableToContinueToResetMyPassword(): void
     {
         // ActorUsers::getIdByPasswordResetToken
@@ -391,25 +355,19 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
-    /**
-     * @Given I am not a user of the lpa application
-     */
+    #[Given('I am not a user of the lpa application')]
     public function iAmNotaUserOftheLpaApplication(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given I want to create a new account
-     */
+    #[Given('I want to create a new account')]
     public function iWantTocreateANewAccount(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When I create an account
-     */
+    #[When('I create an account')]
     public function iCreateAnAccount(): void
     {
         $this->userAccountCreateData = [
@@ -441,9 +399,7 @@ class AccountContext implements Context
         assertArrayHasKey('ExpiresTTL', $result);
     }
 
-    /**
-     * @When I create an account using duplicate details not yet activated
-     */
+    #[When('I create an account using duplicate details not yet activated')]
     public function iCreateAnAccountUsingDuplicateDetailsNotActivated(): void
     {
         $this->userAccountCreateData = [
@@ -499,9 +455,7 @@ class AccountContext implements Context
         Assert::assertEquals($this->userAccountCreateData['Email'], $this->getResponseAsJson()['Email']);
     }
 
-    /**
-     * @When I create an account using duplicate details
-     */
+    #[When('I create an account using duplicate details')]
     public function iCreateAnAccountUsingDuplicateDetails(): void
     {
         $this->userAccountCreateData = [
@@ -539,9 +493,7 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @Given I have asked to create a new account
-     */
+    #[Given('I have asked to create a new account')]
     public function iHaveAskedToCreateANewAccount(): void
     {
         $this->userAccountCreateData = [
@@ -551,18 +503,14 @@ class AccountContext implements Context
         ];
     }
 
-    /**
-     * @Then I am informed about an existing account
-     * @Then I send the activation email again
-     */
+    #[Then('I am informed about an existing account')]
+    #[Then('I send the activation email again')]
     public function iAmInformedAboutAnExistingAccount(): void
     {
         Assert::assertEquals('activate1234567890', $this->userAccountCreateData['ActivationToken']);
     }
 
-    /**
-     * @Then I receive unique instructions on how to activate my account
-     */
+    #[Then('I receive unique instructions on how to activate my account')]
     public function iReceiveUniqueInstructionsOnHowToActivateMyAccount(): void
     {
         $emailTemplate = 'AccountActivationEmail';
@@ -579,9 +527,7 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @When I follow the instructions on how to activate my account
-     */
+    #[When('I follow the instructions on how to activate my account')]
     public function iFollowTheInstructionsOnHowToActivateMyAccount(): void
     {
 
@@ -618,9 +564,7 @@ class AccountContext implements Context
         Assert::assertEquals($this->userAccountCreateData['Id'], $response['Id']);
     }
 
-    /**
-     * @When I follow my instructions on how to activate my account after 24 hours
-     */
+    #[When('I follow my instructions on how to activate my account after 24 hours')]
     public function iFollowMyInstructionsOnHowToActivateMyAccountAfter24Hours(): void
     {
         // ActorUsers::activate
@@ -652,41 +596,31 @@ class AccountContext implements Context
         Assert::assertContains('User not found for token', $response);
     }
 
-    /**
-     * @Then I am told my unique instructions to activate my account have expired
-     */
+    #[Then('I am told my unique instructions to activate my account have expired')]
     public function iAmToldMyUniqueInstructionsToActivateMyAccountHaveExpired(): void
     {
         // Not used in this context
     }
 
-    /**
-     * @Then my account is activated
-     */
+    #[Then('my account is activated')]
     public function myAccountIsActivated(): void
     {
         //Not needed in this context
     }
 
-    /**
-     * @When /^I ask to change my password$/
-     */
+    #[When('/^I ask to change my password$/')]
     public function iAskToChangeMyPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I provide my current password$/
-     */
+    #[Given('/^I provide my current password$/')]
     public function iProvideMyCurrentPassword(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I provide my new password$/
-     */
+    #[Given('/^I provide my new password$/')]
     public function iProvideMyNewPassword(): void
     {
         $newPassword = 'Successful-Raid-on-the-Cooki3s!';
@@ -715,17 +649,13 @@ class AccountContext implements Context
         Assert::assertEmpty($response);
     }
 
-    /**
-     * @Then /^I am told my password was changed$/
-     */
+    #[Then('/^I am told my password was changed$/')]
     public function iAmToldMyPasswordWasChanged(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I cannot enter my current password$/
-     */
+    #[Given('/^I cannot enter my current password$/')]
     public function iCannotEnterMyCurrentPassword(): void
     {
         $failedPassword = 'S0meS0rt0fPassw0rd';
@@ -749,52 +679,40 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
     }
 
-    /**
-     * @Then /^I am told my current password is incorrect$/
-     */
+    #[Then('/^I am told my current password is incorrect$/')]
     public function iAmToldMyCurrentPasswordIsIncorrect(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given /^I am on the settings page$/
-     */
+    #[Given('/^I am on the settings page$/')]
     public function iAmOnTheSettingsPage(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @When /^I request to delete my account$/
-     * @When /^I request to remove an LPA$/
-     * @Then /^I cannot see my LPA on the dashboard$/
-     * @Then /^I can see a flash message confirming that my LPA has been removed$/
-     */
+    #[When('/^I request to delete my account$/')]
+    #[When('/^I request to remove an LPA$/')]
+    #[Then('/^I cannot see my LPA on the dashboard$/')]
+    #[Then('/^I can see a flash message confirming that my LPA has been removed$/')]
     public function iRequestToDeleteMyAccount(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Then /^I confirm that I want to remove the LPA$/
-     */
+    #[Then('/^I confirm that I want to remove the LPA$/')]
     public function iConfirmThatIWantToRemoveTheLPA(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given /^I confirm that I want to delete my account$/
-     */
+    #[Given('/^I confirm that I want to delete my account$/')]
     public function iConfirmThatIWantToDeleteMyAccount(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Then /^My account is deleted$/
-     */
+    #[Then('/^My account is deleted$/')]
     public function myAccountIsDeleted(): void
     {
         // ActorUsers::get
@@ -814,26 +732,20 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
     }
 
-    /**
-     * @Given /^I am logged out of the service and taken to the index page$/
-     */
+    #[Given('/^I am logged out of the service and taken to the index page$/')]
     public function iAmLoggedOutOfTheServiceAndTakenToTheIndexPage(): void
     {
         // Not needed in this context
     }
 
-    /**
-     * @Given /^I am on the change email page$/
-     */
+    #[Given('/^I am on the change email page$/')]
     public function iAmOnTheChangeEmailPage(): void
     {
         $this->newEmail            = 'newEmail@test.com';
         $this->userEmailResetToken = '12345abcde';
     }
 
-    /**
-     * @When /^I request to change my email with an incorrect password$/
-     */
+    #[When('/^I request to change my email with an incorrect password$/')]
     public function iRequestToChangeMyEmailWithAnIncorrectPassword(): void
     {
         // ActorUsers::get
@@ -852,18 +764,14 @@ class AccountContext implements Context
         ], []);
     }
 
-    /**
-     * @Then /^I should be told that I could not change my email because my password is incorrect$/
-     */
+    #[Then('/^I should be told that I could not change my email because my password is incorrect$/')]
     public function iShouldBeToldThatICouldNotChangeMyEmailBecauseMyPasswordIsIncorrect(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_FORBIDDEN);
     }
 
-    /**
-     * @When /^I request to change my email to an email address that (.*)$/
-     */
-    public function iRequestToChangeMyEmailToAnEmailAddressThat($context)
+    #[When('/^I request to change my email to an email address that (.*)$/')]
+    public function iRequestToChangeMyEmailToAnEmailAddressThat($context): void
     {
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
@@ -946,34 +854,26 @@ class AccountContext implements Context
         ], []);
     }
 
-    /**
-     * @Then /^I should be told my email change request was successful$/
-     */
+    #[Then('/^I should be told my email change request was successful$/')]
     public function iShouldBeToldMyEmailChangeRequestWasSuccessful(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
     }
 
-    /**
-     * @When /^I do not confirm cancellation of the chosen viewer code/
-     * @When /^I request to return to the dashboard page/
-     */
+    #[When('/^I do not confirm cancellation of the chosen viewer code/')]
+    #[When('/^I request to return to the dashboard page/')]
     public function iDoNotConfirmCancellationOfTheChosenViewerCode(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Then /^I should be sent an email to both my current and new email$/
-     */
+    #[Then('/^I should be sent an email to both my current and new email$/')]
     public function iShouldBeSentAnEmailToBothMyCurrentAndNewEmail(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I should be told that my request was successful$/
-     */
+    #[Given('/^I should be told that my request was successful$/')]
     public function iShouldBeToldThatMyRequestWasSuccessful(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
@@ -988,9 +888,7 @@ class AccountContext implements Context
         Assert::assertArrayHasKey('EmailResetExpiry', $response);
     }
 
-    /**
-     * @When /^I request to change my email to a unique email address$/
-     */
+    #[When('/^I request to change my email to a unique email address$/')]
     public function iRequestToChangeMyEmailToAUniqueEmailAddress(): void
     {
         // ActorUsers::get
@@ -1028,26 +926,20 @@ class AccountContext implements Context
         ]);
     }
 
-    /**
-     * @Given /^I have requested to change my email address$/
-     */
+    #[Given('/^I have requested to change my email address$/')]
     public function iHaveRequestedToChangeMyEmailAddress(): void
     {
         $this->userEmailResetToken = '12345abcde';
         $this->newEmail            = 'newEmail@test.com';
     }
 
-    /**
-     * @Given /^My email reset token is still valid$/
-     */
+    #[Given('/^My email reset token is still valid$/')]
     public function myEmailResetTokenIsStillValid(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I click the link to verify my new email address$/
-     */
+    #[When('/^I click the link to verify my new email address$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddress(): void
     {
         // canResetEmail
@@ -1126,25 +1018,19 @@ class AccountContext implements Context
         Assert::assertEquals([], $response);
     }
 
-    /**
-     * @Then /^My account email address should be reset$/
-     */
+    #[Then('/^My account email address should be reset$/')]
     public function myAccountEmailAddressShouldBeReset(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @Given /^I should be able to login with my new email address$/
-     */
+    #[Given('/^I should be able to login with my new email address$/')]
     public function iShouldBeAbleToLoginWithMyNewEmailAddress(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I click the link to verify my new email address after my token has expired$/
-     */
+    #[When('/^I click the link to verify my new email address after my token has expired$/')]
     public function iClickTheLinkToVerifyMyNewEmailAddressAfterMyTokenHasExpired(): void
     {
         // ActorUsers::getIdByEmailResetToken
@@ -1177,17 +1063,13 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_GONE);
     }
 
-    /**
-     * @Then /^I should be told that my email could not be changed$/
-     */
+    #[Then('/^I should be told that my email could not be changed$/')]
     public function iShouldBeToldThatMyEmailCouldNotBeChanged(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I click an old link to verify my new email address containing a token that no longer exists$/
-     */
+    #[When('/^I click an old link to verify my new email address containing a token that no longer exists$/')]
     public function iClickAnOldLinkToVerifyMyNewEmailAddressContainingATokenThatNoLongerExists(): void
     {
         // ActorUsers::getIdByEmailResetToken
@@ -1198,9 +1080,7 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_GONE);
     }
 
-    /**
-     * @When /^I create an account using with an email address that has been requested for reset$/
-     */
+    #[When('/^I create an account using with an email address that has been requested for reset$/')]
     public function iCreateAnAccountUsingWithAnEmailAddressThatHasBeenRequestedForReset(): void
     {
         $this->base->userAccountId = '123456789';
@@ -1240,17 +1120,13 @@ class AccountContext implements Context
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_CONFLICT);
     }
 
-    /**
-     * @Then /^I am informed that there was a problem with that email address$/
-     */
+    #[Then('/^I am informed that there was a problem with that email address$/')]
     public function iAmInformedThatThereWasAProblemWithThatEmailAddress(): void
     {
         // Not needed for this context
     }
 
-    /**
-     * @When /^I request to change my email to an email address without my id$/
-     */
+    #[When('/^I request to change my email to an email address without my id$/')]
     public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyId(): void
     {
         $this->apiPatch(
@@ -1263,9 +1139,7 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to change my email to an email address without my new email$/
-     */
+    #[When('/^I request to change my email to an email address without my new email$/')]
     public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyNewEmail(): void
     {
         $this->apiPatch(
@@ -1278,9 +1152,7 @@ class AccountContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to change my email to an email address without my password$/
-     */
+    #[When('/^I request to change my email to an email address without my password$/')]
     public function iRequestToChangeMyEmailToAnEmailAddressWithoutMyPassword(): void
     {
         $this->apiPatch('/v1/request-change-email', [
@@ -1291,17 +1163,15 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then /^I should be told that a bad request was made$/
      * @throws ExpectationException
      */
+    #[Then('/^I should be told that a bad request was made$/')]
     public function iShouldBeToldThatABadRequestWasMade(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
     }
 
-    /**
-     * @When I view a page and the system message is set
-     */
+    #[When('I view a page and the system message is set')]
     public function iViewAPageAndTheSystemMessageIsSet(): void
     {
         $this->awsFixtures->append(new Result([
@@ -1315,10 +1185,10 @@ class AccountContext implements Context
     }
 
     /**
-     * @Then I see the system message
      * @throws ExpectationFailedException|ExpectationException
      * @throws Exception
      */
+    #[Then('I see the system message')]
     public function iSeeTheSystemMessage(): void
     {
         $response = $this->getResponseAsJson();

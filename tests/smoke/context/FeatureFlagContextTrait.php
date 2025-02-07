@@ -34,13 +34,13 @@ trait FeatureFlagContextTrait
 
         if (($tc = count($this->featureFlags)) > 0) {
             printf("Found %d feature flag/s\n", $tc);
-            array_walk($this->featureFlags, fn ($v, $k) => printf('  %s: %s', $k, $v));
+            array_walk($this->featureFlags, fn ($v, $k): int => printf('  %s: %s', $k, $v));
         }
     }
 
     private function processTag(string $suiteName, array $tagParts): array
     {
-        if (!preg_match('/^[a-z_0-9]+$/', $tagParts[1], $matches)) {
+        if (in_array(preg_match('/^[a-z_0-9]+$/', (string) $tagParts[1], $matches), [0, false], true)) {
             throw new SuiteConfigurationException(
                 'Bad feature flag tag name. All tags must be in snake case (' . $tagParts[1] . ')',
                 $suiteName,
@@ -48,11 +48,9 @@ trait FeatureFlagContextTrait
         }
 
         if ($tagParts[2] === 'from_env') {
-            $tag = sprintf('BEHAT_FF_%s', strtoupper($tagParts[1]));
+            $tag = sprintf('BEHAT_FF_%s', strtoupper((string) $tagParts[1]));
 
-            $tagParts[2] = getenv($tag)
-                ? getenv($tag)
-                : 'no env flag despite requesting one';
+            $tagParts[2] = getenv($tag) ?: 'no env flag despite requesting one';
         }
 
         $flagValue = filter_var($tagParts[2], FILTER_VALIDATE_BOOL, FILTER_NULL_ON_FAILURE);

@@ -10,6 +10,7 @@ default:
     Behat\MinkExtension:
       base_url: 'http://localhost/'
       psr: ~
+    NicWortel\BehatUnusedStepDefinitionsExtension\Extension: ~
 
 integration:
   suites:

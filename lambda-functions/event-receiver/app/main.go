@@ -4,17 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"github.com/aws/aws-lambda-go/events"
 	"log/slog"
 	"net/http"
-	"os"
 	"time"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-
+	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/random"
 )
@@ -41,11 +39,12 @@ type DynamodbClient interface {
 }
 
 type Handler interface {
-	Handle(context.Context, factory, *events.SQSEvent) error
+	EventHandler(context.Context, factory, *events.CloudWatchEvent) error
 }
 
 type Event struct {
-	SQSEvent *events.SQSEvent
+	SQSEvent        *events.SQSEvent
+	CloudWatchEvent *events.CloudWatchEvent
 }
 
 func (e *Event) UnmarshalJSON(data []byte) error {
@@ -58,7 +57,7 @@ func (e *Event) UnmarshalJSON(data []byte) error {
 	return errors.New("unknown event type")
 }
 
-func handler(ctx context.Context, event Event, factory *Factory) (map[string]any, error) {
+func handler(ctx context.Context, factory *Factory, event events.SQSEvent) (map[string]any, error) {
 	result := map[string]any{}
 
 	dynamoClient, err := dynamo.NewClient(cfg, tableName)
@@ -93,18 +92,47 @@ func handler(ctx context.Context, event Event, factory *Factory) (map[string]any
 			}
 		}
 
-		result["batchItemFailures"] = batchItemFailures
-		return result, nil
-	}
-
-	return result, nil
+	result["batchItemFailures"] = batchItemFailures
+	return result, err
 }
 
-func handleSQSEvent(ctx context.Context, sqsEvent *events.SQSEvent, factory *Factory) error {
-	handler := &makeregisterEventHandler{}
+func handleCloudWatchEvent(ctx context.Context, body string, factory *Factory) error {
+	var cloudWatchEvent events.CloudWatchEvent
 
-	for _, record := range sqsEvent.Records {
-		logger.InfoContext(ctx, "handling message", slog.String("MessageId", record.MessageId))
+	err := json.Unmarshal([]byte(body), &cloudWatchEvent)
+	if err != nil {
+		logger.ErrorContext(
+			ctx,
+			"Failed to unmarshal CloudWatch Event",
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
+		return err
+	}
+
+	if cloudWatchEvent.DetailType == "lpa-access-granted" {
+		var eventHandler Handler
+		eventHandler = &MakeRegisterEventHandler{}
+
+		if err := eventHandler.EventHandler(ctx, &cloudWatchEvent); err != nil {
+			logger.ErrorContext(
+				ctx,
+				"Failed to handle cloudwatch event",
+				slog.Group("location",
+					slog.String("file", "main.go"),
+				),
+			)
+			return err
+		}
+	} else {
+		logger.ErrorContext(
+			ctx,
+			"Unhandled event type",
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
 
 		if err := handler.Handle(ctx, &record, factory); err != nil {
 			return fmt.Errorf("%s: %w", record.MessageId, err)
@@ -112,8 +140,8 @@ func handleSQSEvent(ctx context.Context, sqsEvent *events.SQSEvent, factory *Fac
 
 		logger.InfoContext(ctx, "successfully handled message", slog.String("MessageId", record.MessageId))
 		return nil
+		return errors.New("Unhandled event type")
 	}
-
 	return nil
 }
 
@@ -122,30 +150,19 @@ func main() {
 
 	httpClient = &http.Client{Timeout: 30 * time.Second}
 
-	logger = slog.New(slog.
-		NewJSONHandler(os.Stdout, &slog.HandlerOptions{
-			ReplaceAttr: func(_ []string, a slog.Attr) slog.Attr {
-				switch a.Value.Kind() {
-				case slog.KindAny:
-					switch v := a.Value.Any().(type) {
-					case *http.Request:
-						return slog.Group(a.Key,
-							slog.String("method", v.Method),
-							slog.String("uri", v.URL.String()))
-					}
-				}
-
-				return a
-			},
-		},
-		),
-	)
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
 	var err error
 	cfg, err = config.LoadDefaultConfig(ctx, config.WithHTTPClient(http.DefaultClient))
 	if err != nil {
-		logger.ErrorContext(ctx, "failed to load config", slog.Any("err", err))
-		return
+		logger.ErrorContext(
+			ctx,
+			"Failed to load default config",
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
+    return err
 	}
 
 	if len(awsBaseURL) > 0 {
@@ -153,5 +170,4 @@ func main() {
 	}
 
 	lambda.Start(handler)
-
 }

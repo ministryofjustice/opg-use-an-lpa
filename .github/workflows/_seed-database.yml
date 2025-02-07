@@ -15,7 +15,7 @@ jobs:
           fetch-depth: '0'
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@f171d5c895855a39c1ef93ab625499424407e172 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@3478c15aa1cf2543c22efcbbd3e483d49c3a31d7 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -30,7 +30,7 @@ jobs:
           path: terraform/environment
 
       - name: install python
-        uses: actions/setup-python@1928ae624dc06094d8c65f021a4700ea8fa56b9d # pin@v4.2.0
+        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'

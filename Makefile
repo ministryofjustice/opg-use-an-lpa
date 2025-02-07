@@ -60,7 +60,7 @@ reset:
 .PHONY: reset
 
 down:
-	$(COMPOSE) down $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) down --remove-orphans $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: down
 
 destroy:

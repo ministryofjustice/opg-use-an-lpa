@@ -7,10 +7,12 @@ namespace BehatTest\Context;
 use Aws\MockHandler as AwsMockHandler;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Hook\AfterScenario;
+use Behat\Hook\BeforeScenario;
+use Behat\Mink\Exception\ExpectationException;
 use Behat\MinkExtension\Context\MinkContext;
 use BehatTest\Context\UI\BaseUiContext;
 use BehatTest\Context\UI\SharedState;
-use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
@@ -28,9 +30,7 @@ trait BaseUiContextTrait
     protected MockHandler $apiFixtures;
     protected AwsMockHandler $awsFixtures;
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
@@ -41,9 +41,7 @@ trait BaseUiContextTrait
         $this->awsFixtures = $this->base->awsFixtures;
     }
 
-    /**
-     * @AfterScenario
-     */
+    #[AfterScenario]
     public function outputLogsOnFailure(AfterScenarioScope $scope): void
     {
         $logger = $this->base->container->get(LoggerInterface::class);
@@ -52,7 +50,7 @@ trait BaseUiContextTrait
             /** @var TestHandler $testHandler */
             $testHandler = array_filter(
                 $logger->getHandlers(),
-                fn ($handler) => $handler instanceof TestHandler
+                fn ($handler): bool => $handler instanceof TestHandler
             )[0];
 
             if (!$scope->getTestResult()->isPassed()) {
@@ -70,7 +68,7 @@ trait BaseUiContextTrait
      *
      * @param $name
      * @param $value
-     * @throws \Behat\Mink\Exception\ExpectationException
+     * @throws ExpectationException
      */
     public function assertResponseHeader($name, $value): void
     {
@@ -79,16 +77,13 @@ trait BaseUiContextTrait
 
     /**
      * Verifies a Javascript accordion element is open
-     *
-     * @param string $searchStr
-     * @return bool
      */
     public function elementIsOpen(string $searchStr): bool
     {
         $page        = $this->ui->getSession()->getPage();
         $element     = $page->find('css', $searchStr);
         $elementHtml = $element->getOuterHtml();
-        return str_contains($elementHtml, ' open');
+        return str_contains((string) $elementHtml, ' open');
     }
 
     public function sharedState(): SharedState

@@ -6,6 +6,8 @@ namespace BehatTest\Context;
 
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Hook\BeforeScenario;
+use Behat\Hook\BeforeSuite;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use PhpPact\Exception\ConnectionException;
 use SmartGamma\Behat\PactExtension\Context\PactContext;
@@ -20,17 +22,14 @@ trait UsesPactContextTrait
      * When starting the PACT services containers it can take a few seconds before they're available.
      * If this was to be done better it would attempt connection and allow the run to continue when
      * connection is made. For now a sleep suffices.
-     *
-     * @BeforeSuite
      */
+    #[BeforeSuite]
     public static function waitForPactServices(BeforeSuiteScope $scope): void
     {
         sleep(3);
     }
 
-    /**
-     * @BeforeScenario
-     */
+    #[BeforeScenario]
     public function gatherContexts(BeforeScenarioScope $scope): void
     {
         $environment = $scope->getEnvironment();
@@ -39,10 +38,7 @@ trait UsesPactContextTrait
     }
 
     /**
-     * @param string $providerName
-     * @param string $uri
      * @param array|stdClass $requestBody
-     * @param int $responseStatus
      * @param array|stdClass $responseBody
      * @throws ConnectionException
      */
@@ -51,7 +47,7 @@ trait UsesPactContextTrait
         string $uri,
         $requestBody,
         int $responseStatus,
-        $responseBody = []
+        $responseBody = [],
     ): void {
         // Create request expectation
         $success = $this->pact->requestToWithParameters(
@@ -72,7 +68,7 @@ trait UsesPactContextTrait
                 $responseStatus,
                 is_array($responseBody) ? $this->createTableNode($responseBody) : $responseBody
             );
-        } catch (NoConsumerRequestDefined $ex) {
+        } catch (NoConsumerRequestDefined) {
             throw new ConnectionException('Unable to create response expectation');
         }
     }
@@ -90,7 +86,7 @@ trait UsesPactContextTrait
         string $uri,
         int $responseStatus,
         $responseBody = [],
-        string $query = ''
+        string $query = '',
     ): void {
         $this->pact->registerInteractionWithQueryAndBody(
             $providerName,
@@ -105,15 +101,10 @@ trait UsesPactContextTrait
     /**
      * Processes a more standard multi-dimensional array into the correct format for a TableNode and returns
      * that TableNode ready to be used.
-     *
-     * @param array $data
-     * @return TableNode
      */
     private function createTableNode(array $data): TableNode
     {
-        $processed = array_map(function ($key, $value) {
-            return [$key, $value];
-        }, array_keys($data), $data);
+        $processed = array_map(fn ($key, $value): array => [$key, $value], array_keys($data), $data);
 
         array_unshift($processed, ['parameter', 'value']);
 
