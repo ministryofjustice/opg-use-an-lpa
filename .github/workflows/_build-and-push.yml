@@ -78,7 +78,7 @@ jobs:
           - svc_prefix: 'event'
             svc_suffix: 'receiver'
             build_development_docker: 'false'
-            run_unit_tests: 'false'
+            run_unit_tests: 'true'
             run_integration_tests: 'false'
             artifact_to_dl: ''
     steps:
@@ -166,6 +166,11 @@ jobs:
             cd lambda-functions/upload-statistics/app
             pip install -r ../requirements-tests.txt
             python -m unittest -v
+          elif [ ${SVC_PREFIX} == 'event' ]; then
+            mkdir -p build/service-${SVC_PREFIX}
+            cd lambda-functions/${SVC_PREFIX}-receiver/app
+            go mod tidy
+            go test
           else
             docker run -d --name tests ${SVC_PREFIX}-app:latest
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
@@ -233,7 +238,7 @@ jobs:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}
         if: |
-          (success() || failure()) && contains(fromJson('["front", "api", "admin"]'), matrix.svc_prefix) &&
+          (success() || failure()) && contains(fromJson('["front", "api", "admin", "event"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
@@ -263,7 +268,6 @@ jobs:
 
           elif [[ "${SVC_PREFIX}" = "stats_upload" ]]; then
             docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
-
           elif [[ "${SVC_PREFIX}" = "event" ]]; then
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
               docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
