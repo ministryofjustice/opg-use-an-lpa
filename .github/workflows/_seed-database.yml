@@ -24,7 +24,7 @@ jobs:
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
-        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        uses: actions/download-artifact@v4.1.8
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
