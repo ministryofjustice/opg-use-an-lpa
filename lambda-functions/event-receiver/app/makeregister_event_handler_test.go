@@ -1,4 +1,4 @@
-//go:generate mockery --all --recursive
+//go:generate mockery --all --recursive --output=./mocks --outpkg=mocks
 package main
 
 import (
@@ -161,9 +161,11 @@ func TestHandleCloudWatchEvent_MissingDetailType(t *testing.T) {
 	cloudWatchPayload, err := json.Marshal(payload)
 	assert.NoError(t, err)
 
+	missingDetailType := "incorrect-value"
+
 	cloudWatchMessage := &events.CloudWatchEvent{
 		ID:         "1",
-		DetailType: "hh",
+		DetailType: missingDetailType,
 		Source:     "opg.poas.makeregister",
 		AccountID:  "123",
 		Time:       time.Now(),
@@ -188,6 +190,6 @@ func TestHandleCloudWatchEvent_MissingDetailType(t *testing.T) {
 	result, err := handler(ctx, sqsEvent)
 
 	assert.Error(t, err)
-	assert.Equal(t, "Unhandled event type", err.Error())
+	assert.Equal(t, "Unhandled event type: "+missingDetailType, err.Error())
 	assert.Len(t, result["batchItemFailures"], 1)
 }
