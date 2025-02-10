@@ -503,10 +503,6 @@ locals {
         {
           name      = "ONE_LOGIN_CLIENT_ID"
           valueFrom = data.aws_secretsmanager_secret.gov_uk_onelogin_client_id.arn
-        },
-        {
-          name      = "LPA_STORE_JWT_SECRET",
-          valueFrom = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
         }
       ],
       environment = [
@@ -594,6 +590,11 @@ locals {
           name  = "ENVIRONMENT_NAME",
           value = var.environment_name
         },
+
+        {
+          name  = "LPA_STORE_JWT_SECRET",
+          value = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
+        }
       ]
   })
 }
