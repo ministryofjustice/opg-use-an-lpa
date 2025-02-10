@@ -8,7 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 )
 
-type Factory struct {
+type DefaultFactory struct {
 	logger       *slog.Logger
 	now          func() time.Time
 	uuidString   func() string
@@ -18,18 +18,18 @@ type Factory struct {
 	httpClient   *http.Client
 }
 
-func (f *Factory) Now() func() time.Time {
+func (f *DefaultFactory) Now() func() time.Time {
 	return f.now
 }
 
-func (f *Factory) DynamoClient() DynamodbClient {
+func (f *DefaultFactory) DynamoClient() DynamodbClient {
 	return f.dynamoClient
 }
 
-func (f *Factory) UuidString() func() string {
+func (f *DefaultFactory) UuidString() func() string {
 	return f.uuidString
 }
 
-func (f *Factory) Logger() *slog.Logger {
+func (f *DefaultFactory) Logger() *slog.Logger {
 	return f.logger
 }

@@ -22,7 +22,7 @@ type lpaAccessGranted struct {
 	Actors  []Actor `json:"actors"`
 }
 
-func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *events.CloudWatchEvent, factory *Factory) error {
+func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Factory, record *events.CloudWatchEvent) error {
 
 	var data lpaAccessGranted
 
@@ -40,7 +40,7 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *eve
 	}
 
 	for _, actor := range data.Actors {
-		if err := handleUsers(ctx, actor, factory.DynamoClient()); err != nil {
+		if err := handleUsers(ctx, factory.DynamoClient(), actor); err != nil {
 			logger.ErrorContext(
 				ctx,
 				err.Error(),
@@ -48,6 +48,8 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *eve
 					slog.String("file", "makeregister_event_handler.go"),
 				),
 			)
+
+			return err
 		}
 
 		return nil
@@ -56,7 +58,7 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, record *eve
 	return nil
 }
 
-func handleUsers(ctx context.Context, actor Actor, dynamoClient DynamodbClient) error {
+func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor Actor) error {
 	// receive data, with data.ActorUID, using dynamo, try and get the row with that id from ActorUsers table and "identity" col
 	// new entry to Actor users of Id (v4 guid) and identity
 
