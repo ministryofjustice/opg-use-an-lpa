@@ -47,7 +47,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        uses: actions/download-artifact@v4.1.8
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
@@ -92,7 +92,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # pin@v3.1.0
+        uses: actions/upload-artifact@v4.6.0
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
