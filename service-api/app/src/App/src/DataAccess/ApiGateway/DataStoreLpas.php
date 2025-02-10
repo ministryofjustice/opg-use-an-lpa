@@ -159,7 +159,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         } catch (RuntimeException $exception) {
             throw ApiException::create(
                 'Not possible to create LPA from response data',
-                $response,
+                null,
                 $exception,
             );
         }
