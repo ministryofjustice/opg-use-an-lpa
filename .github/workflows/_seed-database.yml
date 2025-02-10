@@ -15,7 +15,7 @@ jobs:
           fetch-depth: '0'
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@3478c15aa1cf2543c22efcbbd3e483d49c3a31d7 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@16fec6080fdb89d4b237dee411b7bf8f3658ec97 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -24,7 +24,7 @@ jobs:
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
-        uses: actions/download-artifact@7fba95161a0924506ed1ae69cdbae8371ee00b3f
+        uses: actions/download-artifact@v4.1.8
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
