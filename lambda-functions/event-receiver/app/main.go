@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"net/http"
 	"os"
@@ -14,7 +15,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
-	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 )
 
 var (
@@ -45,27 +45,7 @@ type Handler interface {
 func handler(ctx context.Context, factory Factory, event *events.SQSEvent) (map[string]any, error) {
 	result := map[string]any{}
 	batchItemFailures := []map[string]any{}
-
-	dynamoClient, err := dynamo.NewClient(cfg, tableName)
-	if err != nil {
-		logger.ErrorContext(
-			ctx,
-			"Failed to create dynamodb client: "+err.Error(),
-			slog.Group("location",
-				slog.String("file", "main.go"),
-			),
-		)
-
-		return result, err
-	}
-
-	factory = &DefaultFactory{
-		logger:       logger,
-		cfg:          cfg,
-		dynamoClient: dynamoClient,
-		appPublicURL: appPublicURL,
-		httpClient:   httpClient,
-	}
+	var err error
 
 	for _, record := range event.Records {
 		if err = handleCloudWatchEvent(ctx, factory, record.Body); err != nil {
@@ -153,5 +133,28 @@ func main() {
 		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
-	lambda.Start(handler)
+	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	if err != nil {
+		logger.ErrorContext(
+			ctx,
+			"Failed to create dynamodb client: "+err.Error(),
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
+
+		return
+	}
+
+	factory := &DefaultFactory{
+		logger:       logger,
+		cfg:          cfg,
+		dynamoClient: dynamoClient,
+		appPublicURL: appPublicURL,
+		httpClient:   httpClient,
+	}
+
+	lambda.Start(func(ctx context.Context, event events.SQSEvent) (map[string]any, error) {
+		return handler(ctx, factory, &event)
+	})
 }
