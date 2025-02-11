@@ -15,9 +15,10 @@ use DateTime;
  *     Added: string,
  *     Expires: string,
  *     Organisation: string,
- *     SiriusUid: string,
+ *     SiriusUid?: string,
+ *     LpaUid?: string,
  *     UserLpaActor: string,
- *     CreatedBy?: int,
+ *     CreatedBy?: string,
  *     Cancelled?: string,
  * }
  */
@@ -46,21 +47,24 @@ interface ViewerCodesInterface
      *
      * $siriusUid is denormalised.
      *
-     * @param string   $code
-     * @param string   $userLpaActorToken
-     * @param string   $siriusUid
-     * @param DateTime $expires
-     * @param string   $organisation
-     * @param int|null $actorId
+     * @param string        $code
+     * @param string        $userLpaActorToken
+     * @param string|null   $siriusUid
+     * @param string|null   $lpaUid
+     * @param DateTime      $expires
+     * @param string        $organisation
+     * @param string|null   $actorId
+     *
      * @return void
      */
     public function add(
         string $code,
         string $userLpaActorToken,
-        string $siriusUid,
+        ?string $siriusUid,
+        ?string $lpaUid,
         DateTime $expires,
         string $organisation,
-        ?int $actorId,
+        ?string $actorId,
     ): void;
 
     /**
