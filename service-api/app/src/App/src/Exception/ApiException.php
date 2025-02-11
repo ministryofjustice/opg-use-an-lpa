@@ -56,27 +56,30 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
     ): ApiException {
         $code = self::DEFAULT_CODE;
 
-        if (is_null($message) && ! is_null($response)) {
+        if (! is_null($response)) {
             $body = null;
+            $code = $response->getStatusCode();
 
-            try {
-                $body = json_decode($response->getBody()->getContents(), true);
-                $code = $response->getStatusCode();
+            //  If no message was provided create one from the response data
+            if (is_null($message)) {
+                try {
+                    $body = json_decode($response->getBody()->getContents(), true);
 
-                //  If no message was provided create one from the response data
-                //  Try to get the message from the details section of the body
-                if (is_array($body) && isset($body['details'])) {
-                    $message = $body['details'];
+                    //  If no message was provided create one from the response data
+                    //  Try to get the message from the details section of the body
+                    if (is_array($body) && isset($body['details'])) {
+                        $message = $body['details'];
+                    }
+                } catch (RuntimeException) {
+                    // $body->getContents() can fail and needs trapping
                 }
-            } catch (RuntimeException) {
-                // $body->getContents() can fail and needs trapping
             }
 
             //  If there is still no message then compose a standard message
             if (is_null($message)) {
                 $message = sprintf(
                     'HTTP: %d - %s',
-                    $response->getStatusCode(),
+                    $code,
                     is_array($body) ? print_r($body, true) : 'Unexpected API response'
                 );
             }
