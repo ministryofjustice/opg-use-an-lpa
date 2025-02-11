@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/ministryofjustice/opg-use-an-lpa/internal/random"
 	"log/slog"
+
+	"github.com/google/uuid"
 )
 
 type MakeRegisterEventHandler struct{}
@@ -51,49 +53,28 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 
 			return err
 		}
-
-		return nil
 	}
 
 	return nil
 }
 
 func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor Actor) error {
-	// receive data, with data.ActorUID, using dynamo, try and get the row with that id from ActorUsers table and "identity" col
-	// new entry to Actor users of Id (v4 guid) and identity
-
 	var existingUser Actor
 
 	err := dynamoClient.OneByUID(ctx, actor.SubjectID, &existingUser)
 
 	if err != nil {
-		logger.ErrorContext(
-			ctx,
-			"Failed to find existing user: "+actor.ActorUID+" - Error: "+err.Error(),
-			slog.Group("location",
-				slog.String("file", "makeregister_event_handler.go"),
-			),
-		)
-
-		return err
+		return fmt.Errorf("Failed to find existing user %s: %w", actor.ActorUID, err)
 	}
 
 	newUser := map[string]types.AttributeValue{
-		"Id":       &types.AttributeValueMemberS{Value: random.UuidString()},
+		"Id":       &types.AttributeValueMemberS{Value: uuid.New().String()},
 		"Identity": &types.AttributeValueMemberS{Value: actor.SubjectID},
 	}
 
 	err = dynamoClient.Put(ctx, newUser)
 	if err != nil {
-		logger.ErrorContext(
-			ctx,
-			"Failed to put actor: "+actor.ActorUID+" - Error: "+err.Error(),
-			slog.Group("location",
-				slog.String("file", "makeregister_event_handler.go"),
-			),
-		)
-
-		return err
+		return fmt.Errorf("Failed to put user %s: %w", actor.ActorUID, err)
 	}
 
 	return nil
