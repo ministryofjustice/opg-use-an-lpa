@@ -327,9 +327,9 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/lpas/*",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/health-check",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/POST/lpas",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/GET/lpas/*",
+      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/GET/health-check",
     ]
   }
 
