@@ -282,3 +282,8 @@ variable "sirius_account_id" {
   description = "The AWS ID of the Sirius account."
   type        = string
 }
+
+variable "lpa_store_account_id" {
+  description = "The AWS ID of the LPA store account"
+  type        = string
+}
