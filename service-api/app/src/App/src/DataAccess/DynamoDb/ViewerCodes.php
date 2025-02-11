@@ -10,6 +10,7 @@ use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
+use Exception;
 
 class ViewerCodes implements ViewerCodesInterface
 {
@@ -64,27 +65,41 @@ class ViewerCodes implements ViewerCodesInterface
     public function add(
         string $code,
         string $userLpaActorToken,
-        string $siriusUid,
+        ?string $siriusUid,
+        ?string $lpaUid,
         DateTime $expires,
         string $organisation,
-        ?int $actorId,
+        ?string $actorId,
     ): void {
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
+        //Throw exception if one of siriusUid/lpaUid not set
+        if (is_null($siriusUid) and is_null($lpaUid)) {
+            throw new Exception('siriusUid and lpaUid not set');
+        }
+
+        $array = [
+            'ViewerCode'   => ['S' => $code],
+            'UserLpaActor' => ['S' => $userLpaActorToken],
+            'Added'        => ['S' => $now],
+            'Expires'      => ['S' => $expires->format('c')],
+            // We use 'c' so not to assume UTC.
+            'Organisation' => ['S' => $organisation],
+            'CreatedBy'    => ['S' => $actorId],
+        ];
+
+        if ($siriusUid !== null) {
+            $array['SiriusUid'] = ['S' => $siriusUid];
+        }
+        if ($lpaUid !== null) {
+            $array['LpaUid'] = ['S' => $lpaUid];
+        }
+
         try {
             $this->client->putItem([
                 'TableName'           => $this->viewerCodesTable,
-                'Item'                => [
-                    'ViewerCode'   => ['S' => $code],
-                    'UserLpaActor' => ['S' => $userLpaActorToken],
-                    'SiriusUid'    => ['S' => $siriusUid],
-                    'Added'        => ['S' => $now],
-                    'Expires'      => ['S' => $expires->format('c')],
-                    // We use 'c' so not to assume UTC.
-                    'Organisation' => ['S' => $organisation],
-                    'CreatedBy'    => ['N' => (string)$actorId],
-                    ],
+                'Item'                => $array,
                 'ConditionExpression' => 'attribute_not_exists(ViewerCode)',
             ]);
         } catch (DynamoDbException $e) {
