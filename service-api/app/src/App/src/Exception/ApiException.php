@@ -35,13 +35,20 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
      * associative array.
      *
      * @return array
-     * @throws RuntimeException
      */
     public function getAdditionalData(): array
     {
-        return $this->getResponse() !== null
-            ? json_decode($this->getResponse()->getBody()->getContents(), true)
-            : [];
+        $data = null;
+
+        if ($this->getResponse() !== null) {
+            try {
+                $data = json_decode($this->getResponse()->getBody()->getContents(), true);
+            } catch (RuntimeException) {
+                // $body->getContents() can fail and needs trapping
+            }
+        }
+
+        return $data ?? [];
     }
 
     public function getAdditionalDataForLogging(): array
