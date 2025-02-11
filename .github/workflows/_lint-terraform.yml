@@ -30,7 +30,7 @@ jobs:
           TF_VERSION=$(cat .terraform-version)
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
 
-      - uses: hashicorp/setup-terraform@49dee962d541c13290ae1c9c9be9c8b741ecb6bc # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@1748f9de3921e2d8da70ae721da7f35d589b494f # pin@v2.0.0
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
@@ -38,7 +38,7 @@ jobs:
         name: Setup TFLint
 
       - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@16fec6080fdb89d4b237dee411b7bf8f3658ec97 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}

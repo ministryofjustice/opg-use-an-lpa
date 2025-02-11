@@ -57,7 +57,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       PHP_IDE_CONFIG: serverName=viewer-app
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
+      XDEBUG_CONFIG: client_host=host.docker.internal
       XDEBUG_MODE: develop,debug,coverage # off # xdebug can be disable by replacing modes with "off"
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
@@ -102,7 +102,7 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      SUPPORT_DATASTORE_LPAS: "false"
+      SUPPORT_DATASTORE_LPAS: "true"
 
       # Local only
       API_SERVICE_URL:
@@ -111,7 +111,7 @@ services:
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       PHP_IDE_CONFIG: serverName=actor-app
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
+      XDEBUG_CONFIG: client_host=host.docker.internal
       XDEBUG_MODE: develop,debug,coverage # off # xdebug can be disable by replacing modes with "off"
       SESSION_EXPIRES: 20 # session expiry length to support timeout message.
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
@@ -186,7 +186,7 @@ services:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
-      SUPPORT_DATASTORE_LPAS: "false"
+      SUPPORT_DATASTORE_LPAS: "true"
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"
@@ -198,8 +198,9 @@ services:
       PACT_BROKER_PUBLISH: "false"
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       PHP_IDE_CONFIG: serverName=api-app
-      XDEBUG_CONFIG: client_host=host.docker.internal client_port=9000
+      XDEBUG_CONFIG: client_host=host.docker.internal
       XDEBUG_MODE: develop,debug,coverage # off # xdebug can be disable by replacing modes with "off"
+      XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
 
   api-composer:
