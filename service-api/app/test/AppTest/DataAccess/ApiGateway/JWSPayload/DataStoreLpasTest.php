@@ -28,6 +28,6 @@ class DataStoreLpasTest extends TestCase
         $this->assertEquals($now->getTimestamp(), $payload->nbf);
         $this->assertEquals($now->getTimestamp() + 3600, $payload->exp);
         $this->assertEquals('opg.poas.use', $payload->iss);
-        $this->assertEquals('urn:opg:poas:use:users:my_user_identifier', $payload->aud);
+        $this->assertEquals('urn:opg:poas:use:users:my_user_identifier', $payload->sub);
     }
 }
