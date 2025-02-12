@@ -15,22 +15,30 @@ awslocal secretsmanager create-secret --name lpa-data-store-secret \
     --description "Local development lpa store secret" \
     --secret-string "A shared secret string that needs to be at least 128 bits long"
 
-echo "Creating SNS topic"
-awslocal sns create-topic --region "eu-west-1" --name lpa-registered-events
-awslocal sns list-topics
-
 echo "Creating SQS queue"
-awslocal sqs create-queue --region "eu-west-1" --queue-name local-notifications --attributes '{"MaximumMessageSize": "102400"}' 
+awslocal sqs create-queue --region "eu-west-1" --queue-name receive-events-queue --attributes '{"MaximumMessageSize": "102400"}' 
 
-awslocal sqs get-queue-attributes --region "eu-west-1" --queue-url http://sqs.eu-west-1.localhost.localstack.cloud:4566/000000000000/local-notifications --attribute-names All
+awslocal sqs get-queue-attributes --region "eu-west-1" --queue-url http://sqs.eu-west-1.localhost.localstack.cloud:4566/000000000000/receive-events-queue --attribute-names All
 
-# TODO need to subscribe the queueu to the sns topic
+echo "Creating EventBridge Rule"
+awslocal events put-rule \
+    --name mlpa-events-to-use \
+    --schedule-expression 'rate(2 minutes)'
+    --region "eu-west-1"
+
+awslocal lambda add-permission \
+    --function-name event-receiver-lambda \
+    --statement-id my-scheduled-event \
+    --action 'lambda:InvokeFunction' \
+    --principal events.amazonaws.com \
+    --source-arn arn:aws:events:eu-west-1:000000000000:rule/mlpa-events-to-use
+
 
 echo "Creating schedule"
 awslocal scheduler create-schedule \
     --name sqs-templated-schedule \
     --schedule-expression 'rate(5 minutes)' \
-    --target '{"RoleArn": "arn:aws:iam::000000000000:role/schedule-role", "Arn":"arn:aws:sqs:eu-west-1:000000000000:local-notifications", "Input": "test" }' \
+    --target '{"RoleArn": "arn:aws:iam::000000000000:role/schedule-role", "Arn":"arn:aws:sqs:eu-west-1:000000000000:receive-events-queue", "Input": "test" }' \
     --flexible-time-window '{ "Mode": "OFF"}' \
     --region "eu-west-1" 
 
@@ -55,5 +63,10 @@ echo "Creating event source mapping"
 awslocal lambda create-event-source-mapping \
          --function-name event-receiver-lambda \
          --batch-size 1 \
-         --event-source-arn arn:aws:sqs:eu-west-1:000000000000:local-notifications \
+         --event-source-arn arn:aws:sqs:eu-west-1:000000000000:receive-events-queue \
          --region "eu-west-1" 
+
+echo "Add Lambda function as target"
+awslocal events put-targets \
+    --rule mlpa-events-to-use \
+    --targets file:///targets.json

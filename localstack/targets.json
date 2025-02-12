@@ -1,0 +1,6 @@
+[
+  {
+    "Id": "1",
+    "Arn": "arn:aws:sqs:eu-west-1:000000000000:receive-events-queue"
+  }
+]

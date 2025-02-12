@@ -17,6 +17,7 @@ RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstr
 
 FROM localstack/localstack:4.1.0 AS localstack
 
+COPY ./localstack/targets.json /targets.json
 COPY --from=build /app/event-receiver.zip /event-receiver.zip
 
 COPY ./localstack/localstack-init.sh /etc/localstack/init/ready.d/localstack-init.sh
