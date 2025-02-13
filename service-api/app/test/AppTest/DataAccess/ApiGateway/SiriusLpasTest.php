@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
+use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\DataSanitiserStrategy;
 use App\DataAccess\Repository\Response\LpaInterface;
+use App\Entity\Lpa;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
+use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
@@ -23,9 +25,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 
 class SiriusLpasTest extends TestCase
 {
@@ -45,7 +50,6 @@ class SiriusLpasTest extends TestCase
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
         $this->loggerInterface       = $this->prophesize(LoggerInterface::class);
         $this->featureEnabled        = $this->prophesize(FeatureEnabled::class);
-
         $this->lpaDataFormatter      = $this->prophesize(LpaDataFormatter::class);
 
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
@@ -73,6 +77,116 @@ class SiriusLpasTest extends TestCase
             $this->featureEnabled->reveal(),
             $this->lpaDataFormatter->reveal(),
         );
+    }
+
+    #[Test]
+    public function throws_api_exception_for_request_signing_errors(): void
+    {
+        $this->generateCleanPSR17Prophecies();
+
+        $this->requestSignerFactoryProphecy
+            ->__invoke()
+            ->willThrow($this->prophesize(NotFoundExceptionInterface::class)->reveal());
+
+        // First of two possible exceptions that can be thrown
+        try {
+            $fails = $this->getLpas()->get('700000055554');
+        } catch (ApiException $e) {
+            $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
+            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+        }
+
+        $this->requestSignerFactoryProphecy
+            ->__invoke()
+            ->willThrow($this->prophesize(ContainerExceptionInterface::class)->reveal());
+
+        // Second
+        try {
+            $fails = $this->getLpas()->get('700000055554');
+        } catch (ApiException $e) {
+            $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
+            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+        }
+    }
+
+    #[Test]
+    public function throws_api_exception_for_body_content_errors(): void
+    {
+        $responseBodyProphecy = $this->prophesize(StreamInterface::class);
+        $responseBodyProphecy
+            ->getContents()
+            ->willThrow(new RuntimeException());
+
+        $responseProphecy = $this->prophesize(Response::class);
+        $responseProphecy->getStatusCode()->willReturn(200);
+        $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
+        $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
+
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            [],
+        );
+
+        $this->guzzleClientProphecy
+            ->sendAsync(
+                Argument::type(RequestInterface::class),
+                Argument::any(),
+            )->willReturn(new FulfilledPromise($responseProphecy->reveal()));
+
+        $this->requestFactoryProphecy
+            ->createRequest(
+                'GET',
+                Argument::containingString('localhost/v1/use-an-lpa/lpas/700000055554'),
+            )->willReturn($this->requestProphecy->reveal());
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Not possible to create LPA from response data');
+        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+    }
+
+    #[Test]
+    public function throws_api_exception_for_formatter_hydration_errors(): void
+    {
+        $responseBodyProphecy = $this->prophesize(StreamInterface::class);
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '700000055554']));
+
+        $responseProphecy = $this->prophesize(Response::class);
+        $responseProphecy->getStatusCode()->willReturn(200);
+        $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
+        $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
+
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            [],
+        );
+
+        $this->guzzleClientProphecy
+            ->sendAsync(
+                Argument::type(RequestInterface::class),
+                Argument::any(),
+            )->willReturn(new FulfilledPromise($responseProphecy->reveal()));
+
+        $this->requestFactoryProphecy
+            ->createRequest(
+                'GET',
+                Argument::containingString('localhost/v1/use-an-lpa/lpas/700000055554'),
+            )->willReturn($this->requestProphecy->reveal());
+
+        $this->dataSanitiserStrategy->sanitise(Argument::any())->willReturnArgument(0);
+
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(true);
+
+        $this->lpaDataFormatter
+            ->__invoke(['uId' => '700000055554'])
+            ->willThrow(UnableToHydrateObject::dueToError(Lpa::class));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionMessage('Not possible to create LPA from response data');
+        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
     }
 
     #[Test]
@@ -114,6 +228,50 @@ class SiriusLpasTest extends TestCase
 
         $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
         $this->assertEquals('700000055554', $shouldBeAnLPA->getData()['uId']);
+    }
+
+    #[Test]
+    public function can_get_an_lpa_in_combined_format(): void
+    {
+        $responseBodyProphecy = $this->prophesize(StreamInterface::class);
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '700000055554']));
+
+        $responseProphecy = $this->prophesize(Response::class);
+        $responseProphecy->getStatusCode()->willReturn(200);
+        $responseProphecy->getBody()->willReturn($responseBodyProphecy->reveal());
+        $responseProphecy->getHeaderLine('Date')->willReturn('Wed, 16 Feb 2022 16:45:46 GMT');
+
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            [],
+        );
+
+        $this->guzzleClientProphecy
+            ->sendAsync(
+                Argument::type(RequestInterface::class),
+                Argument::any(),
+            )->willReturn(new FulfilledPromise($responseProphecy->reveal()));
+
+        $this->requestFactoryProphecy
+            ->createRequest(
+                'GET',
+                Argument::containingString('localhost/v1/use-an-lpa/lpas/700000055554'),
+            )->willReturn($this->requestProphecy->reveal());
+
+        $this->dataSanitiserStrategy->sanitise(Argument::any())->willReturnArgument(0);
+
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(true);
+
+        $this->lpaDataFormatter
+            ->__invoke(['uId' => '700000055554'])
+            ->willReturn($this->prophesize(Lpa::class)->reveal());
+
+        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+
+        $this->assertInstanceOf(Lpa::class, $shouldBeAnLPA->getData());
     }
 
     #[Test]
