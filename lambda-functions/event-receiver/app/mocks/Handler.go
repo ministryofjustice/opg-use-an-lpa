@@ -14,17 +14,17 @@ type Handler struct {
 	mock.Mock
 }
 
-// Handle provides a mock function with given fields: _a0, _a1
-func (_m *Handler) Handle(_a0 context.Context, _a1 *events.SQSEvent) error {
-	ret := _m.Called(_a0, _a1)
+// EventHandler provides a mock function with given fields: _a0, _a1, _a2
+func (_m *Handler) EventHandler(_a0 context.Context, _a1 Factory, _a2 *events.CloudWatchEvent) error {
+	ret := _m.Called(_a0, _a1, _a2)
 
 	if len(ret) == 0 {
-		panic("no return value specified for Handle")
+		panic("no return value specified for EventHandler")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *events.SQSEvent) error); ok {
-		r0 = rf(_a0, _a1)
+	if rf, ok := ret.Get(0).(func(context.Context, Factory, *events.CloudWatchEvent) error); ok {
+		r0 = rf(_a0, _a1, _a2)
 	} else {
 		r0 = ret.Error(0)
 	}
