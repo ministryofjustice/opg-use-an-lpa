@@ -18,6 +18,7 @@ use Prophecy\Exception\Doubler\InterfaceNotFoundException;
 use Prophecy\Exception\Prophecy\MethodProphecyException;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 /**
  * @property string            userToken
@@ -112,7 +113,7 @@ class PopulateLpaMetadataTest extends TestCase
             ]
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
         $result = $sut($lpas, $this->userToken);
 
         $this->assertObjectHasProperty($this->actorToken, $result);
@@ -128,7 +129,7 @@ class PopulateLpaMetadataTest extends TestCase
             ]
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
         $result = $sut($lpas, $this->userToken);
 
         $this->assertObjectHasProperty($this->actorToken, $result);
@@ -145,7 +146,7 @@ class PopulateLpaMetadataTest extends TestCase
             ]
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
         $result = $sut($lpas, $this->userToken);
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
@@ -172,7 +173,7 @@ class PopulateLpaMetadataTest extends TestCase
             ArrayObject::ARRAY_AS_PROPS
         );
 
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal());
+        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
         $result = $sut($this->lpas, $this->userToken);
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
