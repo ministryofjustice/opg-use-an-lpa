@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
-use Common\Entity\CaseActor;
-use Common\Entity\CombinedLpa;
-use Common\Entity\Lpa;
-use Common\Entity\Person;
+use Common\Entity\{CaseActor, CombinedLpa, Lpa as SiriusLpa, Person};
+use Common\Exception\LpaRecordInErrorException;
 use Common\Service\Features\FeatureEnabled;
-use Common\Service\Lpa\Factory\LpaDataFormatter;
-use Common\Service\Lpa\Factory\PersonDataFormatter;
+use Common\Service\Lpa\Factory\{LpaDataFormatter, PersonDataFormatter};
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Exception;
 use RuntimeException;
@@ -22,9 +19,6 @@ use RuntimeException;
  */
 class ParseLpaData
 {
-    /**
-     * @codeCoverageIgnore
-     */
     public function __construct(
         private LpaFactory $lpaFactory,
         private InstAndPrefImagesFactory $imagesFactory,
@@ -41,11 +35,7 @@ class ParseLpaData
      * Currently, fairly naive in its assumption that the data types are stored under explicit keys, which
      * may change.
      *
-     * @param  array{
-     *     lpa: array,
-     *     actor?: array,
-     *     iap?: array,
-     *     ...} $data
+     * @param  array $data
      * @return ArrayObject
      * @throws Exception
      */
@@ -64,9 +54,17 @@ class ParseLpaData
                 case 'iap':
                     $data['iap'] = $this->imagesFactory->createFromData($dataItem);
                     break;
+                case 'error':
+                    throw new LpaRecordInErrorException($data['error']);
                 default:
                     if (is_array($dataItem)) {
-                        $data[$dataItemName] = ($this)($dataItem);
+                        try {
+                            $data[$dataItemName] = ($this)($dataItem);
+                        } catch (LpaRecordInErrorException) {
+                            // TODO potentially we'd want to still allow this record through but show the user
+                            //      that this particular lpa wasn't able to be loaded.
+                            unset($data[$dataItemName]);
+                        }
                     }
             }
         }
@@ -75,7 +73,10 @@ class ParseLpaData
     }
 
     /**
-     * @param array $details
+     * @param array{
+     *      type: string,
+     *      details: array,
+     *  } $details
      * @return array{
      *     type: string,
      *     details: Person|CaseActor,
@@ -83,7 +84,7 @@ class ParseLpaData
      * @throws UnableToHydrateObject
      * @throws RuntimeException
      */
-    public function getActor(array $details): array
+    private function getActor(array $details): array
     {
         if (($this->featureEnabled)('support_datastore_lpas')) {
             $details['details'] = ($this->personDataFormatter)($details['details']);
@@ -95,12 +96,12 @@ class ParseLpaData
     }
 
     /**
-     * @param mixed $dataItem
-     * @return array|Lpa
+     * @param array $dataItem
+     * @return SiriusLpa|CombinedLpa
      * @throws UnableToHydrateObject
      * @throws RuntimeException
      */
-    public function getLpa(array $dataItem): Lpa|CombinedLpa
+    private function getLpa(array $dataItem): SiriusLpa|CombinedLpa
     {
         if (($this->featureEnabled)('support_datastore_lpas')) {
             return ($this->lpaDataFormatter)($dataItem);
