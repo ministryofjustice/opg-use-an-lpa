@@ -137,4 +137,41 @@ class ParseLpaDataTest extends TestCase
         $this->assertInstanceOf(CombinedLpa::class, $result->{$this->actorToken}->lpa);
         $this->assertInstanceOf(Person::class, $result->{$this->actorToken}->actor['details']);
     }
+
+    #[Test]
+    public function it_strips_lps_that_are_in_error_from_the_data(): void
+    {
+        $this->featureEnabled
+            ->__invoke('support_datastore_lpas')
+            ->willReturn(true);
+        $this->lpaDataFormatter
+            ->__invoke(Argument::type('array'))
+            ->willReturn(EntityTestHelper::makeCombinedLpa());
+        $this->personDataFormatter
+            ->__invoke(Argument::type('array'))
+            ->willReturn(EntityTestHelper::makePerson());
+
+        $sut = new ParseLpaData(
+            $this->lpaFactory->reveal(),
+            $this->instAndPrefImagesFactory->reveal(),
+            $this->lpaDataFormatter->reveal(),
+            $this->personDataFormatter->reveal(),
+            $this->featureEnabled->reveal()
+        );
+
+        $result = $sut(
+            [
+                $this->actorToken => $this->apiResponse,
+                '12-2-2-2-2-2345' => [
+                    'user-actor-lpa-token' => '12-2-2-2-2-2345',
+                    'error'                => 'LPA_NOT_FOUND',
+                ],
+            ]
+        );
+
+        $this->assertCount(1, $result, 'Bad LPA not stripped from result set');
+        $this->assertObjectHasProperty($this->actorToken, $result);
+        $this->assertInstanceOf(CombinedLpa::class, $result->{$this->actorToken}->lpa);
+        $this->assertInstanceOf(Person::class, $result->{$this->actorToken}->actor['details']);
+    }
 }
