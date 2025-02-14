@@ -116,7 +116,7 @@ class PopulateLpaMetadataTest extends TestCase
         $result = $sut($lpas, $this->userToken);
 
         $this->assertObjectHasProperty($this->actorToken, $result);
-        $this->assertEquals(1, $result->{$this->actorToken}->{'activeCodeCount'});
+        $this->assertEquals(1, $result->{$this->actorToken}->activeCodeCount);
     }
 
     #[Test]
@@ -132,7 +132,7 @@ class PopulateLpaMetadataTest extends TestCase
         $result = $sut($lpas, $this->userToken);
 
         $this->assertObjectHasProperty($this->actorToken, $result);
-        $this->assertEquals(1, $result->{$this->actorToken}->{'activeCodeCount'});
+        $this->assertEquals(1, $result->{$this->actorToken}->activeCodeCount);
     }
 
     #[Test]
@@ -176,6 +176,6 @@ class PopulateLpaMetadataTest extends TestCase
         $result = $sut($this->lpas, $this->userToken);
 
         $this->assertObjectHasProperty('56-5-5-5-5678', $result);
-        $this->assertEquals(true, $result->{'56-5-5-5-5678'}->{'actorActive'});
+        $this->assertEquals(true, $result->{'56-5-5-5-5678'}->actorActive);
     }
 }
