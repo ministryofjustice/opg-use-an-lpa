@@ -149,7 +149,7 @@ class SiriusLpasTest extends TestCase
     public function throws_api_exception_for_formatter_hydration_errors(): void
     {
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
-        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '700000055554']));
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '7000-0005-5554']));
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(200);
@@ -181,7 +181,7 @@ class SiriusLpasTest extends TestCase
             ->willReturn(true);
 
         $this->lpaDataFormatter
-            ->__invoke(['uId' => '700000055554'])
+            ->__invoke(['uId' => '7000-0005-5554'])
             ->willThrow(UnableToHydrateObject::dueToError(Lpa::class));
 
         $this->expectException(ApiException::class);
@@ -193,7 +193,7 @@ class SiriusLpasTest extends TestCase
     public function can_get_an_lpa(): void
     {
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
-        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '700000055554']));
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '7000-0005-5554']));
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(200);
@@ -218,7 +218,20 @@ class SiriusLpasTest extends TestCase
                 Argument::containingString('localhost/v1/use-an-lpa/lpas/700000055554'),
             )->willReturn($this->requestProphecy->reveal());
 
-        $this->dataSanitiserStrategy->sanitise(Argument::any())->willReturnArgument(0);
+        $this->dataSanitiserStrategy
+            ->sanitise(Argument::any())
+            ->will(function (array $args): array {
+                // given the mocked code below is basically all the data sanitiser does right now
+                // it could probably just be instantiated and used.
+                $lpa = $args[0];
+                array_walk_recursive($lpa, function (&$item, $key) {
+                    if ($key === 'uId') {
+                        $item = str_replace('-', '', $item);
+                    }
+                });
+
+                return $lpa;
+            });
 
         $this->featureEnabled
             ->__invoke('support_datastore_lpas')
@@ -234,7 +247,7 @@ class SiriusLpasTest extends TestCase
     public function can_get_an_lpa_in_combined_format(): void
     {
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
-        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '700000055554']));
+        $responseBodyProphecy->getContents()->willReturn(json_encode(['uId' => '7000-0005-5554']));
 
         $responseProphecy = $this->prophesize(Response::class);
         $responseProphecy->getStatusCode()->willReturn(200);
@@ -259,14 +272,12 @@ class SiriusLpasTest extends TestCase
                 Argument::containingString('localhost/v1/use-an-lpa/lpas/700000055554'),
             )->willReturn($this->requestProphecy->reveal());
 
-        $this->dataSanitiserStrategy->sanitise(Argument::any())->willReturnArgument(0);
-
         $this->featureEnabled
             ->__invoke('support_datastore_lpas')
             ->willReturn(true);
 
         $this->lpaDataFormatter
-            ->__invoke(['uId' => '700000055554'])
+            ->__invoke(['uId' => '7000-0005-5554'])
             ->willReturn($this->prophesize(Lpa::class)->reveal());
 
         $shouldBeAnLPA = $this->getLpas()->get('700000055554');

@@ -32,10 +32,6 @@ class PopulateLpaMetadata
             $this->logger->notice('Populating LPA metadata for ' . $lpaKey, $lpaData->getArrayCopy());
             //temporary DEBUG - DO NOT LET LIVE
 
-            if (isset($lpaData->error)) {
-                continue;
-            }
-
             $actorToken = $lpaData['user-lpa-actor-token'];
 
             $shareCodes = $this->viewerCodeService->getShareCodes(

@@ -146,6 +146,11 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
     {
         $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'), true);
 
+        // double check that our source data contains hyphenated sirius uids as these have
+        // been mistakenly removed in the past.
+        $this->assertContains('-', $lpa['uId']);
+        $this->assertContains('-', $lpa['donor']['uId']);
+
         $expectedSiriusLpa = $this->expectedSiriusLpa();
 
         $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);

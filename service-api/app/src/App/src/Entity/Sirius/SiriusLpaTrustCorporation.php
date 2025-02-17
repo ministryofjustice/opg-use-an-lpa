@@ -6,6 +6,7 @@ namespace App\Entity\Sirius;
 
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
+use App\Entity\Sirius\Casters\CastToUnhyphenatedUId;
 use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
@@ -51,6 +52,7 @@ class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('town')]
         ?string $town,
+        #[CastToUnhyphenatedUId]
         ?string $uId,
     ) {
         parent::__construct(
@@ -84,7 +86,7 @@ class SiriusLpaTrustCorporation extends Person implements ActorMatchingInterface
      */
     public function getFirstname(): string
     {
-        return $this->firstname;
+        return $this->firstname ?? '';
     }
 
     /**
