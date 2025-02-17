@@ -47,7 +47,7 @@ class ParseLpaData
                     $data['lpa'] = $this->getLpa($dataItem);
                     break;
                 case 'actor':
-                    $data['actor'] = is_array($data['actor'])
+                    $data['actor'] = is_array($dataItem)
                         ? $this->getActor($dataItem)
                         : $data['actor'];
                     break;
