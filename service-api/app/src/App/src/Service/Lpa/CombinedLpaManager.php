@@ -226,6 +226,10 @@ class CombinedLpaManager implements LpaManagerInterface
                     'lpa'                  => $lpaData,
                     'added'                => $item['Added']->format(DateTimeInterface::ATOM),
                 ];
+
+                // temporary DEBUG
+                $this->logger->notice('Returning LPA data for ' . $item['Id'], $result[$item['Id']]);
+                //temporary DEBUG - DO NOT LET LIVE
             }
         }
 
