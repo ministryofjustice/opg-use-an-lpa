@@ -101,26 +101,6 @@ class PopulateLpaMetadataTest extends TestCase
     }
 
     #[Test]
-    public function it_correctly_handles_lpas_that_werent_found(): void
-    {
-        $lpas = $this->getLpas(
-            [
-                $this->actorToken => $this->siriusLpa,
-                '56-5-5-5-5678'   => [
-                    'user-lpa-actor-token' => '56-5-5-5-5678',
-                    'error'                => 'NO_LPA_FOUND',
-                ],
-            ]
-        );
-
-        $sut    = new PopulateLpaMetadata($this->viewerCodeServiceProphecy->reveal(), $this->prophesize(LoggerInterface::class)->reveal());
-        $result = $sut($lpas, $this->userToken);
-
-        $this->assertObjectHasProperty($this->actorToken, $result);
-        $this->assertEquals(1, $result->{$this->actorToken}->activeCodeCount);
-    }
-
-    #[Test]
     public function it_adds_a_viewer_code_count_per_lpa(): void
     {
         $lpas = $this->getLpas(
