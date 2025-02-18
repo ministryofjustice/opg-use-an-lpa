@@ -40,8 +40,8 @@ class ViewerContext implements Context
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
         $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageMatchesText('We’ve found Babara [\w\s\d]*Gilson\'s LPA');
-        $this->ui->assertPageMatchesText('Babara [\w\s\d]*Gilson');
+        $this->ui->assertPageMatchesText('/We’ve found Babara [\w\s\d]*Gilson\'s LPA/');
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
         $this->ui->fillField('organisation', $this->organisation);
         $this->ui->pressButton('View this LPA');
     }
@@ -51,7 +51,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/view-lpa');
 
-        $this->ui->assertPageMatchesText('Babara [\w\s\d]*Gilson');
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
         $this->ui->assertPageContainsText('This health and welfare LPA is valid');
     }
 
@@ -60,7 +60,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/view-lpa');
 
-        $this->ui->assertPageMatchesText('Babara [\w\s\d]*Gilson');
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
         $this->ui->assertPageContainsText('This health and welfare LPA is valid');
         $this->ui->pressButton('Download this LPA summary');
     }
