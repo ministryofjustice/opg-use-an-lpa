@@ -34,6 +34,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\SetupEnv;
 use BehatTest\Context\UsesPactContextTrait;
+use BehatTest\LpaTestUtilities;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -317,10 +318,11 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I provide the attorney details from a valid paper LPA document$/')]
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa          = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
         $data = [
-            'reference_number'     => (int) $this->lpa->uId,
+            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
             'dob'                  => $this->lpa->attorneys[0]->dob,
             'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
             'first_names'          => $this->lpa->attorneys[0]->firstname,
@@ -334,7 +336,7 @@ class LpaContext extends BaseIntegrationContext
         // LpaRepository::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
+            '/v1/use-an-lpa/lpas/' . $sanitizedSiriusLpa->uId,
             StatusCodeInterface::STATUS_OK,
             $this->lpa
         );
@@ -346,8 +348,8 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpa->uId,
-                'actor' => $this->lpa->attorneys[0]->uId,
+                'lpa'   => $sanitizedSiriusLpa->uId,
+                'actor' => $sanitizedSiriusLpa->attorneys[0]->uId,
             ],
             StatusCodeInterface::STATUS_OK,
             $codeExists
@@ -357,21 +359,21 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
+        $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
         $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(
                     json_decode(
                         json_encode(
-                            $this->lpa->attorneys[0]
+                            $sanitizedSiriusLpa->attorneys[0]
                         ),
                         true
                     ),
                     $this->container->get(LoggerInterface::class),
                 ),
                 'attorney',
-                $this->lpa->uId,
+                $sanitizedSiriusLpa->uId,
             ),
             $expectedLpa,
             null,
@@ -1504,10 +1506,11 @@ class LpaContext extends BaseIntegrationContext
     #[Given('/^I confirm details shown to me of the found LPA are correct$/')]
     public function iConfirmDetailsShownToMeOfTheFoundLPAAreCorrect(): void
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $lpa                = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($lpa);
 
         $data = [
-            'reference_number'     => (int) $this->lpa->uId,
+            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1534,19 +1537,19 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
+        $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
         $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
                 new SiriusPerson(
                     json_decode(
-                        json_encode($lpa->donor),
+                        json_encode($sanitizedSiriusLpa->donor),
                         true
                     ),
                     $this->container->get(LoggerInterface::class),
                 ),
                 'donor',
-                $lpa->uId,
+                $sanitizedSiriusLpa->uId,
             ),
             $expectedLpa,
             null,
@@ -1752,10 +1755,11 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I provide the details from a valid paper LPA document$/')]
     public function iProvideTheDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa          = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
         $data = [
-            'reference_number'     => (int) $this->lpa->uId,
+            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
             'dob'                  => $this->lpa->donor->dob,
             'postcode'             => $this->lpa->donor->addresses[0]->postcode,
             'first_names'          => $this->lpa->donor->firstname,
@@ -1771,7 +1775,7 @@ class LpaContext extends BaseIntegrationContext
         // LpaRepository::get
         $this->pactGetInteraction(
             $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
+            '/v1/use-an-lpa/lpas/' . $sanitizedSiriusLpa->uId,
             StatusCodeInterface::STATUS_OK,
             $this->lpa
         );
@@ -1783,8 +1787,8 @@ class LpaContext extends BaseIntegrationContext
             $this->codesApiPactProvider,
             '/v1/exists',
             [
-                'lpa'   => $this->lpa->uId,
-                'actor' => $this->lpa->donor->uId,
+                'lpa'   => $sanitizedSiriusLpa->uId,
+                'actor' => $sanitizedSiriusLpa->donor->uId,
             ],
             StatusCodeInterface::STATUS_OK,
             $codeExists
@@ -1793,7 +1797,7 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
+        $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
         $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
         $expectedResponse = new AccessForAllValidation(
             new ActorMatch(
@@ -1805,7 +1809,7 @@ class LpaContext extends BaseIntegrationContext
                     $this->container->get(LoggerInterface::class)
                 ),
                 'donor',
-                $this->lpa->uId,
+                $sanitizedSiriusLpa->uId,
             ),
             $expectedLpa,
             null
