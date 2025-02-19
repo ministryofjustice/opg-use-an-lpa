@@ -226,10 +226,6 @@ class CombinedLpaManager implements LpaManagerInterface
                     'lpa'                  => $lpaData,
                     'added'                => $item['Added']->format(DateTimeInterface::ATOM),
                 ];
-
-                // temporary DEBUG
-                $this->logger->notice('Returning LPA data for ' . $item['Id'], $result[$item['Id']]);
-                //temporary DEBUG - DO NOT LET LIVE
             }
         }
 
@@ -260,12 +256,10 @@ class CombinedLpaManager implements LpaManagerInterface
     {
         [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        /** @var LpaInterface[] $siriusLpas */
         $siriusLpas = count($siriusUids) > 0
             ? $this->siriusLpas->lookup($siriusUids)
             : [];
 
-        /** @var LpaInterface[] $siriusLpas */
         $dataStoreLpas = count($dataStoreUids) > 0
             ? $this->dataStoreLpas->lookup($dataStoreUids)
             : [];
@@ -274,6 +268,16 @@ class CombinedLpaManager implements LpaManagerInterface
         array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
             $keyedDataStoreLpas[$item->getData()->getUid()] = $item;
         });
+
+        $this->logger->info(
+            'Found {count} LPAs in account and was able to load {loaded} from upstream',
+            [
+                'count'    => count($siriusUids) + count($dataStoreUids),
+                'loaded'   => count($siriusLpas) + count($dataStoreLpas),
+                'sirius'   => sprintf('%d found, %d loaded', count($siriusUids), count($siriusLpas)),
+                'lpastore' => sprintf('%d found, %d loaded', count($dataStoreUids), count($dataStoreLpas)),
+            ],
+        );
 
         // unusual combination operation in order to preserve potential numeric keys
         return $keyedDataStoreLpas + $siriusLpas;

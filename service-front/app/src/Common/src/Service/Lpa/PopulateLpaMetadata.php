@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Common\Service\Lpa;
 
 use ArrayObject;
-use Psr\Log\LoggerInterface;
 
 /**
  * Given a collection of LPAs will attach metadata to each LPA describing the number of active ViewerCodes
@@ -13,7 +12,7 @@ use Psr\Log\LoggerInterface;
  */
 class PopulateLpaMetadata
 {
-    public function __construct(private ViewerCodeService $viewerCodeService, private LoggerInterface $logger)
+    public function __construct(private ViewerCodeService $viewerCodeService)
     {
     }
 
@@ -28,10 +27,6 @@ class PopulateLpaMetadata
     public function __invoke(ArrayObject $lpas, string $userToken): ArrayObject
     {
         foreach ($lpas as $lpaKey => $lpaData) {
-            // temporary DEBUG
-            $this->logger->notice('Populating LPA metadata for ' . $lpaKey, $lpaData->getArrayCopy());
-            //temporary DEBUG - DO NOT LET LIVE
-
             $actorToken = $lpaData['user-lpa-actor-token'];
 
             $shareCodes = $this->viewerCodeService->getShareCodes(
