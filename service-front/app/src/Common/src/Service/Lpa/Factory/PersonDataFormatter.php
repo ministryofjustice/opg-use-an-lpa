@@ -26,7 +26,7 @@ class PersonDataFormatter
     /**
      * @throws UnableToHydrateObject
      */
-    public function __invoke(array $personJson)
+    public function __invoke(array $personJson): Person
     {
         return $this->mapper->hydrateObject(
             Person::class,

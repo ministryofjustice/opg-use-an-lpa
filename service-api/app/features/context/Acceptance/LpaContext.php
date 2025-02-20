@@ -12,6 +12,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use BehatTest\LpaTestUtilities;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -3215,7 +3216,8 @@ class LpaContext implements Context
     #[When('/^I provide the attorney details from a valid paper LPA document$/')]
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $this->lpa          = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
@@ -3236,7 +3238,7 @@ class LpaContext implements Context
         $this->apiPost(
             '/v1/older-lpa/validate',
             [
-                'reference_number'     => (int) $this->lpa->uId,
+                'reference_number'     => (int) $sanitizedSiriusLpa->uId,
                 'first_names'          => $this->lpa->attorneys[0]->firstname,
                 'last_name'            => $this->lpa->attorneys[0]->surname,
                 'dob'                  => $this->lpa->attorneys[0]->dob,
@@ -3249,21 +3251,21 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->attorneys[0]), true),
             'role'        => 'attorney',
-            'lpa-id'      => $this->lpa->uId,
-            'caseSubtype' => $this->lpa->caseSubtype,
+            'lpa-id'      => $sanitizedSiriusLpa->uId,
+            'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'         => $sanitizedSiriusLpa->donor->uId,
+                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
+                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
+                'surname'     => $sanitizedSiriusLpa->donor->surname,
             ],
             'attorney'    => [
-                'uId'         => $this->lpa->attorneys[0]->uId,
-                'firstname'   => $this->lpa->attorneys[0]->firstname,
-                'middlenames' => $this->lpa->attorneys[0]->middlenames,
-                'surname'     => $this->lpa->attorneys[0]->surname,
+                'uId'         => $sanitizedSiriusLpa->attorneys[0]->uId,
+                'firstname'   => $sanitizedSiriusLpa->attorneys[0]->firstname,
+                'middlenames' => $sanitizedSiriusLpa->attorneys[0]->middlenames,
+                'surname'     => $sanitizedSiriusLpa->attorneys[0]->surname,
             ],
         ];
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
@@ -3273,9 +3275,10 @@ class LpaContext implements Context
     #[Then('/^I being the donor on the LPA I am not shown the attorney details$/')]
     public function iAmShownDetailsOfAnLpa(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
+        $this->lpa                = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $this->lpa->lpaIsCleansed = true;
+
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
         $this->lpaUid         = '700000000047';
         $this->userFirstnames = 'Rachel';
@@ -3316,15 +3319,15 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->donor), true),
+            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->donor), true),
             'role'        => 'donor',
             'lpa-id'      => $this->lpaUid,
-            'caseSubtype' => $this->lpa->caseSubtype,
+            'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'         => $sanitizedSiriusLpa->donor->uId,
+                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
+                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
+                'surname'     => $sanitizedSiriusLpa->donor->surname,
             ],
         ];
 
@@ -3335,15 +3338,17 @@ class LpaContext implements Context
     #[Then('/^I being the attorney on the LPA I am shown the donor details$/')]
     public function iBeingTheAttorneyOnTheLpaIAmShownTheDonorDetails(): void
     {
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
+        $this->lpa                = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $this->lpa->lpaIsCleansed = true;
-        $this->lpaUid             = '700000000047';
-        $this->userFirstnames     = 'jean';
-        $this->userSurname        = 'Sanderson';
-        $this->userDob            = '1990-05-04';
-        $this->userPostCode       = 'DN37 5SH';
-        $this->actorId            = '700000000815';
+
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
+
+        $this->lpaUid         = '700000000047';
+        $this->userFirstnames = 'jean';
+        $this->userSurname    = 'Sanderson';
+        $this->userDob        = '1990-05-04';
+        $this->userPostCode   = 'DN37 5SH';
+        $this->actorId        = '700000000815';
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
@@ -3377,21 +3382,21 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->attorneys[0]), true),
+            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->attorneys[0]), true),
             'role'        => 'attorney',
             'lpa-id'      => $this->lpaUid,
             'attorney'    => [
-                'uId'         => $this->lpa->attorneys[0]->uId,
-                'firstname'   => $this->lpa->attorneys[0]->firstname,
-                'middlenames' => $this->lpa->attorneys[0]->middlenames,
-                'surname'     => $this->lpa->attorneys[0]->surname,
+                'uId'         => $sanitizedSiriusLpa->attorneys[0]->uId,
+                'firstname'   => $sanitizedSiriusLpa->attorneys[0]->firstname,
+                'middlenames' => $sanitizedSiriusLpa->attorneys[0]->middlenames,
+                'surname'     => $sanitizedSiriusLpa->attorneys[0]->surname,
             ],
-            'caseSubtype' => $this->lpa->caseSubtype,
+            'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'         => $sanitizedSiriusLpa->donor->uId,
+                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
+                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
+                'surname'     => $sanitizedSiriusLpa->donor->surname,
             ],
         ];
 
