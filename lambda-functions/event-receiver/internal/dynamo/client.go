@@ -88,3 +88,27 @@ func (c *Client) Put(ctx context.Context, v interface{}) error {
 
 	return nil
 }
+
+func (c *Client) GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId string, v interface{}) error {
+	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
+		TableName: aws.String(c.table),
+		ExpressionAttributeNames: map[string]string{
+			"#LpaUid": "LpaUid",
+			"#UserId": "UserId",
+		},
+		ExpressionAttributeValues: map[string]types.AttributeValue{
+			":lpaUid": &types.AttributeValueMemberS{Value: lpaId},
+			":userid": &types.AttributeValueMemberS{Value: userId},
+		},
+		KeyConditionExpression: aws.String("#LpaUid = :lpaUid AND #UserId = :userid"),
+		Limit:                  aws.Int32(1),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to query LPA mappings: %w", err)
+	}
+	if len(response.Items) == 0 {
+		return NotFoundError{}
+	}
+
+	return attributevalue.UnmarshalMap(response.Items[0], v)
+}

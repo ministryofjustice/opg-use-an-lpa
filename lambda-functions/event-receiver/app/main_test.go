@@ -4,6 +4,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"github.com/google/uuid"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
 	"github.com/stretchr/testify/mock"
@@ -34,6 +35,8 @@ var (
 func TestValidCloudWatchEvent(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	userId := uuid.New().String()
+	lpaId := "M-1234-5678-9012"
 
 	cloudWatchPayload, err := json.Marshal(payload)
 	assert.NoError(t, err)
@@ -67,6 +70,7 @@ func TestValidCloudWatchEvent(t *testing.T) {
 
 	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
 	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(nil)
 
 	result, err := handler(ctx, mockFactory, sqsEvent)
 	assert.Nil(t, err)
