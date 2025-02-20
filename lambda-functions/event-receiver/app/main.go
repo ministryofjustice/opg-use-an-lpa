@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
@@ -16,40 +18,37 @@ import (
 )
 
 var (
+	tableName    = os.Getenv("LPAS_TABLE")
+	appPublicURL = os.Getenv("APP_PUBLIC_URL")
+	awsBaseURL   = os.Getenv("AWS_BASE_URL")
+
 	cfg        aws.Config
 	httpClient *http.Client
 	logger     *slog.Logger
 )
 
-type factory interface {
+type Factory interface {
+	Now() func() time.Time
+	DynamoClient() DynamodbClient
+	UuidString() func() string
+}
+
+type DynamodbClient interface {
+	OneByUID(ctx context.Context, uid string, v any) error
+	Put(ctx context.Context, v any) error
 }
 
 type Handler interface {
-	EventHandler(context.Context, *events.CloudWatchEvent) error
+	EventHandler(context.Context, Factory, *events.CloudWatchEvent) error
 }
 
-type Event struct {
-	SQSEvent        *events.SQSEvent
-	CloudWatchEvent *events.CloudWatchEvent
-}
-
-func (e *Event) UnmarshalJSON(data []byte) error {
-	var sqs events.SQSEvent
-	if err := json.Unmarshal(data, &sqs); err == nil && len(sqs.Records) > 0 && sqs.Records[0].MessageId != "" {
-		e.SQSEvent = &sqs
-		return nil
-	}
-
-	return errors.New("unknown event type")
-}
-
-func handler(ctx context.Context, event events.SQSEvent) (map[string]any, error) {
-
+func handler(ctx context.Context, factory Factory, event *events.SQSEvent) (map[string]any, error) {
 	result := map[string]any{}
-	var err error
 	batchItemFailures := []map[string]any{}
+	var err error
+
 	for _, record := range event.Records {
-		if err = handleCloudWatchEvent(ctx, record.Body); err != nil {
+		if err = handleCloudWatchEvent(ctx, factory, record.Body); err != nil {
 			logger.ErrorContext(
 				ctx,
 				err.Error(),
@@ -67,14 +66,14 @@ func handler(ctx context.Context, event events.SQSEvent) (map[string]any, error)
 	return result, err
 }
 
-func handleCloudWatchEvent(ctx context.Context, body string) error {
+func handleCloudWatchEvent(ctx context.Context, factory Factory, body string) error {
 	var cloudWatchEvent events.CloudWatchEvent
 
 	err := json.Unmarshal([]byte(body), &cloudWatchEvent)
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
-			"Failed to unmarshal CloudWatch Event. Error - "+err.Error(),
+			"Failed to Unmarshal CloudWatch Event",
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
@@ -83,13 +82,12 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 	}
 
 	if cloudWatchEvent.DetailType == "lpa-access-granted" {
-		var eventHandler Handler
-		eventHandler = &MakeRegisterEventHandler{}
+		eventHandler := &MakeRegisterEventHandler{}
 
-		if err := eventHandler.EventHandler(ctx, &cloudWatchEvent); err != nil {
+		if err := eventHandler.EventHandler(ctx, factory, &cloudWatchEvent); err != nil {
 			logger.ErrorContext(
 				ctx,
-				"Failed to handle cloudwatch event",
+				"Failed to handle cloudwatch event: "+err.Error(),
 				slog.Group("location",
 					slog.String("file", "main.go"),
 				),
@@ -99,7 +97,7 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 	} else {
 		logger.ErrorContext(
 			ctx,
-			"Unhandled event type: "+cloudWatchEvent.DetailType,
+			"Unhandled event type",
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
@@ -107,6 +105,7 @@ func handleCloudWatchEvent(ctx context.Context, body string) error {
 
 		return errors.New("Unhandled event type: " + cloudWatchEvent.DetailType)
 	}
+
 	return nil
 }
 
@@ -118,16 +117,44 @@ func main() {
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
 	var err error
-	cfg, err = config.LoadDefaultConfig(ctx)
+	cfg, err = config.LoadDefaultConfig(ctx, config.WithHTTPClient(http.DefaultClient))
 	if err != nil {
-		logger.InfoContext(
+		logger.ErrorContext(
 			ctx,
 			"Failed to load default config",
 			slog.Group("location",
 				slog.String("file", "main.go"),
 			),
 		)
+		return
 	}
 
-	lambda.Start(handler)
+	if len(awsBaseURL) > 0 {
+		cfg.BaseEndpoint = aws.String(awsBaseURL)
+	}
+
+	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	if err != nil {
+		logger.ErrorContext(
+			ctx,
+			"Failed to create dynamodb client: "+err.Error(),
+			slog.Group("location",
+				slog.String("file", "main.go"),
+			),
+		)
+
+		return
+	}
+
+	factory := &DefaultFactory{
+		logger:       logger,
+		cfg:          cfg,
+		dynamoClient: dynamoClient,
+		appPublicURL: appPublicURL,
+		httpClient:   httpClient,
+	}
+
+	lambda.Start(func(ctx context.Context, event events.SQSEvent) (map[string]any, error) {
+		return handler(ctx, factory, &event)
+	})
 }

@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
+	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
+	"github.com/stretchr/testify/mock"
 	"testing"
 	"time"
 
@@ -50,7 +52,7 @@ func TestValidCloudWatchEvent(t *testing.T) {
 	sqsBody, err := json.Marshal(cloudWatchEvent)
 	assert.NoError(t, err)
 
-	sqsEvent := events.SQSEvent{
+	sqsEvent := &events.SQSEvent{
 		Records: []events.SQSMessage{
 			{
 				MessageId: "1",
@@ -59,7 +61,14 @@ func TestValidCloudWatchEvent(t *testing.T) {
 		},
 	}
 
-	result, err := handler(ctx, sqsEvent)
+	mockDynamo := new(mocks.DynamodbClient)
+	mockFactory := new(MockFactory)
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+
+	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+
+	result, err := handler(ctx, mockFactory, sqsEvent)
 	assert.Nil(t, err)
 	assert.Empty(t, result["batchItemFailures"])
 }
@@ -67,8 +76,9 @@ func TestValidCloudWatchEvent(t *testing.T) {
 func TestInvalidJsonInSQSBody(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	factory := &DefaultFactory{}
 
-	sqsEvent := events.SQSEvent{
+	sqsEvent := &events.SQSEvent{
 		Records: []events.SQSMessage{
 			{
 				MessageId: "1",
@@ -77,7 +87,7 @@ func TestInvalidJsonInSQSBody(t *testing.T) {
 		},
 	}
 
-	result, err := handler(ctx, sqsEvent)
+	result, err := handler(ctx, factory, sqsEvent)
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "invalid character 'i'")
@@ -87,6 +97,7 @@ func TestInvalidJsonInSQSBody(t *testing.T) {
 func TestUnsupportedCloudWatchEventType(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	factory := &DefaultFactory{}
 
 	cloudWatchPayload, err := json.Marshal(payload)
 	assert.NoError(t, err)
@@ -106,7 +117,7 @@ func TestUnsupportedCloudWatchEventType(t *testing.T) {
 	sqsBody, err := json.Marshal(cloudWatchEvent)
 	assert.NoError(t, err)
 
-	sqsEvent := events.SQSEvent{
+	sqsEvent := &events.SQSEvent{
 		Records: []events.SQSMessage{
 			{
 				MessageId: "1",
@@ -115,7 +126,7 @@ func TestUnsupportedCloudWatchEventType(t *testing.T) {
 		},
 	}
 
-	result, err := handler(ctx, sqsEvent)
+	result, err := handler(ctx, factory, sqsEvent)
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "Unhandled event type: "+unsupportedDetailType)
