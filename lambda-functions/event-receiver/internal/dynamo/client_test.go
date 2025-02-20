@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/google/uuid"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo/mocks"
 	"testing"
 
@@ -24,10 +25,13 @@ type testSK string
 func (k testSK) SK() string { return string(k) }
 
 var (
-	ctx           = context.Background()
-	expectedError = errors.New("err")
-	subjectID     = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
-	actorUid      = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
+	ctx             = context.Background()
+	expectedError   = errors.New("err")
+	subjectID       = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
+	actorUid        = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
+	lpaId           = "M-1234-5678-9012"
+	userId          = uuid.New().String()
+	UserLpaActorMap = uuid.New().String()
 )
 
 func TestOneByUID(t *testing.T) {
@@ -154,5 +158,78 @@ func TestPutWhenUnmarshalError(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "unmarshal error")
 
+	mockDynamoDB.AssertExpectations(t)
+}
+
+func TestGetByLpaIDAndUserID(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	expectedItem := map[string]types.AttributeValue{
+		"Id":      &types.AttributeValueMemberS{Value: UserLpaActorMap},
+		"LpaUid":  &types.AttributeValueMemberS{Value: lpaId},
+		"ActorId": &types.AttributeValueMemberS{Value: actorUid},
+		"UserId":  &types.AttributeValueMemberS{Value: userId},
+	}
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{
+			Items: []map[string]types.AttributeValue{expectedItem},
+		}, nil).Once()
+
+	c := &Client{table: "this", svc: mockDynamoDB}
+
+	var v map[string]any
+	err := c.GetByLpaIDAndUserID(ctx, lpaId, userId, &v)
+
+	assert.Nil(t, err)
+	assert.Equal(t, map[string]any{"Id": UserLpaActorMap, "LpaUid": lpaId, "ActorId": actorUid, "UserId": userId}, v)
+	mockDynamoDB.AssertExpectations(t)
+}
+
+func TestGetByLpaIDAndUserIDWhenQueryError(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, expectedError).Once()
+
+	c := &Client{table: "this", svc: mockDynamoDB}
+
+	err := c.GetByLpaIDAndUserID(ctx, lpaId, userId, mock.Anything)
+
+	assert.Equal(t, fmt.Errorf("failed to query LPA mappings: %w", expectedError), err)
+}
+
+func TestGetByLpaIDAndUserIDWhenNoItems(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, nil).Once()
+
+	c := &Client{table: "this", svc: mockDynamoDB}
+
+	err := c.GetByLpaIDAndUserID(ctx, lpaId, userId, mock.Anything)
+	assert.ErrorIs(t, err, NotFoundError{})
+}
+
+func TestGetByLpaIDAndUserIDUnmarshalError(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{
+			Items: []map[string]types.AttributeValue{
+				{
+					"Id":      &types.AttributeValueMemberS{Value: UserLpaActorMap},
+					"LpaUid":  &types.AttributeValueMemberS{Value: lpaId},
+					"ActorId": &types.AttributeValueMemberS{Value: actorUid},
+					"UserId":  &types.AttributeValueMemberS{Value: userId},
+				},
+			},
+		}, nil).Once()
+
+	c := &Client{table: "this", svc: mockDynamoDB}
+
+	err := c.GetByLpaIDAndUserID(ctx, lpaId, userId, "not an lpa")
+
+	assert.IsType(t, &attributevalue.InvalidUnmarshalError{}, err)
 	mockDynamoDB.AssertExpectations(t)
 }
