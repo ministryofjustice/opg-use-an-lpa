@@ -20,17 +20,24 @@ trait PSR17PropheciesTrait
     private ObjectProphecy|RequestInterface $requestProphecy;
     private ObjectProphecy|StreamFactoryInterface $streamFactoryProphecy;
 
+    public function generateCleanPSR17Prophecies(): void
+    {
+        $this->httpClientProphecy     = $this->prophesize(ClientInterface::class);
+        $this->streamFactoryProphecy  = $this->prophesize(StreamFactoryInterface::class);
+        $this->requestFactoryProphecy = $this->prophesize(RequestFactoryInterface::class);
+        $this->requestProphecy        = $this->prophesize(RequestInterface::class);
+    }
+
     public function generatePSR17Prophecies(ResponseInterface $response, string $traceId, array $data): void
     {
-        $this->httpClientProphecy = $this->prophesize(ClientInterface::class);
+        $this->generateCleanPSR17Prophecies();
+
         $this->httpClientProphecy->sendRequest(Argument::any())->willReturn($response);
 
-        $this->streamFactoryProphecy = $this->prophesize(StreamFactoryInterface::class);
         $this->streamFactoryProphecy
             ->createStream(json_encode($data))
             ->willReturn($this->prophesize(StreamInterface::class)->reveal());
 
-        $this->requestProphecy = $this->prophesize(RequestInterface::class);
         $this->requestProphecy
             ->withBody(Argument::any())
             ->willReturn($this->requestProphecy->reveal());
@@ -46,7 +53,5 @@ trait PSR17PropheciesTrait
             ->withHeader('x-amzn-trace-id', $traceId)
             ->shouldBeCalled()
             ->willReturn($this->requestProphecy->reveal());
-
-        $this->requestFactoryProphecy = $this->prophesize(RequestFactoryInterface::class);
     }
 }

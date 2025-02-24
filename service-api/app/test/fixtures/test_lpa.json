@@ -1,16 +1,16 @@
 {
   "id": 2,
-  "uId": "700000000047",
+  "uId": "7000-0000-0047",
   "receiptDate": "2014-09-26",
   "registrationDate": "2019-10-10",
   "rejectedDate": null,
   "donor": {
     "id": 7,
-    "uId": "700000000799",
+    "uId": "7000-0000-0799",
     "linked": [
       {
         "id": 7,
-        "uId": "700000000799"
+        "uId": "7000-0000-0799"
       }
     ],
     "dob": "1948-11-01",
@@ -47,7 +47,7 @@
   "attorneys": [
     {
       "id": 9,
-      "uId": "700000000815",
+      "uId": "7000-0000-0815",
       "dob": "1990-05-04",
       "email": "",
       "salutation": "",
@@ -72,7 +72,7 @@
     },
     {
       "id": 12,
-      "uId": "700000000849",
+      "uId": "7000-0000-0849",
       "dob": "1975-10-05",
       "email": "XXXXX",
       "salutation": "Mrs",
@@ -113,7 +113,7 @@
       }
     ],
       "id": 3485,
-      "uId": "700000151998",
+      "uId": "7000-0015-1998",
       "dob": null,
       "email": null,
       "salutation": null,
@@ -128,7 +128,7 @@
   "certificateProviders": [
     {
       "id": 11,
-      "uId": "700000000831",
+      "uId": "7000-0000-0831",
       "dob": null,
       "email": null,
       "salutation": "Miss",

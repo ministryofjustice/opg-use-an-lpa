@@ -35,13 +35,20 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
      * associative array.
      *
      * @return array
-     * @throws RuntimeException
      */
     public function getAdditionalData(): array
     {
-        return $this->getResponse() !== null
-            ? json_decode($this->getResponse()->getBody()->getContents(), true)
-            : [];
+        $data = null;
+
+        if ($this->getResponse() !== null) {
+            try {
+                $data = json_decode($this->getResponse()->getBody()->getContents(), true);
+            } catch (RuntimeException) {
+                // $body->getContents() can fail and needs trapping
+            }
+        }
+
+        return $data ?? [];
     }
 
     public function getAdditionalDataForLogging(): array
@@ -57,14 +64,21 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
         $code = self::DEFAULT_CODE;
 
         if (! is_null($response)) {
-            $body = json_decode($response->getBody()->getContents(), true);
+            $body = null;
             $code = $response->getStatusCode();
 
             //  If no message was provided create one from the response data
             if (is_null($message)) {
-                //  Try to get the message from the details section of the body
-                if (is_array($body) && isset($body['details'])) {
-                    $message = $body['details'];
+                try {
+                    $body = json_decode($response->getBody()->getContents(), true);
+
+                    //  If no message was provided create one from the response data
+                    //  Try to get the message from the details section of the body
+                    if (is_array($body) && isset($body['details'])) {
+                        $message = $body['details'];
+                    }
+                } catch (RuntimeException) {
+                    // $body->getContents() can fail and needs trapping
                 }
             }
 
@@ -72,7 +86,7 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
             if (is_null($message)) {
                 $message = sprintf(
                     'HTTP: %d - %s',
-                    $response->getStatusCode(),
+                    $code,
                     is_array($body) ? print_r($body, true) : 'Unexpected API response'
                 );
             }

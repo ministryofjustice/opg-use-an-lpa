@@ -11,7 +11,6 @@ use EventSauce\ObjectHydrator\DefinitionProvider;
 use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
 use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
-use RuntimeException;
 
 class LpaDataFormatter
 {
@@ -28,33 +27,28 @@ class LpaDataFormatter
 
     /**
      * @throws UnableToHydrateObject
-     * @throws RuntimeException
      */
     public function __invoke(array $lpa): Lpa
     {
-        $lpaObject = $this->hydrateObject($lpa);
-
-        return $lpaObject;
+        return $this->hydrateObject($lpa);
     }
 
     /**
      * @throws UnableToHydrateObject
      */
-    public function hydrateObject(array $lpa): object
+    public function hydrateObject(array $lpa): Lpa
     {
-        $className = $this->getHydrationClass($lpa);
-
         return $this->mapper->hydrateObject(
-            $className,
-            $lpa
+            $this->getHydrationClass($lpa),
+            $lpa,
         );
     }
 
-    public function serializeObject(object $lpa): mixed
-    {
-        return $this->mapper->serializeObject($lpa);
-    }
-
+    /**
+     * @param array $lpa
+     * @return string
+     * @psalm-return class-string
+     */
     private function getHydrationClass(array $lpa): string
     {
         return isset($lpa['uid']) && str_starts_with($lpa['uid'], 'M-')

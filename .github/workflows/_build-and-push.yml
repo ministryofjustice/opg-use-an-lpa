@@ -86,7 +86,7 @@ jobs:
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@9fa7e61ec7e1f44ac75218e7aaea81da8856fd11
+        uses: actions/cache@7921ae235bdcb376cc8f22558dc5f8ddc3c3c2f9
         env:
           cache-name: cache-node-modules
         with:
@@ -149,7 +149,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: install python
-        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
+        uses: actions/setup-python@6ca8e8598faa206f7140a65ba31b899bebe16f58 # pin@v4.2.0
         with:
           python-version: '3.12'
 

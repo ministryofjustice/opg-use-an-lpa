@@ -7,6 +7,7 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
+use App\Entity\Sirius\Casters\CastToUnhyphenatedUId;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
@@ -51,6 +52,7 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         ?DateTimeImmutable $statusDate,
         #[CastListToType(SiriusLpaTrustCorporation::class)]
         ?array $trustCorporations,
+        #[CastToUnhyphenatedUId]
         ?string $uId,
         #[MapFrom('attorneyActDecisions')]
         #[CastToWhenTheLpaCanBeUsed]
