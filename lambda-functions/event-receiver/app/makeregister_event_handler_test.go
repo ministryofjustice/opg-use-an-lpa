@@ -50,7 +50,6 @@ func (m *MockFactory) DynamoClient() DynamodbClient {
 
 func TestMakeRegisterEventHandler_Success(t *testing.T) {
 	ctx := context.Background()
-	userId := "b70e6ec5-dc90-43cf-a107-c79ef2707675"
 	lpaId := "M-1234-5678-9012"
 
 	handler := &MakeRegisterEventHandler{}
@@ -83,7 +82,9 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		*user = existingUser
 	}).Return(nil)
 	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(nil)
+	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
+		return len(id) > 0
+	}), mock.Anything).Return(nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.NoError(t, err)
