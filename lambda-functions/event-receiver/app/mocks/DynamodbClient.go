@@ -13,6 +13,24 @@ type DynamodbClient struct {
 	mock.Mock
 }
 
+// GetByLpaIDAndUserID provides a mock function with given fields: ctx, lpaId, userId, v
+func (_m *DynamodbClient) GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId string, v interface{}) error {
+	ret := _m.Called(ctx, lpaId, userId, v)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetByLpaIDAndUserID")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string, interface{}) error); ok {
+		r0 = rf(ctx, lpaId, userId, v)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // OneByUID provides a mock function with given fields: ctx, uid, v
 func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{}) error {
 	ret := _m.Called(ctx, uid, v)

@@ -36,6 +36,7 @@ type Factory interface {
 type DynamodbClient interface {
 	OneByUID(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, v any) error
+	GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId string, v interface{}) error
 }
 
 type Handler interface {
