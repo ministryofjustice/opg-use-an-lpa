@@ -92,7 +92,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
