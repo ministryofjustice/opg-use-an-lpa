@@ -12,9 +12,6 @@ use EventSauce\ObjectHydrator\UnableToHydrateObject;
 #[Attribute(Attribute::TARGET_PARAMETER)]
 class LinkedDonorCaster implements PropertyCaster
 {
-    /**
-     * @throws UnableToHydrateObject
-     */
     public function cast(mixed $value, ObjectMapper $hydrator): array
     {
         $linkedDonors = [];
@@ -22,7 +19,7 @@ class LinkedDonorCaster implements PropertyCaster
         foreach ($value as $linked) {
             $linkedDonors[] = [
                'id'  => $linked['id'],
-               'uId' => $linked['uId'],
+               'uId' => str_replace('-', '', $linked['uId']),
             ];
         }
 

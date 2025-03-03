@@ -35,22 +35,21 @@ class CombinedLpaTest extends TestCase
         );
 
         $attorneys = [
-        EntityTestHelper::makePerson(
-            uId: 'attorney'
-        ),
+            EntityTestHelper::makePerson(
+                uId: 'attorney'
+            ),
         ];
 
         $trustCorporations = [
-        EntityTestHelper::makePerson(
-            uId: 'trust-corporation'
-        ),
+            EntityTestHelper::makePerson(
+                uId: 'trust-corporation'
+            ),
         ];
 
         $combinedLpa = EntityTestHelper::makeCombinedLpa(
             applicationHasGuidance:     true,
             applicationHasRestrictions: true,
             attorneys:                  $attorneys,
-            caseSubtype:                LpaType::PERSONAL_WELFARE,
             donor:                      $donor,
             howAttorneysMakeDecisions:  HowAttorneysMakeDecisions::JOINTLY,
             lifeSustainingTreatment:    LifeSustainingTreatment::OPTION_B,

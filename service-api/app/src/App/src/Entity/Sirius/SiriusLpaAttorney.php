@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity\Sirius;
 
 use App\Entity\Casters\ExtractAddressFieldFrom;
+use App\Entity\Sirius\Casters\CastToUnhyphenatedUId;
 use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
@@ -50,6 +51,7 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('town')]
         ?string $town,
+        #[CastToUnhyphenatedUId]
         ?string $uId,
     ) {
         parent::__construct(
