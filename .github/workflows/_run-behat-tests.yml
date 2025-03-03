@@ -47,7 +47,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
