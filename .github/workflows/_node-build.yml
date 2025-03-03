@@ -17,7 +17,7 @@ jobs:
           node-version-file: '.nvmrc'
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@7921ae235bdcb376cc8f22558dc5f8ddc3c3c2f9 # pin@v3.0.8
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # pin@v3.0.8
         env:
           cache-name: cache-node-modules
         with:
@@ -33,7 +33,7 @@ jobs:
           cd service-front/web/
           npm run build
       - name: archive dist
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: dist-web
           path: service-front/web/dist/

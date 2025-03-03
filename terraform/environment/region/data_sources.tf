@@ -103,7 +103,7 @@ data "aws_ecr_repository" "use_an_lpa_pdf" {
 }
 
 data "aws_ecr_image" "pdf_service" {
-  repository_name = "pdf_service"
+  repository_name = "pdf-service"
   image_tag       = "latest"
   provider        = aws.management
 }
