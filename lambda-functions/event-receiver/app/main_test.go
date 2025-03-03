@@ -67,10 +67,10 @@ func TestValidCloudWatchEvent(t *testing.T) {
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
 	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
 		return len(id) > 0
-	}), mock.Anything).Return(nil)
+	})).Return(false, nil)
 
 	result, err := handler(ctx, mockFactory, sqsEvent)
 	assert.Nil(t, err)

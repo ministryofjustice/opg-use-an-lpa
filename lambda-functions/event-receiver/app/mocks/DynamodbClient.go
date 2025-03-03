@@ -13,22 +13,32 @@ type DynamodbClient struct {
 	mock.Mock
 }
 
-// GetByLpaIDAndUserID provides a mock function with given fields: ctx, lpaId, userId, v
-func (_m *DynamodbClient) GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId string, v interface{}) error {
-	ret := _m.Called(ctx, lpaId, userId, v)
+// ExistsLpaIDAndUserID provides a mock function with given fields: ctx, lpaId, userId
+func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error) {
+	ret := _m.Called(ctx, lpaId, userId)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetByLpaIDAndUserID")
+		panic("no return value specified for ExistsLpaIDAndUserID")
 	}
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, string, interface{}) error); ok {
-		r0 = rf(ctx, lpaId, userId, v)
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) (bool, error)); ok {
+		return rf(ctx, lpaId, userId)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) bool); ok {
+		r0 = rf(ctx, lpaId, userId)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(bool)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = rf(ctx, lpaId, userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // OneByUID provides a mock function with given fields: ctx, uid, v
@@ -49,17 +59,17 @@ func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{
 	return r0
 }
 
-// Put provides a mock function with given fields: ctx, v
-func (_m *DynamodbClient) Put(ctx context.Context, v interface{}) error {
-	ret := _m.Called(ctx, v)
+// Put provides a mock function with given fields: ctx, tableName, v
+func (_m *DynamodbClient) Put(ctx context.Context, tableName string, v interface{}) error {
+	ret := _m.Called(ctx, tableName, v)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Put")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, interface{}) error); ok {
-		r0 = rf(ctx, v)
+	if rf, ok := ret.Get(0).(func(context.Context, string, interface{}) error); ok {
+		r0 = rf(ctx, tableName, v)
 	} else {
 		r0 = ret.Error(0)
 	}

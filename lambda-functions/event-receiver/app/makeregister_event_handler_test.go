@@ -81,10 +81,10 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		user := args.Get(2).(*Actor)
 		*user = existingUser
 	}).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
 		return len(id) > 0
-	}), mock.Anything).Return(nil)
+	})).Return(false, nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.NoError(t, err)
@@ -126,7 +126,7 @@ func TestHandleSQSEvent_UnmarshalFailure(t *testing.T) {
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
 	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.Error(t, err)
@@ -148,7 +148,7 @@ func TestHandleCloudWatchEvent_FailedToFindUser(t *testing.T) {
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
 	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
 
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, actorUserTable, mock.Anything).Return(nil)
 
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
@@ -169,7 +169,7 @@ func TestHandleCloudWatchEvent_FailedToPutActor(t *testing.T) {
 
 	simulatedError := errors.New("simulated error: Failed to put actor")
 	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(simulatedError)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
 
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
@@ -194,7 +194,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to find existing LPA")
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(simulatedError)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
@@ -221,8 +221,8 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to put Lpa")
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(simulatedError)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
@@ -248,8 +248,8 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(true, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
@@ -273,8 +273,8 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
-	mockDynamo.On("GetByLpaIDAndUserID", ctx, lpaId, userId, mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)

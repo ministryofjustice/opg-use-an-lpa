@@ -77,7 +77,7 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor Actor, 
 		"Identity": &types.AttributeValueMemberS{Value: actor.SubjectID},
 	}
 
-	err = dynamoClient.Put(ctx, newUser)
+	err = dynamoClient.Put(ctx, actorUserTable, newUser)
 	if err != nil {
 		return fmt.Errorf("Failed to put user %s: %w", actor.ActorUID, err)
 	}
@@ -86,10 +86,9 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor Actor, 
 }
 
 func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, userId string, LpaId string) error {
-	var existingLPA map[string]types.AttributeValue
+	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaId, userId)
 
-	err := dynamoClient.GetByLpaIDAndUserID(ctx, LpaId, userId, &existingLPA)
-	if err == nil && existingLPA != nil {
+	if err == nil && lpaExists == true {
 		return nil
 	}
 
@@ -106,7 +105,7 @@ func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, u
 		"Comment": &types.AttributeValueMemberS{Value: "LPA added by Event Receiver"},
 	}
 
-	err = dynamoClient.Put(ctx, newLPA)
+	err = dynamoClient.Put(ctx, actorMapTable, newLPA)
 	if err != nil {
 		return fmt.Errorf("Failed to insert LPA mapping for user %s: %w", LpaId, err)
 	}

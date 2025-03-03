@@ -18,9 +18,11 @@ import (
 )
 
 var (
-	tableName    = os.Getenv("LPAS_TABLE")
-	appPublicURL = os.Getenv("APP_PUBLIC_URL")
-	awsBaseURL   = os.Getenv("AWS_BASE_URL")
+	envPrefix      = os.Getenv("TABLE_PREFIX")
+	appPublicURL   = os.Getenv("APP_PUBLIC_URL")
+	awsBaseURL     = os.Getenv("AWS_BASE_URL")
+	actorMapTable  = "UserLpaActorMap"
+	actorUserTable = "ActorUsers"
 
 	cfg        aws.Config
 	httpClient *http.Client
@@ -35,8 +37,8 @@ type Factory interface {
 
 type DynamodbClient interface {
 	OneByUID(ctx context.Context, uid string, v any) error
-	Put(ctx context.Context, v any) error
-	GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId string, v interface{}) error
+	Put(ctx context.Context, tableName string, v any) error
+	ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error)
 }
 
 type Handler interface {
@@ -134,7 +136,7 @@ func main() {
 		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
-	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	dynamoClient, err := dynamo.NewClient(cfg)
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
