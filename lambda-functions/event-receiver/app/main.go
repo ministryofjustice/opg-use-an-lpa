@@ -23,7 +23,6 @@ var (
 	awsBaseURL     = os.Getenv("AWS_BASE_URL")
 	actorMapTable  = "UserLpaActorMap"
 	actorUserTable = "ActorUsers"
-	lpaId          = "0"
 
 	cfg        aws.Config
 	httpClient *http.Client
