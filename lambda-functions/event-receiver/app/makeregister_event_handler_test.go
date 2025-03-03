@@ -261,9 +261,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	}
 
 	err := handleLpas(ctx, mockDynamo, actor, userId, lpaId)
-
 	assert.NoError(t, err)
-	assert.Nil(t, err)
 }
 
 func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {

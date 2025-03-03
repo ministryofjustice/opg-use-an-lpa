@@ -107,7 +107,7 @@ func (c *Client) GetByLpaIDAndUserID(ctx context.Context, lpaId string, userId s
 		return fmt.Errorf("failed to query LPA mappings: %w", err)
 	}
 	if len(response.Items) == 0 {
-		return NotFoundError{}
+		return nil
 	}
 
 	return attributevalue.UnmarshalMap(response.Items[0], v)

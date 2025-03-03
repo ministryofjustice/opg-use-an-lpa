@@ -26,9 +26,9 @@ type lpaAccessGranted struct {
 }
 
 func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Factory, record *events.CloudWatchEvent) error {
-
 	var data lpaAccessGranted
 	userId := uuid.New().String()
+	dynamodbClient := factory.DynamoClient()
 
 	if err := json.Unmarshal(record.Detail, &data); err != nil {
 		errMsg := "failed to unmarshal CloudWatch detail :" + record.ID + " - Error: " + err.Error()
@@ -44,12 +44,7 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 	}
 
 	for _, actor := range data.Actors {
-		if err := handleUsers(ctx, factory.DynamoClient(), actor, userId); err == nil {
-			err := handleLpas(ctx, factory.DynamoClient(), actor, userId, data.UID)
-			if err != nil {
-				return err
-			}
-		} else {
+		if err := handleUsers(ctx, dynamodbClient, actor, userId); err != nil {
 			logger.ErrorContext(
 				ctx,
 				err.Error(),
@@ -57,7 +52,10 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 					slog.String("file", "makeregister_event_handler.go"),
 				),
 			)
+			return err
+		}
 
+		if err := handleLpas(ctx, dynamodbClient, actor, userId, data.UID); err != nil {
 			return err
 		}
 	}
