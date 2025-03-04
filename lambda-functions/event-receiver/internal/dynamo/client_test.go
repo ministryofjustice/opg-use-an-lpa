@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/google/uuid"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo/mocks"
 	"testing"
 
@@ -24,13 +25,16 @@ type testSK string
 func (k testSK) SK() string { return string(k) }
 
 var (
-	ctx           = context.Background()
-	expectedError = errors.New("err")
-	subjectID     = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
-	actorUid      = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
+	ctx             = context.Background()
+	expectedError   = errors.New("err")
+	subjectID       = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
+	actorUid        = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
+	lpaId           = "M-1234-5678-9012"
+	userId          = uuid.New().String()
+	UserLpaActorMap = uuid.New().String()
 )
 
-func TestOneByUID(t *testing.T) {
+func TestOneByIdentity(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	expectedItem := map[string]types.AttributeValue{
@@ -42,42 +46,42 @@ func TestOneByUID(t *testing.T) {
 			Items: []map[string]types.AttributeValue{expectedItem},
 		}, nil).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
 	var v map[string]any
-	err := c.OneByUID(ctx, subjectID, &v)
+	err := c.OneByIdentity(ctx, subjectID, &v)
 
 	assert.Nil(t, err)
 	assert.Equal(t, map[string]any{"Id": actorUid, "subjectId": subjectID}, v)
 	mockDynamoDB.AssertExpectations(t)
 }
 
-func TestOneByUIDWhenQueryError(t *testing.T) {
+func TestOneByIdentityWhenQueryError(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{}, expectedError).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, mock.Anything)
+	err := c.OneByIdentity(ctx, subjectID, mock.Anything)
 
 	assert.Equal(t, fmt.Errorf("failed to query Identity: %w", expectedError), err)
 }
 
-func TestOneByUIDWhenNoItems(t *testing.T) {
+func TestOneByIdentityWhenNoItems(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{}, nil).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, mock.Anything)
+	err := c.OneByIdentity(ctx, subjectID, mock.Anything)
 	assert.ErrorIs(t, err, NotFoundError{})
 }
 
-func TestOneByUIDWhenUnmarshalError(t *testing.T) {
+func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
@@ -90,9 +94,9 @@ func TestOneByUIDWhenUnmarshalError(t *testing.T) {
 			},
 		}, nil).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, "not an lpa")
+	err := c.OneByIdentity(ctx, subjectID, "not an lpa")
 
 	assert.IsType(t, &attributevalue.InvalidUnmarshalError{}, err)
 	mockDynamoDB.AssertExpectations(t)
@@ -112,13 +116,13 @@ func TestPut(t *testing.T) {
 			mockDynamoDB := new(mocks.DynamoDB)
 
 			mockDynamoDB.On("PutItem", ctx, &dynamodb.PutItemInput{
-				TableName: aws.String("this"),
+				TableName: aws.String("-ActorUsers"),
 				Item:      data,
 			}).Return(&dynamodb.PutItemOutput{}, nil).Once()
 
-			c := &Client{table: "this", svc: mockDynamoDB}
+			c := &Client{svc: mockDynamoDB}
 
-			err = c.Put(ctx, dataMap)
+			err = c.Put(ctx, "ActorUsers", dataMap)
 			assert.Nil(t, err)
 		})
 	}
@@ -129,12 +133,12 @@ func TestPutWhenError(t *testing.T) {
 
 	mockDynamoDB := new(mocks.DynamoDB)
 
-	mockDynamoDB.On("PutItem", ctx, mock.Anything).
+	mockDynamoDB.On("PutItem", ctx, mock.Anything, mock.Anything).
 		Return(nil, expectedError).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
-	err := c.Put(ctx, "hello")
+	err := c.Put(ctx, "hello", map[string]string{})
 	assert.Equal(t, expectedError, err)
 	mockDynamoDB.AssertExpectations(t)
 }
@@ -142,12 +146,12 @@ func TestPutWhenError(t *testing.T) {
 func TestPutWhenUnmarshalError(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
-	mockDynamoDB.On("PutItem", ctx, mock.Anything).
+	mockDynamoDB.On("PutItem", ctx, mock.Anything, mock.Anything).
 		Return(nil, errors.New("unmarshal error")).Once()
 
-	c := &Client{table: "this", svc: mockDynamoDB}
+	c := &Client{svc: mockDynamoDB}
 
-	err := c.Put(ctx, map[string]string{
+	err := c.Put(ctx, "ActorUsers", map[string]string{
 		"subjectId": subjectID,
 	})
 
@@ -155,4 +159,53 @@ func TestPutWhenUnmarshalError(t *testing.T) {
 	assert.Contains(t, err.Error(), "unmarshal error")
 
 	mockDynamoDB.AssertExpectations(t)
+}
+
+func TestExistsLpaIDAndUserID(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	expectedItem := map[string]types.AttributeValue{
+		"Id":      &types.AttributeValueMemberS{Value: UserLpaActorMap},
+		"LpaUid":  &types.AttributeValueMemberS{Value: lpaId},
+		"ActorId": &types.AttributeValueMemberS{Value: actorUid},
+		"UserId":  &types.AttributeValueMemberS{Value: userId},
+	}
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{
+			Items: []map[string]types.AttributeValue{expectedItem},
+		}, nil).Once()
+
+	c := &Client{svc: mockDynamoDB}
+
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+	assert.Equal(t, true, lpaExists)
+	assert.Nil(t, err)
+	mockDynamoDB.AssertExpectations(t)
+}
+
+func TestExistsLpaIDAndUserIDWhenQueryError(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, expectedError).Once()
+
+	c := &Client{svc: mockDynamoDB}
+
+	_, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+
+	assert.Equal(t, fmt.Errorf("failed to query LPA mappings: %w", expectedError), err)
+}
+
+func TestExistsLpaIDAndUserIDWhenNoItems(t *testing.T) {
+	mockDynamoDB := new(mocks.DynamoDB)
+
+	mockDynamoDB.On("Query", ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, nil).Once()
+
+	c := &Client{svc: mockDynamoDB}
+
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+	assert.ErrorIs(t, err, nil)
+	assert.Equal(t, false, lpaExists)
 }

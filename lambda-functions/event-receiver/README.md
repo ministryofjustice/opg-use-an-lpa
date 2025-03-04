@@ -6,7 +6,7 @@ This Lambda function will process events from the new Event Receiver EventBus wh
 
 As the lambda is built from an image, this can be spun up to test in dev environment.
 
-Bring up the lambda locally
+Bring up the lambda locally.
 
 ```
 make build

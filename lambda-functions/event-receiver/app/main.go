@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"net/http"
@@ -18,9 +19,10 @@ import (
 )
 
 var (
-	tableName    = os.Getenv("LPAS_TABLE")
-	appPublicURL = os.Getenv("APP_PUBLIC_URL")
-	awsBaseURL   = os.Getenv("AWS_BASE_URL")
+	appPublicURL   = os.Getenv("APP_PUBLIC_URL")
+	awsBaseURL     = os.Getenv("AWS_BASE_URL")
+	actorMapTable  = "UserLpaActorMap"
+	actorUserTable = "ActorUsers"
 
 	cfg        aws.Config
 	httpClient *http.Client
@@ -34,8 +36,9 @@ type Factory interface {
 }
 
 type DynamodbClient interface {
-	OneByUID(ctx context.Context, uid string, v any) error
-	Put(ctx context.Context, v any) error
+	OneByIdentity(ctx context.Context, uid string, v any) error
+	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
+	ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error)
 }
 
 type Handler interface {
@@ -133,7 +136,7 @@ func main() {
 		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
-	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	dynamoClient, err := dynamo.NewClient(cfg)
 	if err != nil {
 		logger.ErrorContext(
 			ctx,

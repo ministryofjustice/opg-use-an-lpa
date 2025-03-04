@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"log/slog"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -16,6 +17,7 @@ type MakeRegisterEventHandler struct{}
 type Actor struct {
 	ActorUID  string `json:"actorUid"`
 	SubjectID string `json:"subjectId"`
+	Id        string
 }
 
 type lpaAccessGranted struct {
@@ -25,8 +27,9 @@ type lpaAccessGranted struct {
 }
 
 func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Factory, record *events.CloudWatchEvent) error {
-
 	var data lpaAccessGranted
+
+	dynamodbClient := factory.DynamoClient()
 
 	if err := json.Unmarshal(record.Detail, &data); err != nil {
 		errMsg := "failed to unmarshal CloudWatch detail :" + record.ID + " - Error: " + err.Error()
@@ -42,7 +45,8 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 	}
 
 	for _, actor := range data.Actors {
-		if err := handleUsers(ctx, factory.DynamoClient(), actor); err != nil {
+
+		if err := handleUsers(ctx, dynamodbClient, &actor); err != nil {
 			logger.ErrorContext(
 				ctx,
 				err.Error(),
@@ -50,7 +54,11 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 					slog.String("file", "makeregister_event_handler.go"),
 				),
 			)
+			return err
 
+		}
+
+		if err := handleLpas(ctx, dynamodbClient, actor, data.UID); err != nil {
 			return err
 		}
 	}
@@ -58,23 +66,59 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 	return nil
 }
 
-func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor Actor) error {
+func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor) error {
 	var existingUser Actor
 
-	err := dynamoClient.OneByUID(ctx, actor.SubjectID, &existingUser)
+	err := dynamoClient.OneByIdentity(ctx, actor.SubjectID, &existingUser)
 
 	if err != nil {
 		return fmt.Errorf("Failed to find existing user %s: %w", actor.ActorUID, err)
 	}
 
+	if existingUser.Id != "" {
+		actor.Id = existingUser.Id
+		return nil
+	}
+
+	userId := uuid.New().String()
 	newUser := map[string]types.AttributeValue{
-		"Id":       &types.AttributeValueMemberS{Value: uuid.New().String()},
+		"Id":       &types.AttributeValueMemberS{Value: userId},
 		"Identity": &types.AttributeValueMemberS{Value: actor.SubjectID},
 	}
 
-	err = dynamoClient.Put(ctx, newUser)
+	err = dynamoClient.Put(ctx, actorUserTable, newUser)
 	if err != nil {
 		return fmt.Errorf("Failed to put user %s: %w", actor.ActorUID, err)
+	}
+
+	actor.Id = userId
+
+	return nil
+}
+
+func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, LpaId string) error {
+	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaId, actor.Id)
+
+	if err == nil && lpaExists == true {
+		return nil
+	}
+
+	if err != nil {
+		return fmt.Errorf("Failed to find existing LPA %s: %w", LpaId, err)
+	}
+
+	newLPA := map[string]types.AttributeValue{
+		"Id":      &types.AttributeValueMemberS{Value: uuid.New().String()},
+		"LpaUid":  &types.AttributeValueMemberS{Value: LpaId},
+		"ActorId": &types.AttributeValueMemberS{Value: actor.ActorUID},
+		"Added":   &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339)},
+		"UserId":  &types.AttributeValueMemberS{Value: actor.Id},
+		"Comment": &types.AttributeValueMemberS{Value: "LPA added by Event Receiver"},
+	}
+
+	err = dynamoClient.Put(ctx, actorMapTable, newLPA)
+	if err != nil {
+		return fmt.Errorf("Failed to insert LPA mapping for user %s: %w", LpaId, err)
 	}
 
 	return nil

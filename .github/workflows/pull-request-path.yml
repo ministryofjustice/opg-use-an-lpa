@@ -82,9 +82,6 @@ jobs:
           elif [[ ${{ steps.changed-files-admin.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo admin)" >> $GITHUB_OUTPUT
-          elif [[ ${{ steps.changed-files-event.outputs.only_changed }} = "true" ]]
-          then
-            echo "path=$(echo event)" >> $GITHUB_OUTPUT
           elif [[ ${{ steps.changed-files-docs.outputs.only_changed }} = "true" ]]
           then
             echo "path=$(echo docs)" >> $GITHUB_OUTPUT
