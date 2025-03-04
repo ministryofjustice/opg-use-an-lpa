@@ -36,7 +36,7 @@ type Factory interface {
 }
 
 type DynamodbClient interface {
-	OneByUID(ctx context.Context, uid string, v any) error
+	OneByIdentity(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
 	ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error)
 }

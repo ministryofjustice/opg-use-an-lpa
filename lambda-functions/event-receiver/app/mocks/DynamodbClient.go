@@ -42,12 +42,12 @@ func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, lpaId string
 	return r0, r1
 }
 
-// OneByUID provides a mock function with given fields: ctx, uid, v
-func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{}) error {
+// OneByIdentity provides a mock function with given fields: ctx, uid, v
+func (_m *DynamodbClient) OneByIdentity(ctx context.Context, uid string, v interface{}) error {
 	ret := _m.Called(ctx, uid, v)
 
 	if len(ret) == 0 {
-		panic("no return value specified for OneByUID")
+		panic("no return value specified for OneByIdentity")
 	}
 
 	var r0 error

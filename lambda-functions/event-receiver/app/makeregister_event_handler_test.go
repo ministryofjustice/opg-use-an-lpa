@@ -21,7 +21,7 @@ type MockDynamoDbClient struct {
 	mock.Mock
 }
 
-func (m *MockDynamoDbClient) OneByUID(ctx context.Context, subjectID string, v interface{}) error {
+func (m *MockDynamoDbClient) OneByIdentity(ctx context.Context, subjectID string, v interface{}) error {
 	args := m.Called(ctx, subjectID, v)
 	return args.Error(0)
 }
@@ -78,7 +78,7 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
 	}
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Run(func(args mock.Arguments) {
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Run(func(args mock.Arguments) {
 		user := args.Get(2).(*Actor)
 		*user = existingUser
 	}).Return(nil)
@@ -107,7 +107,7 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.NoError(t, err)
 
-	mockDynamo.AssertCalled(t, "OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything)
+	mockDynamo.AssertCalled(t, "OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything)
 	mockDynamo.AssertCalled(t, "Put", ctx, "ActorUsers", mock.Anything)
 	mockDynamo.AssertCalled(t, "Put", ctx, "UserLpaActorMap", mock.Anything)
 	mockDynamo.AssertExpectations(t)
@@ -144,7 +144,7 @@ func TestHandleSQSEvent_UnmarshalFailure(t *testing.T) {
 	mockFactory := new(MockFactory)
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
@@ -160,7 +160,7 @@ func TestHandleCloudWatchEvent_FailedToFindUser(t *testing.T) {
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to find existing user")
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(simulatedError)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
@@ -185,7 +185,7 @@ func TestHandleCloudWatchEvent_FailedToPutActor(t *testing.T) {
 	mockDynamo := new(mocks.DynamodbClient)
 
 	simulatedError := errors.New("simulated error: Failed to put actor")
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
 
 	actor := &Actor{
@@ -220,7 +220,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
-		userId:    userId,
+		Id:        userId,
 	}
 
 	err := handleLpas(ctx, mockDynamo, actor, lpaId)
@@ -249,7 +249,7 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
-		userId:    userId,
+		Id:        userId,
 	}
 
 	err := handleLpas(ctx, mockDynamo, actor, lpaId)
@@ -277,7 +277,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
-		userId:    userId,
+		Id:        userId,
 	}
 
 	err := handleLpas(ctx, mockDynamo, actor, lpaId)
@@ -303,7 +303,7 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 	actor := Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
-		userId:    userId,
+		Id:        userId,
 	}
 
 	err := handleLpas(ctx, mockDynamo, actor, lpaId)

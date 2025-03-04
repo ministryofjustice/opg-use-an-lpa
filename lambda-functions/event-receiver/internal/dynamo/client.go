@@ -55,7 +55,7 @@ func NewClient(cfg aws.Config) (*Client, error) {
 	return &Client{svc: dynamodb.NewFromConfig(cfg)}, nil
 }
 
-func (c *Client) OneByUID(ctx context.Context, subjectId string, v interface{}) error {
+func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interface{}) error {
 	tableName := fmt.Sprintf("%s-%s", envPrefix, actorUserTable)
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(tableName),

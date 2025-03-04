@@ -32,11 +32,9 @@ var (
 	lpaId           = "M-1234-5678-9012"
 	userId          = uuid.New().String()
 	UserLpaActorMap = uuid.New().String()
-	actorUserTable  = "ActorUsers"
-	actorMapTable   = "UserLpaActorMap"
 )
 
-func TestOneByUID(t *testing.T) {
+func TestOneByIdentity(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	expectedItem := map[string]types.AttributeValue{
@@ -51,14 +49,14 @@ func TestOneByUID(t *testing.T) {
 	c := &Client{svc: mockDynamoDB}
 
 	var v map[string]any
-	err := c.OneByUID(ctx, subjectID, &v)
+	err := c.OneByIdentity(ctx, subjectID, &v)
 
 	assert.Nil(t, err)
 	assert.Equal(t, map[string]any{"Id": actorUid, "subjectId": subjectID}, v)
 	mockDynamoDB.AssertExpectations(t)
 }
 
-func TestOneByUIDWhenQueryError(t *testing.T) {
+func TestOneByIdentityWhenQueryError(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
@@ -66,12 +64,12 @@ func TestOneByUIDWhenQueryError(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, mock.Anything)
+	err := c.OneByIdentity(ctx, subjectID, mock.Anything)
 
 	assert.Equal(t, fmt.Errorf("failed to query Identity: %w", expectedError), err)
 }
 
-func TestOneByUIDWhenNoItems(t *testing.T) {
+func TestOneByIdentityWhenNoItems(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
@@ -79,11 +77,11 @@ func TestOneByUIDWhenNoItems(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, mock.Anything)
+	err := c.OneByIdentity(ctx, subjectID, mock.Anything)
 	assert.ErrorIs(t, err, NotFoundError{})
 }
 
-func TestOneByUIDWhenUnmarshalError(t *testing.T) {
+func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
 	mockDynamoDB := new(mocks.DynamoDB)
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
@@ -98,7 +96,7 @@ func TestOneByUIDWhenUnmarshalError(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	err := c.OneByUID(ctx, subjectID, "not an lpa")
+	err := c.OneByIdentity(ctx, subjectID, "not an lpa")
 
 	assert.IsType(t, &attributevalue.InvalidUnmarshalError{}, err)
 	mockDynamoDB.AssertExpectations(t)

@@ -66,7 +66,7 @@ func TestValidCloudWatchEvent(t *testing.T) {
 	mockFactory := new(MockFactory)
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
 		return len(id) > 0

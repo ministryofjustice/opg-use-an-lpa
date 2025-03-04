@@ -17,7 +17,7 @@ type MakeRegisterEventHandler struct{}
 type Actor struct {
 	ActorUID  string `json:"actorUid"`
 	SubjectID string `json:"subjectId"`
-	userId    string
+	Id        string
 }
 
 type lpaAccessGranted struct {
@@ -69,14 +69,16 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor) error {
 	var existingUser Actor
 
-	err := dynamoClient.OneByUID(ctx, actor.SubjectID, &existingUser)
+	err := dynamoClient.OneByIdentity(ctx, actor.SubjectID, &existingUser)
 
 	if err != nil {
 		return fmt.Errorf("Failed to find existing user %s: %w", actor.ActorUID, err)
 	}
 
-	if existingUser.userId != "" {
-		actor.userId = existingUser.userId
+	fmt.Printf("user id : %s", existingUser.Id)
+	fmt.Printf("%+v\n", existingUser)
+	if existingUser.Id != "" {
+		actor.Id = existingUser.Id
 		return nil
 	}
 
@@ -91,13 +93,13 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 		return fmt.Errorf("Failed to put user %s: %w", actor.ActorUID, err)
 	}
 
-	actor.userId = userId
+	actor.Id = userId
 
 	return nil
 }
 
 func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, LpaId string) error {
-	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaId, actor.userId)
+	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaId, actor.Id)
 
 	if err == nil && lpaExists == true {
 		return nil
@@ -112,7 +114,7 @@ func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, L
 		"LpaUid":  &types.AttributeValueMemberS{Value: LpaId},
 		"ActorId": &types.AttributeValueMemberS{Value: actor.ActorUID},
 		"Added":   &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339)},
-		"UserId":  &types.AttributeValueMemberS{Value: actor.userId},
+		"UserId":  &types.AttributeValueMemberS{Value: actor.Id},
 		"Comment": &types.AttributeValueMemberS{Value: "LPA added by Event Receiver"},
 	}
 
