@@ -118,14 +118,17 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId 
 		return false, fmt.Errorf("failed to query LPA mappings: %w", err)
 	}
 
+	fmt.Printf("%+v\n", response)
+
 	if response.Count > 0 {
 		results := []ActorUserMap{}
 
 		err = attributevalue.UnmarshalListOfMaps(response.Items, &results)
 		if err != nil {
-			//log.Error().Err(err).Msg("unable to convert dynamo result into ActorUser")
 			return false, err
 		}
+
+		fmt.Printf("result: %+v\n", results)
 
 		for _, item := range results {
 			if item.lpaUid == lpaId {

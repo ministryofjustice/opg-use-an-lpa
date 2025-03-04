@@ -75,8 +75,6 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 		return fmt.Errorf("Failed to find existing user %s: %w", actor.ActorUID, err)
 	}
 
-	fmt.Printf("user id : %s", existingUser.Id)
-	fmt.Printf("%+v\n", existingUser)
 	if existingUser.Id != "" {
 		actor.Id = existingUser.Id
 		return nil
