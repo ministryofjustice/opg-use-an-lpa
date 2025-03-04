@@ -14,7 +14,6 @@ use App\DataAccess\Repository\{KeyCollisionException,
 use DateTime;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
-use App\Enum\LpaSource;
 
 /**
  * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
