@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ViewerCodes;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
+use App\Entity\Value\LpaUid;
 use DateTimeInterface;
 use App\DataAccess\Repository\{KeyCollisionException,
     UserLpaActorMapInterface,
@@ -64,8 +65,7 @@ class ViewerCodeService
                 $this->viewerCodesRepository->add(
                     $code,
                     $map['Id'],
-                    $map['SiriusUid'] ?? null,
-                    $map['LpaUid'] ?? null,
+                    new LpaUid($map['SiriusUid'] ?? $map['LpaUid']),
                     $expires,
                     $organisation,
                     (string)$map['ActorId']
@@ -99,7 +99,7 @@ class ViewerCodeService
             return null;
         }
 
-        $uid   = $map['SiriusUid'] ?? $map['LpaUid'];
+        $uid   = new LpaUid($map['SiriusUid'] ?? $map['LpaUid']);
         $codes = $this->viewerCodesRepository->getCodesByLpaId($uid);
 
         if (!empty($codes)) {
