@@ -141,7 +141,9 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     effect = "Allow"
     resources = [
       aws_dynamodb_table.user_lpa_actor_map.arn,
-      aws_dynamodb_table.use_users_table.arn
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/*",
+      aws_dynamodb_table.use_users_table.arn,
+      "${aws_dynamodb_table.use_users_table.arn}/index/*",
     ]
     actions = [
       "dynamodb:BatchGetItem",

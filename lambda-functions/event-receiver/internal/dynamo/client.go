@@ -132,7 +132,6 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId 
 			return false, err
 		}
 
-		// we'll only ever want the one result
 		for _, item := range results {
 			if item.lpaUid == lpaId {
 				return true, nil
