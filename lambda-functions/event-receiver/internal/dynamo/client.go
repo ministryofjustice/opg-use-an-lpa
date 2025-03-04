@@ -79,12 +79,7 @@ func (c *Client) OneByUID(ctx context.Context, subjectId string, v interface{}) 
 	return attributevalue.UnmarshalMap(response.Items[0], v)
 }
 
-func (c *Client) Put(ctx context.Context, tableName string, v interface{}) error {
-	item, err := attributevalue.MarshalMap(v)
-	if err != nil {
-		return err
-	}
-
+func (c *Client) Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error {
 	tableName = fmt.Sprintf("%s-"+tableName, envPrefix)
 
 	input := &dynamodb.PutItemInput{
@@ -92,7 +87,7 @@ func (c *Client) Put(ctx context.Context, tableName string, v interface{}) error
 		Item:      item,
 	}
 
-	_, err = c.svc.PutItem(ctx, input)
+	_, err := c.svc.PutItem(ctx, input)
 
 	if err != nil {
 		var ccf *types.ConditionalCheckFailedException

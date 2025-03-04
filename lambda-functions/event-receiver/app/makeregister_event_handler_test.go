@@ -26,7 +26,7 @@ func (m *MockDynamoDbClient) OneByUID(ctx context.Context, subjectID string, v i
 	return args.Error(0)
 }
 
-func (m *MockDynamoDbClient) Put(ctx context.Context, v interface{}) error {
+func (m *MockDynamoDbClient) Put(ctx context.Context, v map[string]types.AttributeValue) error {
 	args := m.Called(ctx, v)
 	return args.Error(0)
 }

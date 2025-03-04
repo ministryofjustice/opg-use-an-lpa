@@ -5,6 +5,7 @@ package mocks
 import (
 	context "context"
 
+	types "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -59,17 +60,17 @@ func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{
 	return r0
 }
 
-// Put provides a mock function with given fields: ctx, tableName, v
-func (_m *DynamodbClient) Put(ctx context.Context, tableName string, v interface{}) error {
-	ret := _m.Called(ctx, tableName, v)
+// Put provides a mock function with given fields: ctx, tableName, item
+func (_m *DynamodbClient) Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error {
+	ret := _m.Called(ctx, tableName, item)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Put")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, interface{}) error); ok {
-		r0 = rf(ctx, tableName, v)
+	if rf, ok := ret.Get(0).(func(context.Context, string, map[string]types.AttributeValue) error); ok {
+		r0 = rf(ctx, tableName, item)
 	} else {
 		r0 = ret.Error(0)
 	}
