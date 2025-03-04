@@ -54,7 +54,9 @@ rebuild:
 .PHONY: rebuild
 
 reset:
+	rm -R service-front/app/vendor service-api/app/vendor tests/smoke/vendor
 	$(MAKE) rebuild
+	$(COMPOSE) --profile tools build --no-cache
 	$(MAKE) pull
 	$(MAKE) composer_install
 .PHONY: reset
@@ -126,6 +128,7 @@ development_mode: enable_development_mode clear_config_cache
 composer_install:
 	$(COMPOSE) run --rm front-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 	$(COMPOSE) run --rm api-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 .PHONY: composer_install
 
 run_front_composer:
@@ -135,6 +138,10 @@ run_front_composer:
 run_api_composer:
 	$(COMPOSE) run --rm api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
+
+run_smoke_composer:
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer $(filter-out $@,$(MAKECMDGOALS))
+.PHONY: run_smoke_composer
 
 run_front_composer_update:
 	$(COMPOSE) run --rm front-composer update
