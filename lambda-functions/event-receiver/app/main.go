@@ -18,7 +18,6 @@ import (
 )
 
 var (
-	envPrefix      = os.Getenv("TABLE_PREFIX")
 	appPublicURL   = os.Getenv("APP_PUBLIC_URL")
 	awsBaseURL     = os.Getenv("AWS_BASE_URL")
 	actorMapTable  = "UserLpaActorMap"

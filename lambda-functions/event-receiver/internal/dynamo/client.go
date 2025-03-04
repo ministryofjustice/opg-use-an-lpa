@@ -17,7 +17,9 @@ const (
 )
 
 var (
-	envPrefix = os.Getenv("TABLE_PREFIX")
+	envPrefix      = os.Getenv("ENVIRONMENT")
+	actorMapTable  = "UserLpaActorMap"
+	actorUserTable = "ActorUsers"
 )
 
 type DynamoDB interface {
@@ -47,7 +49,7 @@ func NewClient(cfg aws.Config) (*Client, error) {
 }
 
 func (c *Client) OneByUID(ctx context.Context, subjectId string, v interface{}) error {
-	tableName := fmt.Sprintf("%s-Actor-Users", envPrefix)
+	tableName := fmt.Sprintf("%s-%s", envPrefix, actorUserTable)
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(tableName),
 		ExpressionAttributeNames: map[string]string{
@@ -97,7 +99,7 @@ func (c *Client) Put(ctx context.Context, tableName string, v interface{}) error
 }
 
 func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error) {
-	tableName := fmt.Sprintf("%s-UserLpaActorMap", envPrefix)
+	tableName := fmt.Sprintf("%s-%s", envPrefix, actorMapTable)
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(tableName),
 		ExpressionAttributeNames: map[string]string{
