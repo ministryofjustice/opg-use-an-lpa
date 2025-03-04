@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="API Integration: Single Scenario" type="PhpBehatConfigurationType">
-    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" file="$PROJECT_DIR$/service-api/app/features/actor-add-an-older-lpa.feature" scenario="" scope="File" options="--profile=integration --tags=integration&amp;&amp;wip,integration --xdebug" use_alternative_configuration_file="true" />
+    <BehatRunner configuration_file="$PROJECT_DIR$/service-api/app/behat.yml" file="$PROJECT_DIR$/service-api/app/features/actor-access-code-cancellation.feature" scenario="" scope="File" options="--profile=integration --tags=integration&amp;&amp;wip,integration --xdebug" use_alternative_configuration_file="true" />
     <CommandLine>
       <PhpTestInterpreterSettings>
         <option name="interpreterName" value="test-api-app" />

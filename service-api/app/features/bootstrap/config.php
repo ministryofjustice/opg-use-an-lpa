@@ -75,5 +75,8 @@ return [
         'discovery_url'   => 'http://one-login-mock/.well-known/openid-configuration',
         'identity_issuer' => 'http://identity.one-login-mock/',
     ],
-    'feature_flags'                          => [],
+    'feature_flags'                          => [
+        'support_datastore_lpas' => false,
+        'paper_verification'     => false,
+    ],
 ];

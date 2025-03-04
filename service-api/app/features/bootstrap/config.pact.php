@@ -1,16 +1,24 @@
 <?php
 
 declare(strict_types=1);
+
+use App\Service\ApiClient\ClientFactory;
+use Psr\Http\Client\ClientInterface;
+
 return [
-    'dependencies' => [
+    'dependencies'   => [
         'factories' => [
-            Psr\Http\Client\ClientInterface::class => App\Service\ApiClient\ClientFactory::class,
-            App\DataAccess\ApiGateway\ActorCodes::class
-                => BehatTest\DataAccess\ApiGateway\PactActorCodesFactory::class,
-            App\DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
-                => BehatTest\DataAccess\ApiGateway\PactInstructionsAndPreferencesImagesFactory::class,
-            App\DataAccess\ApiGateway\SiriusLpas::class
-                => BehatTest\DataAccess\ApiGateway\PactLpasFactory::class,
+            ClientInterface::class => ClientFactory::class,
         ],
+    ],
+    'sirius_api'     => [
+        'endpoint' => 'http://localhost:9191',
+    ],
+    'codes_api'      => [
+        'endpoint'          => 'http://localhost:9090',
+        'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
+    ],
+    'iap_images_api' => [
+        'endpoint' => 'http://localhost:9292',
     ],
 ];

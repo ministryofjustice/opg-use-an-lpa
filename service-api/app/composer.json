@@ -7,8 +7,9 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "laminas/laminas-component-installer": false,
             "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-component-installer": false,
+            "pact-foundation/composer-downloads-plugin": true,
             "php-http/discovery": false
         },
         "platform": {
@@ -129,7 +130,7 @@
             "Composer\\Config::disableProcessTimeout",
             "docker compose -f ../../docker-compose.yml -f ../../docker-compose.dependencies.yml  -f ../../docker-compose.testing.yml -f ../../docker-compose.override.yml"
         ],
-        "dc-run": "@dc run --rm api-app",
+        "dc-run": "@dc run --no-deps --rm api-app",
         "dc-php": "@dc-run php",
         "dc-php-debug": "@dc-run php -dxdebug.start_with_request=yes -d zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so",
         "psalm": "@dc-php /app/vendor/bin/psalm",

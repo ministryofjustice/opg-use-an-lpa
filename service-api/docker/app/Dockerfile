@@ -51,7 +51,8 @@ COPY --from=composer /usr/bin/composer /usr/bin/
 COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/app-php.ini
 
 RUN set -xe \
-  && install-php-extensions xdebug-stable
+  && apk add --no-cache gcc \
+  && install-php-extensions xdebug-stable ffi
 
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
