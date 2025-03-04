@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/uuid"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
@@ -81,7 +82,24 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		user := args.Get(2).(*Actor)
 		*user = existingUser
 	}).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+
+	mockDynamo.On("Put", ctx, mock.MatchedBy(func(tableName string) bool {
+		return tableName == "ActorUsers"
+	}), mock.MatchedBy(func(input map[string]types.AttributeValue) bool {
+		idAttr, ok := input["Id"].(*types.AttributeValueMemberS)
+
+		_, err := uuid.Parse(idAttr.Value)
+		if err != nil {
+			return false
+		}
+		identityAttr, ok := input["Identity"].(*types.AttributeValueMemberS)
+		return ok && identityAttr.Value == "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
+	})).Return(nil)
+
+	mockDynamo.On("Put", ctx, mock.MatchedBy(func(tableName string) bool {
+		return tableName == "UserLpaActorMap"
+	}), mock.Anything).Return(nil)
+
 	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
 		return len(id) > 0
 	})).Return(false, nil)
@@ -90,7 +108,8 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 	assert.NoError(t, err)
 
 	mockDynamo.AssertCalled(t, "OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything)
-
+	mockDynamo.AssertCalled(t, "Put", ctx, "ActorUsers", mock.Anything)
+	mockDynamo.AssertCalled(t, "Put", ctx, "UserLpaActorMap", mock.Anything)
 	mockDynamo.AssertExpectations(t)
 	mockFactory.AssertExpectations(t)
 
