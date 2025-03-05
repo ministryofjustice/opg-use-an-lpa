@@ -156,7 +156,7 @@ run_update: run_front_composer_update run_front_npm_update run_api_composer_upda
 .PHONY: run_update
 
 push_lpa_access_granted_event:
-    # brew install awscli-local
+	# brew install awscli-local
 	awslocal events put-events --region "eu-west-1" --entries '[ \
 	  { \
 		"Source": "opg.poas.makeregister", \
