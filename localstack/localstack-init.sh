@@ -15,11 +15,6 @@ awslocal secretsmanager create-secret --name lpa-data-store-secret \
     --description "Local development lpa store secret" \
     --secret-string "A shared secret string that needs to be at least 128 bits long"
 
-echo "Creating log group"
-awslocal logs create-log-group \
-  --region "eu-west-1" \
-  --log-group-name "local_application_logs"
-
 echo "Configuring events"
 awslocal sqs create-queue --region "eu-west-1" --queue-name event-bus-queue
 awslocal events create-event-bus --region "eu-west-1" --name default
@@ -44,8 +39,7 @@ awslocal lambda create-function \
     --zip-file fileb:///event-receiver.zip \
     --handler main \
     --role arn:aws:iam::000000000000:role/lambda-role \
-    --region "eu-west-1" \
-    --logging-config LogGroup="local_application_logs"
+    --region "eu-west-1"
 
 awslocal lambda wait function-active-v2 --region eu-west-1 --function-name event-receiver-lambda
 
