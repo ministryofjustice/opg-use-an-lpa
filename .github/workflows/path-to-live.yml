@@ -39,7 +39,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@c8e1cdb9ea135ee549963c167ffaec5e7d4a71cd
+        uses: tj-actions/changed-files@315505acf41d2913b71af48080fb158cd01f79e7
         with:
           files: |
             **/*.md
