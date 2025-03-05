@@ -4,20 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
-
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
-const (
-	lpaUIDIndex = "LpaUIDIndex"
-)
-
 var (
-	envPrefix         = os.Getenv("ENVIRONMENT")
 	actorMapTable     = "UserLpaActorMap"
 	actorMapUserIndex = "UserIndex"
 	actorUserTable    = "ActorUsers"
@@ -36,7 +29,8 @@ type DynamoDB interface {
 }
 
 type Client struct {
-	svc DynamoDB
+	svc    DynamoDB
+	Prefix string
 }
 
 type NotFoundError struct{}
@@ -51,14 +45,28 @@ func (c ConditionalCheckFailedError) Error() string {
 	return "Conditional checks failed"
 }
 
-func NewClient(cfg aws.Config) (*Client, error) {
-	return &Client{svc: dynamodb.NewFromConfig(cfg)}, nil
+func NewClient(cfg aws.Config, endpoint string, tablePrefix string) (*Client, error) {
+	prefix := ""
+	if tablePrefix != "" {
+		prefix = tablePrefix + "-"
+	}
+
+	svc := dynamodb.NewFromConfig(cfg, func(o *dynamodb.Options) {
+		if endpoint != "" {
+			o.BaseEndpoint = &endpoint
+		}
+	})
+
+	return &Client{Prefix: prefix, svc: svc}, nil
+}
+
+func (c *Client) prefixedTableName(name string) string {
+	return c.Prefix + name
 }
 
 func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interface{}) error {
-	tableName := fmt.Sprintf("%s-%s", envPrefix, actorUserTable)
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(c.prefixedTableName(actorUserTable)),
 		IndexName: aws.String(actorUserIndex),
 		ExpressionAttributeNames: map[string]string{
 			"#Identity": "Identity",
@@ -80,10 +88,8 @@ func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interfac
 }
 
 func (c *Client) Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error {
-	tableName = fmt.Sprintf("%s-"+tableName, envPrefix)
-
 	input := &dynamodb.PutItemInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(c.prefixedTableName(tableName)),
 		Item:      item,
 	}
 
@@ -102,9 +108,8 @@ func (c *Client) Put(ctx context.Context, tableName string, item map[string]type
 }
 
 func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error) {
-	tableName := fmt.Sprintf("%s-%s", envPrefix, actorMapTable)
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
-		TableName: aws.String(tableName),
+		TableName: aws.String(c.prefixedTableName(actorMapTable)),
 		IndexName: aws.String(actorMapUserIndex),
 		ExpressionAttributeNames: map[string]string{
 			"#UserId": "UserId",

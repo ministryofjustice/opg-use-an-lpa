@@ -19,8 +19,9 @@ import (
 )
 
 var (
-	appPublicURL   = os.Getenv("APP_PUBLIC_URL")
 	awsBaseURL     = os.Getenv("AWS_BASE_URL")
+	tablePrefix    = os.Getenv("ENVIRONMENT")
+	dynamoEndpoint = os.Getenv("AWS_ENDPOINT_DYNAMODB")
 	actorMapTable  = "UserLpaActorMap"
 	actorUserTable = "ActorUsers"
 
@@ -136,7 +137,7 @@ func main() {
 		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
-	dynamoClient, err := dynamo.NewClient(cfg)
+	dynamoClient, err := dynamo.NewClient(cfg, dynamoEndpoint, tablePrefix)
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
@@ -153,7 +154,6 @@ func main() {
 		logger:       logger,
 		cfg:          cfg,
 		dynamoClient: dynamoClient,
-		appPublicURL: appPublicURL,
 		httpClient:   httpClient,
 	}
 

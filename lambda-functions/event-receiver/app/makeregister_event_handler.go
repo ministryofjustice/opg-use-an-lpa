@@ -55,7 +55,6 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 				),
 			)
 			return err
-
 		}
 
 		if err := handleLpas(ctx, dynamodbClient, actor, data.UID); err != nil {
