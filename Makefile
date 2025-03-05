@@ -155,16 +155,12 @@ run_smoke_composer_update:
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
 .PHONY: run_update
 
-push_lpa_access_granted_event:
-	$(COMPOSE) exec localstack awslocal events put-events --region "eu-west-1" --entries '[ \
-	  { \
-		"Source": "opg.poas.makeregister", \
-		"DetailType": "lpa-access-granted", \
-		"Detail": "{}", \
-		"EventBusName": "default" \
-	  } \
-	]'
-.PHONY: push_lpa_access_granted_event
+emit_lpa_access_granted_event: # fire an lpa-access-granted event into the event bus with the specified lpaId e.g. emit_lpa_access_granted_event lpaId=4UX3
+	@[ "${lpaId}" ] || ( echo "Please set lpaId"; exit 1 )
+
+	$(eval lpaJson:=$(shell cat mock-integrations/makeregister/lpa-access-granted-events/$(lpaId).json | jq -c))
+	$(COMPOSE) exec localstack awslocal events put-events --region "eu-west-1" --entries '${lpaJson}'
+.PHONY: emit_lpa_access_granted_event
 
 cleanup_pact_containers:
 	docker rm -f opg-use-an-lpa-api-gateway-pact-mock-1 opg-use-an-lpa-lpa-codes-pact-mock-1 opg-use-an-lpa-iap-images-mock-1

@@ -15,45 +15,37 @@ awslocal secretsmanager create-secret --name lpa-data-store-secret \
     --description "Local development lpa store secret" \
     --secret-string "A shared secret string that needs to be at least 128 bits long"
 
-echo "Creating SNS topic"
-awslocal sns create-topic --region "eu-west-1" --name lpa-registered-events
-awslocal sns list-topics
+echo "Configuring events"
+awslocal sqs create-queue --region "eu-west-1" --queue-name event-bus-queue
+awslocal events create-event-bus --region "eu-west-1" --name default
 
-echo "Creating SQS queue"
-awslocal sqs create-queue --region "eu-west-1" --queue-name local-notifications --attributes '{"MaximumMessageSize": "102400"}' 
+awslocal events put-rule \
+  --region "eu-west-1" \
+  --name send-events-to-bus-queue-rule \
+  --event-bus-name default \
+  --event-pattern '{"source":["opg.poas.makeregister"],"detail-type":["lpa-access-granted"]}'
 
-awslocal sqs get-queue-attributes --region "eu-west-1" --queue-url http://sqs.eu-west-1.localhost.localstack.cloud:4566/000000000000/local-notifications --attribute-names All
-
-# TODO need to subscribe the queueu to the sns topic
-
-echo "Creating schedule"
-awslocal scheduler create-schedule \
-    --name sqs-templated-schedule \
-    --schedule-expression 'rate(5 minutes)' \
-    --target '{"RoleArn": "arn:aws:iam::000000000000:role/schedule-role", "Arn":"arn:aws:sqs:eu-west-1:000000000000:local-notifications", "Input": "test" }' \
-    --flexible-time-window '{ "Mode": "OFF"}' \
-    --region "eu-west-1" 
-
-awslocal scheduler tag-resource \
-    --resource-arn arn:aws:scheduler:eu-west-1:000000000000:schedule/default/sqs-templated-schedule \
-    --tags Key=Name,Value=Test
-
-awslocal scheduler list-tags-for-resource --resource-arn arn:aws:scheduler:eu-west-1:000000000000:schedule/default/sqs-templated-schedule
+awslocal events put-targets \
+  --region "eu-west-1" \
+  --event-bus-name default \
+  --rule send-events-to-bus-queue-rule \
+  --targets "Id"="event-bus-queue","Arn"="arn:aws:sqs:eu-west-1:000000000000:event-bus-queue"
 
 echo "Creating lambda"
-
 awslocal lambda create-function \
+    --environment Variables="{AWS_BASE_URL=$AWS_BASE_URL,AWS_ENDPOINT_DYNAMODB=$AWS_ENDPOINT_DYNAMODB}" \
     --function-name event-receiver-lambda \
-    --runtime go1.x \
+    --runtime provided.al2023 \
     --zip-file fileb:///event-receiver.zip \
     --handler main \
     --role arn:aws:iam::000000000000:role/lambda-role \
-    --region "eu-west-1" 
+    --region "eu-west-1"
+
+awslocal lambda wait function-active-v2 --region eu-west-1 --function-name event-receiver-lambda
 
 echo "Creating event source mapping"
-
 awslocal lambda create-event-source-mapping \
-         --function-name event-receiver-lambda \
-         --batch-size 1 \
-         --event-source-arn arn:aws:sqs:eu-west-1:000000000000:local-notifications \
-         --region "eu-west-1" 
+    --function-name event-receiver-lambda \
+    --batch-size 1 \
+    --event-source-arn arn:aws:sqs:eu-west-1:000000000000:event-bus-queue \
+    --region "eu-west-1"

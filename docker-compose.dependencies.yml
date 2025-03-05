@@ -163,6 +163,9 @@ services:
     environment:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - AWS_BASE_URL=http://localstack:4566
+      - AWS_ENDPOINT_DYNAMODB=http://dynamodb-local:8000
+      - ENVIRONMENT=
     volumes:
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
