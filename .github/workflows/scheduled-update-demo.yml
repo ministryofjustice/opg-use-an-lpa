@@ -2,8 +2,8 @@ name: "[Scheduled] Keep demo environment up to date"
 
 on:
   schedule:
-    # Every 8am
-    - cron: '0 8 * * *'
+    # Every 830am
+    - cron: '30 8 * * *'
 
 permissions:
   contents: read
