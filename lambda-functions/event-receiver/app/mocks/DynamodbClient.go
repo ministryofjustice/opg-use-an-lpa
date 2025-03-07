@@ -14,9 +14,9 @@ type DynamodbClient struct {
 	mock.Mock
 }
 
-// ExistsLpaIDAndUserID provides a mock function with given fields: ctx, lpaId, userId
-func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error) {
-	ret := _m.Called(ctx, lpaId, userId)
+// ExistsLpaIDAndUserID provides a mock function with given fields: ctx, LpaUid, userId
+func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error) {
+	ret := _m.Called(ctx, LpaUid, userId)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ExistsLpaIDAndUserID")
@@ -25,16 +25,16 @@ func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, lpaId string
 	var r0 bool
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, string, string) (bool, error)); ok {
-		return rf(ctx, lpaId, userId)
+		return rf(ctx, LpaUid, userId)
 	}
 	if rf, ok := ret.Get(0).(func(context.Context, string, string) bool); ok {
-		r0 = rf(ctx, lpaId, userId)
+		r0 = rf(ctx, LpaUid, userId)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
-		r1 = rf(ctx, lpaId, userId)
+		r1 = rf(ctx, LpaUid, userId)
 	} else {
 		r1 = ret.Error(1)
 	}

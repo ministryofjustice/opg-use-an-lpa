@@ -51,7 +51,7 @@ func (m *MockFactory) DynamoClient() DynamodbClient {
 
 func TestMakeRegisterEventHandler_Success(t *testing.T) {
 	ctx := context.Background()
-	lpaId := "M-1234-5678-9012"
+	LpaUid := "M-1234-5678-9012"
 
 	handler := &MakeRegisterEventHandler{}
 
@@ -100,7 +100,7 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		return tableName == "UserLpaActorMap"
 	}), mock.Anything).Return(nil)
 
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, mock.MatchedBy(func(id string) bool {
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, mock.MatchedBy(func(id string) bool {
 		return len(id) > 0
 	})).Return(false, nil)
 
@@ -205,13 +205,13 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 	userId := uuid.New().String()
-	lpaId := "M-1234-5678-9012"
+	LpaUid := "M-1234-5678-9012"
 
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to find existing LPA")
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, simulatedError)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
@@ -223,7 +223,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaId)
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Failed to find existing LPA")
@@ -233,13 +233,13 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 	userId := uuid.New().String()
-	lpaId := "M-1234-5678-9012"
+	LpaUid := "M-1234-5678-9012"
 
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to put Lpa")
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
@@ -252,7 +252,7 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaId)
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Failed to insert LPA mapping")
@@ -262,12 +262,12 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 	userId := uuid.New().String()
-	lpaId := "M-1234-5678-9012"
+	LpaUid := "M-1234-5678-9012"
 
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(true, nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(true, nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
@@ -280,7 +280,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaId)
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
 	assert.NoError(t, err)
 }
 
@@ -288,12 +288,12 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 	userId := uuid.New().String()
-	lpaId := "M-1234-5678-9012"
+	LpaUid := "M-1234-5678-9012"
 
 	mockDynamo := new(mocks.DynamodbClient)
 	mockFactory := new(MockFactory)
 
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, lpaId, userId).Return(false, nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, nil)
 	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
@@ -306,7 +306,7 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaId)
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
 
 	assert.NoError(t, err)
 	assert.Nil(t, err)

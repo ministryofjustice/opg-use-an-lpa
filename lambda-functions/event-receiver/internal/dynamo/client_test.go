@@ -29,7 +29,7 @@ var (
 	expectedError   = errors.New("err")
 	subjectID       = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
 	actorUid        = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
-	lpaId           = "M-1234-5678-9012"
+	LpaUid          = "M-1234-5678-9012"
 	userId          = uuid.New().String()
 	UserLpaActorMap = uuid.New().String()
 )
@@ -103,21 +103,52 @@ func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
 }
 
 func TestPut(t *testing.T) {
-	testCases := map[string]map[string]string{
-		"Without UpdatedAt": {"subjectId": subjectID},
-		"Zero UpdatedAt":    {"subjectId": subjectID, "UpdatedAt": "0001-01-01T00:00:00Z"},
+	//testCases := map[string]map[string]types.AttributeValue{
+	//	"Without UpdatedAt": {
+	//		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
+	//	},
+	//	"Zero UpdatedAt": {
+	//		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
+	//		"UpdatedAt": &types.AttributeValueMemberS{Value: "0001-01-01T00:00:00Z"},
+	//	},
+	//}
+	//
+	tests := []struct {
+		name      string
+		tableName string
+		item      map[string]types.AttributeValue
+		mockErr   error
+		wantErr   bool
+	}{
+		{
+			name:      "Valid Input",
+			tableName: "ActorUsers",
+			item: map[string]types.AttributeValue{
+				"UserId": &types.AttributeValueMemberS{Value: userId},
+				"LpaUid": &types.AttributeValueMemberS{Value: LpaUid},
+			},
+			mockErr: nil,
+			wantErr: false,
+		},
+		{
+			name:      "Empty Input",
+			tableName: "ActorUsers",
+			item: map[string]types.AttributeValue{
+				"UserId": &types.AttributeValueMemberS{Value: userId},
+				"LpaUid": &types.AttributeValueMemberS{Value: LpaUid},
+			},
+			mockErr: nil,
+			wantErr: true,
+		},
 	}
 
-	for name, dataMap := range testCases {
-		t.Run(name, func(t *testing.T) {
-			data, err := attributevalue.MarshalMap(dataMap)
-			assert.NoError(t, err)
-
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
 			mockDynamoDB := new(mocks.DynamoDB)
 
-			mockDynamoDB.On("PutItem", ctx, &dynamodb.PutItemInput{
-				TableName: aws.String("-ActorUsers"),
-				Item:      data,
+			mockDynamoDB.On("Put", ctx, &dynamodb.PutItemInput{
+				TableName: aws.String("ActorUsers"),
+				Item:      tc.subjectMap,
 			}).Return(&dynamodb.PutItemOutput{}, nil).Once()
 
 			c := &Client{svc: mockDynamoDB}
@@ -138,7 +169,7 @@ func TestPutWhenError(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	err := c.Put(ctx, "hello", map[string]string{})
+	err := c.Put(ctx, "hello", map[string]types.AttributeValue{})
 	assert.Equal(t, expectedError, err)
 	mockDynamoDB.AssertExpectations(t)
 }
@@ -151,8 +182,8 @@ func TestPutWhenUnmarshalError(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	err := c.Put(ctx, "ActorUsers", map[string]string{
-		"subjectId": subjectID,
+	err := c.Put(ctx, "ActorUsers", map[string]types.AttributeValue{
+		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
 	})
 
 	assert.NotNil(t, err)
@@ -166,7 +197,7 @@ func TestExistsLpaIDAndUserID(t *testing.T) {
 
 	expectedItem := map[string]types.AttributeValue{
 		"Id":      &types.AttributeValueMemberS{Value: UserLpaActorMap},
-		"LpaUid":  &types.AttributeValueMemberS{Value: lpaId},
+		"LpaUid":  &types.AttributeValueMemberS{Value: LpaUid},
 		"ActorId": &types.AttributeValueMemberS{Value: actorUid},
 		"UserId":  &types.AttributeValueMemberS{Value: userId},
 	}
@@ -178,7 +209,7 @@ func TestExistsLpaIDAndUserID(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
 	assert.Equal(t, true, lpaExists)
 	assert.Nil(t, err)
 	mockDynamoDB.AssertExpectations(t)
@@ -192,7 +223,7 @@ func TestExistsLpaIDAndUserIDWhenQueryError(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	_, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+	_, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
 
 	assert.Equal(t, fmt.Errorf("failed to query LPA mappings: %w", expectedError), err)
 }
@@ -205,7 +236,7 @@ func TestExistsLpaIDAndUserIDWhenNoItems(t *testing.T) {
 
 	c := &Client{svc: mockDynamoDB}
 
-	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaId, userId)
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
 	assert.ErrorIs(t, err, nil)
 	assert.Equal(t, false, lpaExists)
 }

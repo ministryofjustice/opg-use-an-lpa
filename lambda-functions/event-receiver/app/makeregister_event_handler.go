@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"time"
 
@@ -70,8 +72,8 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 
 	err := dynamoClient.OneByIdentity(ctx, actor.SubjectID, &existingUser)
 
-	if err != nil {
-		return fmt.Errorf("Failed to find existing user %s: %w", actor.ActorUID, err)
+	if err != nil && !errors.Is(err, dynamo.NotFoundError{}) {
+		return err
 	}
 
 	if existingUser.Id != "" {
@@ -95,20 +97,20 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 	return nil
 }
 
-func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, LpaId string) error {
-	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaId, actor.Id)
+func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, LpaUid string) error {
+	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, LpaUid, actor.Id)
 
 	if err == nil && lpaExists == true {
 		return nil
 	}
 
 	if err != nil {
-		return fmt.Errorf("Failed to find existing LPA %s: %w", LpaId, err)
+		return fmt.Errorf("Failed to find existing LPA %s: %w", LpaUid, err)
 	}
 
 	newLPA := map[string]types.AttributeValue{
 		"Id":      &types.AttributeValueMemberS{Value: uuid.New().String()},
-		"LpaUid":  &types.AttributeValueMemberS{Value: LpaId},
+		"LpaUid":  &types.AttributeValueMemberS{Value: LpaUid},
 		"ActorId": &types.AttributeValueMemberS{Value: actor.ActorUID},
 		"Added":   &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339)},
 		"UserId":  &types.AttributeValueMemberS{Value: actor.Id},
@@ -117,8 +119,13 @@ func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, L
 
 	err = dynamoClient.Put(ctx, actorMapTable, newLPA)
 	if err != nil {
-		return fmt.Errorf("Failed to insert LPA mapping for user %s: %w", LpaId, err)
+		return fmt.Errorf("Failed to insert LPA mapping for user %s: %w", LpaUid, err)
 	}
+
+	logger.InfoContext(
+		ctx,
+		"Added LPA mapping for user",
+	)
 
 	return nil
 }

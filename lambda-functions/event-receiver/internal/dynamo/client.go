@@ -18,8 +18,8 @@ var (
 )
 
 type ActorUserMap struct {
-	userId string
-	lpaUid string
+	UserId string
+	LpaUid string
 }
 
 type DynamoDB interface {
@@ -107,7 +107,7 @@ func (c *Client) Put(ctx context.Context, tableName string, item map[string]type
 	return nil
 }
 
-func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error) {
+func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error) {
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(c.prefixedTableName(actorMapTable)),
 		IndexName: aws.String(actorMapUserIndex),
@@ -123,20 +123,17 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId 
 		return false, fmt.Errorf("failed to query LPA mappings: %w", err)
 	}
 
-	fmt.Printf("%+v\n", response)
-
 	if response.Count > 0 {
 		results := []ActorUserMap{}
 
 		err = attributevalue.UnmarshalListOfMaps(response.Items, &results)
 		if err != nil {
+			fmt.Printf("failed to unmarshal resp: %v\n", err)
 			return false, err
 		}
 
-		fmt.Printf("result: %+v\n", results)
-
 		for _, item := range results {
-			if item.lpaUid == lpaId {
+			if item.LpaUid == LpaUid {
 				return true, nil
 			}
 		}

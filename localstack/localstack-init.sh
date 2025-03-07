@@ -33,7 +33,7 @@ awslocal events put-targets \
 
 echo "Creating lambda"
 awslocal lambda create-function \
-    --environment Variables="{AWS_BASE_URL=$AWS_BASE_URL,AWS_ENDPOINT_DYNAMODB=$AWS_ENDPOINT_DYNAMODB}" \
+    --environment Variables="{AWS_ENDPOINT_DYNAMODB=$AWS_ENDPOINT_DYNAMODB}" \
     --function-name event-receiver-lambda \
     --runtime provided.al2023 \
     --zip-file fileb:///event-receiver.zip \

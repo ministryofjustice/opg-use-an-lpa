@@ -19,11 +19,11 @@ import (
 )
 
 var (
-	awsBaseURL     = os.Getenv("AWS_BASE_URL")
 	tablePrefix    = os.Getenv("ENVIRONMENT")
 	dynamoEndpoint = os.Getenv("AWS_ENDPOINT_DYNAMODB")
 	actorMapTable  = "UserLpaActorMap"
 	actorUserTable = "ActorUsers"
+	sqsMsgId       = ""
 
 	cfg        aws.Config
 	httpClient *http.Client
@@ -39,7 +39,7 @@ type Factory interface {
 type DynamodbClient interface {
 	OneByIdentity(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
-	ExistsLpaIDAndUserID(ctx context.Context, lpaId string, userId string) (bool, error)
+	ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error)
 }
 
 type Handler interface {
@@ -52,6 +52,7 @@ func handler(ctx context.Context, factory Factory, event *events.SQSEvent) (map[
 	var err error
 
 	for _, record := range event.Records {
+		sqsMsgId = record.MessageId
 		if err = handleCloudWatchEvent(ctx, factory, record.Body); err != nil {
 			logger.ErrorContext(
 				ctx,
@@ -121,7 +122,11 @@ func main() {
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
 	var err error
-	cfg, err = config.LoadDefaultConfig(ctx, config.WithHTTPClient(http.DefaultClient))
+	cfg, err = config.LoadDefaultConfig(ctx,
+		config.WithHTTPClient(http.DefaultClient),
+		config.WithRegion("eu-west-1"),
+	)
+
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
@@ -131,10 +136,6 @@ func main() {
 			),
 		)
 		return
-	}
-
-	if len(awsBaseURL) > 0 {
-		cfg.BaseEndpoint = aws.String(awsBaseURL)
 	}
 
 	dynamoClient, err := dynamo.NewClient(cfg, dynamoEndpoint, tablePrefix)

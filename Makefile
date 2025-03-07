@@ -54,7 +54,9 @@ rebuild:
 .PHONY: rebuild
 
 reset:
+	rm -R service-front/app/vendor service-api/app/vendor tests/smoke/vendor
 	$(MAKE) rebuild
+	$(COMPOSE) --profile tools build --no-cache
 	$(MAKE) pull
 	$(MAKE) composer_install
 .PHONY: reset
