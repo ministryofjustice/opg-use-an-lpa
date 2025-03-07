@@ -34,6 +34,7 @@ var (
 func TestValidCloudWatchEvent(t *testing.T) {
 	ctx := context.Background()
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	LpaUid := "M-1234-5678-9012"
 
 	cloudWatchPayload, err := json.Marshal(payload)
 	assert.NoError(t, err)
@@ -65,8 +66,11 @@ func TestValidCloudWatchEvent(t *testing.T) {
 	mockFactory := new(MockFactory)
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, mock.MatchedBy(func(id string) bool {
+		return len(id) > 0
+	})).Return(false, nil)
 
 	result, err := handler(ctx, mockFactory, sqsEvent)
 	assert.Nil(t, err)

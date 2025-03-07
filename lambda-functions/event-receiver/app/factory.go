@@ -14,7 +14,6 @@ type DefaultFactory struct {
 	uuidString   func() string
 	cfg          aws.Config
 	dynamoClient DynamodbClient
-	appPublicURL string
 	httpClient   *http.Client
 }
 

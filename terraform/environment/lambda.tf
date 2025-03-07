@@ -141,17 +141,13 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
     effect = "Allow"
     resources = [
       aws_dynamodb_table.user_lpa_actor_map.arn,
-      aws_dynamodb_table.use_users_table.arn
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/UserIndex",
+      aws_dynamodb_table.use_users_table.arn,
+      "${aws_dynamodb_table.use_users_table.arn}/index/IdentityIndex",
     ]
     actions = [
-      "dynamodb:BatchGetItem",
-      "dynamodb:BatchWriteItem",
-      "dynamodb:ConditionCheckItem",
       "dynamodb:PutItem",
-      "dynamodb:DescribeTable",
-      "dynamodb:DeleteItem",
       "dynamodb:GetItem",
-      "dynamodb:Scan",
       "dynamodb:Query",
       "dynamodb:UpdateItem"
     ]

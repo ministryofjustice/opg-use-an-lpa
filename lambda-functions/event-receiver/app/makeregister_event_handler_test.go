@@ -5,6 +5,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/google/uuid"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
 	"github.com/stretchr/testify/mock"
@@ -19,12 +21,12 @@ type MockDynamoDbClient struct {
 	mock.Mock
 }
 
-func (m *MockDynamoDbClient) OneByUID(ctx context.Context, subjectID string, v interface{}) error {
+func (m *MockDynamoDbClient) OneByIdentity(ctx context.Context, subjectID string, v interface{}) error {
 	args := m.Called(ctx, subjectID, v)
 	return args.Error(0)
 }
 
-func (m *MockDynamoDbClient) Put(ctx context.Context, v interface{}) error {
+func (m *MockDynamoDbClient) Put(ctx context.Context, v map[string]types.AttributeValue) error {
 	args := m.Called(ctx, v)
 	return args.Error(0)
 }
@@ -49,6 +51,8 @@ func (m *MockFactory) DynamoClient() DynamodbClient {
 
 func TestMakeRegisterEventHandler_Success(t *testing.T) {
 	ctx := context.Background()
+	LpaUid := "M-1234-5678-9012"
+
 	handler := &MakeRegisterEventHandler{}
 
 	cloudWatchPayload, err := json.Marshal(payload)
@@ -74,17 +78,38 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
 	}
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Run(func(args mock.Arguments) {
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Run(func(args mock.Arguments) {
 		user := args.Get(2).(*Actor)
 		*user = existingUser
 	}).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+
+	mockDynamo.On("Put", ctx, mock.MatchedBy(func(tableName string) bool {
+		return tableName == "ActorUsers"
+	}), mock.MatchedBy(func(input map[string]types.AttributeValue) bool {
+		idAttr, ok := input["Id"].(*types.AttributeValueMemberS)
+
+		_, err := uuid.Parse(idAttr.Value)
+		if err != nil {
+			return false
+		}
+		identityAttr, ok := input["Identity"].(*types.AttributeValueMemberS)
+		return ok && identityAttr.Value == "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
+	})).Return(nil)
+
+	mockDynamo.On("Put", ctx, mock.MatchedBy(func(tableName string) bool {
+		return tableName == "UserLpaActorMap"
+	}), mock.Anything).Return(nil)
+
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, mock.MatchedBy(func(id string) bool {
+		return len(id) > 0
+	})).Return(false, nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.NoError(t, err)
 
-	mockDynamo.AssertCalled(t, "OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything)
-
+	mockDynamo.AssertCalled(t, "OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything)
+	mockDynamo.AssertCalled(t, "Put", ctx, "ActorUsers", mock.Anything)
+	mockDynamo.AssertCalled(t, "Put", ctx, "UserLpaActorMap", mock.Anything)
 	mockDynamo.AssertExpectations(t)
 	mockFactory.AssertExpectations(t)
 
@@ -119,8 +144,8 @@ func TestHandleSQSEvent_UnmarshalFailure(t *testing.T) {
 	mockFactory := new(MockFactory)
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
 
 	err = handler.EventHandler(ctx, mockFactory, cloudWatchEvent)
 	assert.Error(t, err)
@@ -135,15 +160,15 @@ func TestHandleCloudWatchEvent_FailedToFindUser(t *testing.T) {
 	mockFactory := new(MockFactory)
 
 	simulatedError := errors.New("simulated error: Failed to find existing user")
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(simulatedError)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(simulatedError)
 
 	mockFactory.On("DynamoClient").Return(mockDynamo)
 	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
 	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
 
-	mockDynamo.On("Put", ctx, mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, actorUserTable, mock.Anything).Return(nil)
 
-	actor := Actor{
+	actor := &Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
 	}
@@ -160,10 +185,10 @@ func TestHandleCloudWatchEvent_FailedToPutActor(t *testing.T) {
 	mockDynamo := new(mocks.DynamodbClient)
 
 	simulatedError := errors.New("simulated error: Failed to put actor")
-	mockDynamo.On("OneByUID", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything).Return(simulatedError)
+	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
 
-	actor := Actor{
+	actor := &Actor{
 		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
 		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
 	}
@@ -174,4 +199,115 @@ func TestHandleCloudWatchEvent_FailedToPutActor(t *testing.T) {
 	assert.Contains(t, err.Error(), "Failed to put actor")
 
 	mockDynamo.AssertExpectations(t)
+}
+
+func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	userId := uuid.New().String()
+	LpaUid := "M-1234-5678-9012"
+
+	mockDynamo := new(mocks.DynamodbClient)
+	mockFactory := new(MockFactory)
+
+	simulatedError := errors.New("simulated error: Failed to find existing LPA")
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, simulatedError)
+
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
+	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
+
+	actor := Actor{
+		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
+		Id:        userId,
+	}
+
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
+
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "Failed to find existing LPA")
+}
+
+func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	userId := uuid.New().String()
+	LpaUid := "M-1234-5678-9012"
+
+	mockDynamo := new(mocks.DynamodbClient)
+	mockFactory := new(MockFactory)
+
+	simulatedError := errors.New("simulated error: Failed to put Lpa")
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(simulatedError)
+
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
+	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
+
+	actor := Actor{
+		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
+		Id:        userId,
+	}
+
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
+
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "Failed to insert LPA mapping")
+}
+
+func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	userId := uuid.New().String()
+	LpaUid := "M-1234-5678-9012"
+
+	mockDynamo := new(mocks.DynamodbClient)
+	mockFactory := new(MockFactory)
+
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(true, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
+	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
+
+	actor := Actor{
+		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
+		Id:        userId,
+	}
+
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
+	assert.NoError(t, err)
+}
+
+func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
+	ctx := context.Background()
+	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	userId := uuid.New().String()
+	LpaUid := "M-1234-5678-9012"
+
+	mockDynamo := new(mocks.DynamodbClient)
+	mockFactory := new(MockFactory)
+
+	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, userId).Return(false, nil)
+	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
+
+	mockFactory.On("DynamoClient").Return(mockDynamo)
+	mockFactory.On("Now").Return(func() time.Time { return time.Now() }, nil)
+	mockFactory.On("UuidString").Return(func() string { return "123" }, nil)
+
+	actor := Actor{
+		ActorUID:  "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+		SubjectID: "urn:fdc:gov.uk:2022:XXXX-XXXXXX",
+		Id:        userId,
+	}
+
+	err := handleLpas(ctx, mockDynamo, actor, LpaUid)
+
+	assert.NoError(t, err)
+	assert.Nil(t, err)
 }
