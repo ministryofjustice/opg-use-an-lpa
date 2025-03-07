@@ -103,16 +103,6 @@ func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
 }
 
 func TestPut(t *testing.T) {
-	//testCases := map[string]map[string]types.AttributeValue{
-	//	"Without UpdatedAt": {
-	//		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
-	//	},
-	//	"Zero UpdatedAt": {
-	//		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
-	//		"UpdatedAt": &types.AttributeValueMemberS{Value: "0001-01-01T00:00:00Z"},
-	//	},
-	//}
-	//
 	tests := []struct {
 		name      string
 		tableName string
@@ -133,12 +123,9 @@ func TestPut(t *testing.T) {
 		{
 			name:      "Empty Input",
 			tableName: "ActorUsers",
-			item: map[string]types.AttributeValue{
-				"UserId": &types.AttributeValueMemberS{Value: userId},
-				"LpaUid": &types.AttributeValueMemberS{Value: LpaUid},
-			},
-			mockErr: nil,
-			wantErr: true,
+			item:      map[string]types.AttributeValue{},
+			mockErr:   nil,
+			wantErr:   false,
 		},
 	}
 
@@ -146,15 +133,23 @@ func TestPut(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			mockDynamoDB := new(mocks.DynamoDB)
 
-			mockDynamoDB.On("Put", ctx, &dynamodb.PutItemInput{
+			mockDynamoDB.On("PutItem", ctx, &dynamodb.PutItemInput{
 				TableName: aws.String("ActorUsers"),
-				Item:      tc.subjectMap,
-			}).Return(&dynamodb.PutItemOutput{}, nil).Once()
+				Item:      tc.item,
+			}).Return(&dynamodb.PutItemOutput{}, tc.mockErr).Once()
 
 			c := &Client{svc: mockDynamoDB}
 
-			err = c.Put(ctx, "ActorUsers", dataMap)
-			assert.Nil(t, err)
+			err := c.Put(ctx, "ActorUsers", tc.item)
+
+			if tc.wantErr && err == nil {
+				t.Fatalf("%s: expected an error, but got none", tc.name)
+			}
+			if !tc.wantErr && err != nil {
+				t.Fatalf("%s: did not expect an error, but got %v", tc.name, err)
+			}
+
+			mockDynamoDB.AssertExpectations(t)
 		})
 	}
 }
@@ -204,6 +199,7 @@ func TestExistsLpaIDAndUserID(t *testing.T) {
 
 	mockDynamoDB.On("Query", ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{
+			Count: 1,
 			Items: []map[string]types.AttributeValue{expectedItem},
 		}, nil).Once()
 
