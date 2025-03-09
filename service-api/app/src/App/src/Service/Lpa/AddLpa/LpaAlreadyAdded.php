@@ -16,7 +16,7 @@ class LpaAlreadyAdded
      */
     public function __construct(
         private LpaManagerInterface $lpaManager,
-        private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private UserLpaActorMapInterface $userLpaActorMapRepository
     ) {
     }
 
@@ -51,14 +51,16 @@ class LpaAlreadyAdded
             return null;
         }
 
+        $donorDetails = $lpa['lpa']->getDonor();
+
         $response = [
             'donor'                => [
-                'uId'         => $lpa['lpa']['donor']['uId'],
-                'firstname'   => $lpa['lpa']['donor']['firstname'],
-                'middlenames' => $lpa['lpa']['donor']['middlenames'],
-                'surname'     => $lpa['lpa']['donor']['surname'],
+                'uId'         => $donorDetails->getUid(),
+                'firstname'   => $donorDetails->getFirstnames(),
+                'middlenames' => $donorDetails->getMiddleNames(),
+                'surname'     => $donorDetails->getSurname(),
             ],
-            'caseSubtype'          => $lpa['lpa']['caseSubtype'],
+            'caseSubtype'          => $lpa['lpa']->getCaseSubtype(),
             'lpaActorToken'        => $record['Id'],
             'activationKeyDueDate' => $lpa['activationKeyDueDate'] ?? null,
         ];
