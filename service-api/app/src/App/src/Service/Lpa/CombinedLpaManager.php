@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\DataAccess\ApiGateway\DataStoreLpas;
-use App\DataAccess\ApiGateway\SiriusLpas;
-use App\DataAccess\Repository\Response\Lpa;
-use App\DataAccess\Repository\Response\LpaInterface;
-use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Exception\ApiException;
-use App\Service\Lpa\Combined\FilterActiveActors;
-use App\Service\Lpa\Combined\ResolveLpaTypes;
+use App\DataAccess\ApiGateway\{DataStoreLpas, SiriusLpas};
+use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
+    Response\Lpa,
+    Response\LpaInterface,
+    UserLpaActorMapInterface,
+    ViewerCodeActivityInterface,
+    ViewerCodesInterface};
+use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
+use App\Service\Lpa\Combined\{FilterActiveActors, RejectInvalidLpa, ResolveLpaTypes};
+use App\Service\Lpa\IsValid\IsValidInterface;
+use App\Service\Lpa\ResolveActor\HasActorInterface;
 use DateTimeInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use RuntimeException;
+use Psr\Log\LoggerInterface;
 
 /**
  * @psalm-import-type UserLpaActorMap from UserLpaActorMapInterface
@@ -23,16 +24,24 @@ use RuntimeException;
 class CombinedLpaManager implements LpaManagerInterface
 {
     public function __construct(
-        private readonly UserLpaActorMapInterface $userLpaActorMapRepository,
-        private readonly ResolveLpaTypes $resolveLpaTypes,
+        private readonly UserLpaActorMapInterface $userLpaActorMap,
         private readonly SiriusLpas $siriusLpas,
         private readonly DataStoreLpas $dataStoreLpas,
+        private readonly ViewerCodesInterface $viewerCodes,
+        private readonly ViewerCodeActivityInterface $viewerCodeActivity,
+        private readonly InstructionsAndPreferencesImagesInterface $instructionsAndPreferencesImages,
+        private readonly ResolveLpaTypes $resolveLpaTypes,
         private readonly ResolveActor $resolveActor,
         private readonly IsValidLpa $isValidLpa,
         private readonly FilterActiveActors $filterActiveActors,
+        private readonly RejectInvalidLpa $rejectInvalidLpa,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getByUid(string $uid): ?LpaInterface
     {
         $lpa = str_starts_with($uid, '7')
@@ -51,12 +60,15 @@ class CombinedLpaManager implements LpaManagerInterface
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getByUserLpaActorToken(string $token, string $userId): ?array
     {
-        $lpaActorMap = $this->userLpaActorMapRepository->get($token);
+        $lpaActorMap = $this->userLpaActorMap->get($token);
 
         // Ensure the passed userId matches the passed token
-        if ($userId !== $lpaActorMap['UserId']) {
+        if ($lpaActorMap === null || $userId !== $lpaActorMap['UserId']) {
             return null;
         }
 
@@ -81,7 +93,7 @@ class CombinedLpaManager implements LpaManagerInterface
             $result['actor'] = ($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']);
         }
 
-        // Extract and return only LPA's where status is Registered or Cancelled
+        // Extract and return only LPAs where status is Registered or Cancelled
         if (($this->isValidLpa)($lpaData)) {
             return $result;
         }
@@ -91,39 +103,96 @@ class CombinedLpaManager implements LpaManagerInterface
         return [];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAllActiveForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
-        $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
+        $lpaActorMaps = $this->userLpaActorMap->getByUserId($userId);
 
-        $lpaActorMaps = array_filter($lpaActorMaps, function ($item) {
+        $lpaActorMaps = array_filter($lpaActorMaps, function (array $item) {
             return !array_key_exists('ActivateBy', $item);
         });
 
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
-        $lpaActorMaps = $this->userLpaActorMapRepository->getByUserId($userId);
+        $lpaActorMaps = $this->userLpaActorMap->getByUserId($userId);
 
         return $this->lookupAndFormatLpas($lpaActorMaps);
     }
 
-    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): ?array
+    /**
+     * @inheritDoc
+     */
+    public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): array
     {
-        throw new ApiException('Not implemented');
+        $viewerCodeData = $this->viewerCodes->get($viewerCode);
+
+        if (is_null($viewerCodeData)) {
+            $this->logger->info('The code entered by user to view LPA is not found in the database.');
+            throw new NotFoundException();
+        }
+
+        $lpaId = $viewerCodeData['LpaUid'] ?? $viewerCodeData['SiriusUid'];
+        $lpa   = $this->getByUid($lpaId);
+
+        if ($lpa === null) {
+            throw new NotFoundException();
+        }
+
+        // Whilst the checks in this invokable could be done before we look up the LPA, they are done
+        // at this point as we only want to acknowledge if a code has expired if the donor surname matched.
+        try {
+            ($this->rejectInvalidLpa)($lpa, $viewerCode, $donorSurname, $viewerCodeData);
+        } catch (MissingCodeExpiryException) {
+            throw ApiException::create('Missing code expiry data in Dynamo response');
+        }
+
+        /** @var \App\Entity\Lpa $lpaObj */
+        $lpaObj = $lpa->getData();
+
+        $result = [
+            'date'         => $lpa->getLookupTime()->format(DateTimeInterface::ATOM),
+            'expires'      => $viewerCodeData['Expires']->format(DateTimeInterface::ATOM),
+            'organisation' => $viewerCodeData['Organisation'],
+            'lpa'          => $lpaObj,
+        ];
+
+        // As this method is only ever really hit by the viewer side of the app we'll always need the images
+        // if there are any so we skip that extra round trip and do that fetch now.
+        if (
+            ($lpaObj->applicationHasGuidance ?? false) || ($lpaObj->applicationHasRestrictions ?? false)
+        ) {
+            $this->logger->info('The LPA has instructions and/or preferences. Fetching images');
+            $result['iap'] =
+                $this->instructionsAndPreferencesImages->getInstructionsAndPreferencesImages((int) $lpaObj->uId);
+        }
+
+        if ($organisation !== null) {
+            // Record the lookup in the activity table
+            // We only do this if the organisation is provided
+            $this->viewerCodeActivity->recordSuccessfulLookupActivity(
+                $viewerCodeData['ViewerCode'],
+                $organisation
+            );
+        }
+
+        return $result;
     }
 
     /**
-     * @param $lpaActorMaps array Map of LPAs from Dynamo
+     * @param       $lpaActorMaps array Map of LPAs from Dynamo
      * @psalm-param $lpaActorMaps UserLpaActorMap[]
      * @return array an array with formatted LPA results
      * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
      */
     private function lookupAndFormatLpas(array $lpaActorMaps): array
     {
@@ -143,6 +212,7 @@ class CombinedLpaManager implements LpaManagerInterface
                 continue;
             }
 
+            /** @var HasActorInterface&IsValidInterface $lpaData */
             $lpaData = $lpa->getData();
 
             $actor = ($this->resolveActor)($lpaData, (string) $item['ActorId']);
@@ -163,13 +233,10 @@ class CombinedLpaManager implements LpaManagerInterface
     }
 
     /**
-     * @param array $lpaActorMap
+     * @param array                 $lpaActorMap
      * @psalm-param UserLpaActorMap $lpaActorMap
      * @return LpaInterface|null
      * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
      */
     private function lookupLpa(array $lpaActorMap): ?LpaInterface
     {
@@ -182,23 +249,17 @@ class CombinedLpaManager implements LpaManagerInterface
 
     /**
      * @param array $lpaActorMaps
-     * @psalm-param UserLpaActorMap[] $lpaActorMaps
      * @return LpaInterface[]
      * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws RuntimeException
      */
     private function lookupLpas(array $lpaActorMaps): array
     {
         [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        /** @var LpaInterface[] $siriusLpas */
         $siriusLpas = count($siriusUids) > 0
             ? $this->siriusLpas->lookup($siriusUids)
             : [];
 
-        /** @var LpaInterface[] $siriusLpas */
         $dataStoreLpas = count($dataStoreUids) > 0
             ? $this->dataStoreLpas->lookup($dataStoreUids)
             : [];
@@ -207,6 +268,16 @@ class CombinedLpaManager implements LpaManagerInterface
         array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
             $keyedDataStoreLpas[$item->getData()->getUid()] = $item;
         });
+
+        $this->logger->info(
+            'Found {count} LPAs in account and was able to load {loaded} from upstream',
+            [
+                'count'    => count($siriusUids) + count($dataStoreUids),
+                'loaded'   => count($siriusLpas) + count($dataStoreLpas),
+                'sirius'   => sprintf('%d found, %d loaded', count($siriusUids), count($siriusLpas)),
+                'lpastore' => sprintf('%d found, %d loaded', count($dataStoreUids), count($dataStoreLpas)),
+            ],
+        );
 
         // unusual combination operation in order to preserve potential numeric keys
         return $keyedDataStoreLpas + $siriusLpas;

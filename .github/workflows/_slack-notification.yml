@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@8039c45ed9a312fba91f3399cd0605ba2ebfe93c # pin@v4.2.0
+        uses: actions/setup-python@9e62be81b28222addecf85e47571213eb7680449 # pin@v4.2.0
         with:
           python-version: '3.10'
           cache: 'pip'
@@ -40,7 +40,7 @@ jobs:
         run: pip install -r scripts/pipeline/requirements.txt
 
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: /tmp

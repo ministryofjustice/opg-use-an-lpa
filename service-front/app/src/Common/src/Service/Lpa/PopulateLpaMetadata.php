@@ -12,10 +12,6 @@ use ArrayObject;
  */
 class PopulateLpaMetadata
 {
-    /**
-     * @param ViewerCodeService $viewerCodeService
-     * @codeCoverageIgnore
-     */
     public function __construct(private ViewerCodeService $viewerCodeService)
     {
     }
@@ -24,8 +20,8 @@ class PopulateLpaMetadata
      * Queries the ViewerCodeService for information about the LPAs and attaches it as
      * metadata to the LPA record withing the ArrayObject.
      *
-     * @param ArrayObject $lpas      A list of LPAs to attache metadata to
-     * @param string      $userToken A identity used to query the viewer code service
+     * @param ArrayObject $lpas      A list of LPAs to attach metadata to
+     * @param string      $userToken An identity used to query the viewer code service
      * @return ArrayObject
      */
     public function __invoke(ArrayObject $lpas, string $userToken): ArrayObject

@@ -7,6 +7,9 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
         exclude: '^\.idea/'
+      - id: no-commit-to-branch
+        args:
+          - --branch=main
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.92.0
     hooks:

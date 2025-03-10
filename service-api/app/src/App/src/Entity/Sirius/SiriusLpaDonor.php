@@ -10,7 +10,7 @@ use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
-use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, LinkedDonorCaster};
+use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
@@ -52,6 +52,7 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('town')]
         ?string $town,
+        #[CastToUnhyphenatedUId]
         ?string $uId,
     ) {
         parent::__construct(

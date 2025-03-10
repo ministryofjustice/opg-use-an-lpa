@@ -22,7 +22,7 @@ class DataStoreLpas implements JWSPayload
                 'nbf' => $now,
                 'exp' => $now + 3600,
                 'iss' => 'opg.poas.use',
-                'aud' => 'urn:opg:poas:use:users:' . $identifier,
+                'sub' => 'urn:opg:poas:use:users:' . $identifier,
             ]
         );
     }
