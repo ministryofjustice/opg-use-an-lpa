@@ -8,6 +8,7 @@ use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Entity\Value\LpaUid;
 use App\Service\ViewerCodes\ViewerCodeService;
 use DateTime;
 use DateTimeImmutable;
@@ -54,8 +55,7 @@ class ViewerCodeServiceTest extends TestCase
             ->add(
                 Argument::type('string'),
                 'id',
-                '700000000047',
-                null,
+                new LpaUid('700000000047'),
                 $codeExpiry,
                 'token name',
                 '1234'
@@ -109,8 +109,7 @@ class ViewerCodeServiceTest extends TestCase
             ->add(
                 Argument::type('string'),
                 'id',
-                null,
-                'M-XXXX-1212-ZZZZ',
+                Argument::that(fn(LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
                 $codeExpiry,
                 'token name',
                 '1234'
@@ -125,10 +124,10 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 [
-                    'Id'        => 'id',
-                    'UserId'    => 'user_id',
-                    'LpaUid'    => 'M-XXXX-1212-ZZZZ',
-                    'ActorId'   => '1234',
+                    'Id'      => 'id',
+                    'UserId'  => 'user_id',
+                    'LpaUid'  => 'M-XXXX-1212-ZZZZ',
+                    'ActorId' => '1234',
                 ]
             );
 
@@ -192,8 +191,7 @@ class ViewerCodeServiceTest extends TestCase
             ->add(
                 Argument::type('string'),
                 'id',
-                '700000000047',
-                null,
+                new LpaUid('700000000047'),
                 Argument::type(DateTime::class),
                 'token name',
                 '1234'
