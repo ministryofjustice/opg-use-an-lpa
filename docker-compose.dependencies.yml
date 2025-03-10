@@ -22,8 +22,6 @@ services:
     depends_on:
       codes-gateway:
         condition: service_started
-      dynamodb-local:
-        condition: service_started
       kms:
         condition: service_started
       localstack:
@@ -36,25 +34,22 @@ services:
       IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
       LPA_DATA_STORE_API_ENDPOINT: http://mock-lpa-data-store:4014
       ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
-      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
 
   api-seeding:
     depends_on:
-      - dynamodb-local
+      localstack:
+        condition: service_healthy
     environment:
-      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
+      AWS_ENDPOINT_DYNAMODB: localstack:4566
       CODES_ENDPOINT: codes-gateway:4343
 
-  # -----
-  # Database
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    ports:
-      - 8000:8000
+  upload-stats-lambda:
+    depends_on:
+      localstack:
+        condition: service_healthy
 
   # -----
   # Code Generation API development environment
@@ -67,9 +62,10 @@ services:
     volumes:
       - ../opg-data-lpa-codes/lambda_functions/v1/:/var/www/lambda_functions/v1/
     depends_on:
-      - dynamodb-local
+      localstack:
+        condition: service_healthy
     environment:
-      LOCAL_URL: host.docker.internal #rather than host name as the port is hardcoded to 8000
+      LOCAL_URL: localstack #TODO port is hardcoded to 8000 in upstream repo. FixMe
       ENVIRONMENT: local
       AWS_ACCESS_KEY_ID: testing
       AWS_SECRET_ACCESS_KEY: testing
