@@ -27,5 +27,5 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.10.15 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/ministryofjustice/opg-go-common v1.74.0
+	github.com/ministryofjustice/opg-go-common v1.75.0
 )
