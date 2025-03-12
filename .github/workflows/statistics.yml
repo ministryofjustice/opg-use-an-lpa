@@ -31,7 +31,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
         with:
-          python-version: 3.11.5
+          python-version: 3.13.2
       - name: Install requirements
         run: |
           pip install -r ./scripts/pipeline/requirements.txt
