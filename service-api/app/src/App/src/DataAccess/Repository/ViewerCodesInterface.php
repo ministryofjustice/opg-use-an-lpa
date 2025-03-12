@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\Entity\Value\LpaUid;
 use DateTime;
 use DateTimeInterface;
 
@@ -36,21 +37,18 @@ interface ViewerCodesInterface
     /**
      * Gets a list of viewer codes for a given LPA
      *
-     * @param string $siriusUid
+     * @param LpaUid $lpaUid
      * @psalm-return ViewerCode[]
      * @return array
      */
-    public function getCodesByLpaId(string $siriusUid): array;
+    public function getCodesByLpaId(LpaUid $lpaUid): array;
 
     /**
      * Adds a code to the database.
      *
-     * $siriusUid is denormalised.
-     *
      * @param string        $code
      * @param string        $userLpaActorToken
-     * @param string|null   $siriusUid
-     * @param string|null   $lpaUid
+     * @param LpaUid        $lpaUid
      * @param DateTime      $expires
      * @param string        $organisation
      * @param string|null   $actorId
@@ -59,8 +57,7 @@ interface ViewerCodesInterface
     public function add(
         string $code,
         string $userLpaActorToken,
-        ?string $siriusUid,
-        ?string $lpaUid,
+        LpaUid $lpaUid,
         DateTime $expires,
         string $organisation,
         ?string $actorId,

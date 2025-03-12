@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Entity\Value\LpaUid;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use Exception;
@@ -101,7 +102,7 @@ class RemoveLpa
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
     {
-        $siriusUid = $userActorLpa['SiriusUid'];
+        $siriusUid = new LpaUid($userActorLpa['SiriusUid']);
 
         //Lookup records in ViewerCodes table using siriusUid
         $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
