@@ -6,6 +6,7 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\KeyCollisionException;
+use App\Entity\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
@@ -113,7 +114,7 @@ class ViewerCodesTest extends TestCase
     #[Test]
     public function can_query_by_lpa_id(): void
     {
-        $testSiriusUid = '98765-43210';
+        $testSiriusUid = new LpaUid('98765-43210');
 
         $this->dynamoDbClientProphecy->query(
             Argument::that(function (array $data) use ($testSiriusUid) {
@@ -154,7 +155,7 @@ class ViewerCodesTest extends TestCase
     #[Test]
     public function lpa_with_no_generated_codes_returns_empty_array(): void
     {
-        $testSiriusUid = '98765-43210';
+        $testSiriusUid = new LpaUid('98765-43210');
 
         $this->dynamoDbClientProphecy->query(
             Argument::that(function (array $data) use ($testSiriusUid) {
@@ -191,8 +192,7 @@ class ViewerCodesTest extends TestCase
     {
         $testCode              = 'test-code';
         $testUserLpaActorToken = 'test-token';
-        $testSiriusUid         = 'test-uid';
-        $testLpaUid            = 'null';
+        $testLpaUid            = new LpaUid('98765-43210');
         $testExpires           = new DateTime();
         $testOrganisation      = 'test-organisation';
         $testActorId           = '123';
@@ -201,11 +201,10 @@ class ViewerCodesTest extends TestCase
             Argument::that(function (array $data) use (
                 $testCode,
                 $testUserLpaActorToken,
-                $testSiriusUid,
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-                $testActorId
+                $testActorId,
             ) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -220,7 +219,7 @@ class ViewerCodesTest extends TestCase
 
                 $this->assertEquals(['S' => $testCode], $data['Item']['ViewerCode']);
                 $this->assertEquals(['S' => $testUserLpaActorToken], $data['Item']['UserLpaActor']);
-                $this->assertEquals(['S' => $testSiriusUid], $data['Item']['SiriusUid']);
+                $this->assertEquals(['S' => $testLpaUid], $data['Item']['SiriusUid']);
                 $this->assertEquals(['S' => $testExpires->format('c')], $data['Item']['Expires']);
                 $this->assertEquals(['S' => $testOrganisation], $data['Item']['Organisation']);
 
@@ -235,7 +234,12 @@ class ViewerCodesTest extends TestCase
 
         $repo->add(
             $testCode,
-            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
+            $testUserLpaActorToken,
+            $testLpaUid,
+            $testExpires,
+            $testOrganisation,
+            $testActorId
+        );
     }
 
     #[Test]
@@ -243,8 +247,7 @@ class ViewerCodesTest extends TestCase
     {
         $testCode              = 'test-code';
         $testUserLpaActorToken = 'test-token';
-        $testSiriusUid         = null;
-        $testLpaUid            = 'M-test-uid';
+        $testLpaUid            = new LpaUid('M-1098-7654-3210');
         $testExpires           = new DateTime();
         $testOrganisation      = 'test-organisation';
         $testActorId           = '123';
@@ -253,11 +256,10 @@ class ViewerCodesTest extends TestCase
             Argument::that(function (array $data) use (
                 $testCode,
                 $testUserLpaActorToken,
-                $testSiriusUid,
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-                $testActorId
+                $testActorId,
             ) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -272,7 +274,7 @@ class ViewerCodesTest extends TestCase
 
                 $this->assertEquals(['S' => $testCode], $data['Item']['ViewerCode']);
                 $this->assertEquals(['S' => $testUserLpaActorToken], $data['Item']['UserLpaActor']);
-                $this->assertEquals(['S' => $testLpaUid], $data['Item']['LpaUid']);
+                $this->assertEquals(['S' => $testLpaUid], $data['Item']['SiriusUid']);
                 $this->assertEquals(['S' => $testExpires->format('c')], $data['Item']['Expires']);
                 $this->assertEquals(['S' => $testOrganisation], $data['Item']['Organisation']);
 
@@ -287,27 +289,12 @@ class ViewerCodesTest extends TestCase
 
         $repo->add(
             $testCode,
-            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
-    }
-
-    #[Test]
-    public function throw_exception_when_add_unique_code_called_wih_null_uid(): void
-    {
-        $testCode              = 'test-code';
-        $testUserLpaActorToken = 'test-token';
-        $testSiriusUid         = null;
-        $testLpaUid            = null;
-        $testExpires           = new DateTime();
-        $testOrganisation      = 'test-organisation';
-        $testActorId           = '123';
-
-        $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
-
-        $this->expectException(\Exception::class);
-
-        $repo->add(
-            $testCode,
-            $testUserLpaActorToken, $testSiriusUid, $testLpaUid, $testExpires, $testOrganisation, $testActorId);
+            $testUserLpaActorToken,
+            $testLpaUid,
+            $testExpires,
+            $testOrganisation,
+            $testActorId
+        );
     }
 
     #[Test]
@@ -333,8 +320,7 @@ class ViewerCodesTest extends TestCase
         $repo->add(
             'test-val',
             'test-val',
-            'test-val',
-            'test-val',
+            new LpaUid('M-1098-7654-3210'),
             new DateTime(),
             'test-val',
             '123'
@@ -358,8 +344,7 @@ class ViewerCodesTest extends TestCase
         $repo->add(
             'test-val',
             'test-val',
-            'test-val',
-            'test-val',
+            new LpaUid('M-1098-7654-3210'),
             new DateTime(),
             'test-val',
             '123'
