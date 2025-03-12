@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"net/http"
@@ -18,9 +19,11 @@ import (
 )
 
 var (
-	tableName    = os.Getenv("LPAS_TABLE")
-	appPublicURL = os.Getenv("APP_PUBLIC_URL")
-	awsBaseURL   = os.Getenv("AWS_BASE_URL")
+	tablePrefix    = os.Getenv("ENVIRONMENT")
+	dynamoEndpoint = os.Getenv("AWS_ENDPOINT_DYNAMODB")
+	actorMapTable  = "UserLpaActorMap"
+	actorUserTable = "ActorUsers"
+	sqsMsgId       = ""
 
 	cfg        aws.Config
 	httpClient *http.Client
@@ -34,8 +37,9 @@ type Factory interface {
 }
 
 type DynamodbClient interface {
-	OneByUID(ctx context.Context, uid string, v any) error
-	Put(ctx context.Context, v any) error
+	OneByIdentity(ctx context.Context, uid string, v any) error
+	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
+	ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error)
 }
 
 type Handler interface {
@@ -48,6 +52,7 @@ func handler(ctx context.Context, factory Factory, event *events.SQSEvent) (map[
 	var err error
 
 	for _, record := range event.Records {
+		sqsMsgId = record.MessageId
 		if err = handleCloudWatchEvent(ctx, factory, record.Body); err != nil {
 			logger.ErrorContext(
 				ctx,
@@ -117,7 +122,11 @@ func main() {
 	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
 
 	var err error
-	cfg, err = config.LoadDefaultConfig(ctx, config.WithHTTPClient(http.DefaultClient))
+	cfg, err = config.LoadDefaultConfig(ctx,
+		config.WithHTTPClient(http.DefaultClient),
+		config.WithRegion("eu-west-1"),
+	)
+
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
@@ -129,11 +138,7 @@ func main() {
 		return
 	}
 
-	if len(awsBaseURL) > 0 {
-		cfg.BaseEndpoint = aws.String(awsBaseURL)
-	}
-
-	dynamoClient, err := dynamo.NewClient(cfg, tableName)
+	dynamoClient, err := dynamo.NewClient(cfg, dynamoEndpoint, tablePrefix)
 	if err != nil {
 		logger.ErrorContext(
 			ctx,
@@ -150,7 +155,6 @@ func main() {
 		logger:       logger,
 		cfg:          cfg,
 		dynamoClient: dynamoClient,
-		appPublicURL: appPublicURL,
 		httpClient:   httpClient,
 	}
 

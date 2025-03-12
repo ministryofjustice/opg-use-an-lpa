@@ -5,6 +5,7 @@ package mocks
 import (
 	context "context"
 
+	types "github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -13,12 +14,40 @@ type DynamodbClient struct {
 	mock.Mock
 }
 
-// OneByUID provides a mock function with given fields: ctx, uid, v
-func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{}) error {
+// ExistsLpaIDAndUserID provides a mock function with given fields: ctx, LpaUid, userId
+func (_m *DynamodbClient) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error) {
+	ret := _m.Called(ctx, LpaUid, userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ExistsLpaIDAndUserID")
+	}
+
+	var r0 bool
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) (bool, error)); ok {
+		return rf(ctx, LpaUid, userId)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) bool); ok {
+		r0 = rf(ctx, LpaUid, userId)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = rf(ctx, LpaUid, userId)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// OneByIdentity provides a mock function with given fields: ctx, uid, v
+func (_m *DynamodbClient) OneByIdentity(ctx context.Context, uid string, v interface{}) error {
 	ret := _m.Called(ctx, uid, v)
 
 	if len(ret) == 0 {
-		panic("no return value specified for OneByUID")
+		panic("no return value specified for OneByIdentity")
 	}
 
 	var r0 error
@@ -31,17 +60,17 @@ func (_m *DynamodbClient) OneByUID(ctx context.Context, uid string, v interface{
 	return r0
 }
 
-// Put provides a mock function with given fields: ctx, v
-func (_m *DynamodbClient) Put(ctx context.Context, v interface{}) error {
-	ret := _m.Called(ctx, v)
+// Put provides a mock function with given fields: ctx, tableName, item
+func (_m *DynamodbClient) Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error {
+	ret := _m.Called(ctx, tableName, item)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Put")
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, interface{}) error); ok {
-		r0 = rf(ctx, v)
+	if rf, ok := ret.Get(0).(func(context.Context, string, map[string]types.AttributeValue) error); ok {
+		r0 = rf(ctx, tableName, item)
 	} else {
 		r0 = ret.Error(0)
 	}
