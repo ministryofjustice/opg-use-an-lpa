@@ -82,7 +82,7 @@ class ResolveOAuthUser
                 ]
             );
 
-            if ($user['Email'] !== $email) {
+            if (!isset($user['Email']) || $user['Email'] !== $email) {
                 $user = $this->userUpdate($user, $email);
             }
         } catch (NotFoundException) {
