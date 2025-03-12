@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Entity\Sirius\SiriusLpa;
+use App\Entity\Sirius\SiriusLpaDonor;
+use App\Enum\LifeSustainingTreatment;
+use App\Enum\LpaType;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\LpaService;
@@ -76,17 +80,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => [
-                        'uId'                  => $this->lpaUid,
-                        'caseSubtype'          => 'hw',
-                        'donor'                => [
-                            'uId'         => '700000000444',
-                            'firstname'   => 'Another',
-                            'middlenames' => '',
-                            'surname'     => 'Person',
-                        ],
-                        'activationKeyDueDate' => null,
-                    ],
+                    'lpa'                  => $this->getLpaDataFixture(),
                 ]
             );
 
@@ -149,16 +143,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => [
-                        'uId'         => $this->lpaUid,
-                        'caseSubtype' => 'hw',
-                        'donor'       => [
-                            'uId'         => '700000000444',
-                            'firstname'   => 'Another',
-                            'middlenames' => '',
-                            'surname'     => 'Person',
-                        ],
-                    ],
+                    'lpa'                  => $this->getLpaDataFixture(),
                 ]
             );
 
@@ -184,7 +169,6 @@ class LpaAlreadyAddedTest extends TestCase
      * Modernise records in the database don't blow up code that can't handle them. This shouldn't happen
      * on production at all but causes issues in PR environments and local dev.
      *
-     * TODO: This test will likely disappear when this code is touched as a part of UML-3784
      */
     #[Test]
     public function correctly_handles_records_without_sirius_uids_if_lpa_already_added(): void
@@ -209,16 +193,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => [
-                        'uId'         => $this->lpaUid,
-                        'caseSubtype' => 'hw',
-                        'donor'       => [
-                            'uId'         => '700000000444',
-                            'firstname'   => 'Another',
-                            'middlenames' => '',
-                            'surname'     => 'Person',
-                        ],
-                    ],
+                    'lpa'                  => $this->getLpaDataFixture(),
                 ]
             );
 
@@ -259,5 +234,56 @@ class LpaAlreadyAddedTest extends TestCase
 
         $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '712312341234');
         $this->assertNull($lpaAddedData);
+    }
+
+    private function getLpaDataFixture(): SiriusLpa
+    {
+        return new SiriusLpa(
+            applicationHasGuidance:                    false,
+            applicationHasRestrictions:                false,
+            applicationType:                           'Classic',
+            attorneys:                                 [],
+            caseAttorneyJointly:                       true,
+            caseAttorneyJointlyAndJointlyAndSeverally: false,
+            caseAttorneyJointlyAndSeverally:           false,
+            caseSubtype:                               LpaType::PERSONAL_WELFARE,
+            channel:                                   null,
+            dispatchDate:                              null,
+            donor:                                     new SiriusLpaDonor(
+                                                           addressLine1: '81 Front Street',
+                                                           addressLine2: 'xxxxx',
+                                                           addressLine3: '',
+                                                           country:      '',
+                                                           county:       '',
+                                                           dob:          null,
+                                                           email:        'AnotherPerson@opgtest.com',
+                                                           firstname:    'Another',
+                                                           id:           '123456789',
+                                                           linked:       [],
+                                                           middlenames:  null,
+                                                           otherNames:   null,
+                                                           postcode:     'DN37 5SH',
+                                                           surname:      'Person',
+                                                           systemStatus: null,
+                                                           town:         '',
+                                                           uId:          '700000000444',
+                                                       ),
+            hasSeveranceWarning:                       null,
+            invalidDate:                               null,
+            lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
+            lpaDonorSignatureDate:                     new DateTimeImmutable('2012-12-12'),
+            lpaIsCleansed:                             true,
+            onlineLpaId:                               'A33718377316',
+            receiptDate:                               new DateTimeImmutable('2014-09-26'),
+            registrationDate:                          new DateTimeImmutable('2019-10-10'),
+            rejectedDate:                              null,
+            replacementAttorneys:                      [],
+            status:                                    'Registered',
+            statusDate:                                null,
+            trustCorporations:                         [],
+            uId:                                       '700000000047',
+            whenTheLpaCanBeUsed:                       null,
+            withdrawnDate:                             null
+        );
     }
 }
