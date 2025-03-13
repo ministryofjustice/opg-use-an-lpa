@@ -277,7 +277,7 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@a20de5420d57c4102486cdd9578b45609c99d7eb
+        uses: aquasecurity/trivy-action@53e8848d3e517db48b0e70ae4f648a12ae04fe02
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
