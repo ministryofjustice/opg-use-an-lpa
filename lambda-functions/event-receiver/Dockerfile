@@ -11,7 +11,7 @@ COPY internal/ ./internal
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/main ./
 
-FROM scratch AS production
+FROM public.ecr.aws/lambda/provided:al2023.2025.02.18.01 AS production
 
 WORKDIR /var/task
 
