@@ -5,25 +5,29 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Entity\Sirius\SiriusLpa;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Service\Lpa\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
-use App\Service\Lpa\LpaService;
+use App\Service\Lpa\SiriusPerson;
 use DateTimeImmutable;
+use Monolog\Logger;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 
 #[CoversClass(LpaAlreadyAdded::class)]
 class LpaAlreadyAddedTest extends TestCase
 {
     use ProphecyTrait;
 
+    private LoggerInterface|ObjectProphecy $loggerProphecy;
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
@@ -35,6 +39,7 @@ class LpaAlreadyAddedTest extends TestCase
     {
         $this->lpaManagerProphecy      = $this->prophesize(LpaManagerInterface::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
 
         $this->userId            = '12345';
         $this->lpaUid            = '700000000543';
@@ -45,7 +50,7 @@ class LpaAlreadyAddedTest extends TestCase
     {
         return new LpaAlreadyAdded(
             $this->lpaManagerProphecy->reveal(),
-            $this->userLpaActorMapProphecy->reveal(),
+            $this->userLpaActorMapProphecy->reveal()
         );
     }
 
@@ -80,7 +85,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixture(),
+                    'lpa'                  => $this->getLpaDataFixtureNew(),
                 ]
             );
 
@@ -125,7 +130,7 @@ class LpaAlreadyAddedTest extends TestCase
     }
 
     #[Test]
-    public function returns_lpa_data_if_lpa_is_already_added(): void
+    public function returns_lpa_data_if_lpa_is_already_added_combined(): void
     {
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
@@ -143,7 +148,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixture(),
+                    'lpa'                  => $this->getLpaDataFixtureNew(),
                 ]
             );
 
@@ -164,12 +169,47 @@ class LpaAlreadyAddedTest extends TestCase
         );
     }
 
-    /**
-     * In the interim period before the feature flag for combined format goes live we need to ensure that
-     * Modernise records in the database don't blow up code that can't handle them. This shouldn't happen
-     * on production at all but causes issues in PR environments and local dev.
-     *
-     */
+    #[Test]
+    public function returns_lpa_data_if_lpa_is_already_added_old(): void
+    {
+        $this->userLpaActorMapProphecy
+            ->getByUserId($this->userId)
+            ->willReturn(
+                [
+                    [
+                        'Id'        => $this->userLpaActorToken,
+                        'SiriusUid' => $this->lpaUid,
+                    ],
+                ]
+            );
+
+        $this->lpaManagerProphecy
+            ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
+            ->willReturn(
+                [
+                    'user-lpa-actor-token' => $this->userLpaActorToken,
+                    'lpa'                  => $this->getLpaDataFixtureOld(),
+                ]
+            );
+
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $this->assertEquals(
+            [
+                'donor'                => [
+                    'uId'         => '700000001111',
+                    'firstname'   => 'Donor',
+                    'middlenames' => '',
+                    'surname'     => 'Person',
+                ],
+                'caseSubtype'          => 'hw',
+                'lpaActorToken'        => $this->userLpaActorToken,
+                'activationKeyDueDate' => null,
+            ],
+            $lpaAddedData
+        );
+    }
+
+
     #[Test]
     public function correctly_handles_records_without_sirius_uids_if_lpa_already_added(): void
     {
@@ -193,7 +233,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->willReturn(
                 [
                     'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixture(),
+                    'lpa'                  => $this->getLpaDataFixtureNew(),
                 ]
             );
 
@@ -236,9 +276,9 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertNull($lpaAddedData);
     }
 
-    private function getLpaDataFixture(): SiriusLpa
+    private function getLpaDataFixtureNew(): CombinedSiriusLpa
     {
-        return new SiriusLpa(
+        return new CombinedSiriusLpa(
             applicationHasGuidance:                    false,
             applicationHasRestrictions:                false,
             applicationType:                           'Classic',
@@ -286,4 +326,37 @@ class LpaAlreadyAddedTest extends TestCase
             withdrawnDate:                             null
         );
     }
+
+    private function getLpaDataFixtureOld(): SiriusLpa
+    {
+        return new SiriusLpa(
+            [
+                'uId'       => '700000012346',
+                'caseSubtype' => 'hw',
+                'donor'     => $this->donorFixtureOld(),
+                'attorneys' => [],
+            ],
+            $this->loggerProphecy->reveal(),
+        );
+    }
+
+    private static function donorFixtureOld(): SiriusPerson
+    {
+        return new SiriusPerson(
+            [
+                'uId'       => '700000001111',
+                'dob'       => '1975-10-05',
+                'firstname' => 'Donor',
+                'surname'   => 'Person',
+                'addresses' => [
+                    [
+                        'postcode' => 'PY1 3Kd',
+                    ],
+                ],
+            ],
+            new Logger('test-output'),
+        );
+    }
 }
+
+
