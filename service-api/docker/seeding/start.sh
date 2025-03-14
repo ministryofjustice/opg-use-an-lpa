@@ -6,13 +6,13 @@ echo Starting seeding...
 # DynamoDB setup and seeding for UaLPA
 # -----
 
-if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
+if [[ -n "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     # If we're not running against AWS' endpoint
 
-    DYNAMODN_ENDPOINT=http://${AWS_ENDPOINT_DYNAMODB}
+    DYNAMODB_ENDPOINT=${AWS_ENDPOINT_DYNAMODB}
 
     echo Using local DynamoDB
-    /usr/local/bin/waitforit -address=tcp://${AWS_ENDPOINT_DYNAMODB} -timeout 60 -retry 6000 -debug
+    /usr/local/bin/waitforit -address=${AWS_ENDPOINT_DYNAMODB} -timeout 60 -retry 6000 -debug
 
     # ----------------------------------------------------------
     # Add any setup here that is performed with Terraform in AWS.
@@ -23,7 +23,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --key-schema AttributeName=Id,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT \
+    --endpoint $DYNAMODB_ENDPOINT \
     --global-secondary-indexes \
       IndexName=IdentityIndex,KeySchema=["{AttributeName=Identity,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
       IndexName=EmailIndex,KeySchema=["{AttributeName=Email,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
@@ -35,7 +35,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     aws dynamodb update-time-to-live \
     --table-name ActorUsers \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT \
+    --endpoint $DYNAMODB_ENDPOINT \
     --time-to-live-specification "Enabled=true, AttributeName=ExpiresTTL"
 
     aws dynamodb create-table \
@@ -44,7 +44,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --key-schema AttributeName=ViewerCode,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT \
+    --endpoint $DYNAMODB_ENDPOINT \
     --global-secondary-indexes IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
 
     aws dynamodb create-table \
@@ -53,7 +53,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --key-schema AttributeName=ViewerCode,KeyType=HASH AttributeName=Viewed,KeyType=RANGE \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT
+    --endpoint $DYNAMODB_ENDPOINT
 
    aws dynamodb create-table \
       --attribute-definitions AttributeName=TimePeriod,AttributeType=S \
@@ -61,7 +61,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
       --key-schema AttributeName=TimePeriod,KeyType=HASH \
       --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
       --region eu-west-1 \
-      --endpoint $DYNAMODN_ENDPOINT
+      --endpoint $DYNAMODB_ENDPOINT
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S AttributeName=ActivationCode,AttributeType=S \
@@ -70,7 +70,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
     --key-schema AttributeName=Id,KeyType=HASH \
     --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT \
+    --endpoint $DYNAMODB_ENDPOINT \
     --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
       IndexName=ActivationCodeIndex,KeySchema=["{AttributeName=ActivationCode,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
       IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
@@ -78,7 +78,7 @@ if ! [[ -z "${AWS_ENDPOINT_DYNAMODB}" ]]; then
      aws dynamodb update-time-to-live \
     --table-name UserLpaActorMap \
     --region eu-west-1 \
-    --endpoint $DYNAMODN_ENDPOINT \
+    --endpoint $DYNAMODB_ENDPOINT \
     --time-to-live-specification "Enabled=true, AttributeName=ActivateBy"
 
 fi
@@ -90,10 +90,10 @@ python /app/seeding/dynamodb.py
 # DynamoDB setup and seeding for codes service
 # -----
 
-if ! [[ -z "${CODES_ENDPOINT}" ]]; then
+if [[ -n "${CODES_ENDPOINT}" ]]; then
   # Setup the local codes service
-  /usr/local/bin/waitforit -address=tcp://${CODES_ENDPOINT} -timeout 60 -retry 6000 -debug
-  curl -X POST -H 'Authorization: asdf1234567890' http://${CODES_ENDPOINT}/setup/dynamodb/create/table
+  /usr/local/bin/waitforit -address=${CODES_ENDPOINT} -timeout 60 -retry 6000 -debug
+  curl -X POST -H 'Authorization: asdf1234567890' ${CODES_ENDPOINT}/setup/dynamodb/create/table
 fi
 
 # Seed code service database
