@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Exception\ActorDateOfBirthNotSetException;
+use App\Service\ActorCodes\Validation\CodesApiValidationStrategyInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
@@ -27,6 +28,7 @@ class SiriusPerson implements
     GetTrustCorporationStatusInterface,
     GetAttorneyStatusInterface,
     ActorMatchingInterface,
+    CodesApiValidationStrategyInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
@@ -86,7 +88,7 @@ class SiriusPerson implements
     /**
      * @throws Exception
      */
-    public function getDob(): DateTimeInterface
+    public function getDob(): DateTimeImmutable
     {
         if (is_null($this->person['dob'])) {
             throw new ActorDateOfBirthNotSetException('Actor DOB is not set');

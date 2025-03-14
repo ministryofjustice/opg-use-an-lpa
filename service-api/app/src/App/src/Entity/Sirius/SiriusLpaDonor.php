@@ -7,6 +7,7 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use App\Enum\ActorStatus;
+use App\Service\ActorCodes\Validation\CodesApiValidationStrategyInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
@@ -15,7 +16,7 @@ use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
-class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
+class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface, CodesApiValidationStrategyInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -87,5 +88,10 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
     public function getMiddlenames(): string
     {
         return $this->middlenames ?? '';
+    }
+
+    public function getDob(): DateTimeImmutable
+    {
+        return $this->dob;
     }
 }

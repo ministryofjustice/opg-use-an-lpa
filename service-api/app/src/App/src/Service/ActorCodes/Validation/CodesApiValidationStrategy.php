@@ -119,8 +119,8 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         }
 
         if (
-            ($actor->actorType !== ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $actor->actor['dob']) ||
-            ($actor->actorType === ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $lpa->getData()['donor']['dob'])
+            ($actor->actorType !== ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $actor->getDob()->format('Y-m-d')) ||
+            ($actor->actorType === ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $lpa->getData()->getDonor()->getDob()->format('Y-m-d'))
         ) {
             $this->logger->error(
                 'Provided dob {dob} did not match the expected when validating actor code',

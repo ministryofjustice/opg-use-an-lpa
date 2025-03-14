@@ -54,7 +54,7 @@ class AddLpa
             throw new NotFoundException('Code validation failed');
         }
 
-        if (strtolower($lpaData['lpa']['status']) === 'registered') {
+        if (strtolower($lpaData['lpa']->getStatus()) === 'registered') {
             $this->logger->notice(
                 'User {id} has found an LPA with Id {uId} using their activation key',
                 [

@@ -102,7 +102,7 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      SUPPORT_DATASTORE_LPAS: "true"
+      SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only
       API_SERVICE_URL:

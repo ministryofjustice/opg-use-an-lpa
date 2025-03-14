@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpaInterface;
+use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
@@ -24,6 +25,7 @@ class SiriusLpa implements
     HasActorInterface,
     FindActorInLpaInterface,
     IsValidInterface,
+    AddLpaInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable

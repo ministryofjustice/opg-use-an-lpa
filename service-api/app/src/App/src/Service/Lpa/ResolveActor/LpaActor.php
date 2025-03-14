@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\ResolveActor;
 
+use DateTimeImmutable;
 use JsonSerializable;
 
 class LpaActor implements JsonSerializable
@@ -24,5 +25,9 @@ class LpaActor implements JsonSerializable
             'details' => $this->actor,
             'type'    => $this->actorType->value,
         ];
+    }
+
+    public function getDob():DateTimeImmutable {
+        return $this->actor->dob;
     }
 }
