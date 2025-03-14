@@ -9,13 +9,14 @@ use App\Entity\Person;
 use App\Enum\ActorStatus;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
-class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface
+class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface, DonorInformationInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -84,8 +85,23 @@ class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccess
         return $this->firstname ?? '';
     }
 
-    public function getMiddlenames(): string
+    public function getMiddleNames(): string
     {
         return $this->middlenames ?? '';
+    }
+
+    public function getFirstnames(): string
+    {
+        return $this->firstname ?? '';
+    }
+
+    public function getSurname(): string
+    {
+        return $this->surname ?? '';
+    }
+
+    public function getUid(): string
+    {
+        return $this->uId ?? '';
     }
 }

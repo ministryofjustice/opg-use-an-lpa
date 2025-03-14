@@ -9,6 +9,7 @@ use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use ArrayAccess;
 use Exception;
 use DateTimeImmutable;
@@ -27,6 +28,7 @@ class SiriusPerson implements
     GetTrustCorporationStatusInterface,
     GetAttorneyStatusInterface,
     ActorMatchingInterface,
+    DonorInformationInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
