@@ -24,15 +24,15 @@ jobs:
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
 
       - name: install python
-        uses: actions/setup-python@6ca8e8598faa206f7140a65ba31b899bebe16f58 # pin@v4.2.0
+        uses: actions/setup-python@6fd11e170a18f6ae448d1080a4a63cc987aed84c # pin@v4.2.0
         with:
-          python-version: '3.10'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: install requirements

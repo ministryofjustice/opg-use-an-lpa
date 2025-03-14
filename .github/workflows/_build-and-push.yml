@@ -86,7 +86,7 @@ jobs:
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@7921ae235bdcb376cc8f22558dc5f8ddc3c3c2f9
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf
         env:
           cache-name: cache-node-modules
         with:
@@ -119,7 +119,7 @@ jobs:
 
       - name: ecr login
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@ab791e3b55f08992ffb9dda338aa30bfe2aeed28 # pin@v1.5.1
+        uses: aws-actions/amazon-ecr-login@2d7337f0d3b7665fe22167bece86286325804cb6 # pin@v1.5.1
         with:
           registries: 311462405659
         if: |
@@ -127,7 +127,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: download artifact
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: ${{ matrix.artifact_to_dl }}
           path: service-${{ matrix.svc_prefix }}/web/dist
@@ -149,9 +149,9 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: install python
-        uses: actions/setup-python@6ca8e8598faa206f7140a65ba31b899bebe16f58 # pin@v4.2.0
+        uses: actions/setup-python@6fd11e170a18f6ae448d1080a4a63cc987aed84c # pin@v4.2.0
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: docker unit tests
         env:
@@ -233,7 +233,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: service-${{ matrix.svc_prefix }}
           path: build/service-${{ matrix.svc_prefix }}

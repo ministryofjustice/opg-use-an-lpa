@@ -82,8 +82,7 @@ class ResolveOAuthUser
                 ]
             );
 
-            // user has updated their email at OIDC
-            if ($user['Email'] !== $email) {
+            if (!isset($user['Email']) || $user['Email'] !== $email) {
                 $user = $this->userUpdate($user, $email);
             }
         } catch (NotFoundException) {

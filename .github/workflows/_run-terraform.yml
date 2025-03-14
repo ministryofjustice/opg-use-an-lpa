@@ -71,7 +71,7 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
 
-      - uses: hashicorp/setup-terraform@7d2407faba0d9514aa95dc515182ee36200712a7 # pin@v2.0.0
+      - uses: hashicorp/setup-terraform@2f1b53ffa558af27b90742f3f28397d986061ece # pin@v2.0.0
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
 
@@ -152,7 +152,7 @@ jobs:
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment/cluster_config.json

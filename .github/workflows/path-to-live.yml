@@ -39,7 +39,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@601adb19b693527d2c25440b8c953e1b9023948f
+        uses: tj-actions/changed-files@9200e69727eb73eb060652b19946b8a2fdfb654b
         with:
           files: |
             **/*.md
@@ -232,7 +232,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: environment_config_file_production
           path: terraform/environment

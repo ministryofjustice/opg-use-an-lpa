@@ -19,9 +19,9 @@ jobs:
       - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
 
       - name: install python
-        uses: actions/setup-python@6ca8e8598faa206f7140a65ba31b899bebe16f58 # pin@v4.2.0
+        uses: actions/setup-python@6fd11e170a18f6ae448d1080a4a63cc987aed84c # pin@v4.2.0
         with:
-          python-version: '3.10'
+          python-version: '3.13'
           cache: 'pip'
 
       - name: install chrome
@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@297b3cde3c3c3202e03cd5e9b679a74c06f72214 # pin@v2.21.2
+        uses: shivammathur/setup-php@3209251719395a11279642c89c6fd159cdf5dc82 # pin@v2.21.2
         with:
           php-version: 8.3
 
@@ -47,7 +47,7 @@ jobs:
         working-directory: tests/smoke
 
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4.1.9
         with:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
@@ -92,7 +92,7 @@ jobs:
             vendor/bin/behat
 
       - name: archive failed test screenshots
-        uses: actions/upload-artifact@v4.6.0
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: behat-screenshots
           path: tests/smoke/failed_step_screenshots
