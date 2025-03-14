@@ -252,39 +252,11 @@ services:
       REGION: eu-west-1
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
-    depends_on:
-      - localstack
     volumes:
       - ./lambda-functions/upload-statistics/app:/function/app
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
-
-
-  # ---------------------------
-  # Lambda for ingestion from MLPA
-
-  event-receiver-lambda:
-    container_name: event-receiver
-    build:
-      context: ./lambda-functions/event-receiver
-      dockerfile: Dockerfile
-    environment:
-      AWS_LAMBDA_SERVER_PORT: '8080'
-      AWS_LAMBDA_RUNTIME_API: 'localhost:8080'
-      ENVIRONMENT: local
-      REGION: eu-west-1
-      AWS_ACCESS_KEY_ID: 'devkey'
-      AWS_SECRET_ACCESS_KEY: 'secretdevkey'
-    volumes:
-      - ./lambda-functions/event-receiver/app:/function/app
-      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
-    entrypoint:
-      - /aws-lambda/aws-lambda-rie
-    command:
-      - ./main
-    ports:
-      - 9008:8080
 
   proxy:
     container_name: proxy

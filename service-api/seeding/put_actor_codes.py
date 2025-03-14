@@ -61,16 +61,16 @@ class LpaCodesSeeder:
 
     def create_dynamodb_resources_for_local(self, docker_mode):
         if docker_mode:
-            url = "dynamodb-local"
+            url = "http://localstack:4566"
         else:
-            url = "localhost"
+            url = "http://localhost:4566"
         self.dynamodb = boto3.resource(
             "dynamodb",
             region_name="eu-west-1",
             aws_access_key_id="devkey",
             aws_secret_access_key="secretdevkey",
             aws_session_token="",
-            endpoint_url=f"http://{url}:8000"
+            endpoint_url=url
         )
 
     def put_actor_codes(self):
