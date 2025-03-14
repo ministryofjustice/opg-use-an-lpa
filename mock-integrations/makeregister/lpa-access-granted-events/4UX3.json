@@ -1,0 +1,8 @@
+[
+  {
+    "Source": "opg.poas.makeregister",
+    "DetailType": "lpa-access-granted",
+    "Detail": "{\"uid\":\"M-789Q-P4DF-4UX3\",\"lpaType\":\"personal-welfare\",\"actors\":[{\"actorUid\":\"eda719db-8880-4dda-8c5d-bb9ea12c236f\",\"subjectId\":\"urn:fdc:mock-one-login:2023:15vSHOw4QJtBn+UZEooxrn4kFgzV8hfWSOmPQG+KQUk=\"},{\"actorUid\":\"9201a0b8-70a2-47db-93f2-c7510b4210ae\",\"subjectId\":\"urn:fdc:mock-one-login:2023:A1ijOOniZMZ7rk+IpkVrwpCuzyehufQDPR1XnyCKj3o=\"}]}",
+    "EventBusName": "default"
+  }
+]

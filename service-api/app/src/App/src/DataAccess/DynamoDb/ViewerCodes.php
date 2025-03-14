@@ -6,11 +6,11 @@ namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Entity\Value\LpaUid;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
-use Exception;
 
 class ViewerCodes implements ViewerCodesInterface
 {
@@ -36,7 +36,7 @@ class ViewerCodes implements ViewerCodesInterface
         return !empty($codeData) ? $codeData : null;
     }
 
-    public function getCodesByLpaId(string $siriusUid): array
+    public function getCodesByLpaId(LpaUid $lpaUid): array
     {
         $marshaler = new Marshaler();
 
@@ -45,13 +45,12 @@ class ViewerCodes implements ViewerCodesInterface
             'IndexName'                 => 'SiriusUidIndex',
             'KeyConditionExpression'    => 'SiriusUid = :uId',
             'ExpressionAttributeValues' => $marshaler->marshalItem([
-                ':uId' => $siriusUid,
+                ':uId' => $lpaUid->getLpaUid(),
             ]),
         ]);
 
         if ($result['Count'] !== 0) {
-            $accessCodes = $this->getDataCollection($result);
-            return $accessCodes;
+            return $this->getDataCollection($result);
         } else {
             //the user has not yet created any access codes
             return [];
@@ -65,8 +64,7 @@ class ViewerCodes implements ViewerCodesInterface
     public function add(
         string $code,
         string $userLpaActorToken,
-        ?string $siriusUid,
-        ?string $lpaUid,
+        LpaUid $lpaUid,
         DateTime $expires,
         string $organisation,
         ?string $actorId,
@@ -74,27 +72,16 @@ class ViewerCodes implements ViewerCodesInterface
         // The current DateTime, including microseconds
         $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
 
-        //Throw exception if one of siriusUid/lpaUid not set
-        if (is_null($siriusUid) and is_null($lpaUid)) {
-            throw new Exception('siriusUid and lpaUid not set');
-        }
-
         $array = [
             'ViewerCode'   => ['S' => $code],
             'UserLpaActor' => ['S' => $userLpaActorToken],
+            'SiriusUid'    => ['S' => $lpaUid->getLpaUid()],
             'Added'        => ['S' => $now],
             'Expires'      => ['S' => $expires->format('c')],
             // We use 'c' so not to assume UTC.
             'Organisation' => ['S' => $organisation],
             'CreatedBy'    => ['S' => $actorId],
         ];
-
-        if ($siriusUid !== null) {
-            $array['SiriusUid'] = ['S' => $siriusUid];
-        }
-        if ($lpaUid !== null) {
-            $array['LpaUid'] = ['S' => $lpaUid];
-        }
 
         try {
             $this->client->putItem([
