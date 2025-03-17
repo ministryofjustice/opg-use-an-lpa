@@ -41,4 +41,4 @@ jobs:
         run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag ${TAG} --print_to_terminal --fail_pipe
 
       - name: Check ECR scan results
-        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search pdf_service --print_to_terminal
+        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search pdf-service --print_to_terminal
