@@ -96,7 +96,10 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
         );
     }
 
-    public function getDonor(): ActorMatchingInterface&GetAttorneyStatusInterface&ResolveActorInterface&DonorInformationInterface
+    public function getDonor(): ActorMatchingInterface&
+                                GetAttorneyStatusInterface&
+                                ResolveActorInterface&
+                                DonorInformationInterface
     {
         if (
             !(

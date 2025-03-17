@@ -16,7 +16,10 @@ use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
-class SiriusLpaDonor extends Person implements ActorMatchingInterface, AddAccessForAllActorInterface, DonorInformationInterface
+class SiriusLpaDonor extends Person implements
+    ActorMatchingInterface,
+    AddAccessForAllActorInterface,
+    DonorInformationInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
