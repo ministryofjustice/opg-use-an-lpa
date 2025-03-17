@@ -99,7 +99,7 @@ data "aws_ecr_repository" "use_an_lpa_api_web" {
 
 data "aws_ecr_repository" "use_an_lpa_pdf" {
   provider = aws.management
-  name     = "pdf_service"
+  name     = "pdf-service"
 }
 
 data "aws_ecr_image" "pdf_service" {
