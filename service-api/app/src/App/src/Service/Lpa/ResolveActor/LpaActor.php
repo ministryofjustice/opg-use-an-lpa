@@ -26,8 +26,4 @@ class LpaActor implements JsonSerializable
             'type'    => $this->actorType->value,
         ];
     }
-
-    public function getDob():DateTimeImmutable {
-        return $this->actor->dob;
-    }
 }

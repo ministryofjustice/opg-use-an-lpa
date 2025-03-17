@@ -10,6 +10,7 @@ use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\Lpa\AddLpa\AddLpa;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
+use App\Service\Lpa\SiriusLpa;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\ExpectationFailedException;
@@ -17,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 class AddLpaTest extends TestCase
 {
     use ProphecyTrait;
@@ -83,9 +84,40 @@ class AddLpaTest extends TestCase
     {
         $expectedResponse = [
             'some' => 'other data',
-            'lpa'  => [
-                'status' => 'Registered',
+            'lpa'  => $this->oldLpaFixture()
+        ];
+
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(
+                [
+                    'lpaAddedData' => 'data',
+                    'notActivated' => true,
+                ]
+            );
+
+        $this->actorCodeServiceProphecy
+            ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
+            ->willReturn($expectedResponse);
+
+        $lpaData = $this->addLpa()->validateAddLpaData(
+            [
+                'actor-code' => $this->actorCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
             ],
+            $this->userId
+        );
+
+        $this->assertEquals($expectedResponse, $lpaData);
+    }
+
+    #[Test]
+    public function it_accepts_lpas_that_have_been_requested_to_be_added_but_not_activated_combined_format(): void
+    {
+        $expectedResponse = [
+            'some' => 'other data',
+            'lpa'  => $this->newLpaFixture('Registered')
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -153,9 +185,38 @@ class AddLpaTest extends TestCase
             ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
             ->willReturn(
                 [
-                    'lpa' => [
-                        'status' => 'Cancelled',
-                    ],
+                    'lpa' => new SiriusLpa(
+                        [
+                            'status' => 'Cancelled',
+                        ],
+                        $this->loggerProphecy->reveal(),
+                    ),
+                ]
+            );
+
+        $this->expectException(LpaNotRegisteredException::class);
+        $this->addLpa()->validateAddLpaData(
+            [
+                'actor-code' => $this->actorCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
+            ],
+            $this->userId
+        );
+    }
+
+    #[Test]
+    public function it_throws_a_bad_request_if_the_lpa_status_is_not_registered_combined_format(): void
+    {
+        $this->lpaAlreadyAddedProphecy
+            ->__invoke($this->userId, $this->lpaUid)
+            ->willReturn(null);
+
+        $this->actorCodeServiceProphecy
+            ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
+            ->willReturn(
+                [
+                    'lpa' => $this->newLpaFixture('Cancelled'),
                 ]
             );
 
@@ -175,9 +236,7 @@ class AddLpaTest extends TestCase
     {
         $expectedResponse = [
             'some' => 'other data',
-            'lpa'  => [
-                'status' => 'Registered',
-            ],
+            'lpa'  => $this->oldLpaFixture()
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -199,4 +258,49 @@ class AddLpaTest extends TestCase
 
         $this->assertEquals($expectedResponse, $lpaData);
     }
+
+    public function oldLpaFixture(): SiriusLpa
+    {
+        return new SiriusLpa(
+            [
+                'status' => 'Registered',
+            ],
+            $this->loggerProphecy->reveal(),
+        );
+    }
+
+    public function newLpaFixture($status): CombinedSiriusLpa
+    {
+        return new CombinedSiriusLpa(
+            applicationHasGuidance:                    null,
+            applicationHasRestrictions:                null,
+            applicationType:                           null,
+            attorneys:                                 null,
+            caseAttorneyJointly:                       false,
+            caseAttorneyJointlyAndJointlyAndSeverally: null,
+            caseAttorneyJointlyAndSeverally:           true,
+            caseSubtype:                               null,
+            channel:                                   null,
+            dispatchDate:                              null,
+            donor:                                     null,
+            hasSeveranceWarning:                       null,
+            invalidDate:                               null,
+            lifeSustainingTreatment:                   null,
+            lpaDonorSignatureDate:                     null,
+            lpaIsCleansed:                             null,
+            onlineLpaId:                               null,
+            receiptDate:                               null,
+            registrationDate:                          null,
+            rejectedDate:                              null,
+            replacementAttorneys:                      null,
+            status:                                    $status,
+            statusDate:                                null,
+            trustCorporations:                         null,
+            uId:                                       '700000012346',
+            whenTheLpaCanBeUsed:                       null,
+            withdrawnDate:                             null
+        );
+    }
+
+
 }

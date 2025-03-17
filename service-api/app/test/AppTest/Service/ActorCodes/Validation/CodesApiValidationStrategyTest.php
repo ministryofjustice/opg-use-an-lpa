@@ -15,6 +15,7 @@ use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\LpaActor;
 use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\SiriusPerson;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
@@ -63,7 +64,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1948-11-01')
             ->willReturn($actor);
 
         $lpa = new Lpa(
@@ -84,17 +85,20 @@ class CodesApiValidationStrategyTest extends TestCase
             ->__invoke($lpa->getData(), '123456789')
             ->willReturn(
                 new LpaActor(
-                    [
-                        'uId' => 'actor-uid',
-                        'dob' => 'actor-dob',
-                    ],
+                    new SiriusPerson(
+                        [
+                            'uId'          => 'actor-uid',
+                            'dob'          => '1948-11-01',
+                        ],
+                        $this->loggerProphecy->reveal(),
+                    ),
                     ActorType::ATTORNEY,
                 ),
             );
 
         $strategy = $this->getCodesApiValidationStrategy();
 
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1948-11-01');
 
         $this->assertEquals('123456789', $actorUId);
     }
@@ -183,7 +187,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1948-11-01')
             ->willReturn($actor);
 
         $lpa = new Lpa(
@@ -208,7 +212,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1948-11-01');
     }
 
     #[Test]
@@ -247,10 +251,66 @@ class CodesApiValidationStrategyTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 new LpaActor(
-                    [
-                        'uId' => 'actor-uid',
-                        'dob' => 'different-dob',
-                    ],
+                    new SiriusPerson(
+                        [
+                            'uId' => 'actor-uid',
+                            'dob' => '1975-10-05',
+                        ],
+                        $this->loggerProphecy->reveal(),
+                    ),
+                    ActorType::ATTORNEY,
+                ),
+            );
+
+        $strategy = $this->getCodesApiValidationStrategy();
+
+        $this->expectException(ActorCodeValidationException::class);
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+    }
+
+    #[Test]
+    public function it_wont_validate_a_code_with_a_bad_dob_combined_format(): void
+    {
+        $this->initDependencies();
+
+        $actor = new ActorCode(
+            [
+                'actor' => '123456789',
+            ],
+            new DateTime('now')
+        );
+
+        $this->actorCodeApiProphecy
+            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->willReturn($actor);
+
+        $lpa = new Lpa(
+            new SiriusLpa(
+                [
+                    'uId' => 'lpa-uid',
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
+            new DateTime('now')
+        );
+
+        $this->lpaManagerProphecy
+            ->getByUid('lpa-uid')
+            ->shouldBeCalled()
+            ->willReturn($lpa);
+
+        $this->resolveActorProphecy
+            ->__invoke($lpa->getData(), '123456789')
+            ->shouldBeCalled()
+            ->willReturn(
+                new LpaActor(
+                    new SiriusPerson(
+                        [
+                            'uId' => 'actor-uid',
+                            'dob' => '1975-10-05',
+                        ],
+                        $this->loggerProphecy->reveal(),
+                    ),
                     ActorType::ATTORNEY,
                 ),
             );
@@ -325,7 +385,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1948-11-01')
             ->willReturn($actor);
 
         $lpa = new Lpa(
@@ -334,7 +394,7 @@ class CodesApiValidationStrategyTest extends TestCase
                     'donor' => [
                         'id'          => 1,
                         'uId'         => 'donor-uid',
-                        'dob'         => 'donor-dob',
+                        'dob'         => '1975-10-05',
                         'salutation'  => 'Mr',
                         'firstname'   => 'Test',
                         'middlenames' => '',
@@ -375,6 +435,6 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1948-11-01');
     }
 }
