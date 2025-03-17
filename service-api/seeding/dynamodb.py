@@ -11,9 +11,8 @@ import pytz
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
-    dynamodb_endpoint_url = 'http://' + os.environ['AWS_ENDPOINT_DYNAMODB']
     dynamodb = boto3.resource(
-        'dynamodb', region_name='eu-west-1', endpoint_url=dynamodb_endpoint_url)
+        'dynamodb', region_name='eu-west-1', endpoint_url=os.environ['AWS_ENDPOINT_DYNAMODB'])
 
 else:
 
