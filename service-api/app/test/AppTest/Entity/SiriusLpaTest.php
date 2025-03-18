@@ -8,10 +8,17 @@ use App\Entity\Sirius\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LpaType;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
+use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+
+use function PHPUnit\Framework\assertInstanceOf;
 
 class SiriusLpaTest extends TestCase
 {
@@ -87,6 +94,12 @@ class SiriusLpaTest extends TestCase
             whenTheLpaCanBeUsed:        null,
             withdrawnDate:              null,
         );
+
+        $donor = $sut->getDonor();
+        $this->assertInstanceOf(DonorInformationInterface::class, $donor);
+        $this->assertInstanceOf(GetAttorneyStatusInterface::class, $donor);
+        $this->assertInstanceOf(ResolveActorInterface::class, $donor);
+        $this->assertInstanceOf(ActorMatchingInterface::class, $donor);
 
         $this->assertInstanceOf(SiriusLpa::class, $sut);
     }
