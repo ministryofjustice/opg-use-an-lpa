@@ -36,7 +36,7 @@ jobs:
           terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
           terraform_wrapper: false
 
-      - uses: webfactory/ssh-agent@72c0bfd31ab22a2e11716951e3f107a9647dc97e # pin@v0.5.4
+      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.0
         with:
           ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
