@@ -166,6 +166,6 @@ class CaseActor
 
     public function setSystemStatus(bool $systemStatus): void
     {
-        $this->systemStatus = $systemStatus ?? false;
+        $this->systemStatus = $systemStatus;
     }
 }

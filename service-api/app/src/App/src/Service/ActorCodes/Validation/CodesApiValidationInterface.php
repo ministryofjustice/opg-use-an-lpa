@@ -6,7 +6,7 @@ namespace App\Service\ActorCodes\Validation;
 
 use DateTimeImmutable;
 
-interface CodesApiValidationStrategyInterface
+interface CodesApiValidationInterface
 {
     public function getDob(): DateTimeImmutable;
 }
