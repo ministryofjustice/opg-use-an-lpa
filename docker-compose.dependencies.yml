@@ -22,8 +22,6 @@ services:
     depends_on:
       codes-gateway:
         condition: service_started
-      dynamodb-local:
-        condition: service_started
       kms:
         condition: service_started
       localstack:
@@ -36,25 +34,22 @@ services:
       IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
       LPA_DATA_STORE_API_ENDPOINT: http://mock-lpa-data-store:4014
       ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
-      AWS_ENDPOINT_DYNAMODB: http://dynamodb-local:8000
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
 
   api-seeding:
     depends_on:
-      - dynamodb-local
+      localstack:
+        condition: service_healthy
     environment:
-      AWS_ENDPOINT_DYNAMODB: dynamodb-local:8000
-      CODES_ENDPOINT: codes-gateway:4343
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
+      CODES_ENDPOINT: http://codes-gateway:4343
 
-  # -----
-  # Database
-  dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb"
-    image: "amazon/dynamodb-local:latest"
-    container_name: dynamodb-local
-    ports:
-      - 8000:8000
+  upload-stats-lambda:
+    depends_on:
+      localstack:
+        condition: service_healthy
 
   # -----
   # Code Generation API development environment
@@ -62,14 +57,13 @@ services:
     build:
       context: ../opg-data-lpa-codes/lambda_functions/v1
       dockerfile: Dockerfile-Local-Helper
-    ports:
-      - 4343:4343
     volumes:
       - ../opg-data-lpa-codes/lambda_functions/v1/:/var/www/lambda_functions/v1/
     depends_on:
-      - dynamodb-local
+      localstack:
+        condition: service_healthy
     environment:
-      LOCAL_URL: host.docker.internal #rather than host name as the port is hardcoded to 8000
+      LOCAL_URL: http://localstack:4566
       ENVIRONMENT: local
       AWS_ACCESS_KEY_ID: testing
       AWS_SECRET_ACCESS_KEY: testing
@@ -96,7 +90,7 @@ services:
   # PDF Generator
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.371.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.375.0
     ports:
       - 9004:80
 
@@ -163,6 +157,7 @@ services:
     environment:
       - DEBUG=1
       - DOCKER_HOST=unix:///var/run/docker.sock
+      - DYNAMODB_SHARE_DB=1 # needed for NoSQLWorkbench to function when connecting locally
     volumes:
       - ./mock-integrations/secrets-manager/private_key.pem:/private_key.pem
       - ./mock-integrations/secrets-manager/public_key.pem:/public_key.pem
