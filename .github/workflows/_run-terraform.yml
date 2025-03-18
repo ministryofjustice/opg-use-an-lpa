@@ -69,7 +69,7 @@ jobs:
           TF_VERSION=$(cat .terraform-version)
           echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
 
-      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06 # pin@v1.0.3
+      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
 
       - uses: hashicorp/setup-terraform@2f1b53ffa558af27b90742f3f28397d986061ece # pin@v2.0.0
         with:

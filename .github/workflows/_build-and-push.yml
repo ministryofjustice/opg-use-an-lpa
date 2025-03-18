@@ -100,7 +100,7 @@ jobs:
           matrix.svc_prefix == 'front' &&
           inputs.specific_path == 'all'
 
-      - uses: unfor19/install-aws-cli-action@27d6061dae5d39e89be4d2246824f15e111a7e06
+      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
         if: |
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
