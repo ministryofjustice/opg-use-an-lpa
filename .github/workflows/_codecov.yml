@@ -15,10 +15,10 @@ jobs:
   code_coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: download artifact for front tests
         id: download-artifact-front-tests
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         continue-on-error: true
         with:
           name: service-front
@@ -26,7 +26,7 @@ jobs:
         if: inputs.specific_path == 'all'
       - name: download artifact for api tests
         id: download-artifact-api-tests
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         continue-on-error: true
         with:
           name: service-api
@@ -34,7 +34,7 @@ jobs:
         if: inputs.specific_path == 'all'
       - name: download artifact for admin tests
         id: download-artifact-admin-tests
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         continue-on-error: true
         with:
           name: service-admin
@@ -43,7 +43,7 @@ jobs:
           ${{ inputs.specific_path }} == 'all' ||
           ${{ inputs.specific_path }} == 'admin'
       - name: service front codecov upload
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           name: use-an-lpa-front
           directory: ./service-front
@@ -54,7 +54,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service api codecov upload
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           name: use-an-lpa-api
           directory: ./service-api
@@ -65,7 +65,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service admin codecov upload
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
         with:
           name: use-an-lpa-admin
           directory: ./service-admin
