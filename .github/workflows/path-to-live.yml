@@ -55,7 +55,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         id: semver_tag
         with:
           with_v: true
@@ -232,7 +232,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           name: environment_config_file_production
           path: terraform/environment
