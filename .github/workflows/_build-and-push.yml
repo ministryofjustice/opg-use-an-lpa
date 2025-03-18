@@ -149,7 +149,7 @@ jobs:
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: install python
-        uses: actions/setup-python@6fd11e170a18f6ae448d1080a4a63cc987aed84c # pin@v4.2.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.13'
 
