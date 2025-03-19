@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Exception\BadRequestException;
+use App\Exception\LpaAlreadyAddedException;
 use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
@@ -68,7 +69,7 @@ class AddLpaTest extends TestCase
                 ],
                 $this->userId
             );
-        } catch (BadRequestException $ex) {
+        } catch (LpaAlreadyAddedException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
             $this->assertEquals('LPA already added', $ex->getMessage());
             $this->assertEquals(['lpa added data'], $ex->getAdditionalData());

@@ -15,13 +15,15 @@ use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use Exception;
 
-class SiriusLpa extends Lpa implements FindActorInLpaInterface
+class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedInterface
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -94,17 +96,21 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface
         );
     }
 
-    public function getDonor(): ActorMatchingInterface&GetAttorneyStatusInterface&ResolveActorInterface
+    public function getDonor(): ActorMatchingInterface&
+                                GetAttorneyStatusInterface&
+                                ResolveActorInterface&
+                                DonorInformationInterface
     {
         if (
             !(
                 $this->donor instanceof ActorMatchingInterface &&
                 $this->donor instanceof GetAttorneyStatusInterface &&
-                $this->donor instanceof ResolveActorInterface
+                $this->donor instanceof ResolveActorInterface &&
+                $this->donor instanceof DonorInformationInterface
             )
         ) {
             throw new Exception(
-                'Donor is not a valid ActorMatchingInterface&GetAttorneyStatusInterface instance'
+                'Donor does not implement all necessary interfaces'
             );
         }
 
