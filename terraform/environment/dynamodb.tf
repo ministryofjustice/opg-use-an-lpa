@@ -12,6 +12,8 @@ resource "aws_dynamodb_table" "use_codes_table" {
     name = "ActorCode"
     type = "S"
   }
+  // Enable deletion protection
+  deletion_protection_enabled = true
 
   point_in_time_recovery {
     enabled = true
@@ -54,6 +56,9 @@ resource "aws_dynamodb_table" "stats_table" {
     name = "TimePeriod"
     type = "S"
   }
+
+  // Enable deletion protection
+  deletion_protection_enabled = true
 
   point_in_time_recovery {
     enabled = true
@@ -116,6 +121,9 @@ resource "aws_dynamodb_table" "use_users_table" {
     name = "EmailResetToken"
     type = "S"
   }
+
+  // Enable deletion protection
+  deletion_protection_enabled = true
 
   global_secondary_index {
     name            = "IdentityIndex"
@@ -201,6 +209,9 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
+  // Enable deletion protection
+  deletion_protection_enabled = true
+
   global_secondary_index {
     name            = "SiriusUidIndex"
     hash_key        = "SiriusUid"
@@ -251,6 +262,8 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     name = "Viewed"
     type = "S"
   }
+  // Enable deletion protection
+  deletion_protection_enabled = true
 
   point_in_time_recovery {
     enabled = true
