@@ -35,11 +35,11 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@9200e69727eb73eb060652b19946b8a2fdfb654b
+        uses: tj-actions/changed-files@2f7c5bfce28377bc069a65ba478de0a74aa0ca32  # 46.0.1
         with:
           files: |
             **/*.md
@@ -55,7 +55,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
         id: semver_tag
         with:
           with_v: true
@@ -228,11 +228,11 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: '0'
       - name: download cluster_config
-        uses: actions/download-artifact@v4.1.9
+        uses: actions/download-artifact@cc203385981b70ca67e1cc392babf9cc229d5806 # v4.1.9
         with:
           name: environment_config_file_production
           path: terraform/environment

@@ -15,10 +15,10 @@ jobs:
   ecr-scan-results:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2 # pin@v3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: configure AWS credentials ECR scan results
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # pin@v1.7.0
+        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -27,7 +27,7 @@ jobs:
           role-session-name: OPGUseAnLPAECRScanGithubAction
 
       - name: install python
-        uses: actions/setup-python@6fd11e170a18f6ae448d1080a4a63cc987aed84c # pin@v4.2.0
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
         with:
           python-version: '3.13'
           cache: 'pip'
@@ -41,4 +41,4 @@ jobs:
         run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search use_an_lpa --tag ${TAG} --print_to_terminal --fail_pipe
 
       - name: Check ECR scan results
-        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search pdf_service --print_to_terminal
+        run: python ./scripts/pipeline/check_ecr_scan_results/aws_ecr_scan_results.py --search pdf-service --print_to_terminal
