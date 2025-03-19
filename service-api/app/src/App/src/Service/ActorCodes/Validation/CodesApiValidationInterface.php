@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\ActorCodes\Validation;
 
-use DateTimeImmutable;
+use DateTimeInterface;
 
 interface CodesApiValidationInterface
 {
-    public function getDob(): DateTimeImmutable;
+    public function getDob(): DateTimeInterface;
 }

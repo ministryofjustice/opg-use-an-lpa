@@ -13,7 +13,7 @@ use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
-use DateTimeImmutable;
+use DateTimeInterface;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
@@ -110,7 +110,7 @@ class SiriusLpaDonor extends Person implements
         return $this->uId ?? '';
     }
 
-    public function getDob(): DateTimeImmutable
+    public function getDob(): DateTimeInterface
     {
         return $this->dob;
     }

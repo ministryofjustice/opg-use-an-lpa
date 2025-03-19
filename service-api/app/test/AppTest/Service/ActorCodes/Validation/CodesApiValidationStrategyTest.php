@@ -116,13 +116,13 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('bad-actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('bad-actor-code', 'lpa-uid', '1975-10-05')
             ->willReturn($actor);
 
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('bad-actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('bad-actor-code', 'lpa-uid', '1975-10-05');
     }
 
     #[Test]
@@ -138,13 +138,13 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('expired-actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('expired-actor-code', 'lpa-uid', '1975-10-05')
             ->willReturn($actor);
 
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('expired-actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('expired-actor-code', 'lpa-uid', '1975-10-05');
     }
 
     #[Test]
@@ -160,7 +160,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1975-10-05')
             ->willReturn($actor);
 
         $this->lpaManagerProphecy
@@ -171,7 +171,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1975-10-05');
     }
 
     #[Test]
@@ -228,7 +228,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1948-11-01')
             ->willReturn($actor);
 
         $lpa = new Lpa(
@@ -265,7 +265,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1948-11-01');
     }
 
     #[Test]
@@ -281,7 +281,7 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1948-11-01')
             ->willReturn($actor);
 
         $lpa = new Lpa(
@@ -318,7 +318,7 @@ class CodesApiValidationStrategyTest extends TestCase
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(ActorCodeValidationException::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1948-11-01');
     }
 
     #[Test]
@@ -334,13 +334,13 @@ class CodesApiValidationStrategyTest extends TestCase
         );
 
         $this->actorCodeApiProphecy
-            ->validateCode('actor-code', 'lpa-uid', 'actor-dob')
+            ->validateCode('actor-code', 'lpa-uid', '1975-10-05')
             ->willThrow(new Exception('A serious error has occured'));
 
         $strategy = $this->getCodesApiValidationStrategy();
 
         $this->expectException(Exception::class);
-        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', 'actor-dob');
+        $actorUId = $strategy->validateCode('actor-code', 'lpa-uid', '1975-10-05');
     }
 
     #[Test]
