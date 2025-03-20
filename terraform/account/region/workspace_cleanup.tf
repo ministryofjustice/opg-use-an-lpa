@@ -7,9 +7,6 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
     name = "WorkspaceName"
     type = "S"
   }
-  // Enable deletion protection
-  deletion_protection_enabled = true
-  
   ttl {
     attribute_name = "ExpiresTTL"
     enabled        = true

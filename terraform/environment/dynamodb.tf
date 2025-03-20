@@ -12,7 +12,7 @@ resource "aws_dynamodb_table" "use_codes_table" {
     name = "ActorCode"
     type = "S"
   }
-  // Enable deletion protection
+
   deletion_protection_enabled = true
 
   point_in_time_recovery {
@@ -57,7 +57,6 @@ resource "aws_dynamodb_table" "stats_table" {
     type = "S"
   }
 
-  // Enable deletion protection
   deletion_protection_enabled = true
 
   point_in_time_recovery {
@@ -122,7 +121,6 @@ resource "aws_dynamodb_table" "use_users_table" {
     type = "S"
   }
 
-  // Enable deletion protection
   deletion_protection_enabled = true
 
   global_secondary_index {
@@ -209,7 +207,6 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
-  // Enable deletion protection
   deletion_protection_enabled = true
 
   global_secondary_index {
@@ -262,7 +259,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     name = "Viewed"
     type = "S"
   }
-  // Enable deletion protection
+
   deletion_protection_enabled = true
 
   point_in_time_recovery {
@@ -318,6 +315,8 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     name = "SiriusUid"
     type = "S"
   }
+
+  deletion_protection_enabled = true
 
   global_secondary_index {
     name            = "ActivationCodeIndex"
