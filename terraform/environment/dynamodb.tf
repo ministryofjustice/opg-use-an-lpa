@@ -13,7 +13,7 @@ resource "aws_dynamodb_table" "use_codes_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   point_in_time_recovery {
     enabled = true
@@ -57,7 +57,7 @@ resource "aws_dynamodb_table" "stats_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   point_in_time_recovery {
     enabled = true
@@ -121,7 +121,7 @@ resource "aws_dynamodb_table" "use_users_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   global_secondary_index {
     name            = "IdentityIndex"
@@ -207,7 +207,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   global_secondary_index {
     name            = "SiriusUidIndex"
@@ -260,7 +260,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   point_in_time_recovery {
     enabled = true
@@ -316,7 +316,7 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     type = "S"
   }
 
-  deletion_protection_enabled = true
+  deletion_protection_enabled = local.environment.is_production ? true : false
 
   global_secondary_index {
     name            = "ActivationCodeIndex"
