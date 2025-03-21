@@ -10,7 +10,10 @@ use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\SiriusHasActorTrait;
+use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansingInterface;
 use ArrayAccess;
+use DateTimeInterface;
+use DateTimeImmutable;
 use IteratorAggregate;
 use JsonSerializable;
 use Psr\Log\LoggerInterface;
@@ -26,6 +29,7 @@ class SiriusLpa implements
     FindActorInLpaInterface,
     IsValidInterface,
     LpaAlreadyAddedInterface,
+    RestrictSendingLpaForCleansingInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
@@ -140,5 +144,15 @@ class SiriusLpa implements
     public function getCaseSubType(): string
     {
         return $this['caseSubtype'] ?? '';
+    }
+
+    public function getRegistrationDate(): DateTimeInterface
+    {
+        return new DateTimeImmutable($this->lpa['registrationDate']);
+    }
+
+    public function getLpaIsCleansed(): bool
+    {
+        return $this->lpa['lpaIsCleansed'];
     }
 }
