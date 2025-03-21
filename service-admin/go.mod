@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.41.1
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.57.2
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
-	github.com/golang-jwt/jwt/v4 v4.5.1
+	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/ministryofjustice/opg-go-common v1.75.0
 	github.com/pkg/errors v0.9.1
@@ -35,13 +35,11 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.33.17 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
