@@ -13,6 +13,8 @@ resource "aws_dynamodb_table" "use_codes_table" {
     type = "S"
   }
 
+  deletion_protection_enabled = local.environment.is_production
+
   point_in_time_recovery {
     enabled = true
   }
@@ -54,6 +56,8 @@ resource "aws_dynamodb_table" "stats_table" {
     name = "TimePeriod"
     type = "S"
   }
+
+  deletion_protection_enabled = local.environment.is_production
 
   point_in_time_recovery {
     enabled = true
@@ -116,6 +120,8 @@ resource "aws_dynamodb_table" "use_users_table" {
     name = "EmailResetToken"
     type = "S"
   }
+
+  deletion_protection_enabled = local.environment.is_production
 
   global_secondary_index {
     name            = "IdentityIndex"
@@ -201,6 +207,8 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
+  deletion_protection_enabled = local.environment.is_production
+
   global_secondary_index {
     name            = "SiriusUidIndex"
     hash_key        = "SiriusUid"
@@ -251,6 +259,8 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     name = "Viewed"
     type = "S"
   }
+
+  deletion_protection_enabled = local.environment.is_production
 
   point_in_time_recovery {
     enabled = true
@@ -305,6 +315,8 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     name = "SiriusUid"
     type = "S"
   }
+
+  deletion_protection_enabled = local.environment.is_production
 
   global_secondary_index {
     name            = "ActivationCodeIndex"
