@@ -109,7 +109,7 @@ class Lpa implements
 
     public function getRegistrationDate(): DateTimeInterface
     {
-       return $this->registrationDate;
+        return $this->registrationDate;
     }
 
     public function getLpaIsCleansed(): bool

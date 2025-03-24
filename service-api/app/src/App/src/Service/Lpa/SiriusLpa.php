@@ -147,4 +147,14 @@ class SiriusLpa implements
     {
         return $this['caseSubtype'] ?? '';
     }
+
+    public function getRegistrationDate(): DateTimeInterface
+    {
+        return new DateTimeImmutable($this->lpa['registrationDate']);
+    }
+
+    public function getLpaIsCleansed(): bool
+    {
+        return $this->lpa['lpaIsCleansed'];
+    }
 }
