@@ -4,14 +4,14 @@ import (
 	"crypto/ecdsa"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"os"
 	"sync"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/ministryofjustice/opg-go-common/env"
 )
 
@@ -32,7 +32,7 @@ func loadPrivateKey(pemPath string) (*ecdsa.PrivateKey, error) {
 		return key.(*ecdsa.PrivateKey), nil
 	}
 
-	pem, err := ioutil.ReadFile(pemPath)
+	pem, err := os.ReadFile(pemPath)
 	if err != nil {
 		return nil, fmt.Errorf("unable to load private key pem file from %s, %v", pemPath, err)
 	}
@@ -96,7 +96,7 @@ func proxyRequest(proxyHost string, privKeyPath string, name string, email strin
 
 func servePublicKey(publicKeyPath string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		keyFile, err := ioutil.ReadFile(publicKeyPath)
+		keyFile, err := os.ReadFile(publicKeyPath)
 		if err != nil {
 			panic(err)
 		}
