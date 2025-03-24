@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\SiriusLpa;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -107,13 +108,17 @@ class SiriusLpaTest extends TestCase
     {
         $sut = new SiriusLpa(
             [
-                'uId'    => 700000000000,
-                'status' => 'Registered',
+                'uId'              => 700000000000,
+                'status'           => 'Registered',
+                'registrationDate' => '2019-08-31',
+                'lpaIsCleansed'    => false,
             ],
             $this->loggerProphecy->reveal(),
         );
 
         $this->assertSame('700000000000', $sut->getUid());
         $this->assertSame('Registered', $sut->getStatus());
+        $this->assertEquals(new DateTimeImmutable('2019-08-31'), $sut->getRegistrationDate());
+        $this->assertSame(false, $sut->getLpaIsCleansed());
     }
 }

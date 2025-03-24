@@ -73,7 +73,7 @@ class RestrictSendingLpaForCleansingTest extends TestCase
             invalidDate:                               null,
             lifeSustainingTreatment:                   null,
             lpaDonorSignatureDate:                     null,
-            lpaIsCleansed:                             null,
+            lpaIsCleansed:                             false,
             onlineLpaId:                               null,
             receiptDate:                               null,
             registrationDate:                          new DateTimeImmutable('2020-05-26'),
@@ -93,5 +93,8 @@ class RestrictSendingLpaForCleansingTest extends TestCase
         $this->expectExceptionMessage('LPA not found');
 
         $this->restrictSendingLpaForCleansing()($lpa, $actorDetailsMatch);
+
+        $this->assertEquals(false, $lpa->getLpaIsCleansed());
+        $this->assertEquals(new DateTimeImmutable('2020-05-26'), $lpa->getRegistrationDate());
     }
 }
