@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\Exception\ActorDateOfBirthNotSetException;
+use App\Service\ActorCodes\Validation\CodesApiValidationInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
@@ -29,6 +30,7 @@ class SiriusPerson implements
     GetAttorneyStatusInterface,
     ActorMatchingInterface,
     DonorInformationInterface,
+    CodesApiValidationInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
