@@ -17,4 +17,4 @@ Feature: User Journeys start on Gov.uk
   @smoke @actor
   Scenario: I start a use journey
     Given I access the service root path
-    Then the service should redirect me to "https://www.gov.uk/use-lasting-power-of-attorney/start-lasting-power-of-attorney"
+    Then the service should redirect me to "https://www.gov.uk/use-lasting-power-attorney/start-lasting-power-of-attorney"
