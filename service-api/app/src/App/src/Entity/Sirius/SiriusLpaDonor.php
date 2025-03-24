@@ -7,19 +7,22 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use App\Enum\ActorStatus;
+use App\Service\ActorCodes\Validation\CodesApiValidationInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
-use DateTimeImmutable;
+use DateTimeInterface;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
 class SiriusLpaDonor extends Person implements
     ActorMatchingInterface,
     AddAccessForAllActorInterface,
-    DonorInformationInterface
+    DonorInformationInterface,
+    CodesApiValidationInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -106,5 +109,10 @@ class SiriusLpaDonor extends Person implements
     public function getUid(): string
     {
         return $this->uId ?? '';
+    }
+
+    public function getDob(): DateTimeInterface
+    {
+        return $this->dob;
     }
 }

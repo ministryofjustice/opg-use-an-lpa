@@ -8,6 +8,7 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
+use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
@@ -21,6 +22,7 @@ class Lpa implements
     JsonSerializable,
     HasActorInterface,
     IsValidInterface,
+    AddLpaInterface,
     FilterActiveActorsInterface
 {
     use Cloneable;
