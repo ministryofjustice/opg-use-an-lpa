@@ -128,7 +128,8 @@ func WithErrorHandling(next http.Handler, templateWriter handlers.TemplateWriter
 				case string:
 					err = fmt.Errorf("%w, %s", ErrPanicRecovery, t)
 				}
-				{log.Error().Err(err).Stack().Msg("error handler recovering from panic()")}
+
+				log.Error().Err(err).Stack().Msg("error handler recovering from panic()")
 
 				eh(w, http.StatusInternalServerError)
 			}
