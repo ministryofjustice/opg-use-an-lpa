@@ -87,7 +87,7 @@ jobs:
       - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         id: hadolint
         with:
-          dockerfile: service-${SVC_PREFIX}/docker/app/Dockerfile
+          dockerfile: service-${{ matrix.svc_prefix }}/docker/app/Dockerfile
           no-fail: true
           failure-threshold: warning
 
