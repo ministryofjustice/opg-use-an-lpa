@@ -713,7 +713,7 @@ func Test_SearchHandler(t *testing.T) {
 				Query:  "C-A",
 				Type:   0,
 				Result: nil,
-				Errors: validation.Errors{"Query": errors.New("Enter an email address or activation code")},
+				Errors: validation.Errors{"Query": errors.New("enter an email address or activation code")},
 				Path:   "/my_url",
 			},
 		},
