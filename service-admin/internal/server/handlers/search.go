@@ -50,7 +50,7 @@ const (
 )
 
 var (
-	//nolint:stylecheck // actual message shown to users
+	//nolint:staticcheck // actual message shown to users
 	ErrNotEmailOrCode = errors.New("Enter an email address or activation code")
 
 	activationCodeRegexp = regexp.MustCompile(`(?i)^c(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}(-|)[a-z0-9]{4}$`)

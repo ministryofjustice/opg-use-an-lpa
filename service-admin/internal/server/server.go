@@ -3,10 +3,11 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/time"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/time"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/auth"
@@ -127,6 +128,7 @@ func WithErrorHandling(next http.Handler, templateWriter handlers.TemplateWriter
 				case string:
 					err = fmt.Errorf("%w, %s", ErrPanicRecovery, t)
 				}
+
 				log.Error().Err(err).Stack().Msg("error handler recovering from panic()")
 
 				eh(w, http.StatusInternalServerError)
