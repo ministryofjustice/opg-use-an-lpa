@@ -164,4 +164,20 @@ class CombinedSiriusLpaTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertContainsOnlyInstancesOf(SiriusLpaTrustCorporation::class, $result);
     }
+
+    #[Test]
+    public function it_can_get_registration_date(): void
+    {
+        $sut = $this->getExpectedLpa();
+
+        $this->assertEquals(new DateTimeImmutable('2019-10-10'), $sut->getRegistrationDate());
+    }
+
+    #[Test]
+    public function it_can_get_lpa_is_cleansed(): void
+    {
+        $sut = $this->getExpectedLpa();
+
+        $this->assertEquals(true, $sut->getLpaIsCleansed());;
+    }
 }

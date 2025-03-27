@@ -13,7 +13,9 @@ use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansingInterface;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use JsonSerializable;
 use Spatie\Cloneable\Cloneable;
@@ -23,7 +25,8 @@ class Lpa implements
     HasActorInterface,
     IsValidInterface,
     AddLpaInterface,
-    FilterActiveActorsInterface
+    FilterActiveActorsInterface,
+    RestrictSendingLpaForCleansingInterface
 {
     use Cloneable;
     use CombinedHasActorTrait;
@@ -102,5 +105,15 @@ class Lpa implements
     public function withTrustCorporations(array $trustCorporations): self
     {
         return $this->with(trustCorporations: $trustCorporations);
+    }
+
+    public function getRegistrationDate(): DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function getLpaIsCleansed(): bool
+    {
+        return $this->lpaIsCleansed;
     }
 }

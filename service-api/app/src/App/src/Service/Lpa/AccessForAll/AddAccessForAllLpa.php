@@ -21,6 +21,7 @@ use DateTime;
 use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 
 class AddAccessForAllLpa
 {
@@ -137,10 +138,10 @@ class AddAccessForAllLpa
 
     /**
      * @param int $referenceNumber
-     * @return SiriusLpa|null
+     * @return CombinedSiriusLpa|SiriusLpa
      * @throws NotFoundException
      */
-    private function fetchLPAData(int $referenceNumber): ?SiriusLpa
+    private function fetchLPAData(int $referenceNumber): SiriusLpa|CombinedSiriusLpa
     {
         $lpa = $this->lpaManager->getByUid((string) $referenceNumber);
         if ($lpa === null) {
@@ -153,7 +154,7 @@ class AddAccessForAllLpa
             throw new NotFoundException('LPA not found');
         }
 
-        /** @var ?SiriusLpa */
+        /** @var SiriusLpa|CombinedSiriusLpa */
         return $lpa->getData();
     }
 
@@ -198,7 +199,7 @@ class AddAccessForAllLpa
         $lpa = $this->fetchLPAData($matchData['reference_number']);
 
         // Ensure LPA meets our registration requirements
-        ($this->validateAccessForAllLpaRequirements)($lpa->toArray());
+        ($this->validateAccessForAllLpaRequirements)($lpa->getUid(), $lpa->getStatus());
 
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpa, $matchData);
@@ -206,7 +207,7 @@ class AddAccessForAllLpa
         // We may want to turn off the ability for a user to have their case pushed to the cleansing
         // team if they fail to match and have a "newer" older lpa. In which case they'll be told we
         // can't find their LPA.
-        ($this->restrictSendingLpaForCleansing)($lpa->toArray(), $resolvedActor);
+        ($this->restrictSendingLpaForCleansing)($lpa, $resolvedActor);
 
         if ($resolvedActor === null) {
             $this->logger->info(
@@ -217,7 +218,7 @@ class AddAccessForAllLpa
             );
             throw new LpaDetailsDoNotMatchException(
                 [
-                    'lpaRegDate' => $lpa['registrationDate'],
+                    'lpaRegDate' => $lpa->getRegistrationDate(),
                 ]
             );
         }

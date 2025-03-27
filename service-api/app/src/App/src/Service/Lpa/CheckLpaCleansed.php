@@ -31,8 +31,8 @@ class CheckLpaCleansed
         $lpa = $this->lpaManager->getByUid($actorDetailsMatch->lpaUId)->getData();
 
         if (
-            !$lpa['lpaIsCleansed'] &&
-            (new DateTimeImmutable($lpa['registrationDate']) < $this->earliestDate)
+            !$lpa->getLpaIsCleansed() &&
+            ($lpa->getRegistrationDate() < $this->earliestDate)
         ) {
             $this->logger->notice(
                 'User {userId} requested an activation key for LPA {lpaId} which requires cleansing',
