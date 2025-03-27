@@ -7,6 +7,7 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use App\Enum\ActorStatus;
+use App\Exception\LpaAlreadyHasActivationKeyExceptionInterface;
 use App\Service\ActorCodes\Validation\CodesApiValidationInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
@@ -22,7 +23,8 @@ class SiriusLpaDonor extends Person implements
     ActorMatchingInterface,
     AddAccessForAllActorInterface,
     DonorInformationInterface,
-    CodesApiValidationInterface
+    CodesApiValidationInterface,
+    LpaAlreadyHasActivationKeyExceptionInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
