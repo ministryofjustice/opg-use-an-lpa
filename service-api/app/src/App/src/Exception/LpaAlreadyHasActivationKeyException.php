@@ -22,21 +22,12 @@ class LpaAlreadyHasActivationKeyException extends AbstractApiException implement
         $data = $this->getAdditionalData();
 
         // choose to be explicit about what is being logged to avoid leakage.
-        $donorUid = $data['donor']->getUid() ?? '';
         return [
             'donor'                => [
-                'uId' => $donorUid,
+                'uId' => $data['donor']->getUid() ?? '',
             ],
             'caseSubtype'          => $data['caseSubtype'] ?? '',
             'activationKeyDueDate' => $data['activationKeyDueDate'] ?? '',
         ];
-//
-//        return [
-//            'donor'                => [
-//                'uId' => $data['donor']['uId'] ?? '',
-//            ],
-//            'caseSubtype'          => $data['caseSubtype'] ?? '',
-//            'activationKeyDueDate' => $data['activationKeyDueDate'] ?? '',
-//        ];
     }
 }
