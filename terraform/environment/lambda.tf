@@ -94,8 +94,10 @@ module "event_receiver" {
   source      = "./modules/lambda"
   lambda_name = "event-receiver"
   environment_variables = {
-    ENVIRONMENT = local.environment_name
-    REGION      = data.aws_region.current.name
+    ENVIRONMENT              = local.environment_name
+    REGION                   = data.aws_region.current.name
+    USER_LPA_ACTOR_MAP_TABLE = "${local.environment_name}-UserLpaActorMap"
+    ACTOR_USERS_TABLE        = "${local.environment_name}-ActorUsers"
   }
   image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
   ecr_arn     = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
