@@ -10,6 +10,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use DateTimeImmutable;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansingInterface;
 
 class RestrictSendingLpaForCleansing
 {
@@ -27,11 +28,11 @@ class RestrictSendingLpaForCleansing
      * @param array       $lpaData An LPA data structure
      * @throws NotFoundException Thrown when LPA needs to restricted from cleansing
      */
-    public function __invoke(array $lpaData, ?ActorMatch $actorDetailsMatch): void
+    public function __invoke(RestrictSendingLpaForCleansingInterface $lpaData, ?ActorMatch $actorDetailsMatch): void
     {
-        $lpaPassesAgeRequirements = new DateTimeImmutable($lpaData['registrationDate']) >= $this->earliestDate;
+        $lpaPassesAgeRequirements = $lpaData->getRegistrationDate() >= $this->earliestDate;
         if (
-            ($lpaPassesAgeRequirements || $lpaData['lpaIsCleansed']) &&
+            ($lpaPassesAgeRequirements || $lpaData->getLpaIsCleansed()) &&
             $actorDetailsMatch === null
         ) {
             $this->logger->notice(
@@ -40,7 +41,7 @@ class RestrictSendingLpaForCleansing
                     'event_code' => $lpaPassesAgeRequirements ?
                         EventCodes::OLDER_LPA_PARTIAL_MATCH_TOO_RECENT :
                         EventCodes::OLDER_LPA_PARTIAL_MATCH_HAS_BEEN_CLEANSED,
-                    'uId'        => $lpaData['uId'],
+                    'uId'        => $lpaData->getUid(),
                 ]
             );
             throw new NotFoundException('LPA not found');
