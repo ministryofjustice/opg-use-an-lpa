@@ -26,11 +26,12 @@ func (m *mockTemplateWriterService) RenderTemplate(w http.ResponseWriter, ctx co
 }
 
 func (m *mockTemplates) Get(name string) (*template.Template, error) {
-	if name == "test" {
+	switch name {
+	case "test":
 		return mockTemplate(), nil
-	} else if name == "badlayout" {
+	case "badlayout":
 		return template.New("").Parse("Template Content")
-	} else {
+	default:
 		return nil, errors.New("template not found")
 	}
 }

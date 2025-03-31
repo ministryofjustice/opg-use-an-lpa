@@ -11,9 +11,10 @@ RUN npm ci && npm run build
 # Build Go app
 FROM golang:1.23.4-alpine as build-env
 
-RUN apk --update --no-cache add build-base && apk --update --no-cache add \
-  ca-certificates \
-  tzdata \
+RUN apk --no-cache add \
+  build-base=0.5-r3 \
+  ca-certificates=20241121-r1 \
+  tzdata=2025b-r0 \
   && rm -rf /var/cache/apk/* && update-ca-certificates && \
   adduser -D appuser
 
