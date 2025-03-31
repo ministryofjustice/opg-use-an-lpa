@@ -121,7 +121,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpa->getData(), $this->dataToMatch)
@@ -192,7 +192,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -260,7 +260,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -315,7 +315,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($invalidLpa->getData()->toArray())
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus())
             ->willThrow(new BadRequestException('LPA not eligible due to registration date'));
 
         $this->expectException(BadRequestException::class);
@@ -350,7 +350,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($invalidLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($invalidLpa->getData()->toArray())
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus())
             ->willThrow(new NotFoundException('LPA status invalid'));
 
         $this->expectException(NotFoundException::class);
@@ -382,7 +382,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->expectException(LpaDetailsDoNotMatchException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -410,7 +410,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -451,7 +451,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
@@ -540,14 +540,14 @@ class AddAccessForAllLpaTest extends TestCase
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
-            ->__invoke($this->lpaData->toArray());
+            ->__invoke($this->lpaData->getUid(), $this->lpaData->getStatus());
 
         $this->findActorInLpaProphecy
             ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
         $this->restrictSendingLpaForCleansingProphecy
-            ->__invoke($this->lpaData->toArray(), $this->resolvedActor)
+            ->__invoke($this->lpaData, $this->resolvedActor)
             ->willThrow(new NotFoundException('LPA not found'));
 
         $this->expectException(NotFoundException::class);

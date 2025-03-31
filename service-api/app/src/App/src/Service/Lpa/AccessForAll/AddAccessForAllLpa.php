@@ -198,7 +198,7 @@ class AddAccessForAllLpa
         $lpa = $this->fetchLPAData($matchData['reference_number']);
 
         // Ensure LPA meets our registration requirements
-        ($this->validateAccessForAllLpaRequirements)($lpa->toArray());
+        ($this->validateAccessForAllLpaRequirements)($lpa->getUid(), $lpa->getStatus());
 
         // Find actor in LPA
         $resolvedActor = ($this->findActorInLpa)($lpa, $matchData);
@@ -206,7 +206,7 @@ class AddAccessForAllLpa
         // We may want to turn off the ability for a user to have their case pushed to the cleansing
         // team if they fail to match and have a "newer" older lpa. In which case they'll be told we
         // can't find their LPA.
-        ($this->restrictSendingLpaForCleansing)($lpa->toArray(), $resolvedActor);
+        ($this->restrictSendingLpaForCleansing)($lpa, $resolvedActor);
 
         if ($resolvedActor === null) {
             $this->logger->info(

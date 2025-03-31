@@ -27,23 +27,26 @@ class ValidateAccessForAllLpaRequirements
      * @param array $lpa An LPA data structure
      * @throws BadRequestException Thrown when unable to parse LPA registration date as a date
      */
-    public function __invoke(array $lpa): void
+    public function __invoke(string $lpaUid, string $status): void
     {
-        $this->lpaHasNecessaryStatus($lpa);
+        $this->lpaHasNecessaryStatus($lpaUid, $status);
     }
 
     /**
-     * @param array $lpa
+     * @param string $lpaUid
+     * @param string $status
+     *
      * @return void
+     * @throws BadRequestException
      */
-    public function lpaHasNecessaryStatus(array $lpa): void
+    public function lpaHasNecessaryStatus(string $lpaUid, string $status): void
     {
-        if ($lpa['status'] !== self::NECESSARY_STATUS) {
+        if ($status !== self::NECESSARY_STATUS) {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
                 [
                     'event_code' => EventCodes::OLDER_LPA_INVALID_STATUS,
-                    'uId'        => $lpa['uId'],
+                    'uId'        => $lpaUid,
                 ]
             );
             throw new BadRequestException('LPA status invalid');
