@@ -42,11 +42,11 @@ class CombinedLpaManager implements LpaManagerInterface
     /**
      * @inheritDoc
      */
-    public function getByUid(string $uid): ?LpaInterface
+    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface
     {
         $lpa = str_starts_with($uid, '7')
             ? $this->siriusLpas->get($uid)
-            : $this->dataStoreLpas->get($uid);
+            : $this->dataStoreLpas->setOriginatorId($originatorId)->get($uid);
 
         if ($lpa === null) {
             return null;
@@ -72,7 +72,7 @@ class CombinedLpaManager implements LpaManagerInterface
             return null;
         }
 
-        $lpa = $this->lookupLpa($lpaActorMap);
+        $lpa = $this->lookupLpa($lpaActorMap, $userId);
 
         if ($lpa === null) {
             return null;
@@ -115,7 +115,7 @@ class CombinedLpaManager implements LpaManagerInterface
             return !array_key_exists('ActivateBy', $item);
         });
 
-        return $this->lookupAndFormatLpas($lpaActorMaps);
+        return $this->lookupAndFormatLpas($lpaActorMaps, $userId);
     }
 
     /**
@@ -126,7 +126,7 @@ class CombinedLpaManager implements LpaManagerInterface
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
         $lpaActorMaps = $this->userLpaActorMap->getByUserId($userId);
 
-        return $this->lookupAndFormatLpas($lpaActorMaps);
+        return $this->lookupAndFormatLpas($lpaActorMaps, $userId);
     }
 
     /**
@@ -142,7 +142,7 @@ class CombinedLpaManager implements LpaManagerInterface
         }
 
         $lpaId = $viewerCodeData['LpaUid'] ?? $viewerCodeData['SiriusUid'];
-        $lpa   = $this->getByUid($lpaId);
+        $lpa   = $this->getByUid($lpaId, 'V-' . $viewerCode);
 
         if ($lpa === null) {
             throw new NotFoundException();
@@ -194,9 +194,9 @@ class CombinedLpaManager implements LpaManagerInterface
      * @return array an array with formatted LPA results
      * @throws ApiException
      */
-    private function lookupAndFormatLpas(array $lpaActorMaps): array
+    private function lookupAndFormatLpas(array $lpaActorMaps, string $userId): array
     {
-        $lpas   = $this->lookupLpas($lpaActorMaps);
+        $lpas   = $this->lookupLpas($lpaActorMaps, $userId);
         $result = [];
 
         foreach ($lpaActorMaps as $item) {
@@ -233,26 +233,29 @@ class CombinedLpaManager implements LpaManagerInterface
     }
 
     /**
-     * @param array                 $lpaActorMap
-     * @psalm-param UserLpaActorMap $lpaActorMap
+     * @param array $lpaActorMap
+     * @psalm-param $lpaActorMap UserLpaActorMap
+     * @param string $originatorId
      * @return LpaInterface|null
      * @throws ApiException
      */
-    private function lookupLpa(array $lpaActorMap): ?LpaInterface
+    private function lookupLpa(array $lpaActorMap, string $originatorId): ?LpaInterface
     {
         [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)([$lpaActorMap]);
 
         return count($siriusUids) > 0
             ? $this->siriusLpas->get($siriusUids[0])
-            : $this->dataStoreLpas->get($dataStoreUids[0]);
+            : $this->dataStoreLpas->setOriginatorId($originatorId)->get($dataStoreUids[0]);
     }
 
     /**
      * @param array $lpaActorMaps
+     * @psalm-param $lpaActorMaps UserLpaActorMap[]
+     * @param string $originatorId
      * @return LpaInterface[]
      * @throws ApiException
      */
-    private function lookupLpas(array $lpaActorMaps): array
+    private function lookupLpas(array $lpaActorMaps, string $originatorId): array
     {
         [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
@@ -261,7 +264,7 @@ class CombinedLpaManager implements LpaManagerInterface
             : [];
 
         $dataStoreLpas = count($dataStoreUids) > 0
-            ? $this->dataStoreLpas->lookup($dataStoreUids)
+            ? $this->dataStoreLpas->setOriginatorId($originatorId)->lookup($dataStoreUids)
             : [];
 
         $keyedDataStoreLpas = [];
