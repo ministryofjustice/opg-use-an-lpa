@@ -8,19 +8,18 @@ use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
 use Psr\Log\LoggerInterface;
+use ArrayObject;
 
 class RemoveLpa
 {
     /**
      * @param ApiClient       $apiClient
      * @param LoggerInterface $logger
-     * @param ParseLpaData    $parseLpaData
      * @codeCoverageIgnore
      */
     public function __construct(
         private ApiClient $apiClient,
-        private LoggerInterface $logger,
-        private ParseLpaData $parseLpaData,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -30,6 +29,7 @@ class RemoveLpa
 
         try {
             $removedLpaData = $this->apiClient->httpDelete('/v1/lpas/' . $actorLpaToken);
+
             $this->logger->notice(
                 'Successfully removed LPA for user lpa actor {token}',
                 [
@@ -47,6 +47,6 @@ class RemoveLpa
             throw $ex;
         }
 
-        return ($this->parseLpaData)($removedLpaData);
+        return new ArrayObject($removedLpaData, ArrayObject::ARRAY_AS_PROPS);
     }
 }

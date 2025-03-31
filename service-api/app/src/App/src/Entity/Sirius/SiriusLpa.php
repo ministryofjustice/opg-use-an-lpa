@@ -17,13 +17,15 @@ use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
+use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
+use App\Service\Lpa\LpaRemoved\LpaRemovedInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use Exception;
 
-class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedInterface
+class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedInterface, LpaRemovedInterface
 {
     public function __construct(
         ?bool $applicationHasGuidance,
@@ -99,14 +101,16 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
     public function getDonor(): ActorMatchingInterface&
                                 GetAttorneyStatusInterface&
                                 ResolveActorInterface&
-                                DonorInformationInterface
+                                DonorInformationInterface&
+                                LpaRemovedDonorInformationInterface
     {
         if (
             !(
                 $this->donor instanceof ActorMatchingInterface &&
                 $this->donor instanceof GetAttorneyStatusInterface &&
                 $this->donor instanceof ResolveActorInterface &&
-                $this->donor instanceof DonorInformationInterface
+                $this->donor instanceof DonorInformationInterface &&
+                $this->donor instanceof LpaRemovedDonorInformationInterface
             )
         ) {
             throw new Exception(

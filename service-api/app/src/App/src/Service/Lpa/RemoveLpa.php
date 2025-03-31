@@ -70,16 +70,18 @@ class RemoveLpa
                     );
                 }
 
+                //Actor id in codeOwner array is an int in the case of an old lpa, however is a string in the case of a M-lpa
                 $this->viewerCodesRepository->removeActorAssociation(
                     $viewerCodeRecord['ViewerCode'],
-                    $codeOwner['ActorId'],
+                    (string)$codeOwner['ActorId'],
                 );
             }
         }
 
         // get the LPA to display the donor name and lpa type in the flash message
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
-        $lpaRemovedData = $this->lpaManager->getByUid($userActorLpa['SiriusUid'])->getData();
+        $uid            = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
+        $lpaRemovedData = $this->lpaManager->getByUid($uid)->getData();
 
         $deletedData = $this->userLpaActorMapRepository->delete($token);
 
@@ -96,13 +98,26 @@ class RemoveLpa
         }
 
         // TODO UML-3606 this will always be an object at this time but we need to make it check for existing
-        //      tests to pass
-        return $lpaRemovedData instanceof SiriusLpa ? $lpaRemovedData->toArray() : $lpaRemovedData;
+        // tests to pass
+
+        $lpaDonorData = $lpaRemovedData->getDonor();
+        $response = [
+            'donor' => [
+                'uId'         => $lpaDonorData->getUid(),
+                'firstname'   => $lpaDonorData->getFirstnames(),
+                'middlenames' => isset($lpaDonorData->middlenames) ? $lpaDonorData->getMiddleNames() : '',
+                'surname'     => $lpaDonorData->getSurname(),
+            ],
+            'caseSubtype'     => $lpaRemovedData->getCaseSubType(),
+        ];
+
+        return $response;
     }
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
     {
-        $siriusUid = new LpaUid($userActorLpa['SiriusUid']);
+        $uid = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
+        $siriusUid = new LpaUid($uid);
 
         //Lookup records in ViewerCodes table using siriusUid
         $viewerCodesData = $this->viewerCodesRepository->getCodesByLpaId($siriusUid);
