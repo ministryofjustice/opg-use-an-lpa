@@ -116,7 +116,7 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
             /** @psalm-suppress RedundantPropertyInitializationCheck */
             if (!isset($this->originatorId)) {
                 throw new OriginatorIdNotSetException(
-                    'Unable to create a request signer for this endpoint without an originator id.'
+                    'Unable to create a request signer for this endpoint without an originator id'
                 );
             }
 

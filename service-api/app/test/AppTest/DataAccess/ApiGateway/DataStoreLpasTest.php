@@ -11,6 +11,7 @@ use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
 use App\Exception\ApiException;
+use App\Exception\OriginatorIdNotSetException;
 use App\Service\Lpa\LpaDataFormatter;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use PHPUnit\Framework\Attributes\Test;
@@ -72,7 +73,7 @@ class DataStoreLpasTest extends TestCase
             ->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willThrow($this->prophesize(NotFoundExceptionInterface::class)->reveal());
 
-        // First of two possible exceptions that can be thrown
+        // First of three possible exceptions that can be thrown
         try {
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
@@ -89,6 +90,24 @@ class DataStoreLpasTest extends TestCase
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
+            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+        }
+
+        // Third
+        try {
+            $moderniseLpas = new DataStoreLpas(
+                $this->httpClientProphecy->reveal(),
+                $this->requestFactoryProphecy->reveal(),
+                $this->streamFactoryProphecy->reveal(),
+                $this->requestSignerFactoryProphecy->reveal(),
+                $this->lpaDataFormatterProphecy->reveal(),
+                $apiBaseUri,
+                $traceId,
+            );
+
+            $moderniseLpas->get($uid);
+        } catch (ApiException $e) {
+            $this->assertInstanceOf(OriginatorIdNotSetException::class, $e->getPrevious());
             $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
         }
     }
