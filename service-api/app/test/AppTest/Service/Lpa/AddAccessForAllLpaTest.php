@@ -5,11 +5,6 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
-use App\Entity\Sirius\SiriusLpaAttorney;
-use App\Entity\Sirius\SiriusLpaDonor;
-use App\Enum\ActorStatus;
-use App\Enum\LifeSustainingTreatment;
-use App\Enum\LpaType;
 use App\Exception\BadRequestException;
 use App\Exception\LpaActivationKeyAlreadyRequestedException;
 use App\Exception\LpaAlreadyAddedException;
