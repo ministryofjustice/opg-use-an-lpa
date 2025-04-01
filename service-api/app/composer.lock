@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fba7d5348276feb2e16c1d1bac946ddc",
+    "content-hash": "ce3e8ee44fcf4e7106bea2b7d57935e5",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -5417,7 +5417,7 @@
         },
         {
             "name": "web-token/jwt-encryption-algorithm-aeskw",
-            "version": "3.4.6",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-encryption-algorithm-aeskw.git",
@@ -5471,7 +5471,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-encryption-algorithm-aeskw/tree/3.4.6"
+                "source": "https://github.com/web-token/jwt-encryption-algorithm-aeskw/tree/4.0.0"
             },
             "funding": [
                 {
@@ -5714,7 +5714,7 @@
         },
         {
             "name": "web-token/jwt-signature-algorithm-ecdsa",
-            "version": "3.4.6",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-token/jwt-signature-algorithm-ecdsa.git",
@@ -5767,7 +5767,7 @@
                 "symfony"
             ],
             "support": {
-                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/3.4.6"
+                "source": "https://github.com/web-token/jwt-signature-algorithm-ecdsa/tree/4.0.0"
             },
             "funding": [
                 {

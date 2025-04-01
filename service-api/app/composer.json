@@ -67,8 +67,8 @@
         "ramsey/uuid": "^4.0",
         "spatie/php-cloneable": "^1.0.2",
         "symfony/console": "^6.1",
-        "web-token/jwt-signature-algorithm-ecdsa": "^3.2",
-        "web-token/jwt-encryption-algorithm-aeskw": "^3.4.0"
+        "web-token/jwt-signature-algorithm-ecdsa": "^4.0",
+        "web-token/jwt-encryption-algorithm-aeskw": "^4.0.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
