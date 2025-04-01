@@ -57,7 +57,7 @@
         "laminas/laminas-crypt": "^4.0",
         "laminas/laminas-diactoros": "^3.0",
         "laminas/laminas-form": "^3.1.1",
-        "laminas/laminas-servicemanager": "^3.4",
+        "laminas/laminas-servicemanager": "^4.0",
         "laminas/laminas-stdlib": "^3.1",
         "mezzio/mezzio": "^3.0.1",
         "mezzio/mezzio-authentication-session": "^1.0",
