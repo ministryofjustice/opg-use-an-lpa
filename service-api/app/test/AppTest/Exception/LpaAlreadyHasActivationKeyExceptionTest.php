@@ -6,7 +6,6 @@ namespace AppTest\Exception;
 
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Exception\LpaAlreadyHasActivationKeyException;
-use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -21,12 +20,10 @@ class LpaAlreadyHasActivationKeyExceptionTest extends TestCase
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-
     public function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
-
 
     #[Test]
     public function it_can_be_instantiated(): void
