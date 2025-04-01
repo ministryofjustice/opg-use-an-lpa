@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
+use App\Entity\Sirius\SiriusLpaDonor;
+use App\Enum\ActorStatus;
+use App\Enum\LifeSustainingTreatment;
+use App\Enum\LpaType;
 use App\Exception\BadRequestException;
 use App\Exception\LpaActivationKeyAlreadyRequestedException;
 use App\Exception\LpaAlreadyAddedException;
@@ -22,6 +26,7 @@ use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
+use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
