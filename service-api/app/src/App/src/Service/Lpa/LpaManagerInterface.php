@@ -17,11 +17,12 @@ interface LpaManagerInterface
     /**
      * Get an LPA using the ID value
      *
-     * @param string $uid        Unique ID of LPA to fetch
-     * @return LpaInterface|null A processed LPA data transfer object
+     * @param string $uid           Unique ID of LPA to fetch
+     * @param ?string $originatorId A unique identifier that allows upstread auditing of requests
+     * @return LpaInterface|null    A processed LPA data transfer object
      * @throws ApiException
      */
-    public function getByUid(string $uid): ?LpaInterface;
+    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface;
 
     /**
      * Given a user token and a user id (who should own the token), return the actor and LPA details

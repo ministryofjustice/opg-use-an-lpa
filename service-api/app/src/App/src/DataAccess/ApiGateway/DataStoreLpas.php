@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
+use App\Exception\OriginatorIdNotSetException;
 use App\Service\Lpa\LpaDataFormatter;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
-use App\DataAccess\Repository\{LpasInterface, Response, Response\LpaInterface};
+use App\DataAccess\Repository\{AuditableLpasInterface, Response, Response\LpaInterface};
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Container\{ContainerExceptionInterface, NotFoundExceptionInterface};
@@ -16,8 +17,10 @@ use Psr\Http\Message\{RequestFactoryInterface, ResponseInterface, StreamFactoryI
 use RuntimeException;
 use Throwable;
 
-class DataStoreLpas extends AbstractApiClient implements LpasInterface
+class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 {
+    private string $originatorId;
+
     public function __construct(
         ClientInterface $httpClient,
         RequestFactoryInterface $requestFactory,
@@ -33,8 +36,15 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
             $streamFactory,
             $requestSignerFactory,
             $apiBaseUri,
-            $traceId
+            $traceId,
         );
+    }
+
+    public function setOriginatorId(string $originatorId): AuditableLpasInterface
+    {
+        $this->originatorId = $originatorId;
+
+        return $this;
     }
 
     public function get(string $uid): ?LpaInterface
@@ -42,9 +52,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
         $url = sprintf('%s/lpas/%s', $this->apiBaseUri, $uid);
 
         $request = $this->requestFactory->createRequest('GET', $url);
-        $request = $this->createRequestSigner(
-            /* TODO this identifier needs to come from somewhere */
-        )->sign($this->attachHeaders($request));
+        $request = $this->createRequestSigner()->sign($this->attachHeaders($request));
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -77,9 +85,7 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
                     json_encode(['uids' => $uids])
                 )
             );
-        $request = $this->createRequestSigner(
-            /* TODO this identifier needs to come from somewhere */
-        )->sign($this->attachHeaders($request));
+        $request = $this->createRequestSigner()->sign($this->attachHeaders($request));
 
         try {
             $response = $this->httpClient->sendRequest($request);
@@ -101,15 +107,21 @@ class DataStoreLpas extends AbstractApiClient implements LpasInterface
     }
 
     /**
-     * @param string $uniqueUserIdentifier
      * @return RequestSigner
      * @throws ApiException
      */
-    private function createRequestSigner(string $uniqueUserIdentifier = 'UniqueUserIdentifier'): RequestSigner
+    private function createRequestSigner(): RequestSigner
     {
         try {
-            return ($this->requestSignerFactory)(SignatureType::DataStoreLpas, $uniqueUserIdentifier);
-        } catch (NotFoundExceptionInterface | ContainerExceptionInterface $exception) {
+            /** @psalm-suppress RedundantPropertyInitializationCheck */
+            if (!isset($this->originatorId)) {
+                throw new OriginatorIdNotSetException(
+                    'Unable to create a request signer for this endpoint without an originator id'
+                );
+            }
+
+            return ($this->requestSignerFactory)(SignatureType::DataStoreLpas, $this->originatorId);
+        } catch (OriginatorIdNotSetException | NotFoundExceptionInterface | ContainerExceptionInterface $exception) {
             throw ApiException::create(
                 'Unable to build a request signer instance',
                 null,
