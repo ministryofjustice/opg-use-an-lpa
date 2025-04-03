@@ -3,12 +3,14 @@
         {% trans %}
             This LPA has instructions.<br>
         {% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
-           data-gaEventType="onClick"
-           data-gaAction="Clicked Link"
-           data-gaCategory="Read More"
-           data-gaLabel="Read More - instructions and preferences"
-        > {% trans %}Read more{% endtrans %}</a>
+        {% if not (lpa.uId starts with 'M-') %}
+            <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+               data-gaEventType="onClick"
+               data-gaAction="Clicked Link"
+               data-gaCategory="Read More"
+               data-gaLabel="Read More - instructions and preferences"
+            > {% trans %}Read more{% endtrans %}</a>
+        {% endif %}
     </p>
 {% endif %}
 {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasGuidance and not lpa.applicationHasRestrictions %}
