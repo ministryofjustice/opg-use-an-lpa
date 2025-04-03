@@ -36,7 +36,7 @@ class SiriusLpaManager implements LpaManagerInterface
     ) {
     }
 
-    public function getByUid(string $uid): ?LpaInterface
+    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface
     {
         $lpa = $this->lpaRepository->get($uid);
         if ($lpa === null) {

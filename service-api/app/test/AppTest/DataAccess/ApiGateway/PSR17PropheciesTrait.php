@@ -15,10 +15,10 @@ use Psr\Http\Message\StreamInterface;
 
 trait PSR17PropheciesTrait
 {
-    private ObjectProphecy|ClientInterface $httpClientProphecy;
-    private ObjectProphecy|RequestFactoryInterface $requestFactoryProphecy;
-    private ObjectProphecy|RequestInterface $requestProphecy;
-    private ObjectProphecy|StreamFactoryInterface $streamFactoryProphecy;
+    private ClientInterface|ObjectProphecy $httpClientProphecy;
+    private RequestFactoryInterface|ObjectProphecy $requestFactoryProphecy;
+    private RequestInterface|ObjectProphecy $requestProphecy;
+    private StreamFactoryInterface|ObjectProphecy $streamFactoryProphecy;
 
     public function generateCleanPSR17Prophecies(): void
     {

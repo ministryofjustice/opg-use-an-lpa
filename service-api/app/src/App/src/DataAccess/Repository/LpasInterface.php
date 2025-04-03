@@ -22,6 +22,7 @@ interface LpasInterface
      * Looks up the all the LPA uids in the passed array.
      *
      * @param string[] $uids
+     * @psalm-param list<string> $uids
      * @return LpaInterface[]
      * @throws ApiException
      */
