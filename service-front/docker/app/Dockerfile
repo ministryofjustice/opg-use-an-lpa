@@ -5,7 +5,7 @@ FROM composer:2.8.6 AS composer
 
 FROM mlocati/php-extension-installer:2.7.28 AS php-extension-installer
 
-FROM php:8.1.29-fpm-alpine3.20 AS php-base
+FROM php:8.4.5-fpm-alpine3.20 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
