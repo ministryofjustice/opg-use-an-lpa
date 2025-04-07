@@ -6,6 +6,8 @@ namespace AppTest\Service\ActorCodes;
 
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\ActorCodeService;
@@ -16,6 +18,8 @@ use App\Service\Lpa\ResolveActor\ActorType;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\LpaActor;
 use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\SiriusPerson;
+use BehatTest\LpaTestUtilities;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -48,13 +52,13 @@ class ActorCodeServiceTest extends TestCase
     #[Test]
     public function confirmation_fails_with_invalid_details(): void
     {
-        $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', 'test-dob')
+        $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', '1982-10-28')
             ->shouldBeCalled()
             ->willThrow(new ActorCodeValidationException());
 
         $service = $this->getActorCodeService();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
 
         $this->assertNull($result);
     }
@@ -82,7 +86,7 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
 
         $this->assertEquals('00000000-0000-4000-A000-000000000000', $result);
     }
@@ -116,7 +120,7 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
 
         // We expect a uuid4 back.
         $this->assertEquals('token-3', $result);
@@ -148,7 +152,7 @@ class ActorCodeServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', 'test-dob', 'test-user');
+        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
     }
 
     #[Test]
@@ -157,22 +161,50 @@ class ActorCodeServiceTest extends TestCase
         [
             $testCode,
             $testUid,
+            $testCombinedUid,
             $testDob,
             $testActorId,
             $testActorUid,
             $mockLpa,
+            $mockCombinedLpa,
             $mockActor,
+            $mockCombinedActor,
         ] = $this->initValidParameterSet();
 
         $service = $this->getActorCodeService();
 
         $result = $service->validateDetails($testCode, $testUid, $testDob);
 
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('lpa', $result);
-        $this->assertArrayHasKey('actor', $result);
-        $this->assertEquals($mockLpa, $result['lpa']);
-        $this->assertEquals($mockActor, $result['actor']);
+        $this->assertArrayHasKey('lpa', $result->jsonSerialize());
+        $this->assertArrayHasKey('actor', $result->jsonSerialize());
+        $this->assertEquals($mockLpa, $result->jsonSerialize()['lpa']);
+        $this->assertEquals($mockActor, $result->jsonSerialize()['actor']);
+    }
+
+    #[Test]
+    public function successful_validation_with_combined_format(): void
+    {
+        [
+            $testCode,
+            $testUid,
+            $testCombinedUid,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockCombinedLpa,
+            $mockActor,
+            $mockCombinedActor,
+        ] = $this->initValidParameterSet();
+
+        $service = $this->getActorCodeService();
+
+        $result = $service->validateDetails($testCode, $testCombinedUid, $testDob);
+
+        $this->assertArrayHasKey('lpa', $result->jsonSerialize());
+        $this->assertArrayHasKey('actor', $result->jsonSerialize());
+        $this->assertEquals($mockCombinedLpa, $result->jsonSerialize()['lpa']);
+        $this->assertEquals($mockCombinedActor, $result->jsonSerialize()['actor']);
     }
 
     #[Test]
@@ -180,7 +212,7 @@ class ActorCodeServiceTest extends TestCase
     {
         $testCode = 'test-code';
         $testUid  = 'test-uid';
-        $testDob  = 'test-dob';
+        $testDob  = '1982-10-28';
 
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
             ->willThrow(new ActorCodeValidationException())
@@ -207,7 +239,8 @@ class ActorCodeServiceTest extends TestCase
     {
         $testCode           = 'test-code';
         $testUid            = 'test-uid';
-        $testDob            = 'test-dob';
+        $testCombinedUid    = 'test-combined-uid';
+        $testDob            = '1982-10-28';
         $testActorId        = 1;
         $this->testActorUid = '123456789012';
 
@@ -218,35 +251,71 @@ class ActorCodeServiceTest extends TestCase
             $this->loggerProphecy->reveal(),
         );
 
-        $mockActor = new LpaActor(
+        $mockCombinedLpa = LpaTestUtilities::MapEntityFromData(
             [
-                'dob' => $testDob,
-                'id'  => $testActorId,
-                'uId' => $this->testActorUid,
+                'uId' => $testCombinedUid,
             ],
+            CombinedSiriusLpa::class
+        );
+
+        $mockActor = new LpaActor(
+            new SiriusPerson(
+                [
+                    'dob' => $testDob,
+                    'id'  => $testActorId,
+                    'uId' => $this->testActorUid,
+                ],
+                $this->loggerProphecy->reveal(),
+            ),
             ActorType::ATTORNEY,
         );
-        $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
-            ->willReturn($this->testActorUid)
-            ->shouldBeCalled();
 
+        $mockCombinedActor = new LpaActor(
+            LpaTestUtilities::MapEntityFromData(
+                [
+                    'dob' => $testDob,
+                    'id'  => $testActorId,
+                    'uId' => $this->testActorUid,
+                ],
+                SiriusLpaAttorney::class,
+            ),
+            ActorType::ATTORNEY,
+        );
+
+        $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
+            ->willReturn($this->testActorUid);
         $this->lpaManagerProphecy->getByUid($testUid)->willReturn(
             new Lpa($mockLpa, new DateTime())
-        )->shouldBeCalled();
+        );
+
+        $this->codeValidatorProphecy->validateCode($testCode, $testCombinedUid, $testDob)
+            ->willReturn($this->testActorUid);
+        $this->lpaManagerProphecy->getByUid($testCombinedUid)->willReturn(
+            new Lpa($mockCombinedLpa, new DateTime())
+        );
 
         $this->resolveActorProphecy
             ->__invoke(Argument::type(HasActorInterface::class), Argument::type('string'))
-            ->willReturn($mockActor)
+            ->will(function ($args) use ($mockActor, $mockCombinedActor) {
+                if ($args[0] instanceof SiriusLpa) {
+                    return $mockActor;
+                } else {
+                    return $mockCombinedActor;
+                }
+            })
             ->shouldBeCalled();
 
         return [
             $testCode,
             $testUid,
+            $testCombinedUid,
             $testDob,
             $testActorId,
             $this->testActorUid,
             $mockLpa,
+            $mockCombinedLpa,
             $mockActor,
+            $mockCombinedActor,
         ];
     }
 }

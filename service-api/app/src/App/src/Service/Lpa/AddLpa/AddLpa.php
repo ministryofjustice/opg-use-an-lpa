@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\AddLpa;
 
-use App\Exception\BadRequestException;
+use App\Exception\ApiException;
 use App\Exception\LpaAlreadyAddedException;
 use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Service\ActorCodes\ValidatedActorCode;
 use Psr\Log\LoggerInterface;
 
 class AddLpa
@@ -23,12 +24,13 @@ class AddLpa
     /**
      * @param array  $data
      * @param string $userId
-     * @return array
-     * @throws BadRequestException
+     * @return ValidatedActorCode
+     * @throws LpaAlreadyAddedException
      * @throws LpaNotRegisteredException
      * @throws NotFoundException
+     * @throws ApiException
      */
-    public function validateAddLpaData(array $data, string $userId): array
+    public function validateAddLpaData(array $data, string $userId): ValidatedActorCode
     {
         if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
             if (!array_key_exists('notActivated', $lpaAddedData)) {
@@ -43,9 +45,9 @@ class AddLpa
             }
         }
 
-        $lpaData = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
+        $validatedDetails = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
 
-        if (!is_array($lpaData)) {
+        if (! $validatedDetails instanceof ValidatedActorCode) {
             $this->logger->notice(
                 'Code validation failed for user {id}',
                 [
@@ -55,7 +57,7 @@ class AddLpa
             throw new NotFoundException('Code validation failed');
         }
 
-        if (strtolower($lpaData['lpa']->getStatus()) === 'registered') {
+        if (strtolower($validatedDetails->lpa->getStatus()) === 'registered') {
             $this->logger->notice(
                 'User {id} has found an LPA with Id {uId} using their activation key',
                 [
@@ -63,7 +65,7 @@ class AddLpa
                     'uId' => $data['uid'],
                 ]
             );
-            return $lpaData;
+            return $validatedDetails;
         }
 
         $this->logger->notice(

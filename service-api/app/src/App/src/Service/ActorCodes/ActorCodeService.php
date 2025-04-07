@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ActorCodes;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException};
+use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException, ApiException};
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 
@@ -33,26 +33,17 @@ class ActorCodeService
     }
 
     /**
-     * @param string $code
-     * @param string $uid
-     * @param string $dob
-     * @return array|null
+     * @throws ApiException
      */
-    public function validateDetails(string $code, string $uid, string $dob): ?array
+    public function validateDetails(string $code, string $uid, string $dob): ?ValidatedActorCode
     {
         try {
             $actorUid = $this->codeValidator->validateCode($code, $uid, $dob);
+            $lpa      = $this->lpaManager->getByUid($uid);
+            $actor    = ($this->resolveActor)($lpa->getData(), $actorUid);
+            $lpaData  = $lpa->getData();
 
-            $lpa = $this->lpaManager->getByUid($uid);
-
-            $actor = ($this->resolveActor)($lpa->getData(), $actorUid);
-
-            $lpaData = $lpa->getData();
-
-            return [
-                'actor' => $actor,
-                'lpa'   => $lpaData,
-            ];
+            return new ValidatedActorCode($actor, $lpaData);
         } catch (ActorCodeValidationException) {
             return null;
         }
@@ -83,19 +74,18 @@ class ActorCodeService
             return null;
         }
 
-        //---
-        $lpaId = $details['lpa']['uId'];
+        $lpaId = $details->lpa->getUid();
 
         $lpas       = $this->userLpaActorMapRepository->getByUserId($userId);
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
-            $id = $this->activateRecord($idToLpaMap[$lpaId], $details['actor']->actor['uId'], $code);
+            $id = $this->activateRecord($idToLpaMap[$lpaId], $details->actor->actor->getUid(), $code);
         } else {
             $id = $this->userLpaActorMapRepository->create(
                 $userId,
                 $lpaId,
-                (string) $details['actor']->actor['uId'],
+                (string) $details->actor->actor->getUid(),
                 null,
                 null,
                 $code

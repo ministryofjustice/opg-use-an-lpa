@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace BehatTest;
 
+use App\Entity\Lpa;
+use App\Entity\Person;
+use EventSauce\ObjectHydrator\DefinitionProvider;
+use EventSauce\ObjectHydrator\KeyFormatterWithoutConversion;
+use EventSauce\ObjectHydrator\ObjectMapperUsingReflection;
+use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use stdClass;
 
 class LpaTestUtilities
@@ -32,5 +38,28 @@ class LpaTestUtilities
         }
 
         return $data;
+    }
+
+    /**
+     * @template T
+     * @param array  $data
+     * @param string $entity
+     * @psalm-param class-string<T> $entity
+     * @return Lpa|Person
+     * @psalm-return T
+     * @throws UnableToHydrateObject
+     */
+    public static function MapEntityFromData(array $data, string $entity): Lpa|Person
+    {
+        $mapper = new ObjectMapperUsingReflection(
+            new DefinitionProvider(
+                keyFormatter: new KeyFormatterWithoutConversion(),
+            ),
+        );
+
+        return $mapper->hydrateObject(
+            $entity,
+            $data,
+        );
     }
 }
