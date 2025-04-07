@@ -7,6 +7,8 @@ namespace CommonTest\Entity;
 use Common\Entity\CombinedLpa;
 use Common\Entity\Person;
 use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
 use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use CommonTest\Helper\EntityTestHelper;
@@ -124,16 +126,26 @@ class CanHydrateCombinedLpaTest extends TestCase
         ];
 
         return EntityTestHelper::makeCombinedLpa(
+            applicationHasGuidance:    false,
+            applicationHasRestrictions:false,
+            applicationType:           'Classic',
             attorneys:                 $attorneys,
+            caseSubtype:               LpaType::PERSONAL_WELFARE,
             channel:                   null,
+            dispatchDate:              null,
             donor:                     $donor,
+            hasSeveranceWarning:       null,
             howAttorneysMakeDecisions: null,
+            invalidDate:               null,
+            lifeSustainingTreatment:   LifeSustainingTreatment::OPTION_A,
             lpaDonorSignatureDate:     new DateTimeImmutable('2012-12-12'),
             lpaIsCleansed:             true,
             onlineLpaId:               'A33718377316',
             receiptDate:               new DateTimeImmutable('2014-09-26'),
             registrationDate:          new DateTimeImmutable('2019-10-10'),
+            rejectedDate :             null,
             replacementAttorneys:      $replacementAttorneys,
+            restrictionsAndConditions: 'my restrictions and conditions',
             trustCorporations:         $trustCorporations,
             uId:                       '700000000047',
             whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY,
