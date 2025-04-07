@@ -92,7 +92,8 @@
     lifeSustainingTreatmentOption: "option-a",
     signedAt: "2024-01-10T23:00:00Z",
     howAttorneysMakeDecisions: "jointly",
-    whenTheLpaCanBeUsed: "when-capacity-lost"
+    whenTheLpaCanBeUsed: "when-capacity-lost",
+    restrictionsAndConditions: "my restrictions and conditions",
   };
 
   // src/lpas/lpas.mjs

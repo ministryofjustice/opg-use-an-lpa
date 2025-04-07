@@ -7,6 +7,8 @@ namespace CommonTest\Entity;
 use Common\Entity\CombinedLpa;
 use Common\Entity\Person;
 use Common\Enum\HowAttorneysMakeDecisions;
+use Common\Enum\LifeSustainingTreatment;
+use Common\Enum\LpaType;
 use Common\Enum\WhenTheLpaCanBeUsed;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use CommonTest\Helper\EntityTestHelper;
@@ -134,6 +136,7 @@ class CanHydrateCombinedLpaTest extends TestCase
             receiptDate:               new DateTimeImmutable('2014-09-26'),
             registrationDate:          new DateTimeImmutable('2019-10-10'),
             replacementAttorneys:      $replacementAttorneys,
+            restrictionsAndConditions: 'my restrictions and conditions',
             trustCorporations:         $trustCorporations,
             uId:                       '700000000047',
             whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY,

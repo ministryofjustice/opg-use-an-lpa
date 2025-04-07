@@ -47,6 +47,7 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface, ProcessLpasI
         /** @var Person[] $replacementAttorneys */
         #[CastListToType(Person::class)]
         public readonly ?array $replacementAttorneys,
+        public readonly ?string $restrictionsAndConditions,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */

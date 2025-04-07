@@ -53,6 +53,7 @@ class Lpa implements
         public readonly ?DateTimeImmutable $rejectedDate,
         /** @var Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
+        public readonly ?string $restrictionsAndConditions,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */

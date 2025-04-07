@@ -124,5 +124,6 @@
   ],
   "uId": "700000000047",
   "withdrawnDate": null,
-  "whenTheLpaCanBeUsed": "when-has-capacity"
+  "whenTheLpaCanBeUsed": "when-has-capacity",
+  "restrictionsAndConditions": "my restrictions and conditions"
 }

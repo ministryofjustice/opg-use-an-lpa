@@ -250,6 +250,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
             lifeSustainingTreatment:   LifeSustainingTreatment::OPTION_A,
             signedAt:                  new DateTimeImmutable('2019-10-10'),
             registrationDate:          new DateTimeImmutable('2019-10-10'),
+            restrictionsAndConditions: null,
             status:                    'Registered',
             trustCorporations:         [
                 new LpaStoreTrustCorporation(
