@@ -2148,11 +2148,11 @@ class LpaContext extends BaseIntegrationContext
         $actorLpaId = 700000000054;
 
         $expected_response = [
-            'donor' => [
-                'uId' => '700000000053',
-                'firstname' => 'Ian',
-                'middlenames' => 'Deputy',
-                'surname' => 'Deputy',
+            'donor'      => [
+                'uId'           => '700000000053',
+                'firstname'     => 'Ian',
+                'middlenames'   => 'Deputy',
+                'surname'       => 'Deputy',
             ],
             'caseSubtype' => 'hw'
         ];
