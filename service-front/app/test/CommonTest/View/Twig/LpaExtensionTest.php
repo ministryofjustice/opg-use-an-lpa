@@ -46,6 +46,7 @@ class LpaExtensionTest extends TestCase
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
+            'is_sirius_lpa' => 'isSiriusLpa',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
