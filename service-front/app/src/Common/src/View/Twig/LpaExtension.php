@@ -216,7 +216,7 @@ class LpaExtension extends AbstractExtension
 
     public function isSiriusLpa(string $lpaUid): bool
     {
-        return str_starts_with($lpaUid, 'M-');
+        return !str_starts_with($lpaUid, 'M-');
     }
 
     /**
