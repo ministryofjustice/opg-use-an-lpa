@@ -80,6 +80,7 @@ class RemoveLpa
 
         // get the LPA to display the donor name and lpa type in the flash message
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
+
         $uid            = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
         $lpaRemovedData = $this->lpaManager->getByUid($uid)->getData();
 
@@ -96,9 +97,6 @@ class RemoveLpa
             );
             throw new ApiException('Incorrect LPA data deleted from users account');
         }
-
-        // TODO UML-3606 this will always be an object at this time but we need to make it check for existing
-        // tests to pass
 
         $lpaDonorData = $lpaRemovedData->getDonor();
         $response = [
