@@ -46,6 +46,7 @@ class LpaExtensionTest extends TestCase
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
+            'is_sirius_lpa'                   => 'isSiriusLpa',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -543,5 +544,17 @@ class LpaExtensionTest extends TestCase
         $lpaDonorSignatureDate = $combinedLpa->getLpaDonorSignatureDate();
 
         $this->assertEquals(new DateTimeImmutable('2012-12-12'), $lpaDonorSignatureDate);
+    }
+
+    #[Test]
+    public function it_checks_if_an_lpa_is_sirius_lpa_for_combined_lpa(): void
+    {
+        $extension   = new LpaExtension();
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
+        $combinedLpa = ($this->lpaDataFormatter)($lpa);
+
+        $isSiriusLpa = $extension->isSiriusLpa($combinedLpa->getUId());
+
+        $this->assertEquals(true, $isSiriusLpa);
     }
 }
