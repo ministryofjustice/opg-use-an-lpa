@@ -7,24 +7,22 @@ namespace AppTest\Service\Lpa;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\DynamoDb\ViewerCodes;
-use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
-use App\DataAccess\Repository\Response\Lpa;
-use App\DataAccess\Repository\UserLpaActorMapInterface;
-use App\DataAccess\Repository\ViewerCodeActivityInterface;
-use App\DataAccess\Repository\ViewerCodesInterface;
+use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
+    Response\InstructionsAndPreferencesImages,
+    Response\Lpa,
+    UserLpaActorMapInterface,
+    ViewerCodeActivityInterface,
+    ViewerCodesInterface};
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
-use App\Exception\ApiException;
-use App\Exception\MissingCodeExpiryException;
-use App\Exception\NotFoundException;
-use App\Service\Lpa\Combined\FilterActiveActors;
-use App\Service\Lpa\Combined\RejectInvalidLpa;
-use App\Service\Lpa\Combined\ResolveLpaTypes;
-use App\Service\Lpa\CombinedLpaManager;
-use App\Service\Lpa\IsValidLpa;
-use App\Service\Lpa\LpaDataFormatter;
-use App\Service\Lpa\ResolveActor;
+use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
+use App\Service\Lpa\{Combined\FilterActiveActors,
+    Combined\RejectInvalidLpa,
+    Combined\ResolveLpaTypes,
+    CombinedLpaManager,
+    IsValidLpa,
+    LpaDataFormatter,
+    ResolveActor};
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -80,13 +78,11 @@ class CombinedLpaManagerTest extends TestCase
     {
         $testUserId = 'test-user-id';
 
-        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
         $siriusLpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(),
             new DateTimeImmutable('now'),
         );
 
-        /** @var Lpa<LpaStore> $dataStoreLpaResponse */
         $dataStoreLpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -118,6 +114,10 @@ class CombinedLpaManagerTest extends TestCase
                 ]
             );
         $this->dataStoreLpasProphecy
+            ->setOriginatorId($testUserId)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
+        $this->dataStoreLpasProphecy
             ->lookup([$dataStoreLpaResponse->getData()->uId ?? ''])
             ->willReturn([$dataStoreLpaResponse]);
         $this->resolveActorProphecy
@@ -147,13 +147,11 @@ class CombinedLpaManagerTest extends TestCase
     {
         $testUserId = 'test-user-id';
 
-        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
         $siriusLpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(),
             new DateTimeImmutable('now'),
         );
 
-        /** @var Lpa<LpaStore> $siriusLpaResponse */
         $dataStoreLpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -190,6 +188,10 @@ class CombinedLpaManagerTest extends TestCase
                     $siriusLpaResponse->getData()->uId ?? '' => $siriusLpaResponse,
                 ],
             );
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId($testUserId)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
             ->lookup([$dataStoreLpaResponse->getData()->uId ?? ''])
             ->willReturn([$dataStoreLpaResponse]);
@@ -321,7 +323,8 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_lpastore_uid()
     {
-        $testUid = 'M-789Q-P4DF-4UX3';
+        $testUid     = 'M-789Q-P4DF-4UX3';
+        $testUserId  = 'test-user-id';
 
         $lpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(
@@ -352,12 +355,16 @@ class CombinedLpaManagerTest extends TestCase
         $filteredLpa = $lpaResponse->getData()->withAttorneys($filteredLpa->attorneys);
         $filteredLpa = $lpaResponse->getData()->withTrustCorporations($filteredLpa->trustCorporations);
 
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId($testUserId)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy->get($testUid)->willReturn($lpaResponse);
         $this->siriusLpasProphecy->get(Argument::any())->shouldNotBeCalled();
         $this->filterActiveActorsProphecy->__invoke($lpaResponse->getData())->willReturn($filteredLpa);
 
         $service = $this->getLpaService();
-        $result  = $service->getByUid($testUid);
+        $result  = $service->getByUid($testUid, $testUserId);
 
         $this->assertEquals($filteredLpa, $result->getData());
     }
@@ -381,7 +388,6 @@ class CombinedLpaManagerTest extends TestCase
         $testLpaToken = 'token-1';
         $testUserId   = 'userId-1';
 
-        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
         $siriusLpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(),
             new DateTimeImmutable('now'),
@@ -436,7 +442,6 @@ class CombinedLpaManagerTest extends TestCase
         $testLpaToken = 'token-2';
         $testUserId   = 'userId-1';
 
-        /** @var Lpa<LpaStore> $dataStoreLpaResponse */
         $dataStoreLpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -460,6 +465,10 @@ class CombinedLpaManagerTest extends TestCase
                     [$dataStoreLpaResponse->getData()->uId],
                 ]
             );
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId($testUserId)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
             ->get($dataStoreLpaResponse->getData()->uId ?? '')
             ->willReturn($dataStoreLpaResponse);
@@ -508,7 +517,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function get_by_user_lpa_actor_token_sirius_returns_null_when_lpa_data_missing()
+    public function get_by_user_lpa_actor_token_datastore_returns_null_when_lpa_data_missing()
     {
         $testLpaToken = 'token-1';
         $testUserId   = 'userId-1';
@@ -531,6 +540,10 @@ class CombinedLpaManagerTest extends TestCase
                 ]
             );
         $this->dataStoreLpasProphecy
+            ->setOriginatorId($testUserId)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
+        $this->dataStoreLpasProphecy
             ->get('M-789Q-P4DF-4UX34')
             ->willReturn(null);
 
@@ -546,7 +559,7 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+        $service->getByViewerCode('code', 'surname', 'organisation');
     }
 
     #[Test]
@@ -571,12 +584,14 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+        $service->getByViewerCode('code', 'surname', 'organisation');
     }
 
     #[Test]
     public function cannot_get_lpastore_by_viewer_code_when_lpa_no_longer_available()
     {
+        $testCode = 'code';
+
         $this->viewerCodesProphecy
             ->get('code')
             ->willReturn(
@@ -587,7 +602,10 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId('V-' . $testCode)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
             ->get('M-XXXX-XXXX-XXXX')
             ->shouldBeCalled()
@@ -596,13 +614,12 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode('code', 'surname', 'organisation');
+        $service->getByViewerCode($testCode, 'surname', 'organisation');
     }
 
     #[Test]
     public function cannot_get_viewercode_as_expires_missing(): void
     {
-        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
         $siriusLpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(),
             new DateTimeImmutable('now'),
@@ -638,7 +655,7 @@ class CombinedLpaManagerTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Missing code expiry data in Dynamo response');
-        $result = $service->getByViewerCode(
+        $service->getByViewerCode(
             'code',
             $siriusLpaResponse->getData()->getDonor()->getSurname(),
             'organisation'
@@ -648,7 +665,6 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function matched_viewercode_loads_images_if_required(): void
     {
-        /** @var Lpa<SiriusLpa> $siriusLpaResponse */
         $siriusLpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(
                 [
@@ -694,7 +710,8 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function matched_viewercode_records_successful_lookup(): void
     {
-        /** @var Lpa<LpaStore> $lpaStoreResponse */
+        $testCode = 'code';
+
         $lpaStoreResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -704,12 +721,16 @@ class CombinedLpaManagerTest extends TestCase
             ->get('code')
             ->willReturn(
                 [
-                    'ViewerCode'   => 'code',
+                    'ViewerCode'   => $testCode,
                     'LpaUid'       => $lpaStoreResponse->getData()->uId,
                     'Expires'      => new DateTimeImmutable('+1 hour'),
                     'Organisation' => 'bank',
                 ]
             );
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId('V-' . $testCode)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
             ->get($lpaStoreResponse->getData()->uId)
             ->shouldBeCalled()
@@ -718,13 +739,13 @@ class CombinedLpaManagerTest extends TestCase
             ->__invoke($lpaStoreResponse->getData())
             ->willReturn($lpaStoreResponse->getData());
         $this->viewerCodesActivityProphecy
-            ->recordSuccessfulLookupActivity('code', 'organisation')
+            ->recordSuccessfulLookupActivity($testCode, 'organisation')
             ->shouldBeCalled();
 
         $service = $this->getLpaService();
 
-        $result = $service->getByViewerCode(
-            'code',
+        $service->getByViewerCode(
+            $testCode,
             $lpaStoreResponse->getData()->getDonor()->getSurname(),
             'organisation'
         );
@@ -733,7 +754,8 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function matched_viewercode_returns_viewercode_record(): void
     {
-        /** @var Lpa<LpaStore> $lpaStoreResponse */
+        $testCode = 'code';
+
         $lpaStoreResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(),
             new DateTimeImmutable('now'),
@@ -743,12 +765,16 @@ class CombinedLpaManagerTest extends TestCase
             ->get('code')
             ->willReturn(
                 [
-                    'ViewerCode'   => 'code',
+                    'ViewerCode'   => $testCode,
                     'LpaUid'       => $lpaStoreResponse->getData()->uId,
                     'Expires'      => new DateTimeImmutable('+1 hour'),
                     'Organisation' => 'bank',
                 ]
             );
+        $this->dataStoreLpasProphecy
+            ->setOriginatorId('V-' . $testCode)
+            ->shouldBeCalled()
+            ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
             ->get($lpaStoreResponse->getData()->uId)
             ->shouldBeCalled()
@@ -760,7 +786,7 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
 
         $result = $service->getByViewerCode(
-            'code',
+            $testCode,
             $lpaStoreResponse->getData()->getDonor()->getSurname(),
             'organisation'
         );

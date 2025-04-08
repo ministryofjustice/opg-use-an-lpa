@@ -1,7 +1,6 @@
-import { context, logger, respond } from './types/index';
 import { getList, getLpa } from './lpas/lpas.mjs';
 
-const opId = context.operation.getOperationId()
+const opId = context.operation.operationId
 logger.info('Operation is ' + opId)
 
 let code = 400

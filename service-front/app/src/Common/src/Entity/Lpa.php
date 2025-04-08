@@ -28,6 +28,7 @@ class Lpa
     protected ?string $lifeSustainingTreatment                 = null;
     protected ?string $onlineLpaId                             = null;
     protected ?string $attorneyActDecisions                    = null;
+    protected ?string $restrictionsAndConditions               = null;
     protected ?CaseActor $donor                                = null;
 
     /** @var CaseActor[] */

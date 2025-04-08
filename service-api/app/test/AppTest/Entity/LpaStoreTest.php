@@ -57,6 +57,7 @@ class LpaStoreTest extends TestCase
             lifeSustainingTreatment: null,
             signedAt: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
             registrationDate: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
+            restrictionsAndConditions: null,
             status: '',
             trustCorporations: [],
             uId: '700000000001',

@@ -35,6 +35,7 @@ class LpaStore extends Lpa
         ?LifeSustainingTreatment $lifeSustainingTreatment,
         DateTimeImmutable $signedAt,
         DateTimeImmutable $registrationDate,
+        ?string $restrictionsAndConditions,
         string $status,
         #[CastListToType(LpaStoreTrustCorporation::class)]
         ?array $trustCorporations,
@@ -72,6 +73,7 @@ class LpaStore extends Lpa
             registrationDate:           $registrationDate,
             rejectedDate:               null,
             replacementAttorneys:       $replacementAttorneys,
+            restrictionsAndConditions:  $restrictionsAndConditions,
             status:                     $status,
             statusDate:                 $updatedAt,
             trustCorporations:          $trustCorporations,

@@ -8,11 +8,14 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
+use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansingInterface;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use JsonSerializable;
 use Spatie\Cloneable\Cloneable;
@@ -21,7 +24,9 @@ class Lpa implements
     JsonSerializable,
     HasActorInterface,
     IsValidInterface,
-    FilterActiveActorsInterface
+    AddLpaInterface,
+    FilterActiveActorsInterface,
+    RestrictSendingLpaForCleansingInterface
 {
     use Cloneable;
     use CombinedHasActorTrait;
@@ -48,6 +53,7 @@ class Lpa implements
         public readonly ?DateTimeImmutable $rejectedDate,
         /** @var Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
+        public readonly ?string $restrictionsAndConditions,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */
@@ -100,5 +106,15 @@ class Lpa implements
     public function withTrustCorporations(array $trustCorporations): self
     {
         return $this->with(trustCorporations: $trustCorporations);
+    }
+
+    public function getRegistrationDate(): DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function getLpaIsCleansed(): bool
+    {
+        return $this->lpaIsCleansed;
     }
 }

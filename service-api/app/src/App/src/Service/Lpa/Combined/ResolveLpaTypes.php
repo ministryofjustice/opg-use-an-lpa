@@ -36,15 +36,17 @@ class ResolveLpaTypes
             array_column($lpaActorMaps, 'LpaUid'),
         );
 
-        $dataStoreUids = [];
-        $siriusUids    = array_filter($lpaUids, function ($item) use (&$dataStoreUids) {
-            if (str_starts_with($item, '7')) {
-                return true;
-            }
+        $siriusUids    = [];
+        $dataStoreUids = array_values(
+            array_filter($lpaUids, function ($item) use (&$siriusUids) {
+                if (str_starts_with($item, 'M-')) {
+                    return true;
+                }
 
-            $dataStoreUids[] = $item;
-            return false;
-        });
+                $siriusUids[] = $item;
+                return false;
+            })
+        );
 
         return [$siriusUids, $dataStoreUids];
     }

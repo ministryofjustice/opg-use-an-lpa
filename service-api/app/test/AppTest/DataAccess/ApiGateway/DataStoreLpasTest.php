@@ -11,6 +11,7 @@ use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
 use App\Exception\ApiException;
+use App\Exception\OriginatorIdNotSetException;
 use App\Service\Lpa\LpaDataFormatter;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,9 +48,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function throws_api_exception_for_request_signing_errors_on_single_lpa(): void
     {
-        $uid        = 'M-789Q-P4DF-4UX3';
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uid          = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $this->generateCleanPSR17Prophecies();
 
@@ -71,9 +73,9 @@ class DataStoreLpasTest extends TestCase
             ->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
             ->willThrow($this->prophesize(NotFoundExceptionInterface::class)->reveal());
 
-        // First of two possible exceptions that can be thrown
+        // First of three possible exceptions that can be thrown
         try {
-            $error = $moderniseLpas->get($uid);
+            $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
             $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
@@ -85,9 +87,27 @@ class DataStoreLpasTest extends TestCase
 
         // Second
         try {
-            $error = $moderniseLpas->get($uid);
+            $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
+            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+        }
+
+        // Third
+        try {
+            $moderniseLpas = new DataStoreLpas(
+                $this->httpClientProphecy->reveal(),
+                $this->requestFactoryProphecy->reveal(),
+                $this->streamFactoryProphecy->reveal(),
+                $this->requestSignerFactoryProphecy->reveal(),
+                $this->lpaDataFormatterProphecy->reveal(),
+                $apiBaseUri,
+                $traceId,
+            );
+
+            $moderniseLpas->get($uid);
+        } catch (ApiException $e) {
+            $this->assertInstanceOf(OriginatorIdNotSetException::class, $e->getPrevious());
             $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
         }
     }
@@ -95,9 +115,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function throws_api_exception_when_hydration_fails_on_single_lpa(): void
     {
-        $uid        = 'M-789Q-P4DF-4UX3';
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uid          = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy->getContents()->willReturn(json_encode(['uid' => $uid]));
@@ -140,15 +161,16 @@ class DataStoreLpasTest extends TestCase
         );
 
         $this->expectException(ApiException::class);
-        $shouldBeAnLPA = $moderniseLpas->get($uid);
+        $moderniseLpas->setOriginatorId($originatorId)->get($uid);
     }
 
     #[Test]
     public function can_get_an_lpa(): void
     {
-        $uid        = 'M-789Q-P4DF-4UX3';
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uid          = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy->getContents()->willReturn(json_encode(['uid' => $uid]));
@@ -190,7 +212,7 @@ class DataStoreLpasTest extends TestCase
             $traceId,
         );
 
-        $shouldBeAnLPA = $moderniseLpas->get($uid);
+        $shouldBeAnLPA = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
 
         $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
         $this->assertInstanceOf(Lpa::class, $shouldBeAnLPA->getData());
@@ -199,9 +221,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function handles_a_not_found_response_from_the_api(): void
     {
-        $uid        = 'M-789Q-P4DF-4UX3';
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uid          = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy->getContents()->willReturn('');
@@ -239,7 +262,7 @@ class DataStoreLpasTest extends TestCase
             $traceId,
         );
 
-        $shouldBeANull = $moderniseLpas->get($uid);
+        $shouldBeANull = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
 
         $this->assertNull($shouldBeANull);
     }
@@ -247,9 +270,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function can_lookup_multiple_lpas(): void
     {
-        $uids       = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP', 'M-WILL-FAIL-HYDR'];
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uids         = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP', 'M-WILL-FAIL-HYDR'];
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy
@@ -318,7 +342,7 @@ class DataStoreLpasTest extends TestCase
             $traceId,
         );
 
-        $lpas = $moderniseLpas->lookup($uids);
+        $lpas = $moderniseLpas->setOriginatorId($originatorId)->lookup($uids);
 
         $this->assertCount(2, $lpas);
         foreach ($lpas as $lpa) {
@@ -330,9 +354,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_response_error_during_multiple_lpa_lookup(): void
     {
-        $uids       = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP'];
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uids         = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP'];
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy
@@ -376,15 +401,16 @@ class DataStoreLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Not possible to create LPA from response data');
-        $lpas = $moderniseLpas->lookup($uids);
+        $moderniseLpas->setOriginatorId($originatorId)->lookup($uids);
     }
 
     #[Test]
     public function it_deals_with_a_client_error(): void
     {
-        $uid        = 'M-789Q-P4DF-4UX3';
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uid          = 'M-789Q-P4DF-4UX3';
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseBodyProphecy = $this->prophesize(StreamInterface::class);
         $responseBodyProphecy->getContents()->willReturn(json_encode(['uid' => $uid]));
@@ -425,15 +451,16 @@ class DataStoreLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $shouldBeAnLPA = $moderniseLpas->get($uid);
+        $moderniseLpas->setOriginatorId($originatorId)->get($uid);
     }
 
     #[Test]
     public function it_deals_with_a_client_error_for_multiple_lpa_fetches(): void
     {
-        $uids       = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP'];
-        $apiBaseUri = 'http://localhost';
-        $traceId    = 'test-trace-id';
+        $uids         = ['M-789Q-P4DF-4UX3', 'M-789Q-X7DT-5PDP'];
+        $apiBaseUri   = 'http://localhost';
+        $traceId      = 'test-trace-id';
+        $originatorId = 'originator-id';
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
@@ -470,6 +497,6 @@ class DataStoreLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $lpas = $moderniseLpas->lookup($uids);
+        $moderniseLpas->setOriginatorId($originatorId)->lookup($uids);
     }
 }
