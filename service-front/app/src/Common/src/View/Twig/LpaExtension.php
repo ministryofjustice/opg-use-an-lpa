@@ -214,9 +214,9 @@ class LpaExtension extends AbstractExtension
         return $lpa->getLpaDonorSignatureDate() < new DateTime('2016-01-01');
     }
 
-    public function isSiriusLpa(Lpa|CombinedLpa $lpa): bool
+    public function isSiriusLpa(string $lpaUid): bool
     {
-        return str_starts_with($lpa->getUId(), 'M-');
+        return str_starts_with($lpaUid, 'M-');
     }
 
     /**

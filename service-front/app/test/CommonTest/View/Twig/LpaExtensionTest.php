@@ -545,4 +545,16 @@ class LpaExtensionTest extends TestCase
 
         $this->assertEquals(new DateTimeImmutable('2012-12-12'), $lpaDonorSignatureDate);
     }
+
+    #[Test]
+    public function it_checks_if_an_lpa_is_sirius_lpa_for_combined_lpa(): void
+    {
+        $extension = new LpaExtension();
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
+        $combinedLpa = ($this->lpaDataFormatter)($lpa);
+
+        $isSiriusLpa = $extension->isSiriusLpa($combinedLpa->getUId());
+
+        $this->assertEquals(false, $isSiriusLpa);
+    }
 }
