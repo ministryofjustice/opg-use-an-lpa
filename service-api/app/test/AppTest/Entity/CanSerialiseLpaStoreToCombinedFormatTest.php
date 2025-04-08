@@ -76,6 +76,7 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
             'registrationDate'           => '2024-01-12T00:00:00Z',
             'rejectedDate'               => null,
             'replacementAttorneys'       => [],
+            'restrictionsAndConditions'  => 'my restrictions and conditions',
             'status'                     => 'registered',
             'statusDate'                 => '2024-01-12T23:00:00Z',
             'trustCorporations'          => [
