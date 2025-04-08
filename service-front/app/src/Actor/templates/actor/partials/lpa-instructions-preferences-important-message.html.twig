@@ -3,7 +3,7 @@
         {% trans %}
             This LPA has instructions.<br>
         {% endtrans %}
-        {% if not (lpa.uId starts with 'M-') %}
+        {% if not is_sirius_lpa(lpa) %}
             <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
                data-gaEventType="onClick"
                data-gaAction="Clicked Link"
