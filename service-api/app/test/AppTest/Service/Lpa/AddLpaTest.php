@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\Exception\BadRequestException;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Exception\LpaAlreadyAddedException;
 use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Service\ActorCodes\ValidatedActorCode;
 use App\Service\Lpa\AddLpa\AddLpa;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
+use App\Service\Lpa\ResolveActor\LpaActor;
 use App\Service\Lpa\SiriusLpa;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -19,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+
 class AddLpaTest extends TestCase
 {
     use ProphecyTrait;
@@ -83,10 +85,10 @@ class AddLpaTest extends TestCase
     #[Test]
     public function it_accepts_lpas_that_have_been_requested_to_be_added_but_not_activated(): void
     {
-        $expectedResponse = [
-            'some' => 'other data',
-            'lpa'  => $this->oldLpaFixture()
-        ];
+        $expectedResponse = new ValidatedActorCode(
+            $this->prophesize(LpaActor::class)->reveal(),
+            $this->oldLpaFixture(),
+        );
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
@@ -116,10 +118,10 @@ class AddLpaTest extends TestCase
     #[Test]
     public function it_accepts_lpas_that_have_been_requested_to_be_added_but_not_activated_combined_format(): void
     {
-        $expectedResponse = [
-            'some' => 'other data',
-            'lpa'  => $this->newLpaFixture('Registered')
-        ];
+        $expectedResponse = new ValidatedActorCode(
+            $this->prophesize(LpaActor::class)->reveal(),
+            $this->newLpaFixture('Registered'),
+        );
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)
@@ -185,14 +187,15 @@ class AddLpaTest extends TestCase
         $this->actorCodeServiceProphecy
             ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
             ->willReturn(
-                [
-                    'lpa' => new SiriusLpa(
+                new ValidatedActorCode(
+                    $this->prophesize(LpaActor::class)->reveal(),
+                    new SiriusLpa(
                         [
                             'status' => 'Cancelled',
                         ],
                         $this->loggerProphecy->reveal(),
                     ),
-                ]
+                ),
             );
 
         $this->expectException(LpaNotRegisteredException::class);
@@ -216,9 +219,10 @@ class AddLpaTest extends TestCase
         $this->actorCodeServiceProphecy
             ->validateDetails($this->actorCode, $this->lpaUid, $this->dob)
             ->willReturn(
-                [
-                    'lpa' => $this->newLpaFixture('Cancelled'),
-                ]
+                new ValidatedActorCode(
+                    $this->prophesize(LpaActor::class)->reveal(),
+                    $this->newLpaFixture('Cancelled'),
+                ),
             );
 
         $this->expectException(LpaNotRegisteredException::class);
@@ -235,10 +239,10 @@ class AddLpaTest extends TestCase
     #[Test]
     public function it_returns_the_lpa_data_if_all_validation_checks_passed(): void
     {
-        $expectedResponse = [
-            'some' => 'other data',
-            'lpa'  => $this->oldLpaFixture()
-        ];
+        $expectedResponse = new ValidatedActorCode(
+            $this->prophesize(LpaActor::class)->reveal(),
+            $this->oldLpaFixture(),
+        );
 
         $this->lpaAlreadyAddedProphecy
             ->__invoke($this->userId, $this->lpaUid)

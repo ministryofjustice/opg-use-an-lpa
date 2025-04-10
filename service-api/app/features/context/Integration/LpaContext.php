@@ -6,6 +6,9 @@ namespace BehatTest\Context\Integration;
 
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Entity\Sirius\SiriusLpa as CombinedFormatSiriusLpa;
+use App\Entity\Sirius\SiriusLpaAttorney;
+use App\Entity\Sirius\SiriusLpaDonor;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\LpaActivationKeyAlreadyRequestedException;
@@ -14,6 +17,7 @@ use App\Exception\LpaAlreadyHasActivationKeyException;
 use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\AccessForAll\AccessForAllValidation;
@@ -360,25 +364,46 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
-        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(
-                    json_decode(
-                        json_encode(
-                            $sanitizedSiriusLpa->attorneys[0]
-                        ),
-                        true
-                    ),
-                    $this->container->get(LoggerInterface::class),
-                ),
-                'attorney',
-                $sanitizedSiriusLpa->uId,
-            ),
-            $expectedLpa,
-            null,
-        );
 
+        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+            $expectedLpa = LpaTestUtilities::MapEntityFromData($expectedLpaArray, CombinedFormatSiriusLpa::class);
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    LpaTestUtilities::MapEntityFromData(
+                        json_decode(
+                            json_encode($this->lpa->attorneys[0]),
+                            true
+                        ),
+                        SiriusLpaAttorney::class
+                    ),
+                    'attorney',
+                    $sanitizedSiriusLpa->uId,
+                ),
+                $expectedLpa,
+                null
+            );
+        } else {
+            $expectedLpa = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    new SiriusPerson(
+                        json_decode(
+                            json_encode(
+                                $sanitizedSiriusLpa->attorneys[0]
+                            ),
+                            true
+                        ),
+                        $this->container->get(LoggerInterface::class),
+                    ),
+                    'attorney',
+                    $sanitizedSiriusLpa->uId,
+                ),
+                $expectedLpa,
+                null,
+            );
+        }
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
 
@@ -564,9 +589,8 @@ class LpaContext extends BaseIntegrationContext
             $this->userId
         );
 
-        Assert::assertArrayHasKey('actor', $validatedLpa);
-        Assert::assertArrayHasKey('lpa', $validatedLpa);
-        Assert::assertEquals($validatedLpa['lpa']->getUid(), $this->lpaUid);
+        Assert::assertNotNull($validatedLpa);
+        Assert::assertEquals($validatedLpa->lpa->getUid(), $this->lpaUid);
     }
 
     #[When('/^I request to view an LPA which has instructions and preferences$/')]
@@ -1538,22 +1562,44 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
-        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(
-                    json_decode(
-                        json_encode($sanitizedSiriusLpa->donor),
-                        true
+
+        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+            $expectedLpa = LpaTestUtilities::MapEntityFromData($expectedLpaArray, CombinedFormatSiriusLpa::class);
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    LpaTestUtilities::MapEntityFromData(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        SiriusLpaDonor::class
                     ),
-                    $this->container->get(LoggerInterface::class),
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
                 ),
-                'donor',
-                $sanitizedSiriusLpa->uId,
-            ),
-            $expectedLpa,
-            null,
-        );
+                $expectedLpa,
+                null
+            );
+        } else {
+            $expectedLpa = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    new SiriusPerson(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        $this->container->get(LoggerInterface::class)
+                    ),
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
+                ),
+                $expectedLpa,
+                null
+            );
+        }
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -1798,22 +1844,44 @@ class LpaContext extends BaseIntegrationContext
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
-        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(
-                    json_decode(
-                        json_encode($this->lpa->donor),
-                        true
+
+        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+            $expectedLpa = LpaTestUtilities::MapEntityFromData($expectedLpaArray, CombinedFormatSiriusLpa::class);
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    LpaTestUtilities::MapEntityFromData(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        SiriusLpaDonor::class,
                     ),
-                    $this->container->get(LoggerInterface::class)
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
                 ),
-                'donor',
-                $sanitizedSiriusLpa->uId,
-            ),
-            $expectedLpa,
-            null
-        );
+                $expectedLpa,
+                null
+            );
+        } else {
+            $expectedLpa = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    new SiriusPerson(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        $this->container->get(LoggerInterface::class)
+                    ),
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
+                ),
+                $expectedLpa,
+                null
+            );
+        }
 
         Assert::assertEquals($expectedResponse, $lpaMatchResponse);
     }
@@ -1870,26 +1938,40 @@ class LpaContext extends BaseIntegrationContext
         } catch (LpaAlreadyHasActivationKeyException $lpaAlreadyHasActivationKeyException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyHasActivationKeyException->getCode());
             Assert::assertEquals('LPA has an activation key already', $lpaAlreadyHasActivationKeyException->getMessage());
+
+            if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+                $expectedDonor = LpaTestUtilities::MapEntityFromData(
+                    json_decode(
+                        json_encode($this->lpa->donor),
+                        true
+                    ),
+                    SiriusLpaDonor::class,
+                );
+            } else {
+                $expectedDonor = new SiriusPerson(
+                    json_decode(
+                        json_encode(
+                            $this->lpa->donor
+                        ),
+                        true
+                    ),
+                    $this->container->get(LoggerInterface::class),
+                );
+            }
+
             Assert::assertEquals(
                 [
-                    'donor'                => new SiriusPerson(
-                        json_decode(
-                            json_encode(
-                                $this->lpa->donor
-                            ),
-                            true
-                        ),
-                        $this->container->get(LoggerInterface::class),
-                    ),
+                    'donor'                => $expectedDonor,
                     'caseSubtype'          => $this->lpa->caseSubtype,
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ],
                 $lpaAlreadyHasActivationKeyException->getAdditionalData(),
             );
+
             return;
         }
 
-        throw new ExpectationFailedException('Activation key exists exception should have been thrown');
+        Assert::fail('Activation key exists exception should have been thrown');
     }
 
     #[When('/^I request to add an LPA with valid details$/')]
@@ -1935,9 +2017,8 @@ class LpaContext extends BaseIntegrationContext
             $this->userId
         );
 
-        Assert::assertArrayHasKey('actor', $validatedLpa);
-        Assert::assertArrayHasKey('lpa', $validatedLpa);
-        Assert::assertEquals($validatedLpa['lpa']->getUid(), $this->lpaUid);
+        Assert::assertNotNull($validatedLpa);
+        Assert::assertEquals($validatedLpa->lpa->getUid(), $this->lpaUid);
     }
 
     #[When('/^I request to give an organisation access to one of my LPAs$/')]
@@ -2572,6 +2653,8 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I repeat my request for an activation key$/')]
     public function iRequestForANewActivationKeyAgain(): void
     {
+        $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
+
         $data = [
             'reference_number'     => (int) $this->lpa->uId,
             'first_names'          => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
@@ -2596,23 +2679,45 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $response    = $addOlderLpa->validateRequest($this->userId, $data);
 
-        $expectedLpaArray = json_decode(json_encode($this->lpa), true);
-        $expectedLpa      = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
-        $expectedResponse = new AccessForAllValidation(
-            new ActorMatch(
-                new SiriusPerson(
-                    json_decode(
-                        json_encode($this->lpa->donor),
-                        true
+        $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
+
+        if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
+            $expectedLpa = LpaTestUtilities::MapEntityFromData($expectedLpaArray, CombinedFormatSiriusLpa::class);
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    LpaTestUtilities::MapEntityFromData(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        SiriusLpaDonor::class,
                     ),
-                    $this->container->get(LoggerInterface::class)
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
                 ),
-                'donor',
-                $this->lpa->uId,
-            ),
-            $expectedLpa,
-            null
-        );
+                $expectedLpa,
+                null
+            );
+        } else {
+            $expectedLpa = new SiriusLpa($expectedLpaArray, $this->container->get(LoggerInterface::class));
+
+            $expectedResponse = new AccessForAllValidation(
+                new ActorMatch(
+                    new SiriusPerson(
+                        json_decode(
+                            json_encode($this->lpa->donor),
+                            true
+                        ),
+                        $this->container->get(LoggerInterface::class)
+                    ),
+                    'donor',
+                    $sanitizedSiriusLpa->uId,
+                ),
+                $expectedLpa,
+                null
+            );
+        }
 
         Assert::assertEquals($expectedResponse, $response);
     }
