@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   branch_name:
-    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@45d8381b4ecd4238f7933096eaa5052884e6fc02 # v3.1.0
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/data-parse-branch-name.yml@ce7e03453712dee1e56accf0a83a4349b1a97c42 # v3.10.0
 
   node_test:
     name: test node dependencies
