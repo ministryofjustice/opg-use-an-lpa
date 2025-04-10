@@ -59,6 +59,20 @@
         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
     </div>
 
+    {% if not is_sirius_lpa(lpa.Uid) %}
+        {% if lpa.restrictionsAndConditions is not empty %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                <dd class="govuk-summary-list__value">{% trans %}Yes, the donor added restrictions and conditions to their LPA{% endtrans %}</dd>
+            </div>
+        {% else %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                <dd class="govuk-summary-list__value">{% trans %}No, the donor did not add restrictions and conditions to their LPA{% endtrans %}</dd>
+            </div>
+        {% endif %}
+    {% endif %}
+
     </dl>
 
         {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
@@ -77,6 +91,7 @@
             {% endif %}
         {% endif %}
 
+        {% if is_sirius_lpa(lpa.Uid) %}
         <iap-preferences>
             <dl class="govuk-summary-list govuk-summary-list--no-border">
                 <div class="govuk-summary-list__row">
@@ -110,7 +125,9 @@
                 {% endif %}
             {% endif %}
         </iap-preferences>
+        {% endif %}
 
+        {% if is_sirius_lpa(lpa.Uid) %}
         <iap-instructions>
             <dl class="govuk-summary-list govuk-summary-list--no-border">
                 <div class="govuk-summary-list__row">
@@ -144,7 +161,7 @@
                 {% endif %}
             {% endif %}
         </iap-instructions>
-
+        {% endif %}
         <iap-unknown>
             {% if iap_images is defined and
                     iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
