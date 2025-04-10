@@ -1,4 +1,4 @@
-FROM golang:1.23.5-alpine AS build
+FROM golang:1.24.2-alpine AS build
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstr
   && chmod 755 bootstrap \
   && zip event-receiver.zip bootstrap
 
-FROM localstack/localstack:4.1.0 AS localstack
+FROM localstack/localstack:4.3.0 AS localstack
 
 COPY --from=build /app/event-receiver.zip /event-receiver.zip
 
