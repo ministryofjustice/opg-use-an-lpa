@@ -94,7 +94,7 @@ class RemoveLpa
                     'expectedId' => $deletedData['Id'],
                     'deletedId'  => $userActorLpa['Id'],
                 ]
-            );
+          );
             throw new ApiException('Incorrect LPA data deleted from users account');
         }
 
