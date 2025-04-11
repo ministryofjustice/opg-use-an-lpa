@@ -41,7 +41,7 @@ interface ViewerCodesInterface
      * @psalm-return ViewerCode[]
      * @return array
      */
-    public function getCodesByLpaId(LpaUid $lpaUid): array;
+    public function getCodesByLpaId(LpaUid $lpaUid): ?array;
 
     /**
      * Adds a code to the database.
@@ -79,5 +79,5 @@ interface ViewerCodesInterface
      * @param int    $codeOwner
      * @return bool
      */
-    public function removeActorAssociation(string $code, int $codeOwner): bool;
+    public function removeActorAssociation(string $code, string $codeOwner): bool;
 }
