@@ -52,6 +52,7 @@ class LpasResourceImagesCollectionHandler implements RequestHandlerInterface
             throw new NotFoundException();
         }
 
+        $map['SiriusUid'] = '700000000138';
         $images = $this->iapImages->getInstructionsAndPreferencesImages((int) $map['SiriusUid']);
 
         return new JsonResponse($images);
