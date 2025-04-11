@@ -1,60 +1,64 @@
-{% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
-    <p class="govuk-body govuk-!-margin-bottom-1">
-        {% if not is_sirius_lpa(lpa.Uid) %}
+{% if not is_sirius_lpa(lpa.Uid) %}
+    {% if lpa.restrictionsAndConditions is not empty %}
+            <p class="govuk-body govuk-!-margin-bottom-1">
+                {% trans %}
+                    This LPA has restrictions and conditions.<br>
+                {% endtrans %}
+            </p>
+    {% endif %}
+{% else %}
+    {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
+        <p class="govuk-body govuk-!-margin-bottom-1">
+                {% trans %}
+                    This LPA has instructions.<br>
+                {% endtrans %}
+            {% if is_sirius_lpa(lpa.Uid) %}
+                <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+                   data-gaEventType="onClick"
+                   data-gaAction="Clicked Link"
+                   data-gaCategory="Read More"
+                   data-gaLabel="Read More - instructions and preferences"
+                > {% trans %}Read more{% endtrans %}</a>
+            {% endif %}
+        </p>
+    {% endif %}
+    {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasGuidance and not lpa.applicationHasRestrictions %}
+        <p class="govuk-body govuk-!-margin-bottom-1">
             {% trans %}
-                This LPA has restrictions and conditions.<br>
+                This LPA has preferences.<br>
             {% endtrans %}
-        {% else %}
-            {% trans %}
-                This LPA has instructions.<br>
-            {% endtrans %}
-        {% endif %}
-        {% if is_sirius_lpa(lpa.Uid) %}
             <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
                data-gaEventType="onClick"
                data-gaAction="Clicked Link"
                data-gaCategory="Read More"
                data-gaLabel="Read More - instructions and preferences"
             > {% trans %}Read more{% endtrans %}</a>
-        {% endif %}
-    </p>
-{% endif %}
-{% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasGuidance and not lpa.applicationHasRestrictions %}
-    <p class="govuk-body govuk-!-margin-bottom-1">
-        {% trans %}
-            This LPA has preferences.<br>
-        {% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
-           data-gaEventType="onClick"
-           data-gaAction="Clicked Link"
-           data-gaCategory="Read More"
-           data-gaLabel="Read More - instructions and preferences"
-        > {% trans %}Read more{% endtrans %}</a>
-    </p>
-{% endif %}
-{% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
-    <p class="govuk-body govuk-!-margin-bottom-1">
-        {% trans %}
-            This LPA has preferences and instructions.<br>
-        {% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
-           data-gaEventType="onClick"
-           data-gaAction="Clicked Link"
-           data-gaCategory="Read More"
-           data-gaLabel="Read More - instructions and preferences"
-        > {% trans %}Read more{% endtrans %}</a>
-    </p>
-{% endif %}
-{% if actorActive and is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
-    <p class="govuk-body govuk-!-margin-bottom-1">
-        {% trans %}
-            This LPA has preferences and/or instructions.<br>
-        {% endtrans %}
-        <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
-           data-gaEventType="onClick"
-           data-gaAction="Clicked Link"
-           data-gaCategory="Read More"
-           data-gaLabel="Read More - instructions and preferences"
-        > {% trans %}Read more{% endtrans %}</a>
-    </p>
+        </p>
+    {% endif %}
+    {% if not is_donor_signature_date_too_old(lpa) and actorActive and lpa.applicationHasRestrictions and lpa.applicationHasGuidance %}
+        <p class="govuk-body govuk-!-margin-bottom-1">
+            {% trans %}
+                This LPA has preferences and instructions.<br>
+            {% endtrans %}
+            <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+               data-gaEventType="onClick"
+               data-gaAction="Clicked Link"
+               data-gaCategory="Read More"
+               data-gaLabel="Read More - instructions and preferences"
+            > {% trans %}Read more{% endtrans %}</a>
+        </p>
+    {% endif %}
+    {% if actorActive and is_donor_signature_date_too_old(lpa) and (lpa.applicationHasRestrictions or lpa.applicationHasGuidance) %}
+        <p class="govuk-body govuk-!-margin-bottom-1">
+            {% trans %}
+                This LPA has preferences and/or instructions.<br>
+            {% endtrans %}
+            <a class="govuk-link" href="{{ path('lpa.instructions-preferences') }}"
+               data-gaEventType="onClick"
+               data-gaAction="Clicked Link"
+               data-gaCategory="Read More"
+               data-gaLabel="Read More - instructions and preferences"
+            > {% trans %}Read more{% endtrans %}</a>
+        </p>
+    {% endif %}
 {% endif %}
