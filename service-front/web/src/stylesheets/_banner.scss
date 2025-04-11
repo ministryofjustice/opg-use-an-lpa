@@ -47,6 +47,12 @@
   color: #b10e1e;
 }
 
+.restrictions-and-conditions-banner {
+  border:  govuk-spacing(1) solid govuk-colour('mid-grey');
+  margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
+  padding: 10px
+}
+
 .moj-banner--page-top {
   position: relative;
   top: govuk-spacing(-4);

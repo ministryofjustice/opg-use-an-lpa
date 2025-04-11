@@ -72,9 +72,16 @@
             </div>
         {% endif %}
     {% endif %}
-
     </dl>
-
+    {% if not is_sirius_lpa(lpa.Uid) and lpa.restrictionsAndConditions is not empty %}
+        <div class="govuk-grid-row restrictions-and-conditions-banner">
+            <div class="govuk-grid-column-full column-full-alt-1">
+                <p class="govuk-body body-alt-1">
+                    {{ lpa.restrictionsAndConditions}}
+                </p>
+            </div>
+        </div>
+    {% endif %}
         {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
             {% if lpa.hasSeveranceWarning %}
                 <div class="govuk-warning-text">
