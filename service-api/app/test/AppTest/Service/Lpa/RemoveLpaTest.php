@@ -20,7 +20,6 @@ use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
-use Monolog\Logger;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -29,7 +28,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use App\Service\Lpa\LpaManagerInterface;
 use DateTimeImmutable;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class RemoveLpaTest extends TestCase
 {
@@ -118,9 +116,9 @@ class RemoveLpaTest extends TestCase
             new DateTime()
         );
 
-        $this->response = [
+        $this->old_lpa_response = [
             'donor' => [
-                'uId'           => $this->getLpaDataFixtureOld()->getUid(),
+                'uId'           => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
                 'firstname'     => $this->getLpaDataFixtureOld()->getDonor()->getFirstnames(),
                 'middlenames'   => isset(
                     $this->getLpaDataFixtureOld()->getDonor()['middlenames']
@@ -128,6 +126,18 @@ class RemoveLpaTest extends TestCase
                 'surname'       => $this->getLpaDataFixtureOld()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->getLpaDataFixtureOld()->getCaseSubType(),
+        ];
+
+        $this->new_lpa_response = [
+            'donor' => [
+                'uId'           => $this->getLpaDataFixtureNew()->getDonor()->getUid(),
+                'firstname'     => $this->getLpaDataFixtureNew()->getDonor()->getFirstnames(),
+                'middlenames'   => isset(
+                    $this->getLpaDataFixtureNew()->getDonor()->getMiddleNames()->value
+                ) ? $this->getLpaDataFixtureNew()->getDonor()->getMiddleNames() : '',
+                'surname'       => $this->getLpaDataFixtureNew()->getDonor()->getSurname(),
+            ],
+            'caseSubtype' => $this->getLpaDataFixtureNew()->getCaseSubType(),
         ];
     }
 
@@ -144,7 +154,7 @@ class RemoveLpaTest extends TestCase
             ->willReturn([]);
 
         $this->lpaManagerProphecy
-            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->getByUid($this->userActorLpa['SiriusUid'], $this->userActorLpa['UserId'])
             ->willReturn($this->lpaRemovedData);
 
         $this->userLpaActorMapInterfaceProphecy
@@ -154,23 +164,31 @@ class RemoveLpaTest extends TestCase
         $result = ($this->deleteLpa())($this->userId, $this->actorLpaToken);
 
         $this->assertNotEmpty($result);
-        $this->assertEquals($result, $this->response);
+        $this->assertEquals($result, $this->old_lpa_response);
     }
 
     #[Test]
     public function it_can_remove_new_format_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
+        $userActorLpa = [
+            'LpaUid' => 'M-789Q-P4DF-4UX3',
+            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'        => $this->actorLpaToken,
+            'ActorId'   => '1',
+            'UserId'    => $this->userId,
+        ];
+
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
-            ->willReturn($this->userActorLpa)
+            ->willReturn($userActorLpa)
             ->shouldBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->getCodesByLpaId($this->userActorLpa['SiriusUid'])
+            ->getCodesByLpaId($userActorLpa['LpaUid'])
             ->willReturn([]);
 
         $this->lpaManagerProphecy
-            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->getByUid($userActorLpa['LpaUid'], $userActorLpa['UserId'])
             ->willReturn($this->combinedLpaRemovedData);
 
         $this->userLpaActorMapInterfaceProphecy
@@ -180,7 +198,7 @@ class RemoveLpaTest extends TestCase
         $result = ($this->deleteLpa())($this->userId, $this->actorLpaToken);
 
         $this->assertNotEmpty($result);
-        $this->assertEquals($result, $this->response);
+        $this->assertEquals($result, $this->new_lpa_response);
     }
 
     #[Test]
@@ -225,7 +243,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->lpaManagerProphecy
-            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->getByUid($this->userActorLpa['SiriusUid'], $this->userActorLpa['UserId'])
             ->willReturn($this->lpaRemovedData);
 
         $this->userLpaActorMapInterfaceProphecy
@@ -235,24 +253,32 @@ class RemoveLpaTest extends TestCase
         $result = ($this->deleteLpa())($this->userId, $this->actorLpaToken);
 
         $this->assertNotEmpty($result);
-        $this->assertEquals($result, $this->response);
+        $this->assertEquals($result, $this->old_lpa_response);
     }
 
     #[Test]
     public function it_removes_a_new_lpa_from_a_user_account_and_cancels_their_active_codes_only(): void
     {
+        $userActorLpa = [
+            'LpaUid' => 'M-789Q-P4DF-4UX3',
+            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'        => $this->actorLpaToken,
+            'ActorId'   => '1',
+            'UserId'    => $this->userId,
+        ];
+
         $this->userLpaActorMapInterfaceProphecy
             ->get($this->actorLpaToken)
-            ->willReturn($this->userActorLpa)
+            ->willReturn($userActorLpa)
             ->shouldBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->getCodesByLpaId($this->userActorLpa['SiriusUid'])
+            ->getCodesByLpaId($userActorLpa['LpaUid'])
             ->willReturn($this->viewerCodes);
 
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], (string)$this->userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], (string)$userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -262,7 +288,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], (string)$this->userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], (string)$userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -271,7 +297,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], (string)$this->userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], (string)$userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -280,7 +306,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->lpaManagerProphecy
-            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->getByUid($userActorLpa['LpaUid'], $userActorLpa['UserId'])
             ->willReturn($this->combinedLpaRemovedData);
 
         $this->userLpaActorMapInterfaceProphecy
@@ -290,7 +316,7 @@ class RemoveLpaTest extends TestCase
         $result = ($this->deleteLpa())($this->userId, $this->actorLpaToken);
 
         $this->assertNotEmpty($result);
-        $this->assertEquals($result, $this->response);
+        $this->assertEquals($result, $this->new_lpa_response);
     }
 
     #[Test]
@@ -338,7 +364,7 @@ class RemoveLpaTest extends TestCase
             ->willReturn([]);
 
         $this->lpaManagerProphecy
-            ->getByUid($this->userActorLpa['SiriusUid'])
+            ->getByUid($this->userActorLpa['SiriusUid'], $this->userActorLpa['UserId'])
             ->willReturn($this->lpaRemovedData);
 
         $this->deletedData['Id'] = 'd1ffer3nt-Id-1234';
@@ -409,7 +435,7 @@ class RemoveLpaTest extends TestCase
             status:                                    'Registered',
             statusDate:                                null,
             trustCorporations:                         [],
-            uId:                                       $this->lpaUid,
+            uId:                                       'M-789Q-P4DF-4UX3',
             whenTheLpaCanBeUsed:                       null,
             withdrawnDate:                             null
         );

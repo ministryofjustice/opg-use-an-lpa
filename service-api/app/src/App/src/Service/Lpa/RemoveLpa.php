@@ -82,7 +82,7 @@ class RemoveLpa
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
 
         $uid            = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
-        $lpaRemovedData = $this->lpaManager->getByUid($uid)->getData();
+        $lpaRemovedData = $this->lpaManager->getByUid($uid, $userActorLpa['UserId'])->getData();
 
         $deletedData = $this->userLpaActorMapRepository->delete($token);
 

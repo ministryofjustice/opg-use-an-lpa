@@ -41,7 +41,7 @@ interface ViewerCodesInterface
      * @psalm-return ViewerCode[]
      * @return array
      */
-    public function getCodesByLpaId(LpaUid $lpaUid): array;
+    public function getCodesByLpaId(LpaUid $lpaUid): ?array;
 
     /**
      * Adds a code to the database.
