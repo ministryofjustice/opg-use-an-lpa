@@ -282,7 +282,7 @@ class DynamoDBExporterAndQuerier:
                 wr.writerow(csvRow)
 
     def get_expired_viewed_access_codes(self):
-        sql_string = f'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation, vc.item.SiriusUid.s as "LPA Reference" FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER by Organisation;'
+        sql_string = f'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation, vc.item.SiriusUid.s as "LPA Reference Number" FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER by Organisation;'
         self.run_athena_query(sql_string, outputFileName="ExpiredViewedAccessCodes")
 
     def get_expired_unviewed_access_codes(self):
