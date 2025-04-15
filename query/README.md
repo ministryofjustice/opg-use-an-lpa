@@ -15,6 +15,13 @@ Install pip modules
 pip install -r ./requirements.txt
 ```
 
+## Running in Virtual Env
+
+If there are issues installing the above requirements, it may be needed to use virtual env to intall and use the script
+```shell
+virtualenv venv --python=python3.12 ; source venv/bin/activate
+```
+
 ## Export Dynamodb data, load Athena
 
 Run the following script to request a DynanmoDB export to S3, drop and re-creation of Athena database and tables, and query against Athena
