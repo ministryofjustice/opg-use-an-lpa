@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-04-09T10:55:02+00:00\n"
+"POT-Creation-Date: 2025-04-11T09:17:33+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -141,7 +141,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:154
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:28
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:69
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:81
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:69
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:28
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:42
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
@@ -603,7 +603,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:127
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:139
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:127
 msgid "No"
 msgstr ""
 
@@ -3330,7 +3330,7 @@ msgstr ""
 msgid "Check that the organisation will accept an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr> and how they want to receive the access code you make for them."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:3
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:8
 msgid "This LPA has instructions.<br>"
 msgstr ""
 
@@ -3338,12 +3338,12 @@ msgstr ""
 msgid "You might need to show organisations the paper LPA."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:52
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:58
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:26
 msgid "Read more"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:18
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:24
 msgid "This LPA has preferences.<br>"
 msgstr ""
 
@@ -4046,7 +4046,7 @@ msgid "Yes, the donor made instructions and/or preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:124
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:136
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:124
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 
@@ -4055,22 +4055,22 @@ msgid "Some words in these instructions or preferences have been removed by the 
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:83
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:95
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:83
 msgid "Preferences"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:89
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:101
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:89
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:117
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:129
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:117
 msgid "Instructions"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:123
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:135
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:123
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 
@@ -4851,7 +4851,7 @@ msgstr ""
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, including a scanned image of any restrictions and conditions (can also be known as “preferences and instructions” depending on when the LPA was made)"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:31
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:37
 msgid "This LPA has preferences and instructions.<br>"
 msgstr ""
 
@@ -4891,7 +4891,7 @@ msgstr ""
 msgid "any continuation sheets you used are not missing"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:44
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:50
 msgid "This LPA has preferences and/or instructions.<br>"
 msgstr ""
 
@@ -4932,7 +4932,7 @@ msgstr ""
 msgid "Preferences and instructions"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:82
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:70
 msgid "Some words in these preferneces or instructions have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
@@ -4948,14 +4948,6 @@ msgstr ""
 msgid "we say you did not add restrictions and conditions when you did"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:69
-msgid "Restrictions and Conditions"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:65
-msgid "Yes, the donor added restrictions and conditions to their LPA"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:70
-msgid "No, the donor did not add restrictions and conditions to their LPA"
+#: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
+msgid "This LPA has restrictions and conditions.<br>"
 msgstr ""
