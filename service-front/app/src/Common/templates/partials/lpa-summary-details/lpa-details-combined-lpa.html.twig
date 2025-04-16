@@ -61,7 +61,7 @@
 
     {% if not is_sirius_lpa(lpa.Uid) %}
         {% if lpa.restrictionsAndConditions is not empty %}
-            <div class="govuk-summary-list__row" data-related-to="restrictions-and-conditions-summary">
+            <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key"
                     id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
                 <dd class="govuk-summary-list__value">{% trans %}Yes, the donor added restrictions and conditions to their LPA{% endtrans %}</dd>
@@ -75,8 +75,7 @@
     {% endif %}
     </dl>
     {% if not is_sirius_lpa(lpa.Uid) and lpa.restrictionsAndConditions is not empty %}
-        <div class="govuk-grid-row restrictions-and-conditions-banner"
-             data-related-to="restrictions-and-conditions-label" aria-labelledby="restrictions-and-conditions-label">
+        <div class="govuk-grid-row restrictions-and-conditions-banner" aria-labelledby="restrictions-and-conditions-label">
             <div class="govuk-grid-column-full column-full-alt-1">
                 <p class="govuk-body body-alt-1">
                     {{ lpa.restrictionsAndConditions}}
