@@ -47,6 +47,9 @@ class RemoveLpa
             throw $ex;
         }
 
+        /*
+        // TODO UML-3913 ingest the array [replace array object] using object Hydrator library here
+        */
         return new ArrayObject($removedLpaData, ArrayObject::ARRAY_AS_PROPS);
     }
 }

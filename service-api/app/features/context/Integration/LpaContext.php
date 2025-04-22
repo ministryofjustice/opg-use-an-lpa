@@ -2131,8 +2131,10 @@ class LpaContext extends BaseIntegrationContext
 
         if ($status === 'Revoked') {
             Assert::assertEmpty($lpaData);
+        } elseif ($lpaData['lpa'] instanceof SiriusLpa) {
+            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+            Assert::assertEquals($this->lpa->status, $lpaData['lpa']['status']);
         } else {
-
             Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->uId);
             Assert::assertEquals($this->lpa->status, $lpaData['lpa']->status);
         }

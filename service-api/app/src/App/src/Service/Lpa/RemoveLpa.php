@@ -99,11 +99,15 @@ class RemoveLpa
         }
 
         $lpaDonorData = $lpaRemovedData->getDonor();
+
+        /*
+        //TODO UML-3914 Return a response object here
+        */
         $response = [
             'donor' => [
                 'uId'         => $lpaDonorData->getUid(),
                 'firstname'   => $lpaDonorData->getFirstnames(),
-                'middlenames' => isset($lpaDonorData->middlenames) ? $lpaDonorData->getMiddleNames() : '',
+                'middlenames' => $lpaDonorData->getMiddleNames(),
                 'surname'     => $lpaDonorData->getSurname(),
             ],
             'caseSubtype'     => $lpaRemovedData->getCaseSubType(),

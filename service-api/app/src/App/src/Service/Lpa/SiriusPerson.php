@@ -61,7 +61,7 @@ class SiriusPerson implements
 
     public function getMiddleNames(): string
     {
-        return (string)$this->person['middlenames'];
+        return (string)$this->person['middlenames'] ?? '';
     }
 
     public function getSurname(): string
