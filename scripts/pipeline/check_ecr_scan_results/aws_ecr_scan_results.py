@@ -186,7 +186,6 @@ class ECRScanChecker:
         severity_lines = []
 
         for line in report.split("\n"):
-            print(f'report line is {line}\n')
             if 'Severity:' in line:
                 severity_lines.append(line)
 
@@ -204,7 +203,7 @@ class ECRScanChecker:
             exit(1)
 
 # temp fix to ignore specific CVE until AWS have fixed their image - this logic will later be removed
-        if severity_dict["CRITICAL"] = 1:
+        if severity_dict["CRITICAL"] == 1:
             if 'stats_upload_lambda' in report and 'CVE-2025-22871' in report :
                 print("Ignoring known CVE in AWs image until new image is released")
             else:
