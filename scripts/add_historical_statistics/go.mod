@@ -1,6 +1,6 @@
 module get_backdated_statistics
 
-go 1.22.0
+go 1.23.8
 
 toolchain go1.24.1
 
@@ -26,6 +26,4 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.3 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.10.15 // indirect
 	github.com/aws/smithy-go v1.22.2 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/ministryofjustice/opg-go-common v1.83.0
 )
