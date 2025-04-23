@@ -2,7 +2,7 @@ module github.com/ministryofjustice/opg-use-an-lpa/service-admin/proxy
 
 go 1.23.7
 
-toolchain go1.24.1
+toolchain go1.24.2
 
 require github.com/ministryofjustice/opg-go-common v1.83.0
 
