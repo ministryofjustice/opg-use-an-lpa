@@ -188,9 +188,8 @@ class ECRScanChecker:
         for line in report.split("\n"):
             if 'Severity:' in line:
 # temp fix to ignore specific CVE until AWS have fixed their image
-                if 'Repository' in line and line['Respository'] == 'use_an_lpa/stats_upload_lambda' 
-                and 'CVE' in line and line['CVE'] == 'CVE-2025-22871 - go/stdlib' :
-                        print("Ignoring known CVE in AWs image until new image is released")
+                if 'use_an_lpa/stats_upload_lambda' in line and 'CVE-2025-22871' in line :
+                    print("Ignoring known CVE in AWs image until new image is released")
                 else:
                     severity_lines.append(line)
 
