@@ -196,7 +196,7 @@ class ECRScanChecker:
         for severity, count in severity_dict.items():
             print(f"{severity}: {count}")
 
-        cutoff_date = date(2025, 05, 23)
+        cutoff_date = date(2025, 5, 23)
         today = date.today()
 
 # temp fix : if we're after the cutoff date, fail on any errors as before
