@@ -205,12 +205,12 @@ class ECRScanChecker:
                 print("Failing the build. Please fix security vulnerabilities")
                 exit(1)
         else:
-# if we're before the cutoff date, fail if there's more than 1 error
+# otherwise fail if there's more than 1 error
             if severity_dict["CRITICAL"] > 1:
                 print("Failing the build. Please fix security vulnerabilities")
                 exit(1)
 
-# temp fix to ignore specific CVE until AWS have fixed their image 
+# ignore specific CVE until AWS have fixed their image 
             if severity_dict["CRITICAL"] == 1:
                 if 'stats_upload_lambda' in report and 'CVE-2025-22871' in report :
                     print("Ignoring known CVE in AWS image until new image is released")
