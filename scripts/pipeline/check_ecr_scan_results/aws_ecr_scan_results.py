@@ -196,9 +196,27 @@ class ECRScanChecker:
         for severity, count in severity_dict.items():
             print(f"{severity}: {count}")
 
-        if severity_dict["CRITICAL"] > 0:
-            print("Failing the build. Please fix security vulnerabilities")
-            exit(1)
+        cutoff_date = date(2025, 5, 23)
+        today = date.today()
+
+# temp fix : if we're after the cutoff date, fail on any errors as before
+        if today > cutoff_date:
+            if severity_dict["CRITICAL"] > 0:
+                print("Failing the build. Please fix security vulnerabilities")
+                exit(1)
+        else:
+# otherwise fail if there's more than 1 error
+            if severity_dict["CRITICAL"] > 1:
+                print("Failing the build. Please fix security vulnerabilities")
+                exit(1)
+
+# ignore specific CVE until AWS have fixed their image 
+            if severity_dict["CRITICAL"] == 1:
+                if 'stats_upload_lambda' in report and 'CVE-2025-22871' in report :
+                    print("Ignoring known CVE in AWS image until new image is released")
+                else:
+                    print("Failing the build. Please fix security vulnerabilities")
+                    exit(1)
 
 
 def main():
