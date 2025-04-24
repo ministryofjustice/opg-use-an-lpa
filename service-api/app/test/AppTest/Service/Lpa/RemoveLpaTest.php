@@ -118,6 +118,11 @@ class RemoveLpaTest extends TestCase
             new DateTime()
         );
 
+        $this->lpaStoreResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
         $this->old_lpa_response = [
             'donor' => [
                 'uId'           => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
@@ -138,11 +143,11 @@ class RemoveLpaTest extends TestCase
 
         $this->new_lpa_store_format_response = [
             'donor' => [
-                'uId'           => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
-                'firstname'     => 'Feeg',
-                'surname'       => 'Bundlaaaa',
+                'uId'           => $this->loadTestLpaStoreLpaFixture()->getDonor()->getUid(),//'eda719db-8880-4dda-8c5d-bb9ea12c236f',
+                'firstname'     => $this->loadTestLpaStoreLpaFixture()->getDonor()->getFirstnames(),
+                'surname'       => $this->loadTestLpaStoreLpaFixture()->getDonor()->getSurname(),
             ],
-            'caseSubtype' => 'hw',
+            'caseSubtype' => $this->loadTestLpaStoreLpaFixture()->getCaseSubType(),
         ];
     }
 
@@ -389,13 +394,8 @@ class RemoveLpaTest extends TestCase
     }
 
     #[Test]
-    public function it_can_remove_new_LPA_store_format_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
+    public function it_can_remove_new_lpa_store_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
-        $lpaStoreResponse = new Lpa(
-            $this->loadTestLpaStoreLpaFixture(),
-            new DateTimeImmutable('now'),
-        );
-
         $userActorLpa = [
             'LpaUid' => 'M-789Q-P4DF-4UX3',
             'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
@@ -415,7 +415,7 @@ class RemoveLpaTest extends TestCase
 
         $this->lpaManagerProphecy
             ->getByUid($userActorLpa['LpaUid'], $userActorLpa['UserId'])
-            ->willReturn($lpaStoreResponse);
+            ->willReturn($this->lpaStoreResponse);
 
         $this->userLpaActorMapInterfaceProphecy
             ->delete($this->actorLpaToken)
