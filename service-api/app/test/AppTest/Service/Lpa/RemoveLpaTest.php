@@ -122,9 +122,6 @@ class RemoveLpaTest extends TestCase
             'donor' => [
                 'uId'           => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
                 'firstname'     => $this->getLpaDataFixtureOld()->getDonor()->getFirstnames(),
-                'middlenames'   => isset(
-                    $this->getLpaDataFixtureOld()->getDonor()['middlenames']
-                ) ? $this->getLpaDataFixtureOld()->getDonor()->getMiddleNames() : '',
                 'surname'       => $this->getLpaDataFixtureOld()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->getLpaDataFixtureOld()->getCaseSubType(),
