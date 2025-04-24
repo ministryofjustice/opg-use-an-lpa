@@ -46,29 +46,29 @@ jobs:
 
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@73bfe6f3ea05ffbc3dd278fe29c113ec1e7dcefc # v3.1.1
+        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@9a39e099657fda2d7389e1fab3c333ad3c704212 # v3.1.3
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0  # 46.0.3
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c  # 46.0.5
         with:
           files: |
             service-admin/**
       - name: get changed files in the event-receiver folder
         id: changed-files-event
-        uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0  # 46.0.3
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c  # 46.0.5
         with:
           files: |
             lambda-functions/event-receiver/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0  # 46.0.3
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c  # 46.0.5
         with:
           files: |
             terraform/**
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@823fcebdb31bb35fdf2229d9f769b400309430d0  # 46.0.3
+        uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c  # 46.0.5
         with:
           files: |
             **/*.md
