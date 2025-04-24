@@ -9,11 +9,13 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Entity\LpaStore\LpaStore as LpaStore;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
+use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
@@ -132,12 +134,18 @@ class RemoveLpaTest extends TestCase
             'donor' => [
                 'uId'           => $this->getLpaDataFixtureNew()->getDonor()->getUid(),
                 'firstname'     => $this->getLpaDataFixtureNew()->getDonor()->getFirstnames(),
-                'middlenames'   => isset(
-                    $this->getLpaDataFixtureNew()->getDonor()->getMiddleNames()->value
-                ) ? $this->getLpaDataFixtureNew()->getDonor()->getMiddleNames() : '',
                 'surname'       => $this->getLpaDataFixtureNew()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->getLpaDataFixtureNew()->getCaseSubType(),
+        ];
+
+        $this->new_lpa_store_format_response = [
+            'donor' => [
+                'uId'           => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
+                'firstname'     => 'Feeg',
+                'surname'       => 'Bundlaaaa',
+            ],
+            'caseSubtype' => 'hw',
         ];
     }
 
@@ -199,6 +207,7 @@ class RemoveLpaTest extends TestCase
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result, $this->new_lpa_response);
+        $this->assertEquals($result['caseSubtype'], $this->combinedLpaRemovedData->getData()->getCaseSubType());
     }
 
     #[Test]
@@ -317,6 +326,8 @@ class RemoveLpaTest extends TestCase
 
         $this->assertNotEmpty($result);
         $this->assertEquals($result, $this->new_lpa_response);
+
+        $this->assertEquals($result['caseSubtype'], $this->combinedLpaRemovedData->getData()->getCaseSubType());
     }
 
     #[Test]
@@ -378,6 +389,55 @@ class RemoveLpaTest extends TestCase
         $this->expectExceptionMessage('Incorrect LPA data deleted from users account');
 
         ($this->deleteLpa())($this->userId, $this->actorLpaToken);
+    }
+
+    #[Test]
+    public function it_can_remove_new_LPA_store_format_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
+    {
+        $lpaStoreResponse = new Lpa(
+            $this->loadTestLpaStoreLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $userActorLpa = [
+            'LpaUid' => 'M-789Q-P4DF-4UX3',
+            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'        => $this->actorLpaToken,
+            'ActorId'   => '1',
+            'UserId'    => $this->userId,
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->get($this->actorLpaToken)
+            ->willReturn($userActorLpa)
+            ->shouldBeCalled();
+
+        $this->viewerCodesInterfaceProphecy
+            ->getCodesByLpaId($userActorLpa['LpaUid'])
+            ->willReturn([]);
+
+        $this->lpaManagerProphecy
+            ->getByUid($userActorLpa['LpaUid'], $userActorLpa['UserId'])
+            ->willReturn($lpaStoreResponse);
+
+        $this->userLpaActorMapInterfaceProphecy
+            ->delete($this->actorLpaToken)
+            ->willReturn($this->deletedData);
+
+        $result = ($this->deleteLpa())($this->userId, $this->actorLpaToken);
+
+        $this->assertNotEmpty($result);
+        $this->assertEquals($result, $this->new_lpa_store_format_response);
+       // $this->assertEquals($result['caseSubtype'], $this->combinedLpaRemovedData->getData()->getCaseSubType());
+    }
+
+    private function loadTestLpaStoreLpaFixture(array $overwrite = []): LpaStore
+    {
+        $lpaData = json_decode(file_get_contents(__DIR__ . '/../../../fixtures/4UX3.json'), true);
+        $lpaData = array_merge($lpaData, $overwrite);
+
+        /** @var LpaStore */
+        return (new LpaDataFormatter())->hydrateObject($lpaData);
     }
 
     private function deleteLpa(): RemoveLpa
