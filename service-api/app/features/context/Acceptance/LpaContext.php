@@ -2359,7 +2359,6 @@ class LpaContext implements Context
                 'donor' => [
                     'uId' => '700000000053',
                     'firstname' => 'Ian',
-                    'middlenames' => 'Deputy',
                     'surname' => 'Deputy',
                 ],
                 'caseSubtype' => 'hw'
