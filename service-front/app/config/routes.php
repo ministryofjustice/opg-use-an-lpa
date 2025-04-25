@@ -36,8 +36,8 @@ use Psr\Container\ContainerInterface;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
-    $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
+    $app->route('/home', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home-trial');
     $app->route('/check-code', Viewer\Handler\CheckCodeHandler::class, ['GET', 'POST'], 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
