@@ -62,7 +62,7 @@ services:
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       SUPPORT_DATASTORE_LPAS: "false"
-      PAPER_VERFICATION: "false"
+      PAPER_VERFICATION: "true"
     depends_on:
       - api-web
 
