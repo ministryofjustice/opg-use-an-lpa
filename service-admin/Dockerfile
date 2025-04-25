@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci && npm run build
 
 # Build Go app
-FROM golang:1.23.7-alpine as build-env
+FROM golang:1.23.8-alpine as build-env
 
 RUN apk --no-cache add \
   build-base=0.5-r3 \
