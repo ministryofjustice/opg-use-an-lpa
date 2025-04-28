@@ -36,7 +36,7 @@ return [
     ],
     'feature_flags'                          => [
         'delete_lpa_feature'     => true,
-        'support_datastore_lpas' => false,
+        'support_datastore_lpas' => true,
         'paper_verification'     => false,
     ],
     'notify'                                 => [
