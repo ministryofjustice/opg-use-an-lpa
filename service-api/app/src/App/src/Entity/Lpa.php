@@ -54,7 +54,6 @@ class Lpa implements
         /** @var Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
         public readonly ?string $restrictionsAndConditions,
-        public readonly ?array $restrictionsAndConditionsImages,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */

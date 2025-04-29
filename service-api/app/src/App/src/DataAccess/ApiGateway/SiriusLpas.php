@@ -75,8 +75,7 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         $requests = array_combine(
             $uids,  // Use as array key
             array_map(function ($v) use ($signer) {
-                $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s?presign-images', $v);
-                //$url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
+                $url     = $this->apiBaseUri . sprintf('/v1/use-an-lpa/lpas/%s', $v);
                 $request = $this->requestFactory->createRequest('GET', $url);
                 $request = $this->attachHeaders($request);
 

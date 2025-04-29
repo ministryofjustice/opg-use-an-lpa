@@ -29,7 +29,6 @@ class Lpa
     protected ?string $onlineLpaId                             = null;
     protected ?string $attorneyActDecisions                    = null;
     protected ?string $restrictionsAndConditions               = null;
-    protected ?array $restrictionsAndConditionsImages         = null;
     protected ?CaseActor $donor                                = null;
 
     /** @var CaseActor[] */

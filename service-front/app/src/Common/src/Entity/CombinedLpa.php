@@ -11,7 +11,6 @@ use Common\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
-use Common\Enum\Channel;
 use Common\Service\Lpa\ServiceInterfaces\GroupLpasInterface;
 use Common\Service\Lpa\ServiceInterfaces\ProcessLpasInterface;
 use Common\Service\Lpa\ServiceInterfaces\SortLpasInterface;
@@ -49,7 +48,6 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface, ProcessLpasI
         #[CastListToType(Person::class)]
         public readonly ?array $replacementAttorneys,
         public readonly ?string $restrictionsAndConditions,
-        public readonly ?array $restrictionsAndConditionsImages,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
         /** @var Person[] $trustCorporations */
@@ -150,10 +148,5 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface, ProcessLpasI
     public function getLpaType(): LpaType
     {
         return LpaType::from($this->getCaseSubtype());
-    }
-
-    public function getChannel(): Channel
-    {
-        return Channel::from($this->channel);
     }
 }
