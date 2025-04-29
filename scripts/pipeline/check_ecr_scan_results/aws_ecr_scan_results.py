@@ -212,7 +212,7 @@ class ECRScanChecker:
 
 # ignore specific CVE until AWS have fixed their image 
             if severity_dict["CRITICAL"] == 1:
-                if 'stats_upload_lambda' in report and 'CVE-2025-22871' in report :
+                if 'CVE-2025-22871' in report :
                     print("Ignoring known CVE in AWS image until new image is released")
                 else:
                     print("Failing the build. Please fix security vulnerabilities")
