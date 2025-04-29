@@ -77,9 +77,21 @@
     {% if not is_sirius_lpa(lpa.Uid) and lpa.restrictionsAndConditions is not empty %}
         <div class="govuk-grid-row restrictions-and-conditions-banner" aria-labelledby="restrictions-and-conditions-label">
             <div class="govuk-grid-column-full column-full-alt-1">
+        {{ dump(lpa) }}
+            {% if is_online_channel(lpa) %}
                 <p class="govuk-body body-alt-1">
                     {{ lpa.restrictionsAndConditions}}
                 </p>
+            {% else %}
+                {% if lpa.restrictionsAndConditionsImages is not empty %}
+                    {% for image in lpa.restrictionsAndConditionsImages %}
+                        {% if image.path is not empty %}
+                            <img class="opg-ip__image" src="{{ image.path }}"
+                                 alt="{% trans %}A scanned copy of the donor’s restrictions and/or instructions - the text cannot be digitised at present{% endtrans %}">
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
             </div>
         </div>
     {% endif %}

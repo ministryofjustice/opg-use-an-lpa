@@ -93,7 +93,15 @@
     signedAt: "2024-01-10T23:00:00Z",
     howAttorneysMakeDecisions: "jointly",
     whenTheLpaCanBeUsed: "when-capacity-lost",
-    restrictionsAndConditions: "my restrictions and conditions",
+    restrictionsAndConditions: "my restrictions and conditions.",
+    restrictionsAndConditionsImages: [
+      {
+        path: "https://assets.publishing.service.gov.uk/media/5a60cb4f40f0b652634c77dd/Lasting_power_of_attorney_form_-_section_1.jpg"
+      },
+      {
+        path: "https://www.fairstep.co.uk/portal/web/839/content/images/LPA.jpg"
+      }
+    ],
   };
 
   // src/lpas/lpas.mjs

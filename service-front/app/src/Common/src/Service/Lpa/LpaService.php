@@ -68,8 +68,8 @@ class LpaService
     public function getLpaById(string $userToken, string $actorLpaToken): ?ArrayObject
     {
         $this->apiClient->setUserTokenHeader($userToken);
-
-        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
+        $url = '/v1/lpas/' . $actorLpaToken . '?presign-images';
+        $lpaData = $this->apiClient->httpGet($url);
 
         $lpaData = ($this->parseLpaData)($lpaData);
 
