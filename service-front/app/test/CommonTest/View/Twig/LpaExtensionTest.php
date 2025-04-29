@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommonTest\View\Twig;
 
 use Common\Entity\Person;
+use Common\Enum\Channel;
 use Common\Service\Lpa\Factory\LpaDataFormatter;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
@@ -47,6 +48,7 @@ class LpaExtensionTest extends TestCase
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
             'is_sirius_lpa'                   => 'isSiriusLpa',
+            'is_online_channel'               => 'isOnlineChannel',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -556,5 +558,17 @@ class LpaExtensionTest extends TestCase
         $isSiriusLpa = $extension->isSiriusLpa($combinedLpa->getUId());
 
         $this->assertEquals(true, $isSiriusLpa);
+    }
+
+    #[Test]
+    public function it_checks_if_an_LPA_is_online_channel_lpa_store(): void
+    {
+        $extension   = new LpaExtension();
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/4UX3.json'), true);
+        $combinedLpa = ($this->lpaDataFormatter)($lpa);
+
+        $isOnlineChannel = $extension->isOnlineChannel($combinedLpa);
+
+        $this->assertEquals(true, $isOnlineChannel);
     }
 }
