@@ -59,8 +59,30 @@
         <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
     </div>
 
+    {% if not is_sirius_lpa(lpa.Uid) %}
+        {% if lpa.restrictionsAndConditions is not empty %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key"
+                    id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                <dd class="govuk-summary-list__value">{% trans %}Yes, the donor added restrictions and conditions to their LPA{% endtrans %}</dd>
+            </div>
+        {% else %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                <dd class="govuk-summary-list__value">{% trans %}No, the donor did not add restrictions and conditions to their LPA{% endtrans %}</dd>
+            </div>
+        {% endif %}
+    {% endif %}
     </dl>
-
+    {% if not is_sirius_lpa(lpa.Uid) and lpa.restrictionsAndConditions is not empty %}
+        <div class="govuk-grid-row restrictions-and-conditions-banner" aria-labelledby="restrictions-and-conditions-label">
+            <div class="govuk-grid-column-full column-full-alt-1">
+                <p class="govuk-body body-alt-1">
+                    {{ lpa.restrictionsAndConditions}}
+                </p>
+            </div>
+        </div>
+    {% endif %}
         {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
             {% if lpa.hasSeveranceWarning %}
                 <div class="govuk-warning-text">
@@ -77,6 +99,7 @@
             {% endif %}
         {% endif %}
 
+        {% if is_sirius_lpa(lpa.Uid) %}
         <iap-preferences>
             <dl class="govuk-summary-list govuk-summary-list--no-border">
                 <div class="govuk-summary-list__row">
@@ -156,3 +179,4 @@
                 {% endif %}
             {% endif %}
         </iap-unknown>
+        {% endif %}
