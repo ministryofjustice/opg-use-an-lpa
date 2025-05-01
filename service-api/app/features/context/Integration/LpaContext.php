@@ -994,8 +994,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('date', $lpaData);
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
 
         // Get the share codes
 
@@ -1116,8 +1116,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('date', $lpaData);
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
 
         // Get the share codes
 
@@ -1367,8 +1367,8 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertArrayHasKey('date', $lpaData);
         Assert::assertArrayHasKey('actor', $lpaData);
         Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
 
         // Get the share codes
 
@@ -2132,9 +2132,9 @@ class LpaContext extends BaseIntegrationContext
         if ($status === 'Revoked') {
             Assert::assertEmpty($lpaData);
         } else {
-            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-            Assert::assertEquals($this->lpa->id, $lpaData['lpa']['id']);
-            Assert::assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+            Assert::assertEquals($this->lpa->id, $lpaData['lpa']->id);
+            Assert::assertEquals($this->lpa->status, $lpaData['lpa']->getStatus());
         }
     }
 
