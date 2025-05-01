@@ -16,10 +16,12 @@ use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class DataStoreLpasFactoryTest extends TestCase
 {
@@ -74,6 +76,10 @@ class DataStoreLpasFactoryTest extends TestCase
 
         $containerProphecy->get(DataSanitiserStrategy::class)->willReturn(
             $this->prophesize(DataSanitiserStrategy::class)->reveal()
+        );
+
+        $containerProphecy->get(LoggerInterface::class)->willReturn(
+            $this->prophesize(LoggerInterface::class)->reveal()
         );
 
         $factory = new DataStoreLpasFactory();

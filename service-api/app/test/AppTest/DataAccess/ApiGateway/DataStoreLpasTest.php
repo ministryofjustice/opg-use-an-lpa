@@ -26,6 +26,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class DataStoreLpasTest extends TestCase
@@ -37,12 +38,14 @@ class DataStoreLpasTest extends TestCase
     private RequestSigner|ObjectProphecy $requestSignerProphecy;
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
     private LpaDataFormatter|ObjectProphecy $lpaDataFormatterProphecy;
+    private LoggerInterface|ObjectProphecy $loggerInterface;
 
     protected function setUp(): void
     {
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerProphecy        = $this->prophesize(RequestSigner::class);
         $this->lpaDataFormatterProphecy     = $this->prophesize(LpaDataFormatter::class);
+        $this->loggerInterface              = $this->prophesize(LoggerInterface::class);
     }
 
     #[Test]
@@ -63,6 +66,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $this->requestFactoryProphecy
@@ -103,6 +107,7 @@ class DataStoreLpasTest extends TestCase
                 $this->lpaDataFormatterProphecy->reveal(),
                 $apiBaseUri,
                 $traceId,
+                $this->loggerInterface->reveal(),
             );
 
             $moderniseLpas->get($uid);
@@ -158,6 +163,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $this->expectException(ApiException::class);
@@ -210,6 +216,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $shouldBeAnLPA = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
@@ -260,6 +267,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $shouldBeANull = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
@@ -340,6 +348,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $lpas = $moderniseLpas->setOriginatorId($originatorId)->lookup($uids);
@@ -397,6 +406,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $this->expectException(ApiException::class);
@@ -447,6 +457,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $this->expectException(ApiException::class);
@@ -493,6 +504,7 @@ class DataStoreLpasTest extends TestCase
             $this->lpaDataFormatterProphecy->reveal(),
             $apiBaseUri,
             $traceId,
+            $this->loggerInterface->reveal(),
         );
 
         $this->expectException(ApiException::class);

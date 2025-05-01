@@ -11,6 +11,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Log\LoggerInterface;
 
 class DataStoreLpasFactory
 {
@@ -30,6 +31,7 @@ class DataStoreLpasFactory
             $container->get(LpaDataFormatter::class),
             $config['lpa_data_store_api']['endpoint'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
+            $container->get(LoggerInterface::class),
         );
     }
 }
