@@ -16,6 +16,7 @@ use Psr\Http\Client\{ClientExceptionInterface, ClientInterface};
 use Psr\Http\Message\{RequestFactoryInterface, ResponseInterface, StreamFactoryInterface};
 use RuntimeException;
 use Throwable;
+use Psr\Log\LoggerInterface;
 
 class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 {
@@ -29,6 +30,7 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
         private LpaDataFormatter $lpaDataFormatter,
         string $apiBaseUri,
         string $traceId,
+        private readonly LoggerInterface $logger,
     ) {
         parent::__construct(
             $httpClient,
@@ -56,6 +58,13 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 
         try {
             $response = $this->httpClient->sendRequest($request);
+
+            $this->logger->info(
+                'Response from DataStoreLPas M-LPAs  from upstream {lpas}',
+                [
+                    'lpas' => $response->getStatusCode(),
+                ],
+            );
         } catch (ClientExceptionInterface $ce) {
             throw ApiException::create(
                 'Error whilst communicating with LPA data store',

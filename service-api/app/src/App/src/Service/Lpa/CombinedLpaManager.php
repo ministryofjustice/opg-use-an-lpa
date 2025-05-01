@@ -271,6 +271,8 @@ class CombinedLpaManager implements LpaManagerInterface
             'Found M-LPAs  from upstream {lpas}',
             [
                 'lpas' => $dataStoreLpas,
+                'originatorId' => $originatorId,
+                'dataStoreUids' => $dataStoreUids,
             ],
         );
 
