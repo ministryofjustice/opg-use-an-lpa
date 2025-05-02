@@ -238,7 +238,7 @@ class LpaServiceTest extends TestCase
 
         $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
 
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'])
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'] . '?presign-images')
             ->willReturn($lpaData);
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
