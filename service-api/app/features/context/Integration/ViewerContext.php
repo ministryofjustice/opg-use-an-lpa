@@ -86,7 +86,7 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is a string when doing a full check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, $this->lpaViewedBy);
 
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         Assert::assertEquals($lpaExpiry, $lpaData['expires']);
     }
 
@@ -181,7 +181,7 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
         Assert::assertEquals($lpaExpiry, $lpaData['expires']);
 
         Assert::assertArrayHasKey('iap', $lpaData);
