@@ -2355,6 +2355,14 @@ class LpaContext implements Context
     public function theLPAIsRemoved(): void
     {
         $actorId = 700000000054;
+        $expected_response = [
+                'donor' => [
+                    'uId' => '700000000053',
+                    'firstname' => 'Ian',
+                    'surname' => 'Deputy',
+                ],
+                'caseSubtype' => 'hw'
+        ];
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -2512,7 +2520,9 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         Assert::assertArrayHasKey('lpa', $response);
-        Assert::assertEquals($this->lpa->uId, $response['lpa']['uId']);
+        Assert::assertArrayHasKey('donor', $response['lpa']);
+        Assert::assertArrayHasKey('caseSubtype', $response['lpa']);
+        Assert::assertEquals($response['lpa'], $expected_response);
     }
 
     #[Given('/^I am on the add an older LPA page$/')]

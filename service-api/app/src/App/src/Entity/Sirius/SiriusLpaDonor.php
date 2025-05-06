@@ -12,6 +12,7 @@ use App\Service\ActorCodes\Validation\CodesApiValidationInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
@@ -23,6 +24,7 @@ class SiriusLpaDonor extends Person implements
     ActorMatchingInterface,
     AddAccessForAllActorInterface,
     DonorInformationInterface,
+    LpaRemovedDonorInformationInterface,
     CodesApiValidationInterface,
     LpaAlreadyHasActivationKeyInterface
 {

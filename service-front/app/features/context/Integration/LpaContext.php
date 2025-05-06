@@ -146,11 +146,21 @@ class LpaContext extends BaseIntegrationContext
     #[Then('/^The LPA is removed/')]
     public function theLPAIsRemoved(): void
     {
+        $removedLpaDetails = [
+                'donor' => [
+                    'uId' => $this->lpa['donor']['uId'],
+                    'firstname' => $this->lpa['donor']['firstname'],
+                    'middlenames' => $this->lpa['donor']['middlenames'],
+                    'surname' => $this->lpa['donor']['surname'],
+                ],
+                'caseSubtype' => $this->lpa['caseSubtype'],
+        ];
+
         $this->apiFixtures->reset();
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(['lpa' => $this->lpa]),
+                json_encode(['lpa' => $removedLpaDetails]),
                 self::REMOVE_LPA_INVOKE
             )
         );
@@ -159,7 +169,7 @@ class LpaContext extends BaseIntegrationContext
         $result    = $removeLpa($this->userIdentity, $this->actorLpaToken);
 
         Assert::assertArrayHasKey('lpa', $result);
-        Assert::assertEquals($this->lpa['uId'], $result['lpa']->getUId());
+        Assert::assertEquals($this->lpa['donor']['uId'], $result['lpa']['donor']['uId']);
     }
 
     #[Given('/^My active codes are cancelled$/')]
