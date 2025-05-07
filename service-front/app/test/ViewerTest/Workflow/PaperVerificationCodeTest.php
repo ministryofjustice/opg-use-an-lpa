@@ -10,22 +10,22 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Viewer\Workflow\PaperVerificationCode;
+use Viewer\Workflow\PaperVerificationShareCode;
 
-#[CoversClass(PaperVerificationCode::class)]
+#[CoversClass(PaperVerificationShareCode::class)]
 class PaperVerificationCodeTest extends TestCase
 {
     #[Test]
     #[DoesNotPerformAssertions]
     public function it_can_be_created_empty(): void
     {
-        new PaperVerificationCode();
+        new PaperVerificationShareCode();
     }
 
     #[Test]
     public function it_can_be_created_with_data(): void
     {
-        $sut = new PaperVerificationCode(
+        $sut = new PaperVerificationShareCode(
             lastName:    'Tester',
             code:        'P-ADGH-ZXCV-BNTR-36',
             lpaUid:      'M-794D-TP43-XQ86',
@@ -42,7 +42,7 @@ class PaperVerificationCodeTest extends TestCase
     #[Test]
     public function it_can_be_reset(): void
     {
-        $sut = new PaperVerificationCode(
+        $sut = new PaperVerificationShareCode(
             lastName:    'Tester',
             code:        'P-ADGH-ZXCV-BNTR-36',
             lpaUid:      'M-794D-TP43-XQ86',

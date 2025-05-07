@@ -15,7 +15,8 @@ trait State
     /**
      * @param ServerRequestInterface $request
      * @param class-string<T> $workflowStateClass
-     * @return T
+     * @return WorkflowState
+     * @psalm-return T
      * @throws StateNotInitialisedException
      */
     public function loadState(ServerRequestInterface $request, string $workflowStateClass): WorkflowState
