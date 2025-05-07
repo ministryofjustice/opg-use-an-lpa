@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Actor\Workflow\Traits;
+namespace Common\Workflow\Traits;
 
 use DateTimeImmutable;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Workflow;
 
-use Actor\Workflow\Traits\JsonSerializable;
+use Common\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use RuntimeException;
