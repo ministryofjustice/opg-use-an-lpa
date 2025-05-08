@@ -2131,10 +2131,12 @@ class LpaContext extends BaseIntegrationContext
 
         if ($status === 'Revoked') {
             Assert::assertEmpty($lpaData);
-        } else {
+        } elseif ($lpaData['lpa'] instanceof SiriusLpa) {
             Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-            Assert::assertEquals($this->lpa->id, $lpaData['lpa']['id']);
             Assert::assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        } else {
+            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->uId);
+            Assert::assertEquals($this->lpa->status, $lpaData['lpa']->status);
         }
     }
 
@@ -2227,6 +2229,15 @@ class LpaContext extends BaseIntegrationContext
     public function theLPAIsRemoved(): void
     {
         $actorLpaId = 700000000054;
+
+        $expected_response = [
+            'donor'       => [
+                'uId'           => '700000000053',
+                'firstname'     => 'Ian',
+                'surname'       => 'Deputy',
+            ],
+            'caseSubtype' => 'hw'
+        ];
 
         // UserLpaActorMap::get
         $this->awsFixtures->append(
@@ -2373,7 +2384,7 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaRemoved = ($this->deleteLpa)($this->userId, $this->userLpaActorToken);
 
-        Assert::assertEquals($this->lpa->uId, $lpaRemoved['uId']);
+        Assert::assertEquals($lpaRemoved, $expected_response);
     }
 
     #[Given('/^The LPA is successfully added$/')]

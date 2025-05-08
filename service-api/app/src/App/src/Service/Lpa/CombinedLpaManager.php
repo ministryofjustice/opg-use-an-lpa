@@ -267,6 +267,15 @@ class CombinedLpaManager implements LpaManagerInterface
             ? $this->dataStoreLpas->setOriginatorId($originatorId)->lookup($dataStoreUids)
             : [];
 
+        $this->logger->info(
+            'Found M-LPAs  from upstream {lpas}',
+            [
+                'lpas' => $dataStoreLpas,
+                'originatorId' => $originatorId,
+                'dataStoreUids' => $dataStoreUids,
+            ],
+        );
+
         $keyedDataStoreLpas = [];
         array_walk($dataStoreLpas, function (LpaInterface $item) use (&$keyedDataStoreLpas) {
             $keyedDataStoreLpas[$item->getData()->getUid()] = $item;

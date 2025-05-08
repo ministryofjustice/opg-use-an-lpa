@@ -118,7 +118,7 @@ class ViewerCodes implements ViewerCodesInterface
         return true;
     }
 
-    public function removeActorAssociation(string $code, int $codeOwner): bool
+    public function removeActorAssociation(string $code, string $codeOwner): bool
     {
         // Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
@@ -134,7 +134,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'S' => '',
                 ],
                 ':d' => [
-                    'N' => (string)$codeOwner,
+                    'S' => (string)$codeOwner,
                 ],
             ],
         ]);

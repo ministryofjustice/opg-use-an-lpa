@@ -61,7 +61,7 @@ services:
       XDEBUG_MODE: develop,debug,coverage # off # xdebug can be disable by replacing modes with "off"
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
-      SUPPORT_DATASTORE_LPAS: "false"
+      SUPPORT_DATASTORE_LPAS: "true"
       PAPER_VERFICATION: "false"
     depends_on:
       - api-web
