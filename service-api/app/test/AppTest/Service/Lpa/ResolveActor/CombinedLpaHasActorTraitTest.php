@@ -251,6 +251,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
             signedAt:                  new DateTimeImmutable('2019-10-10'),
             registrationDate:          new DateTimeImmutable('2019-10-10'),
             restrictionsAndConditions: null,
+            restrictionsAndConditionsImages: [],
             status:                    'Registered',
             trustCorporations:         [
                 new LpaStoreTrustCorporation(

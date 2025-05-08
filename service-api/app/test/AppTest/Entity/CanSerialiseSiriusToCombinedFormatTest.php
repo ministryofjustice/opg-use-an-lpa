@@ -94,6 +94,7 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
             'rejectedDate'               => null,
             'replacementAttorneys'       => [],
             'restrictionsAndConditions'  => null,
+            'restrictionsAndConditionsImages' =>null,
             'status'                     => 'Registered',
             'statusDate'                 => null,
             'trustCorporations'          => [
