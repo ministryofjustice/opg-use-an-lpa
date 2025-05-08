@@ -258,6 +258,26 @@ services:
     ports:
       - 9007:8080
 
+  # ---------------------------
+  # Lambda to upload monthly reports to Analytical platform
+
+  upload-monthly-reports-lambda:
+    container_name: upload-monthly-reports
+    build:
+      context: ./lambda-functions/upload-monthly-reports
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: local
+      REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+    volumes:
+      - ./lambda-functions/upload-monthly-reports/app:/function/app
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
+    ports:
+      - 9008:8080
+
   proxy:
     container_name: proxy
     image: traefik:3.0
