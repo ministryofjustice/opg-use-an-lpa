@@ -16,6 +16,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\ShareCode;
+use Common\Service\Features\FeatureEnabled;
 
 /**
  * @codeCoverageIgnore
@@ -28,6 +29,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper);
@@ -48,7 +50,11 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
                 $session->set('code', $lpaCode);
                 $session->set('surname', $form->getData()['donor_surname']);
 
-                return $this->redirectToRoute('check-code');
+                $template = ($this->featureEnabled)('paper_verification')
+                    ? 'paper-verification-code-sent-to'
+                    : 'check-code';
+
+                return $this->redirectToRoute($template);
             }
         }
 
