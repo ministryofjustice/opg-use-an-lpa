@@ -238,7 +238,7 @@ class LpaServiceTest extends TestCase
 
         $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
 
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'] . '?presign-images')
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'] . '?presign-images=1')
             ->willReturn($lpaData);
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
@@ -256,7 +256,7 @@ class LpaServiceTest extends TestCase
         $token = '01234567-01234-01234-01234-012345678901';
         $lpaId = '98765432-01234-01234-01234-012345678901';
 
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId . '?presign-images')
+        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId . '?presign-images=1')
             ->willThrow(new ApiException('Error whilst making http GET request', 404));
 
         $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
