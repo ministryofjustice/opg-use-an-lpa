@@ -88,6 +88,7 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
             rejectedDate:               $rejectedDate,
             replacementAttorneys:       $replacementAttorneys,
             restrictionsAndConditions:  null,
+            restrictionsAndConditionsImages:null,
             status:                     $status,
             statusDate:                 $statusDate,
             trustCorporations:          $trustCorporations,

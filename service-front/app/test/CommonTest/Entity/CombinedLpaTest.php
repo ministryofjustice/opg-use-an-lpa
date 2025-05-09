@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Entity;
 
+use Common\Enum\Channel;
 use Common\Enum\HowAttorneysMakeDecisions;
 use Common\Enum\LifeSustainingTreatment;
 use Common\Enum\LpaType;
@@ -77,5 +78,6 @@ class CombinedLpaTest extends TestCase
         $this->assertEquals(WhenTheLpaCanBeUsed::WHEN_HAS_CAPACITY, $combinedLpa->getWhenTheLpaCanBeUsed());
         $this->assertEquals($attorneys, $combinedLpa->getAttorneys());
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $combinedLpa->getLpaType());
+        $this->assertEquals(Channel::ONLINE, $combinedLpa->getChannel());
     }
 }

@@ -69,7 +69,7 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken . '?presign-images=1');
 
         $lpaData = ($this->parseLpaData)($lpaData);
 
