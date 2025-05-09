@@ -62,7 +62,7 @@ services:
       SESSION_EXPIRES: 30 # session expiry length to support timeout message.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       SUPPORT_DATASTORE_LPAS: "false"
-      PAPER_VERFICATION: "false"
+      PAPER_VERIFICATION: "true"
     depends_on:
       - api-web
 
@@ -102,7 +102,7 @@ services:
       # Feature flags
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
-      SUPPORT_DATASTORE_LPAS: "true"
+      SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only
       API_SERVICE_URL:
@@ -186,7 +186,7 @@ services:
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
-      SUPPORT_DATASTORE_LPAS: "true"
+      SUPPORT_DATASTORE_LPAS: "false"
 
       # Local only
       AWS_ACCESS_KEY_ID: "devkey"
