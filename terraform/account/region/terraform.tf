@@ -9,7 +9,7 @@ terraform {
         aws.management,
         aws.shared,
       ]
-      version = "~> 5.94.0"
+      version = "~> 5.97.0"
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
