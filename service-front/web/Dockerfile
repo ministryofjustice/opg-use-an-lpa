@@ -1,4 +1,4 @@
-FROM node:22.14-alpine
+FROM node:22.15-alpine
 
 RUN apk add --no-cache \
   chromium \
