@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
-use Common\Filter\ActorViewerCodeFilter;
 use Common\Form\AbstractForm;
 use Common\Validator\NotEmptyConditional;
 use Laminas\Filter\StringToUpper;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Regex;
-use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 class VerificationCode extends AbstractForm implements InputFilterProviderInterface
@@ -43,8 +40,8 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                  'type'    => 'Radio',
                  'options' => [
                      'value_options' => [
-                         'Yes' => 'Yes',
-                         'No'  => 'No',
+                         'Attorney' => 'Attorney',
+                         'Donor'  => 'Donor',
                      ],
                  ],
             ]
@@ -62,6 +59,7 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                 'validators' => [
                     [
                         'name'                   => NotEmpty::class,
+                        'break_chain_on_failure' => true,
                         'options'                => [
                             'message' => [
                                 NotEmpty::IS_EMPTY => 'Select who the paper verification code was sent to',
@@ -81,7 +79,7 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                         'options' => [
                             'message'         => 'Enter attorney name',
                             'dependant'       => 'verification_code_receiver',
-                            'dependant_value' => 'Yes',
+                            'dependant_value' => 'Donor',
                         ],
                     ],
                 ],
