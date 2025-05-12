@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Viewer\Workflow\PaperVerificationShareCode;
 
-#[CoversClass(PaperVerificationCode::class)]
+#[CoversClass(PaperVerificationShareCode::class)]
 class PaperVerificationCodeTest extends TestCase
 {
     #[Test]
