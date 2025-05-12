@@ -11,7 +11,7 @@ COPY internal/ ./internal
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/main ./
 
-FROM public.ecr.aws/lambda/provided:al2023.2025.04.03.11 AS production
+FROM public.ecr.aws/lambda/provided:al2023.2025.05.04.04@sha256:fed9eb1f995d9c1f714794e3c2223fd5a97990022eedbab6f6f0d711ba888ac6 AS production
 
 WORKDIR /var/task
 
