@@ -93,4 +93,9 @@ class LpaStore extends Lpa
 
         return $this->donor;
     }
+
+    public function getCaseSubType(): string
+    {
+        return $this->caseSubtype->value;
+    }
 }
