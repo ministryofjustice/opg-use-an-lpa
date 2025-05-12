@@ -1,14 +1,18 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
+FROM composer:2.8.8@sha256:1e30756b14356f49b84a9086c0bbba05ab10f76df3f73fb536582b71fb1b1078 AS composer
+
+FROM mlocati/php-extension-installer:2.7.28@sha256:61ec62196646d4299a959ebdf0f6753f71a7e9db0eebafe1e4f3bf0f323f50be AS php-extension-installer
+
 FROM php:8.1.29-fpm-alpine3.20 AS php-base
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
 RUN set -xe \
-  && apk add --update --no-cache fcgi \
+  && apk add --update --no-cache fcgi=2.4.2-r4 \
   && install-php-extensions apcu gmp opcache \
   && rm /usr/bin/install-php-extensions
 
@@ -26,8 +30,8 @@ FROM php-base AS dependency
 COPY --from=composer /usr/bin/composer /usr/bin/
 COPY service-api/app/composer.json service-api/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader
-RUN composer check-platform-reqs
+RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader && \
+    composer check-platform-reqs
 
 #
 # Create production image using base and app files
@@ -41,7 +45,7 @@ COPY --from=dependency /app/vendor /app/vendor
 # Install development dependencies and tools into production image
 #
 FROM app AS development
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/
 
 COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/app-php.ini
