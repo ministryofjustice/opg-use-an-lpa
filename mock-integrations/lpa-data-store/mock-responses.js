@@ -6,7 +6,7 @@
     registrationDate: "2024-01-12",
     updatedAt: "2024-01-12T23:00:00Z",
     lpaType: "personal-welfare",
-    channel: "online",
+    channel: "paper",
     donor: {
       uid: "eda719db-8880-4dda-8c5d-bb9ea12c236f",
       firstNames: "Feeg",

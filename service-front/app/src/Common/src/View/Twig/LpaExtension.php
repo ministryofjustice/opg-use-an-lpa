@@ -8,6 +8,7 @@ use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
 use Common\Entity\CombinedLpa;
+use Common\Enum\Channel;
 use DateTime;
 use DateTimeInterface;
 use Exception;
@@ -239,6 +240,6 @@ class LpaExtension extends AbstractExtension
 
     public function isOnlineChannel(Lpa|CombinedLpa $lpa): bool
     {
-        return $lpa->getChannel()->isOnlineChannel();
+        return $lpa->getChannel() === Channel::ONLINE;
     }
 }

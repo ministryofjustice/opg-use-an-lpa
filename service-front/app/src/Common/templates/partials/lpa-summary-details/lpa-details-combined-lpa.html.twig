@@ -60,7 +60,7 @@
     </div>
 
     {% if not is_sirius_lpa(lpa.Uid) %}
-        {% if lpa.restrictionsAndConditions or lpa.restrictionsAndConditionsImages is not empty %}
+        {% if (lpa.restrictionsAndConditions and is_online_channel(lpa)) or (lpa.restrictionsAndConditionsImages is not empty and not is_online_channel(lpa)) %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key"
                     id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
