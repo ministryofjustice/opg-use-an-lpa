@@ -230,9 +230,9 @@
 
 {%- block input_hint -%}
     {% if hint is defined %}
-        <span id="{{ element.getName() }}-hint" class="govuk-hint">
+        <div id="{{ element.getName() }}-hint" class="govuk-hint">
             {{ hint | raw }}
-        </span>
+        </div>
     {% endif %}
 {%- endblock input_hint -%}
 
