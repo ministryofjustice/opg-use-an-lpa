@@ -22,6 +22,8 @@ use Viewer\Workflow\PaperVerificationShareCode;
  * A base for our workflow for both Share Code and Paper Verification codes
  *
  * Abstract Paper Verification Share Code Handler
+ *
+ * @codeCoverageIgnore
  */
 abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
