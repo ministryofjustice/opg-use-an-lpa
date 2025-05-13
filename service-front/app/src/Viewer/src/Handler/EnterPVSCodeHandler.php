@@ -21,14 +21,6 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
 {
     private ShareCode $form;
 
-    /**
-     * @var array{
-     *   "view/en"?: string,
-     *   "view/cy"?: string
-     * }
-     */
-    private array $systemMessages;
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
@@ -40,8 +32,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new ShareCode($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new ShareCode($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -51,14 +42,15 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         // reset the state on a new visit.
         $this->state($request)->reset();
 
-        $template = ($this->featureEnabled)('paper_verification')
+        $template       = ($this->featureEnabled)('paper_verification')
             ? 'viewer::enter-code-pv'
             : 'viewer::enter-code';
+        $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render($template, [
             'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'en_message' => $systemMessages['view/en'] ?? null,
+            'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -78,14 +70,15 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        $template = ($this->featureEnabled)('paper_verification')
+        $template       = ($this->featureEnabled)('paper_verification')
             ? 'viewer::enter-code-pv'
             : 'viewer::enter-code';
+        $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render($template, [
             'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'en_message' => $systemMessages['view/en'] ?? null,
+            'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
     }
 
