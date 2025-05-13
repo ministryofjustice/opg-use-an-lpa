@@ -34,6 +34,7 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use Session;
+    /** @use State<PaperVerificationShareCode> */
     use State;
 
     protected ?SessionInterface $session;
