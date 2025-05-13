@@ -12,7 +12,7 @@ require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/mux v1.8.1
-	github.com/ministryofjustice/opg-go-common v1.87.0
+	github.com/ministryofjustice/opg-go-common v1.91.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
 	github.com/sethvargo/go-retry v0.3.0
