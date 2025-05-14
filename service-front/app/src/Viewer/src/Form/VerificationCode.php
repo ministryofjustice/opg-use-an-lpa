@@ -77,8 +77,8 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                     [
                         'name'    => NotEmptyConditional::class,
                         'options' => [
-                            'message' => 'Enter attorney name',
-                            'dependant' => 'verification_code_receiver',
+                            'message'         => 'Enter attorney name',
+                            'dependant'       => 'verification_code_receiver',
                             'dependant_value' => 'Donor',
                         ],
                     ],
