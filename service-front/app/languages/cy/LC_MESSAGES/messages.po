@@ -7047,6 +7047,22 @@ msgstr ""
 "Efallai fod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi. Gofynnwch "
 "iddyn nhw wneud yn siŵr bod y cod maen nhw wedi’i roi i chi yn gywir."
 
+#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:22
+msgid "Who the paper verification code was sent to"
+msgstr "Y sawl yr anfonwyd y cod gwirio papur ato"
+
+#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:29
+msgid "An attorney"
+msgstr "Atwrnai"
+
+#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:31
+msgid "Enter the attorneys name as it appears on the notice of registration"
+msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
+
+#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:34
+msgid "The donor, (Donor name to be extracted and displayed here)"
+msgstr "Y rhoddwr, Donor name to be extracted and displayed here)"
+
 #~ msgid ""
 #~ "Give %organisation% this access code. They should go to www.gov.uk/view-lpa "
 #~ "to enter the access code and see a summary of the <abbr title=\"lasting power "
