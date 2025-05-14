@@ -50,11 +50,7 @@ class EnterCodeHandler extends AbstractHandler implements CsrfGuardAware
                 $session->set('code', $lpaCode);
                 $session->set('surname', $form->getData()['donor_surname']);
 
-                $template = ($this->featureEnabled)('paper_verification')
-                    ? 'paper-verification-code-sent-to'
-                    : 'check-code';
-
-                return $this->redirectToRoute($template);
+                return $this->redirectToRoute('check-code');
             }
         }
 
