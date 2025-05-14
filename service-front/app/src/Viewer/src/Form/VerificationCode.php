@@ -41,7 +41,7 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                  'options' => [
                      'value_options' => [
                          'Attorney' => 'Attorney',
-                         'Donor'  => 'Donor',
+                         'Donor'    => 'Donor',
                      ],
                  ],
             ]
@@ -68,7 +68,7 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                     ],
                 ],
             ],
-            'attorney_name'   => [
+            'attorney_name'              => [
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => StringToUpper::class],
@@ -77,8 +77,8 @@ class VerificationCode extends AbstractForm implements InputFilterProviderInterf
                     [
                         'name'    => NotEmptyConditional::class,
                         'options' => [
-                            'message'         => 'Enter attorney name',
-                            'dependant'       => 'verification_code_receiver',
+                            'message' => 'Enter attorney name',
+                            'dependant' => 'verification_code_receiver',
                             'dependant_value' => 'Donor',
                         ],
                     ],

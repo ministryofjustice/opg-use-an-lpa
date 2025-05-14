@@ -34,8 +34,8 @@ class VerificationCodeSentToTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'     => Csrf::class,
-            'attorney_name'   => Text::class,
+            '__csrf'                     => Csrf::class,
+            'attorney_name'              => Text::class,
             'verification_code_receiver' => Radio::class,
         ];
     }

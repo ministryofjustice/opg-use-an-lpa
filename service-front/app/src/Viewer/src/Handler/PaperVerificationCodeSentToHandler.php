@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
-use Common\Handler\AbstractHandler;
-use Common\Handler\CsrfGuardAware;
-use Common\Handler\Traits\CsrfGuard;
-use Common\Handler\Traits\Session as SessionTrait;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -18,16 +14,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\VerificationCode;
 
-
 /**
  * @codeCoverageIgnore
  */
 class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
     private VerificationCode $form;
-
-    //use CsrfGuard;
-    //use SessionTrait;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -40,7 +32,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new VerificationCode($this->getCsrfGuard($request));
+        $this->form           = new VerificationCode($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
