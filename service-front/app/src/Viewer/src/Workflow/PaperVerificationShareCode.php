@@ -9,7 +9,7 @@ use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-class PaperVerificationCode implements WorkflowState
+class PaperVerificationShareCode implements WorkflowState
 {
     use JsonSerializable;
 

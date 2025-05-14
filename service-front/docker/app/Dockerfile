@@ -5,7 +5,7 @@ FROM composer:2.8.8@sha256:1e30756b14356f49b84a9086c0bbba05ab10f76df3f73fb536582
 
 FROM mlocati/php-extension-installer:2.7.28@sha256:277b9751adb3120413fc71ef1859bb47fabb73b60fdbc3cc2f2af6451573046e AS php-extension-installer
 
-FROM php:8.1.29-fpm-alpine3.20 AS php-base
+FROM php:8.1.32-fpm-alpine3.21@sha256:9e20c084a69820d87ef2ee96e1b7fe21ecf1ce49dd0abeafce6a6d25e14e350a AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
