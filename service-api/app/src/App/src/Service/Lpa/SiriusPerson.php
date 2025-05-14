@@ -11,6 +11,7 @@ use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
 use ArrayAccess;
 use Exception;
 use DateTimeImmutable;
@@ -30,6 +31,7 @@ class SiriusPerson implements
     GetAttorneyStatusInterface,
     ActorMatchingInterface,
     DonorInformationInterface,
+    LpaRemovedDonorInformationInterface,
     CodesApiValidationInterface,
     ArrayAccess,
     IteratorAggregate,
@@ -59,7 +61,7 @@ class SiriusPerson implements
 
     public function getMiddleNames(): string
     {
-        return (string)$this->person['middlenames'];
+        return (string)$this->person['middlenames'] ?? '';
     }
 
     public function getSurname(): string

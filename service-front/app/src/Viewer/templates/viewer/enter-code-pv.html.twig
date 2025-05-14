@@ -1,0 +1,95 @@
+{% extends '@viewer/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Enter the LPA access or paper verification code{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+<div class="govuk-width-container">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+
+        {{ include('@viewer/partials/service-message.html.twig') }}
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+
+                {{ govuk_error_summary(form) }}
+
+                {{ govuk_form_open(form) }}
+
+                    <fieldset class="govuk-fieldset">
+
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                            <h1 class="govuk-heading-xl">
+                                {% trans %}Enter the LPA access or paper verification code{% endtrans %}
+                            </h1>
+                        </legend>
+
+                        <details id="what-are-access-codes-reveal" class="govuk-details" data-gaEventType="onClick" data-gaAction="AccessCodeReveal" data-gaCategory="Details" data-gaLabel="What are LPA access and paper verification codes?">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">
+                                    {% trans %}What are LPA access and paper verification codes?{% endtrans %}
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">
+                                    {% trans %}These are codes given to you by the donor or an attorney named on a lasting power of attorney.{% endtrans %}
+                                </p>
+                                <h3 class="govuk-heading-s">{% trans %}Access codes{% endtrans %}</h3>
+                                <p class="govuk-body">
+                                    {% trans %}Donors and attorneys request these codes online, using their Use a lasting power of attorney account.{% endtrans %}
+                                </p>
+                                <h3 class="govuk-heading-s">{% trans %}Paper verification codes{% endtrans %}</h3>
+                                <p class="govuk-body">
+                                    {% trans %}These codes are posted to donors and attorneys who do not want to use an LPA online. Each code
+                                        is unique to the person who received it When you are  given a paper verification code to view the LPA,
+                                        you should also be given the:{% endtrans %}
+                                    <ul class="list list-bullet">
+                                        <li>{% trans %}LPA reference number this will be on any letters we’ve sent to the donor or attorneys{% endtrans %}</li>
+                                        <li>{% trans %}date of birth of the person who the paper verification code was sent to{% endtrans %}</li>
+                                        <li>{% trans %}number of attorneys named on the notice of registration{% endtrans %}</li>
+                                        <li>{% trans %}name of 1 attorney named on the notice of registration{% endtrans %}</li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </details>
+
+                        {{ govuk_form_element(form.get('__csrf')) }}
+
+                        {{ govuk_form_element(form.get('donor_surname'),
+                            {
+                                'label': 'Donor\'s last name' | trans
+                            }
+                        ) }}
+
+                        {{ govuk_form_element(form.get('lpa_code'),
+                            {
+                                'label': 'LPA access or paper verification code' | trans,
+                                'hint': 'Access codes start with a V. For example, V-AB12-CD34-EF56.<br/>Paper verification codes start with a P. For example, P-AB12-CD34-EF56-G7' | trans
+                            }
+                        ) }}
+
+                        <details id="access-code-reveal" class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="AccessCodeReveal" data-gaCategory="Details" data-gaLabel="The code I\'ve been given does not start with V or P.">
+                            <summary class="govuk-details__summary" role="button" >
+                                <span class="govuk-details__summary-text">
+                                    {% trans %}The code I’ve been given does not start with V or P.{% endtrans %}
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                <p class="govuk-body">
+                                    {% trans %}The donor or attorney may have given you the wrong code. Ask them to check the
+                                        code they’ve given you is correct.{% endtrans %}
+                                </p>
+                            </div>
+                        </details>
+
+                        <p class="govuk-body">{% trans with {'%link%': path('terms-of-use')} %}By continuing you agree to our <a href="%link%" target="_blank" class="govuk-link" rel="noreferrer noopener">terms of use (opens in new tab)</a>.{% endtrans %}</p>
+
+                        <button data-prevent-double-click="true" type="submit" class="govuk-button">{% trans %}Continue{% endtrans %}</button>
+
+                    </fieldset>
+
+                {{ govuk_form_close() }}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

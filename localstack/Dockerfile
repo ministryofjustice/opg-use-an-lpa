@@ -1,8 +1,8 @@
-FROM golang:1.24.2-alpine AS build
+FROM golang:1.24.3-alpine@sha256:ef18ee7117463ac1055f5a370ed18b8750f01589f13ea0b48642f5792b234044 AS build
 
 WORKDIR /app
 
-RUN apk add --no-cache zip=3.0-r13 
+RUN apk add --no-cache zip=3.0-r13
 
 COPY lambda-functions/event-receiver/go.mod lambda-functions/event-receiver/go.sum ./
 

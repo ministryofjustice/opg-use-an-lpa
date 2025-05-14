@@ -2,7 +2,9 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    "helpers:pinGitHubActionDigests"
+    "schedule:earlyMondays",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests"
   ],
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
@@ -136,7 +138,7 @@
       ],
       "matchFileNames": [
         "package.json",
-        "service-front/package.json"
+        "service-front/web/package.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
@@ -186,7 +188,7 @@
         "patch"
       ],
       "matchFileNames": [
-        "service-front/composer.json"
+        "service-front/app/composer.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
@@ -216,7 +218,7 @@
         "patch"
       ],
       "matchFileNames": [
-        "service-api/composer.json"
+        "service-api/app/composer.json"
       ],
       "prCreation": "immediate",
       "prPriority": 4,
