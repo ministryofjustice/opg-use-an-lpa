@@ -89,6 +89,7 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
             signedAt:                  new DateTimeImmutable('2024-01-10T23:00:00Z'),
             registrationDate:          new DateTimeImmutable('2024-01-12'),
             restrictionsAndConditions: 'my restrictions and conditions',
+            restrictionsAndConditionsImages: null,
             status:                    'registered',
             trustCorporations:         [
                 new LpaStoreTrustCorporation(
