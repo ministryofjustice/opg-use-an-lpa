@@ -88,7 +88,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'check-code';
+        //needs changing when next page ready
+        return 'home';
     }
 
     /**
@@ -96,6 +97,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
+        //needs changing when next page ready
         return 'home';
     }
 }
