@@ -1,0 +1,66 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We need some more details{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-xl">
+                                    {% trans %}We need some more details{% endtrans %}
+                                </h1>
+                            </legend>
+
+                            <p class="govuk-body">Because the code you entered is a paper verification code, we need some further details:</p>
+
+                            <ul class="govuk-list govuk-list--bullet">
+                                <li><abbr title="lasting power of attorney">LPA</abbr> reference number - this will be on any letters we've sent to the donor or attorneys</li>
+                                <li>date of birth of the person who the paper verification code was sent to</li>
+                                <li>number of attorneys named on the notice of registration</li>
+                                <li>name of 1 attorney named on the notice of registration</li>
+                            </ul>
+
+                            <h2 class="govuk-heading-m">
+                                {% trans %}What is the LPA reference number?{% endtrans %}
+                            </h2>
+
+                            {{ govuk_form_element(form.get('lpa_reference'), {
+                                'hint': 'LPA reference numbers start with an M followed by 12 numbers.<br>For example, M-1234-1234-1234.'| trans,
+                                'value': 'Lpa Reference',
+                                'aria_labelledby': 'ref_number_heading'
+                            }) }}
+                        </fieldset>
+                    </div>
+
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </button>
+                            <a href="{{ path('home') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+                    {{ govuk_form_close() }}
+                </div>
+
+            </div>
+        </main>
+    </div>
+{% endblock %}
