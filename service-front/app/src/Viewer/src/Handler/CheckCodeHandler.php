@@ -100,11 +100,16 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
             }
 
             $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
+
+            $template = ($this->featureEnabled)('paper_verification')
+                ? 'viewer::lpa-not-found-with-pvc'
+                : 'viewer::check-code-not-found';
+
             return new HtmlResponse(
                 $this->renderer->render(
-                    'viewer::check-code-not-found',
+                    $template,
                     [
-                    'donor_last_name' => $surname,
+                    'donor_last_name' => ucfirst($surname),
                     'lpa_access_code' => $code,
                     ]
                 )
