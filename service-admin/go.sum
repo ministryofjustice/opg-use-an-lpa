@@ -53,6 +53,8 @@ github.com/mattn/go-isatty v0.0.19 h1:JITubQf0MOLdlGRuRq+jtsDlekdYPia9ZFsB8h/APP
 github.com/mattn/go-isatty v0.0.19/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
 github.com/ministryofjustice/opg-go-common v1.87.0 h1:RPFGJeTcHymU6Kl4ibWdzmPTlQLxnWhWitSldS2ryEc=
 github.com/ministryofjustice/opg-go-common v1.87.0/go.mod h1:lbtymJXPx5RV2ACGm0rWBza3vqIUBvCbtCR7s2istDY=
+github.com/ministryofjustice/opg-go-common v1.94.0 h1:5R+u3AX8x/GF9I4o7yzZVtXX1oVZEK1O+Ktmyy1lMrw=
+github.com/ministryofjustice/opg-go-common v1.94.0/go.mod h1:sqlhBAsEgEyOEdfMayRXIe3bzjtwMGE6FghgTxDitpY=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
