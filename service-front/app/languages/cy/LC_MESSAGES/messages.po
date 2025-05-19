@@ -7111,8 +7111,6 @@ msgid "LPA paper verification code"
 msgstr "Y cod gwirio papur ar gyfer yr atwrneiaeth arhosol"
 
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:49
-#, fuzzy
-#| msgid "Are you using the right service?"
 msgid "Are you using the correct service?"
 msgstr "Ydych chi’n defnyddio’r gwasanaeth cywir?"
 
