@@ -7,7 +7,7 @@ COPY app/ .
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt && \
-    dnf update -y libarchive --releasever 2023.6.20241028 && \
+    dnf update -y libarchive sqlite --releasever 2023.7.20250512 && \
     dnf clean all
 
 CMD [ "upload_statistics.lambda_handler" ]
