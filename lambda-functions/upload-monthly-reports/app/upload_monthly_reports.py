@@ -25,12 +25,12 @@ class DynamoDBExporterAndQuerier:
         }
 
         self.table_ddl_files = {
-            "tables/stats.ddl": "Stats",
-            "tables/actor_codes.ddl": "ActorCodes",
-            "tables/actor_users.ddl": "ActorUsers",
-            "tables/viewer_codes.ddl": "ViewerCodes",
-            "tables/viewer_activity.ddl": "ViewerActivity",
-            "tables/user_lpa_actor_map.ddl": "UserLpaActorMap",
+            "stats.ddl": "Stats",
+            "actor_codes.ddl": "ActorCodes",
+            "actor_users.ddl": "ActorUsers",
+            "viewer_codes.ddl": "ViewerCodes",
+            "viewer_activity.ddl": "ViewerActivity",
+            "user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
         self.environment_details = self.set_environment_details(environment)
@@ -405,7 +405,16 @@ def lambda_handler(event, context):
 
     work.set_default_date_range()
     work.export_all_dynamo_tables()
+    work.check_dynamo_export_status()
+    work.create_athena_tables()
     work.get_expired_viewed_access_codes()
+    work.get_expired_unviewed_access_codes()
+    work.get_count_of_viewed_access_codes()
+    work.get_count_of_created_access_codes()
+    work.get_count_of_expired_access_codes()
+    work.get_organisations_field()
+    work.get_count_of_lpas_for_users()
+    work.get_count_of_users_with_no_lpas()
 
     success = True # TODO need to return this from the actual run 
     return {
