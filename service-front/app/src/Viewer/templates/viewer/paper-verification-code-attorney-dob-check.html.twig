@@ -1,0 +1,55 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Enter DOB{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-xl">
+                                    {% trans %}Enter (Attorney Name) date of birth{% endtrans %}
+                                </h1>
+                            </legend>
+
+                            {{ govuk_form_fieldset(form.get('attorney_dob'), {
+                                'hint': 'For example, 31 03 1980'| trans,
+                                'value': 'Attorney DOB',
+                                'aria_labelledby': 'Attorney_dob'
+                            }) }}
+
+                        </fieldset>
+
+                    </div>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+
+                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </button>
+                            <a href="{{ path('home') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+                    {{ govuk_form_close() }}
+                </div>
+
+            </div>
+        </main>
+    </div>
+{% endblock %}
