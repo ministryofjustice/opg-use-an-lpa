@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
-use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -21,10 +20,11 @@ class PaperVerificationLpaCheckHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
+    private const TEMPLATE = 'viewer::paper-verification-check-code';
+
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper);
@@ -40,13 +40,10 @@ class PaperVerificationLpaCheckHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->reset();
+        // TODO get donor name and add it to twig template
+        //$code = $this->state($request)->code;
 
-        $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification-lpa-check'
-            : 'viewer::enter-code';
-
-        return new HtmlResponse($this->renderer->render($template, [
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
@@ -58,15 +55,12 @@ class PaperVerificationLpaCheckHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->session->set('lpa_check', $this->form->getData()['lpa_check']);
+            $this->state($request)->lpaUid = $this->form->getData()['lpa_reference'];
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification-lpa-check'
-            : 'viewer::enter-code';
-
-        return new HtmlResponse($this->renderer->render($template, [
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
@@ -96,6 +90,6 @@ class PaperVerificationLpaCheckHandler extends AbstractPVSCodeHandler
     public function lastPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'enter-code-pv';
     }
 }
