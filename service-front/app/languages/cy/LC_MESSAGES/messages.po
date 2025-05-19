@@ -7078,10 +7078,6 @@ msgstr ""
 "iddyn nhw wneud yn siŵr bod y cod maen nhw wedi’i roi i chi yn gywir."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:93
-#, fuzzy
-#| msgid ""
-#| "A scanned copy of the donor’s preferences and/or instructions - the text "
-#| "cannot be digitised at present"
 msgid ""
 "A scanned copy of the donor’s restrictions and/or instructions - the text "
 "cannot be digitised at present"
@@ -7090,17 +7086,13 @@ msgstr ""
 "ni ellir digideiddio’r testun ar hyn o bryd"
 
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:20
-#, fuzzy
-#| msgid "date of birth you entered does not match our records"
 msgid "the donor’s name you entered does not match our records"
 msgstr ""
 "dydy’r dyddiad geni rydych chi wedi’i roi ddim yn cyfatb i’n cofnodion ni"
 
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:21
-#, fuzzy
-#| msgid "the LPA reference number you entered is incorrect"
 msgid "the LPA paper verification code you entered is incorrect"
-msgstr "mae cyfeirnod yr LPA rydych chi wedi’i roi yn anghywir"
+msgstr "mae’r cod gwirio papur ar gyfer yr atwrneiaeth arhosol yn anghywir"
 
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:28
 msgid "Donor’s last name"
