@@ -3,9 +3,9 @@
 #
 FROM composer:2.8.8@sha256:1e30756b14356f49b84a9086c0bbba05ab10f76df3f73fb536582b71fb1b1078 AS composer
 
-FROM mlocati/php-extension-installer:2.7.28@sha256:61ec62196646d4299a959ebdf0f6753f71a7e9db0eebafe1e4f3bf0f323f50be AS php-extension-installer
+FROM mlocati/php-extension-installer:2.7.34@sha256:277b9751adb3120413fc71ef1859bb47fabb73b60fdbc3cc2f2af6451573046e AS php-extension-installer
 
-FROM php:8.1.32-fpm-alpine3.21@sha256:9e20c084a69820d87ef2ee96e1b7fe21ecf1ce49dd0abeafce6a6d25e14e350a AS php-base
+FROM php:8.4.7-fpm-alpine3.21@sha256:d445d374b3b72968124be3a3a3040a995192dc88d36373bf12d406ac5475098d AS php-base
 
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 

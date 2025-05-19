@@ -15,7 +15,7 @@ RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstr
   && chmod 755 bootstrap \
   && zip event-receiver.zip bootstrap
 
-FROM localstack/localstack:4.1.0 AS localstack
+FROM localstack/localstack:4.4.0@sha256:b52c16663c70b7234f217cb993a339b46686e30a1a5d9279cb5feeb2202f837c AS localstack
 
 COPY --from=build /app/event-receiver.zip /event-receiver.zip
 
