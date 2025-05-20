@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Switch DNF to the latest AL2023.7 release (2023.7.20250512) and update SQLite packages
 RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
     dnf clean all && \
-    dnf -y update sqlite sqlite-libs libarchive && \
+    dnf -y update sqlite-libs libxml2 && \
     dnf clean all
 
 COPY app/ .
