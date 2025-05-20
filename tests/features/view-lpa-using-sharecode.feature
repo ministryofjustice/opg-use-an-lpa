@@ -9,7 +9,7 @@ Feature: View an LPA via share code
     Given I access the viewer service insecurely
     Then the viewer service homepage should be shown securely
 
-  @integration @acceptance @smoke
+  @smoke @ff:paper_verification:from_env
   Scenario: View an LPA
     Given I have been given access to an LPA via share code
     And I access the viewer service
