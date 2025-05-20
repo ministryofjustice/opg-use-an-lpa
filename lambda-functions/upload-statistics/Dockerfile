@@ -6,11 +6,14 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Switch DNF to the latest AL2023.7 release (2023.7.20250512) and update SQLite packages
-RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
-    dnf clean all && \
+RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever
+RUN dnf clean all && \
     dnf -y update sqlite sqlite-libs libarchive && \
     dnf clean all
 
+COPY app/ .
+
+CMD ["upload_statistics.lambda_handler"]
 COPY app/ .
 
 CMD ["upload_statistics.lambda_handler"]
