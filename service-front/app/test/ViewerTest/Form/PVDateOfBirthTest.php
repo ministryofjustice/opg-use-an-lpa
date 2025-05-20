@@ -33,8 +33,8 @@ class PVDateOfBirthTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'       => Csrf::class,
-            'attorney_dob' => Text::class,
+            '__csrf' => Csrf::class,
+            'dob'    => Text::class,
         ];
     }
 

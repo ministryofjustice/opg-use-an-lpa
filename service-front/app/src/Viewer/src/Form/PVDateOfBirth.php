@@ -27,7 +27,7 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
-        $this->add(new Date('attorney_dob'));
+        $this->add(new Date('dob'));
     }
 
     /**
@@ -36,7 +36,7 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'attorney_dob' => [
+            'dob' => [
                 'required'   => true,
                 'filters'    => [
                     ['name' => DateTrimFilter::class],
@@ -47,7 +47,7 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
                         'name'    => DobValidator::class,
                         'options' => [
                             'messages' => [
-                                DobValidator::DATE_EMPTY => 'Enter the attorney\'s date of birth',
+                                DobValidator::DATE_EMPTY => 'Enter the date of birth.',
                             ],
                         ],
                     ],
