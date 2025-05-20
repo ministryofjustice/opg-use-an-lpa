@@ -81,7 +81,10 @@ jobs:
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
           public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+
           ff_paper_verification=$(cat ./terraform/environment/cluster_config.json | jq .ff_paper_verification | xargs)
+          negated_paper_verification=$(if "$ff_paper_verification"; then echo "false"; else echo "true"; fi)
+          negatedTags="~ff:paper_verification:${negated_paper_verification}"
 
           ln -sf ../features tests/smoke/features
 
@@ -91,7 +94,7 @@ jobs:
             BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
             BEHAT_OLD_ACTOR_URL=https://$use_fqdn \
             BEHAT_FF_PAPER_VERIFICATION=$ff_paper_verification \
-            vendor/bin/behat
+            vendor/bin/behat --tags $negatedTags
 
       - name: archive failed test screenshots
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
