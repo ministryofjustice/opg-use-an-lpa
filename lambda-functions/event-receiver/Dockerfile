@@ -13,8 +13,11 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go/bin/main ./
 
 FROM public.ecr.aws/lambda/provided:al2023.2025.05.04.04@sha256:fed9eb1f995d9c1f714794e3c2223fd5a97990022eedbab6f6f0d711ba888ac6 AS production
 
-RUN dnf update -y sqlite --releasever 2023.7.20250512 \
-    && dnf clean all
+# Switch DNF to the latest AL2023.7 release (2023.7.20250512) and update SQLite packages
+RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
+    dnf clean all && \
+    dnf -y update sqlite-libs libarchive && \
+    dnf clean all
 
 WORKDIR /var/task
 
