@@ -95,9 +95,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return ($this->featureEnabled)('paper_verification')
-            ? 'paper-verification-check-code'
-            : 'check-code';
+        return 'check-code';
     }
 
     /**
