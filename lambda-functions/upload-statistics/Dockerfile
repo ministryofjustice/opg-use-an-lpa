@@ -14,6 +14,3 @@ RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
 COPY app/ .
 
 CMD ["upload_statistics.lambda_handler"]
-COPY app/ .
-
-CMD ["upload_statistics.lambda_handler"]
