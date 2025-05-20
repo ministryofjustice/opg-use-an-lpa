@@ -61,10 +61,10 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         'lpa.instructions-preferences-before-2016'
     );
 
-    $app->route('/paper-verification-code-attorney-dob-check',
+    $app->route('/attorney-dob',
                 PVAttorneyDateOfBirthHandler::class,
                 ['GET', 'POST'],
-                'paper-verification-code-attorney-dob-check');
+                'attorney-dob');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

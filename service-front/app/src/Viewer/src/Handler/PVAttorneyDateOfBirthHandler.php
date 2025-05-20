@@ -19,7 +19,8 @@ use Viewer\Form\PVDateOfBirth;
 class PVAttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-    public const template = 'viewer::paper-verification-code-attorney-dob-check';
+
+    public const TEMPLATE = 'viewer::attorney-dob';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -39,12 +40,14 @@ class PVAttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->reset();
+        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
 
-        return new HtmlResponse($this->renderer->render(self::template, [
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'form'         => $this->form->prepare(),
+            'attorneyName' => $attorneyName,
+            'back'         => $this->lastPage($this->state($request)),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -59,7 +62,7 @@ class PVAttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
         $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
 
-        return new HtmlResponse($this->renderer->render(self::template, [
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,

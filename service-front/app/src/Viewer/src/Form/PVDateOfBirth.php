@@ -36,7 +36,7 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
     public function getInputFilterSpecification(): array
     {
         return [
-            'attorney_dob'         => [
+            'attorney_dob' => [
                 'required'   => true,
                 'filters'    => [
                     ['name' => DateTrimFilter::class],

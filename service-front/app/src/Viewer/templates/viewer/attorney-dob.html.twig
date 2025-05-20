@@ -4,7 +4,9 @@
 
 {% block content %}
     <div class="govuk-width-container">
-
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
         <main class="govuk-main-wrapper" id="main-content" role="main">
             {{ govuk_error_summary(form) }}
 
@@ -19,7 +21,7 @@
 
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                                 <h1 class="govuk-heading-xl">
-                                    {% trans %}Enter (Attorney Name) date of birth{% endtrans %}
+                                    {% trans %}Enter{% endtrans %} {{ attorneyName }}{% trans %}'s date of birth{% endtrans %}
                                 </h1>
                             </legend>
 
