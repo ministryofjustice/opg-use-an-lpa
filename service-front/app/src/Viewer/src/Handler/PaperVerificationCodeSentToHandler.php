@@ -12,14 +12,16 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Form\VerificationCode;
+use Viewer\Form\VerificationCodeReceiver;
 
 /**
  * @codeCoverageIgnore
  */
 class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
-    private VerificationCode $form;
+    private VerificationCodeReceiver $form;
+
+    private const TEMPLATE = 'viewer::paper-verification-check-code';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -32,7 +34,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new VerificationCode($this->getCsrfGuard($request));
+        $this->form           = new VerificationCodeReceiver($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -40,13 +42,15 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $this->state($request)->reset();
+        // TODO get donor name and add it to twig template
+        $donorName = "(Donor name to be extracted and displayed here)";
 
         $template = ($this->featureEnabled)('paper_verification')
             ? 'viewer::paper-verification-code-sent-to'
             : 'viewer::enter-code';
 
         return new HtmlResponse($this->renderer->render($template, [
+            'donor_name' => $donorName,
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
@@ -60,15 +64,12 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         if ($this->form->isValid()) {
             $this->session->set('code_receiver', $this->form->getData()['verification_code_receiver']);
 
-           // $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+            $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification-code-sent-to'
-            : 'viewer::enter-code';
-
-        return new HtmlResponse($this->renderer->render($template, [
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Form;
 
-use Viewer\Form\VerificationCode;
+use Viewer\Form\VerificationCodeReceiver;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use Laminas\Form\Element\Radio;
@@ -19,7 +19,7 @@ class VerificationCodeSentToTest extends TestCase implements TestsLaminasForm
     use LaminasFormTests;
     use ProphecyTrait;
 
-    protected VerificationCode $form;
+    protected VerificationCodeReceiver $form;
 
     public function getForm(): AbstractForm
     {
@@ -43,6 +43,6 @@ class VerificationCodeSentToTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new VerificationCode($guardProphecy->reveal());
+        $this->form    = new VerificationCodeReceiver($guardProphecy->reveal());
     }
 }
