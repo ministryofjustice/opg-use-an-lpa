@@ -2,12 +2,15 @@ FROM public.ecr.aws/lambda/python:3.12@sha256:594f15713623d599aa3d2cefe4e239e40e
 
 WORKDIR ${LAMBDA_TASK_ROOT}
 
-COPY app/ .
-
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt && \
-    dnf update -y libarchive --releasever 2023.6.20241028 && \
+# Switch DNF to the latest AL2023.7 release (2023.7.20250512) and update SQLite packages
+RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
+    dnf clean all && \
+    dnf -y update sqlite sqlite-libs libarchive && \
     dnf clean all
 
-CMD [ "upload_statistics.lambda_handler" ]
+COPY app/ .
+
+CMD ["upload_statistics.lambda_handler"]
