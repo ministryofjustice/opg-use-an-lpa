@@ -43,7 +43,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         // TODO get donor name and add it to twig template
-        $donorName = "(Donor name to be extracted and displayed here)";
+        $donorName = '(Donor name to be extracted and displayed here)';
 
         $template = ($this->featureEnabled)('paper_verification')
             ? 'viewer::paper-verification-code-sent-to'
