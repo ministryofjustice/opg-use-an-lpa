@@ -16,7 +16,7 @@ FROM public.ecr.aws/lambda/provided:al2023.2025.05.04.04@sha256:fed9eb1f995d9c1f
 # Switch DNF to the latest AL2023.7 release (2023.7.20250512) and update SQLite packages
 RUN echo "2023.7.20250512" > /etc/dnf/vars/releasever && \
     dnf clean all && \
-    dnf -y update sqlite-libs libarchive && \
+    dnf -y update sqlite-libs libxml2 && \
     dnf clean all
 
 WORKDIR /var/task
