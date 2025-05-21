@@ -66,6 +66,13 @@
     {{ block('form_element_simple') }}
 {%- endblock form_input_password -%}
 
+{%- block form_input_number -%}
+    {%- set type = type|default('number') -%}
+    {%- set inputmode = inputmode|default('') -%}
+    {%- set pattern = pattern|default('') -%}
+    {%- set value = element.getValue() -%}
+    {{ block('form_element_simple') }}
+{%- endblock form_input_number -%}
 
 {%- block form_input_checkbox -%}
     <div class="govuk-form-group {{- block('form_group_error_class') -}}">
