@@ -36,7 +36,7 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
         return [
             '__csrf'          => Csrf::class,
             'no_of_attorneys' => Text::class,
-            'attorneys_name'   => Text::class,
+            'attorneys_name'  => Text::class,
         ];
     }
 
