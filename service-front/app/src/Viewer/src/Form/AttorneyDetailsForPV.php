@@ -41,12 +41,12 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
     public function getInputFilterSpecification(): array
     {
         return [
-            'no_of_attorneys'      => [
+            'no_of_attorneys' => [
                 'required'   => false,
                 'filters'    => [],
                 'validators' => [],
             ],
-            'attorneys_name' => [
+            'attorneys_name'  => [
                 'required'   => false,
                 'filters'    => [
                     ['name' => StringTrim::class],

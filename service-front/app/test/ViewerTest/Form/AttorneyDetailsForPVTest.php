@@ -14,7 +14,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\AttorneyDetailsForPV;
 
-
 class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
@@ -45,7 +44,7 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form = new AttorneyDetailsForPV($guardProphecy->reveal());
+        $this->form    = new AttorneyDetailsForPV($guardProphecy->reveal());
     }
 
     public function testIsAForm(): void
