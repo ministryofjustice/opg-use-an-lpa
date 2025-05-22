@@ -34,10 +34,9 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'             => Csrf::class,
-            'lpa_code'           => Text::class,
-            'nuber_of_attorneys' => Text::class,
-            'attorney_name'      => Text::class,
+            '__csrf'              => Csrf::class,
+            'number_of_attorneys' => Text::class,
+            'attorney_name'       => Text::class,
         ];
     }
 

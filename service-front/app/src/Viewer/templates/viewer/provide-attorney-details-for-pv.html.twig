@@ -16,15 +16,16 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl"
-                        id="attorney_details_heading">{% trans %}Attorney details{% endtrans %}</h1>
-
+                    <h1 class="govuk-heading-xl" id="attorney_details_heading">{% trans %}Attorney details{% endtrans %}</h1>
 
                     {{ govuk_form_open(form) }}
-
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <h2 class="govuk-heading-m" id="number_of_attorneys_heading">{% trans %}Number of Attorneys{% endtrans %}</h2>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-heading-m" id="number_of_attorneys_heading">
+                            {% trans %}Number of Attorneys{% endtrans %}
+                        </h2>
+                    </legend>
 
                     {{ govuk_form_element(form.get('no_of_attorneys'), {
                         'label': 'Enter the number of attorneys listed on the notice of registration.' | trans,
@@ -36,7 +37,11 @@
                         'aria_labelledby': 'number_of_attorneys_heading'
                     }) }}
 
-                    <h2 class="govuk-heading-m" id="attorney_name_heading">{% trans %}Enter an attorney's name{% endtrans %}</h2>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        <h2 class="govuk-heading-m" id="attorney_name_heading">
+                            {% trans %}Enter an attorney's name{% endtrans %}
+                        </h2>
+                    </legend>
 
                     {{ govuk_form_element(form.get('attorneys_name'), {
                         'label': 'Enter the name of an attorney listed on the notice of registration. It does not matter which attorney you enter.' | trans,
