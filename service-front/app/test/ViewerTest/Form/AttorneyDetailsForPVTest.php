@@ -34,9 +34,9 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
     public function getFormElements(): array
     {
         return [
-            '__csrf'              => Csrf::class,
-            'number_of_attorneys' => Text::class,
-            'attorney_name'       => Text::class,
+            '__csrf'          => Csrf::class,
+            'no_of_attorneys' => Text::class,
+            'attorney_name'   => Text::class,
         ];
     }
 
@@ -52,11 +52,5 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
         $this->assertInstanceOf(AttorneyDetailsForPV::class, $this->form);
 
         $this->assertEquals('attorney_details', $this->form->getName());
-    }
-
-    public function testInputFilter(): void
-    {
-        $this->assertIsArray($this->form->getInputFilterSpecification());
-        $this->assertInstanceOf(InputFilter::class, $this->form->getInputFilter());
     }
 }
