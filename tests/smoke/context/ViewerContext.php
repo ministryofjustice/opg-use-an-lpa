@@ -29,7 +29,12 @@ class ViewerContext implements Context
     public function iGiveAValidLpaShareCode(): void
     {
         $this->ui->assertPageAddress('/home');
-        // $this->ui->assertPageContainsText('Enter the LPA access code');
+
+        if ($this->featureFlags['paper_verification']) {
+            $this->ui->assertPageContainsText('Enter the LPA access or paper verification code');
+        } else {
+            $this->ui->assertPageContainsText('Enter the LPA access code');
+        }
 
         $this->ui->fillField('donor_surname', $this->donorSurname);
         $this->ui->fillField('lpa_code', $this->shareCode);

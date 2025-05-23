@@ -15,6 +15,7 @@ locals {
     viewer_codes_table                              = aws_dynamodb_table.viewer_codes_table.name
     user_lpa_actor_map                              = aws_dynamodb_table.user_lpa_actor_map.name
     stats_table                                     = aws_dynamodb_table.stats_table.name
+    ff_paper_verification                           = local.environment.application_flags.paper_verification
     use_fqdn                                        = local.active_region == "eu-west-1" ? module.eu_west_1[0].route53_fqdns.use : module.eu_west_2[0].route53_fqdns.use
     viewer_fqdn                                     = local.active_region == "eu-west-1" ? module.eu_west_1[0].route53_fqdns.viewer : module.eu_west_2[0].route53_fqdns.viewer
     admin_fqdn                                      = local.active_region == "eu-west-1" ? module.eu_west_1[0].route53_fqdns.admin : module.eu_west_2[0].route53_fqdns.admin
