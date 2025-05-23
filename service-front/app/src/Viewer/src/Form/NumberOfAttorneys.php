@@ -7,11 +7,8 @@ namespace Viewer\Form;
 use Common\Form\AbstractForm;
 use Laminas\Filter\Digits;
 use Laminas\Filter\StringTrim;
-use Laminas\Form\Element\Number;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Regex;
-use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 class NumberOfAttorneys extends AbstractForm implements InputFilterProviderInterface
@@ -44,8 +41,8 @@ class NumberOfAttorneys extends AbstractForm implements InputFilterProviderInter
     {
         return [
             'no_of_attorneys' => [
-                'required'  => false,
-                'filters'   => [
+                'required'   => false,
+                'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => Digits::class],
                 ],
