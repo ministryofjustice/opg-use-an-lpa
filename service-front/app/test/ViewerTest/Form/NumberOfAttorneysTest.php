@@ -6,14 +6,14 @@ namespace ViewerTest\Form;
 
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
+use Laminas\Form\Element\Number;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
-use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\NumberOfAttorneys;
 
-class PVDateOfBirthTest extends TestCase implements TestsLaminasForm
+class NumberOfAttorneysTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
     use ProphecyTrait;
@@ -27,14 +27,14 @@ class PVDateOfBirthTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'pv_date_of_birth';
+        return 'pv_number_of_attorneys';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf' => Csrf::class,
-            'dob'    => Text::class,
+            '__csrf'          => Csrf::class,
+            'no_of_attorneys' => Number::class,
         ];
     }
 
