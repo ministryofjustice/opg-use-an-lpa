@@ -59,6 +59,12 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         Common\Handler\InstructionsPreferencesBefore2016Handler::class,
         'lpa.instructions-preferences-before-2016'
     );
+
+    //Paper Verification Code journey
+    $app->route('/paper-verification-check-code',
+                Viewer\Handler\PaperVerificationLpaCheckHandler::class,
+                ['GET', 'POST'],
+                'paper-verification-check-code');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
