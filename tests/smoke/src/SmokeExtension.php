@@ -8,11 +8,13 @@ use Behat\Testwork\EventDispatcher\ServiceContainer\EventDispatcherExtension;
 use Behat\Testwork\ServiceContainer\Extension;
 use Behat\Testwork\ServiceContainer\ExtensionManager;
 use Behat\Testwork\ServiceContainer\ServiceProcessor;
+use Smoke\Decorator\FeatureFlagScenarioSkipper;
 use Smoke\Drivers\ChromeDriver;
 use Smoke\Drivers\Driver;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 class SmokeExtension implements Extension
 {
@@ -96,5 +98,10 @@ class SmokeExtension implements Extension
         $definition = new Definition(DriverSubscriber::class);
         $definition->addTag(EventDispatcherExtension::SUBSCRIBER_TAG);
         $container->setDefinition('smokedriver.suite_listener', $definition);
+
+        $definition = new Definition(FeatureFlagScenarioSkipper::class);
+        $definition->setDecoratedService('tester.scenario');
+        $definition->addArgument(new Reference('.inner'));
+        $container->setDefinition('smokedriver.featureflaggedscenarioskipper', $definition);
     }
 }
