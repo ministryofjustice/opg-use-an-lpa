@@ -59,8 +59,8 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'encoding' => 'UTF-8',
-                            'min'      => 12,
-                            'max'      => 12,
+                            'min'      => 13,
+                            'max'      => 16,
                             'messages' => [
                                 StringLength::TOO_LONG  => 'The LPA reference number you entered is too long',
                                 StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
@@ -71,7 +71,7 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'pattern' => '/^[[:alnum:]]{12}$/',
+                            'pattern' => '/M[-\s]?(\d{4}[-\s]?){2}\d{4}$/',
                             'message' => 'Enter LPA reference number in the correct format',
                         ],
                     ],
