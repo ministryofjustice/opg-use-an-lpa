@@ -26,7 +26,7 @@
                             </legend>
 
                             <p class="govuk-body">
-                                {% trans %}Enter the total number of attorneys listed on thr noice of registration including{% endtrans %}
+                                {% trans %}Enter the total number of attorneys listed on the notice of registration including{% endtrans %} {{ attorneyName }}
                             </p>
                             {{ govuk_form_element(form.get('no_of_attorneys'), {
                                 'hint': 'For example, 2'| trans,
