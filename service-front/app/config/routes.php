@@ -59,6 +59,9 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         Common\Handler\InstructionsPreferencesBefore2016Handler::class,
         'lpa.instructions-preferences-before-2016'
     );
+
+    //Paper verification journey
+    $app->route('/provide-attorney-details-for-pv', Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class, ['GET', 'POST'], 'provide-attorney-details-for-pv');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
