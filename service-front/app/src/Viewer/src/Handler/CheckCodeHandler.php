@@ -115,7 +115,7 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
                 $this->renderer->render(
                     $template,
                     [
-                    'donor_last_name' => ucfirst($surname),
+                    'donor_last_name' => $surname,
                     'lpa_access_code' => $code,
                     ]
                 )
