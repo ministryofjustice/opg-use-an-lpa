@@ -61,7 +61,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         'lpa.instructions-preferences-before-2016'
     );
 
-    $app->route('/donor-dob',
+    $app->route('/paper-verification/donor-dob',
                 PVDonorDateOfBirthHandler::class,
                 ['GET', 'POST'],
                 'donor-dob');
