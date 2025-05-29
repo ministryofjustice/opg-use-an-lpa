@@ -6,7 +6,7 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\KeyCollisionException;
-use App\Entity\Value\LpaUid;
+use App\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;

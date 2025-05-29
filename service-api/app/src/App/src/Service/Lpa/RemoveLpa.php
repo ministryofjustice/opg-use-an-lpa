@@ -6,9 +6,9 @@ namespace App\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\Entity\Value\LpaUid;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
+use App\Value\LpaUid;
 use Exception;
 use Psr\Log\LoggerInterface;
 
