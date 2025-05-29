@@ -33,6 +33,7 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -61,10 +62,10 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     );
 
     //Paper Verification Code journey
-    $app->route('/paper-verification-check-code',
-                Viewer\Handler\PaperVerificationLpaCheckHandler::class,
+    $app->route('/paper-verification/check-code',
+                CheckLpaCodeHandler::class,
                 ['GET', 'POST'],
-                'paper-verification-check-code');
+                'pv.check-code');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

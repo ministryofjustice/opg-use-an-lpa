@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -12,15 +12,16 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\LpaCheck;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class PaperVerificationLpaCheckHandler extends AbstractPVSCodeHandler
+class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
-    private const TEMPLATE = 'viewer::paper-verification-check-code';
+    private const TEMPLATE = 'viewer::paper-verification/check-code';
 
     public function __construct(
         TemplateRendererInterface $renderer,
