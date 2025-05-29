@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -12,6 +12,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\PVDateOfBirth;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
@@ -20,7 +21,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
 
-    public const TEMPLATE = 'viewer::donor-dob';
+    public const TEMPLATE = 'viewer::paper-verification/donor-dob';
 
     public function __construct(
         TemplateRendererInterface $renderer,
