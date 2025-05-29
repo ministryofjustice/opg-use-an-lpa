@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.11.0"
+  required_version = "~> 1.12.0"
 
   required_providers {
     aws = {
@@ -9,7 +9,7 @@ terraform {
         aws.management,
         aws.shared,
       ]
-      version = "~> 5.94.0"
+      version = "~> 5.98.0"
     }
     pagerduty = {
       source  = "PagerDuty/pagerduty"
