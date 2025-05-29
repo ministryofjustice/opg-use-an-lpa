@@ -33,7 +33,7 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
-use Viewer\Handler\NumberOfAttorneysPVHander;
+use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -61,8 +61,8 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         'lpa.instructions-preferences-before-2016'
     );
 
-    $app->route('/number-of-attorneys',
-                NumberOfAttorneysPVHander::class,
+    $app->route('/paper-verification/number-of-attorneys',
+                NumberOfAttorneysHander::class,
                 ['GET', 'POST'],
                 'number-of-attorneys');
 };

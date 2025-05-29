@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -12,15 +12,16 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\NumberOfAttorneys;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class NumberOfAttorneysPVHander extends AbstractPVSCodeHandler
+class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 {
     private NumberOfAttorneys $form;
 
-    public const TEMPLATE = 'viewer::number-of-attorneys';
+    public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
 
     public function __construct(
         TemplateRendererInterface $renderer,
