@@ -6,10 +6,10 @@ namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\Entity\Value\LpaUid;
+use App\Value\LpaUid;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Aws\DynamoDb\Marshaler;
 use DateTime;
 
 class ViewerCodes implements ViewerCodesInterface

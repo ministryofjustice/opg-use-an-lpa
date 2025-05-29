@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Value;
+namespace App\Value;
 
 use App\Enum\LpaSource;
 
