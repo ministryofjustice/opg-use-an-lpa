@@ -41,6 +41,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
         $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
