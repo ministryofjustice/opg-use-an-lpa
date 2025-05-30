@@ -33,6 +33,7 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -60,6 +61,12 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         Common\Handler\InstructionsPreferencesBefore2016Handler::class,
         'lpa.instructions-preferences-before-2016'
     );
+
+    //Paper Verification Code journey
+    $app->route('/paper-verification/check-code',
+                CheckLpaCodeHandler::class,
+                ['GET', 'POST'],
+                'pv.check-code');
 
     $app->route('/paper-verification/donor-dob',
                 PVDonorDateOfBirthHandler::class,
