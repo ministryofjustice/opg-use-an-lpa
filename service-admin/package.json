@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@ministryofjustice/frontend": "^2.0.0",
-    "esbuild": "0.25.0",
+    "esbuild": "0.25.4",
     "govuk-frontend": "^5.0.0",
     "sass": "^1.63.2"
   }
