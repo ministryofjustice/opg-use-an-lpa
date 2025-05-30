@@ -41,6 +41,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
         $donorName = $this->state($request)->attorneyName ?? 'Barbara Gilson';
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
