@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-05-29T22:44:28+00:00\n"
+"POT-Creation-Date: 2025-06-01T19:52:34+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -433,9 +433,9 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 msgid "Continue"
 msgstr "Parhau"
@@ -692,10 +692,12 @@ msgstr "Nid oedd modd cael hyd i LPA"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:12
 msgid "We could not find a lasting power of attorney"
 msgstr "Dydyn ni ddim yn gallu dod o hyd i atwrneiaeth arhosol (LPA)"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:15
 msgid "This could be because:"
 msgstr "Gallai’r rheswm fod oherwydd:"
 
@@ -710,6 +712,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:37
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:24
 msgid "Your answers"
 msgstr "Eich atebion"
 
@@ -768,6 +771,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
 #: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:65
 msgid "Try again"
 msgstr "Rhowch gynnig arall arni"
 
@@ -2174,7 +2178,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:53
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 msgid "Cancel"
 msgstr "Canslo"
@@ -7117,18 +7121,62 @@ msgstr ""
 "cyfeirnod yr atwrneiaeth arhosol – bydd hwn i’w weld ar unrhyw lythyrau rydym "
 "wedi’u hanfon at y rhoddwr neu’r atwrneiod"
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:22
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:20
+msgid "the donor’s name you entered does not match our records"
+msgstr ""
+"dydy enw’r rhoddwr rydych chi wedi’i roi ddim yn cyfateb i’n cofnodion ni"
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:21
+msgid "the LPA paper verification code you entered is incorrect"
+msgstr "mae’r cod gwirio papur ar gyfer yr atwrneiaeth arhosol yn anghywir"
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:28
+msgid "Donor’s last name"
+msgstr "Cyfenw’r rhoddwr"
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:36
+msgid "LPA paper verification code"
+msgstr "Y cod gwirio papur ar gyfer yr atwrneiaeth arhosol"
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:49
+msgid "Are you using the correct service?"
+msgstr "Ydych chi’n defnyddio’r gwasanaeth cywir?"
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:54
+msgid ""
+"This service is for organisations such as care homes or banks to view a "
+"summary of an LPA. They do this by using an access or paper verification code "
+"given to them by attorneys or donors."
+msgstr ""
+"Ar gyfer sefydliadau fel cartrefi gofal neu fanciau mae’r gwasanaeth hwn, i’w "
+"galluogi i weld crynodeb o atwrneiaeth arhosol. Maent yn gwneud hyn drwy "
+"ddefnyddio cod mynediad neu god gwirio papur a roddir iddynt gan atwrneiod neu "
+"roddwyr."
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:57
+msgid ""
+"If you’re a donor or an attorney who wants to see an LPA summary, go to the <a "
+"class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. "
+"You’ll also be able to give organisations access to LPA summaries."
+msgstr ""
+"Os mai rhoddwr neu atwrnai sydd eisiau gweld crynodeb o atwrneiaeth arhosol ar-"
+"lein ydych chi, ewch i <a class=\"govuk-link\" href=\"https://www.gov.uk/"
+"defnyddio-atwrneiaeth-arhosol\">Defnyddio gwasanaeth atwrneiaeth arhosol</a>. "
+"Byddwch hefyd yn gallu rhoi mynediad i sefydliadau at grynodebau o "
+"atwrneiaethau arhosol."
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
 msgid "Who the paper verification code was sent to"
 msgstr "Y sawl yr anfonwyd y cod gwirio papur ato"
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:29
 msgid "An attorney"
 msgstr "Atwrnai"
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:31
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:31
 msgid "Enter the attorneys name as it appears on the notice of registration"
 msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:34
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
 msgid "The donor, %donor_name%"
-msgstr "Y rhoddwr,"
+msgstr "Y rhoddwr, %donor_name%"

@@ -66,6 +66,10 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 CheckLpaCodeHandler::class,
                 ['GET', 'POST'],
                 'pv.check-code');
+    $app->route('/paper-verification/verification-code-sent-to',
+                Viewer\Handler\PaperVerificationCodeSentToHandler::class,
+                ['GET', 'POST'],
+                'pv.verification-code-sent-to');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

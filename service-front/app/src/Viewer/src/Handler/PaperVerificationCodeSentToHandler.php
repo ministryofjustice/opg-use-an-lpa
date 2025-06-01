@@ -21,7 +21,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
     private VerificationCodeReceiver $form;
 
-    private const TEMPLATE = 'viewer::paper-verification-check-code';
+    private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -46,7 +46,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
 
         $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification-code-sent-to'
+            ? 'viewer::paper-verification/verification-code-sent-to'
             : 'viewer::enter-code';
 
         return new HtmlResponse($this->renderer->render($template, [

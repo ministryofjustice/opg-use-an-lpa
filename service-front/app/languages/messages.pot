@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-05-29T22:44:28+00:00\n"
+"POT-Creation-Date: 2025-06-01T19:52:34+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -334,9 +334,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/home-page.html.twig:47
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 msgid "Continue"
 msgstr ""
@@ -545,10 +545,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:12
 msgid "We could not find a lasting power of attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:15
 msgid "This could be because:"
 msgstr ""
 
@@ -562,6 +564,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:37
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:24
 msgid "Your answers"
 msgstr ""
 
@@ -618,6 +621,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
 #: src/Actor/templates/actor/lpa-not-found.html.twig:79
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:65
 msgid "Try again"
 msgstr ""
 
@@ -1474,7 +1478,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:53
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 msgid "Cancel"
 msgstr ""
@@ -5055,18 +5059,46 @@ msgstr ""
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number - this will be on any letters we've sent to the donor or attorneys"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:22
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:20
+msgid "the donor’s name you entered does not match our records"
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:21
+msgid "the LPA paper verification code you entered is incorrect"
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:28
+msgid "Donor’s last name"
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:36
+msgid "LPA paper verification code"
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:49
+msgid "Are you using the correct service?"
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:54
+msgid "This service is for organisations such as care homes or banks to view a summary of an LPA. They do this by using an access or paper verification code given to them by attorneys or donors."
+msgstr ""
+
+#: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:57
+msgid "If you’re a donor or an attorney who wants to see an LPA summary, go to the <a class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to LPA summaries."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
 msgid "Who the paper verification code was sent to"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:29
 msgid "An attorney"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:31
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:31
 msgid "Enter the attorneys name as it appears on the notice of registration"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification-code-sent-to.html.twig:34
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
 msgid "The donor, %donor_name%"
 msgstr ""
