@@ -20,7 +20,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
     private AttorneyDetailsForPV $form;
 
-    private const TEMPLATE = 'viewer::provide-attorney-details-for-pv';
+    private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -32,15 +32,14 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new AttorneyDetailsForPV($this->getCsrfGuard($request));
+        $this->form           = new AttorneyDetailsForPV($this->getCsrfGuard($request));
+        $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $systemMessages = $this->systemMessageService->getMessages();
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $systemMessages['view/en'] ?? null,
