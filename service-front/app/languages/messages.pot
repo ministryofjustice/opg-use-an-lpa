@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-02T07:59:26+00:00\n"
+"POT-Creation-Date: 2025-06-02T13:25:24+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -337,6 +337,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 msgid "Continue"
@@ -1479,6 +1480,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 msgid "Cancel"
@@ -5111,4 +5113,20 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:48
 msgid "Spell the name as it appears on the notice of registration."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
+msgid "Who the paper verification code was sent to"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:29
+msgid "An attorney"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:31
+msgid "Enter the attorneys name as it appears on the notice of registration"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
+msgid "The donor, %donor_name%"
 msgstr ""

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-02T07:59:26+00:00\n"
+"POT-Creation-Date: 2025-06-02T13:25:24+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -436,6 +436,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 msgid "Continue"
@@ -2179,6 +2180,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 msgid "Cancel"
@@ -7195,14 +7197,18 @@ msgstr ""
 msgid "Spell the name as it appears on the notice of registration."
 msgstr "Cofiwch sillafu’r enw fel y mae’n ymddangos ar yr hysbysiad cofrestru."
 
-#~ msgid ""
-#~ "If you’re a donor or an attorney who wants to see an LPA summary, go to the "
-#~ "<a class=\"govuk-link\" href=\"https://www.gov.uk/use-lasting-power-of-"
-#~ "attorney\">Use a lasting power of attorney service</a>. You’ll also be able "
-#~ "to give organisations access to LPA summaries."
-#~ msgstr ""
-#~ "Os mai rhoddwr neu atwrnai sydd eisiau gweld crynodeb o atwrneiaeth arhosol "
-#~ "ar-lein ydych chi, ewch i <a class=\"govuk-link\" href=\"https://www.gov.uk/"
-#~ "defnyddio-atwrneiaeth-arhosol\">Defnyddio gwasanaeth atwrneiaeth arhosol</"
-#~ "a>. Byddwch hefyd yn gallu rhoi mynediad i sefydliadau at grynodebau o "
-#~ "atwrneiaethau arhosol."
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
+msgid "Who the paper verification code was sent to"
+msgstr "Y sawl yr anfonwyd y cod gwirio papur ato"
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:29
+msgid "An attorney"
+msgstr "Atwrnai"
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:31
+msgid "Enter the attorneys name as it appears on the notice of registration"
+msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
+msgid "The donor, %donor_name%"
+msgstr "Y rhoddwr, %donor_name%"
