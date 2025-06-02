@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-05-29T22:31:18+00:00\n"
+"POT-Creation-Date: 2025-06-02T07:59:26+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -364,6 +364,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Common/templates/common/contact-us.html.twig:7
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 msgid "Back"
 msgstr "Yn ôl"
 
@@ -435,6 +436,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 msgid "Continue"
 msgstr "Parhau"
@@ -2177,6 +2179,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:105
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 msgid "Cancel"
 msgstr "Canslo"
@@ -3220,6 +3223,7 @@ msgstr "Nid wyf yn byw yn y DU"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:19
 msgid "Attorney details"
 msgstr "Manylion yr atwrnai"
 
@@ -5412,25 +5416,25 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
-#: src/Common/templates/partials/govuk_form.html.twig:156
+#: src/Common/templates/partials/govuk_form.html.twig:164
 msgid "Day"
 msgstr "Dydd"
 
-#: src/Common/templates/partials/govuk_form.html.twig:167
+#: src/Common/templates/partials/govuk_form.html.twig:175
 msgid "Month"
 msgstr "Mis"
 
-#: src/Common/templates/partials/govuk_form.html.twig:178
+#: src/Common/templates/partials/govuk_form.html.twig:186
 msgid "Year"
 msgstr "Blwyddyn"
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:244
+#: src/Common/templates/partials/govuk_form.html.twig:252
 msgid "Show"
 msgstr "Dangos"
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:245
+#: src/Common/templates/partials/govuk_form.html.twig:253
 msgid "Hide"
 msgstr "Cuddio"
 
@@ -7162,6 +7166,34 @@ msgstr ""
 "defnyddio-atwrneiaeth-arhosol\">Defnyddio gwasanaeth atwrneiaeth arhosol</a>. "
 "Byddwch hefyd yn gallu rhoi mynediad i sefydliadau at grynodebau o "
 "atwrneiaethau arhosol."
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:26
+msgid "Number of Attorneys"
+msgstr "Nifer yr atwrneiod"
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:31
+msgid "Enter the number of attorneys listed on the notice of registration."
+msgstr "Nodwch nifer yr atwrneiod a restrir ar yr hysbysiad cofrestru."
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:32
+msgid "For example, 2."
+msgstr "Er enghraifft, 2."
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:42
+msgid "Enter an attorney's name"
+msgstr "Rhowch enw atwrnai"
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:47
+msgid ""
+"Enter the name of an attorney listed on the notice of registration. It does "
+"not matter which attorney you enter."
+msgstr ""
+"Rhowch enw un atwrnai a enwir ar yr hysbysiad cofrestru. Does dim ots pa "
+"atwrnai."
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:48
+msgid "Spell the name as it appears on the notice of registration."
+msgstr "Cofiwch sillafu’r enw fel y mae’n ymddangos ar yr hysbysiad cofrestru."
 
 #~ msgid ""
 #~ "If you’re a donor or an attorney who wants to see an LPA summary, go to the "
