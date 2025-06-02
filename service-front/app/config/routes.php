@@ -70,6 +70,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 Viewer\Handler\PaperVerificationCodeSentToHandler::class,
                 ['GET', 'POST'],
                 'pv.verification-code-sent-to');
+
+    $app->route('/paper-verification/provide-attorney-details',
+                Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class,
+                ['GET', 'POST'],
+                'pv.provide-attorney-details');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
