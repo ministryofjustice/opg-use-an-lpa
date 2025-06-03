@@ -35,6 +35,7 @@ use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
