@@ -68,6 +68,16 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 ['GET', 'POST'],
                 'pv.check-code');
 
+    $app->route('/paper-verification/provide-attorney-details',
+                Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class,
+                ['GET', 'POST'],
+                'pv.provide-attorney-details');
+
+    $app->route('/paper-verification/donor-dob',
+                PVDonorDateOfBirthHandler::class,
+                ['GET', 'POST'],
+                'donor-dob');
+
     $app->route('/paper-verification/attorney-dob',
                 AttorneyDateOfBirthHandler::class,
                 ['GET', 'POST'],
