@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler\PaperVerification;
+namespace Viewer\Handler;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -11,17 +11,16 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Form\NumberOfAttorneys;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Form\AttorneyDetailsForPV;
 
 /**
  * @codeCoverageIgnore
  */
-class NumberOfAttorneysHander extends AbstractPVSCodeHandler
+class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
-    private NumberOfAttorneys $form;
+    private AttorneyDetailsForPV $form;
 
-    public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
+    private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -33,7 +32,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new NumberOfAttorneys($this->getCsrfGuard($request));
+        $this->form           = new AttorneyDetailsForPV($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -41,14 +40,10 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'         => $this->form->prepare(),
-            'attorneyName' => $attorneyName,
-            'back'         => $this->lastPage($this->state($request)),
-            'en_message'   => $this->systemMessages['view/en'] ?? null,
-            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
+            'form'       => $this->form->prepare(),
+            'en_message' => $systemMessages['view/en'] ?? null,
+            'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -57,14 +52,19 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->dateOfBirth = $this->form->getData()['pv_number_of_attorneys'];
+            $this->session->set('noAttorneys', $this->form->getData()['no_of_attorneys']);
+            $this->session->set('attorneysName', $this->form->getData()['attorneys_name']);
+
+            $this->state($request)->noAttorneys   = $this->form->getData()['no_of_attorneys'];
+            $this->state($request)->attorneysName = $this->form->getData()['attorneys_name'];
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'en_message' => $systemMessages['view/en'] ?? null,
+            'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -73,12 +73,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
-            || $this->state($request)->attorneyName === null
-            || $this->state($request)->dateOfBirth === null;
+        return false;
     }
 
     /**
@@ -95,7 +90,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
+        //needs changing when last page ready
         return 'home';
     }
 }

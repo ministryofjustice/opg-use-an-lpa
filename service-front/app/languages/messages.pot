@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-02T08:47:59+00:00\n"
+"POT-Creation-Date: 2025-06-03T13:26:15+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -267,6 +267,7 @@ msgstr ""
 #: src/Common/templates/common/contact-us.html.twig:7
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
 msgstr ""
@@ -336,6 +337,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -1480,6 +1482,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 msgid "Cancel"
 msgstr ""
@@ -2334,6 +2337,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:19
 msgid "Attorney details"
 msgstr ""
 
@@ -5086,6 +5090,30 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:57
 msgid "If you’re a donor or an attorney who wants to see an LPA summary, go to the <a class=\"govuk-link\" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to LPA summaries."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:26
+msgid "Number of Attorneys"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:31
+msgid "Enter the number of attorneys listed on the notice of registration."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:32
+msgid "For example, 2."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:42
+msgid "Enter an attorney's name"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:47
+msgid "Enter the name of an attorney listed on the notice of registration. It does not matter which attorney you enter."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:48
+msgid "Spell the name as it appears on the notice of registration."
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
