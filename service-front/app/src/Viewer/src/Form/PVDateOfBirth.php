@@ -47,7 +47,7 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
                         'name'    => DobValidator::class,
                         'options' => [
                             'messages' => [
-                                DobValidator::DATE_EMPTY => 'Enter the attorney\'s date of birth',
+                                DobValidator::DATE_EMPTY => 'Enter the date of birth.',
                             ],
                         ],
                     ],

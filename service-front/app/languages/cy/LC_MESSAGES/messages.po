@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-03T08:44:04+00:00\n"
+"POT-Creation-Date: 2025-06-03T14:20:15+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -365,6 +365,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 msgid "Back"
 msgstr "Yn ôl"
@@ -436,6 +437,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
@@ -2182,6 +2184,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 msgid "Cancel"
@@ -2349,6 +2352,7 @@ msgstr "Beth yw eich dyddiad geni?"
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:29
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -7200,12 +7204,17 @@ msgid "Spell the name as it appears on the notice of registration."
 msgstr "Cofiwch sillafu’r enw fel y mae’n ymddangos ar yr hysbysiad cofrestru."
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
 msgid "Enter DOB"
 msgstr "Rhowch ddyddiad geni"
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:24
 msgid "Enter %donorName%'s date of birth"
 msgstr "Rhowch ddyddiad geni %donorName%"
+
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
+msgid "Enter %attorneyName%'s date of birth"
+msgstr "Rhowch ddyddiad geni %attorneyName%"
 
 #~ msgid ""
 #~ "If you’re a donor or an attorney who wants to see an LPA summary, go to the "
