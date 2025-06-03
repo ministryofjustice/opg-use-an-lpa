@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-03T13:26:15+00:00\n"
+"POT-Creation-Date: 2025-06-03T14:20:15+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -267,8 +267,9 @@ msgstr ""
 #: src/Common/templates/common/contact-us.html.twig:7
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
 msgstr ""
 
@@ -336,9 +337,10 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:35
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
@@ -1481,9 +1483,10 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 msgid "Cancel"
 msgstr ""
 
@@ -1610,6 +1613,8 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:29
 msgid "For example, 31 03 1980"
 msgstr ""
 
@@ -3957,25 +3962,25 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:163
+#: src/Common/templates/partials/govuk_form.html.twig:164
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:174
+#: src/Common/templates/partials/govuk_form.html.twig:175
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:185
+#: src/Common/templates/partials/govuk_form.html.twig:186
 msgid "Year"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:251
+#: src/Common/templates/partials/govuk_form.html.twig:252
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:252
+#: src/Common/templates/partials/govuk_form.html.twig:253
 msgid "Hide"
 msgstr ""
 
@@ -5116,18 +5121,15 @@ msgstr ""
 msgid "Spell the name as it appears on the notice of registration."
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
 msgid "Enter DOB"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:24
-msgid "Number of attorneys"
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:24
+msgid "Enter %donorName%'s date of birth"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
-msgid "Enter the total number of attorneys listed on the notice of registration including"
-msgstr ""
-
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:32
-msgid "For example, 2"
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
+msgid "Enter %attorneyName%'s date of birth"
 msgstr ""

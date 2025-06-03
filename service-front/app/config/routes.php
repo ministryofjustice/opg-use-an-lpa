@@ -34,6 +34,8 @@ use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
+use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
 use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -72,6 +74,16 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class,
                 ['GET', 'POST'],
                 'pv.provide-attorney-details');
+
+    $app->route('/paper-verification/donor-dob',
+                PVDonorDateOfBirthHandler::class,
+                ['GET', 'POST'],
+                'donor-dob');
+
+    $app->route('/paper-verification/attorney-dob',
+                AttorneyDateOfBirthHandler::class,
+                ['GET', 'POST'],
+                'attorney-dob');
 
     $app->route('/paper-verification/number-of-attorneys',
                 NumberOfAttorneysHander::class,
