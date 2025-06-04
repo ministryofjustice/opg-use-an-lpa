@@ -118,7 +118,6 @@ enable_development_mode:
 	$(COMPOSE) run --rm api-composer development-enable
 .PHONY: enable_development_mode
 
-
 generate_event_receiver_mocks:
 	mockery --all --recursive --output=./mocks --outpkg=mocks
 
@@ -178,15 +177,6 @@ clear_config_cache:
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
-
-run-structurizr:
-	docker pull structurizr/lite
-	docker run -it --rm -p 8080:8080 -v $(PWD)/docs/diagrams/dsl:/usr/local/structurizr structurizr/lite
-
-run-structurizr-export:
-	docker pull structurizr/cli:latest
-	docker run --rm -v $(PWD)/docs/diagrams/dsl:/usr/local/structurizr structurizr/cli \
-	export -workspace /usr/local/structurizr/workspace.dsl -format mermaid
 
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048

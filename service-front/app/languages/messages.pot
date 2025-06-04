@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-02T13:25:24+00:00\n"
+"POT-Creation-Date: 2025-06-04T09:52:48+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -267,7 +267,9 @@ msgstr ""
 #: src/Common/templates/common/contact-us.html.twig:7
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 msgid "Back"
 msgstr ""
 
@@ -338,8 +340,10 @@ msgstr ""
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
 msgid "Continue"
 msgstr ""
 
@@ -1481,8 +1485,10 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 msgid "Cancel"
 msgstr ""
 
@@ -1609,6 +1615,8 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:29
 msgid "For example, 31 03 1980"
 msgstr ""
 
@@ -5113,6 +5121,19 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:48
 msgid "Spell the name as it appears on the notice of registration."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
+msgid "Enter DOB"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:24
+msgid "Enter %donorName%'s date of birth"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
+msgid "Enter %attorneyName%'s date of birth"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22

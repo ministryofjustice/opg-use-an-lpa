@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -12,21 +11,21 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Form\VerificationCodeReceiver;
+use Viewer\Form\PVDateOfBirth;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
+class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
-    private VerificationCodeReceiver $form;
+    private PVDateOfBirth $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
+    public const TEMPLATE = 'viewer::paper-verification/attorney-dob';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper);
@@ -34,7 +33,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new VerificationCodeReceiver($this->getCsrfGuard($request));
+        $this->form           = new PVDateOfBirth($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -42,18 +41,15 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO get donor name and add it to twig template
-        $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
+        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
+        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
 
-        $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification/verification-code-sent-to'
-            : 'viewer::enter-code';
-
-        return new HtmlResponse($this->renderer->render($template, [
-            'donor_name' => $donorName,
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'form'         => $this->form->prepare(),
+            'attorneyName' => $attorneyName,
+            'back'         => $this->lastPage($this->state($request)),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -62,7 +58,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+            $this->state($request)->dateOfBirth = $this->form->getData()['pv_date_of_birth'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -80,7 +76,9 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
     {
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null;
+            || $this->state($request)->lpaUid === null
+            || $this->state($request)->sentToDonor === null
+            || $this->state($request)->sentToDonor === false;
     }
 
     /**

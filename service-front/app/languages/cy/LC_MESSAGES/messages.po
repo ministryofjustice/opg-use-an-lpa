@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-02T13:25:24+00:00\n"
+"POT-Creation-Date: 2025-06-04T09:52:48+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -364,7 +364,9 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Common/templates/common/contact-us.html.twig:7
 #: src/Viewer/templates/viewer/check-code-found.html.twig:8
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 msgid "Back"
 msgstr "Yn ôl"
 
@@ -437,8 +439,10 @@ msgstr "Math o LPA"
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
 msgid "Continue"
 msgstr "Parhau"
 
@@ -2181,8 +2185,10 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -2347,6 +2353,8 @@ msgstr "Beth yw eich dyddiad geni?"
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:25
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:34
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:29
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:29
 msgid "For example, 31 03 1980"
 msgstr "Er enghraifft, 31 03 1980"
 
@@ -7197,6 +7205,19 @@ msgstr ""
 msgid "Spell the name as it appears on the notice of registration."
 msgstr "Cofiwch sillafu’r enw fel y mae’n ymddangos ar yr hysbysiad cofrestru."
 
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
+msgid "Enter DOB"
+msgstr "Rhowch ddyddiad geni"
+
+#: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:24
+msgid "Enter %donorName%'s date of birth"
+msgstr "Rhowch ddyddiad geni %donorName%"
+
+#: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
+msgid "Enter %attorneyName%'s date of birth"
+msgstr "Rhowch ddyddiad geni %attorneyName%"
+
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
 msgid "Who the paper verification code was sent to"
 msgstr "Y sawl yr anfonwyd y cod gwirio papur ato"
@@ -7207,7 +7228,7 @@ msgstr "Atwrnai"
 
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:31
 msgid "Enter the attorneys name as it appears on the notice of registration"
-msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
+msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru)"
 
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
 msgid "The donor, %donor_name%"
