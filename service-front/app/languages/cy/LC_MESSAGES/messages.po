@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-03T14:20:15+00:00\n"
+"POT-Creation-Date: 2025-06-03T15:43:18+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -367,6 +367,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
 msgstr "Yn ôl"
 
@@ -440,6 +441,7 @@ msgstr "Math o LPA"
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
@@ -2187,6 +2189,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 msgid "Cancel"
 msgstr "Canslo"
 
@@ -5424,25 +5427,25 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr "Rwyf am wirio LPA arall"
 
-#: src/Common/templates/partials/govuk_form.html.twig:164
+#: src/Common/templates/partials/govuk_form.html.twig:163
 msgid "Day"
 msgstr "Dydd"
 
-#: src/Common/templates/partials/govuk_form.html.twig:175
+#: src/Common/templates/partials/govuk_form.html.twig:174
 msgid "Month"
 msgstr "Mis"
 
-#: src/Common/templates/partials/govuk_form.html.twig:186
+#: src/Common/templates/partials/govuk_form.html.twig:185
 msgid "Year"
 msgstr "Blwyddyn"
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:252
+#: src/Common/templates/partials/govuk_form.html.twig:251
 msgid "Show"
 msgstr "Dangos"
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:253
+#: src/Common/templates/partials/govuk_form.html.twig:252
 msgid "Hide"
 msgstr "Cuddio"
 
@@ -7205,6 +7208,7 @@ msgstr "Cofiwch sillafu’r enw fel y mae’n ymddangos ar yr hysbysiad cofrestr
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
 msgid "Enter DOB"
 msgstr "Rhowch ddyddiad geni"
 
@@ -7215,6 +7219,23 @@ msgstr "Rhowch ddyddiad geni %donorName%"
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
 msgid "Enter %attorneyName%'s date of birth"
 msgstr "Rhowch ddyddiad geni %attorneyName%"
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:24
+#, fuzzy
+#| msgid "Number of Attorneys"
+msgid "Number of attorneys"
+msgstr "Nifer yr atwrneiod"
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
+msgid ""
+"Enter the total number of attorneys listed on the notice of registration "
+"including"
+msgstr ""
+"Nodwch gyfanswm yr atwrneiod a restrir ar yr hysbysiad cofrestru, gan gynnwys"
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:32
+msgid "For example, 2"
+msgstr "Er enghraifft, 2."
 
 #~ msgid ""
 #~ "If you’re a donor or an attorney who wants to see an LPA summary, go to the "
