@@ -1,4 +1,4 @@
-FROM node:22-alpine@sha256:ad1aedbcc1b0575074a91ac146d6956476c1f9985994810e4ee02efd932a68fd as asset-env
+FROM node:22.16.0-alpine3.22@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e as asset-env
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ FROM golang:1.24.3-alpine@sha256:b4f875e650466fa0fe62c6fd3f02517a392123eea85f1d7
 
 RUN apk --no-cache add \
   build-base=0.5-r3 \
-  ca-certificates=20241121-r1 \
+  ca-certificates=20241121-r2	\
   tzdata=2025b-r0 \
   && rm -rf /var/cache/apk/* && update-ca-certificates && \
   adduser -D appuser
