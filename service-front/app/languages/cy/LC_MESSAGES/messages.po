@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-06-06T13:49:54+00:00\n"
+"POT-Creation-Date: 2025-06-06T23:36:54+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -130,6 +130,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:19
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:29
 #: src/Actor/src/Handler/RemoveLpaHandler.php:90
 msgid "Health and welfare"
 msgstr "Iechyd a lles"
@@ -367,6 +368,7 @@ msgstr "Cadarnhau ein bod wedi dod o hyd i’r atwrneiaeth arhosol gywir"
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 msgid "Back"
 msgstr "Yn ôl"
@@ -411,6 +413,7 @@ msgstr "Enw’r rhoddwr"
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:22
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:28
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
@@ -617,8 +620,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:34
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:34
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:24
 msgid "Donor name"
-msgstr "Enw’r rhoddwr"
+msgstr "Daw’r cod i ben"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:42
 msgid ""
@@ -2191,6 +2195,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 msgid "Cancel"
 msgstr "Canslo"
@@ -5869,6 +5874,7 @@ msgstr "Erioed wedi mewngofnodi"
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:3
 msgid "We’ve found this LPA"
 msgstr "Rydym wedi dod o hyd i’r LPA hwn"
 
@@ -5939,16 +5945,19 @@ msgstr "gweld yr LPA ymhellach ymlaen"
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:65
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:65
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:36
 msgid "Your organisation name"
 msgstr "Enw eich sefydliad"
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:66
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:66
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:40
 msgid "This will be displayed to the attorneys and donor on the LPA"
 msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:70
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:70
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:47
 msgid "View this LPA"
 msgstr "Gweld yr LPA"
 
@@ -7252,3 +7261,11 @@ msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
 msgid "The donor, %donor_name%"
 msgstr "Y rhoddwr, %donor_name%"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:20
+msgid "The LPA is ready to view"
+msgstr "Mae’r LPA yn barod i’w gweld"
+
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:29
+msgid "Property and affairs"
+msgstr "Eiddo ac arian"
