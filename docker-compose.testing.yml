@@ -7,7 +7,7 @@ services:
       context: zap
 
   lpa-codes-pact-mock:
-    image: pactfoundation/pact-cli:latest-multi
+    image: pactfoundation/pact-cli:latest-multi@sha256:328565c63fcd516c91ab9a3787231424e55ba22c05b082ab648dd67d841b47d9
     ports:
       - 1234:80
     command:
@@ -26,7 +26,7 @@ services:
       - ./service-api/app/test/pacts:/tmp/pacts
 
   api-gateway-pact-mock:
-    image: pactfoundation/pact-cli:latest-multi
+    image: pactfoundation/pact-cli:latest-multi@sha256:328565c63fcd516c91ab9a3787231424e55ba22c05b082ab648dd67d841b47d9
     command:
       - mock-service
       - -p
@@ -43,7 +43,7 @@ services:
       - ./service-api/app/test/pacts:/tmp/pacts
 
   iap-images-mock:
-    image: pactfoundation/pact-cli:latest-multi
+    image: pactfoundation/pact-cli:latest-multi@sha256:328565c63fcd516c91ab9a3787231424e55ba22c05b082ab648dd67d841b47d9
     command:
       - mock-service
       - -p
