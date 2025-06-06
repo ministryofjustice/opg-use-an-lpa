@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-03T14:20:15+00:00\n"
+"POT-Creation-Date: 2025-06-03T15:43:18+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -270,6 +270,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
 msgstr ""
 
@@ -341,6 +342,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 msgid "Continue"
@@ -1487,6 +1489,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 msgid "Cancel"
 msgstr ""
 
@@ -3962,25 +3965,25 @@ msgstr ""
 msgid "I want to check another LPA"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:164
+#: src/Common/templates/partials/govuk_form.html.twig:163
 msgid "Day"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:175
+#: src/Common/templates/partials/govuk_form.html.twig:174
 msgid "Month"
 msgstr ""
 
-#: src/Common/templates/partials/govuk_form.html.twig:186
+#: src/Common/templates/partials/govuk_form.html.twig:185
 msgid "Year"
 msgstr ""
 
 #. Show password label
-#: src/Common/templates/partials/govuk_form.html.twig:252
+#: src/Common/templates/partials/govuk_form.html.twig:251
 msgid "Show"
 msgstr ""
 
 #. Hide password label
-#: src/Common/templates/partials/govuk_form.html.twig:253
+#: src/Common/templates/partials/govuk_form.html.twig:252
 msgid "Hide"
 msgstr ""
 
@@ -5123,6 +5126,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
 msgid "Enter DOB"
 msgstr ""
 
@@ -5132,4 +5136,16 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:24
 msgid "Enter %attorneyName%'s date of birth"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:24
+msgid "Number of attorneys"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
+msgid "Enter the total number of attorneys listed on the notice of registration including"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:32
+msgid "For example, 2"
 msgstr ""

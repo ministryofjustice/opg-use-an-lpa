@@ -36,7 +36,11 @@ use Psr\Container\ContainerInterface;
 use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
 use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
+<<<<<<< HEAD
 use Viewer\Handler\PaperVerification\LpaReadyToViewHandler;
+=======
+use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
+>>>>>>> main
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -85,10 +89,17 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 ['GET', 'POST'],
                 'attorney-dob');
 
+<<<<<<< HEAD
     $app->route('/paper-verification/enter-organisation-name',
                 LpaReadyToViewHandler::class,
                 ['GET', 'POST'],
                 'enter-organisation-name');
+=======
+    $app->route('/paper-verification/number-of-attorneys',
+                NumberOfAttorneysHander::class,
+                ['GET', 'POST'],
+                'number-of-attorneys');
+>>>>>>> main
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
