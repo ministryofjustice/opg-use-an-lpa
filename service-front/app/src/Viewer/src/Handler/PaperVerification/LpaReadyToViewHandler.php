@@ -36,8 +36,8 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // TODO - Remove temporary code and get from session
-       $this->code    = ($this->getSession($request, 'session')->get('lpa_code')) ?? 'P-AB12-CD34-EF56-G7';
-       $this->surname = ($this->getSession($request, 'session')->get('donor_surname')) ?? 'Babara Gilson';
+       $this->code     = ($this->getSession($request, 'session')->get('lpa_code')) ?? 'P-AB12-CD34-EF56-G7';
+       $this->surname  = ($this->getSession($request, 'session')->get('donor_surname')) ?? 'Babara Gilson';
 
         $this->form           = new Organisation($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
@@ -47,21 +47,20 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-       if (isset($this->code)) {
+        if (isset($this->code)) {
             // TODO - LPA service call to check lpa match
             //$lpa = $this->lpaService->getLpaByLpaCode($this->code, $this->surname, null);
 
             // mocking Lpa data for testing page
-           $lpa = json_decode(
-               file_get_contents(
-                   __DIR__ . '../../../../../../test/fixtures/combined_lpa.json'
-               ),
-               true
-           );
+            $lpa = json_decode(
+                file_get_contents(
+                    __DIR__ . '../../../../../../test/fixtures/combined_lpa.json'
+                ),
+                true
+            );
 
             $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
-            //
-       }
+        }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
