@@ -60,7 +60,8 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
             );
 
             $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
-            $donor = $combinedSiriusLpa->getDonor()->getFirstname() . ' ' . $combinedSiriusLpa->getDonor()->getSurname();
+            $donor             = $combinedSiriusLpa->getDonor()->getFirstname() .
+                                          ' ' . $combinedSiriusLpa->getDonor()->getSurname();
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
