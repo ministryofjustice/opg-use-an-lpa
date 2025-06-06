@@ -52,7 +52,13 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
             //$lpa = $this->lpaService->getLpaByLpaCode($this->code, $this->surname, null);
 
             // mocking Lpa data for testing page
-            $lpa = json_decode(file_get_contents(__DIR__ . '../../../../../../test/fixtures/combined_lpa.json'), true);
+           $lpa = json_decode(
+               file_get_contents(
+                   __DIR__ . '../../../../../../test/fixtures/combined_lpa.json'
+               ),
+               true
+           );
+
             $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
             //
        }
