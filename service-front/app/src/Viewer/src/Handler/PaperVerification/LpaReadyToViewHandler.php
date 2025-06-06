@@ -36,8 +36,8 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         // TODO - Remove temporary code and get from session
-       $this->code     = ($this->getSession($request, 'session')->get('lpa_code')) ?? 'P-AB12-CD34-EF56-G7';
-       $this->surname  = ($this->getSession($request, 'session')->get('donor_surname')) ?? 'Babara Gilson';
+        $this->code    = ($this->getSession($request, 'session')->get('lpa_code')) ?? 'P-AB12-CD34-EF56-G7';
+        $this->surname = ($this->getSession($request, 'session')->get('donor_surname')) ?? 'Babara Gilson';
 
         $this->form           = new Organisation($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
@@ -60,11 +60,12 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
             );
 
             $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
+            $donor = $combinedSiriusLpa->getDonor()->getFirstname() . ' ' . $combinedSiriusLpa->getDonor()->getSurname();
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donor_name' => $combinedSiriusLpa->getDonor()->getFirstname() . ' ' . $combinedSiriusLpa->getDonor()->getSurname(),
+            'donor_name' => $donor,
             'lpa_type'   => $combinedSiriusLpa->getLpaType(),
             'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
@@ -95,7 +96,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-       return false;
+        return false;
 //        return $this->state($request)->lastName === null
 //            || $this->state($request)->code === null
 //            || $this->state($request)->lpaUid === null
