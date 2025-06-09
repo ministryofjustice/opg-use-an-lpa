@@ -23,24 +23,8 @@ trait RequestAsObjectTrait
      */
     public function requestAsObject(ServerRequestInterface $request, string $class): object
     {
-        try {
-            return $request
-                ->getAttribute(RequestObjectMiddleware::REQUEST_OBJECT)
-                ->get($class);
-        } catch (UnableToHydrateObject $exception) {
-            if (count($exception->missingFields()) > 0) {
-                throw new BadRequestException(
-                    sprintf('%s requires %s', $class, implode(', ', $exception->missingFields())),
-                    ['requestObject' => $class],
-                    $exception
-                );
-            }
-
-            throw new BadRequestException(
-                'Could not hydrate request object',
-                ['requestObject' => $class],
-                $exception
-            );
-        }
+        return $request
+            ->getAttribute(RequestObjectMiddleware::REQUEST_OBJECT)
+            ->get($class);
     }
 }
