@@ -1,65 +1,50 @@
-{% extends '@actor/layout.html.twig' %}
+{% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}We need some more details{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}We’ve found this LPA{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
 
-        <main class="govuk-main-wrapper" id="main-content" role="main">
-            {{ govuk_error_summary(form) }}
+        <main class="govuk-main-wrapper " id="main-content" role="main">
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
+                    {{ govuk_error_summary(form) }}
+
                     {{ govuk_form_open(form) }}
+
+                    <h1 class="govuk-heading-xl">{% trans %}The LPA is ready to view{% endtrans %}</h1>
+                    <table id="confirmation-table" class="govuk-table">
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
+                            <td class="govuk-table__cell">{{ donor_name }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
+                            <td class="govuk-table__cell">{{ lpa_type == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
+                    <h2 class="govuk-heading-m" id="org_name_heading">{% trans %}Your organisation name{% endtrans %}</h2>
 
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-heading-xl">
-                                    {% trans %}We need some more details{% endtrans %}
-                                </h1>
-                            </legend>
 
-                            <p class="govuk-body">{% trans %}Because the code you entered is a paper verification code, we need some further details:{% endtrans %}</p>
-
-                            <ul class="govuk-list govuk-list--bullet">
-                                <li>{% trans %}<abbr title="lasting power of attorney">LPA</abbr> reference number - this will be on any letters we've sent to the donor or attorneys{% endtrans %}</li>
-                                <li>{% trans %}date of birth of the person who the paper verification code was sent to{% endtrans %}</li>
-                                <li>{% trans %}number of attorneys named on the notice of registration{% endtrans %}</li>
-                                <li>{% trans %}name of 1 attorney named on the notice of registration{% endtrans %}</li>
-                            </ul>
-
-                            <h2 class="govuk-heading-m">
-                                {% trans %}What is the LPA reference number?{% endtrans %}
-                            </h2>
-
-                            {{ govuk_form_element(form.get('lpa_reference'), {
-                                'hint': 'LPA reference numbers start with an M followed by 12 numbers.<br>For example, M-1234-1234-1234.'| trans,
-                                'value': 'Lpa Reference',
-                                'aria_labelledby': 'ref_number_heading'
-                            }) }}
-                        </fieldset>
-                    </div>
-
-                    <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
-                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
-                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
-                                {% trans %}Continue{% endtrans %}
-                            </button>
-                            <a href="{{ path('home') }}" role="button" draggable="false"
-                               class="govuk-button moj-button-menu__item govuk-button--secondary "
-                               data-module="govuk-button">
-                                {% trans %}Cancel{% endtrans %}
-                            </a>
-                        </div>
-                    </div>
+                    <button data-prevent-double-click="true" type="submit"
+                            class="govuk-button">{% trans %}View this LPA{% endtrans %}</button>
+                    <a href="{{ path('home') }}" role="button" draggable="false"
+                       class="govuk-button moj-button-menu__item govuk-button--secondary "
+                       data-module="govuk-button">
+                        {% trans %}Cancel{% endtrans %}
+                    </a>
                     {{ govuk_form_close() }}
                 </div>
-
             </div>
         </main>
     </div>
