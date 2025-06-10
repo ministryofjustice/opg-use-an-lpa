@@ -177,6 +177,7 @@ class DynamoDBExporterAndQuerier:
             TableArn=table_arn, MaxResults=1
         )
         completed = True
+        print(response)
         for export in response["ExportSummaries"]:
             export_arn_hash = export["ExportArn"].rsplit("/", 1)[-1]
             s3_path = "s3://{}/{}/AWSDynamoDB/{}/data/".format(
@@ -229,6 +230,7 @@ class DynamoDBExporterAndQuerier:
             QueryExecutionContext={"Database": self.athena_database_name},
             ResultConfiguration={"OutputLocation": f"s3://{self.export_bucket_name}/"},
         )
+        print(response)
 
         query_execution_id = response["QueryExecutionId"]
         while True:
