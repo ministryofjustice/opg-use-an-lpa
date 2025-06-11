@@ -2,7 +2,7 @@
   <configuration default="false" name="API Functional" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="false">
     <CommandLine>
       <PhpTestInterpreterSettings>
-        <option name="interpreterName" value="api-app" />
+        <option name="interpreterName" value="test-api-app" />
       </PhpTestInterpreterSettings>
     </CommandLine>
     <TestRunner configuration_file="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" scope="XML" options="--testsuite functional" use_alternative_configuration_file="true" />
