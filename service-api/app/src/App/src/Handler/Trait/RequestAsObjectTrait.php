@@ -12,6 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * @template T as InputFilteredRequest
+ * @codeCoverageIgnore
  */
 trait RequestAsObjectTrait
 {
