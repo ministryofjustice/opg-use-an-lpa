@@ -189,7 +189,7 @@ jobs:
             docker run -d --name tests ${SVC_PREFIX}-app:latest
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec tests docker-php-ext-enable xdebug
-            docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit --testsuite unit
+            docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit
           fi
         if: |
           matrix.run_unit_tests == 'true' &&
