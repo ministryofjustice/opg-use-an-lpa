@@ -2,12 +2,10 @@
   <configuration default="false" name="API Functional" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="false">
     <CommandLine>
       <PhpTestInterpreterSettings>
-        <option name="interpreterName" value="test-api-app" />
+        <option name="interpreterName" value="api-app" />
       </PhpTestInterpreterSettings>
     </CommandLine>
     <TestRunner configuration_file="$PROJECT_DIR$/service-api/app/phpunit.xml.dist" scope="XML" options="--testsuite functional" use_alternative_configuration_file="true" />
-    <method v="2">
-      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Cleanup PACT containers" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>
