@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-06T13:49:54+00:00\n"
+"POT-Creation-Date: 2025-06-06T23:36:54+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -102,6 +102,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:19
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:29
 #: src/Actor/src/Handler/RemoveLpaHandler.php:90
 msgid "Health and welfare"
 msgstr ""
@@ -270,6 +271,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 msgid "Back"
 msgstr ""
@@ -312,6 +314,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:22
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:28
 msgid "Type of LPA"
 msgstr ""
 
@@ -483,6 +486,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:34
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:34
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:24
 msgid "Donor name"
 msgstr ""
 
@@ -1491,6 +1495,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 msgid "Cancel"
 msgstr ""
@@ -4293,6 +4298,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:3
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:3
 msgid "We’ve found this LPA"
 msgstr ""
 
@@ -4344,16 +4350,19 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:65
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:65
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:36
 msgid "Your organisation name"
 msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:66
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:66
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:40
 msgid "This will be displayed to the attorneys and donor on the LPA"
 msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:70
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:70
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:47
 msgid "View this LPA"
 msgstr ""
 
@@ -5166,4 +5175,12 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:34
 msgid "The donor, %donor_name%"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:20
+msgid "The LPA is ready to view"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:29
+msgid "Property and affairs"
 msgstr ""
