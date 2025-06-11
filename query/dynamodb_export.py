@@ -331,6 +331,7 @@ class DynamoDBExporterAndQuerier:
             outputFileName="CountOfUsersWithNoLpas",
         )
 
+
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
     parser.add_argument(
