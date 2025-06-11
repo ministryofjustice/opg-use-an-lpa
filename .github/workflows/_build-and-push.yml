@@ -43,7 +43,6 @@ jobs:
             svc_suffix: 'app'
             build_development_docker: 'true'
             run_unit_tests: 'true'
-            run_functional_tests: 'false'
             run_integration_tests: 'true'
             artifact_to_dl: 'dist-web'
             path_to_docker_file: 'service-front/docker/app/Dockerfile'
@@ -51,7 +50,6 @@ jobs:
             svc_suffix: 'web'
             build_development_docker: 'false'
             run_unit_tests: 'false'
-            run_functional_tests: 'false'
             run_integration_tests: 'false'
             artifact_to_dl: 'dist-web'
             path_to_docker_file: 'service-front/docker/web/Dockerfile'
@@ -59,7 +57,6 @@ jobs:
             svc_suffix: 'app'
             build_development_docker: 'true'
             run_unit_tests: 'true'
-            run_functional_tests: 'true'
             run_integration_tests: 'true'
             artifact_to_dl: ''
             path_to_docker_file: 'service-api/docker/app/Dockerfile'
@@ -67,7 +64,6 @@ jobs:
             svc_suffix: 'web'
             build_development_docker: 'false'
             run_unit_tests: 'false'
-            run_functional_tests: 'false'
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'service-api/docker/web/Dockerfile'
@@ -75,7 +71,6 @@ jobs:
             svc_suffix: 'app'
             build_development_docker: 'false'
             run_unit_tests: 'true'
-            run_functional_tests: 'false'
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'service-admin/Dockerfile'
@@ -83,7 +78,6 @@ jobs:
             svc_suffix: 'lambda'
             build_development_docker: 'false'
             run_unit_tests: 'true'
-            run_functional_tests: 'false'
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/upload-statistics/Dockerfile'
@@ -91,7 +85,6 @@ jobs:
             svc_suffix: 'receiver'
             build_development_docker: 'false'
             run_unit_tests: 'true'
-            run_functional_tests: 'false'
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/event-receiver/Dockerfile'
@@ -192,21 +185,7 @@ jobs:
             cd lambda-functions/${SVC_PREFIX}-receiver/app
             go mod tidy
             go test
-          else
-            docker run -d --name tests ${SVC_PREFIX}-app:latest
-            docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-            docker exec tests install-php-extensions xdebug
-            docker exec tests php -dxdebug.mode=coverage /app/vendor/bin/phpunit --testsuite unit
-          fi
-        if: |
-          matrix.run_unit_tests == 'true' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-
-      - name: docker functional tests
-        env:
-          SVC_PREFIX: ${{ matrix.svc_prefix }}
-        run: |
-          if [[ "${SVC_PREFIX}" = "api" ]]; then
+          elif [ ${SVC_PREFIX} == 'api' ]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
               --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
@@ -218,21 +197,26 @@ jobs:
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
             export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
 
-            docker run -d --name functests \
+            docker run -d --name tests \
               --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP \
               --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP \
               --add-host iap-images-mock:$DOCKER_REMOTE_IAP_PACT_IP api-app:latest
 
-            docker exec functests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-            docker exec functests install-php-extensions xdebug
-            docker exec functests php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit --testsuite unit
+            docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+            docker exec tests docker-php-ext-enable xdebug
+            docker exec tests /usr/local/bin/php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
             docker stop iap-images-mock
+          else
+            docker run -d --name tests ${SVC_PREFIX}-app:latest
+            docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+            docker exec tests docker-php-ext-enable xdebug
+            docker exec tests /usr/local/bin/php -dxdebug.mode=coverage /app/vendor/bin/phpunit --testsuite unit
           fi
         if: |
-          matrix.run_functional_tests == 'true' &&
+          matrix.run_unit_tests == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: docker integration and acceptance tests
