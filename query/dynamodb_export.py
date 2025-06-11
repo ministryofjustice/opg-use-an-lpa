@@ -243,7 +243,7 @@ class DynamoDBExporterAndQuerier:
         assert finish_state == "SUCCEEDED", f"query state is {finish_state}"
 
         response = self.aws_athena_client.get_query_results(
-            QueryExecutionId=query_execution_id, MaxResults=500
+            QueryExecutionId=query_execution_id, MaxResults=1000
         )
 
         results = response["ResultSet"]["Rows"]
@@ -251,7 +251,7 @@ class DynamoDBExporterAndQuerier:
         while "NextToken" in response:
             response = self.aws_athena_client.get_query_results(
                 QueryExecutionId=query_execution_id,
-                MaxResults=500,
+                MaxResults=1000,
                 NextToken=response["NextToken"],
             )
             results.extend(response["ResultSet"]["Rows"])
@@ -393,12 +393,12 @@ def main():
 
     work.get_expired_viewed_access_codes()
     work.get_expired_unviewed_access_codes()
-    work.get_count_of_viewed_access_codes()
-    work.get_count_of_created_access_codes()
-    work.get_count_of_expired_access_codes()
-    work.get_organisations_field()
-    work.get_count_of_lpas_for_users()
-    work.get_count_of_users_with_no_lpas()
+#     work.get_count_of_viewed_access_codes()
+#     work.get_count_of_created_access_codes()
+#     work.get_count_of_expired_access_codes()
+#     work.get_organisations_field()
+#     work.get_count_of_lpas_for_users()
+#     work.get_count_of_users_with_no_lpas()
 
 
 if __name__ == "__main__":
