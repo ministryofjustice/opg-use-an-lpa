@@ -1,0 +1,61 @@
+{% extends '@actor/layout.html.twig' %}
+
+{% block html_title %}{% trans %}Enter DOB{% endtrans %} - {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+            {{ govuk_error_summary(form) }}
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-full">
+
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset">
+
+                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                <h1 class="govuk-heading-xl">
+                                    {% trans %}Number of attorneys{% endtrans %}
+                                </h1>
+                            </legend>
+
+                            <p class="govuk-body">
+                                {% trans %}Enter the total number of attorneys listed on the notice of registration including{% endtrans %} {{ attorneyName }}
+                            </p>
+                            {{ govuk_form_element(form.get('no_of_attorneys'), {
+                                'hint': 'For example, 2'| trans,
+                                'attr' : {'class': 'govuk-input--width-3'},
+                                'value': 'Attorney DOB',
+                                'aria_labelledby': 'Attorney_dob'
+                            }) }}
+
+                        </fieldset>
+
+                    </div>
+                    <div class="moj-button-menu">
+                        <div class="moj-button-menu__wrapper">
+
+                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                                {% trans %}Continue{% endtrans %}
+                            </button>
+                            <a href="{{ path('home') }}" role="button" draggable="false"
+                               class="govuk-button moj-button-menu__item govuk-button--secondary "
+                               data-module="govuk-button">
+                                {% trans %}Cancel{% endtrans %}
+                            </a>
+                        </div>
+                    </div>
+                    {{ govuk_form_close() }}
+                </div>
+
+            </div>
+        </main>
+    </div>
+{% endblock %}
