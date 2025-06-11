@@ -20,7 +20,7 @@
                             <th class="govuk-table__header" scope="row">{% trans %}LPA reference number{% endtrans %}</th>
                             <td class="govuk-table__cell govuk-!-width-one-half">{{ lpaUid }}</td>
                             <td class="govuk-table__cell">
-                                <a href="" role="button" draggable="false" class="moj-button-menu__item">
+                                <a href="{{ path('pv.check-code') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
                                 </a>
                             </td>
@@ -47,7 +47,7 @@
                             <th class="govuk-table__header" scope="row">{% trans %}Number of attorneys{% endtrans %}</th>
                             <td class="govuk-table__cell">{{ noOfAttorneys }}</td>
                             <td class="govuk-table__cell">
-                                <a href="" role="button" draggable="false" class="moj-button-menu__item">
+                                <a href="{{ path('number-of-attorneys') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
                                 </a>
                             </td>
@@ -56,7 +56,7 @@
                             <th class="govuk-table__header" scope="row">{% trans %}Attorney name{% endtrans %}</th>
                             <td class="govuk-table__cell">{{ attorneyName }}</td>
                             <td class="govuk-table__cell">
-                                <a href="" role="button" draggable="false" class="moj-button-menu__item">
+                                <a href="{{ path('pv.provide-attorney-details') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
                                 </a>
                             </td>
