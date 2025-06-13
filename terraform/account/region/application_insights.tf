@@ -4,13 +4,3 @@ resource "aws_sns_topic" "cloudwatch_application_insights" {
 
   provider = aws.region
 }
-
-resource "aws_applicationinsights_application" "environment" {
-  count                  = var.account.cloudwatch_application_insights_enabled ? 1 : 0
-  resource_group_name    = aws_resourcegroups_group.account.name
-  auto_config_enabled    = true
-  cwe_monitor_enabled    = true
-  ops_center_enabled     = true
-  ops_item_sns_topic_arn = aws_sns_topic.cloudwatch_application_insights.arn
-  provider               = aws.region
-}
