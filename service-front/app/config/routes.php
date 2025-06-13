@@ -35,6 +35,7 @@ use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\LpaNotFoundHandler;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
 use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 
@@ -93,6 +94,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 NumberOfAttorneysHander::class,
                 ['GET', 'POST'],
                 'number-of-attorneys');
+
+    $app->route('/paper-verification/lpa-not-found',
+                LpaNotFoundHandler::class,
+                ['GET', 'POST'],
+                'lpa-not-found');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
