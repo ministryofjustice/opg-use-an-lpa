@@ -69,6 +69,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
+        return false;
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
