@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Request;
 
+use App\Entity\Casters\CastToDateTimeImmutable;
 use App\Value\CastToValueObject;
 use App\Value\LpaUid;
 use App\Value\PaperVerificationCode;
@@ -34,7 +35,7 @@ class PaperVerificationCodeValidate implements InputFilteredRequest
         public readonly string $attorneyName,
         #[Input\Required]
         #[Input\Validator(Date::class, ['format' => 'Y-m-d'])]
-        ##[CastToDateTimeImmutable('!Y-m-d')] # TODO Due to a bug in the hydrator we can't do this
+        #[CastToDateTimeImmutable('!Y-m-d')]
         public readonly DateTimeInterface $dateOfBirth,
         #[Input\Required]
         public readonly int $noOfAttorneys,
