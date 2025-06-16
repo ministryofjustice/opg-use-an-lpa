@@ -16,7 +16,7 @@ use function assert;
 use function is_int;
 
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
-final class CastToDateTimeImmutable implements PropertyCaster, PropertySerializer
+final class CastToDateTimeImmutable implements PropertyCaster
 {
     public function __construct(private ?string $format = null, private ?string $timeZone = null)
     {
@@ -30,17 +30,6 @@ final class CastToDateTimeImmutable implements PropertyCaster, PropertySerialize
             return DateTimeImmutable::createFromFormat($this->format, $value, $timeZone);
         }
 
-        if (is_int($value)) {
-            $value = '@' . $value;
-        }
-
         return new DateTimeImmutable($value, $timeZone);
-    }
-
-    public function serialize(mixed $value, ObjectMapper $hydrator): string
-    {
-        assert($value instanceof DateTimeInterface);
-
-        return $value->format($this->format ?: 'Y-m-d H:i:s.uO');
     }
 }
