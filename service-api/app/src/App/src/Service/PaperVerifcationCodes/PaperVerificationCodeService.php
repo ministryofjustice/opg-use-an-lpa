@@ -10,14 +10,17 @@ use App\Request\PaperVerificationCodeView;
 
 class PaperVerificationCodeService
 {
+    /** @codeCoverageIgnore  */
     public function usable(PaperVerificationCodeUsable $params): void
     {
     }
 
+    /** @codeCoverageIgnore  */
     public function validate(PaperVerificationCodeValidate $params): void
     {
     }
 
+    /** @codeCoverageIgnore  */
     public function view(PaperVerificationCodeView $params): void
     {
     }
