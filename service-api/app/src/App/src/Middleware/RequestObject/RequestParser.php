@@ -33,10 +33,10 @@ class RequestParser
 
     /**
      * @param class-string<T> $request
-     * @psalm-return InputFilteredRequest
+     * @psalm-return T
      * @throws BadRequestException
      */
-    public function get(string $request): object
+    public function get(string $request): InputFilteredRequest
     {
         $form = $this->attributeBuilder->createForm($request);
 
