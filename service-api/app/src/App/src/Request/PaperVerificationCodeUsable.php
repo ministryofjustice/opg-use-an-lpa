@@ -14,6 +14,7 @@ class PaperVerificationCodeUsable implements InputFilteredRequest
     public function __construct(
         #[Input\Required]
         public readonly string $name,
+        #[Input\Required]
         #[Input\Validator(Regex::class, ['pattern' => '/^P(-[[:alnum:]]{4}){3}-[[:alnum:]]{2}$/'])]
         #[CastToValueObject(PaperVerificationCode::class)]
         public readonly PaperVerificationCode $code,
