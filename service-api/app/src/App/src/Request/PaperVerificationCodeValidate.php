@@ -10,7 +10,6 @@ use App\Value\PaperVerificationCode;
 use DateTimeInterface;
 use Laminas\Form\Annotation as Input;
 use Laminas\Validator\InArray;
-use Laminas\Validator\NotEmpty;
 use Laminas\Validator\Regex;
 use Laminas\Validator\Date;
 
@@ -28,7 +27,7 @@ class PaperVerificationCodeValidate implements InputFilteredRequest
         #[CastToValueObject(LpaUid::class)]
         public readonly LpaUid $lpaUid,
         #[Input\Required]
-        #[Input\Validator(NotEmpty::class, ['type' => NotEmpty::NULL])]
+        #[Input\AllowEmpty]
         #[Input\Validator(InArray::class, ['haystack' => [true, false], 'strict' => InArray::COMPARE_STRICT])]
         public readonly bool $sentToDonor,
         #[Input\Required]

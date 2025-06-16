@@ -71,7 +71,7 @@ class PaperVerificationCodeValidateTest extends AbstractFunctionalTestCase
             'name'          => 'Test',
             'code'          => 'P-1111-1111-1111-11',
             'lpaUid'        => 'M-1234-1234-1234',
-            'sentToDonor'   => 'true',
+            'sentToDonor'   => 'false',
             'attorneyName'  => 'Test Test',
             'dateOfBirth'   => '1999-01-01',
             'noOfAttorneys' => 2,
