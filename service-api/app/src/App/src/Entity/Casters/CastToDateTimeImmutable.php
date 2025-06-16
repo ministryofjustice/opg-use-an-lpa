@@ -6,14 +6,9 @@ namespace App\Entity\Casters;
 
 use Attribute;
 use DateTimeImmutable;
-use DateTimeInterface;
 use DateTimeZone;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use EventSauce\ObjectHydrator\PropertyCaster;
-use EventSauce\ObjectHydrator\PropertySerializer;
-
-use function assert;
-use function is_int;
 
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::TARGET_PROPERTY | Attribute::IS_REPEATABLE)]
 final class CastToDateTimeImmutable implements PropertyCaster
