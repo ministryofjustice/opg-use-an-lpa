@@ -20,6 +20,12 @@ variable "admin_container_version" {
   type        = string
 }
 
+variable "cloudwatch_application_insights_enabled" {
+  description = "Whether to turn on Application Insights for the environment."
+  type        = bool
+  default     = false
+}
+
 variable "associate_alb_with_waf_web_acl_enabled" {
   description = "Whether or not to associate the ALBs with the WAF web ACL."
   type        = bool
