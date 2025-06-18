@@ -16,8 +16,18 @@ class PaperVerificationCodeService
     }
 
     /** @codeCoverageIgnore  */
-    public function validate(PaperVerificationCodeValidate $params): void
+    public function validate(PaperVerificationCodeValidate $params): array
     {
+        return [
+            'name'          => $params->name,
+            'code'          => $params->code,
+            'lpaUid'        => $params->lpaUid,
+            'sentToDonor'   => $params->sentToDonor,
+            'attorneyName'  => $params->attorneyName,
+            'donorName'     => 'Barbara Gilson',
+            'dateOfBirth'   => $params->dateOfBirth,
+            'noOfAttorneys' => $params->noOfAttorneys,
+        ];
     }
 
     /** @codeCoverageIgnore  */

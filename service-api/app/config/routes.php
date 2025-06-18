@@ -22,6 +22,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
+    PaperVerification\PaperVerificationValidationHandler,
     RequestChangeEmailHandler,
     RequestCleanseHandler,
     RequestPasswordResetHandler,
@@ -165,4 +166,15 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
+
+    $app->post(
+        '/v1/paper-verification/validate',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                PaperVerificationValidationHandler::class,
+            ],
+        ),
+        'pv.validate'
+    );
 };
