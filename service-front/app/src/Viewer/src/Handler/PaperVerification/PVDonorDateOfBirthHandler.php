@@ -6,6 +6,7 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
+use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -58,11 +59,18 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->code_receiver = $this->form->getData()['pv_date_of_birth'];
+//            $this->state($request)->code_receiver = $this->form->getData()['pv_date_of_birth'];
+            $postData = $this->form->getData();
+
+            $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
+                (int) $postData['dob']['year'],
+                (int) $postData['dob']['month'],
+                (int) $postData['dob']['day']
+            );
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
-        $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+//        $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
@@ -79,7 +87,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
             || $this->state($request)->sentToDonor === false;
     }
 
@@ -89,7 +96,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'pv.provide-attorney-details';
     }
 
     /**
@@ -98,6 +105,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     public function lastPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'pv.verification-code-sent-to';
     }
 }

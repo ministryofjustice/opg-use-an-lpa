@@ -62,7 +62,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+//            $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -89,7 +89,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'donor-dob';
     }
 
     /**
