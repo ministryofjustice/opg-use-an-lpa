@@ -8,7 +8,7 @@ use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Text;
-use Laminas\InputFilter\InputFilter;
+use Laminas\Form\Element\Number;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -35,7 +35,7 @@ class AttorneyDetailsForPVTest extends TestCase implements TestsLaminasForm
     {
         return [
             '__csrf'          => Csrf::class,
-            'no_of_attorneys' => Text::class,
+            'no_of_attorneys' => Number::class,
             'attorneys_name'  => Text::class,
         ];
     }
