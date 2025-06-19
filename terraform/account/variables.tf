@@ -17,13 +17,12 @@ variable "lambda_container_version" {
 variable "accounts" {
   type = map(
     object({
-      account_id                              = string
-      cloudwatch_application_insights_enabled = bool
-      shared_account_id                       = number
-      is_production                           = bool
-      retention_in_days                       = number
-      pagerduty_service_name                  = string
-      pagerduty_service_id                    = string
+      account_id             = string
+      shared_account_id      = number
+      is_production          = bool
+      retention_in_days      = number
+      pagerduty_service_name = string
+      pagerduty_service_id   = string
       opg_metrics = object({
         enabled                     = bool
         api_key_secretsmanager_name = string
