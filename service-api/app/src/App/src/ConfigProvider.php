@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use Aws;
+use EventSauce;
 use Facile;
 use GuzzleHttp;
 use Laminas;
@@ -108,8 +109,14 @@ class ConfigProvider
                     => Service\ActorCodes\CodeValidationStrategyFactory::class,
                 DataAccess\ApiGateway\ActorCodes::class => DataAccess\ApiGateway\ActorCodesFactory::class,
 
+                // Reflection Based Object Hydrations
+                'definition_provider_without_key_conversion'
+                    => Service\Hydration\WithoutConversionDefinitionProviderFactory::class,
+                'request_object_mapper' => Middleware\RequestObject\RequestObjectMapperFactory::class,
+
                 // Handlers
-                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
+                Middleware\RequestObject\RequestParser::class => Middleware\RequestObject\RequestParserFactory::class,
+                Handler\HealthcheckHandler::class             => Handler\Factory\HealthcheckHandlerFactory::class,
 
                 // One Login
                 Service\Authentication\AuthorisationClientManager::class

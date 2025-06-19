@@ -31,7 +31,7 @@ class ViewerContext implements Context
     #[Given('I have been given access to an LPA via share code')]
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
-        $this->viewerCode             = '1111-1111-1111';
+        $this->viewerCode             = '111111111111';
         $this->donorSurname           = 'Deputy';
         $this->viewerCodeOrganisation = 'santander';
         $this->lpaViewedBy            = 'Santander';

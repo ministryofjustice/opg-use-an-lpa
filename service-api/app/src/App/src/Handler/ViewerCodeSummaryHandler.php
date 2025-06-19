@@ -8,6 +8,8 @@ use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
+use App\Handler\Trait\RequestAsObjectTrait;
+use App\Request\ViewerCodeSummary;
 use App\Service\Lpa\LpaManagerInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -19,6 +21,9 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ViewerCodeSummaryHandler implements RequestHandlerInterface
 {
+    /** @use RequestAsObjectTrait<ViewerCodeSummary> */
+    use RequestAsObjectTrait;
+
     public function __construct(
         private LpaManagerInterface $lpaManager,
     ) {
@@ -34,13 +39,9 @@ class ViewerCodeSummaryHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $params = $request->getParsedBody();
+        $params = $this->requestAsObject($request, ViewerCodeSummary::class);
 
-        if (empty($params['code']) || empty($params['name'])) {
-            throw new BadRequestException("'code' and 'name' are required fields.");
-        }
-
-        $data = $this->lpaManager->getByViewerCode($params['code'], $params['name'], null);
+        $data = $this->lpaManager->getByViewerCode($params->code, $params->name);
 
         return new JsonResponse($data);
     }
