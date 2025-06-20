@@ -62,7 +62,12 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-//            $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
+            $sentToDonor = $this->form->getData()['verification_code_receiver'];
+
+            if (!$this->state($request)->sentToDonor = $sentToDonor === 'Donor') {
+                $this->state($request)->attorneyName = $this->form->getData()['attorney_name'];
+            }
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 

@@ -59,7 +59,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-//            $this->state($request)->code_receiver = $this->form->getData()['pv_date_of_birth'];
             $postData = $this->form->getData();
 
             $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
@@ -69,8 +68,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
             );
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
-
-//        $this->state($request)->code_receiver = $this->form->getData()['verification_code_receiver'];
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
