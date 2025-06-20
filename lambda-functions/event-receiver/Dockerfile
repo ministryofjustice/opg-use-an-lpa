@@ -12,7 +12,7 @@ COPY internal/ ./internal
 
 RUN go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/main ./
 
-FROM gcr.io/distroless/static:nonroot@sha256:627d6c5a23ad24e6bdff827f16c7b60e0289029b0c79e9f7ccd54ae3279fb45f AS final
+FROM gcr.io/distroless/static:nonroot@sha256:627d6c5a23ad24e6bdff827f16c7b60e0289029b0c79e9f7ccd54ae3279fb45f AS production
 
 WORKDIR /var/task
 
