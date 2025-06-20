@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt  -t python/
 
 # Install CA certs for HTTPS calls in boto3
 RUN dnf install -y ca-certificates && \
+    dnf update -y openssl && \
     dnf clean all
 
 COPY app/ python/app
