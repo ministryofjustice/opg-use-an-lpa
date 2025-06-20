@@ -9,10 +9,10 @@ module "eu_west_1" {
   autoscaling                                      = local.environment.autoscaling
   associate_alb_with_waf_web_acl_enabled           = local.environment.associate_alb_with_waf_web_acl_enabled
   capacity_provider                                = local.capacity_provider
-  cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   container_version                                = var.container_version
   cookie_expires_use                               = local.environment.cookie_expires_use
   cookie_expires_view                              = local.environment.cookie_expires_view
+  cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
   dns_namespace_env                                = local.dns_namespace_env
@@ -100,10 +100,10 @@ module "eu_west_2" {
   autoscaling                                      = local.environment.autoscaling
   associate_alb_with_waf_web_acl_enabled           = local.environment.associate_alb_with_waf_web_acl_enabled
   capacity_provider                                = local.capacity_provider
-  cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   container_version                                = var.container_version
   cookie_expires_use                               = local.environment.cookie_expires_use
   cookie_expires_view                              = local.environment.cookie_expires_view
+  cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
   dns_namespace_env                                = local.dns_namespace_env
