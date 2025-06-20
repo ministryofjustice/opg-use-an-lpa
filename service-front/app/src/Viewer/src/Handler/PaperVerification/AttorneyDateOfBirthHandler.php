@@ -6,6 +6,7 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
+use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -58,7 +59,13 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->dateOfBirth = $this->form->getData()['pv_date_of_birth'];
+            $postData = $this->form->getData();
+
+            $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
+                (int) $postData['dob']['year'],
+                (int) $postData['dob']['month'],
+                (int) $postData['dob']['day']
+            );
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
