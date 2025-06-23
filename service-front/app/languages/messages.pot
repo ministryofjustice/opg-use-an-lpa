@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-12T15:23:18+00:00\n"
+"POT-Creation-Date: 2025-06-23T09:53:13+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -102,7 +102,6 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:29
 #: src/Actor/src/Handler/RemoveLpaHandler.php:90
 msgid "Health and welfare"
 msgstr ""
@@ -142,7 +141,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:154
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:28
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:69
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:104
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:106
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:28
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:42
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
@@ -271,7 +270,6 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
@@ -315,7 +313,6 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:29
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:24
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:28
 msgid "Type of LPA"
 msgstr ""
 
@@ -345,6 +342,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:68
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
@@ -487,7 +485,6 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:34
 #: src/Actor/templates/actor/lpa-already-added.html.twig:21
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:24
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:24
 msgid "Donor name"
 msgstr ""
 
@@ -623,7 +620,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:127
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:163
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:165
 msgid "No"
 msgstr ""
 
@@ -1495,7 +1492,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:74
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:44
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
@@ -1632,6 +1629,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:36
 msgid "What is the LPA reference number?"
 msgstr ""
 
@@ -4078,7 +4076,7 @@ msgid "Yes, the donor made instructions and/or preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:124
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:160
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:162
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 
@@ -4087,22 +4085,22 @@ msgid "Some words in these instructions or preferences have been removed by the 
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:83
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:119
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:121
 msgid "Preferences"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:89
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:125
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:127
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:117
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:153
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:155
 msgid "Instructions"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:123
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:159
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:161
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 
@@ -4300,7 +4298,6 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:3
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:3
 msgid "We’ve found this LPA"
 msgstr ""
 
@@ -4352,7 +4349,6 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:65
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:65
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:36
 msgid "Your organisation name"
 msgstr ""
 
@@ -4363,7 +4359,6 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-found.html.twig:70
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:70
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:40
 msgid "View this LPA"
 msgstr ""
 
@@ -4969,7 +4964,7 @@ msgstr ""
 msgid "Preferences and instructions"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:105
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:107
 msgid "Some words in these preferneces or instructions have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
@@ -5033,14 +5028,17 @@ msgstr ""
 msgid "LPA reference number this will be on any letters we’ve sent to the donor or attorneys"
 msgstr ""
 
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:30
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:47
 msgid "date of birth of the person who the paper verification code was sent to"
 msgstr ""
 
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:31
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:48
 msgid "number of attorneys named on the notice of registration"
 msgstr ""
 
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:32
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:49
 msgid "name of 1 attorney named on the notice of registration"
 msgstr ""
