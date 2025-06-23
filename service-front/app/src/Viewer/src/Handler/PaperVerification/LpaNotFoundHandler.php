@@ -41,20 +41,16 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $lpaUid        = $this->state($request)->lpaUid ?? 'M-1111-2222-3333';
-        $sentToDonor   = $this->state($request)->sentToDonor ?? false;
-        $dateOfBirth   = $this->state($request)->dateOfBirth?->format('j F Y') ?? '2 February 1994';
-        $noOfAttorneys = $this->state($request)->noOfAttorneys ?? 2;
-        $attorneyName  = $this->state($request)->attorneyName ?? 'Michael Clarke';
-        $donorName     = $this->state($request)->donorName ?? 'Barbara Gilson';
+
+        $stateData = $this->state($request);
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'lpaUid'        => $lpaUid,
-            'sentToDonor'   => $sentToDonor,
-            'dateOfBirth'   => $dateOfBirth,
-            'noOfAttorneys' => $noOfAttorneys,
-            'attorneyName'  => $attorneyName,
-            'donorName'     => $donorName,
+            'lpaUid'        => $stateData->lpaUid,
+            'sentToDonor'   => $stateData->sentToDonor,
+            'dateOfBirth'   => $stateData->dateOfBirth,
+            'noOfAttorneys' => $stateData->noOfAttorneys,
+            'attorneyName'  => $stateData->attorneyName,
+            'donorName'     => 'Barbara Gilson',
             'back'          => $this->lastPage($this->state($request)),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,
