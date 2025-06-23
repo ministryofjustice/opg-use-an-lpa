@@ -14,9 +14,19 @@ class ShareCodeFilter extends AbstractFilter
      */
     public function filter($code): string
     {
-        // Remove P- (hyphen) or P– (en dash) or P— (em dash) or V- from start of the code if present
-        $code = preg_replace('/^((v|p)(–|—|-| ))?/i', '', strtoupper($code));
+        $code = strtoupper($code);
+        // replaces other dashes with normal dash
+        $code = preg_replace('/[–—]/u', '-', $code);
 
-        return (new StripSpacesAndHyphens())->filter($code);
+        if (preg_match('/^P[\- ]/', $code)) {
+            // remove spaces or multiple hyphens to one
+            $code = preg_replace('/[\- ]+/', '-', $code);
+            return preg_replace('/^P\-*/', 'P-', $code);
+        }
+
+        // V codes - removes V- and hyphens (maintaining current behaviour)
+        $code = preg_replace('/^V[\- ]*/', '', $code);
+
+        return preg_replace('/[\- ]+/', '', $code);
     }
 }

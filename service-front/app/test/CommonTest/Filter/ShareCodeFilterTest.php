@@ -36,12 +36,12 @@ class ShareCodeFilterTest extends TestCase
             ['V - ABCD - 1234 - EFGH', 'ABCD1234EFGH'],
             ['V   ABCD   1234   EFGH', 'ABCD1234EFGH'],
             ['v--ABCD--1234--EFGH', 'ABCD1234EFGH'],
-            ['P-AB12-CD34-EF56-G7', 'AB12CD34EF56G7'],
-            ['P-ab12-CD34-ef56-G7', 'AB12CD34EF56G7'],
-            ['P AB12 CD34 EF56 G7', 'AB12CD34EF56G7'],
-            ['P   AB12   CD34   EF56   G7', 'AB12CD34EF56G7'],
-            ['P - AB12 - CD34 - EF56 - G7', 'AB12CD34EF56G7'],
-            ['P--AB12--CD34--EF56--G7', 'AB12CD34EF56G7'],
+            ['P-AB12-CD34-EF56-G7', 'P-AB12-CD34-EF56-G7'],
+            ['P-ab12-CD34-ef56-G7', 'P-AB12-CD34-EF56-G7'],
+            ['P AB12 CD34 EF56 G7', 'P-AB12-CD34-EF56-G7'],
+            ['P   AB12   CD34   EF56   G7', 'P-AB12-CD34-EF56-G7'],
+            ['P - AB12 - CD34 - EF56 - G7', 'P-AB12-CD34-EF56-G7'],
+            ['P--AB12--CD34--EF56--G7', 'P-AB12-CD34-EF56-G7'],
         ];
     }
 }

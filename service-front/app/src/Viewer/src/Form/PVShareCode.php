@@ -69,14 +69,6 @@ class PVShareCode extends AbstractForm implements InputFilterProviderInterface
                             ],
                         ],
                     ],
-                    [
-                        'name'                   => Regex::class,
-                        'break_chain_on_failure' => true,
-                        'options'                => [
-                            'pattern' => '/\A(?: V? (?:[-–—]?[A-Z0-9]{4}){3}|P? (?:[-–—]?[A-Z0-9]{4}){3} [-–—]?[A-Z0-9]{2})\z/ix',
-                            'message' => 'Enter a code in the correct format',
-                        ],
-                    ],
                 ],
             ],
             'donor_surname' => [
