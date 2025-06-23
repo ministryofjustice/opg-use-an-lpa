@@ -4,7 +4,7 @@ Feature: Retain a copy of the shared LPA summary
   I can download a summary of a LPA
   So that I can retain a copy of the data as it was at the time I accessed it
 
-  @smoke @ff:paper_verification:from_env
+  @smoke @ff:paper_verification:false
   Scenario: Download a PDF Summary
     Given I have been given access to an LPA via share code
     And I access the viewer service
