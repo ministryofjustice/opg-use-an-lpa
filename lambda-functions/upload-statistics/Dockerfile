@@ -7,7 +7,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt -t python/
 
 # Install CA certs for HTTPS calls in boto3
-RUN yum install -y ca-certificates openssl \
+RUN yum install -y ca-certificates openssl=3.0.16-1~deb12u1 \
     && yum clean all
 
 COPY app/ python/
