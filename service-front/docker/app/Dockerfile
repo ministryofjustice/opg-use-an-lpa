@@ -13,7 +13,7 @@ COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu=74.2-r0 gettext=0.22.5-r0 fcgi=2.4.2-r4 \
-  && install-php-extensions apcu redis-^5 intl gettext opcache \
+  && install-php-extensions apcu redis intl gettext opcache \
   && rm /usr/bin/install-php-extensions
 
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
