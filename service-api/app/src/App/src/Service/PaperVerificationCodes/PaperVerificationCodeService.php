@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\PaperVerificationCodes;
 
+use App\DataAccess\Repository\ActorCodesInterface;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Exception\ApiException;
@@ -21,6 +22,7 @@ use DateTimeImmutable;
 class PaperVerificationCodeService
 {
     public function __construct(
+        private readonly ActorCodesInterface $actorCodes,
         private readonly LpaManagerInterface $lpaManager,
         private readonly RejectInvalidLpa $rejectInvalidLpa,
     ) {

@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\PaperVerificationCodes;
+namespace AppTest\Service\PaperVerificationCodes;
 
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
+use App\Service\PaperVerificationCodes\CodeUsable;
 use DateInterval;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
