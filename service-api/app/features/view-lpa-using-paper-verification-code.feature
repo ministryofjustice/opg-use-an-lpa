@@ -1,4 +1,4 @@
-@viewer @viewlpa @papververificationcode
+@viewer @viewlpa @paperverificationcode @ff:support_datastore_lpas:true
 Feature: View an LPA using a paper verification code
   As an organisation who has been given a paper verification code
   I can enter that code and see the details of an LPA
