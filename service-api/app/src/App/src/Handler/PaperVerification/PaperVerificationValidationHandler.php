@@ -23,7 +23,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class PaperVerificationValidationHandler implements RequestHandlerInterface
 {
-    /** @use RequestAsObjectTrait<ViewerCodeFull> */
+    /** @use RequestAsObjectTrait<PaperVerificationCodeValidate> */
     use RequestAsObjectTrait;
 
     public function __construct(
