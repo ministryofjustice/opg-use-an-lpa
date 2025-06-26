@@ -28,7 +28,7 @@ class PaperVerificationValidationHandler implements RequestHandlerInterface
 
     public function __construct(
         private LpaManagerInterface $lpaManager,
-        private PaperVerificationCodeService $paperVerificationCodeService,
+        private PaperVerificationCodeService $codeService,
     ) {
     }
 
