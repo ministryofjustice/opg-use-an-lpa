@@ -102,7 +102,6 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'home';
     }
 }

@@ -52,9 +52,6 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->session->set('noOfAttorneys', $this->form->getData()['no_of_attorneys']);
-            $this->session->set('attorneyName', $this->form->getData()['attorneys_name']);
-
             $this->state($request)->noOfAttorneys   = $this->form->getData()['no_of_attorneys'];
             $this->state($request)->attorneyName = $this->form->getData()['attorneys_name'];
 

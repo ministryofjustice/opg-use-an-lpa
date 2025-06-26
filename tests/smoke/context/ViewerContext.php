@@ -44,11 +44,15 @@ class ViewerContext implements Context
     #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
-        $this->ui->assertPageAddress('/check-code');
-        $this->ui->assertPageMatchesText('/We’ve found Babara [\w\s\d]*Gilson\'s LPA/');
-        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-        $this->ui->fillField('organisation', $this->organisation);
-        $this->ui->pressButton('View this LPA');
+        if ($this->featureFlags['paper_verification']) {
+            $this->ui->assertPageAddress('/paper-verification/check-code');
+        } else {
+            $this->ui->assertPageAddress('/check-code');
+            $this->ui->assertPageMatchesText('/We’ve found Babara [\w\s\d]*Gilson\'s LPA/');
+            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+            $this->ui->fillField('organisation', $this->organisation);
+            $this->ui->pressButton('View this LPA');
+        }
     }
 
     #[Then('I can see the full details of the valid LPA')]
