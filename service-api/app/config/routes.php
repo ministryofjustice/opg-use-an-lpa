@@ -22,6 +22,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
+    PaperVerificationCodes\UsableHandler,
     RequestChangeEmailHandler,
     RequestCleanseHandler,
     RequestPasswordResetHandler,
@@ -130,6 +131,17 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
             ],
         ),
         'lpa.viewer-code.full'
+    );
+
+    $app->post(
+        '/v1/paper-verification/usable',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                UsableHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.usable'
     );
 
     $app->get('/v1/user', UserHandler::class, 'user.get');
