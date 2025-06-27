@@ -242,7 +242,7 @@ jobs:
 
             docker exec behattests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec behattests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
-            docker exec behattests /usr/local/bin/php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
+            docker exec behattests /usr/local/bin/php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance -f pretty --verbose
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
