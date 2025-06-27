@@ -212,6 +212,7 @@ jobs:
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
+            docker stop lpa-data-store-pact-mock
             docker stop iap-images-mock
           else
             docker run -d --name tests ${SVC_PREFIX}-app:latest
@@ -254,6 +255,7 @@ jobs:
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
+            docker stop lpa-data-store-pact-mock
             docker stop iap-images-mock
           elif [[ "${SVC_PREFIX}" = "front" ]]; then
             docker run -d --name behattests front-app:latest
