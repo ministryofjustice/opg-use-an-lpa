@@ -113,7 +113,7 @@ class PaperVerificationCodeServiceTest extends TestCase
     {
         $params = new PaperVerificationCodeUsable(
             name: 'Bundlaaaa',
-            code: new PaperVerificationCode('P-5678-5678-5678-56'),
+            code: new PaperVerificationCode('P-3456-3456-3456-34'),
         );
 
         $actorCodes       = $this->createMock(ActorCodesInterface::class);
