@@ -7,7 +7,6 @@ namespace App\Handler\Trait;
 use App\Exception\BadRequestException;
 use App\Middleware\RequestObject\RequestObjectMiddleware;
 use App\Request\InputFilteredRequest;
-use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**

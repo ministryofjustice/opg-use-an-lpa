@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Enum;
 
-enum LpaSource
+enum LpaSource: string
 {
-    case SIRIUS;
-    case LPASTORE;
+    case SIRIUS   = 'sirius';
+    case LPASTORE = 'lpastore';
 }
