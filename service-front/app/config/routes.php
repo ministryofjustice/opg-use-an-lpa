@@ -33,9 +33,10 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
-use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\LpaReadyToViewHandler;
 use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
@@ -88,6 +89,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 AttorneyDateOfBirthHandler::class,
                 ['GET', 'POST'],
                 'attorney-dob');
+
+    $app->route('/paper-verification/enter-organisation-name',
+                LpaReadyToViewHandler::class,
+                ['GET', 'POST'],
+                'enter-organisation-name');
 
     $app->route('/paper-verification/number-of-attorneys',
                 NumberOfAttorneysHander::class,
