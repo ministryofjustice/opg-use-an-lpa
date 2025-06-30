@@ -34,12 +34,6 @@ class PaperVerificationCodeService
                 'Uid'     => 'M-789Q-P4DF-4UX3',
                 'Expires' => (new DateTimeImmutable())->add(new DateInterval('P1Y')),
             ];
-        } elseif ((string)$params->lpaUid === 'M-1234-1234-1234') {
-            $codeData = [
-                'Uid'       => 'M-789Q-P4DF-4UX3',
-                'Expires'   => (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-                'Cancelled' => 'yes',
-            ];
         } else {
             throw new NotFoundException();
         }
