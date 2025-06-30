@@ -1,11 +1,11 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM composer:2.8.8@sha256:1e30756b14356f49b84a9086c0bbba05ab10f76df3f73fb536582b71fb1b1078 AS composer
+FROM composer:2.8.9@sha256:9f2a31e610b009bbf38cbc378384f74b60295dbe44ac0dd6077b5f74391dd15e AS composer
 
-FROM mlocati/php-extension-installer:2.7.28@sha256:61ec62196646d4299a959ebdf0f6753f71a7e9db0eebafe1e4f3bf0f323f50be AS php-extension-installer
+FROM mlocati/php-extension-installer:2.8.2@sha256:a7d3e11e022dbc563c85d3c71827cc3a0a338640bcb4dc629ce3e98bcd5875e4 AS php-extension-installer
 
-FROM php:8.1.32-fpm-alpine3.21@sha256:9e20c084a69820d87ef2ee96e1b7fe21ecf1ce49dd0abeafce6a6d25e14e350a AS php-base
+FROM php:8.4.8-fpm-alpine3.21@sha256:cf3ece6236225c5e8d959feeb03b6b7740d82db8b09f27b4f88581b8c6395beb AS php-base
 
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
