@@ -21,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * @codeCoverageIgnore
  */
-class PaperVerificationValidationHandler implements RequestHandlerInterface
+class ValidateHandler implements RequestHandlerInterface
 {
     /** @use RequestAsObjectTrait<ViewerCodeFull> */
     use RequestAsObjectTrait;

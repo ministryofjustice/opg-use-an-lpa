@@ -22,7 +22,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
-    PaperVerification\PaperVerificationValidationHandler,
+    PaperVerification\ValidateHandler,
     RequestChangeEmailHandler,
     RequestCleanseHandler,
     RequestPasswordResetHandler,
@@ -172,9 +172,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         $factory->pipeline(
             [
                 RequestObjectMiddleware::class,
-                PaperVerificationValidationHandler::class,
+                ValidateHandler::class,
             ],
         ),
-        'pv.validate'
+        'lpa.paper-verification.validate'
     );
 };
