@@ -58,19 +58,27 @@ class ViewerContext implements Context
     #[Then('I can see the full details of the valid LPA')]
     public function iCanSeeTheFullDetailsOfTheValidLpa(): void
     {
-        $this->ui->assertPageAddress('/view-lpa');
+        if ($this->featureFlags['paper_verification']) {
+            $this->ui->assertPageAddress('/paper-verification/check-code');
+        } else {
+            $this->ui->assertPageAddress('/view-lpa');
 
-        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-        $this->ui->assertPageContainsText('This health and welfare LPA is valid');
+            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+            $this->ui->assertPageContainsText('This health and welfare LPA is valid');
+        }
     }
 
     #[When('I click Download this LPA summary')]
     public function IClickDownloadThisLPASummary(): void
     {
-        $this->ui->assertPageAddress('/view-lpa');
+        if ($this->featureFlags['paper_verification']) {
+            $this->ui->assertPageAddress('/paper-verification/check-code');
+        } else {
+            $this->ui->assertPageAddress('/view-lpa');
 
-        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-        $this->ui->assertPageContainsText('This health and welfare LPA is valid');
-        $this->ui->pressButton('Download this LPA summary');
+            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+            $this->ui->assertPageContainsText('This health and welfare LPA is valid');
+            $this->ui->pressButton('Download this LPA summary');
+        }
     }
 }
