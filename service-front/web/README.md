@@ -13,7 +13,7 @@ The project uses Jest to test the javascript components. Only `index.js` is igno
 
 Jest also provides us with code coverage reports. There are currently no thresholds setup to fail tests but this could be done easily in the future.
 
-Coverage is fed into codecov for easy reporting via Github and also hooked into CircleCI which will fail the build if any tests fail.
+Coverage is fed into codecov for easy reporting via Github and will fail the build if any tests fail.
 
 You can run the test by running the following
 
