@@ -44,35 +44,29 @@ class ViewerContext implements Context
     #[When('/^I enter an organisation name and confirm the LPA is correct$/')]
     public function iEnterAnOrganisationNameAndConfirmTheLPAIsCorrect(): void
     {
-        if (!$this->featureFlags['paper_verification']) {
-            $this->ui->assertPageAddress('/check-code');
-            $this->ui->assertPageMatchesText('/We’ve found Babara [\w\s\d]*Gilson\'s LPA/');
-            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-            $this->ui->fillField('organisation', $this->organisation);
-            $this->ui->pressButton('View this LPA');
-        }
+        $this->ui->assertPageAddress('/check-code');
+        $this->ui->assertPageMatchesText('/We’ve found Babara [\w\s\d]*Gilson\'s LPA/');
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+        $this->ui->fillField('organisation', $this->organisation);
+        $this->ui->pressButton('View this LPA');
     }
 
     #[Then('I can see the full details of the valid LPA')]
     public function iCanSeeTheFullDetailsOfTheValidLpa(): void
     {
-        if (!$this->featureFlags['paper_verification']) {
-            $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageAddress('/view-lpa');
 
-            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-            $this->ui->assertPageContainsText('This health and welfare LPA is valid');
-        }
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+        $this->ui->assertPageContainsText('This health and welfare LPA is valid');
     }
 
     #[When('I click Download this LPA summary')]
     public function IClickDownloadThisLPASummary(): void
     {
-        if (!$this->featureFlags['paper_verification']) {
-            $this->ui->assertPageAddress('/view-lpa');
+        $this->ui->assertPageAddress('/view-lpa');
 
-            $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
-            $this->ui->assertPageContainsText('This health and welfare LPA is valid');
-            $this->ui->pressButton('Download this LPA summary');
-        }
+        $this->ui->assertPageMatchesText('/Babara [\w\s\d]*Gilson/');
+        $this->ui->assertPageContainsText('This health and welfare LPA is valid');
+        $this->ui->pressButton('Download this LPA summary');
     }
 }
