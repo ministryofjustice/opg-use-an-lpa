@@ -23,12 +23,12 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ValidateHandler implements RequestHandlerInterface
 {
-    /** @use RequestAsObjectTrait<ViewerCodeFull> */
+    /** @use RequestAsObjectTrait<PaperVerificationCodeValidate> */
     use RequestAsObjectTrait;
 
     public function __construct(
         private LpaManagerInterface $lpaManager,
-        private PaperVerificationCodeService $paperVerificationCodeService,
+        private PaperVerificationCodeService $codeService,
     ) {
     }
 
@@ -44,7 +44,7 @@ class ValidateHandler implements RequestHandlerInterface
     {
         $params = $this->requestAsObject($request, PaperVerificationCodeValidate::class);
 
-        $data = $this->paperVerificationCodeService->validate($params);
+        $data = $this->codeService->validate($params);
 
         return new JsonResponse($data);
     }
