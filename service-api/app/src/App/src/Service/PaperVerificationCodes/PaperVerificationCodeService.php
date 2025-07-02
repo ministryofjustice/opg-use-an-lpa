@@ -85,8 +85,7 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
-    public function validate(PaperVerificationCodeValidate $params): void
+    public function validate(PaperVerificationCodeValidate $params): CodeValidate
     {
         if ((string)$params->lpaUid === 'M-1111-2222-3333') {
             $codeData = [
@@ -109,7 +108,7 @@ class PaperVerificationCodeService
             donorName:      $lpaObj->getDonor()->getFirstnames() . ' ' . $lpaObj->getDonor()->getSurname(),
             lpaType:        $lpaObj->caseSubtype,
             codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-            lpaStatus:      \App\Service\Lpa\IsValid\LpaStatus::from($lpaObj->status),
+            lpaStatus:      LpaStatus::from($lpaObj->status),
             lpaSource:      LpaSource::LPASTORE,
         );
     }

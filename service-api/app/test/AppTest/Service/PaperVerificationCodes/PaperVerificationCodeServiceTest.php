@@ -169,7 +169,10 @@ class PaperVerificationCodeServiceTest extends TestCase
     #[Test]
     public function it_successfully_validates(): void
     {
-        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+
 
         $lpaManager
             ->expects($this->once())
@@ -177,7 +180,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
-        $sut = new PaperVerificationCodeService($lpaManager);
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
 
         $params = new PaperVerificationCodeValidate(
             name: 'Bundlaaaa',
@@ -198,14 +201,17 @@ class PaperVerificationCodeServiceTest extends TestCase
             $result->codeExpiryDate,
             5,
         );
-        $this->assertEquals(\App\Service\Lpa\IsValid\LpaStatus::REGISTERED, $result->lpaStatus);
+        $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
 
     #[Test]
     public function validation_throws_an_exception_for_a_missing_lpa(): void
     {
-        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+
 
         $lpaManager
             ->expects($this->once())
@@ -213,7 +219,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
             ->willReturn(null);
 
-        $sut = new PaperVerificationCodeService($lpaManager);
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
 
         $params = new PaperVerificationCodeValidate(
             name: 'Bundlaaaa',
