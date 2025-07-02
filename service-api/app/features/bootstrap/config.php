@@ -60,6 +60,9 @@ return [
     'sirius_api'                             => [
         'endpoint' => 'http://api-gateway-pact-mock',
     ],
+    'lpa_data_store_api'                     => [
+        'endpoint' => 'http://lpa-data-store-pact-mock',
+    ],
     'codes_api'                              => [
         'endpoint'          => 'http://lpa-codes-pact-mock',
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
