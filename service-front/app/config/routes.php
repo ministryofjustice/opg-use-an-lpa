@@ -33,6 +33,7 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use Viewer\Handler\PaperVerification\CheckAnswersHandler;
 use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
@@ -93,6 +94,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 NumberOfAttorneysHander::class,
                 ['GET', 'POST'],
                 'number-of-attorneys');
+
+    $app->route('/paper-verification/check-answers',
+                CheckAnswersHandler::class,
+                ['GET', 'POST'],
+                'check-answers');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
