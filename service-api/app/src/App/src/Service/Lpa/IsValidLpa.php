@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Enum\LpaStatus;
 use App\Service\Lpa\IsValid\IsValidInterface;
-use App\Service\Lpa\IsValid\LpaStatus;
 use Psr\Log\LoggerInterface;
 
 class IsValidLpa

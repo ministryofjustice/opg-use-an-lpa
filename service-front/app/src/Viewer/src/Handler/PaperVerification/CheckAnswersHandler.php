@@ -6,23 +6,19 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
-use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
+class CheckAnswersHandler extends AbstractPVSCodeHandler
 {
-    private PVDateOfBirth $form;
-
-    public const TEMPLATE = 'viewer::paper-verification/attorney-dob';
+    public const TEMPLATE = 'viewer::paper-verification/check-answers';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -34,7 +30,6 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new PVDateOfBirth($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -42,35 +37,24 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $stateData = $this->state($request);
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'         => $this->form->prepare(),
-            'attorneyName' => $attorneyName,
-            'back'         => $this->lastPage($this->state($request)),
-            'en_message'   => $this->systemMessages['view/en'] ?? null,
-            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
+            'lpaUid'        => $stateData->lpaUid,
+            'sentToDonor'   => $stateData->sentToDonor,
+            'dateOfBirth'   => $stateData->dateOfBirth,
+            'noOfAttorneys' => $stateData->noOfAttorneys,
+            'attorneyName'  => $stateData->attorneyName,
+            'donorName'     => 'Barbara Gilson',
+            'back'          => $this->lastPage($this->state($request)),
+            'en_message'    => $this->systemMessages['view/en'] ?? null,
+            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($request->getParsedBody());
-
-        if ($this->form->isValid()) {
-            $postData = $this->form->getData();
-
-            $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
-                (int) $postData['dob']['year'],
-                (int) $postData['dob']['month'],
-                (int) $postData['dob']['day']
-            );
-            return $this->redirectToRoute($this->nextPage($this->state($request)));
-        }
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -82,10 +66,11 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
         return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
-            || $this->state($request)->sentToDonor === false;
+        || $this->state($request)->code === null
+        || $this->state($request)->lpaUid === null
+        || $this->state($request)->sentToDonor === false
+        || $this->state($request)->attorneyName === null
+        || $this->state($request)->dateOfBirth === null;
     }
 
     /**
@@ -93,8 +78,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'enter-organisation-name';
     }
 
     /**
@@ -102,6 +86,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'home';
+        //needs changing when next page ready
+        return 'pv.provide-attorney-details';
     }
 }

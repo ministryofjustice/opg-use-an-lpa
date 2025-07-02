@@ -52,11 +52,8 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->session->set('noAttorneys', $this->form->getData()['no_of_attorneys']);
-            $this->session->set('attorneysName', $this->form->getData()['attorneys_name']);
-
-            $this->state($request)->noAttorneys   = $this->form->getData()['no_of_attorneys'];
-            $this->state($request)->attorneysName = $this->form->getData()['attorneys_name'];
+            $this->state($request)->noOfAttorneys   = $this->form->getData()['no_of_attorneys'];
+            $this->state($request)->attorneyName = $this->form->getData()['attorneys_name'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -82,7 +79,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'check-answers';
     }
 
     /**

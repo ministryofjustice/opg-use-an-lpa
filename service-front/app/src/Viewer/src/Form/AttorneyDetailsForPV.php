@@ -6,6 +6,7 @@ namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
+use Laminas\Filter\ToInt;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\Digits;
@@ -28,7 +29,7 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
 
         $this->add([
             'name' => 'no_of_attorneys',
-            'type' => 'Text',
+            'type' => 'number',
         ]);
 
         $this->add([
@@ -48,6 +49,7 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => Digits::class],
+                    ['name' => ToInt::class],
                 ],
                 'validators' => [
                     [
