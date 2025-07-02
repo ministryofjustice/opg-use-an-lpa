@@ -59,14 +59,6 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form->setData($request->getParsedBody());
-
-        if ($this->form->isValid()) {
-            $this->state($request)->lpaUid = $this->form->getData()['lpa_reference'];
-
-            return $this->redirectToRoute($this->nextPage($this->state($request)));
-        }
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
@@ -79,6 +71,7 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
+        return false;
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
