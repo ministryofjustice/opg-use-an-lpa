@@ -3,7 +3,7 @@ resource "aws_lb_target_group" "admin" {
   port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id               = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   deregistration_delay = 0
 
   health_check {
@@ -123,7 +123,7 @@ moved {
 resource "aws_security_group" "admin_loadbalancer" {
   name_prefix = "${var.environment_name}-admin-loadbalancer"
   description = "Admin service application load balancer"
-  vpc_id      = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
