@@ -21,7 +21,7 @@ resource "aws_lb" "viewer" {
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnets.public.ids
+  subnets                    = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_subnet.public[*].id : data.aws_subnets.public.ids
   enable_deletion_protection = var.load_balancer_deletion_protection_enabled
 
   security_groups = [

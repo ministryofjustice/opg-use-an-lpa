@@ -11,7 +11,7 @@ resource "aws_ecs_service" "mock_onelogin" {
 
   network_configuration {
     security_groups  = [aws_security_group.mock_onelogin_ecs_service.id]
-    subnets          = data.aws_subnets.private.ids
+    subnets          = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
