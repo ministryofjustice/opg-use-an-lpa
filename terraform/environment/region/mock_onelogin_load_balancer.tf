@@ -3,7 +3,7 @@ resource "aws_lb_target_group" "mock_onelogin" {
   port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id               = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   deregistration_delay = 0
 
   health_check {
@@ -74,7 +74,7 @@ resource "aws_lb_listener" "mock_onelogin_loadbalancer" {
 resource "aws_security_group" "mock_onelogin_loadbalancer" {
   name_prefix = "${var.environment_name}-mock-onelogin-loadbalancer"
   description = "Mock One Login application load balancer"
-  vpc_id      = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
