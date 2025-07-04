@@ -1,7 +1,7 @@
 resource "aws_security_group" "brute_force_cache_service" {
   name_prefix = "brute-force-cache-service"
   description = "brute force cache sg"
-  vpc_id      = aws_default_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.environment-name == "development" ? module.network.vpc.id : aws_default_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
@@ -11,7 +11,7 @@ resource "aws_security_group" "brute_force_cache_service" {
 
 resource "aws_elasticache_subnet_group" "private_subnets" {
   name       = "private-subnets"
-  subnet_ids = aws_subnet.private[*].id
+  subnet_ids = data.aws_default_tags.current.tags.environment-name == "development" ? module.network.application_subnets[*].id : aws_subnet.private[*].id
 
   provider = aws.region
 }
