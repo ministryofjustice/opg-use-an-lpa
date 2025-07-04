@@ -21,10 +21,3 @@ repos:
     rev: 5357e18bc27b42a827b6780564ea873a72ca1f01
     hooks:
       - id: git-secrets
-  - repo: local
-    hooks:
-    - id: structurizr
-      name: "structurizr"
-      entry: pre-commit-hooks/structurizr/pre-commit
-      language: script
-      args: ['/docs/diagrams/dsl']
