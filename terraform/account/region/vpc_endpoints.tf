@@ -75,7 +75,7 @@ data "aws_route_tables" "application" {
   }
   filter {
     name   = "vpc-id"
-    values = [data.aws_default_tags.current.tags.environment-name == "development" ? module.network.vpc.id : aws_default_vpc.default.id]
+    values = [aws_default_vpc.default.id]
   }
 }
 
