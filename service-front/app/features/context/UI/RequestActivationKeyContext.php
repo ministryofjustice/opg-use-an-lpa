@@ -17,19 +17,6 @@ use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
 /**
- * @property mixed  $lpa
- * @property string $userLpaActorToken
- * @property int    $actorId
- * @property string $actorUId
- * @property array  $lpaData
- * @property string $organisation
- * @property string $accessCode
- * @property string $userFirstName
- * @property int    $userId
- * @property string $userSurname
- * @property string $activationCode
- * @property string $codeCreatedDate
- * @property string $live_in_uk
  * @psalm-ignore UndefinedThisPropertyFetch
  * @psalm-ignore UndefinedThisPropertyAssignment
  */
@@ -39,14 +26,22 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
-    private const ADD_OLDER_LPA_CONFIRM  = 'AddOlderLpa::confirm';
-    private const CLEANSE_LPA_CLEANSE    = 'CleanseLpa::cleanse';
+    private const ADD_OLDER_LPA_CONFIRM = 'AddOlderLpa::confirm';
+    private const CLEANSE_LPA_CLEANSE = 'CleanseLpa::cleanse';
 
     /**
      * @var RequestInterface Used to store external requests made to a mocked handler for
      *                       subsequent "Then" step verification.
      */
     private RequestInterface $requestBody;
+    private mixed $lpa;
+    private string $userLpaActorToken;
+    private int $actorId;
+    private string $actorUId;
+    private array $lpaData;
+    private ?string $activationCode;
+    private string $codeCreatedDate;
+    private string $live_in_uk;
 
     #[Then('/^I am taken to the check answers page$/')]
     public function iAmTakenToTheCheckAnswersPage(): void
