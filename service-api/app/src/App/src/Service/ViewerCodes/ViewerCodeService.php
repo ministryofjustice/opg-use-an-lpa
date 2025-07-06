@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Service\ViewerCodes;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\Entity\Value\LpaUid;
-use DateTimeInterface;
 use App\DataAccess\Repository\{KeyCollisionException,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
-    ViewerCodesInterface
-};
+    ViewerCodesInterface};
+use App\Value\LpaUid;
 use DateTime;
+use DateTimeInterface;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
 

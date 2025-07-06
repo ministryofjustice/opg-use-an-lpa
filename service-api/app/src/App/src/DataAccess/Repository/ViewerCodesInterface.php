@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use App\Entity\Value\LpaUid;
+use App\Value\LpaUid;
 use DateTime;
 use DateTimeInterface;
 

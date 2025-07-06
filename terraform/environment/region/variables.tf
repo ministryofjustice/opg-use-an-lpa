@@ -20,6 +20,11 @@ variable "admin_container_version" {
   type        = string
 }
 
+variable "cloudwatch_application_insights_enabled" {
+  description = "Whether to turn on Application Insights for the environment."
+  type        = bool
+}
+
 variable "associate_alb_with_waf_web_acl_enabled" {
   description = "Whether or not to associate the ALBs with the WAF web ACL."
   type        = bool
@@ -36,11 +41,6 @@ variable "autoscaling" {
 variable "capacity_provider" {
   description = "The capacity provider to use for the ECS services."
   type        = string
-}
-
-variable "cloudwatch_application_insights_enabled" {
-  type        = bool
-  description = "Enable CloudWatch Application Insights"
 }
 
 variable "container_version" {

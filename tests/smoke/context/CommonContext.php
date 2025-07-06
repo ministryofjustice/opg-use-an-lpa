@@ -89,18 +89,20 @@ class CommonContext implements Context
     #[Then('/^I can see that the lpa has instructions and no preferences images in summary$/')]
     public function iCanSeeThatTheLpaHasInstructionsAndPreferencesImagesInSummary(): void
     {
-        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
-        $instructionsElement = $this->ui
-            ->getMink()
-            ->getSession()
-            ->getPage()
-            ->find('css', 'iap-instructions > div.opg-ip > img');
-        Assert::assertNotNull($instructionsElement, 'Instructions images not found');
-        $preferencesElement = $this->ui->getMink()
-            ->getSession()
-            ->getPage()
-            ->find('css', 'iap-preferences > div.opg-ip > img');
-        Assert::assertNull($preferencesElement, 'Preferences images were found');
+        if (!$this->featureFlags['paper_verification']) {
+            $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+            $instructionsElement = $this->ui
+                ->getMink()
+                ->getSession()
+                ->getPage()
+                ->find('css', 'iap-instructions > div.opg-ip > img');
+            Assert::assertNotNull($instructionsElement, 'Instructions images not found');
+            $preferencesElement = $this->ui->getMink()
+                ->getSession()
+                ->getPage()
+                ->find('css', 'iap-preferences > div.opg-ip > img');
+            Assert::assertNull($preferencesElement, 'Preferences images were found');
+        }
     }
 
     #[Then('/^I can see Welsh text$/')]

@@ -12,6 +12,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Viewer\Form\PVShareCode;
 use Viewer\Form\ShareCode;
 
 /**
@@ -19,7 +20,7 @@ use Viewer\Form\ShareCode;
  */
 class EnterPVSCodeHandler extends AbstractPVSCodeHandler
 {
-    private ShareCode $form;
+    private ShareCode|PVShareCode $form;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -32,7 +33,11 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new ShareCode($this->getCsrfGuard($request));
+        if (($this->featureEnabled)('paper_verification')) {
+            $this->form = new PVShareCode($this->getCsrfGuard($request));
+        } else {
+            $this->form = new ShareCode($this->getCsrfGuard($request));
+        }
 
         return parent::handle($request);
     }
@@ -95,7 +100,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'check-code';
+        return ($this->featureEnabled)('paper_verification') ? 'pv.check-code' : 'check-code';
     }
 
     /**

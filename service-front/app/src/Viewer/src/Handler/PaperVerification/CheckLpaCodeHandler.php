@@ -82,7 +82,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'pv.verification-code-sent-to';
     }
 
     /**

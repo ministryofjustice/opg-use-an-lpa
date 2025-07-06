@@ -7,6 +7,7 @@ namespace Viewer\Form;
 use Common\Form\AbstractForm;
 use Laminas\Filter\Digits;
 use Laminas\Filter\StringTrim;
+use Laminas\Filter\ToInt;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
@@ -45,6 +46,7 @@ class NumberOfAttorneys extends AbstractForm implements InputFilterProviderInter
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => Digits::class],
+                    ['name' => ToInt::class],
                 ],
                 'validators' => [
                     [

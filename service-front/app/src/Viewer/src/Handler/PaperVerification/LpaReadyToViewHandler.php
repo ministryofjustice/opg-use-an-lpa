@@ -35,9 +35,8 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO - Remove temporary code and get from session
-        $this->code    = ($this->getSession($request, 'session')->get('lpa_code')) ?? 'P-AB12-CD34-EF56-G7';
-        $this->surname = ($this->getSession($request, 'session')->get('donor_surname')) ?? 'Babara Gilson';
+        $this->code    = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
+        $this->surname = $this->state($request)->donorSurname ?? 'Babara Gilson';
 
         $this->form           = new Organisation($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
@@ -97,15 +96,13 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return false;
-//        return $this->state($request)->lastName === null
-//            || $this->state($request)->code === null
-//            || $this->state($request)->lpaUid === null
-//            || $this->state($request)->sentToDonor === null
-//            || $this->state($request)->sentToDonor === false
-//            || $this->state($request)->attorneyName === null
-//            || $this->state($request)->noOfAttorneys === 0
-//            || $this->state($request)->noOfAttorneys === null;
+        return $this->state($request)->lastName === null
+            || $this->state($request)->code === null
+            || $this->state($request)->lpaUid === null
+            || $this->state($request)->sentToDonor === false
+            || $this->state($request)->attorneyName === null
+            || $this->state($request)->noOfAttorneys === 0
+            || $this->state($request)->noOfAttorneys === null;
     }
 
     /**
