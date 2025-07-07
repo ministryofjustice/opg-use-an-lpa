@@ -18,7 +18,6 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(CodeValidate::class)]
 class CodeValidateTest extends TestCase
 {
-
     private function makeSut(): array
     {
         $expiry = (new DateTimeImmutable())->add(new DateInterval('P1Y'));
@@ -45,12 +44,12 @@ class CodeValidateTest extends TestCase
     #[Test]
     public function test_properties_are_assigned(): void
     {
-       [$sut] = $this->makeSut();
+        [$sut] = $this->makeSut();
 
-       self::assertSame('Barbara Gilson', $sut->donorName);
-       self::assertSame(LpaType::PERSONAL_WELFARE, $sut->lpaType);
-       self::assertSame(LpaStatus::REGISTERED, $sut->lpaStatus);
-       self::assertSame(LpaSource::LPASTORE, $sut->lpaSource);
+        self::assertSame('Barbara Gilson', $sut->donorName);
+        self::assertSame(LpaType::PERSONAL_WELFARE, $sut->lpaType);
+        self::assertSame(LpaStatus::REGISTERED, $sut->lpaStatus);
+        self::assertSame(LpaSource::LPASTORE, $sut->lpaSource);
     }
 
     #[Test]
