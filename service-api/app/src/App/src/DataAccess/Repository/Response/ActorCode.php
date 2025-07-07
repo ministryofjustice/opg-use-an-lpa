@@ -6,7 +6,7 @@ namespace App\DataAccess\Repository\Response;
 
 use DateTime;
 
-final class ActorCode implements ActorCodeInterface
+final class ActorCode implements APIResponseInterface
 {
     /**
      * Array representing the LPA's data.

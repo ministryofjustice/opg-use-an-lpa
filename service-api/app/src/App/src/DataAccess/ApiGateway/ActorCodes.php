@@ -8,12 +8,11 @@ use App\DataAccess\Repository\Response\ActorCode;
 use App\Exception\ApiException;
 use DateTime;
 use Exception;
-use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
 
 class ActorCodes extends AbstractApiClient
 {
+    use PostRequest;
+
     /**
      * @param string $code
      * @param string $uid
@@ -56,41 +55,13 @@ class ActorCodes extends AbstractApiClient
             [
                 'lpa'   => $lpaId,
                 'actor' => $actorId,
-            ]
+            ],
+            SignatureType::ActorCodes,
         );
 
         return new ActorCode(
             json_decode((string) $response->getBody(), true),
             new DateTime($response->getHeaderLine('Date'))
         );
-    }
-
-    /**
-     * @param string $url
-     * @param array $body
-     * @return ResponseInterface
-     * @throws ApiException
-     */
-    private function makePostRequest(string $url, array $body): ResponseInterface
-    {
-        $url = sprintf('%s/%s', $this->apiBaseUri, $url);
-
-        $request = $this->requestFactory->createRequest('POST', $url);
-        $request = $request->withBody($this->streamFactory->createStream(json_encode($body)));
-
-        $request = $this->attachHeaders($request);
-        $request = ($this->requestSignerFactory)(SignatureType::ActorCodes)->sign($request);
-
-        try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $ce) {
-            throw ApiException::create('Error whilst communicating with actor codes service', null, $ce);
-        }
-
-        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
-            throw ApiException::create('Actor codes service returned non-ok response', $response);
-        }
-
-        return $response;
     }
 }

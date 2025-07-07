@@ -6,7 +6,7 @@ namespace App\DataAccess\Repository\Response;
 
 use DateTime;
 
-interface ActorCodeInterface
+interface APIResponseInterface
 {
     /**
      * Returns the data the makes up the LPA.
