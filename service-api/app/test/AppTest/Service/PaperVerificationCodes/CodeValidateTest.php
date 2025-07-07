@@ -5,47 +5,59 @@ declare(strict_types=1);
 namespace AppTest\Service\PaperVerificationCodes;
 
 use App\Enum\LpaSource;
+use App\Enum\LpaStatus;
 use App\Enum\LpaType;
-use App\Service\Lpa\IsValid\LpaStatus;
 use App\Service\PaperVerificationCodes\CodeValidate;
 use DateInterval;
 use DateTimeImmutable;
-use PHPUnit\Framework\Assert;
+use DateTimeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\Depends;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(CodeValidate::class)]
 class CodeValidateTest extends TestCase
 {
-    #[Test]
-    #[DoesNotPerformAssertions]
-    public function it_is_initializable(): CodeValidate
+
+    private function makeSut(): array
     {
-        return new CodeValidate(
+        $expiry = (new DateTimeImmutable())->add(new DateInterval('P1Y'));
+
+        $sut = new CodeValidate(
             donorName: 'Barbara Gilson',
             lpaType: LpaType::PERSONAL_WELFARE,
-            codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+            codeExpiryDate: $expiry,
             lpaStatus:  LpaStatus::REGISTERED,
             lpaSource:  LpaSource::LPASTORE,
         );
+
+        $expected = [
+            'donorName'  => 'Barbara Gilson',
+            'type'       => LpaType::PERSONAL_WELFARE,
+            'expiryDate' => $expiry->format(DateTimeInterface::ATOM),
+            'status'     => LpaStatus::REGISTERED,
+            'source'     => LpaSource::LPASTORE,
+        ];
+
+        return [$sut, $expected];
     }
 
     #[Test]
-    #[Depends('it_is_initializable')]
-    public function it_serialises_as_expected(CodeValidate $sut): void
+    public function test_properties_are_assigned(): void
     {
-        $json = json_encode($sut);
+       [$sut] = $this->makeSut();
 
-        Assert::assertJson($json);
+       self::assertSame('Barbara Gilson', $sut->donorName);
+       self::assertSame(LpaType::PERSONAL_WELFARE, $sut->lpaType);
+       self::assertSame(LpaStatus::REGISTERED, $sut->lpaStatus);
+       self::assertSame(LpaSource::LPASTORE, $sut->lpaSource);
+    }
 
-        $obj = json_decode($json);
-        Assert::assertObjectHasProperty('donorName', $obj);
-        Assert::assertObjectHasProperty('type', $obj);
-        Assert::assertObjectHasProperty('expiryDate', $obj);
-        Assert::assertObjectHasProperty('status', $obj);
-        Assert::assertObjectHasProperty('source', $obj);
+    #[Test]
+    public function it_serialises_as_expected(): void
+    {
+        [$sut, $expected] = $this->makeSut();
+
+        self::assertSame($expected, $sut->jsonSerialize());
     }
 }

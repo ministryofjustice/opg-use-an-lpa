@@ -234,4 +234,34 @@ class PaperVerificationCodeServiceTest extends TestCase
         $this->expectException(NotFoundException::class);
         $sut->validate($params);
     }
+
+    #[Test]
+    public function validation_throws_if_uid_is_unknown(): void
+    {
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+
+
+        $lpaManager
+            ->expects($this->any())
+            ->method('getByUid')
+            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
+            ->willReturn(null);
+
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+
+        $params = new PaperVerificationCodeValidate(
+            name: 'Bundlaaaa',
+            code: new PaperVerificationCode('P-1234-1234-1234-12'),
+            lpaUid: new LpaUid('M-1111-1111-1111'),
+            sentToDonor: false,
+            attorneyName: 'Michael Clarkson',
+            dateOfBirth: new DateTimeImmutable('2020-01-01'),
+            noOfAttorneys: 2,
+        );
+
+        $this->expectException(NotFoundException::class);
+        $sut->validate($params);
+    }
 }
