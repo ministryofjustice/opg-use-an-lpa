@@ -17,40 +17,39 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
-/**
- * @property string userEmail
- * @property string userPassword
- * @property bool   userActive
- * @property string userId
- * @property string activationToken
- * @property string newUserEmail
- * @property string userEmailResetToken
- * @property string email
- * @property string password
- * @property string language
- * @property array  systemMessages
- */
 class AccountContext implements Context
 {
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const USER_SERVICE_ACTIVATE                = 'UserService::activate';
-    private const USER_SERVICE_CREATE                  = 'UserService::create';
-    private const USER_SERVICE_REQUEST_CHANGE_EMAIL    = 'UserService::requestChangeEmail';
-    private const USER_SERVICE_CAN_RESET_EMAIL         = 'UserService::canResetEmail';
-    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL   = 'UserService::completeChangeEmail';
-    private const USER_SERVICE_AUTHENTICATE            = 'UserService::authenticate';
-    private const LPA_SERVICE_GET_LPAS                 = 'LpaService::getLpas';
-    private const USER_SERVICE_REQUEST_PASSWORD_RESET  = 'UserService::requestPasswordReset';
-    private const USER_SERVICE_CAN_PASSWORD_RESET      = 'UserService::canPasswordReset';
+    private const USER_SERVICE_ACTIVATE = 'UserService::activate';
+    private const USER_SERVICE_CREATE = 'UserService::create';
+    private const USER_SERVICE_REQUEST_CHANGE_EMAIL = 'UserService::requestChangeEmail';
+    private const USER_SERVICE_CAN_RESET_EMAIL = 'UserService::canResetEmail';
+    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL = 'UserService::completeChangeEmail';
+    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
+    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
+    private const USER_SERVICE_REQUEST_PASSWORD_RESET = 'UserService::requestPasswordReset';
+    private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
-    private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
-    private const ONE_LOGIN_SERVICE_AUTHENTICATE       = 'OneLoginService::authenticate';
-    private const ONE_LOGIN_SERVICE_CALLBACK           = 'OneLoginService::callback';
-    private const ONE_LOGIN_SERVICE_LOGOUT             = 'OneLoginService::logout';
-    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES  = 'ViewerCodeService::getShareCodes';
-    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES  = 'SystemMessageService::getMessages';
+    private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
+    private const ONE_LOGIN_SERVICE_AUTHENTICATE = 'OneLoginService::authenticate';
+    private const ONE_LOGIN_SERVICE_CALLBACK = 'OneLoginService::callback';
+    private const ONE_LOGIN_SERVICE_LOGOUT = 'OneLoginService::logout';
+    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES = 'ViewerCodeService::getShareCodes';
+    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
+
+    private string $userEmail;
+    private string $userPassword;
+    private bool $userActive;
+    private string $userId;
+    private string $activationToken;
+    private string $newUserEmail;
+    private string $userEmailResetToken;
+    private string $email;
+    private string $password;
+    private string $language;
+    private array $systemMessages;
 
     #[Given('/^another user logs in$/')]
     public function anotherUserLogsIn(): void

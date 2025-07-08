@@ -26,39 +26,20 @@ use PHPUnit\Framework\ExpectationFailedException;
  * A behat context that encapsulates user account steps
  *
  * Account creation, login, password reset etc.
- *
- * @property string resetToken
- * @property string activationToken
- * @property string userPassword
- * @property string userEmail
- * @property string userPasswordResetToken
- * @property string lpa
- * @property string lpaJson
- * @property string lpaData
- * @property string activation_key
- * @property string referenceNo
- * @property string userDob
- * @property string userIdentity
- * @property string actorLpaToken
- * @property int actorId
- * @property string $organisation
- * @property string $accessCode
- * @property string newUserEmail
- * @property string userEmailResetToken
- */
+ **/
 class AccountContext extends BaseIntegrationContext
 {
     use ActorContextTrait;
 
-    private const USER_SERVICE_AUTHENTICATE            = 'UserService::authenticate';
-    private const USER_SERVICE_CREATE                  = 'UserService::create';
-    private const LPA_SERVICE_GET_LPAS                 = 'LpaService::getLpas';
-    private const USER_SERVICE_REQUEST_CHANGE_EMAIL    = 'UserService::requestChangeEmail';
-    private const USER_SERVICE_CAN_RESET_EMAIL         = 'UserService::canResetEmail';
-    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL   = 'UserService::completeChangeEmail';
-    private const USER_SERVICE_DELETE_ACCOUNT          = 'UserService::deleteAccount';
-    private const USER_SERVICE_REQUEST_PASSWORD_RESET  = 'UserService::requestPasswordReset';
-    private const USER_SERVICE_CAN_PASSWORD_RESET      = 'UserService::canPasswordReset';
+    private const USER_SERVICE_AUTHENTICATE = 'UserService::authenticate';
+    private const USER_SERVICE_CREATE = 'UserService::create';
+    private const LPA_SERVICE_GET_LPAS = 'LpaService::getLpas';
+    private const USER_SERVICE_REQUEST_CHANGE_EMAIL = 'UserService::requestChangeEmail';
+    private const USER_SERVICE_CAN_RESET_EMAIL = 'UserService::canResetEmail';
+    private const USER_SERVICE_COMPLETE_CHANGE_EMAIL = 'UserService::completeChangeEmail';
+    private const USER_SERVICE_DELETE_ACCOUNT = 'UserService::deleteAccount';
+    private const USER_SERVICE_REQUEST_PASSWORD_RESET = 'UserService::requestPasswordReset';
+    private const USER_SERVICE_CAN_PASSWORD_RESET = 'UserService::canPasswordReset';
     private const USER_SERVICE_COMPLETE_PASSWORD_RESET = 'UserService::completePasswordReset';
 
     private LpaFactory $lpaFactory;
@@ -66,6 +47,13 @@ class AccountContext extends BaseIntegrationContext
     private UserService $userService;
     private ViewerCodeService $viewerCodeService;
     private NotifyService $notifyService;
+    private string $activationToken;
+    private string $userPassword;
+    private string $userEmail;
+    private string $userPasswordResetToken;
+    private string $userIdentity;
+    private string $newUserEmail;
+    private string $userEmailResetToken;
 
     #[Given('/^I am a user of the lpa application$/')]
     public function iAmAUserOfTheLpaApplication(): void

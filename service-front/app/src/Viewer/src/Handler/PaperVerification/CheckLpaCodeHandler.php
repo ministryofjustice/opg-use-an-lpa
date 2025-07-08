@@ -21,6 +21,14 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
+
     private const TEMPLATE = 'viewer::paper-verification/check-code';
 
     public function __construct(

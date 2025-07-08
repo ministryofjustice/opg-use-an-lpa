@@ -16,15 +16,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
 
-/**
- * @property $lpaSurname
- * @property $lpaShareCode
- * @property $lpaData
- * @property $lpaStoredCode
- * @property $lpaViewedBy
- * @property $imageCollectionStatus
- * @property $systemMessageData
- */
 class ViewerContext implements Context
 {
     use BaseUiContextTrait;
@@ -32,6 +23,14 @@ class ViewerContext implements Context
 
     private const LPA_SERVICE_GET_LPA_BY_CODE         = 'LpaService::getLpaByCode';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
+
+    private $lpaSurname;
+    private $lpaShareCode;
+    private $lpaData;
+    private $lpaStoredCode;
+    private $lpaViewedBy;
+    private $imageCollectionStatus;
+    private $systemMessageData;
 
     #[Then('/^a PDF is downloaded$/')]
     public function aPDFIsDownloaded(): void

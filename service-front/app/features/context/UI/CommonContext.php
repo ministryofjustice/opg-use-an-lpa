@@ -30,14 +30,12 @@ use Mezzio\Session\SessionMiddlewareFactory;
 use Mezzio\Session\SessionPersistenceInterface;
 use PHPUnit\Framework\Assert;
 
-/**
- * @property $traceId  The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
- */
 class CommonContext implements Context
 {
     use BaseUiContextTrait;
 
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
+    private $traceId; // The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
 
     #[Given('I access the service home page')]
     public function iAccessTheServiceHomepage(): void
