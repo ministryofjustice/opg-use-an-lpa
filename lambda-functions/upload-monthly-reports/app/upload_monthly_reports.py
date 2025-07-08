@@ -195,7 +195,7 @@ class DynamoDBExporterAndQuerier:
         return response["Table"]["TableArn"]
 
     def drop_athena_database(self):
-        query = f"DROP DATABASE {self.athena_database_name} CASCADE;"
+        query = f"DROP DATABASE IF EXISTS {self.athena_database_name} CASCADE;"
         self.run_athena_query(query, quiet=True)
 
     def create_athena_database(self):
