@@ -2,34 +2,36 @@
 
 declare(strict_types=1);
 
-use App\Handler\AccessForAllLpaConfirmationHandler;
-use App\Handler\AccessForAllLpaValidationHandler;
-use App\Handler\AddLpaConfirmationHandler;
-use App\Handler\AddLpaValidationHandler;
-use App\Handler\AuthHandler;
-use App\Handler\CanPasswordResetHandler;
-use App\Handler\CanResetEmailHandler;
-use App\Handler\ChangePasswordHandler;
-use App\Handler\CompleteChangeEmailHandler;
-use App\Handler\CompleteDeleteAccountHandler;
-use App\Handler\CompletePasswordResetHandler;
-use App\Handler\HealthcheckHandler;
-use App\Handler\LpasCollectionHandler;
-use App\Handler\LpasResourceCodesCollectionHandler;
-use App\Handler\LpasResourceHandler;
-use App\Handler\LpasResourceImagesCollectionHandler;
-use App\Handler\NotifyHandler;
-use App\Handler\OneLoginAuthenticationCallbackHandler;
-use App\Handler\OneLoginAuthenticationLogoutHandler;
-use App\Handler\OneLoginAuthenticationRequestHandler;
-use App\Handler\RequestChangeEmailHandler;
-use App\Handler\RequestCleanseHandler;
-use App\Handler\RequestPasswordResetHandler;
-use App\Handler\SystemMessageHandler;
-use App\Handler\UserActivateHandler;
-use App\Handler\UserHandler;
-use App\Handler\ViewerCodeFullHandler;
-use App\Handler\ViewerCodeSummaryHandler;
+use App\Handler\{AccessForAllLpaConfirmationHandler,
+    AccessForAllLpaValidationHandler,
+    AddLpaConfirmationHandler,
+    AddLpaValidationHandler,
+    AuthHandler,
+    CanPasswordResetHandler,
+    CanResetEmailHandler,
+    ChangePasswordHandler,
+    CompleteChangeEmailHandler,
+    CompleteDeleteAccountHandler,
+    CompletePasswordResetHandler,
+    HealthcheckHandler,
+    LpasCollectionHandler,
+    LpasResourceCodesCollectionHandler,
+    LpasResourceHandler,
+    LpasResourceImagesCollectionHandler,
+    NotifyHandler,
+    OneLoginAuthenticationCallbackHandler,
+    OneLoginAuthenticationLogoutHandler,
+    OneLoginAuthenticationRequestHandler,
+    PaperVerificationCodes\UsableHandler,
+    RequestChangeEmailHandler,
+    RequestCleanseHandler,
+    RequestPasswordResetHandler,
+    SystemMessageHandler,
+    UserActivateHandler,
+    UserHandler,
+    ViewerCodeFullHandler,
+    ViewerCodeSummaryHandler};
+use App\Middleware\RequestObject\RequestObjectMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -110,8 +112,37 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->post('/v1/add-lpa/validate', AddLpaValidationHandler::class, 'lpa.add.validate');
     $app->post('/v1/add-lpa/confirm', AddLpaConfirmationHandler::class, 'lpa.add.confirm');
 
-    $app->post('/v1/viewer-codes/summary', ViewerCodeSummaryHandler::class, 'lpa.viewer-code.summary');
-    $app->post('/v1/viewer-codes/full', ViewerCodeFullHandler::class, 'lpa.viewer-code.full');
+    $app->post(
+        '/v1/viewer-codes/summary',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ViewerCodeSummaryHandler::class,
+            ],
+        ),
+        'lpa.viewer-code.summary'
+    );
+    $app->post(
+        '/v1/viewer-codes/full',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ViewerCodeFullHandler::class,
+            ],
+        ),
+        'lpa.viewer-code.full'
+    );
+
+    $app->post(
+        '/v1/paper-verification/usable',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                UsableHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.usable'
+    );
 
     $app->get('/v1/user', UserHandler::class, 'user.get');
     $app->post('/v1/user', UserHandler::class, 'user.create');

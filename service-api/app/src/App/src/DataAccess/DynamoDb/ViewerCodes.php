@@ -6,10 +6,10 @@ namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\ViewerCodesInterface;
-use App\Entity\Value\LpaUid;
+use App\Value\LpaUid;
 use Aws\DynamoDb\DynamoDbClient;
-use Aws\DynamoDb\Marshaler;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use Aws\DynamoDb\Marshaler;
 use DateTime;
 
 class ViewerCodes implements ViewerCodesInterface
@@ -118,7 +118,7 @@ class ViewerCodes implements ViewerCodesInterface
         return true;
     }
 
-    public function removeActorAssociation(string $code, int $codeOwner): bool
+    public function removeActorAssociation(string $code, string $codeOwner): bool
     {
         // Update the item by removing association with userlpactor and setting the code owner
         $this->client->updateItem([
@@ -134,7 +134,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'S' => '',
                 ],
                 ':d' => [
-                    'N' => (string)$codeOwner,
+                    'S' => (string)$codeOwner,
                 ],
             ],
         ]);

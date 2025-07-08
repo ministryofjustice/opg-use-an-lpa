@@ -74,12 +74,12 @@ services:
   # ---------------------------
   # Cache service
   redis:
-    image: redis:7
+    image: docker.io/redis:7@sha256:2582cc7e28849e4bdca8b991c3ede503ec706112d2eb2feb2191e9e980d37e92
 
   # ---------------------------
   # AWS KMS mock service
   kms:
-    image: nsmithuk/local-kms:3
+    image: docker.io/nsmithuk/local-kms:3@sha256:360d7377b6f3687c89a622236791e4fa3f7316366267b437829edbdfa8a5fc60
     volumes:
       - ./local-config/kms:/init
     environment:
@@ -90,7 +90,7 @@ services:
   # PDF Generator
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.375.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.385.0
     ports:
       - 9004:80
 
@@ -98,7 +98,7 @@ services:
   # Sirius gateway mock
   api-gateway:
     container_name: api-gateway
-    image: nginx:stable-alpine
+    image: docker.io/nginx:stable-alpine@sha256:aed99734248e851764f1f2146835ecad42b5f994081fa6631cc5d79240891ec9
     depends_on:
       - mock-data-lpa
       - mock-image-request-handler
@@ -110,7 +110,7 @@ services:
 
   mock-data-lpa:
     container_name: mock-data-lpa
-    image: stoplight/prism:5
+    image: docker.io/stoplight/prism:5.12.1@sha256:1319faa9f80dcbae95f5b24ce497eb08fa4a191b7ed3ad65723da608d702bc4e
     command:
       - "mock"
       - "-h"
@@ -123,7 +123,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: outofcoffee/imposter:4.6.2
+    image: docker.io/outofcoffee/imposter:4.6.2@sha256:84655fbe52a33e3523d63f9f1f3d1d4377188436fee5c6b1b231162051820c52
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -136,7 +136,7 @@ services:
 
   mock-lpa-data-store:
     container_name: mock-lpa-data-store
-    image: outofcoffee/imposter:4.6.2
+    image: docker.io/outofcoffee/imposter:4.6.2@sha256:84655fbe52a33e3523d63f9f1f3d1d4377188436fee5c6b1b231162051820c52
     command:
       - "-c"
       - "/opt/imposter/config"

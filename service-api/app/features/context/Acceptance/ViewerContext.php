@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use Aws\Command;
 use Aws\Result;
+use Aws\ResultInterface;
 use Behat\Behat\Context\Context;
 use Behat\Step\Given;
 use Behat\Step\Then;
@@ -28,10 +30,39 @@ class ViewerContext implements Context
     private string $viewerCodeOrganisation;
     private string $lpaViewedBy;
 
+    #[Then('I am told that the LPA has been found')]
+    public function iAmToldThatTheLPAHasBeenFound()
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('donorName', $lpaData);
+        Assert::assertArrayHasKey('type', $lpaData);
+        Assert::assertArrayHasKey('expiryDate', $lpaData);
+        Assert::assertArrayHasKey('status', $lpaData);
+        Assert::assertEquals('lpastore', $lpaData['source']);
+    }
+
+    #[Given('I have access to an LPA via :a paper verification code')]
+    public function iHaveAccessToAnLPAViaAPaperVerificationCode(string $type)
+    {
+        // this hardcoded stuff will be swapped out when the service stops hardcoding things
+        $this->viewerCode = match ($type) {
+            'a'           => 'P-1234-1234-1234-12',
+            'an expired'  => 'P-5678-5678-5678-56',
+            'a cancelled' => 'P-3456-3456-3456-34'
+        };
+        $this->donorSurname = 'Bundlaaaa';
+
+        $this->lpa = json_decode(
+            file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'),
+        );
+    }
+
     #[Given('I have been given access to an LPA via share code')]
     public function iHaveBeenGivenAccessToUseAnLPAViaShareCode(): void
     {
-        $this->viewerCode             = '1111-1111-1111';
+        $this->viewerCode             = '111111111111';
         $this->donorSurname           = 'Deputy';
         $this->viewerCodeOrganisation = 'santander';
         $this->lpaViewedBy            = 'Santander';
@@ -88,12 +119,22 @@ class ViewerContext implements Context
     }
 
     #[Then('I can see a message the LPA has been cancelled')]
+    #[Then('I am told that the paper verification code has been cancelled')]
     public function iCanSeeAMessageTheLPAHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
         Assert::assertEquals($lpaData['details'], 'Share code cancelled');
+    }
+
+    #[Then('I am told that the paper verification code has expired')]
+    public function iCanSeeAMessageTheLPAHasBeenExpired(): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
+        $lpaData = $this->getResponseAsJson();
+        Assert::assertEquals($lpaData['title'], 'Gone');
+        Assert::assertEquals($lpaData['details'], 'Share code expired');
     }
 
     #[Given('/^I can see (.*) images$/')]
@@ -217,6 +258,30 @@ class ViewerContext implements Context
         Assert::assertArrayHasKey('lpa', $lpaData);
 
         Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
+    }
+
+    #[When('I provide donor surname and paper verification code')]
+    public function iProvideDonorSurnameAndPaperVerificationCode()
+    {
+        // CombinedLpaManager::get
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('GetSecretValue', $command->getName());
+                Assert::assertEquals('lpa-data-store-secret', $command['SecretId']);
+
+                return new Result(['SecretString' => 'secret-value-string-at-least-128-bits-long']);
+            }
+        );
+
+        $this->apiPost(
+            '/v1/paper-verification/usable',
+            [
+                'code' => $this->viewerCode,
+                'name' => $this->donorSurname,
+            ]
+        );
     }
 
     #[Then('/^I see a message that LPA has been cancelled$/')]

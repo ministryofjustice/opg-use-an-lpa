@@ -1,0 +1,71 @@
+{% extends '@viewer/layout.html.twig' %}
+
+{% block html_title %}{% trans %}We could not find a lasting power of attorney{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper" id="main-content" role="main">
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+
+                    <h1 class="govuk-heading-xl">{% trans %}We could not find a lasting power of attorney{% endtrans %}</h1>
+
+                    <p class="govuk-body">
+                        {% trans %}
+                            This could be because:
+                        {% endtrans %}
+                    </p>
+                    <ul class="govuk-list govuk-list--bullet">
+                        <li>{% trans %}the donor’s name you entered does not match our records{% endtrans %}</li>
+                        <li>{% trans %}the LPA paper verification code you entered is incorrect{% endtrans %}</li>
+                    </ul>
+
+                    <h2 class="govuk-heading-l">{% trans %}Your answers{% endtrans %}</h2>
+                    <dl class="govuk-summary-list govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Donor’s last name{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ donor_last_name }}
+                            </dd>
+                        </div>
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}LPA paper verification code{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpa_access_code }}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick"
+                             data-gaAction="Details" data-gaCategory="Wrong Details"
+                             data-gaLabel="What to do if the details are wrong">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                {% trans %}Are you using the correct service?{% endtrans %}
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            <p>
+                                {% trans %}This service is for organisations such as care homes or banks to view a summary of an LPA. They do this by using an access or paper verification code given to them by attorneys or donors.{% endtrans %}
+                            </p>
+                            <p>
+                                {% trans with {'%link%': "https://www.gov.uk/use-lasting-power-of-attorney"} %}
+                                    If you’re a donor or an attorney who wants to see an LPA summary, go to the <a class="govuk-link" href=%link%>Use a lasting power of attorney service</a>. You’ll also be able to give organisations access to LPA summaries.
+                                {% endtrans %}
+                            </p>
+                        </div>
+                    </details>
+
+                    <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button">
+                        {% trans %}Try again{% endtrans %}
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

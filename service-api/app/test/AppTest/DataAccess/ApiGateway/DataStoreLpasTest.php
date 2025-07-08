@@ -66,7 +66,7 @@ class DataStoreLpasTest extends TestCase
         );
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
@@ -131,7 +131,7 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
@@ -183,7 +183,7 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
@@ -237,7 +237,7 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy
@@ -420,7 +420,7 @@ class DataStoreLpasTest extends TestCase
         $this->generatePSR17Prophecies($responseProphecy->reveal(), $traceId, []);
 
         $this->requestFactoryProphecy
-            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid)
+            ->createRequest('GET', $apiBaseUri . '/lpas/' . $uid . '?presign-images')
             ->willReturn($this->requestProphecy->reveal());
 
         $this->requestSignerFactoryProphecy

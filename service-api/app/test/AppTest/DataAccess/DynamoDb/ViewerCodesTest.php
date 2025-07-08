@@ -6,7 +6,7 @@ namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\KeyCollisionException;
-use App\Entity\Value\LpaUid;
+use App\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Exception\DynamoDbException;
@@ -388,7 +388,7 @@ class ViewerCodesTest extends TestCase
     public function can_remove_actor_and_code_association(): void
     {
         $testCode  = 'test-code';
-        $codeOwner = 23;
+        $codeOwner = '23';
 
         $this->dynamoDbClientProphecy->updateItem(
             Argument::that(function (array $data) use (

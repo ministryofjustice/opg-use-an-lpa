@@ -33,11 +33,16 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
+use Viewer\Handler\PaperVerification\CheckAnswersHandler;
+use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
+use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
-    $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
+    $app->route('/home', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home-trial');
     $app->route('/check-code', Viewer\Handler\CheckCodeHandler::class, ['GET', 'POST'], 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
@@ -59,6 +64,41 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         Common\Handler\InstructionsPreferencesBefore2016Handler::class,
         'lpa.instructions-preferences-before-2016'
     );
+
+    //Paper Verification Code journey
+    $app->route('/paper-verification/check-code',
+                CheckLpaCodeHandler::class,
+                ['GET', 'POST'],
+                'pv.check-code');
+    $app->route('/paper-verification/verification-code-sent-to',
+                Viewer\Handler\PaperVerificationCodeSentToHandler::class,
+                ['GET', 'POST'],
+                'pv.verification-code-sent-to');
+
+    $app->route('/paper-verification/provide-attorney-details',
+                Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class,
+                ['GET', 'POST'],
+                'pv.provide-attorney-details');
+
+    $app->route('/paper-verification/donor-dob',
+                PVDonorDateOfBirthHandler::class,
+                ['GET', 'POST'],
+                'donor-dob');
+
+    $app->route('/paper-verification/attorney-dob',
+                AttorneyDateOfBirthHandler::class,
+                ['GET', 'POST'],
+                'attorney-dob');
+
+    $app->route('/paper-verification/number-of-attorneys',
+                NumberOfAttorneysHander::class,
+                ['GET', 'POST'],
+                'number-of-attorneys');
+
+    $app->route('/paper-verification/check-answers',
+                CheckAnswersHandler::class,
+                ['GET', 'POST'],
+                'check-answers');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

@@ -1,6 +1,6 @@
 module github.com/ministryofjustice/opg-use-an-lpa/service-admin
 
-go 1.23.8
+go 1.24.4
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.36.3
@@ -12,7 +12,7 @@ require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/mux v1.8.1
-	github.com/ministryofjustice/opg-go-common v1.87.0
+	github.com/ministryofjustice/opg-go-common v1.106.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.34.0
 	github.com/sethvargo/go-retry v0.3.0
@@ -39,7 +39,7 @@ require (
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/xid v1.6.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

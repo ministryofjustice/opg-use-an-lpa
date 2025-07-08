@@ -1,4 +1,4 @@
-FROM node:22-alpine as asset-env
+FROM node:22.16.0-alpine3.22@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e AS asset-env
 
 WORKDIR /app
 
@@ -9,11 +9,11 @@ COPY package.json package-lock.json ./
 RUN npm ci && npm run build
 
 # Build Go app
-FROM golang:1.23.8-alpine as build-env
+FROM golang:1.24.4-alpine@sha256:68932fa6d4d4059845c8f40ad7e654e626f3ebd3706eef7846f319293ab5cb7a AS build-env
 
 RUN apk --no-cache add \
   build-base=0.5-r3 \
-  ca-certificates=20241121-r1 \
+  ca-certificates=20241121-r2	\
   tzdata=2025b-r0 \
   && rm -rf /var/cache/apk/* && update-ca-certificates && \
   adduser -D appuser
@@ -29,7 +29,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o admin cmd/admin/main.go
 
 # Bundle all
-FROM scratch as production
+FROM scratch AS production
 
 WORKDIR /go/bin
 

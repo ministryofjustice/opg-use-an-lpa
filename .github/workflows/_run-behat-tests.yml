@@ -30,7 +30,7 @@ jobs:
           chrome-version: stable
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
         with:
           php-version: 8.3
 
@@ -53,7 +53,7 @@ jobs:
           path: terraform/environment
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df # v4.2.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -81,6 +81,7 @@ jobs:
           use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .use_fqdn | xargs)
           public_facing_view_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
           public_facing_use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
+          ff_paper_verification=$(cat ./terraform/environment/cluster_config.json | jq .ff_paper_verification | xargs)
 
           ln -sf ../features tests/smoke/features
 
@@ -89,6 +90,7 @@ jobs:
             BEHAT_ACTOR_URL=https://$public_facing_use_fqdn \
             BEHAT_OLD_VIEWER_URL=https://$viewer_fqdn \
             BEHAT_OLD_ACTOR_URL=https://$use_fqdn \
+            BEHAT_FF_PAPER_VERIFICATION=$ff_paper_verification \
             vendor/bin/behat
 
       - name: archive failed test screenshots

@@ -21,12 +21,11 @@ permissions:
 jobs:
   phpcs:
     name: Lint PHP
-
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         service_path: [ 'service-front', 'service-api' ]
 
-    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -35,7 +34,7 @@ jobs:
         fetch-depth: 2
 
     - name: Setup PHP with tools
-      uses: shivammathur/setup-php@9e72090525849c5e82e596468b86eb55e9cc5401 # 2.32.0
+      uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
       with:
         php-version: '8.1'
 

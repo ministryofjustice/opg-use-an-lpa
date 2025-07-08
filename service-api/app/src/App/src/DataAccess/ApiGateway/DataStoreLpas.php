@@ -49,7 +49,7 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
 
     public function get(string $uid): ?LpaInterface
     {
-        $url = sprintf('%s/lpas/%s', $this->apiBaseUri, $uid);
+        $url = sprintf('%s/lpas/%s?presign-images', $this->apiBaseUri, $uid);
 
         $request = $this->requestFactory->createRequest('GET', $url);
         $request = $this->createRequestSigner()->sign($this->attachHeaders($request));
