@@ -8,6 +8,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Exception\ApiException;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
@@ -94,7 +95,7 @@ class PaperVerificationCodeService
     public function view(PaperVerificationCodeView $params): ViewCode
     {
         if (empty($params->organisation)) {
-            throw new \Exception();
+            throw new BadRequestException('An organisation must be provided');
         }
 
         $codeData = [
@@ -116,6 +117,7 @@ class PaperVerificationCodeService
             codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
             lpaStatus:      LpaStatus::from($lpaObj->status),
             lpaSource:      LpaSource::LPASTORE,
+            lpa:            $lpaObj,
         );
     }
 }

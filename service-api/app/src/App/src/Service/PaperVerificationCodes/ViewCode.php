@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\PaperVerificationCodes;
 
+use App\Entity\Lpa;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
@@ -18,6 +19,7 @@ class ViewCode implements JsonSerializable
         public readonly DateTimeInterface $codeExpiryDate,
         public readonly LpaStatus $lpaStatus,
         public readonly LpaSource $lpaSource,
+        public readonly Lpa $lpa,
     ) {
     }
 
@@ -32,6 +34,7 @@ class ViewCode implements JsonSerializable
             'expiryDate' => $this->codeExpiryDate->format(DateTimeInterface::ATOM),
             'status'     => $this->lpaStatus,
             'source'     => $this->lpaSource,
+            'lpa'        => $this->lpa,
         ];
     }
 }

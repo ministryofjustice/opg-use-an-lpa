@@ -11,9 +11,12 @@ use App\Enum\LpaType;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Request\PaperVerificationCodeUsable;
+use App\Request\PaperVerificationCodeValidate;
+use App\Request\PaperVerificationCodeView;
 use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\PaperVerificationCodes\PaperVerificationCodeService;
+use App\Value\LpaUid;
 use App\Value\PaperVerificationCode;
 use AppTest\LpaUtilities;
 use DateInterval;
@@ -162,5 +165,109 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->expectException(NotFoundException::class);
         $sut->usable($params);
+    }
+
+    #[Test]
+    public function it_successfully_view(): void
+    {
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+        $lpa              = LpaUtilities::lpaStoreLpaFixture();
+
+
+        $lpaManager
+            ->expects($this->once())
+            ->method('getByUid')
+            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
+            ->willReturn(LpaUtilities::lpaStoreResponseFixture());
+
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+
+        $params = new PaperVerificationCodeView(
+            name: 'Bundlaaaa',
+            code: new PaperVerificationCode('P-1234-1234-1234-12'),
+            lpaUid: new LpaUid('M-1111-2222-3333'),
+            sentToDonor: false,
+            attorneyName: 'Michael Clarkson',
+            dateOfBirth: new DateTimeImmutable('2020-01-01'),
+            noOfAttorneys: 2,
+            organisation: 'Company A'
+        );
+
+        $result = $sut->view($params);
+
+        $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
+        $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
+        $this->assertEqualsWithDelta(
+            (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+            $result->codeExpiryDate,
+            5,
+        );
+        $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
+        $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
+        $this->assertEquals($lpa, $result->lpa);
+    }
+
+    #[Test]
+    public function validation_throws_an_exception_for_a_missing_lpa(): void
+    {
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+
+
+        $lpaManager
+            ->expects($this->once())
+            ->method('getByUid')
+            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
+            ->willReturn(null);
+
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+
+        $params = new PaperVerificationCodeView(
+            name: 'Bundlaaaa',
+            code: new PaperVerificationCode('P-1234-1234-1234-12'),
+            lpaUid: new LpaUid('M-1111-2222-3333'),
+            sentToDonor: false,
+            attorneyName: 'Michael Clarkson',
+            dateOfBirth: new DateTimeImmutable('2020-01-01'),
+            noOfAttorneys: 2,
+            organisation: 'Company A'
+        );
+
+        $this->expectException(NotFoundException::class);
+        $sut->view($params);
+    }
+
+    #[Test]
+    public function validation_throws_if_uid_is_unknown(): void
+    {
+        $actorCodes       = $this->createMock(ActorCodesInterface::class);
+        $lpaManager       = $this->createMock(LpaManagerInterface::class);
+        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+
+
+        $lpaManager
+            ->expects($this->any())
+            ->method('getByUid')
+            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
+            ->willReturn(null);
+
+        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+
+        $params = new PaperVerificationCodeView(
+            name: 'Bundlaaaa',
+            code: new PaperVerificationCode('P-1234-1234-1234-12'),
+            lpaUid: new LpaUid('M-1111-1111-1111'),
+            sentToDonor: false,
+            attorneyName: 'Michael Clarkson',
+            dateOfBirth: new DateTimeImmutable('2020-01-01'),
+            noOfAttorneys: 2,
+            organisation: 'Company A'
+        );
+
+        $this->expectException(NotFoundException::class);
+        $sut->view($params);
     }
 }
