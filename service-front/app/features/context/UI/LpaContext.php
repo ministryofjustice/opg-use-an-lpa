@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\UI;
 
-use Amp\Http\Server\RequestHandler;
 use Behat\Behat\Context\Context;
 use Behat\Step\Given;
 use Behat\Step\Then;
@@ -21,21 +20,6 @@ use PHPUnit\Framework\AssertionFailedError;
 
 use function PHPUnit\Framework\assertStringContainsString;
 
-/**
- * @property mixed  $lpa
- * @property string $userLpaActorToken
- * @property int    $actorId
- * @property array  $lpaData
- * @property array  $systemMessageData
- * @property string $organisation
- * @property string $accessCode
- * @property string $userFirstName
- * @property int    $userId
- * @property string $userSurname
- * @property string $activationCode
- * @property string $codeCreatedDate
- * @property string $companyName
- */
 class LpaContext implements Context
 {
     use ActorContext;
@@ -53,10 +37,17 @@ class LpaContext implements Context
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
     private array $dashboardLPAs;
-
-    /** @var RequestHandler Allows the overriding of the dashboard LPA endpoints request (if registered) */
-    private RequestHandler $requestDashboardLPAs;
-    private RequestHandler $requestDashboardLPACodes;
+    private mixed $lpa;
+    private string $userLpaActorToken;
+    private int $actorId;
+    private array $lpaData;
+    private array $systemMessageData;
+    private string $organisation;
+    private string $accessCode;
+    private string $userFirstName;
+    private int $userId;
+    private string $userSurname;
+    private string $companyName;
 
     #[Given('/^A trust corporation has created an access code$/')]
     public function zaTrustCorporationHasCreatedAndAccessCode(): void

@@ -25,7 +25,6 @@ use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Lpa\ViewerCodeService;
-use Common\Service\Notify\NotifyService;
 use DateTime;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
@@ -36,22 +35,6 @@ use PHPUnit\Framework\Assert;
  *
  * Account creation, login, password reset etc.
  *
- * @property array lpa
- * @property string lpaJson
- * @property array lpaData
- * @property string activation_key
- * @property string referenceNo
- * @property string userDob
- * @property string userIdentity
- * @property string actorLpaToken
- * @property int actorId
- * @property string organisation
- * @property string accessCode
- * @property string userPostCode
- * @property string userFirstname
- * @property string userMiddlenames
- * @property string userSurname
- * @property string codeCreatedDate
  * @psalm-ignore UndefinedThisPropertyFetch
  */
 class LpaContext extends BaseIntegrationContext
@@ -71,11 +54,22 @@ class LpaContext extends BaseIntegrationContext
     private const REMOVE_LPA_INVOKE                     = 'RemoveLpa::__invoke';
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
 
-    private LpaFactory $lpaFactory;
-    private LpaService $lpaService;
-    private ViewerCodeService $viewerCodeService;
-    private NotifyService $notifyService;
-    private InstAndPrefImagesService $instAndPrefImagesService;
+    private mixed $lpa;
+    private string $lpaJson;
+    private array $lpaData;
+    private string $activation_key;
+    private string $referenceNo;
+    private string $userDob;
+    private string $userIdentity;
+    private string $actorLpaToken;
+    private int $actorId;
+    private string $organisation;
+    private string $accessCode;
+    private string $userPostCode;
+    private string $userFirstname;
+    private string $userMiddlenames;
+    private string $userSurname;
+    private string $codeCreatedDate;
 
     #[Given('/^I am told that I have already requested an activation key for this LPA$/')]
     public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA(): void
