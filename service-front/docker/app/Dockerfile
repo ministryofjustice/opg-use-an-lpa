@@ -12,7 +12,7 @@ ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
-  && apk add --update --no-cache icu=76.1-r0 gettext=0.24.1-r0 fcgi=2.4.6-r0 \
+  && apk add --update --no-cache icu=76.1-r1 gettext=0.24.1-r0 fcgi=2.4.6-r0 \
   && install-php-extensions apcu redis-^6 intl gettext opcache \
   && rm /usr/bin/install-php-extensions
 
