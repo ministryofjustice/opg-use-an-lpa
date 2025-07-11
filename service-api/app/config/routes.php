@@ -146,6 +146,28 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.paper-verification.usable'
     );
 
+    $app->post(
+        '/v1/paper-verification/validate',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ValidateHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.validate'
+    );
+
+    $app->post(
+        '/v1/paper-verification/view',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ViewHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.view'
+    );
+
     $app->get('/v1/user', UserHandler::class, 'user.get');
     $app->post('/v1/user', UserHandler::class, 'user.create');
     $app->patch('/v1/user-activation', UserActivateHandler::class, 'user.activate');
@@ -179,26 +201,4 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
-
-    $app->post(
-        '/v1/paper-verification/validate',
-        $factory->pipeline(
-            [
-                RequestObjectMiddleware::class,
-                ValidateHandler::class,
-            ],
-        ),
-        'lpa.paper-verification.validate'
-    );
-
-    $app->post(
-        '/v1/paper-verification/view',
-        $factory->pipeline(
-            [
-                RequestObjectMiddleware::class,
-                ViewHandler::class,
-            ],
-        ),
-        'lpa.paper-verification.validate'
-    );
 };
