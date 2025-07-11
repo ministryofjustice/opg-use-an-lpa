@@ -1,0 +1,4 @@
+services:
+  viewer-app:
+    environment:
+      SUPPORT_DATASTORE_LPAS: "false"
