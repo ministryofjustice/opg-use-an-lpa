@@ -10,6 +10,7 @@ use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Handler\Trait\RequestAsObjectTrait;
 use App\Request\PaperVerificationCodeUsable;
+use App\Request\PaperVerificationCodeView;
 use App\Service\PaperVerificationCodes\PaperVerificationCodeService;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -39,7 +40,7 @@ class ViewHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $params = $this->requestAsObject($request, PaperVerificationCodeUsable::class);
+        $params = $this->requestAsObject($request, PaperVerificationCodeView::class);
 
         $response = $this->codeService->view($params);
 
