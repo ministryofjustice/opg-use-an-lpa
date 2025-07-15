@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace AppTest\Service\ActorCodes\Validation;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\Repository\Response\ActorCode;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\DataAccess\Repository\Response\Lpa;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\Validation\CodesApiValidationStrategy;
@@ -56,10 +57,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => '123456789',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -108,10 +107,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => null,
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid(null),
             new DateTime('now')
         );
 
@@ -130,10 +127,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => null,
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid(null),
             new DateTime('now')
         );
 
@@ -152,10 +147,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => 'actor-uid',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -179,10 +172,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => '123456789',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -220,10 +211,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => '123456789',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -273,10 +262,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => '123456789',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -326,10 +313,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => 'actor-uid',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 
@@ -377,10 +362,8 @@ class CodesApiValidationStrategyTest extends TestCase
     {
         $this->initDependencies();
 
-        $actor = new ActorCode(
-            [
-                'actor' => '123456789',
-            ],
+        $actor = new UpstreamResponse(
+            new ActorCodeIsValid('123456789'),
             new DateTime('now')
         );
 

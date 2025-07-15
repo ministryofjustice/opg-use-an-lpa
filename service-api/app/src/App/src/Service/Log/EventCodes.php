@@ -63,4 +63,10 @@ class EventCodes
      * A one login authentication transaction resulted in a local account being recovered during an email change.
      */
     public const AUTH_ONELOGIN_ACCOUNT_RECOVERED = 'AUTH_ONELOGIN_ACCOUNT_RECOVERED';
+
+    /**
+     * Whilst retrieving an LPA from upstream sources, using information that refers to it,
+     * the LPA was not found.
+     */
+    public const EXPECTED_LPA_MISSING = 'EXPECTED_LPA_MISSING';
 }

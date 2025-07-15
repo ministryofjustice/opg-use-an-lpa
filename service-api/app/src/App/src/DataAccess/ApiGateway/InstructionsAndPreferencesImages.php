@@ -6,7 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages as InstructionsAndPreferencesImagesDTO;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;

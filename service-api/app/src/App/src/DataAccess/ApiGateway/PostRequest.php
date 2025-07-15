@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
+use App\Exception\RequestSigningException;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -19,8 +20,6 @@ trait PostRequest
      * @param SignatureType $signature
      * @return ResponseInterface
      * @throws ApiException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     protected function makePostRequest(
         string $url,
@@ -33,7 +32,12 @@ trait PostRequest
         $request = $request->withBody($this->streamFactory->createStream(json_encode($body)));
 
         $request = $this->attachHeaders($request);
-        $request = ($this->requestSignerFactory)($signature)->sign($request);
+
+        try {
+            $request = ($this->requestSignerFactory)($signature)->sign($request);
+        } catch (RequestSigningException $e) {
+            throw ApiException::create('Error whilst signing request for upstream service', null, $e);
+        }
 
         try {
             $response = $this->httpClient->sendRequest($request);

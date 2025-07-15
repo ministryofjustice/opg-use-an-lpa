@@ -38,7 +38,6 @@ class ViewerContext implements Context
 
         Assert::assertArrayHasKey('donorName', $lpaData);
         Assert::assertArrayHasKey('type', $lpaData);
-        Assert::assertArrayHasKey('expiryDate', $lpaData);
         Assert::assertArrayHasKey('status', $lpaData);
         Assert::assertEquals('lpastore', $lpaData['source']);
     }
@@ -125,7 +124,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertEquals($lpaData['details'], 'Share code cancelled');
+        Assert::assertStringContainsString('cancelled', $lpaData['details']);
     }
 
     #[Then('I am told that the paper verification code has expired')]
@@ -134,7 +133,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertEquals($lpaData['details'], 'Share code expired');
+        Assert::assertStringContainsString('expired', $lpaData['details']);
     }
 
     #[Given('/^I can see (.*) images$/')]

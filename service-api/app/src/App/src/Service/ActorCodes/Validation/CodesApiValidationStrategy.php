@@ -29,9 +29,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
 
-            $actorUid = !empty($actorCode->getData()['actor'])
-                ? $actorCode->getData()['actor']
-                : null;
+            $actorUid = $actorCode->getData()->actorUid;
 
             if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
                 return $actorUid;
@@ -119,8 +117,13 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
         }
 
         if (
-            ($actor->actorType !== ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $actor->actor->getDob()->format('Y-m-d')) ||
-            ($actor->actorType === ResolveActor\ActorType::TRUST_CORPORATION && $dob !== $lpa->getData()->getDonor()->getDob()->format('Y-m-d'))
+            (
+                $actor->actorType !== ResolveActor\ActorType::TRUST_CORPORATION
+                && $dob !== $actor->actor->getDob()->format('Y-m-d')
+            ) || (
+                $actor->actorType === ResolveActor\ActorType::TRUST_CORPORATION
+                && $dob !== $lpa->getData()->getDonor()->getDob()->format('Y-m-d')
+            )
         ) {
             $this->logger->error(
                 'Provided dob {dob} did not match the expected when validating actor code',

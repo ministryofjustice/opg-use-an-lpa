@@ -19,8 +19,6 @@ use Laminas\Diactoros\Response\JsonResponse;
 class NotifyHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private EmailClient $emailClient,
-        private LoggerInterface $logger,
         private NotifyService $notifyService,
     ) {
     }
