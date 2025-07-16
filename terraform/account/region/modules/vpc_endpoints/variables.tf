@@ -23,11 +23,6 @@ variable "public_subnets_cidr_blocks" {
   type        = any
 }
 
-variable "public_subnets_id" {
-  description = "public subnet CIDR blocks"
-  type        = any
-}
-
 variable "application_route_tables" {
   type = any
 }

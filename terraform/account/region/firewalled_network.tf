@@ -39,3 +39,40 @@ resource "aws_networkfirewall_rule_group" "rule_file" {
   }
   provider = aws.region
 }
+
+data "aws_route_tables" "firewalled_network_application" {
+  provider = aws.region
+  filter {
+    name   = "tag:Name"
+    values = ["application-route-table"]
+  }
+  filter {
+    name   = "vpc-id"
+    values = [module.network.vpc.id]
+  }
+}
+
+module "vpc_endpoints" {
+  source = "./modules/vpc_endpoints"
+  interface_endpoint_names = [
+    "ec2",
+    "ecr.api",
+    "ecr.dkr",
+    "execute-api",
+    "events",
+    "logs",
+    "rum",
+    "secretsmanager",
+    "ssm",
+    "xray",
+  ]
+  vpc_id                          = module.network.vpc.id
+  application_subnets_cidr_blocks = module.network.application_subnets[*].cidr_block
+  application_subnets_id          = module.network.application_subnets[*].id
+  public_subnets_cidr_blocks      = module.network.public_subnets[*].cidr_block
+  # public_subnets_id               = module.network.public_subnets[*].id
+  application_route_tables = data.aws_route_tables.firewalled_network_application
+  providers = {
+    aws.region = aws.region
+  }
+}
