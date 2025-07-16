@@ -82,6 +82,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function startExpiry(Code $code): ResponseInterface
     {
