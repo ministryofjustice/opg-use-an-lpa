@@ -28,6 +28,7 @@ use Psr\Http\Message\ResponseInterface;
  * @psalm-suppress PropertyNotSetInConstructor
  */
 #[CoversClass(PaperVerificationCodes::class)]
+#[CoversClass(PaperVerificationCode::class)]
 class PaperVerificationCodesTest extends TestCase
 {
     use ProphecyTrait;
