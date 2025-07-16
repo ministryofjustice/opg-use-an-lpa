@@ -4,29 +4,33 @@ declare(strict_types=1);
 
 namespace Common\Filter;
 
-use Laminas\Filter\AbstractFilter;
+use Exception;
+use Laminas\Filter\FilterInterface;
 
-class ShareCodeFilter extends AbstractFilter
+class ShareCodeFilter implements FilterInterface
 {
     /**
-     * @param string $code
-     * @return string
+     * @throws Exception
      */
-    public function filter($code): string
+    public function filter($value): string
     {
-        $code = strtoupper($code);
-        // replaces other dashes with normal dash
-        $code = preg_replace('/[–—]/u', '-', $code);
+        if (!is_string($value)) {
+            throw new Exception('Invalid filter value - expecting string');
+        }
 
-        if (preg_match('/^P[\- ]/', $code)) {
+        $value = strtoupper($value);
+        // replaces other dashes with normal dash
+        $value = preg_replace('/[–—]/u', '-', $value);
+
+        if (preg_match('/^P[\- ]/', $value)) {
             // remove spaces or multiple hyphens to one
-            $code = preg_replace('/[\- ]+/', '-', $code);
-            return preg_replace('/^P\-*/', 'P-', $code);
+            $value = preg_replace('/[\- ]+/', '-', $value);
+            return preg_replace('/^P\-*/', 'P-', $value);
         }
 
         // V codes - removes V- and hyphens (maintaining current behaviour)
-        $code = preg_replace('/^V[\- ]*/', '', $code);
+        $value = preg_replace('/^V[\- ]*/', '', $value);
 
-        return preg_replace('/[\- ]+/', '', $code);
+        return preg_replace('/[\- ]+/', '', $value);
     }
 }

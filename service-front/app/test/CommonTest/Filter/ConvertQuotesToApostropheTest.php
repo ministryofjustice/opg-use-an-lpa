@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace CommonTest\Filter;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Filter\ConvertQuotesToApostrophe;
+use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -20,8 +22,16 @@ class ConvertQuotesToApostropheTest extends TestCase
         $this->filter = new ConvertQuotesToApostrophe();
     }
 
+    #[Test]
+    public function it_expects_a_string_input(): void
+    {
+        $this->expectException(Exception::class);
+        $this->filter->filter(12);
+    }
+
+    #[Test]
     #[DataProvider('nameFormatProvider')]
-    public function testConvertQuotesToApostrophe(string $name, string $expected): void
+    public function convertQuotesToApostrophe(string $name, string $expected): void
     {
         $formattedName = $this->filter->filter($name);
         $this->assertEquals($expected, $formattedName);
