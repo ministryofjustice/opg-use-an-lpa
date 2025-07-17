@@ -69,7 +69,7 @@ class IngressManager:
                   'Values': [
                       self.vpc_id,
                   ]
-              },
+              }
     ]
         )
 
