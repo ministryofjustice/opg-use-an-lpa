@@ -11,6 +11,7 @@ class IngressManager:
     aws_ec2_client = ''
     aws_region = ''
     security_groups = []
+    vpc_id=''
 
     def __init__(self, config_file):
         self.read_parameters_from_file(config_file)
@@ -31,6 +32,7 @@ class IngressManager:
                 parameters['viewer_load_balancer_security_group_name'],
                 parameters['actor_load_balancer_security_group_name'],
                 parameters['mock_onelogin_load_balancer_security_group_name']]
+            self.vpc_id=parameters['vpc_id']
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -61,6 +63,14 @@ class IngressManager:
             GroupNames=[
                 sg_name,
             ],
+            Filters=[
+              {
+                  'Name': 'vpc-id',
+                  'Values': [
+                      self.vpc_id,
+                  ]
+              },
+    ]
         )
 
     def clear_all_ci_ingress_rules_from_sg(self):
