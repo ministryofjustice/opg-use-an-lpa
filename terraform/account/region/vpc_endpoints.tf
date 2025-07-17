@@ -82,7 +82,7 @@ data "aws_route_tables" "application" {
 resource "aws_vpc_endpoint" "private-gw" {
   for_each = var.environment_name == "development" ? local.gateway_endpoint_dev : local.gateway_endpoint
 
-  vpc_id            = module.network.vpc.id
+  vpc_id            = aws_default_vpc.default.id
   service_name      = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = tolist(data.aws_route_tables.application.ids)
