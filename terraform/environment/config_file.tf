@@ -25,6 +25,9 @@ locals {
     viewer_load_balancer_security_group_name        = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_names.viewer_loadbalancer : module.eu_west_2[0].security_group_names.viewer_loadbalancer
     actor_load_balancer_security_group_name         = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_names.actor_loadbalancer : module.eu_west_2[0].security_group_names.actor_loadbalancer
     mock_onelogin_load_balancer_security_group_name = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_names.mock_onelogin_loadbalancer : module.eu_west_2[0].security_group_names.mock_onelogin_loadbalancer
+    viewer_load_balancer_security_group_id          = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_ids.viewer_loadbalancer : module.eu_west_2[0].security_group_id.viewer_loadbalancer
+    actor_load_balancer_security_group_id           = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_ids.actor_loadbalancer : module.eu_west_2[0].security_group_id.actor_loadbalancer
+    mock_onelogin_load_balancer_security_group_id   = local.active_region == "eu-west-1" ? module.eu_west_1[0].security_group_ids.mock_onelogin_loadbalancer : module.eu_west_2[0].security_group_id.mock_onelogin_loadbalancer
     active_region                                   = local.active_region
     vpc_id                                          = local.active_region == "eu-west-1" ? module.eu_west_1[0].vpc_id : module.eu_west_2[0].vpc_id
   }
