@@ -11,7 +11,7 @@ resource "aws_ecs_service" "mock_onelogin" {
 
   network_configuration {
     security_groups  = [aws_security_group.mock_onelogin_ecs_service.id]
-    subnets          = data.aws_subnets.private.ids
+    subnets          = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -83,7 +83,7 @@ locals {
 resource "aws_security_group" "mock_onelogin_ecs_service" {
   name_prefix = "${var.environment_name}-mock-onelogin-ecs-service"
   description = "Mock One Login service security group"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
