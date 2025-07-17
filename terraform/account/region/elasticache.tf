@@ -11,7 +11,14 @@ resource "aws_security_group" "brute_force_cache_service" {
 
 resource "aws_elasticache_subnet_group" "private_subnets" {
   name       = "private-subnets"
-  subnet_ids = data.aws_default_tags.current.tags.environment-name == "development" ? module.network.application_subnets[*].id : aws_subnet.private[*].id
+  subnet_ids = aws_subnet.private[*].id
+
+  provider = aws.region
+}
+
+resource "aws_elasticache_subnet_group" "private_subnets_fwn" {
+  name       = "private-subnets-fwn"
+  subnet_ids = module.network.application_subnets[*].id
 
   provider = aws.region
 }
@@ -27,7 +34,7 @@ resource "aws_elasticache_replication_group" "brute_force_cache_replication_grou
   num_cache_clusters         = 2
   transit_encryption_enabled = true
   at_rest_encryption_enabled = true
-  subnet_group_name          = aws_elasticache_subnet_group.private_subnets.name
+  subnet_group_name          = data.aws_default_tags.current.tags.environment-name == "development" ? aws_elasticache_subnet_group.private_subnets_fwn.name : aws_elasticache_subnet_group.private_subnets.name
   security_group_ids         = [aws_security_group.brute_force_cache_service.id]
 
   provider = aws.region
