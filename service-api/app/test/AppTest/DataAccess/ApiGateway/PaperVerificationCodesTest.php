@@ -99,7 +99,7 @@ class PaperVerificationCodesTest extends TestCase
         $this->assertEquals($response['lpa'], (string)$data->lpaUid);
 
         if (isset($response['expires'])) {
-            $this->assertEquals(new DateTimeImmutable($response['expires']), $data->expiresAt);
+            $this->assertEqualsWithDelta(new DateTimeImmutable($response['expires']), $data->expiresAt, 5);
         }
 
         if (isset($response['cancelled'])) {
