@@ -65,6 +65,8 @@ module "vpc_endpoints" {
     "secretsmanager",
     "ssm",
     "xray",
+    "kms",
+    "monitoring",
   ]
   vpc_id                          = module.network.vpc.id
   application_subnets_cidr_blocks = module.network.application_subnets[*].cidr_block
