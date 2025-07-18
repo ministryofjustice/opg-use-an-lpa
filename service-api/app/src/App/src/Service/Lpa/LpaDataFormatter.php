@@ -47,7 +47,7 @@ class LpaDataFormatter
     /**
      * @param array $lpa
      * @return string
-     * @psalm-return class-string
+     * @psalm-return class-string<LpaStore|SiriusLpa>
      */
     private function getHydrationClass(array $lpa): string
     {
