@@ -318,7 +318,7 @@ class DynamoDBExporterAndQuerier:
         )
 
     def get_count_of_lpas_for_users(self):
-        sql_string = f"SELECT countofLpasForUser as noOfLpas, count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
+        sql_string = f"SELECT countofLpasForUser'[p]', count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
         self.run_athena_query(
             sql_string,
             outputFileName="CountOfLpasForUsersWithSomeLpas",
@@ -331,6 +331,19 @@ class DynamoDBExporterAndQuerier:
             outputFileName="CountOfUsersWithNoLpas",
         )
 
+    def get_duplicate_users_with_same_email(self):
+            sql_string = f"SELECT a.Item.id.S as User_Id,a.Item.email.S as User_Email FROM actor_users a WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)"
+            self.run_athena_query(
+                sql_string,
+                outputFileName="DuplicateUsersWithSameEmail",
+            )
+
+    def get_lpa_duplicate_users_with_same_email(self):
+        sql_string = f"SELECT a.Item.id.S as User_Id,a. Item.email.S as User_Email, b.Item.SiriusUid.S as Lpa_Id FROM user_lpa_actor_map b JOIN actor_users a ON b.Item.UserId.S = a.Item.id.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) ORDER BY a. Item.email.S"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="LpasForDuplicateUsersWithSameEmail",
+        )
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -399,6 +412,8 @@ def main():
     work.get_organisations_field()
     work.get_count_of_lpas_for_users()
     work.get_count_of_users_with_no_lpas()
+    work.get_duplicate_users_with_same_email()
+    work.get_lpa_duplicate_users_with_same_email()
 
 
 if __name__ == "__main__":
