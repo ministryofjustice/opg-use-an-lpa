@@ -318,7 +318,7 @@ class DynamoDBExporterAndQuerier:
         )
 
     def get_count_of_lpas_for_users(self):
-        sql_string = f"SELECT countofLpasForUser'[p]', count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
+        sql_string = f"SELECT countofLpasForUser as noOfLpas, count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
         self.run_athena_query(
             sql_string,
             outputFileName="CountOfLpasForUsersWithSomeLpas",
