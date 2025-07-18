@@ -32,17 +32,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Setup PHP with tools
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
+      - name: Psalm
+        uses: docker://ghcr.io/psalm/psalm-github-actions:2.3.2
+
+      - name: Psalm Security
+        uses: docker://ghcr.io/psalm/psalm-github-actions:2.3.2
         with:
-          php-version: '8.1'
-          tools: vimeo/psalm:5
-
-      - name: Composer install
-        run: composer install
-
-      - name: Run psalm
-        run: psalm --output-format=github --taint-analysis --report=results.sarif
+          security_analysis: true
+          report_file: results.sarif
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
