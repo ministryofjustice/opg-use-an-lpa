@@ -34,10 +34,13 @@ jobs:
 
       - name: Psalm
         uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
+        with:
+          relative_dir: ./service-front/app/
 
       - name: Psalm Security
         uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
         with:
+          relative_dir: ./service-front/app/
           security_analysis: true
           report_file: results.sarif
 
