@@ -7,7 +7,7 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\InstructionsAndPreferencesImages;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;

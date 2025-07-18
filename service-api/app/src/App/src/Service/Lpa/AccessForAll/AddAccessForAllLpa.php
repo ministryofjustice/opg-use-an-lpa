@@ -19,6 +19,7 @@ use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
@@ -77,8 +78,8 @@ class AddAccessForAllLpa
                 $validationData->actorMatch->actor->getUid(),
             );
 
-            if ($hasActivationCode instanceof DateTime) {
-                $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+            if ($hasActivationCode instanceof DateTimeInterface) {
+                $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
                 $activationKeyDueDate = $activationKeyDueDate
                     ->add(new DateInterval('P10D'))
                     ->format('Y-m-d');
@@ -120,8 +121,8 @@ class AddAccessForAllLpa
             $validationData->actorMatch->actor->getUid()
         );
 
-        if ($hasActivationCode instanceof DateTime) {
-            $activationKeyDueDate = DateTimeImmutable::createFromMutable($hasActivationCode);
+        if ($hasActivationCode instanceof DateTimeInterface) {
+            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
             $activationKeyDueDate = $activationKeyDueDate
                 ->add(new DateInterval('P10D'))
                 ->format('Y-m-d');

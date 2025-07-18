@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use Behat\Step\Given;

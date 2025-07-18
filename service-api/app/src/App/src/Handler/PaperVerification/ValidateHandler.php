@@ -10,8 +10,6 @@ use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Handler\Trait\RequestAsObjectTrait;
 use App\Request\PaperVerificationCodeValidate;
-use App\Request\ViewerCodeFull;
-use App\Service\Lpa\LpaManagerInterface;
 use App\Service\PaperVerificationCodes\PaperVerificationCodeService;
 use Laminas\Diactoros\Response\JsonResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -27,7 +25,6 @@ class ValidateHandler implements RequestHandlerInterface
     use RequestAsObjectTrait;
 
     public function __construct(
-        private LpaManagerInterface $lpaManager,
         private PaperVerificationCodeService $codeService,
     ) {
     }

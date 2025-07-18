@@ -10,7 +10,6 @@ use App\Enum\LpaType;
 use App\Service\PaperVerificationCodes\CodeUsable;
 use DateInterval;
 use DateTimeImmutable;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
@@ -26,10 +25,10 @@ class CodeUsableTest extends TestCase
     {
         return new CodeUsable(
             donorName: 'Test Tester',
-            lpaType: LpaType::PERSONAL_WELFARE,
-            codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1D')),
-            lpaStatus:  LpaStatus::REGISTERED,
-            lpaSource:  LpaSource::LPASTORE,
+            lpaType:   LpaType::PERSONAL_WELFARE,
+            lpaStatus: LpaStatus::REGISTERED,
+            lpaSource: LpaSource::LPASTORE,
+            expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1D')),
         );
     }
 
@@ -39,13 +38,13 @@ class CodeUsableTest extends TestCase
     {
         $json = json_encode($sut);
 
-        Assert::assertJson($json);
+        $this->assertJson($json);
 
         $obj = json_decode($json);
-        Assert::assertObjectHasProperty('donorName', $obj);
-        Assert::assertObjectHasProperty('type', $obj);
-        Assert::assertObjectHasProperty('expiryDate', $obj);
-        Assert::assertObjectHasProperty('status', $obj);
-        Assert::assertObjectHasProperty('source', $obj);
+        $this->assertObjectHasProperty('donorName', $obj);
+        $this->assertObjectHasProperty('type', $obj);
+        $this->assertObjectHasProperty('expiresAt', $obj);
+        $this->assertObjectHasProperty('status', $obj);
+        $this->assertObjectHasProperty('source', $obj);
     }
 }

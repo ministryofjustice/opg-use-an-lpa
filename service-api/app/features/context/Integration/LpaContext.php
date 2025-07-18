@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace BehatTest\Context\Integration;
 
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
 use App\Entity\Sirius\SiriusLpa as CombinedFormatSiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;
 use App\Exception\LpaActivationKeyAlreadyRequestedException;
