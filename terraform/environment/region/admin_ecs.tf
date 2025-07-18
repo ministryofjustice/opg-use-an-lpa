@@ -10,7 +10,7 @@ resource "aws_ecs_service" "admin" {
 
   network_configuration {
     security_groups  = [aws_security_group.admin_ecs_service.id]
-    subnets          = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
+    subnets          = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -60,7 +60,7 @@ moved {
 resource "aws_security_group" "admin_ecs_service" {
   name_prefix = "${var.environment_name}-admin-ecs-service"
   description = "Admin service security group"
-  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
