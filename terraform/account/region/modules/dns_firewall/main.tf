@@ -23,7 +23,7 @@ resource "aws_route53_resolver_query_log_config" "egress" {
 
 resource "aws_route53_resolver_query_log_config_association" "egress" {
   resolver_query_log_config_id = aws_route53_resolver_query_log_config.egress.id
-  resource_id                  = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  resource_id                  = data.aws_default_tags.current.tags.environment-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   provider                     = aws.region
 }
 
@@ -99,7 +99,7 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   name                   = "egress"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.egress.id
   priority               = 500
-  vpc_id                 = data.aws_default_tags.current.tags.environment-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id                 = data.aws_default_tags.current.tags.environment-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }
