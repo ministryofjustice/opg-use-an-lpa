@@ -8,6 +8,7 @@ use App\DataAccess\Repository\ActorCodesInterface;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Exception\ApiException;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
@@ -114,7 +115,32 @@ class PaperVerificationCodeService
     }
 
     /** @codeCoverageIgnore  */
-    public function view(PaperVerificationCodeView $params): void
+    public function view(PaperVerificationCodeView $params): ViewCode
     {
+        if (empty($params->organisation)) {
+            throw new BadRequestException('An organisation must be provided');
+        }
+
+        $codeData = [
+            'Uid'     => 'M-789Q-P4DF-4UX3',
+            'Expires' => (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+        ];
+
+        $lpa = $this->lpaManager->getByUid($codeData['Uid'], (string) $params->code);
+
+        if ($lpa === null) {
+            throw new NotFoundException();
+        }
+
+        $lpaObj = $lpa->getData();
+
+        return new ViewCode(
+            donorName:      $lpaObj->getDonor()->getFirstnames() . ' ' . $lpaObj->getDonor()->getSurname(),
+            lpaType:        $lpaObj->caseSubtype,
+            codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+            lpaStatus:      LpaStatus::from($lpaObj->status),
+            lpaSource:      LpaSource::LPASTORE,
+            lpa:            $lpaObj,
+        );
     }
 }
