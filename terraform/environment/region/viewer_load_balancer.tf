@@ -9,7 +9,7 @@ resource "aws_lb_target_group" "viewer" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = data.aws_vpc.default.id
+  vpc_id               = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   deregistration_delay = 0
   depends_on           = [aws_lb.viewer]
 
@@ -21,7 +21,7 @@ resource "aws_lb" "viewer" {
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnets.public.ids
+  subnets                    = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_subnet.public[*].id : data.aws_subnets.public.ids
   enable_deletion_protection = var.load_balancer_deletion_protection_enabled
 
   security_groups = [
@@ -222,7 +222,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 resource "aws_security_group" "viewer_loadbalancer" {
   name_prefix = "${var.environment_name}-viewer-loadbalancer"
   description = "View service application load balancer"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
@@ -285,7 +285,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
 resource "aws_security_group" "viewer_loadbalancer_route53" {
   name_prefix = "${var.environment_name}-viewer-loadbalancer-route53"
   description = "View service Route53 healthchecks"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name == "development" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }
