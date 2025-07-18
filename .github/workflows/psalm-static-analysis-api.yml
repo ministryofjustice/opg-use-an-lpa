@@ -36,11 +36,13 @@ jobs:
         uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
         with:
           relative_dir: ./service-api/app/
+          composer_ignore_platform_reqs: true
 
       - name: Psalm Security
         uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
         with:
           relative_dir: ./service-api/app/
+          composer_ignore_platform_reqs: true
           security_analysis: true
           report_file: results.sarif
 
