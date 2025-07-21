@@ -55,10 +55,10 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Run psalm
-        run: vendor/bin/psalm --output-format=github
+        run: vendor/bin/psalm --output-format=github --long-progress
 
-      - name: Run psalm
-        run: vendor/bin/psalm --output-format=github --taint-analysis --report=results.sarif
+      - name: Run psalm taint analysis
+        run: vendor/bin/psalm --output-format=github --taint-analysis --report=results.sarif --long-progress --ignore-baseline
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
