@@ -35,6 +35,7 @@ jobs:
       - name: Setup PHP with tools
         uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
         with:
+          php-version: 8.3
           tools: vimeo/psalm:5
           extensions: apcu, intl, json, redis
           coverage: none
@@ -54,10 +55,10 @@ jobs:
         run: composer install --prefer-dist
 
       - name: Run psalm
-        run: psalm --output-format=github
+        run: vendor/bin/psalm --output-format=github
 
       - name: Run psalm
-        run: psalm --output-format=github --taint-analysis --report=results.sarif
+        run: vendor/bin/psalm --output-format=github --taint-analysis --report=results.sarif
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
