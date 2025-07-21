@@ -37,12 +37,14 @@ jobs:
         with:
           relative_dir: ./service-front/app/
           composer_ignore_platform_reqs: true
+          composer_require_dev: true
 
       - name: Psalm Security
         uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
         with:
           relative_dir: ./service-front/app/
           composer_ignore_platform_reqs: true
+          composer_require_dev: true
           security_analysis: true
           report_file: results.sarif
 
