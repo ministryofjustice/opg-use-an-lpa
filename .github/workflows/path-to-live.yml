@@ -81,7 +81,7 @@ jobs:
     needs:
       - update_documentation
     with:
-      template: production_release.txt
+      template: documentation_update.txt
       documentation_update: ${{ needs.update_documentation.result }}
       workspace: production
     secrets:
