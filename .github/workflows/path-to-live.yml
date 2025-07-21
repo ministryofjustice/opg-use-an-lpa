@@ -81,7 +81,7 @@ jobs:
     needs:
       - update_documentation
     with:
-      template: documentation_update.txt
+      template: production_release.txt
       documentation_update: ${{ needs.update_documentation.result }}
       workspace: production
     secrets:
@@ -267,6 +267,7 @@ jobs:
     with:
       template: production_release.txt
       workflow_status: ${{ needs.production_health_check.result }}
+      workflow_status: ${{ needs.production_health_check.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
@@ -280,6 +281,7 @@ jobs:
       - workflow_variables
       - slack_notify
       - slack_notify_documentation_update
+      - slack_notify_documentation_update
     steps:
       - name: workflow has ended
         run: |
@@ -287,6 +289,9 @@ jobs:
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
             echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
+            exit 0
+          elif ${{ contains(needs.slack_notify_documentation_update.result, 'success')}}; then
+            echo "Documentation update successful"
             exit 0
           elif ${{ contains(needs.slack_notify_documentation_update.result, 'success')}}; then
             echo "Documentation update successful"

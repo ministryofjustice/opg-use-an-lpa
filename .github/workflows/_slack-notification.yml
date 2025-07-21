@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: failure
+      documentation_update:
+        description: 'Whether the pipeline was update docs only'
+        required: false
+        type: string
+        default: failure
       template:
         description: 'Template to use'
         required: true
@@ -73,7 +78,7 @@ jobs:
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
-        if: inputs.documentation_update == 'success' && inputs.workflow_status != 'success'
+        if: inputs.documentation_update == 'success'
         run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook ${SLACK_WEB_HOOK} \
