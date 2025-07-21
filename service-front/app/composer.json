@@ -74,6 +74,7 @@
         "behat/behat": "^3.6",
         "cooperaj/behat-psr-extension": "^2.0",
         "filp/whoops": "^2.1.12",
+        "jetbrains/phpstorm-stubs": "^2024.3",
         "laminas/laminas-development-mode": "^3.1",
         "mezzio/mezzio-tooling": "^2.0",
         "mikey179/vfsstream": "^1.6",

@@ -9,10 +9,10 @@
     errorBaseline="psalm-baseline.xml"
 >
     <projectFiles>
-        <directory name="src" />
-        <directory name="config" />
+        <directory name="src"/>
+        <directory name="config"/>
         <ignoreFiles>
-            <directory name="vendor" />
+            <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
 
@@ -25,4 +25,8 @@
             </errorLevel>
         </PossiblyUnusedMethod>
     </issueHandlers>
+
+    <plugins>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
 </psalm>
