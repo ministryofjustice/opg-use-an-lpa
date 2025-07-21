@@ -25,12 +25,12 @@ class DynamoDBExporterAndQuerier:
         }
 
         self.table_ddl_files = {
-            "stats.ddl": "Stats",
-            "actor_codes.ddl": "ActorCodes",
-            "actor_users.ddl": "ActorUsers",
-            "viewer_codes.ddl": "ViewerCodes",
-            "viewer_activity.ddl": "ViewerActivity",
-            "user_lpa_actor_map.ddl": "UserLpaActorMap",
+            "/tmp/stats.ddl": "Stats",
+            "/tmp/actor_codes.ddl": "ActorCodes",
+            "/tmp/actor_users.ddl": "ActorUsers",
+            "/tmp/viewer_codes.ddl": "ViewerCodes",
+            "/tmp/viewer_activity.ddl": "ViewerActivity",
+            "/tmp/user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
         self.environment_details = self.set_environment_details(environment)
@@ -261,7 +261,7 @@ class DynamoDBExporterAndQuerier:
 
     def output_athena_results(self, results, outputFileName):
         with open(
-            f"{outputFileName}-{self.start_date}-{self.end_date}.csv",
+            f"/tmp/{outputFileName}-{self.start_date}-{self.end_date}.csv",
             "w",
             newline="",
         ) as outFile:
@@ -404,8 +404,8 @@ def lambda_handler(event, context):
     work = DynamoDBExporterAndQuerier('demo')
 
     work.set_default_date_range()
-    work.export_all_dynamo_tables()
-    work.check_dynamo_export_status()
+    #work.export_all_dynamo_tables()
+    #work.check_dynamo_export_status()
     work.create_athena_tables()
     work.get_expired_viewed_access_codes()
     work.get_expired_unviewed_access_codes()
