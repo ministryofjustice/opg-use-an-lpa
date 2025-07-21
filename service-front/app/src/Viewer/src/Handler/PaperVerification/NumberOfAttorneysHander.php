@@ -42,6 +42,11 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'         => $this->form->prepare(),
@@ -57,7 +62,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->dateOfBirth = $this->form->getData()['pv_number_of_attorneys'];
+            $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -86,8 +91,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'pv.check-answers';
     }
 
     /**
@@ -95,7 +99,6 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'pv.attorney-dob';
     }
 }

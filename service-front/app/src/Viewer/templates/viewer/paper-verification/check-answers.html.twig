@@ -1,11 +1,11 @@
-{% extends '@viewer/layout.html.twig' %}
+{% extends '@actor/layout.html.twig' %}
 
 {% block html_title %}{% trans %}Check your answers{% endtrans %} - {{ parent() }} {% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper " id="main-content" role="main">
@@ -38,7 +38,7 @@
                             <th class="govuk-table__header" scope="row">{% trans with { '%donorName%': donorName } %}%donorName%'s date of birth{% endtrans %}</th>
                             <td class="govuk-table__cell">{{ lpa_date(dateOfBirth) }}</td>
                             <td class="govuk-table__cell">
-                                <a href="{{ path('donor-dob') }}" role="button" draggable="false" class="moj-button-menu__item">
+                                <a href="{{ path('pv.donor-dob') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
                                 </a>
                             </td>
@@ -47,7 +47,7 @@
                             <th class="govuk-table__header" scope="row">{% trans %}Number of attorneys{% endtrans %}</th>
                             <td class="govuk-table__cell">{{ noOfAttorneys }}</td>
                             <td class="govuk-table__cell">
-                                <a href="{{ path('number-of-attorneys') }}" role="button" draggable="false" class="moj-button-menu__item">
+                                <a href="{{ path('pv.number-of-attorneys') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
                                 </a>
                             </td>

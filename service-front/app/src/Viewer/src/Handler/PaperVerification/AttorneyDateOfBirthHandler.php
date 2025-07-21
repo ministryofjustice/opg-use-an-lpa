@@ -42,6 +42,18 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $dob = $this->state($request)->dateOfBirth;
+
+        if ($dob) {
+            $this->form->setData([
+                 'dob' => [
+                     'day'   => $dob->format('d'),
+                     'month' => $dob->format('m'),
+                     'year'  => $dob->format('Y'),
+                 ],
+             ]);
+        }
+
         // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
         $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
 
@@ -84,8 +96,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
-            || $this->state($request)->sentToDonor === false;
+            || $this->state($request)->sentToDonor === null;
     }
 
     /**
@@ -93,8 +104,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'pv.number-of-attorneys';
     }
 
     /**
@@ -102,6 +112,6 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'home';
+        return 'pv.verification-code-sent-to';
     }
 }

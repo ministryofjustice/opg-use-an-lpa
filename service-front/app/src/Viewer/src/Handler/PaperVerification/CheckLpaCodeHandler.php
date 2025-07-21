@@ -49,8 +49,11 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO get donor name and add it to twig template
-        //$code = $this->state($request)->code;
+        $lpaUid = $this->state($request)->lpaUid;
+
+        if ($lpaUid) {
+            $this->form->setData(['lpa_reference' => $lpaUid]);
+        }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),

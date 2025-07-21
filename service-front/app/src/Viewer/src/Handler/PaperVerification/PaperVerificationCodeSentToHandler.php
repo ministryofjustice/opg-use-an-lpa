@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
@@ -13,6 +13,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\VerificationCodeReceiver;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
@@ -42,18 +43,29 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO get donor name and add it to twig template
-        $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
+        $sentToDonor  = $this->state($request)->sentToDonor;
+        $attorneyName = $this->state($request)->attorneyName;
+
+        if ($sentToDonor) {
+            $this->form->setData(['verification_code_receiver' => $sentToDonor === false ? 'Attorney' : 'Donor']);
+        }
+
+        if ($attorneyName) {
+            $this->form->setData(['attorney_name' => $attorneyName]);
+        }
 
         $template = ($this->featureEnabled)('paper_verification')
             ? 'viewer::paper-verification/verification-code-sent-to'
             : 'viewer::enter-code';
 
+        // TODO get donor name and add it to twig template
         return new HtmlResponse($this->renderer->render($template, [
-            'donor_name' => $donorName,
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'donor_name'    => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
+            'sent_to_donor' => $sentToDonor ?? null,
+            'attorneyName'  => $attorneyName ?? null,
+            'form'          => $this->form->prepare(),
+            'en_message'    => $this->systemMessages['view/en'] ?? null,
+            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -93,8 +105,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'donor-dob';
+        return $state->sentToDonor === false ? 'pv.attorney-dob' : 'pv.donor-dob';
     }
 
     /**

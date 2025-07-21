@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -12,6 +12,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\AttorneyDetailsForPV;
+use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
  * @codeCoverageIgnore
@@ -40,6 +41,17 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $attorneyName = $this->state($request)->attorneyName;
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['attorneys_name' => $attorneyName]);
+        }
+
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'en_message' => $systemMessages['view/en'] ?? null,
@@ -78,8 +90,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'check-answers';
+        return 'pv.check-answers';
     }
 
     /**
@@ -87,7 +98,6 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when last page ready
-        return 'home';
+        return 'pv.donor-dob';
     }
 }
