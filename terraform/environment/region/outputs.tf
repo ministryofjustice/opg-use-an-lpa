@@ -34,6 +34,15 @@ output "security_group_names" {
   }
 }
 
+output "security_group_ids" {
+  description = "Security group ids"
+  value = {
+    actor_loadbalancer         = aws_security_group.use_loadbalancer.id
+    viewer_loadbalancer        = aws_security_group.viewer_loadbalancer.id
+    mock_onelogin_loadbalancer = aws_security_group.mock_onelogin_loadbalancer.id
+  }
+}
+
 output "route53_fqdns" {
   description = "The FQDNs for the various services"
   value = {
@@ -59,4 +68,8 @@ output "receive_events_sqs_queue_arn" {
 output "receive_events_sqs_queue_name" {
   description = "SQS queue name from the event_bus module"
   value       = module.event_bus.receive_events_sqs_queue_name
+}
+
+output "vpc_id" {
+  value = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 }

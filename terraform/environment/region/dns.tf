@@ -15,7 +15,7 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
 
 resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
   name = "${var.environment_name}.ual.internal.ecs"
-  vpc  = data.aws_vpc.default.id
+  vpc  = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }

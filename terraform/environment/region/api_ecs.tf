@@ -11,7 +11,7 @@ resource "aws_ecs_service" "api" {
 
   network_configuration {
     security_groups  = [aws_security_group.api_ecs_service.id]
-    subnets          = data.aws_subnets.private.ids
+    subnets          = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
@@ -40,6 +40,11 @@ resource "aws_ecs_service" "api" {
     ignore_changes = [
       desired_count
     ]
+  }
+
+  timeouts {
+    create = "7m"
+    update = "4m"
   }
 
   provider = aws.region
@@ -80,7 +85,7 @@ locals {
 resource "aws_security_group" "api_ecs_service" {
   name_prefix = "${var.environment_name}-api-ecs-service"
   description = "API service security group"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   lifecycle {
     create_before_destroy = true
   }
