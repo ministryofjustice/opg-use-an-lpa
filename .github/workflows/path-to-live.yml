@@ -75,6 +75,19 @@ jobs:
     if: |
       needs.workflow_variables.outputs.specific_path == 'docs'
 
+  slack_notify_documentation_update:
+    name: notify of result
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - update_documentation
+    with:
+      template: documentation_update.txt
+      documentation_update: ${{ needs.update_documentation.result }}
+      workspace: production
+    secrets:
+      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+    if: always()
+
   terraform_lint:
     name: lint terraform code
     uses: ./.github/workflows/_lint-terraform.yml
@@ -251,10 +264,9 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - production_health_check
-      - update_documentation
     with:
       template: production_release.txt
-      workflow_status: ${{ needs.production_health_check.result || needs.update_documentation.result }}
+      workflow_status: ${{ needs.production_health_check.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
@@ -267,6 +279,7 @@ jobs:
     needs:
       - workflow_variables
       - slack_notify
+      - slack_notify_documentation_update
     steps:
       - name: workflow has ended
         run: |
@@ -274,6 +287,9 @@ jobs:
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
             echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
+            exit 0
+          elif ${{ contains(needs.slack_notify_documentation_update.result, 'success')}}; then
+            echo "Documentation update successful"
             exit 0
           else
             echo "Deployment to production failed"
