@@ -7,6 +7,11 @@ defaults:
 on:
   workflow_call:
     inputs:
+      documentation_update:
+        description: 'Whether the pipeline was update docs only'
+        required: false
+        type: string
+        default: failure
       template:
         description: 'Template to use'
         required: true
@@ -59,6 +64,17 @@ jobs:
             commit_message="$(git log -1 --pretty=%B)"
           fi
 
+          python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
+            --slack_webhook ${SLACK_WEB_HOOK} \
+            --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
+            --commit_message "$commit_message"
+
+      - name: Notify Slack Documentation Update
+        env:
+          SLACK_WEB_HOOK: ${{ secrets.webhook }}
+          TEMPLATE: ${{ inputs.template }}
+        if: inputs.documentation_update == 'success'
+        run: |
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook ${SLACK_WEB_HOOK} \
             --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
