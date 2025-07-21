@@ -32,21 +32,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: Psalm
-        uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
+      - name: Setup PHP with tools
+        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
         with:
-          relative_dir: ./service-api/app/
-          composer_ignore_platform_reqs: true
-          composer_require_dev: true
+          tools: vimeo/psalm:5
+          extensions: apcu, gmp, openssl
+          coverage: none
 
-      - name: Psalm Security
-        uses: docker://ghcr.io/psalm/psalm-github-actions:5.26.1
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
         with:
-          relative_dir: ./service-api/app/
-          composer_ignore_platform_reqs: true
-          composer_require_dev: true
-          security_analysis: true
-          report_file: results.sarif
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer install
+        run: composer install --prefer-dist
+
+      - name: Run psalm
+        run: psalm --output-format=github
+
+      - name: Run psalm
+        run: psalm --output-format=github --taint-analysis --report=results.sarif
 
       - name: Upload Security Analysis results to GitHub
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
