@@ -76,17 +76,18 @@ jobs:
       needs.workflow_variables.outputs.specific_path == 'docs'
 
   slack_notify_documentation_update:
-    name: notify of result
+    name: notify documentation update
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - update_documentation
+      - workflow_variables
     with:
       template: documentation_update.txt
       documentation_update: ${{ needs.update_documentation.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: always()
+    if: needs.workflow_variables.outputs.specific_path == 'docs'
 
   terraform_lint:
     name: lint terraform code
