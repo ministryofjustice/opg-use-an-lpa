@@ -55,7 +55,7 @@ jobs:
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
-        if: inputs.workflow_status == 'success'
+        if: inputs.workflow_status == 'success' && inputs.documentation_update != 'success'
         run: |
           commit_message="Merge ${{ github.head_ref }} into ${{ github.base_ref }}"
 
@@ -73,8 +73,9 @@ jobs:
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
           TEMPLATE: ${{ inputs.template }}
-        if: inputs.documentation_update == 'success' && inputs.workflow_status != 'success'
+        if: inputs.workflow_status != 'success' && inputs.documentation_update == 'success'
         run: |
+          echo "{}" > /tmp/cluster_config.json
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook ${SLACK_WEB_HOOK} \
             --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
@@ -83,7 +84,7 @@ jobs:
       - name: Notify Slack Failure
         env:
           SLACK_WEB_HOOK: ${{ secrets.webhook }}
-        if: inputs.workflow_status != 'success'
+        if: inputs.workflow_status != 'success' && inputs.documentation_update != 'success'
         run: |
           echo "{}" > /tmp/cluster_config.json
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
