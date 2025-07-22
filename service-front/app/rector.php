@@ -9,7 +9,6 @@
 
 declare(strict_types=1);
 
-use Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 
@@ -64,7 +63,6 @@ return RectorConfig::configure()
     ->withImportNames(removeUnusedImports: true)
     ->withSkip(
         [
-            CompleteDynamicPropertiesRector::class,
             NewlineAfterStatementRector::class,
         ]
     );
