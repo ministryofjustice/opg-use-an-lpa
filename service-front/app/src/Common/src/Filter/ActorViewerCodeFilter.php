@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Common\Filter;
 
-use Laminas\Filter\AbstractFilter;
+use Exception;
+use Laminas\Filter\FilterInterface;
 
-class ActorViewerCodeFilter extends AbstractFilter
+class ActorViewerCodeFilter implements FilterInterface
 {
     /**
-     * @param string $code
-     * @return string
+     * @throws Exception
      */
-    public function filter($code): string
+    public function filter($value): string
     {
-        // Remove C- (hyphen) or C– (en dash) or C— (em dash) or V- from start of the code if present
-        $code = preg_replace('/^((v|c)(–|—|-| ))?/i', '', strtoupper($code));
+        if (!is_string($value)) {
+            throw new Exception('Invalid filter value - expecting string');
+        }
 
-        return (new StripSpacesAndHyphens())->filter($code);
+        // Remove C- (hyphen) or C– (en dash) or C— (em dash) or V- from start of the code if present
+        $value = preg_replace('/^((v|c)(–|—|-| ))?/i', '', strtoupper($value));
+
+        return (new StripSpacesAndHyphens())->filter($value);
     }
 }

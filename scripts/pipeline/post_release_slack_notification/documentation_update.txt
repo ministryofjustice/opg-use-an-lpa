@@ -1,0 +1,7 @@
+:book: *Use a Lasting Power of Attorney Documentation Update* :book:
+*User:* {{ gh_actor }}
+*Links*
+    *GH Actions build url:* {{ gh_actions_build_url }}
+
+*Commit message:*
+{{ commit_message }}

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-06-23T09:53:13+00:00\n"
+"POT-Creation-Date: 2025-07-02T11:38:00+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -271,6 +271,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:9
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 msgid "Back"
 msgstr ""
@@ -345,6 +346,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:48
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:77
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:86
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -574,6 +576,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:22
 #: src/Actor/templates/actor/lpa-not-found.html.twig:37
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:26
 #: src/Viewer/templates/viewer/lpa-not-found-with-pvc.html.twig:24
 msgid "Your answers"
 msgstr ""
@@ -583,6 +586,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:40
 #: src/Actor/templates/actor/check-your-answers.html.twig:22
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:20
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:57
 msgid "LPA reference number"
 msgstr ""
 
@@ -1495,6 +1499,7 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:53
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:81
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
 msgid "Cancel"
 msgstr ""
@@ -2998,6 +3003,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:16
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:3
 msgid "Check your answers"
 msgstr ""
 
@@ -4068,6 +4074,7 @@ msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:57
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:20
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr ""
 
@@ -5039,6 +5046,7 @@ msgid "number of attorneys named on the notice of registration"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:32
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:23
 #: src/Viewer/templates/viewer/enter-code-pv.html.twig:49
 msgid "name of 1 attorney named on the notice of registration"
 msgstr ""
@@ -5146,6 +5154,7 @@ msgid "Enter %attorneyName%'s date of birth"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:47
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:69
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:24
 msgid "Number of attorneys"
 msgstr ""
@@ -5160,6 +5169,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:29
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:22
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:61
 msgid "Who the paper verification code was sent to"
 msgstr ""
 
@@ -5180,10 +5190,12 @@ msgid "Change"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:38
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:40
 msgid "%donorName%'s date of birth"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:48
 msgid "Attorney name"
 msgstr ""
 
@@ -5193,4 +5205,24 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:29
 msgid "Property and affairs"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:16
+msgid "We cannot show %donorName%'s lasting power of attorney"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:17
+msgid "This is because some of the information you entered is incorrect. To view the LPA, try again making sure you enter the correct:"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:21
+msgid "date of birth of who the paper verification code was sent to"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:22
+msgid "number of attorneys on the notice of registration"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:65
+msgid "%attorneyName%'s date of birth"
 msgstr ""

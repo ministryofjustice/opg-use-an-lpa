@@ -12,7 +12,7 @@
             "php-http/discovery": false
         },
         "platform": {
-            "php": "8.1.29"
+            "php": "8.3.22"
         }
     },
     "extra": {
@@ -35,7 +35,7 @@
         "forum": "https://discourse.zendframework.com/c/questions/expressive"
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.3",
         "ext-apcu": "*",
         "ext-intl": "*",
         "ext-json": "*",
