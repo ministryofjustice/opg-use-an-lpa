@@ -45,7 +45,7 @@ jobs:
           echo "${stat_content}" >> $GITHUB_STEP_SUMMARY
       - name: Post to Slack
         env:
-          SLACK_WEB_HOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+          SLACK_WEB_HOOK: ${{ secrets.STATS_SLACK_WEBHOOK }}
         run: |
           python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
           --slack_webhook ${{ env.SLACK_WEB_HOOK }} \
