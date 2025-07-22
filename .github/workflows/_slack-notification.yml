@@ -12,11 +12,6 @@ on:
         required: false
         type: string
         default: failure
-      documentation_update:
-        description: 'Whether the pipeline was update docs only'
-        required: false
-        type: string
-        default: failure
       template:
         description: 'Template to use'
         required: true
