@@ -20,6 +20,9 @@ class LpaDataStoreSecretManager implements SecretManagerInterface
     ) {
     }
 
+    /**
+     * @psalm-taint-source system_secret
+     */
     public function getSecret(): Secret
     {
         try {
