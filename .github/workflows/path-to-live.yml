@@ -282,7 +282,6 @@ jobs:
       - workflow_variables
       - slack_notify
       - slack_notify_documentation_update
-      - slack_notify_documentation_update
     steps:
       - name: workflow has ended
         run: |
