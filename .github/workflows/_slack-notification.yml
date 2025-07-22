@@ -79,7 +79,7 @@ jobs:
           python scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
             --slack_webhook ${SLACK_WEB_HOOK} \
             --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
-            --commit_message "$commit_message"
+            --commit_message "$(git log -2 --pretty=%B)"
 
       - name: Notify Slack Failure
         env:
