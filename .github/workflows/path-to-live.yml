@@ -292,5 +292,8 @@ jobs:
           elif ${{ contains(needs.slack_notify_documentation_update.result, 'success')}}; then
             echo "Documentation update successful"
             exit 0
+          else
+            echo "Deployment to production failed"
+            exit 1
           fi
     if: always()
