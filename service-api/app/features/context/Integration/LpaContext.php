@@ -57,32 +57,31 @@ use function PHPUnit\Framework\assertEquals;
 
 /**
  * A place for context steps relating to LPA interactions such as adding, removing etc.
- *
- * @property mixed        lpa
- * @property string       oneTimeCode
- * @property string       lpaUid
- * @property string       userLpaActorToken
- * @property string|array $userDob
- * @property string       actorLpaId
- * @property string       userId
- * @property string       organisation
- * @property string       accessCode
- * @property string       userPostCode
- * @property string       userSurname
- * @property string       userFirstname
  */
 class LpaContext extends BaseIntegrationContext
 {
     use SetupEnv;
     use UsesPactContextTrait;
 
-    private MockHandler $apiFixtures;
     private AwsMockHandler $awsFixtures;
     private string $apiGatewayPactProvider;
     private string $codesApiPactProvider;
     private string $iapImagesApiPactProvider;
     private RemoveLpa $deleteLpa;
     private LpaManagerInterface $lpaService;
+    public MockHandler $apiFixtures;
+    public string $lpaUid;
+    public string $actorLpaId;
+    public string $userId;
+    public string $userLpaActorToken;
+    public stdClass $lpa;
+    public string $organisation;
+    public string $oneTimeCode;
+    public string $userDob;
+    public string $accessCode;
+    public string $userPostCode;
+    public string $userFirstname;
+    public string $userSurname;
 
     #[Given('I have previously requested the addition of a paper LPA to my account')]
     public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
@@ -2049,9 +2048,7 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result());
     }
 
-    /**
-     * @When /^I request to give an organisation access to one of my new LPA$/
-     */
+    #[When('/^I request to give an organisation access to one of my new LPA$/')]
     public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
     {
         $this->organisation = 'TestOrg';

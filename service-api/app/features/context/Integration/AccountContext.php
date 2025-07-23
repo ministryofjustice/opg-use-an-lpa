@@ -22,24 +22,20 @@ use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\ExpectationFailedException;
 
-/**
- * @property $userAccountId
- * @property $userAccountEmail
- * @property $passwordResetData
- * @property $userId
- * @property $password
- * @property $userAccountPassword
- * @property $userActivationToken
- * @property $actorAccountCreateData
- * @property $newEmail
- * @property $userEmailResetToken
- */
 class AccountContext extends BaseIntegrationContext
 {
     use SetupEnv;
 
     private AwsMockHandler $awsFixtures;
     private array $createUserResponse;
+    public string $userAccountId;
+    public string $userAccountEmail;
+    public string $userAccountPassword;
+    public string $password;
+    public array $actorAccountCreateData;
+    public string $newEmail;
+    public string $userEmailResetToken;
+    public array $passwordResetData;
 
     #[Given('/^I access the login form$/')]
     public function iAccessTheLoginForm(): void

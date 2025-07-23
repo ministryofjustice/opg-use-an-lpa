@@ -19,16 +19,15 @@ use PHPUnit\Framework\ExpectationFailedException;
 
 use function PHPUnit\Framework\assertArrayHasKey;
 
-/**
- * @property array passwordResetData
- * @property array userAccountCreateData
- * @property string newEmail
- * @property string userEmailResetToken
- */
 class AccountContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
+
+    public array $passwordResetData;
+    public array $userAccountCreateData;
+    public string $newEmail;
+    public string $userEmailResetToken;
 
     #[Given('/^I access the login form$/')]
     public function iAccessTheLoginForm(): void
