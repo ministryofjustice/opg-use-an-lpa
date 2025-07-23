@@ -21,13 +21,6 @@ use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use stdClass;
 
-/**
- * @property string viewerCode   The share code given to an organisation
- * @property string donorSurname The surname of the donors LPA reference by the share code
- * @property array  lpa          LPA data as returned by the API gateway
- * @property string lpaViewedBy  The organisation that the lpa has been viewed by using the share code
- * @property string organisation The organisation that the lpa was created for
- */
 class ViewerContext extends BaseIntegrationContext
 {
     use SetupEnv;
@@ -37,6 +30,11 @@ class ViewerContext extends BaseIntegrationContext
     private string $iapImagesPactProvider;
     private AwsMockHandler $awsFixtures;
     private SiriusLpaManager $lpaService;
+    public string $organisation;
+    public string $viewerCode;
+    public stdClass $lpa;
+    public string $donorSurname;
+    public string $lpaViewedBy;
 
     #[Given('I access the viewer service')]
     public function iAccessTheViewerService(): void

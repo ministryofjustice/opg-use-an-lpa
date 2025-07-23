@@ -26,7 +26,6 @@ jobs:
       matrix:
         service_path: [ 'service-front', 'service-api' ]
 
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -42,7 +41,7 @@ jobs:
       run: |
         export install_dir=$HOME/.composer/vendor
         composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-        composer global require --no-interaction squizlabs/php_codesniffer:3.11.2 webimpress/coding-standard:1.4.0 slevomat/coding-standard:8.15.0
+        composer global require --no-interaction squizlabs/php_codesniffer:3.13.2 webimpress/coding-standard:1.4.0 slevomat/coding-standard:8.19.1
         phpcs --version
         phpcs -i
 
