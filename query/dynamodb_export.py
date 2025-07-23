@@ -332,14 +332,14 @@ class DynamoDBExporterAndQuerier:
         )
 
     def get_duplicate_users_with_same_email(self):
-            sql_string = f"SELECT a.Item.id.S as User_Id,a.Item.email.S as User_Email FROM actor_users a WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)"
+            sql_string = f"SELECT a.Item.id.S as User_Id,a.Item.email.S as User_Email,COUNT(b.Item.SiriusUid) AS Lpa_Count FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) GROUP BY a.Item.email.S, a.Item.id.S ORDER BY a.Item.email.S"
             self.run_athena_query(
                 sql_string,
                 outputFileName="DuplicateUsersWithSameEmail",
             )
 
     def get_lpa_duplicate_users_with_same_email(self):
-        sql_string = f"SELECT a.Item.id.S as User_Id,a. Item.email.S as User_Email, b.Item.SiriusUid.S as Lpa_Id FROM user_lpa_actor_map b JOIN actor_users a ON b.Item.UserId.S = a.Item.id.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) ORDER BY a. Item.email.S"
+        sql_string = f"SELECT  a.Item.id.S as User_Id, a.Item.email.S as User_Email,b.Item.SiriusUid.S as Lpa_Id FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) GROUP BY a. Item.email.S, a.Item.id.S,b.Item.SiriusUid.S ORDER BY a.Item.email.S"
         self.run_athena_query(
             sql_string,
             outputFileName="LpasForDuplicateUsersWithSameEmail",
