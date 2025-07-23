@@ -62,10 +62,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
+        $now = new DateTimeImmutable();
         $clock
             ->expects($this->any())
             ->method('now')
-            ->willReturn(new DateTimeImmutable());
+            ->willReturn($now);
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
@@ -73,11 +74,7 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
-        $this->assertEqualsWithDelta(
-            (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-            $result->expiresAt,
-            5,
-        );
+        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 1);
         $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
@@ -318,17 +315,19 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with((string) $params->lpaUid, originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
+        $now = new DateTimeImmutable();
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn($now);
+
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $result = $sut->validate($params);
 
         $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
-        $this->assertEqualsWithDelta(
-            (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-            $result->expiresAt,
-            5,
-        );
+        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 1);
         $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
