@@ -159,7 +159,7 @@ resource "aws_ecs_task_definition" "mock_onelogin" {
   cpu                      = 512
   memory                   = 1024
   container_definitions    = "[${local.mock_onelogin_app}]"
-  task_role_arn            = var.ecs_task_roles.mock_onelogin_task_role[0].arn
+  task_role_arn            = var.ecs_task_roles.mock_onelogin_task_role.arn
   execution_role_arn       = var.ecs_execution_role.arn
 
   provider = aws.region
