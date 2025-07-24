@@ -108,6 +108,7 @@ jobs:
         env:
           TF_PATH: ${{ inputs.terraform_path }}
           TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VERSION: ${{ steps.set-terraform-version.outputs.version }}
           TAG: ${{ steps.version-output.outputs.tag }}
           ADMIN_TAG: ${{ steps.version-output.outputs.admin-tag }}
         run: |
@@ -115,6 +116,7 @@ jobs:
           echo "Workspace: ${TF_WORKSPACE}"
           echo "Image tag: ${TAG}"
           echo "Admin image tag: ${ADMIN_TAG}"
+          echo "TF_VERSION: ${TF_VERSION}"
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 
@@ -131,6 +133,9 @@ jobs:
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform version info
+        run: terraform version
 
       - name: add TTL to dynamodb for environment
         if: inputs.apply == 'true' && inputs.add_ttl == 'true'
