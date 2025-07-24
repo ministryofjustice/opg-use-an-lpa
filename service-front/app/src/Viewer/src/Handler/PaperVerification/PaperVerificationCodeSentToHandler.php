@@ -22,7 +22,13 @@ use Viewer\Workflow\PaperVerificationShareCode;
 class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
     private VerificationCodeReceiver $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
 
     public function __construct(

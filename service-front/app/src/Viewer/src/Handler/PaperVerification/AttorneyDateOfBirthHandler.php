@@ -22,7 +22,13 @@ use Viewer\Workflow\PaperVerificationShareCode;
 class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     public const TEMPLATE = 'viewer::paper-verification/attorney-dob';
 
     public function __construct(

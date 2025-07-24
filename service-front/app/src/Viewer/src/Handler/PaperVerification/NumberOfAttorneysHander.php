@@ -21,7 +21,13 @@ use Viewer\Workflow\PaperVerificationShareCode;
 class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 {
     private NumberOfAttorneys $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
 
     public function __construct(

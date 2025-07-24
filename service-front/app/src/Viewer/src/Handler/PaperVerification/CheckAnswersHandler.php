@@ -19,6 +19,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class CheckAnswersHandler extends AbstractPVSCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
 
     public function __construct(
         TemplateRendererInterface $renderer,
