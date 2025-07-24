@@ -9,7 +9,7 @@ use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use DateInterval;
-use DateTime;
+use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 
 class AccessForAllLpaService
@@ -29,18 +29,14 @@ class AccessForAllLpaService
     /**
      * Checks if an actor already has an active activation key
      *
-     * @param string $lpaId
-     * @param string $actorId
-     * @return DateTime|null
+     * @throws ApiException
      */
-    public function hasActivationCode(string $lpaId, string $actorId): ?DateTime
+    public function hasActivationCode(string $lpaId, string $actorId): ?DateTimeInterface
     {
         $response = $this->actorCodes->checkActorHasCode($lpaId, $actorId);
-        if (is_null($response->getData()['Created'])) {
+        if ($response->getData()->createdAt === null) {
             return null;
         }
-
-        $createdDate = DateTime::createFromFormat('Y-m-d', $response->getData()['Created']);
 
         $this->logger->notice(
             'Activation key exists for actor {actorId} on LPA {lpaId}',
@@ -50,7 +46,7 @@ class AccessForAllLpaService
             ]
         );
 
-        return $createdDate;
+        return $response->getData()->createdAt;
     }
 
     private function removeLpa(string $requestId): void

@@ -25,7 +25,6 @@ class AccessForAllLpaConfirmationHandler implements RequestHandlerInterface
     public function __construct(
         private AddAccessForAllLpa $addAccessForAllLpa,
         private AccessForAllLpaService $accessForAllLpaService,
-        private FeatureEnabled $featureEnabled,
         private CheckLpaCleansed $checkLpaCleansed,
         private LoggerInterface $logger,
     ) {

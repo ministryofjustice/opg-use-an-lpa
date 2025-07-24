@@ -25,17 +25,17 @@ class CodeValidateTest extends TestCase
         $sut = new CodeValidate(
             donorName: 'Barbara Gilson',
             lpaType: LpaType::PERSONAL_WELFARE,
-            codeExpiryDate: $expiry,
             lpaStatus:  LpaStatus::REGISTERED,
             lpaSource:  LpaSource::LPASTORE,
+            expiresAt: $expiry,
         );
 
         $expected = [
-            'donorName'  => 'Barbara Gilson',
-            'type'       => LpaType::PERSONAL_WELFARE,
-            'expiryDate' => $expiry->format(DateTimeInterface::ATOM),
-            'status'     => LpaStatus::REGISTERED,
-            'source'     => LpaSource::LPASTORE,
+            'donorName' => 'Barbara Gilson',
+            'type'      => LpaType::PERSONAL_WELFARE,
+            'status'    => LpaStatus::REGISTERED,
+            'source'    => LpaSource::LPASTORE,
+            'expiresAt' => $expiry->format(DateTimeInterface::ATOM),
         ];
 
         return [$sut, $expected];
