@@ -19,6 +19,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class CheckAnswersHandler extends AbstractPVSCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -68,7 +75,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
         || $this->state($request)->code === null
         || $this->state($request)->lpaUid === null
-        || $this->state($request)->sentToDonor === false
+        || $this->state($request)->sentToDonor === null
         || $this->state($request)->attorneyName === null
         || $this->state($request)->dateOfBirth === null;
     }
@@ -86,7 +93,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'pv.provide-attorney-details';
+        return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
     }
 }

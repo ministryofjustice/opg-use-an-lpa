@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -12,6 +12,8 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\AttorneyDetailsForPV;
+use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -19,7 +21,13 @@ use Viewer\Form\AttorneyDetailsForPV;
 class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
     private AttorneyDetailsForPV $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
@@ -40,8 +48,20 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $attorneyName  = $this->state($request)->attorneyName;
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['attorneys_name' => $attorneyName]);
+        }
+
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $systemMessages['view/en'] ?? null,
             'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
@@ -78,8 +98,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'check-answers';
+        return 'pv.check-answers';
     }
 
     /**
@@ -87,7 +106,9 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when last page ready
-        return 'home';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.donor-dob';
     }
 }

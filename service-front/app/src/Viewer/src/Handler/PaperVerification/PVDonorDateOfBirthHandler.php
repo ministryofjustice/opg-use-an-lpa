@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -21,7 +22,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     public const TEMPLATE = 'viewer::paper-verification/donor-dob';
 
     public function __construct(
@@ -42,6 +49,18 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $dob = $this->state($request)->dateOfBirth;
+
+        if ($dob) {
+            $this->form->setData([
+                 'dob' => [
+                     'day'   => $dob->format('d'),
+                     'month' => $dob->format('m'),
+                     'year'  => $dob->format('Y'),
+                 ],
+             ]);
+        }
+
         // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
         $donorName = $this->state($request)->attorneyName ?? 'Barbara Gilson';
 
@@ -92,7 +111,11 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
+        /** @var PaperVerificationShareCode $state **/
+        if ($this->hasFutureAnswersInState($state)) {
+            return 'pv.check-answers';
+        }
+
         return 'pv.provide-attorney-details';
     }
 
@@ -101,7 +124,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'pv.verification-code-sent-to';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 }
