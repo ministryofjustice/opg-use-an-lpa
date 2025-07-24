@@ -59,8 +59,6 @@ jobs:
         uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@464975f6f9e628ffcece3db87ecb819d8d391ab6 # v3.1.6
         with:
           terraform_directory: "./terraform/environment"
-          terraform_versions_file: ".terraform-version"
-          simple_file: true
 
 
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
