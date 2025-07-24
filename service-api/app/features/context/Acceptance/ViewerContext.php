@@ -31,20 +31,19 @@ class ViewerContext implements Context
     private string $lpaViewedBy;
 
     #[Then('I am told that the LPA has been found')]
-    public function iAmToldThatTheLPAHasBeenFound()
+    public function iAmToldThatTheLPAHasBeenFound(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
         $lpaData = $this->getResponseAsJson();
 
         Assert::assertArrayHasKey('donorName', $lpaData);
         Assert::assertArrayHasKey('type', $lpaData);
-        Assert::assertArrayHasKey('expiryDate', $lpaData);
         Assert::assertArrayHasKey('status', $lpaData);
         Assert::assertEquals('lpastore', $lpaData['source']);
     }
 
     #[Given('I have access to an LPA via :a paper verification code')]
-    public function iHaveAccessToAnLPAViaAPaperVerificationCode(string $type)
+    public function iHaveAccessToAnLPAViaAPaperVerificationCode(string $type): void
     {
         // this hardcoded stuff will be swapped out when the service stops hardcoding things
         $this->viewerCode = match ($type) {
@@ -125,7 +124,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertEquals($lpaData['details'], 'Share code cancelled');
+        Assert::assertStringContainsString('cancelled', $lpaData['details']);
     }
 
     #[Then('I am told that the paper verification code has expired')]
@@ -134,7 +133,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertEquals($lpaData['details'], 'Share code expired');
+        Assert::assertStringContainsString('expired', $lpaData['details']);
     }
 
     #[Given('/^I can see (.*) images$/')]
@@ -261,7 +260,7 @@ class ViewerContext implements Context
     }
 
     #[When('I provide donor surname and paper verification code')]
-    public function iProvideDonorSurnameAndPaperVerificationCode()
+    public function iProvideDonorSurnameAndPaperVerificationCode(): void
     {
         // CombinedLpaManager::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));

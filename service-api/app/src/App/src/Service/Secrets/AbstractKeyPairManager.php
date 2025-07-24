@@ -16,6 +16,9 @@ abstract class AbstractKeyPairManager implements KeyPairManagerInterface
     {
     }
 
+    /**
+     * @psalm-taint-source system_secret
+     */
     protected function fetchKeyPairFromSecretsManager(string $publicKeyName, ?string $privateKeyName = null): KeyPair
     {
         try {

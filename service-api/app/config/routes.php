@@ -22,7 +22,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
-    PaperVerificationCodes\UsableHandler,
+    PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
     PaperVerificationCodes\ViewHandler,
     RequestChangeEmailHandler,
@@ -39,30 +39,7 @@ use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 
 /**
- * Setup routes with a single request method:
- *
- * $app->get('/', App\Handler\HomePageHandler::class, 'home');
- * $app->post('/album', App\Handler\AlbumCreateHandler::class, 'album.create');
- * $app->put('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.put');
- * $app->patch('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.patch');
- * $app->delete('/album/{id}', App\Handler\AlbumDeleteHandler::class, 'album.delete');
- *
- * Or with multiple request methods:
- *
- * $app->route('/contact', App\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
- *
- * Or handling all request methods:
- *
- * $app->route('/contact', App\Handler\ContactHandler::class)->setName('contact');
- *
- * or:
- *
- * $app->route(
- *     '/contact',
- *     App\Handler\ContactHandler::class,
- *     Mezzio\Router\Route::HTTP_METHOD_ANY,
- *     'contact'
- * );
+ * @psalm-suppress UnusedClosureParam
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->get('/healthcheck', HealthcheckHandler::class, 'healthcheck');
@@ -144,6 +121,16 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
             ],
         ),
         'lpa.paper-verification.usable'
+    );
+    $app->post(
+        '/v1/paper-verification/validate',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ValidateHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.validate'
     );
 
     $app->post(

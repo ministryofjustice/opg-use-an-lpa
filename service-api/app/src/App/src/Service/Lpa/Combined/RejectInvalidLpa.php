@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Lpa\Combined;
 
 use App\DataAccess\Repository\Response\LpaInterface;
-use App\DataAccess\Repository\ViewerCodesInterface;
 use App\Exception\GoneException;
 use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
@@ -13,9 +12,6 @@ use DateTimeInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * @psalm-import-type ViewerCode from ViewerCodesInterface
- */
 class RejectInvalidLpa
 {
     public function __construct(
