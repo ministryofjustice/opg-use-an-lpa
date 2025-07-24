@@ -62,18 +62,17 @@ jobs:
         with:
           fetch-depth: '0'
 
-      - name: Set Terraform version
-        working-directory: ./terraform/${{ inputs.terraform_path }}
+      - name: "Set terraform version"
         id: set-terraform-version
-        run: |
-          TF_VERSION=$(cat .terraform-version)
-          echo "TF_VERSION=$TF_VERSION" >> $GITHUB_OUTPUT
+        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@464975f6f9e628ffcece3db87ecb819d8d391ab6 # v3.1.6
+        with:
+          terraform_directory: ./terraform/${{ inputs.terraform_path }}
 
       - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
 
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
-          terraform_version: ${{ steps.set-terraform-version.outputs.TF_VERSION }}
+          terraform_version: ${{ steps.set-terraform-version.outputs.version }}
 
       - name: configure AWS credentials for getting pagerduty token
         uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df # v4.2.1
@@ -109,6 +108,7 @@ jobs:
         env:
           TF_PATH: ${{ inputs.terraform_path }}
           TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VERSION: ${{ steps.set-terraform-version.outputs.version }}
           TAG: ${{ steps.version-output.outputs.tag }}
           ADMIN_TAG: ${{ steps.version-output.outputs.admin-tag }}
         run: |
@@ -116,6 +116,7 @@ jobs:
           echo "Workspace: ${TF_WORKSPACE}"
           echo "Image tag: ${TAG}"
           echo "Admin image tag: ${ADMIN_TAG}"
+          echo "TF_VERSION: ${TF_VERSION}"
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 
@@ -132,6 +133,9 @@ jobs:
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform version info
+        run: terraform version
 
       - name: add TTL to dynamodb for environment
         if: inputs.apply == 'true' && inputs.add_ttl == 'true'
