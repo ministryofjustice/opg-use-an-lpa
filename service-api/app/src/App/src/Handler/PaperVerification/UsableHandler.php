@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\PaperVerificationCodes;
+namespace App\Handler\PaperVerification;
 
 use App\Exception\ApiException;
 use App\Exception\BadRequestException;

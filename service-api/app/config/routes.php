@@ -22,8 +22,8 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
+    PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
-    PaperVerificationCodes\UsableHandler,
     RequestChangeEmailHandler,
     RequestCleanseHandler,
     RequestPasswordResetHandler,
@@ -121,6 +121,16 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         ),
         'lpa.paper-verification.usable'
     );
+    $app->post(
+        '/v1/paper-verification/validate',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ValidateHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.validate'
+    );
 
     $app->get('/v1/user', UserHandler::class, 'user.get');
     $app->post('/v1/user', UserHandler::class, 'user.create');
@@ -155,15 +165,4 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
 
     $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
-
-    $app->post(
-        '/v1/paper-verification/validate',
-        $factory->pipeline(
-            [
-                RequestObjectMiddleware::class,
-                ValidateHandler::class,
-            ],
-        ),
-        'lpa.paper-verification.validate'
-    );
 };
