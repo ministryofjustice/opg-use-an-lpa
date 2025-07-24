@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\LpaCheck;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -92,8 +93,10 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'pv.verification-code-sent-to';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 
     /**

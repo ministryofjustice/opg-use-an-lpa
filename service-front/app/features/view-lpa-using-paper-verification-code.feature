@@ -5,6 +5,7 @@ Feature: View an LPA via Paper Verification Code
   So that I can carry out business functions
 
   @integration @ui @ff:paper_verification:true
+#  Scenario: View an LPA is for attorney
   Scenario: View an LPA
     Given I have been given access to an LPA via Paper Verification Code
     And I access the viewer service
@@ -22,6 +23,22 @@ Feature: View an LPA via Paper Verification Code
     Given paper verification code is for the attorney
     And they have entered date of birth for attorney
     And they have entered number of attorneys
+    Then they check their answers
+
+    Given they change LPA Reference on check answers page
+    When they click continue they return to check answers page
+    Then they check their answers
+
+    Given they change who code sent to on check answers page
+    When they click continue they return to check answers page
+    Then they check their answers
+
+    Given they change attorney dob on check answers page
+    When they click back they return to check answers page
+    Then they check their answers
+
+    Given they change number of attorney on check answers page
+    When they click back they return to check answers page
     Then they check their answers
 
   Scenario: View an LPA is for donor
@@ -42,4 +59,3 @@ Feature: View an LPA via Paper Verification Code
     And they have entered date of birth for donor
     And they have entered attorney details
     Then they check their answers
-

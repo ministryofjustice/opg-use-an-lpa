@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\AttorneyDetailsForPV;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -41,7 +42,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $attorneyName = $this->state($request)->attorneyName;
+        $attorneyName  = $this->state($request)->attorneyName;
         $noOfAttorneys = $this->state($request)->noOfAttorneys;
 
         if ($noOfAttorneys) {
@@ -54,6 +55,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $systemMessages['view/en'] ?? null,
             'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
@@ -98,6 +100,9 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.donor-dob';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.donor-dob';
     }
 }

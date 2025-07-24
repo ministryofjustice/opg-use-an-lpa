@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\NumberOfAttorneys;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -99,6 +100,9 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.attorney-dob';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.attorney-dob';
     }
 }

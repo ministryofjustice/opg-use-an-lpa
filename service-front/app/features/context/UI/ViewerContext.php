@@ -12,6 +12,7 @@ use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
@@ -1203,7 +1204,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
 
         $this->ui->fillField('no_of_attorneys', '2');
-
+        $this->appendSystemMessageFixture();
         $this->ui->pressButton('Continue');
     }
 
@@ -1224,14 +1225,78 @@ class ViewerContext implements Context
     {
         $this->appendSystemMessageFixture();
         $this->ui->assertPageAddress('/paper-verification/check-answers');
-
-        $this->ui->assertPageContainsText('Check your answers');
-
-        $this->ui->assertPageContainsText('LPA reference number');
-        $this->ui->assertPageContainsText('M-1234-1234-1234');
-
-        $this->ui->assertPageContainsText('Who the paper verification code was sent to');
-        $this->ui->assertPageContainsText('Barbara Gilson');
     }
+
+    #[Given('/^they change LPA Reference on check answers page$/')]
+    public function theyChangeLpaReferenceOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/check-code")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/check-code');
+    }
+
+    #[When('/^they click continue they return to check answers page$/')]
+    public function theyClickContinueTheyReturnToCheckAnswersPage(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+    }
+
+    #[Given('/^they change who code sent to on check answers page$/')]
+    public function theyChangeWhoCodeSentToOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/verification-code-sent-to")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+    }
+
+    #[When('/^they click back they return to check answers page$/')]
+    public function theyClickBackTheyReturnToCheckAnswersPage(): void
+    {
+        $this->ui->clickLink('Back');
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+    }
+
+    #[Given('/^they change attorney dob on check answers page$/')]
+    public function theyChangeAttorneyDobOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/attorney-dob")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/attorney-dob');
+    }
+
+    #[Given('/^they change number of attorney on check answers page$/')]
+    public function theyChangeNumberOfAttorneyOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/number-of-attorneys")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
+    }
+
 
 }

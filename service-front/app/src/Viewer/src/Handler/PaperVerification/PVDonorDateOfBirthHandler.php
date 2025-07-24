@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -104,6 +105,11 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
+        /** @var PaperVerificationShareCode $state **/
+        if ($this->hasFutureAnswersInState($state)) {
+            return 'pv.check-answers';
+        }
+
         return 'pv.provide-attorney-details';
     }
 
@@ -112,6 +118,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.verification-code-sent-to';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 }

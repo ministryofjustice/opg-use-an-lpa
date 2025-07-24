@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -46,12 +47,12 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
         if ($dob) {
             $this->form->setData([
-                 'dob' => [
-                     'day'   => $dob->format('d'),
-                     'month' => $dob->format('m'),
-                     'year'  => $dob->format('Y'),
-                 ],
-             ]);
+                                     'dob' => [
+                                         'day'   => $dob->format('d'),
+                                         'month' => $dob->format('m'),
+                                         'year'  => $dob->format('Y'),
+                                     ],
+                                 ]);
         }
 
         // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
@@ -104,7 +105,10 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'pv.number-of-attorneys';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.number-of-attorneys';
     }
 
     /**
@@ -112,6 +116,9 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.verification-code-sent-to';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 }

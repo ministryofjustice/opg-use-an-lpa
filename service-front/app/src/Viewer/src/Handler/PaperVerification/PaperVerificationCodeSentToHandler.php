@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\VerificationCodeReceiver;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -46,7 +47,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $sentToDonor  = $this->state($request)->sentToDonor;
         $attorneyName = $this->state($request)->attorneyName;
 
-        if ($sentToDonor) {
+        if ($sentToDonor !== null) {
             $this->form->setData(['verification_code_receiver' => $sentToDonor === false ? 'Attorney' : 'Donor']);
         }
 
@@ -71,12 +72,19 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $storedSentToDonor = $this->state($request)->sentToDonor;
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $sentToDonor = $this->form->getData()['verification_code_receiver'];
+            $sentToDonor = $this->form->getData()['verification_code_receiver'] === 'Donor';
 
-            if (!$this->state($request)->sentToDonor = $sentToDonor === 'Donor') {
+            if ($storedSentToDonor !== null && $storedSentToDonor !== $sentToDonor) {
+                $this->state($request)->noOfAttorneys = null;
+                $this->state($request)->attorneyName  = null;
+                $this->state($request)->dateOfBirth   = null;
+            }
+
+            if (!$this->state($request)->sentToDonor = $sentToDonor) {
                 $this->state($request)->attorneyName = $this->form->getData()['attorney_name'];
             }
 
@@ -105,6 +113,11 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
+        /** @var PaperVerificationShareCode $state **/
+        if ($this->hasFutureAnswersInState($state)) {
+            return 'pv.check-answers';
+        }
+
         return $state->sentToDonor === false ? 'pv.attorney-dob' : 'pv.donor-dob';
     }
 
