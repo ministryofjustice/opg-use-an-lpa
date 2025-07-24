@@ -2,27 +2,28 @@
 // Mock One Login ECS Service level config
 
 resource "aws_ecs_service" "mock_onelogin" {
+  count                             = var.mock_onelogin_enabled ? 1 : 0
   name                              = "mock-onelogin-service"
   cluster                           = aws_ecs_cluster.use_an_lpa.id
-  task_definition                   = aws_ecs_task_definition.mock_onelogin.arn
+  task_definition                   = aws_ecs_task_definition.mock_onelogin[0].arn
   desired_count                     = local.mock_onelogin_desired_count
   platform_version                  = "1.4.0"
   health_check_grace_period_seconds = 0
 
   network_configuration {
-    security_groups  = [aws_security_group.mock_onelogin_ecs_service.id]
+    security_groups  = [aws_security_group.mock_onelogin_ecs_service[0].id]
     subnets          = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.mock_onelogin.arn
+    target_group_arn = aws_lb_target_group.mock_onelogin[0].arn
     container_name   = "mock_onelogin"
     container_port   = 8080
   }
 
   service_registries {
-    registry_arn = aws_service_discovery_service.mock_onelogin_ecs.arn
+    registry_arn = aws_service_discovery_service.mock_onelogin_ecs[0].arn
   }
 
   capacity_provider_strategy {
@@ -52,7 +53,8 @@ resource "aws_ecs_service" "mock_onelogin" {
 // Mock One Login service discovery
 
 resource "aws_service_discovery_service" "mock_onelogin_ecs" {
-  name = "mock-onelogin"
+  count = var.mock_onelogin_enabled ? 1 : 0
+  name  = "mock-onelogin"
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.internal_ecs.id
@@ -74,13 +76,14 @@ resource "aws_service_discovery_service" "mock_onelogin_ecs" {
 
 //
 locals {
-  mock_onelogin_service_fqdn = "${aws_service_discovery_service.mock_onelogin_ecs.name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}"
+  mock_onelogin_service_fqdn = var.mock_onelogin_enabled ? "${aws_service_discovery_service.mock_onelogin_ecs[0].name}.${aws_service_discovery_private_dns_namespace.internal_ecs.name}" : ""
 }
 
 //----------------------------------
 // The Mock One Login service's Security Groups
 
 resource "aws_security_group" "mock_onelogin_ecs_service" {
+  count       = var.mock_onelogin_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-mock-onelogin-ecs-service"
   description = "Mock One Login service security group"
   vpc_id      = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
@@ -94,13 +97,14 @@ resource "aws_security_group" "mock_onelogin_ecs_service" {
 //----------------------------------
 // 8080 in from the ELB
 resource "aws_security_group_rule" "mock_onelogin_ecs_service_ingress" {
+  count                    = var.mock_onelogin_enabled ? 1 : 0
   description              = "Allow Port 8080 ingress from the application load balancer"
   type                     = "ingress"
   from_port                = 8080
   to_port                  = 8080
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.mock_onelogin_ecs_service.id
-  source_security_group_id = aws_security_group.mock_onelogin_loadbalancer.id
+  security_group_id        = aws_security_group.mock_onelogin_ecs_service[0].id
+  source_security_group_id = aws_security_group.mock_onelogin_loadbalancer[0].id
   lifecycle {
     create_before_destroy = true
   }
@@ -111,12 +115,13 @@ resource "aws_security_group_rule" "mock_onelogin_ecs_service_ingress" {
 //----------------------------------
 // 80 in from API ECS service
 resource "aws_security_group_rule" "mock_onelogin_ecs_service_api_ingress" {
+  count                    = var.mock_onelogin_enabled ? 1 : 0
   description              = "Allow Port 8080 ingress from the Api service"
   type                     = "ingress"
   from_port                = 0
   to_port                  = 8080
   protocol                 = "tcp"
-  security_group_id        = aws_security_group.mock_onelogin_ecs_service.id
+  security_group_id        = aws_security_group.mock_onelogin_ecs_service[0].id
   source_security_group_id = aws_security_group.api_ecs_service.id
   lifecycle {
     create_before_destroy = true
@@ -128,13 +133,14 @@ resource "aws_security_group_rule" "mock_onelogin_ecs_service_api_ingress" {
 //----------------------------------
 // Anything out
 resource "aws_security_group_rule" "mock_onelogin_ecs_service_egress" {
+  count             = var.mock_onelogin_enabled ? 1 : 0
   description       = "Allow any egress from Mock One Login service"
   type              = "egress"
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
-  security_group_id = aws_security_group.mock_onelogin_ecs_service.id
+  security_group_id = aws_security_group.mock_onelogin_ecs_service[0].id
   lifecycle {
     create_before_destroy = true
   }
@@ -146,6 +152,7 @@ resource "aws_security_group_rule" "mock_onelogin_ecs_service_egress" {
 // Api ECS Service Task level config
 
 resource "aws_ecs_task_definition" "mock_onelogin" {
+  count                    = var.mock_onelogin_enabled ? 1 : 0
   family                   = "${var.environment_name}-mock-onelogin"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
@@ -162,8 +169,9 @@ resource "aws_ecs_task_definition" "mock_onelogin" {
 // Permissions
 
 resource "aws_iam_role_policy" "mock_onelogin_permissions_role" {
+  count  = var.mock_onelogin_enabled ? 1 : 0
   name   = "${var.environment_name}-${local.policy_region_prefix}-mockOneLoginApplicationPermissions"
-  policy = data.aws_iam_policy_document.mock_onelogin_permissions_role.json
+  policy = data.aws_iam_policy_document.mock_onelogin_permissions_role[0].json
   role   = var.ecs_task_roles.mock_onelogin_task_role.id
 
   provider = aws.region
@@ -173,6 +181,7 @@ resource "aws_iam_role_policy" "mock_onelogin_permissions_role" {
   Defines permissions that the application running within the task has.
 */
 data "aws_iam_policy_document" "mock_onelogin_permissions_role" {
+  count = var.mock_onelogin_enabled ? 1 : 0
   statement {
     sid    = "${local.policy_region_prefix}AllowSecretsManagerAccess"
     effect = "Allow"

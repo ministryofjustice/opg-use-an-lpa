@@ -9,7 +9,8 @@ use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
     Repository\UserLpaActorMapInterface,
     Repository\ViewerCodeActivityInterface,
     Repository\ViewerCodesInterface};
-use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, InstructionsAndPreferencesImagesResult, Lpa};
+use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, Lpa};
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;

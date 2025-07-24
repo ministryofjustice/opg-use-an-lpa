@@ -19,12 +19,6 @@
       <code><![CDATA[$codeOwner]]></code>
     </ImplementedParamTypeMismatch>
   </file>
-  <file src="src/App/src/DataAccess/Repository/ActorCodesInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[flagCodeAsUsed]]></code>
-      <code><![CDATA[get]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/App/src/DataAccess/Repository/ActorUsersInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool]]></code>
@@ -32,9 +26,9 @@
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
   </file>
-  <file src="src/App/src/DataAccess/Repository/Response/ActorCodeInterface.php">
+  <file src="src/App/src/DataAccess/Repository/PaperVerificationCodesInterface.php">
     <PossiblyUnusedMethod>
-      <code><![CDATA[getLookupTime]]></code>
+      <code><![CDATA[startExpiry]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="src/App/src/DataAccess/Repository/Response/InstructionsAndPreferencesImages.php">
@@ -43,6 +37,11 @@
       <code><![CDATA[$status]]></code>
       <code><![CDATA[$uId]]></code>
     </PossiblyUnusedProperty>
+  </file>
+  <file src="src/App/src/DataAccess/Repository/Response/ResponseInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getLookupTime]]></code>
+    </PossiblyUnusedMethod>
   </file>
   <file src="src/App/src/DataAccess/Repository/UserLpaActorMapInterface.php">
     <PossiblyUnusedReturnValue>
@@ -164,9 +163,6 @@
     <InvalidArgument>
       <code><![CDATA[$requestData]]></code>
     </InvalidArgument>
-    <UnusedProperty>
-      <code><![CDATA[$featureEnabled]]></code>
-    </UnusedProperty>
   </file>
   <file src="src/App/src/Handler/AccessForAllLpaValidationHandler.php">
     <InvalidArgument>
@@ -177,15 +173,6 @@
     <UndefinedDocblockClass>
       <code><![CDATA[Exception]]></code>
     </UndefinedDocblockClass>
-    <UnusedProperty>
-      <code><![CDATA[$emailClient]]></code>
-      <code><![CDATA[$logger]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/App/src/Handler/PaperVerification/ValidateHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$lpaManager]]></code>
-    </UnusedProperty>
   </file>
   <file src="src/App/src/Handler/UserHandler.php">
     <InvalidArgument>
@@ -211,7 +198,7 @@
     <PossiblyUnusedProperty>
       <code><![CDATA[$attorneyName]]></code>
       <code><![CDATA[$dateOfBirth]]></code>
-      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$lpaUid]]></code>
       <code><![CDATA[$noOfAttorneys]]></code>
       <code><![CDATA[$sentToDonor]]></code>
     </PossiblyUnusedProperty>
@@ -336,9 +323,6 @@
     <PossiblyUnusedParam>
       <code><![CDATA[$params]]></code>
     </PossiblyUnusedParam>
-    <UnusedProperty>
-      <code><![CDATA[$actorCodes]]></code>
-    </UnusedProperty>
   </file>
   <file src="src/App/src/Value/LpaUid.php">
     <PossiblyUnusedMethod>
