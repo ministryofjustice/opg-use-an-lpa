@@ -1,7 +1,7 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM composer:2.8.9@sha256:9f2a31e610b009bbf38cbc378384f74b60295dbe44ac0dd6077b5f74391dd15e AS composer
+FROM composer:2.8.9@sha256:69d57c07ed077bc22d6e584202b6d9160f636abdb6df25c7c437ded589b3fa6c AS composer
 
 FROM mlocati/php-extension-installer:2.8.28@sha256:a7d3e11e022dbc563c85d3c71827cc3a0a338640bcb4dc629ce3e98bcd5875e4 AS php-extension-installer
 
@@ -12,7 +12,7 @@ ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
-  && apk add --update --no-cache icu=76.1-r0 gettext=0.24.1-r0 fcgi=2.4.6-r0 \
+  && apk add --update --no-cache icu=76.1-r1 gettext=0.24.1-r0 fcgi=2.4.6-r0 \
   && install-php-extensions apcu redis-^6 intl gettext opcache \
   && rm /usr/bin/install-php-extensions
 

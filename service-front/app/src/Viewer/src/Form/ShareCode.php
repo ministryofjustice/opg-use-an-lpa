@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Filter\ActorViewerCodeFilter;
+use Common\Filter\ConvertQuotesToApostrophe;
 use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
@@ -86,6 +87,7 @@ class ShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
+                    ['name' => ConvertQuotesToApostrophe::class],
                 ],
                 'validators' => [
                     [

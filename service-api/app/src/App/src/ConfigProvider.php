@@ -52,7 +52,6 @@ class ConfigProvider
                     => Service\Container\PhpDiModifiableContainer::class,
 
                 // Data Access
-                DataAccess\Repository\ActorCodesInterface::class => DataAccess\DynamoDb\ActorCodes::class,
                 DataAccess\Repository\ActorUsersInterface::class => DataAccess\DynamoDb\ActorUsers::class,
                 DataAccess\Repository\ViewerCodeActivityInterface::class
                     => DataAccess\DynamoDb\ViewerCodeActivity::class,
@@ -62,6 +61,8 @@ class ConfigProvider
                 DataAccess\Repository\RequestLetterInterface::class   => DataAccess\ApiGateway\SiriusLpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
+                DataAccess\Repository\PaperVerificationCodesInterface::class
+                    => DataAccess\ApiGateway\PaperVerificationCodes::class,
 
                 // One Login
                 Facile\OpenIDClient\Issuer\IssuerBuilderInterface::class
@@ -94,7 +95,6 @@ class ConfigProvider
                 Service\Lpa\LpaManagerInterface::class         => Service\Lpa\LpaManagerFactory::class,
 
                 // Data Access
-                DataAccess\DynamoDb\ActorCodes::class         => DataAccess\DynamoDb\ActorCodesFactory::class,
                 DataAccess\DynamoDb\ActorUsers::class         => DataAccess\DynamoDb\ActorUsersFactory::class,
                 DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
                 DataAccess\DynamoDb\ViewerCodes::class        => DataAccess\DynamoDb\ViewerCodesFactory::class,
@@ -103,6 +103,8 @@ class ConfigProvider
                 DataAccess\ApiGateway\DataStoreLpas::class    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
                     => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
+                DataAccess\ApiGateway\PaperVerificationCodes::class
+                    => DataAccess\ApiGateway\PaperVerificationCodesFactory::class,
 
                 // Code Validation
                 Service\ActorCodes\CodeValidationStrategyInterface::class
