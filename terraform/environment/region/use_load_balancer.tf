@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "use" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = data.aws_vpc.default.id
+  vpc_id               = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
   deregistration_delay = 0
   depends_on           = [aws_lb.use]
 
@@ -23,7 +23,7 @@ resource "aws_lb" "use" {
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - Intentionally public facing
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = data.aws_subnets.public.ids
+  subnets                    = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_subnet.public[*].id : data.aws_subnets.public.ids
 
   enable_deletion_protection = var.load_balancer_deletion_protection_enabled
 
@@ -225,7 +225,7 @@ resource "aws_lb_listener_rule" "use_maintenance_welsh" {
 resource "aws_security_group" "use_loadbalancer" {
   name_prefix = "${var.environment_name}-actor-loadbalancer"
   description = "Allow inbound traffic"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }
@@ -282,7 +282,7 @@ resource "aws_security_group_rule" "use_loadbalancer_egress" {
 resource "aws_security_group" "use_loadbalancer_route53" {
   name_prefix = "${var.environment_name}-actor-loadbalancer-route53"
   description = "Allow Route53 healthchecks"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }

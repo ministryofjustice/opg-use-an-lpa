@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\GenerateJWT;
-use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
+use App\Exception\RequestSigningException;
 use App\Service\Secrets\LpaDataStoreSecretManager;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Attributes\BackupGlobals;
@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 
 #[BackupGlobals(true)]
@@ -46,9 +47,8 @@ class RequestSignerFactoryTest extends TestCase
 
         $factory = new RequestSignerFactory($containerProphecy->reveal());
 
-        $signer = $factory();
-
-        $this->assertInstanceOf(RequestSigner::class, $signer);
+        $this->expectNotToPerformAssertions();
+        $factory();
     }
 
     #[Test]
@@ -67,9 +67,8 @@ class RequestSignerFactoryTest extends TestCase
 
         $factory = new RequestSignerFactory($containerProphecy->reveal());
 
-        $signer = $factory(SignatureType::ActorCodes);
-
-        $this->assertInstanceOf(RequestSigner::class, $signer);
+        $this->expectNotToPerformAssertions();
+        $factory(SignatureType::ActorCodes);
     }
 
     #[Test]
@@ -79,8 +78,11 @@ class RequestSignerFactoryTest extends TestCase
         $jwtGenerator
             ->__invoke(Argument::any(), Argument::any())
             ->shouldBeCalled()
-            ->will(function ($args) {
-                Assert::assertStringContainsString('urn:opg:poas:use:users:my_user_identifier', $args[1]->getPayload());
+            ->will(function (array $args) {
+                Assert::assertStringContainsString(
+                    'urn:opg:poas:use:users:my_user_identifier',
+                    $args[1]->getPayload()
+                );
 
                 return 'signed_jwt_string';
             });
@@ -98,8 +100,21 @@ class RequestSignerFactoryTest extends TestCase
 
         $factory = new RequestSignerFactory($containerProphecy->reveal());
 
-        $signer = $factory(SignatureType::DataStoreLpas, 'my_user_identifier');
+        $this->expectNotToPerformAssertions();
+        $factory(SignatureType::DataStoreLpas, 'my_user_identifier');
+    }
 
-        $this->assertInstanceOf(RequestSigner::class, $signer);
+    #[Test]
+    public function it_handles_container_exceptions(): void
+    {
+        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $containerProphecy
+            ->get('config')
+            ->willThrow($this->prophesize(ContainerExceptionInterface::class)->reveal());
+
+        $factory = new RequestSignerFactory($containerProphecy->reveal());
+
+        $this->expectException(RequestSigningException::class);
+        $factory(SignatureType::ActorCodes);
     }
 }

@@ -1,18 +1,18 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM composer:2.8.8@sha256:1e30756b14356f49b84a9086c0bbba05ab10f76df3f73fb536582b71fb1b1078 AS composer
+FROM composer:2.8.9@sha256:69d57c07ed077bc22d6e584202b6d9160f636abdb6df25c7c437ded589b3fa6c AS composer
 
-FROM mlocati/php-extension-installer:2.7.28@sha256:61ec62196646d4299a959ebdf0f6753f71a7e9db0eebafe1e4f3bf0f323f50be AS php-extension-installer
+FROM mlocati/php-extension-installer:2.8.28@sha256:a7d3e11e022dbc563c85d3c71827cc3a0a338640bcb4dc629ce3e98bcd5875e4 AS php-extension-installer
 
-FROM php:8.1.32-fpm-alpine3.21@sha256:9e20c084a69820d87ef2ee96e1b7fe21ecf1ce49dd0abeafce6a6d25e14e350a AS php-base
-
-COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+FROM php:8.3.22-fpm-alpine3.22@sha256:13147c0420a956ae3ecab236c0a8ee8073d9bb100be6dde7f23c4c447e59ec8b AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
+COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
+
 RUN set -xe \
-  && apk add --update --no-cache fcgi=2.4.2-r4 \
+  && apk add --update --no-cache fcgi=2.4.6-r0 \
   && install-php-extensions apcu gmp opcache \
   && rm /usr/bin/install-php-extensions
 

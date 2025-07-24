@@ -4,33 +4,27 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-/**
- * Interface for recording activity around the Viewer Code.
- *
- * @psalm-type ViewerCodeWithActivity = array{
- *     SiriusUid: string,
- *     ActorLpaId: int,
- *     Expires: string,
- *     Active: bool,
- *     ActorCode: string,
- * }
- */
+use App\DataAccess\Repository\Response\ActorCodeExists;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
+use App\DataAccess\Repository\Response\ResponseInterface;
+
 interface ActorCodesInterface
 {
     /**
-     * Get an actor LPA code and actor details from the database.
+     * Checks the provided information against the upstream source and returns
+     * data that identifies the actor that information is registered against.
      *
-     * @param string $code
-     * @psalm-return ViewerCodeWithActivity|null
-     * @return array|null
+     * @psalm-return ResponseInterface<ActorCodeIsValid>
      */
-    public function get(string $code): ?array;
+    public function validateCode(string $code, string $uid, string $dob): ResponseInterface;
 
     /**
-     * Marks a given actor code as used.
-     * It will not be able to be used again.
-     *
-     * @param string $code
+     * Marks a given actor code as used. It will not be able to be used again.
      */
-    public function flagCodeAsUsed(string $code);
+    public function flagCodeAsUsed(string $code): void;
+
+    /**
+     * @psalm-return ResponseInterface<ActorCodeExists>
+     */
+    public function checkActorHasCode(string $lpaId, string $actorId): ResponseInterface;
 }

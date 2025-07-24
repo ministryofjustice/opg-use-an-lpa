@@ -8,8 +8,10 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
-use App\DataAccess\Repository\Response\ActorCode;
+use App\DataAccess\Repository\Response\ActorCodeExists;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Exception\ApiException;
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -53,7 +55,7 @@ class ActorCodesTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode($testData));
+        $responseProphecy->getBody()->willReturn(json_encode(['actor' => 'test-actor']));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
@@ -73,8 +75,8 @@ class ActorCodesTest extends TestCase
 
         $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
 
-        $this->assertInstanceOf(ActorCode::class, $actorCode);
-        $this->assertEquals($testData, $actorCode->getData());
+        $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
     }
 
     #[Test]
@@ -247,7 +249,7 @@ class ActorCodesTest extends TestCase
 
     #[Test]
     #[DataProvider('codeExistsResponse')]
-    public function it_checks_whether_an_actor_has_a_code($codeExistsResponse): void
+    public function it_checks_whether_an_actor_has_a_code(?string $codeExistsResponse): void
     {
         $testData = [
             'lpa'   => 'test-lpa-id',
@@ -287,8 +289,16 @@ class ActorCodesTest extends TestCase
 
         $actorCode = $service->checkActorHasCode($testData['lpa'], $testData['actor']);
 
-        $this->assertInstanceOf(ActorCode::class, $actorCode);
-        $this->assertEquals($expectedResponse, $actorCode->getData());
+        $this->assertInstanceOf(ActorCodeExists::class, $actorCode->getData());
+
+        if ($codeExistsResponse !== null) {
+            $this->assertEquals(
+                new DateTimeImmutable($codeExistsResponse),
+                $actorCode->getData()->createdAt
+            );
+        } else {
+            $this->assertNull($actorCode->getData()->createdAt);
+        }
     }
 
     public static function codeExistsResponse(): array

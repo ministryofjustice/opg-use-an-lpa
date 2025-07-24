@@ -6,6 +6,8 @@ namespace AppTest;
 
 use App\DataAccess\Repository\Response\Lpa as LpaResponse;
 use App\DataAccess\Repository\Response\LpaInterface;
+use App\DataAccess\Repository\Response\ResponseInterface;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\Entity\Lpa;
 use App\Service\Lpa\LpaDataFormatter;
 use DateTimeImmutable;
@@ -30,5 +32,15 @@ class LpaUtilities
 
         /** @var Lpa */
         return (new LpaDataFormatter())->hydrateObject($lpaData);
+    }
+
+    public static function codesApiResponseFixture(
+        mixed $response,
+        DateTimeInterface $fetchDate = new DateTimeImmutable(),
+    ): ResponseInterface {
+        return new UpstreamResponse(
+            $response,
+            $fetchDate,
+        );
     }
 }

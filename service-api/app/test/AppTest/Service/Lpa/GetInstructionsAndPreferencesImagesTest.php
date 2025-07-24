@@ -6,7 +6,7 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
 use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
