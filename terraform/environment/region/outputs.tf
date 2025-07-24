@@ -39,7 +39,7 @@ output "security_group_ids" {
   value = {
     actor_loadbalancer         = aws_security_group.use_loadbalancer.id
     viewer_loadbalancer        = aws_security_group.viewer_loadbalancer.id
-    mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? aws_security_group.mock_onelogin_loadbalancer[0].name : null
+    mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? aws_security_group.mock_onelogin_loadbalancer[0].id : null
   }
 }
 
