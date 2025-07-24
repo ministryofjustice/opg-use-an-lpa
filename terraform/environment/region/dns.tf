@@ -118,6 +118,7 @@ module "admin_use_my_lpa" {
 }
 
 module "mock_onelogin_use_my_lpa" {
+  count  = var.mock_onelogin_enabled ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env          = var.dns_namespace_env
