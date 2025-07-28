@@ -12,6 +12,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -53,7 +54,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             'noOfAttorneys' => $stateData->noOfAttorneys,
             'attorneyName'  => $stateData->attorneyName,
             'donorName'     => 'Barbara Gilson',
-            'back'          => $this->lastPage($this->state($request)),
+            'back'          => $this->lastPage($stateData),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -89,10 +90,12 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
     }
 
     /**
-     * @inheritDoc
+     * @param WorkflowState $state
+     * @return string The route name of the previous page in the workflow
      */
     public function lastPage(WorkflowState $state): string
     {
+        /** @var PaperVerificationShareCode $state * */
         return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
     }
 }
