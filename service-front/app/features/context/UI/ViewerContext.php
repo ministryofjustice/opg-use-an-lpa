@@ -1236,12 +1236,9 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-
+        $this->appendSystemMessageFixture();
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/check-code');
-        $this->appendSystemMessageFixture();
-        $this->ui->pressButton('Continue');
-        $this->ui->assertPageAddress('/paper-verification/check-answers');
      }
 
     #[When('/^they click continue they return to check answers page$/')]
@@ -1261,7 +1258,7 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-
+        $this->appendSystemMessageFixture();
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
     }
@@ -1282,7 +1279,7 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-
+        $this->appendSystemMessageFixture();
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/attorney-dob');
     }
@@ -1296,10 +1293,8 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-
+        $this->appendSystemMessageFixture();
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
     }
-
-
 }
