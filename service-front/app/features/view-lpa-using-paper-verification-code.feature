@@ -5,8 +5,7 @@ Feature: View an LPA via Paper Verification Code
   So that I can carry out business functions
 
   @integration @ui @ff:paper_verification:true
-#  Scenario: View an LPA is for attorney
-  Scenario: View an LPA
+  Scenario: View an LPA is for attorney
     Given I have been given access to an LPA via Paper Verification Code
     And I access the viewer service
     And I give a valid LPA Paper Verification Code

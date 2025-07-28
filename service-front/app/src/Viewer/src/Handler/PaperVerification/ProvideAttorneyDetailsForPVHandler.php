@@ -21,6 +21,7 @@ use Viewer\Workflow\PaperVerificationShareCode;
 class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
     private AttorneyDetailsForPV $form;
+
     /**
      * @var array{
      *     "view/en": string,
@@ -28,6 +29,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
      * }
      */
     private array $systemMessages;
+
     private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
@@ -62,8 +64,8 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
             'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $systemMessages['view/en'] ?? null,
-            'cy_message' => $systemMessages['view/cy'] ?? null,
+            'en_message' => $this->systemMessages['view/en'] ?? null,
+            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -72,16 +74,16 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->noOfAttorneys   = $this->form->getData()['no_of_attorneys'];
-            $this->state($request)->attorneyName = $this->form->getData()['attorneys_name'];
+            $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
+            $this->state($request)->attorneyName  = $this->form->getData()['attorneys_name'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'en_message' => $systemMessages['view/en'] ?? null,
-            'cy_message' => $systemMessages['view/cy'] ?? null,
+            'en_message' => $this->systemMessages['view/en'] ?? null,
+            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 

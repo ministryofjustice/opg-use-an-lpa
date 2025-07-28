@@ -1239,7 +1239,10 @@ class ViewerContext implements Context
 
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/check-code');
-    }
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+     }
 
     #[When('/^they click continue they return to check answers page$/')]
     public function theyClickContinueTheyReturnToCheckAnswersPage(): void
