@@ -1,0 +1,39 @@
+---
+plugin: "openapi"
+specFile: "mock-openapi.yml"
+
+response:
+  scriptFile: "mock-responses.js"
+
+security:
+  # no requests permitted by default
+  default: Deny
+
+  # only requests meeting all these conditions are permitted
+  conditions:
+    - effect: Permit
+      requestHeaders:
+        Authorization:
+          value: AWS4-HMAC-SHA256 .*
+          operator: Matches
+
+resources:
+  # always permit status endpoint
+  - method: GET
+    path: /system/status
+    security:
+      default: Permit
+
+  # always permit _spec viewer endpoint
+  - method: GET
+    path: /_spec
+    security:
+      default: Permit
+  - method: GET
+    path: /_spec/combined.json
+    security:
+      default: Permit
+
+pickFirstIfNoneMatch: false
+validation:
+  request: true
