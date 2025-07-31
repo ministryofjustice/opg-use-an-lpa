@@ -333,9 +333,11 @@ jobs:
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
+          vuln-type: 'os,library'
           format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
+          exit-code: '1'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: Upload Trivy scan results to GitHub Security tab
