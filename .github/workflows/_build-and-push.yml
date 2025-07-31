@@ -337,26 +337,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
           TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
-          # TRIVY_IGNOREFILE: ${{ matrix.path_to_trivyignore_file }}
           TRIVY_DEBUG: true
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
           vuln-type: 'os,library'
-          # format: 'sarif'
-          format: 'table'
+          format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
           trivyignores: ${{ matrix.path_to_trivyignore_file }}
           exit-code: '1'
           version: 'v0.65.0'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-
-      - run: |
-          cat trivy-results.sarif
-        id: print_table
-        if: always()
-
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
