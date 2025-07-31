@@ -354,7 +354,7 @@ jobs:
 
       - run: |
           cat trivy-results.sarif
-        id: print table
+        id: print_table
         if: always()
 
 
