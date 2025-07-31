@@ -343,11 +343,9 @@ jobs:
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
-        if: |
-          (steps.trivy_scan.outcome == 'success' || steps.trivy_scan.outcome == 'failure') &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+        if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: 'trivy-results.sarif
 
       - name: tag and push container
         env:
