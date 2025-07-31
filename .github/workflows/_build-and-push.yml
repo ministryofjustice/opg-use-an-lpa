@@ -86,7 +86,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/upload-statistics/Dockerfile'
-            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore'
+            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore.yaml'
           - svc_prefix: 'event'
             svc_suffix: 'receiver'
             build_development_docker: 'false'
@@ -337,6 +337,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
           TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
+          TRIVY_IGNOREFILE: ${{ matrix.path_to_trivyignore_file }}
           TRIVY_DEBUG: true
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
@@ -346,7 +347,7 @@ jobs:
           # format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
-          trivyignores: ${{ matrix.path_to_trivyignore_file }}
+          # trivyignores: ${{ matrix.path_to_trivyignore_file }}
           exit-code: '1'
           version: 'v0.65.0'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
