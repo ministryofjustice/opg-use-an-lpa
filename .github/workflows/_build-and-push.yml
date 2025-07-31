@@ -342,7 +342,8 @@ jobs:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
           vuln-type: 'os,library'
-          format: 'sarif'
+          format: 'table'
+          # format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
           trivyignores: ${{ matrix.path_to_trivyignore_file }}
@@ -350,12 +351,18 @@ jobs:
           version: 'v0.65.0'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
+      - run: |
+          cat trivy-results.sarif
+        id: print_table
         if: always()
-        with:
-          sarif_file: 'trivy-results.sarif'
+
+
+      # - name: Upload Trivy scan results to GitHub Security tab
+      #   id: trivy_upload_sarif
+      #   uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
+      #   if: always()
+      #   with:
+      #     sarif_file: 'trivy-results.sarif'
 
       - name: tag and push container
         env:
