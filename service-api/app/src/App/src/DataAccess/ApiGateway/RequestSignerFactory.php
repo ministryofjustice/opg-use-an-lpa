@@ -38,9 +38,8 @@ class RequestSignerFactory
             $config = $this->container->get('config');
 
             $additionalHeaders = match ($signature) {
-                SignatureType::ActorCodes => $this->actorCodesHeaders(),
                 SignatureType::DataStoreLpas => $this->dataStoreLpasHeaders(...$additionalSignatureData),
-                default => [],
+                default => [], // SignatureType::None
             };
 
             $aws_region = $config['aws']['ApiGateway']['endpoint_region'] ?? 'eu-west-1';
@@ -49,21 +48,6 @@ class RequestSignerFactory
         } catch (ContainerExceptionInterface $e) {
             throw new RequestSigningException('Failed to sign request', 0, $e);
         }
-    }
-
-    /**
-     * @return array{
-     *     Authorization: ?string
-     * }
-     * @throws ContainerExceptionInterface
-     */
-    private function actorCodesHeaders(): array
-    {
-        $config = $this->container->get('config');
-
-        return [
-            'Authorization' => $config['codes_api']['static_auth_token'] ?? null,
-        ];
     }
 
     /**

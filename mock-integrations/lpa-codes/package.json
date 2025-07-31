@@ -1,0 +1,19 @@
+{
+  "name": "lpa-codes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "types": "src/types/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build.mjs"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@imposter-js/types": "^1.0.0",
+    "@types/node": "^24.1.0",
+    "esbuild": "^0.25.1",
+    "esbuild-plugin-external-global": "^1.0.1"
+  }
+}

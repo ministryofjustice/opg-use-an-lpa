@@ -7,43 +7,36 @@ namespace App\DataAccess\DynamoDb;
 use Aws\DynamoDb\Marshaler;
 use Aws\Result;
 use DateTime;
-use Exception;
 use UnexpectedValueException;
 
 trait DynamoHydrateTrait
 {
     /**
-     * @param Result $result
-     * @param array  $dateFields
-     * @return array
-     * @throws Exception|UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     private function getData(Result $result, array $dateFields = []): array
     {
-        if ($result->hasKey('Item')) {
-            return $this->extractData($result->get('Item'), $dateFields);
+        if (($item = $result->hasKey('Item') ? $result->get('Item') : null) !== null) {
+            return $this->extractData($item, $dateFields);
         }
 
         // updateItem calls return an AWS Result object with "Attributes"
-        if ($result->hasKey('Attributes')) {
-            return $this->extractData($result->get('Attributes'), $dateFields);
+        if (($attributes = $result->hasKey('Attributes') ? $result->get('Attributes') : null) !== null) {
+            return $this->extractData($attributes, $dateFields);
         }
 
         return [];
     }
 
     /**
-     * @param Result $result
-     * @param array  $dateFields
-     * @return array
-     * @throws Exception|UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     private function getDataCollection(Result $result, array $dateFields = []): array
     {
         $items = [];
 
-        if ($result->hasKey('Items')) {
-            foreach ($result->get('Items') as $item) {
+        if (($dynamoDBItems = $result->hasKey('Items') ? $result->get('Items') : null) !== null) {
+            foreach ($dynamoDBItems as $item) {
                 $items[] = $this->extractData($item, $dateFields);
             }
         }
@@ -52,10 +45,7 @@ trait DynamoHydrateTrait
     }
 
     /**
-     * @param array $resultItem
-     * @param array $dateFields
-     * @return array
-     * @throws Exception|UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     private function extractData(array $resultItem, array $dateFields = []): array
     {
