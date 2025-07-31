@@ -36,7 +36,7 @@ jobs:
     outputs:
       matrix_job_names: ${{ steps.output_names.outputs.MATRIX_JOB_NAMES }}
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
           - svc_prefix: 'front'
