@@ -5,6 +5,6 @@ vulnerabilities:
   - id: CVE-2025-49795
     statement: Patched version of libxml2 unavailable in latest image
     expired_at: 2025-08-30
-  # - id: CVE-2025-49796
-  #   statement: Patched version of libxml2 unavailable in latest image
-  #   expired_at: 2025-08-30
+  - id: CVE-2025-49796
+    statement: Patched version of libxml2 unavailable in latest image
+    expired_at: 2025-08-30
