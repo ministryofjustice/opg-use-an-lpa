@@ -345,7 +345,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
-          # exit-code: '1'
+          exit-code: '1'
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: Upload Trivy scan results to GitHub Security tab
