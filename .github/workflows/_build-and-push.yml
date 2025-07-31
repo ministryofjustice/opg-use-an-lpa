@@ -342,7 +342,8 @@ jobs:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
           vuln-type: 'os,library'
-          format: 'sarif'
+          # format: 'sarif'
+          format: 'table'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
           exit-code: '1'
