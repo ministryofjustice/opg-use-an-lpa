@@ -343,6 +343,7 @@ jobs:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
           vuln-type: 'os,library'
+          # we could add an if, on main sarif and upload, on PR table and show/push to summary/post to slack
           format: 'sarif'
           output: 'trivy-results.sarif'
           skip-dirs: /app/vendor
