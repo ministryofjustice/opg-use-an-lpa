@@ -9,6 +9,7 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
+use Fig\Http\Message\StatusCodeInterface;
 use ParagonIE\HiddenString\HiddenString;
 
 use function password_hash;
@@ -43,8 +44,8 @@ class ActorUsers implements ActorUsersInterface
             ]
         );
 
-        $code = $result->get('@metadata')['statusCode'];
-        if ($code !== 200) {
+        $code = $result->get('@metadata')['statusCode'] ?? null;
+        if ($code !== StatusCodeInterface::STATUS_OK) {
             throw new CreationException('Failed to create account with code', ['code' => $code]);
         }
     }

@@ -1,0 +1,61 @@
+### GET healthcheck endpoint
+GET http://localhost:4015/v1/healthcheck
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+
+### POST code validation - valid
+POST http://localhost:4015/v1/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "lpa": "700000000526",
+  "dob": "1948-11-01",
+  "code": "3JHKF3C6D9W8"
+}
+
+### POST code validation - invalid (bad DoB)
+POST http://localhost:4015/v1/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "lpa": "700000000526",
+  "dob": "1948-11-01",
+  "code": "NYGUAMNB46JQ"
+}
+
+### POST code validation - expired
+POST http://localhost:4015/v1/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+"lpa": "700000000138",
+"dob": "1948-11-01",
+"code": "8EFXFEF48WJ4"
+}
+
+### POST code revoke
+POST http://localhost:4015/v1/revoke
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "NYGUAMNB46JQ"
+}
+
+### POST code exists
+POST http://localhost:4015/v1/exists
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "lpa": "700000000526",
+  "actor": "700000001805"
+}
