@@ -338,7 +338,6 @@ jobs:
           TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
           TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
           TRIVY_IGNOREFILE: ${{ matrix.path_to_trivyignore_file }}
-          TRIVY_DEBUG: true
         with:
           image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
           severity: 'HIGH,CRITICAL'
