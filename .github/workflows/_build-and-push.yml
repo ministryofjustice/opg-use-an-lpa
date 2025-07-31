@@ -86,7 +86,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/upload-statistics/Dockerfile'
-            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore.yaml'
+            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore'
           - svc_prefix: 'event'
             svc_suffix: 'receiver'
             build_development_docker: 'false'
