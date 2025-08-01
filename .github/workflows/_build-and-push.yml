@@ -368,7 +368,7 @@ jobs:
       - name: Upload Trivy scan results to GitHub Action Step Summary
         id: trivy_update_github_actions_summary
         run: |
-          cat './test-results/trivy.sarif' >> $GITHUB_STEP_SUMMARY
+          cat './test-results/trivy.txt' >> $GITHUB_STEP_SUMMARY
         if: always()
 
       - name: Upload Trivy scan results to GitHub Security tab
