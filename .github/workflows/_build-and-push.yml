@@ -343,7 +343,7 @@ jobs:
             --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
             aquasec/trivy:0.65.0 image \
             ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
-            --severity 'CRITICAL, HIGH'
+            --severity CRITICAL,HIGH
 
           docker run \
             --volume /var/run/docker.sock:/var/run/docker.sock \
@@ -352,7 +352,7 @@ jobs:
             --volume ./${{ matrix.path_to_trivyignore_file }}:/.trivyignore.yaml \
             --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
             aquasec/trivy:0.65.0 image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
-            --severity 'CRITICAL, HIGH' \
+            --severity CRITICAL, HIGH \
             --exit-code 1 \
             --format sarif --output /test-results/trivy.sarif \
 
