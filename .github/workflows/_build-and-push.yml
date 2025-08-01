@@ -341,7 +341,8 @@ jobs:
             --volume ./test-results:/test-results \
             --volume ./${{ matrix.path_to_trivyignore_file }}:/.trivyignore.yaml \
             --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
-            aquasec/trivy:latest image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
+            aquasec/trivy:latest image \
+            ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
 
             docker run \
             --volume /var/run/docker.sock:/var/run/docker.sock \
@@ -350,6 +351,7 @@ jobs:
             --volume ./${{ matrix.path_to_trivyignore_file }}:/.trivyignore.yaml \
             --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
             aquasec/trivy:latest image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
+            --exit-code 1
             --format sarif --output /test-results/trivy.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
