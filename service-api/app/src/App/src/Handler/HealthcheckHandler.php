@@ -7,10 +7,9 @@ namespace App\Handler;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\RequestSigningException;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
@@ -60,8 +59,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws RequestSigningException
      */
     private function checkIapImagesApi(): array
     {
@@ -75,8 +73,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws RequestSigningException
      */
     private function checkSiriusEndpoint(): array
     {
@@ -90,8 +87,7 @@ final class HealthcheckHandler implements RequestHandlerInterface
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws RequestSigningException
      */
     private function checkCodesApiEndpoint(): array
     {
@@ -99,14 +95,13 @@ final class HealthcheckHandler implements RequestHandlerInterface
             'GET',
             sprintf('%s/v1/healthcheck', $this->codesApiUrl),
         );
-        $request = ($this->requestSignerFactory)(SignatureType::ActorCodes)->sign($request);
+        $request = ($this->requestSignerFactory)()->sign($request);
 
         return $this->apiCall($request);
     }
 
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws RequestSigningException
      */
     private function checkLpaStoreEndpoint(): array
     {

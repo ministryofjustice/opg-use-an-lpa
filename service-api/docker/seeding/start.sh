@@ -86,17 +86,4 @@ fi
 # Seed UaLPA database
 python /app/seeding/dynamodb.py
 
-# -----
-# DynamoDB setup and seeding for codes service
-# -----
-
-if [[ -n "${CODES_ENDPOINT}" ]]; then
-  # Setup the local codes service
-  /usr/local/bin/waitforit -address=${CODES_ENDPOINT} -timeout 60 -retry 6000 -debug
-  curl -X POST -H 'Authorization: asdf1234567890' ${CODES_ENDPOINT}/setup/dynamodb/create/table
-fi
-
-# Seed code service database
-python /app/seeding/put_actor_codes.py -f /app/seeding/seeding_lpa_codes.json -d
-
 echo Finished seeding

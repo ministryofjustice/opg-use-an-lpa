@@ -29,7 +29,6 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
                 'dob'  => $dob,
                 'code' => $code,
             ],
-            SignatureType::ActorCodes,
         );
 
         $responseData = json_decode((string) $response->getBody(), true);
@@ -45,7 +44,7 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
      */
     public function flagCodeAsUsed(string $code): void
     {
-        $this->makePostRequest('v1/revoke', ['code' => $code], SignatureType::ActorCodes);
+        $this->makePostRequest('v1/revoke', ['code' => $code]);
     }
 
     /**
@@ -60,7 +59,6 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
                 'lpa'   => $lpaId,
                 'actor' => $actorId,
             ],
-            SignatureType::ActorCodes,
         );
 
         $responseData = json_decode((string) $response->getBody(), true);
