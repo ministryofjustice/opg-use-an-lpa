@@ -333,21 +333,28 @@ jobs:
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
-          TRIVY_IGNOREFILE: ${{ matrix.path_to_trivyignore_file }}
         run: |
           mkdir -p -m 0777 .trivy-cache coverage ./test-results/
           docker run \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -v ./.trivy-cache:/root/.cache \
-            -v ./test-results:/test-results \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume ./.trivy-cache:/root/.cache \
+            --volume ./test-results:/test-results \
+            --env TRIVY_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2 \
+            --env TRIVY_JAVA_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1 \
+            --env TRIVY_IGNOREFILE=${{ matrix.path_to_trivyignore_file }} \
             aquasec/trivy:latest image \
             ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
+          docker run \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume ./.trivy-cache:/root/.cache \
+            --volume ./test-results:/test-results \
+            --env TRIVY_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2 \
+            --env TRIVY_JAVA_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1 \
+            --env TRIVY_IGNOREFILE=${{ matrix.path_to_trivyignore_file }} \
+            aquasec/trivy:latest image \
+            ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
+            --format sarif --output /test-results/trivy.sarif
 
-      # --format sarif --output /test-results/trivy.sarif
       # - name: Trivy Image Vulnerability Scanner
       #   id: trivy_scan
       #   uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2dd26090d2a6c4 # 0.32.0
