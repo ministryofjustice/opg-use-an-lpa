@@ -333,6 +333,11 @@ jobs:
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+        env:
+          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
+          DOCKER_USERNAME: ${{ steps.login_ecr.outputs.docker_username_311462405659_dkr_ecr_eu_west_1_amazonaws_com }}
+          DOCKER_PASSWORD: ${{ steps.login_ecr.outputs.docker_password_311462405659_dkr_ecr_eu_west_1_amazonaws_com }}
         run: |
           mkdir -p -m 0777 .trivy-cache ./test-results/
           docker run \
