@@ -52,26 +52,6 @@ class RequestSignerFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_creates_an_actor_codes_configured_signer(): void
-    {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->willReturn(
-                [
-                    'codes_api' => [
-                        'static_auth_token' => 'test',
-                    ],
-                ]
-            );
-
-        $factory = new RequestSignerFactory($containerProphecy->reveal());
-
-        $this->expectNotToPerformAssertions();
-        $factory(SignatureType::ActorCodes);
-    }
-
-    #[Test]
     public function it_creates_an_data_store_lpas_configured_signer(): void
     {
         $jwtGenerator = $this->prophesize(GenerateJWT::class);
@@ -100,7 +80,6 @@ class RequestSignerFactoryTest extends TestCase
 
         $factory = new RequestSignerFactory($containerProphecy->reveal());
 
-        $this->expectNotToPerformAssertions();
         $factory(SignatureType::DataStoreLpas, 'my_user_identifier');
     }
 
@@ -115,6 +94,6 @@ class RequestSignerFactoryTest extends TestCase
         $factory = new RequestSignerFactory($containerProphecy->reveal());
 
         $this->expectException(RequestSigningException::class);
-        $factory(SignatureType::ActorCodes);
+        $factory();
     }
 }

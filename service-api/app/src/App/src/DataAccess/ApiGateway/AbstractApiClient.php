@@ -35,7 +35,7 @@ class AbstractApiClient
     protected function attachHeaders(RequestInterface $request): RequestInterface
     {
         $headerLines = [
-            'Accept'       => 'application/json',
+            'Accept'       => 'application/vnd.opg-data.v1+json,application/json',
             'Content-Type' => 'application/json',
         ];
 

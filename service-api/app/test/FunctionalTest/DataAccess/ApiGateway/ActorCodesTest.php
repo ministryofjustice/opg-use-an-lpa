@@ -57,7 +57,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ->setPath('/v1/validate')
             ->setHeaders(
                 [
-                    'Accept'                          => 'application/json',
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
                     'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
                     'Content-Type'                    => 'application/json',
                     RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),
@@ -103,7 +103,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ->setPath('/v1/revoke')
             ->setHeaders(
                 [
-                    'Accept'                          => 'application/json',
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
                     'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
                     'Content-Type'                    => 'application/json',
                     RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),

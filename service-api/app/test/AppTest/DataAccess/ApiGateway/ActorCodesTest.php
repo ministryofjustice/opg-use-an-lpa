@@ -40,7 +40,7 @@ class ActorCodesTest extends TestCase
 
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerFactoryProphecy
-            ->__invoke(SignatureType::ActorCodes)
+            ->__invoke(SignatureType::None)
             ->willReturn($requestSignerProphecy->reveal());
     }
 
