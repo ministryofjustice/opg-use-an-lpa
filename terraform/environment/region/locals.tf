@@ -33,7 +33,7 @@ locals {
     admin              = local.is_active_region ? module.admin_use_my_lpa.fqdn : ""
     use                = local.is_active_region ? module.actor_use_my_lpa.fqdn : ""
     viewer             = local.is_active_region ? module.viewer_use_my_lpa.fqdn : ""
-    mock_onelogin      = local.is_active_region ? module.mock_onelogin_use_my_lpa.fqdn : ""
+    mock_onelogin      = local.is_active_region && var.mock_onelogin_enabled ? module.mock_onelogin_use_my_lpa[0].fqdn : ""
   }
 
   onelogin_discovery_url = (

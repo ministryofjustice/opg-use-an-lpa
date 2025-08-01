@@ -253,8 +253,8 @@ services:
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
     volumes:
-      - ./lambda-functions/upload-statistics/app:/var/task:ro
-      - ./lambda-functions/.aws-lambda-rie/aws-lambda-rie:/aws-lambda/aws-lambda-rie:ro
+      - ./lambda-functions/upload-statistics/app/upload_statistics.py:/var/task/upload_statistics.py
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
     entrypoint: [ "/aws-lambda/aws-lambda-rie", "python3", "-m", "awslambdaric" ]

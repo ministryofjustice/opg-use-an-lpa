@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 namespace App\DataAccess\ApiGateway;
 
-use App\DataAccess\Repository\Response\ActorCode;
+use App\DataAccess\Repository\ActorCodesInterface;
+use App\DataAccess\Repository\Response\ActorCodeExists;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
+use App\DataAccess\Repository\Response\ResponseInterface;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\Exception\ApiException;
-use DateTime;
-use Exception;
-use Fig\Http\Message\StatusCodeInterface;
-use Psr\Http\Client\ClientExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
+use DateTimeImmutable;
 
-class ActorCodes extends AbstractApiClient
+class ActorCodes extends AbstractApiClient implements ActorCodesInterface
 {
+    use PostRequest;
+
     /**
-     * @param string $code
-     * @param string $uid
-     * @param string $dob
-     * @return ActorCode
-     * @throws ApiException|Exception
+     * @psalm-return ResponseInterface<ActorCodeIsValid>
+     * @throws ApiException
      */
-    public function validateCode(string $code, string $uid, string $dob): ActorCode
+    public function validateCode(string $code, string $uid, string $dob): ResponseInterface
     {
         $response = $this->makePostRequest(
             'v1/validate',
@@ -29,68 +28,50 @@ class ActorCodes extends AbstractApiClient
                 'lpa'  => $uid,
                 'dob'  => $dob,
                 'code' => $code,
-            ]
+            ],
+            SignatureType::ActorCodes,
         );
 
-        return new ActorCode(
-            json_decode((string) $response->getBody(), true),
-            new DateTime($response->getHeaderLine('Date'))
-        );
-    }
+        $responseData = json_decode((string) $response->getBody(), true);
 
-    /**
-     * @throws ApiException|Exception
-     */
-    public function flagCodeAsUsed(string $code): void
-    {
-        $this->makePostRequest('v1/revoke', ['code' => $code]);
+        return new UpstreamResponse(
+            new ActorCodeIsValid($responseData['actor']),
+            new DateTimeImmutable($response->getHeaderLine('Date'))
+        );
     }
 
     /**
      * @throws ApiException
      */
-    public function checkActorHasCode(string $lpaId, string $actorId): ActorCode
+    public function flagCodeAsUsed(string $code): void
+    {
+        $this->makePostRequest('v1/revoke', ['code' => $code], SignatureType::ActorCodes);
+    }
+
+    /**
+     * @psalm-return ResponseInterface<ActorCodeExists>
+     * @throws ApiException
+     */
+    public function checkActorHasCode(string $lpaId, string $actorId): ResponseInterface
     {
         $response = $this->makePostRequest(
             'v1/exists',
             [
                 'lpa'   => $lpaId,
                 'actor' => $actorId,
-            ]
+            ],
+            SignatureType::ActorCodes,
         );
 
-        return new ActorCode(
-            json_decode((string) $response->getBody(), true),
-            new DateTime($response->getHeaderLine('Date'))
+        $responseData = json_decode((string) $response->getBody(), true);
+
+        $createdAt = isset($responseData['Created'])
+            ? new DateTimeImmutable($responseData['Created'])
+            : null;
+
+        return new UpstreamResponse(
+            new ActorCodeExists($createdAt),
+            new DateTimeImmutable($response->getHeaderLine('Date'))
         );
-    }
-
-    /**
-     * @param string $url
-     * @param array $body
-     * @return ResponseInterface
-     * @throws ApiException
-     */
-    private function makePostRequest(string $url, array $body): ResponseInterface
-    {
-        $url = sprintf('%s/%s', $this->apiBaseUri, $url);
-
-        $request = $this->requestFactory->createRequest('POST', $url);
-        $request = $request->withBody($this->streamFactory->createStream(json_encode($body)));
-
-        $request = $this->attachHeaders($request);
-        $request = ($this->requestSignerFactory)(SignatureType::ActorCodes)->sign($request);
-
-        try {
-            $response = $this->httpClient->sendRequest($request);
-        } catch (ClientExceptionInterface $ce) {
-            throw ApiException::create('Error whilst communicating with actor codes service', null, $ce);
-        }
-
-        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
-            throw ApiException::create('Actor codes service returned non-ok response', $response);
-        }
-
-        return $response;
     }
 }

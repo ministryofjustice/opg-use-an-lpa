@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
-use App\DataAccess\Repository\Response\InstructionsAndPreferencesImagesResult;
+use App\Enum\InstructionsAndPreferencesImagesResult;
 use Aws\Result;
 use Behat\Behat\Context\Context;
 use Behat\Step\Given;
@@ -40,6 +40,19 @@ class LpaContext implements Context
 {
     use BaseAcceptanceContextTrait;
     use SetupEnv;
+
+    public string $lpaUid;
+    public string $userPostCode;
+    public string $userFirstnames;
+    public string $userSurname;
+    public string $userDob;
+    public string $userLpaActorToken;
+    public string $oneTimeCode;
+    public string $organisation;
+    public string $actorId;
+    public string $userId;
+    public stdClass $lpa;
+    public string $accessCode;
 
     #[Given('I have previously requested the addition of a paper LPA to my account')]
     public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
@@ -1666,9 +1679,7 @@ class LpaContext implements Context
         );
     }
 
-    /**
-     * @When /^I request to give an organisation access to one of my new LPA$/
-     */
+    #[When('/^I request to give an organisation access to one of my new LPA$/')]
     public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
     {
         $this->organisation = 'TestOrg';

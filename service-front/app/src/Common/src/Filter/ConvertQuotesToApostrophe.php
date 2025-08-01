@@ -4,16 +4,20 @@ declare(strict_types=1);
 
 namespace Common\Filter;
 
-use Laminas\Filter\AbstractFilter;
+use Exception;
+use Laminas\Filter\FilterInterface;
 
-class ConvertQuotesToApostrophe extends AbstractFilter
+class ConvertQuotesToApostrophe implements FilterInterface
 {
     /**
-     * @param string $name
-     * @return string
+     * @throws Exception
      */
-    public function filter($name): string
+    public function filter($value): string
     {
-        return  str_replace(['‘', '’'], "'", $name);
+        if (!is_string($value)) {
+            throw new Exception('Invalid filter value - expecting string');
+        }
+
+        return str_replace(['‘', '’'], "'", $value);
     }
 }

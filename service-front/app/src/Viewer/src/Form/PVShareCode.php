@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Viewer\Form;
 
+use Common\Filter\ConvertQuotesToApostrophe;
 use Common\Filter\ShareCodeFilter;
 use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
-use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
@@ -75,6 +75,7 @@ class PVShareCode extends AbstractForm implements InputFilterProviderInterface
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
+                    ['name' => ConvertQuotesToApostrophe::class],
                 ],
                 'validators' => [
                     [

@@ -10,12 +10,12 @@ use Behat\Step\Then;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use PHPUnit\Framework\Assert;
 
-/**
- * @property $traceId The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB
- */
 class CommonContext implements Context
 {
     use BaseAcceptanceContextTrait;
+
+    /** @var string The X-Amzn-Trace-Id that gets attached to incoming requests by the AWS LB */
+    public string $traceId;
 
     #[Given('/^I attach a tracing header to my requests$/')]
     public function iAttachATracingHeaderToMyRequests(): void

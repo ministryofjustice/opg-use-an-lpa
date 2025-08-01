@@ -18,18 +18,16 @@ use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Handler\MockHandler;
 use PHPUnit\Framework\Assert;
 
-/**
- * @property $lpaSurname
- * @property $lpaShareCode
- * @property $lpaData
- * @property $viewedLpa
- * @property $lpaViewedBy
- */
 class ViewerContext extends BaseIntegrationContext
 {
     use ViewerContextTrait;
 
     private const LPA_SERVICE_GET_LPA_BY_CODE = 'LpaService::getLpaByCode';
+    private array $lpaData;
+    private string $lpaShareCode;
+    private string $lpaSurname;
+    private string $lpaViewedBy;
+    private mixed $viewedLpa;
 
     protected function prepareContext(): void
     {

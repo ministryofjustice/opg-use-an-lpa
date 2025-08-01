@@ -15,7 +15,7 @@ data "aws_route53_zone" "live_service_view_lasting_power_of_attorney" {
 
 resource "aws_service_discovery_private_dns_namespace" "internal_ecs" {
   name = "${var.environment_name}.ual.internal.ecs"
-  vpc  = data.aws_vpc.default.id
+  vpc  = data.aws_default_tags.current.tags.account-name != "production" ? data.aws_vpc.main.id : data.aws_vpc.default.id
 
   provider = aws.region
 }
@@ -118,13 +118,14 @@ module "admin_use_my_lpa" {
 }
 
 module "mock_onelogin_use_my_lpa" {
+  count  = var.mock_onelogin_enabled ? 1 : 0
   source = "./modules/dns"
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
   current_region             = data.aws_region.current.name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = aws_lb.mock_onelogin
+  loadbalancer               = aws_lb.mock_onelogin[0]
   service_name               = "mock-onelogin"
   dns_name                   = "mol.lastingpowerofattorney"
   environment_name           = var.environment_name

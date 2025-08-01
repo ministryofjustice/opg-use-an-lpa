@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace CommonTest\Filter;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Filter\StripSpacesAndHyphens;
+use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -20,8 +22,16 @@ class StripSpacesAndHyphensTest extends TestCase
         $this->filter = new StripSpacesAndHyphens();
     }
 
+    #[Test]
+    public function it_expects_a_string_input(): void
+    {
+        $this->expectException(Exception::class);
+        $this->filter->filter(12);
+    }
+
+    #[Test]
     #[DataProvider('codeFormatProvider')]
-    public function testRemovesHyphensAndWhitespace(string $code, string $expected): void
+    public function removesHyphensAndWhitespace(string $code, string $expected): void
     {
         $formattedCode = $this->filter->filter($code);
         $this->assertEquals($expected, $formattedCode);
