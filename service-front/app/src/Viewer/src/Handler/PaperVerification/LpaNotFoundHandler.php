@@ -20,7 +20,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class LpaNotFoundHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     private const TEMPLATE = 'viewer::paper-verification/lpa-not-found';
 
     public function __construct(

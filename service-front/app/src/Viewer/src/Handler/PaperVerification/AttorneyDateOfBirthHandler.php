@@ -14,6 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -21,7 +22,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     public const TEMPLATE = 'viewer::paper-verification/attorney-dob';
 
     public function __construct(
@@ -42,6 +49,18 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
+        $dob = $this->state($request)->dateOfBirth;
+
+        if ($dob) {
+            $this->form->setData([
+                                     'dob' => [
+                                         'day'   => $dob->format('d'),
+                                         'month' => $dob->format('m'),
+                                         'year'  => $dob->format('Y'),
+                                     ],
+                                 ]);
+        }
+
         // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
         $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
 
@@ -84,8 +103,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
-            || $this->state($request)->sentToDonor === false;
+            || $this->state($request)->sentToDonor === null;
     }
 
     /**
@@ -93,8 +111,10 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.number-of-attorneys';
     }
 
     /**
@@ -102,6 +122,9 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'home';
+        /** @var PaperVerificationShareCode $state **/
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 }
