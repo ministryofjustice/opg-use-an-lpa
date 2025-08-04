@@ -237,7 +237,6 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
       AWS_ENDPOINT_DYNAMODB:
-      CODES_ENDPOINT:
 
   # ---------------------------
   # Lambda to upload stats

@@ -7,7 +7,6 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
-use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\PaperVerificationCode as PaperVerificationCodeResponse;
 use App\Value\PaperVerificationCode;
 use DateInterval;
@@ -45,7 +44,7 @@ class PaperVerificationCodesTest extends TestCase
 
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerFactoryProphecy
-            ->__invoke(SignatureType::ActorCodes)
+            ->__invoke()
             ->willReturn($requestSignerProphecy->reveal());
     }
 

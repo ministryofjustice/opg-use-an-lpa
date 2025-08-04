@@ -42,7 +42,7 @@ trait PSR17PropheciesTrait
             ->withBody(Argument::any())
             ->willReturn($this->requestProphecy->reveal());
         $this->requestProphecy
-            ->withHeader('Accept', 'application/json')
+            ->withHeader('Accept', 'application/vnd.opg-data.v1+json,application/json')
             ->shouldBeCalled()
             ->willReturn($this->requestProphecy->reveal());
         $this->requestProphecy

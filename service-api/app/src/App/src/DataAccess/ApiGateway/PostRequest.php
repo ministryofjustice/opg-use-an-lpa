@@ -7,8 +7,6 @@ namespace App\DataAccess\ApiGateway;
 use App\Exception\ApiException;
 use App\Exception\RequestSigningException;
 use Fig\Http\Message\StatusCodeInterface;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 
