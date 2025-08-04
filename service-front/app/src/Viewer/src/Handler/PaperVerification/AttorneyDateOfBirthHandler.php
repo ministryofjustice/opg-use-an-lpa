@@ -52,13 +52,15 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         $dob = $this->state($request)->dateOfBirth;
 
         if ($dob) {
-            $this->form->setData([
-                                     'dob' => [
-                                         'day'   => $dob->format('d'),
-                                         'month' => $dob->format('m'),
-                                         'year'  => $dob->format('Y'),
-                                     ],
-                                 ]);
+            $this->form->setData(
+                [
+                    'dob' => [
+                        'day'   => $dob->format('d'),
+                        'month' => $dob->format('m'),
+                        'year'  => $dob->format('Y'),
+                    ],
+                ]
+            );
         }
 
         // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
