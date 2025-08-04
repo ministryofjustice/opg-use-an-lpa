@@ -121,7 +121,6 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param WorkflowState<PaperVerificationShareCode> $state
     */
     public function lastPage(WorkflowState $state): string
     {
