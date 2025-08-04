@@ -103,7 +103,6 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function lastPage(WorkflowState $state): string
     {

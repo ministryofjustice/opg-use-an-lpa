@@ -12,6 +12,7 @@ use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Workflow\State;
+use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;

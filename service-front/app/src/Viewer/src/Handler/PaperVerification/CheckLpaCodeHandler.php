@@ -90,7 +90,6 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function nextPage(WorkflowState $state): string
     {
@@ -104,7 +103,6 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'enter-code-pv';
     }
 }

@@ -108,7 +108,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function nextPage(WorkflowState $state): string
     {
@@ -121,7 +120,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param PaperVerificationShareCode $state
      */
     public function lastPage(WorkflowState $state): string
     {
