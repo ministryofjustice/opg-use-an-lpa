@@ -51,7 +51,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $code    = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
+        $code = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
       //$surname = $this->state($request)->donorSurname ?? 'Babara Gilson';
 
         if (isset($code)) {
@@ -94,9 +94,9 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'organisation' => $this->state($request)->organisation,
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form'         => $this->form->prepare(),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
