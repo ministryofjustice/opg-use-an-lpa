@@ -118,7 +118,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     * @param WorkflowState<PaperVerificationShareCode> $state
+     * @param PaperVerificationShareCode $state
      */
     public function nextPage(WorkflowState $state): string
     {
