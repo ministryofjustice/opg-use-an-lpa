@@ -87,12 +87,13 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
         if ($this->form->isValid()) {
             //$this->session->set('organisation', $this->form->getData()['organisation']);
-            
+
             $this->state($request)->organisation = $this->form->getData()['organisation'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'organisation' => $this->state($request)->organisation,
             'form'       => $this->form->prepare(),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
