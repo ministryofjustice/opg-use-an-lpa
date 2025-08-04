@@ -22,6 +22,14 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 {
     private Organisation $form;
 
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
+
     public const TEMPLATE = 'viewer::paper-verification/enter-organisation-name';
 
     public function __construct(
@@ -35,9 +43,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->code    = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
-        $this->surname = $this->state($request)->donorSurname ?? 'Babara Gilson';
-
         $this->form           = new Organisation($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
@@ -46,9 +51,12 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if (isset($this->code)) {
+        $code    = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
+        $surname = $this->state($request)->donorSurname ?? 'Babara Gilson';
+
+        if (isset($code)) {
             // TODO - LPA service call to check lpa match
-            //$lpa = $this->lpaService->getLpaByLpaCode($this->code, $this->surname, null);
+            //$lpa = $this->lpaService->getLpaByLpaCode($this->code, $surname, null);
 
             // mocking Lpa data for testing page
             $lpa = json_decode(
