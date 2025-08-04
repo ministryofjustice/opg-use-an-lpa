@@ -91,7 +91,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
 
     /**
      * @return string The route name of the previous page in the workflow
-     * @param PaperVerificationShareCode $state
+     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function lastPage(WorkflowState $state): string
     {
