@@ -118,10 +118,10 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
+     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function nextPage(WorkflowState $state): string
     {
-        /** @var PaperVerificationShareCode $state **/
         if ($this->hasFutureAnswersInState($state)) {
             return 'pv.check-answers';
         }

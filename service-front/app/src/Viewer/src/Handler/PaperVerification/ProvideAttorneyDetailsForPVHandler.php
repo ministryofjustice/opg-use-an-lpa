@@ -105,10 +105,10 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
+     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function lastPage(WorkflowState $state): string
     {
-        /** @var PaperVerificationShareCode $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
             : 'pv.donor-dob';

@@ -110,10 +110,10 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
+     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function nextPage(WorkflowState $state): string
     {
-        /** @var PaperVerificationShareCode $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
             : 'pv.number-of-attorneys';
@@ -121,10 +121,10 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     */
+     * @param WorkflowState<PaperVerificationShareCode> $state
+    */
     public function lastPage(WorkflowState $state): string
     {
-        /** @var PaperVerificationShareCode $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
             : 'pv.verification-code-sent-to';
