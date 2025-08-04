@@ -91,10 +91,10 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
 
     /**
      * @return string The route name of the previous page in the workflow
-     * @param WorkflowState<PaperVerificationShareCode> $state
      */
     public function lastPage(WorkflowState $state): string
     {
+        /** @var PaperVerificationShareCode $state */
         return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
     }
 }
