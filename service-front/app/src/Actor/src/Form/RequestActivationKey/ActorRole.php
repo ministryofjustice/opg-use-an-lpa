@@ -11,7 +11,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class ActorRole extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'actor_role';
+    public const string FORM_NAME = 'actor_role';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

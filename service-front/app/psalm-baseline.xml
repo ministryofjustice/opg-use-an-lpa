@@ -44,27 +44,7 @@
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
   </file>
-  <file src="src/Actor/src/Form/CreateAccount.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
   <file src="src/Actor/src/Form/CreateShareCode.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/Actor/src/Form/Login.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/Actor/src/Form/PasswordReset.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/Actor/src/Form/PasswordResetRequest.php">
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
@@ -117,34 +97,6 @@
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
   </file>
-  <file src="src/Actor/src/Form/Triage.php">
-    <LessSpecificImplementedReturnType>
-      <code><![CDATA[array]]></code>
-    </LessSpecificImplementedReturnType>
-  </file>
-  <file src="src/Actor/src/Handler/ActivateAccountHandler.php">
-    <UnnecessaryVarAnnotation>
-      <code><![CDATA[bool|string]]></code>
-    </UnnecessaryVarAnnotation>
-    <UnusedClass>
-      <code><![CDATA[ActivateAccountHandler]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Actor/src/Handler/ActorTermsOfUseHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$urlValidityCheckService]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/Actor/src/Handler/ActorTriagePageHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$serverUrlHelper]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/Actor/src/Handler/AddLpa/AbstractAddLpaHandler.php">
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
-  </file>
   <file src="src/Actor/src/Handler/AuthenticateOneLoginHandler.php">
     <InvalidArgument>
       <code><![CDATA[$result]]></code>
@@ -156,11 +108,6 @@
     </ImplementationRequirementViolation>
     <UnusedProperty>
       <code><![CDATA[$lpaService]]></code>
-    </UnusedProperty>
-  </file>
-  <file src="src/Actor/src/Handler/ChangePasswordHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$serverUrlHelper]]></code>
     </UnusedProperty>
   </file>
   <file src="src/Actor/src/Handler/CheckAccessCodesHandler.php">
@@ -177,14 +124,6 @@
       <code><![CDATA[$state]]></code>
     </UnusedProperty>
   </file>
-  <file src="src/Actor/src/Handler/CompleteChangeEmailHandler.php">
-    <UndefinedDocblockClass>
-      <code><![CDATA[\Http\Client\Exception]]></code>
-    </UndefinedDocblockClass>
-    <UnusedClass>
-      <code><![CDATA[CompleteChangeEmailHandler]]></code>
-    </UnusedClass>
-  </file>
   <file src="src/Actor/src/Handler/ConfirmCancelCodeHandler.php">
     <ImplementationRequirementViolation>
       <code><![CDATA[Session]]></code>
@@ -193,11 +132,6 @@
       <code><![CDATA[$lpaService]]></code>
       <code><![CDATA[$viewerCodeService]]></code>
     </UnusedProperty>
-  </file>
-  <file src="src/Actor/src/Handler/CreateAccountSuccessHandler.php">
-    <UnusedClass>
-      <code><![CDATA[CreateAccountSuccessHandler]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Actor/src/Handler/CreateViewerCodeHandler.php">
     <ImplementationRequirementViolation>
@@ -213,16 +147,6 @@
       <code><![CDATA[$viewerCodeService]]></code>
     </UnusedProperty>
   </file>
-  <file src="src/Actor/src/Handler/PasswordResetPageHandler.php">
-    <UnusedClass>
-      <code><![CDATA[PasswordResetPageHandler]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Actor/src/Handler/PasswordResetRequestPageHandler.php">
-    <UnusedClass>
-      <code><![CDATA[PasswordResetRequestPageHandler]]></code>
-    </UnusedClass>
-  </file>
   <file src="src/Actor/src/Handler/RemoveLpaHandler.php">
     <UndefinedClass>
       <code><![CDATA[BadRequestException]]></code>
@@ -230,20 +154,11 @@
     </UndefinedClass>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/AbstractCleansingDetailsHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <PossiblyUnusedProperty>
       <code><![CDATA[$session]]></code>
     </PossiblyUnusedProperty>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/AbstractRequestKeyHandler.php">
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <PossiblyUnusedProperty>
       <code><![CDATA[$session]]></code>
     </PossiblyUnusedProperty>
@@ -257,9 +172,6 @@
     </UnusedParam>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/AttorneyDetailsHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
     <MissingTemplateParam>
       <code><![CDATA[State]]></code>
     </MissingTemplateParam>
@@ -268,9 +180,6 @@
     <ImplementationRequirementViolation>
       <code><![CDATA[SessionTrait]]></code>
     </ImplementationRequirementViolation>
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <PossiblyUnusedParam>
       <code><![CDATA[$request]]></code>
     </PossiblyUnusedParam>
@@ -279,12 +188,6 @@
     </UnusedProperty>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/CheckYourAnswersHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <UndefinedMethod>
       <code><![CDATA[getAttorney]]></code>
       <code><![CDATA[getAttorney]]></code>
@@ -303,25 +206,14 @@
     </UnusedProperty>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/CreateActivationKeyHandler.php">
-    <MissingTemplateParam>
-      <code><![CDATA[State]]></code>
-    </MissingTemplateParam>
     <UndefinedMethod>
       <code><![CDATA[$result->getData()]]></code>
     </UndefinedMethod>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/RequestActivationKeyInfoHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
     <UnusedProperty>
       <code><![CDATA[$featureEnabled]]></code>
     </UnusedProperty>
-  </file>
-  <file src="src/Actor/src/Handler/RequestChangeEmailHandler.php">
-    <UnusedClass>
-      <code><![CDATA[RequestChangeEmailHandler]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Actor/src/Handler/ViewLpaSummaryHandler.php">
     <UndefinedPropertyFetch>
@@ -563,21 +455,6 @@
       <code><![CDATA[$translator]]></code>
     </UnusedProperty>
   </file>
-  <file src="src/Common/src/Handler/InstructionsPreferencesBefore2016Handler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[User]]></code>
-    </ImplementationRequirementViolation>
-  </file>
-  <file src="src/Common/src/Middleware/Authentication/ForcedPasswordResetMiddleware.php">
-    <UnusedClass>
-      <code><![CDATA[ForcedPasswordResetMiddleware]]></code>
-    </UnusedClass>
-  </file>
-  <file src="src/Common/src/Middleware/Logging/RequestTracingMiddleware.php">
-    <ParamNameMismatch>
-      <code><![CDATA[$delegate]]></code>
-    </ParamNameMismatch>
-  </file>
   <file src="src/Common/src/Middleware/Routing/ConditionalRoutingMiddleware.php">
     <UnusedDocblockParam>
       <code><![CDATA[$container]]></code>
@@ -605,11 +482,6 @@
     <RedundantPropertyInitializationCheck>
       <code><![CDATA[isset($this->token)]]></code>
     </RedundantPropertyInitializationCheck>
-  </file>
-  <file src="src/Common/src/Service/Authentication/LocalAccountLogout.php">
-    <UnusedClass>
-      <code><![CDATA[LocalAccountLogout]]></code>
-    </UnusedClass>
   </file>
   <file src="src/Common/src/Service/Cache/RedisAdapterPluginManagerDelegatorFactory.php">
     <UnusedParam>
@@ -741,12 +613,6 @@
       <code><![CDATA[array|bool]]></code>
     </PossiblyUnusedReturnValue>
   </file>
-  <file src="src/Common/src/Service/User/UserService.php">
-    <RedundantCondition>
-      <code><![CDATA[!is_null($data)]]></code>
-      <code><![CDATA[!is_null($data)]]></code>
-    </RedundantCondition>
-  </file>
   <file src="src/Common/src/Validator/CsrfGuardValidator.php">
     <InvalidArrayAccess>
       <code><![CDATA[$options['guard']]]></code>
@@ -762,20 +628,6 @@
     <PossiblyUnusedMethod>
       <code><![CDATA[setGuard]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/Common/src/Validator/EmailAddressValidator.php">
-    <InvalidExtendClass>
-      <code><![CDATA[LaminasEmailAddressValidator]]></code>
-    </InvalidExtendClass>
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[$this->abstractOptions]]></code>
-    </InvalidPropertyAssignmentValue>
-    <MethodSignatureMismatch>
-      <code><![CDATA[public function isValid($value)]]></code>
-    </MethodSignatureMismatch>
-    <MoreSpecificImplementedParamType>
-      <code><![CDATA[$value]]></code>
-    </MoreSpecificImplementedParamType>
   </file>
   <file src="src/Common/src/Validator/LuhnCheck.php">
     <InvalidOperand>
@@ -883,15 +735,9 @@
     </UndefinedPropertyFetch>
   </file>
   <file src="src/Viewer/src/Handler/DownloadLpaHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
     <UndefinedClass>
       <code><![CDATA[$lpa->lpa]]></code>
     </UndefinedClass>
-    <UndefinedPropertyAssignment>
-      <code><![CDATA[$lpa->expires]]></code>
-    </UndefinedPropertyAssignment>
     <UndefinedPropertyFetch>
       <code><![CDATA[$lpa->iap]]></code>
       <code><![CDATA[$lpa->lpa]]></code>
@@ -942,18 +788,9 @@
     </UndefinedVariable>
   </file>
   <file src="src/Viewer/src/Handler/ViewLpaHandler.php">
-    <ImplementationRequirementViolation>
-      <code><![CDATA[SessionTrait]]></code>
-    </ImplementationRequirementViolation>
     <UndefinedPropertyFetch>
-      <code><![CDATA[$lpaData->expires]]></code>
       <code><![CDATA[$lpaData->iap]]></code>
       <code><![CDATA[$lpaData->lpa]]></code>
     </UndefinedPropertyFetch>
-  </file>
-  <file src="src/Viewer/src/Handler/ViewerTermsOfUseHandler.php">
-    <UnusedProperty>
-      <code><![CDATA[$urlValidityCheckService]]></code>
-    </UnusedProperty>
   </file>
 </files>

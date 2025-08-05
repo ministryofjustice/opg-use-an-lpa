@@ -26,7 +26,6 @@ use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use DateTimeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
@@ -40,6 +39,7 @@ use Twig\Environment;
 
 /**
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<RequestActivationKey>
  */
 class CheckDetailsAndConsentHandler extends AbstractHandler implements
     UserAware,
@@ -50,6 +50,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
+    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
@@ -64,7 +65,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         CleanseLpa $cleanseLpa,
@@ -74,7 +74,6 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
 
-        $this->setAuthenticator($authenticator);
         $this->cleanseLPA = $cleanseLpa;
     }
 

@@ -16,7 +16,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class AttorneyDetails extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'attorney_details';
+    public const string FORM_NAME = 'attorney_details';
 
     /**
      * DonorDetails constructor

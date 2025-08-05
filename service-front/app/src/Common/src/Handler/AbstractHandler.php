@@ -20,7 +20,7 @@ abstract class AbstractHandler implements RequestHandlerInterface
     public function __construct(
         protected TemplateRendererInterface $renderer,
         protected UrlHelper $urlHelper,
-        protected ?LoggerInterface $logger = null,
+        protected LoggerInterface $logger,
     ) {
     }
 

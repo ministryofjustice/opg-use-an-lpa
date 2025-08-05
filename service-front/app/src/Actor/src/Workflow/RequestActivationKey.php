@@ -14,12 +14,12 @@ class RequestActivationKey implements WorkflowState
     use JsonSerializable;
 
     // TODO replace with enums at PHP 8.1
-    public const ACTOR_TYPE_DONOR    = 'donor';
-    public const ACTOR_TYPE_ATTORNEY = 'attorney';
+    public const string ACTOR_TYPE_DONOR    = 'donor';
+    public const string ACTOR_TYPE_ATTORNEY = 'attorney';
 
-    public const ACTOR_ADDRESS_SELECTION_YES      = 'Yes';
-    public const ACTOR_ADDRESS_SELECTION_NO       = 'No';
-    public const ACTOR_ADDRESS_SELECTION_NOT_SURE = 'Not sure';
+    public const string ACTOR_ADDRESS_SELECTION_YES      = 'Yes';
+    public const string ACTOR_ADDRESS_SELECTION_NO       = 'No';
+    public const string ACTOR_ADDRESS_SELECTION_NOT_SURE = 'Not sure';
 
     private ?string $actorType = null;
     public ?DateTimeImmutable $dob;

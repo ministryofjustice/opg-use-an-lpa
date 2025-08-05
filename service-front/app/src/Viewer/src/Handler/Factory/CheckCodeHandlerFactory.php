@@ -10,6 +10,7 @@ use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Handler\CheckCodeHandler;
 
 class CheckCodeHandlerFactory
@@ -21,6 +22,7 @@ class CheckCodeHandlerFactory
         return new CheckCodeHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
+            $container->get(LoggerInterface::class),
             $container->get(LpaService::class),
             $rateLimitFactory->factory('viewer_code_failure'),
             $container->get(FeatureEnabled::class),

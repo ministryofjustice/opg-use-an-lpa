@@ -12,6 +12,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\VerificationCodeReceiver;
 
 /**
@@ -26,10 +27,11 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

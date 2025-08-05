@@ -16,7 +16,7 @@ class SetLocaleMiddleware implements MiddlewareInterface
 {
     private string $fallbackLocale = 'en_GB';
 
-    private const REGEX_LOCALE = '#^/(?P<locale>cy)(?:/|$)#';
+    private const string REGEX_LOCALE = '#^/(?P<locale>cy)(?:/|$)#';
 
     public function __construct(private UrlHelper $helper, private TranslatorInterface $translator, private ?string $defaultLocale = null)
     {
@@ -35,7 +35,7 @@ class SetLocaleMiddleware implements MiddlewareInterface
         }
 
         $locale = $matches['locale'];
-        Locale::setDefault(Locale::canonicalize($locale . '_GB'));
+        Locale::setDefault(Locale::canonicalize($locale . '_GB') ?? $this->fallbackLocale);
         $this->translator->setLocale(Locale::getDefault());
         $this->helper->setBasePath($locale);
 

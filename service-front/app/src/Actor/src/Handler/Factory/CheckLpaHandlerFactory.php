@@ -8,7 +8,6 @@ use Actor\Handler\CheckLpaHandler;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Security\RateLimitServiceFactory;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
@@ -25,7 +24,6 @@ class CheckLpaHandlerFactory
         return new CheckLpaHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
-            $container->get(AuthenticationInterface::class),
             $container->get(LoggerInterface::class),
             $container->get(LpaService::class),
             $rateLimitFactory->factory('actor_code_failure'),
