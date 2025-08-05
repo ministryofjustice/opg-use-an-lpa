@@ -46,6 +46,7 @@ jobs:
             run_integration_tests: 'true'
             artifact_to_dl: 'dist-web'
             path_to_docker_file: 'service-front/docker/app/Dockerfile'
+            path_to_trivyignore_file: 'service-front/docker/app/.trivyignore.yaml'
           - svc_prefix: 'front'
             svc_suffix: 'web'
             build_development_docker: 'false'
@@ -53,6 +54,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: 'dist-web'
             path_to_docker_file: 'service-front/docker/web/Dockerfile'
+            path_to_trivyignore_file: 'service-front/docker/web/.trivyignore.yaml'
           - svc_prefix: 'api'
             svc_suffix: 'app'
             build_development_docker: 'true'
@@ -60,6 +62,7 @@ jobs:
             run_integration_tests: 'true'
             artifact_to_dl: ''
             path_to_docker_file: 'service-api/docker/app/Dockerfile'
+            path_to_trivyignore_file: 'service-api/docker/app/.trivyignore.yaml'
           - svc_prefix: 'api'
             svc_suffix: 'web'
             build_development_docker: 'false'
@@ -67,6 +70,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'service-api/docker/web/Dockerfile'
+            path_to_trivyignore_file: 'service-api/docker/web/.trivyignore.yaml'
           - svc_prefix: 'admin'
             svc_suffix: 'app'
             build_development_docker: 'false'
@@ -74,6 +78,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'service-admin/Dockerfile'
+            path_to_trivyignore_file: 'service-admin/.trivyignore.yaml'
           - svc_prefix: 'stats_upload'
             svc_suffix: 'lambda'
             build_development_docker: 'false'
@@ -81,6 +86,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/upload-statistics/Dockerfile'
+            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore.yaml'
           - svc_prefix: 'event'
             svc_suffix: 'receiver'
             build_development_docker: 'false'
@@ -88,6 +94,7 @@ jobs:
             run_integration_tests: 'false'
             artifact_to_dl: ''
             path_to_docker_file: 'lambda-functions/event-receiver/Dockerfile'
+            path_to_trivyignore_file: 'lambda-functions/event-receiver/.trivyignore.yaml'
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
@@ -325,27 +332,45 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # 0.30.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
-        with:
-          image-ref: ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest
-          severity: 'HIGH,CRITICAL'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          skip-dirs: /app/vendor
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+        run: |
+          mkdir -p -m 0777 .trivy-cache ./test-results/
+          docker run \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume ./.trivy-cache:/root/.cache \
+            --volume ./test-results:/test-results \
+            --volume ./${{ matrix.path_to_trivyignore_file }}:/.trivyignore.yaml \
+            --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
+            --env TRIVY_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2 \
+            --env TRIVY_JAVA_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1 \
+            --env TRIVY_USERNAME=${{ steps.login_ecr.outputs.docker_username_311462405659_dkr_ecr_eu_west_1_amazonaws_com }} \
+            --env TRIVY_PASSWORD=${{ steps.login_ecr.outputs.docker_password_311462405659_dkr_ecr_eu_west_1_amazonaws_com }} \
+            aquasec/trivy:0.65.0 image \
+            ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
+            --format table \
+            --severity HIGH,CRITICAL
+
+          docker run \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume ./.trivy-cache:/root/.cache \
+            --volume ./test-results:/test-results \
+            --volume ./${{ matrix.path_to_trivyignore_file }}:/.trivyignore.yaml \
+            --env TRIVY_IGNOREFILE='.trivyignore.yaml' \
+            --env TRIVY_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2 \
+            --env TRIVY_JAVA_DB_REPOSITORY=${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1 \
+            --env TRIVY_USERNAME=${{ steps.login_ecr.outputs.docker_username_311462405659_dkr_ecr_eu_west_1_amazonaws_com }} \
+            --env TRIVY_PASSWORD=${{ steps.login_ecr.outputs.docker_password_311462405659_dkr_ecr_eu_west_1_amazonaws_com }} \
+            aquasec/trivy:0.65.0 image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
+            --severity HIGH,CRITICAL \
+            --exit-code 1 \
+            --format sarif --output ./test-results/trivy.sarif \
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
-        if: |
-          (steps.trivy_scan.outcome == 'success' || steps.trivy_scan.outcome == 'failure') &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+        if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: './test-results/trivy.sarif'
 
       - name: tag and push container
         env:
