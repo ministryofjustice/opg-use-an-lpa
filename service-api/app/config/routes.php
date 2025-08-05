@@ -134,17 +134,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     );
 
     $app->post(
-        '/v1/paper-verification/validate',
-        $factory->pipeline(
-            [
-                RequestObjectMiddleware::class,
-                ValidateHandler::class,
-            ],
-        ),
-        'lpa.paper-verification.validate'
-    );
-
-    $app->post(
         '/v1/paper-verification/view',
         $factory->pipeline(
             [

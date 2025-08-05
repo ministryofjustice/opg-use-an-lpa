@@ -206,12 +206,10 @@
   <file src="src/App/src/Request/PaperVerificationCodeView.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$attorneyName]]></code>
-      <code><![CDATA[$code]]></code>
       <code><![CDATA[$dateOfBirth]]></code>
       <code><![CDATA[$lpaUid]]></code>
       <code><![CDATA[$name]]></code>
       <code><![CDATA[$noOfAttorneys]]></code>
-      <code><![CDATA[$organisation]]></code>
       <code><![CDATA[$sentToDonor]]></code>
     </PossiblyUnusedProperty>
   </file>
@@ -318,11 +316,6 @@
     <UnusedDocblockParam>
       <code><![CDATA[$emailClient]]></code>
     </UnusedDocblockParam>
-  </file>
-  <file src="src/App/src/Service/PaperVerificationCodes/PaperVerificationCodeService.php">
-    <PossiblyUnusedParam>
-      <code><![CDATA[$params]]></code>
-    </PossiblyUnusedParam>
   </file>
   <file src="src/App/src/Value/LpaUid.php">
     <PossiblyUnusedMethod>
