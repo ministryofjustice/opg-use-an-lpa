@@ -425,10 +425,11 @@ class PaperVerificationCodeServiceTest extends TestCase
     #[Test]
     public function it_successfully_view(): void
     {
-        $actorCodes       = $this->createMock(ActorCodesInterface::class);
-        $lpaManager       = $this->createMock(LpaManagerInterface::class);
-        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
-        $lpa              = LpaUtilities::lpaStoreLpaFixture();
+        $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
+        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $clock      = $this->createMock(ClockInterface::class);
+        $logger     = $this->createMock(LoggerInterface::class);
+        $lpa        = LpaUtilities::lpaStoreLpaFixture();
 
 
         $lpaManager
@@ -437,7 +438,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
-        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
@@ -467,9 +468,10 @@ class PaperVerificationCodeServiceTest extends TestCase
     #[Test]
     public function validation_throws_an_exception_for_a_missing_lpa_view(): void
     {
-        $actorCodes       = $this->createMock(ActorCodesInterface::class);
-        $lpaManager       = $this->createMock(LpaManagerInterface::class);
-        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+        $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
+        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $clock      = $this->createMock(ClockInterface::class);
+        $logger     = $this->createMock(LoggerInterface::class);
 
 
         $lpaManager
@@ -478,7 +480,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
             ->willReturn(null);
 
-        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
@@ -498,9 +500,10 @@ class PaperVerificationCodeServiceTest extends TestCase
     #[Test]
     public function validation_throws_if_uid_is_unknown_view(): void
     {
-        $actorCodes       = $this->createMock(ActorCodesInterface::class);
-        $lpaManager       = $this->createMock(LpaManagerInterface::class);
-        $rejectInvalidLpa = $this->createMock(RejectInvalidLpa::class);
+        $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
+        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $clock      = $this->createMock(ClockInterface::class);
+        $logger     = $this->createMock(LoggerInterface::class);
 
 
         $lpaManager
@@ -509,7 +512,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
             ->willReturn(null);
 
-        $sut = new PaperVerificationCodeService($actorCodes, $lpaManager, $rejectInvalidLpa);
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',

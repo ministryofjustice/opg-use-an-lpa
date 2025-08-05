@@ -9,7 +9,6 @@ use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Handler\Trait\RequestAsObjectTrait;
-use App\Request\PaperVerificationCodeUsable;
 use App\Request\PaperVerificationCodeView;
 use App\Service\PaperVerificationCodes\PaperVerificationCodeService;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -22,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class ViewHandler implements RequestHandlerInterface
 {
-    /** @use RequestAsObjectTrait<PaperVerificationCodeUsable> */
+    /** @use RequestAsObjectTrait<PaperVerificationCodeView> */
     use RequestAsObjectTrait;
 
     public function __construct(
