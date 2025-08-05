@@ -33,7 +33,7 @@ class SessionAttributeAllowlistMiddleware implements MiddlewareInterface
     /**
      * An array of allowed session keys that can persist across session expiry
      */
-    public const ALLOWLIST = [
+    public const array ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         SessionExpiryMiddleware::SESSION_EXPIRED_KEY,
         FlashMessagesInterface::FLASH_NEXT,

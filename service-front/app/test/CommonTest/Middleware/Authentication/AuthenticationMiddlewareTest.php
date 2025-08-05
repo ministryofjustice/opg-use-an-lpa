@@ -9,27 +9,30 @@ use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\Session\Exception\MissingSessionContainerException;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class AuthenticationMiddlewareTest extends TestCase
 {
-    private MockObject|RequestHandlerInterface $handler;
-    private MockObject|UrlHelper $helper;
-    private MockObject|ServerRequestInterface $request;
+    private MockObject&RequestHandlerInterface $handler;
+    private Stub&UrlHelper $helper;
+    private MockObject&ServerRequestInterface $request;
 
     protected function setUp(): void
     {
         $this->helper = $this->createStub(UrlHelper::class);
 
-        $this->request = $this->createStub(ServerRequestInterface::class);
-        $this->handler = $this->createStub(RequestHandlerInterface::class);
+        $this->request = $this->createMock(ServerRequestInterface::class);
+        $this->handler = $this->createMock(RequestHandlerInterface::class);
 
         parent::setUp();
     }
@@ -97,7 +100,19 @@ class AuthenticationMiddlewareTest extends TestCase
     #[Test]
     public function it_continues_to_the_handler_if_auth_is_successful(): void
     {
-        $session = $this->createStub(SessionInterface::class);
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->method('get')
+            ->with(UserInterface::class)
+            ->willReturn(
+                [
+                    'username' => 'test',
+                    'roles'    => [],
+                    'details'  => [
+                        'Email' => 'test@test.com',
+                    ],
+                ]
+            );
 
         $this->request->method('getAttribute')
             ->with(SessionMiddleware::SESSION_ATTRIBUTE)
@@ -106,9 +121,11 @@ class AuthenticationMiddlewareTest extends TestCase
         $this->request->method('withAttribute')
             ->willReturnSelf();
 
-        $sut = new AuthenticationMiddleware($this->helper);
+        $this->handler->expects($this->once())
+            ->method('handle')
+            ->willReturn($this->createStub(ResponseInterface::class));
 
-        $this->expectNotToPerformAssertions();
+        $sut = new AuthenticationMiddleware($this->helper);
         $sut->process($this->request, $this->handler);
     }
 
