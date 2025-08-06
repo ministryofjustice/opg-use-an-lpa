@@ -98,6 +98,20 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->sentToDonor !== null &&
+            $state->lastName !== null &&
+            $state->dateOfBirth !== null &&
+            $state->lpaUid !== null &&
+            $state->code !== null &&
+            $state->attorneyName !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function nextPage(WorkflowState $state): string
     {
         return 'pv.check-answers';

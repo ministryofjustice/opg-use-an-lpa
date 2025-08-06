@@ -111,6 +111,20 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->noOfAttorneys !== null &&
+            $state->sentToDonor !== null &&
+            $state->lastName !== null &&
+            $state->lpaUid !== null &&
+            $state->code !== null &&
+            $state->attorneyName !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function nextPage(WorkflowState $state): string
     {
         if ($this->hasFutureAnswersInState($state)) {

@@ -93,6 +93,20 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->noOfAttorneys !== null &&
+            $state->dateOfBirth !== null &&
+            $state->lastName !== null &&
+            $state->lpaUid !== null &&
+            $state->sentToDonor !== null &&
+            $state->attorneyName !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function nextPage(WorkflowState $state): string
     {
         return $this->hasFutureAnswersInState($state)
