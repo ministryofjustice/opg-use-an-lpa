@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Handler\Factory;
 
-use Actor\Handler\ActorSessionCheckHandler;
-use Mezzio\Authentication\AuthenticationInterface;
+use Common\Handler\SessionCheckHandler;
 use Mezzio\Exception\RuntimeException;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -14,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 class ActorSessionCheckHandlerFactory
 {
-    public function __invoke(ContainerInterface $container): ActorSessionCheckHandler
+    public function __invoke(ContainerInterface $container): SessionCheckHandler
     {
         $config = $container->get('config');
 
@@ -26,11 +25,10 @@ class ActorSessionCheckHandlerFactory
             throw new RuntimeException('Missing session expiry warning value');
         }
 
-        return new ActorSessionCheckHandler(
+        return new SessionCheckHandler(
             $container->get(TemplateRendererInterface::class),
-            $container->get(AuthenticationInterface::class),
-            $container->get(LoggerInterface::class),
             $container->get(UrlHelper::class),
+            $container->get(LoggerInterface::class),
             $config['session']['expires'],
             $config['session']['expiry_warning']
         );

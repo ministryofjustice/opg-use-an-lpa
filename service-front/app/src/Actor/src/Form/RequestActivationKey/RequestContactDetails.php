@@ -14,7 +14,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class RequestContactDetails extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'contact-details';
+    public const string FORM_NAME = 'contact-details';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

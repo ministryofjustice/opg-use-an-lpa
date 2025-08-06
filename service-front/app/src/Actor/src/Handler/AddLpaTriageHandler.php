@@ -10,11 +10,7 @@ use Common\Handler\Traits\{CsrfGuard, User};
 use Common\Handler\Traits\Logger;
 use Common\Service\Log\EventCodes;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -24,17 +20,6 @@ class AddLpaTriageHandler extends AbstractHandler implements UserAware, CsrfGuar
     use CsrfGuard;
     use Logger;
     use User;
-
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
-    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

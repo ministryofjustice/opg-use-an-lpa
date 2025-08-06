@@ -17,11 +17,11 @@ use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -35,14 +35,12 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
         private FeatureEnabled $featureEnabled,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

@@ -12,7 +12,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class ActorAbroadAddress extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'actor_address';
+    public const string FORM_NAME = 'actor_address';
 
     /**
      * DonorDetails constructor

@@ -42,9 +42,8 @@ class ConfigProvider
         return [
             'factories' => [
                 // Handlers
-                HealthcheckHandler::class        => HealthcheckHandlerFactory::class,
-                CheckCodeHandler::class          => CheckCodeHandlerFactory::class,
-                ViewerSessionCheckHandler::class => ViewerSessionCheckHandlerFactory::class,
+                HealthcheckHandler::class => HealthcheckHandlerFactory::class,
+                CheckCodeHandler::class   => CheckCodeHandlerFactory::class,
             ],
         ];
     }

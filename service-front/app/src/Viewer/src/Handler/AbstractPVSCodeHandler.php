@@ -22,9 +22,8 @@ use Viewer\Workflow\PaperVerificationShareCode;
 /**
  * A base for our workflow for both Share Code and Paper Verification codes
  *
- * Abstract Paper Verification Share Code Handler
- *
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<PaperVerificationShareCode>
  */
 abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
@@ -61,7 +60,7 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     /**
      * @inheritDoc
      */
-    public function state(ServerRequestInterface $request): PaperVerificationShareCode
+    public function state(ServerRequestInterface $request): WorkflowState
     {
         return $this->loadState($request, PaperVerificationShareCode::class);
     }

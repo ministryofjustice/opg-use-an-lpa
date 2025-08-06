@@ -9,8 +9,6 @@ use Acpr\I18n\TranslatorInterface;
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
-use Common\Middleware\Authentication\AuthenticationMiddleware;
-use Common\Middleware\Authentication\AuthenticationMiddlewareFactory;
 use Common\Middleware\Session\{SessionExpiryMiddleware, SessionExpiryMiddlewareFactory};
 use Common\Service\{Cache\RedisAdapterPluginManagerDelegatorFactory,
     SystemMessage\SystemMessageService,
@@ -20,8 +18,8 @@ use Gettext\Loader\{LoaderInterface, PoLoader};
 use GuzzleHttp\Client;
 use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
-use Laminas\Stratigility\{Middleware\ErrorHandler, MiddlewarePipe, MiddlewarePipeInterface};
-use Mezzio\Authentication\{AuthenticationInterface, Session\PhpSession, UserInterface, UserRepositoryInterface};
+use Laminas\Stratigility\Middleware\ErrorHandler;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Csrf\CsrfGuardFactoryInterface;
 use Mezzio\Session\{SessionMiddleware, SessionMiddlewareFactory, SessionPersistenceInterface};
 use Psr\Http\Client\ClientInterface;
@@ -69,11 +67,6 @@ class ConfigProvider
                 // The Session Key Manager to use
                 Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
 
-                // Auth
-                UserRepositoryInterface::class => Service\User\UserService::class,
-                AuthenticationInterface::class => PhpSession::class,
-                MiddlewarePipeInterface::class => MiddlewarePipe::class,
-
                 // allows value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class
                     => Service\Container\PhpDiModifiableContainer::class,
@@ -105,7 +98,6 @@ class ConfigProvider
                 SessionMiddleware::class                   => SessionMiddlewareFactory::class,
                 SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
                 Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
-                AuthenticationMiddleware::class            => AuthenticationMiddlewareFactory::class,
 
                 // Auth
                 UserInterface::class                    => Entity\UserFactory::class,

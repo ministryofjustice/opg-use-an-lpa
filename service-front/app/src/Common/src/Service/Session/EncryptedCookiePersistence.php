@@ -37,21 +37,21 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
      * This unusual past date value is taken from the php-engine source code and
      * used "as is" for consistency.
      */
-    public const CACHE_PAST_DATE = 'Thu, 19 Nov 1981 08:52:00 GMT';
+    public const string CACHE_PAST_DATE = 'Thu, 19 Nov 1981 08:52:00 GMT';
 
-    public const HTTP_DATE_FORMAT = 'D, d M Y H:i:s T';
+    public const string HTTP_DATE_FORMAT = 'D, d M Y H:i:s T';
 
     /**
      * Key used within the session for the current time
      */
-    public const SESSION_TIME_KEY = '__TIME__';
+    public const string SESSION_TIME_KEY = '__TIME__';
 
     /**
      * Key used within the session to flag that the session has been expired
      */
-    public const SESSION_EXPIRED_KEY = '__EXPIRED__';
+    public const string SESSION_EXPIRED_KEY = '__EXPIRED__';
 
-    private const SUPPORTED_CACHE_LIMITERS = [
+    private const array SUPPORTED_CACHE_LIMITERS = [
         'nocache',
         'public',
         'private',

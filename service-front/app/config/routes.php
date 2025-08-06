@@ -45,7 +45,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'privacy-notice');
     $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
-    $app->get('/session-check', Viewer\Handler\ViewerSessionCheckHandler::class, 'session-check');
+    $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
     $app->get(
@@ -54,11 +54,6 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
         'accessibility-statement'
     );
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
-    $app->get(
-        '/instructions-preferences-signed-before-2016',
-        Common\Handler\InstructionsPreferencesBefore2016Handler::class,
-        'lpa.instructions-preferences-before-2016'
-    );
 
     //Paper Verification Code journey
     $app->route('/paper-verification/check-code',
@@ -107,7 +102,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
     $app->route('/home', Actor\Handler\AuthenticateOneLoginHandler::class, ['GET', 'POST'], 'home');
-    $app->route('/', Actor\Handler\ActorTriagePageHandler::class, ['GET', 'POST'], 'home-trial');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
@@ -121,24 +115,11 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
     );
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
-    // User creation
-    $app->route('/create-account',Common\Handler\GoneHandler::class,['GET', 'POST'],'create-account');
-
-    $app->get('/create-account-success',Common\Handler\GoneHandler::class,'create-account-success');
-    $app->get(
-        '/activate-account/{token}',
-        fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'),
-        'activate-account'
-    );
-
-    // User auth
-    $app->route('/login', fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'), ['GET', 'POST'], 'login');
-
+    $app->get('/login', fn () => new \Laminas\Diactoros\Response\RedirectResponse('/home'), 'login');
     $app->get('/session-expired', Actor\Handler\ActorSessionExpiredHandler::class, 'session-expired');
-    $app->get('/session-check', Actor\Handler\ActorSessionCheckHandler::class, 'session-check');
+    $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
     $app->get('/home/login', Actor\Handler\OneLoginCallbackHandler::class, 'auth-redirect');
-
     $app->get(
         '/logout',
         [
@@ -146,23 +127,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             Actor\Handler\LogoutPageHandler::class
         ],
         'logout'
-    );
-
-    // User management
-    $app->route('/reset-password', Common\Handler\GoneHandler::class, ['GET', 'POST'], 'password-reset');
-
-
-    $app->route(
-        '/reset-password/{token}',
-        Common\Handler\GoneHandler::class,
-        ['GET', 'POST'],
-        'password-reset-token'
-    );
-
-    $app->get(
-        '/verify-new-email/{token}',
-        Common\Handler\GoneHandler::class,
-        'verify-new-email'
     );
 
     // User deletion
@@ -179,9 +143,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\SettingsHandler::class,
     ], 'settings');
-
-    $app->route('/change-password', Common\Handler\GoneHandler::class, ['GET','POST'], 'change-password');
-    $app->route('/change-email', Common\Handler\GoneHandler::class, ['GET','POST'], 'change-email');
 
     $app->get('/lpa/change-details', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
@@ -229,10 +190,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\InstructionsPreferencesHandler::class
     ], 'lpa.instructions-preferences');
-    $app->get('/lpa/instructions-preferences-signed-before-2016', [
-        Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Common\Handler\InstructionsPreferencesBefore2016Handler::class
-    ], 'lpa.instructions-preferences-before-2016');
     $app->get('/lpa/death-notification', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
         Actor\Handler\DeathNotificationHandler::class
@@ -346,11 +303,6 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
             $defaultNotFoundPage
         )
     ], ['GET', 'POST'], 'lpa.remove-lpa');
-
-    $app->get('/login-notification', [
-        Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        Actor\Handler\LoginNotificationHandler::class
-    ], 'login-notification');
 };
 
 return match (getenv('CONTEXT')) {

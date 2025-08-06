@@ -9,9 +9,9 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
@@ -25,14 +25,12 @@ class ConfirmCancelCodeHandler extends AbstractHandler implements UserAware, Csr
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
+        UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
-        UrlHelper $urlHelper,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

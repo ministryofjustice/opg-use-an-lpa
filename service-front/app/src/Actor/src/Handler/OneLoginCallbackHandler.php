@@ -32,10 +32,10 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
     use Session;
 
     public function __construct(
-        private OneLoginService $oneLoginService,
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
+        private OneLoginService $oneLoginService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
