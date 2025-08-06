@@ -64,4 +64,13 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     {
         return $this->loadState($request, PaperVerificationShareCode::class);
     }
+
+    /**
+     * @param PaperVerificationShareCode $state
+     * @return bool
+     */
+    protected function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return false;
+    }
 }

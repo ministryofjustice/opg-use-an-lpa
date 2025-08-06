@@ -4,25 +4,26 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
+use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
-use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\PVDateOfBirth;
+use Viewer\Form\VerificationCodeReceiver;
 use Viewer\Handler\AbstractPVSCodeHandler;
 use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
  */
-class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
+class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
-    private PVDateOfBirth $form;
+    private VerificationCodeReceiver $form;
+
     /**
      * @var array{
      *     "view/en": string,
@@ -30,12 +31,14 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      * }
      */
     private array $systemMessages;
-    public const TEMPLATE = 'viewer::paper-verification/donor-dob';
+
+    private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
@@ -43,7 +46,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new PVDateOfBirth($this->getCsrfGuard($request));
+        $this->form           = new VerificationCodeReceiver($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -51,42 +54,50 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $dob = $this->state($request)->dateOfBirth;
+        $sentToDonor  = $this->state($request)->sentToDonor;
+        $attorneyName = $this->state($request)->attorneyName;
 
-        if ($dob) {
-            $this->form->setData([
-                 'dob' => [
-                     'day'   => $dob->format('d'),
-                     'month' => $dob->format('m'),
-                     'year'  => $dob->format('Y'),
-                 ],
-             ]);
+        if ($sentToDonor !== null) {
+            $this->form->setData(['verification_code_receiver' => $sentToDonor === false ? 'Attorney' : 'Donor']);
         }
 
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $donorName = $this->state($request)->attorneyName ?? 'Barbara Gilson';
+        if ($attorneyName) {
+            $this->form->setData(['attorney_name' => $attorneyName]);
+        }
 
-        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'donorName'  => $donorName,
-            'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+        $template = ($this->featureEnabled)('paper_verification')
+            ? 'viewer::paper-verification/verification-code-sent-to'
+            : 'viewer::enter-code';
+
+        // TODO get donor name and add it to twig template
+        return new HtmlResponse($this->renderer->render($template, [
+            'donor_name'    => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
+            'sent_to_donor' => $sentToDonor ?? null,
+            'attorneyName'  => $attorneyName ?? null,
+            'form'          => $this->form->prepare(),
+            'en_message'    => $this->systemMessages['view/en'] ?? null,
+            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $storedSentToDonor = $this->state($request)->sentToDonor;
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $postData = $this->form->getData();
+            $sentToDonor = $this->form->getData()['verification_code_receiver'] === 'Donor';
 
-            $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
-                (int) $postData['dob']['year'],
-                (int) $postData['dob']['month'],
-                (int) $postData['dob']['day']
-            );
+            if ($storedSentToDonor !== null && $storedSentToDonor !== $sentToDonor) {
+                $this->state($request)->noOfAttorneys = null;
+                $this->state($request)->attorneyName  = null;
+                $this->state($request)->dateOfBirth   = null;
+            }
+
+            if (!$this->state($request)->sentToDonor = $sentToDonor) {
+                $this->state($request)->attorneyName = $this->form->getData()['attorney_name'];
+            }
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -104,8 +115,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     {
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === false;
+            || $this->state($request)->lpaUid === null;
     }
 
     /**
@@ -115,7 +125,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     {
         return
             $state->noOfAttorneys !== null &&
-            $state->sentToDonor !== null &&
+            $state->dateOfBirth !== null &&
             $state->lastName !== null &&
             $state->lpaUid !== null &&
             $state->code !== null &&
@@ -124,14 +134,14 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     /**
      * @inheritDoc
-     */
+    */
     public function nextPage(WorkflowState $state): string
     {
         if ($this->hasFutureAnswersInState($state)) {
             return 'pv.check-answers';
         }
 
-        return 'pv.provide-attorney-details';
+        return $state->sentToDonor === false ? 'pv.attorney-dob' : 'pv.donor-dob';
     }
 
     /**
@@ -139,8 +149,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.verification-code-sent-to';
+        return 'home';
     }
 }
