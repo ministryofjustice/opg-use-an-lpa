@@ -17,7 +17,6 @@ use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
@@ -25,6 +24,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -42,14 +42,12 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
+        LoggerInterface $logger,
         private RemoveLpa $removeLpa,
         private TranslatorInterface $translator,
         private LpaService $lpaService,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

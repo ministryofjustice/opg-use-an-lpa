@@ -10,6 +10,7 @@ use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 
 class CookiesPageHandlerFactory
@@ -25,6 +26,7 @@ class CookiesPageHandlerFactory
         return new CookiesPageHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
+            $container->get(LoggerInterface::class),
             $container->get(UrlValidityCheckService::class),
             $container->get(TranslatorInterface::class),
             $config['application']
