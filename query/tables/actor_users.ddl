@@ -1,5 +1,6 @@
 CREATE EXTERNAL TABLE IF NOT EXISTS actor_users (
     Item struct <Id:struct<S:string>,
+                  Identity:struct<S:string>,
                   Email:struct<S:string>,
                   LastLogin:struct<S:date>>
 )
