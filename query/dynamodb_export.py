@@ -331,6 +331,13 @@ class DynamoDBExporterAndQuerier:
             outputFileName="CountOfUsersWithNoLpas",
         )
 
+    def get_count_of_duplicate_accounts(self):
+        sql_string = f"SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="CountOfDuplicateAccounts",
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -399,6 +406,7 @@ def main():
     work.get_organisations_field()
     work.get_count_of_lpas_for_users()
     work.get_count_of_users_with_no_lpas()
+    work.get_count_of_duplicate_accounts()
 
 
 if __name__ == "__main__":
