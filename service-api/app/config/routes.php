@@ -24,6 +24,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationRequestHandler,
     PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
+    PaperVerificationCodes\ViewHandler,
     RequestChangeEmailHandler,
     RequestCleanseHandler,
     RequestPasswordResetHandler,
@@ -130,6 +131,17 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
             ],
         ),
         'lpa.paper-verification.validate'
+    );
+
+    $app->post(
+        '/v1/paper-verification/view',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ViewHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.view'
     );
 
     $app->get('/v1/user', UserHandler::class, 'user.get');
