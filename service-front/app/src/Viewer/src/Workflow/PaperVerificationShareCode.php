@@ -23,6 +23,7 @@ class PaperVerificationShareCode implements WorkflowState
         public ?string $attorneyName = null,
         ?string $dateOfBirth = null,
         public ?int $noOfAttorneys = null,
+        public ?string $organisation = null,
     ) {
         $this->dateOfBirth = $dateOfBirth !== null ? new DateTimeImmutable($dateOfBirth) : null;
     }
@@ -36,5 +37,6 @@ class PaperVerificationShareCode implements WorkflowState
         $this->attorneyName  = null;
         $this->dateOfBirth   = null;
         $this->noOfAttorneys = null;
+        $this->organisation  = null;
     }
 }
