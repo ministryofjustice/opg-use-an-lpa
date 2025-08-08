@@ -11,6 +11,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\Organisation;
 use Viewer\Handler\AbstractPVSCodeHandler;
 use Common\Service\Lpa\Factory\{LpaDataFormatter};
@@ -27,10 +28,11 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
         private LpaDataFormatter $lpaDataFormatter,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
