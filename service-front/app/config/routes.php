@@ -39,6 +39,7 @@ use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
 use Viewer\Handler\PaperVerification\LpaNotFoundHandler;
 use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
 use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
+use Viewer\Handler\PaperVerification\LpaReadyToViewHandler;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -90,6 +91,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 NumberOfAttorneysHander::class,
                 ['GET', 'POST'],
                 'number-of-attorneys');
+
+    $app->route('/paper-verification/enter-organisation-name',
+                LpaReadyToViewHandler::class,
+                ['GET', 'POST'],
+                'enter-organisation-name');
 
     $app->route('/paper-verification/check-answers',
                 CheckAnswersHandler::class,
