@@ -15,22 +15,23 @@ use Common\Handler\{AbstractHandler,
     Traits\Session,
     Traits\User,
     UserAware};
-use Common\Service\{Lpa\AddAccessForAllLpa, Lpa\Response\AccessForAllResult};
+use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\LocalisedDate;
-use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Notify\NotifyService;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<RequestActivationKey>
  */
 class CreateActivationKeyHandler extends AbstractHandler implements
     UserAware,
@@ -40,20 +41,19 @@ class CreateActivationKeyHandler extends AbstractHandler implements
 {
     use CsrfGuard;
     use Session;
+    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        private AddAccessForAllLpa $addAccessForAllLpa,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
+        private AddAccessForAllLpa $addAccessForAllLpa,
         private LocalisedDate $localisedDate,
         private NotifyService $notifyService,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**
@@ -113,13 +113,14 @@ class CreateActivationKeyHandler extends AbstractHandler implements
                     $state->actorUid       = (int) $result->getData()['actor_id'];
 
                     return $this->redirectToRoute('lpa.add.contact-details');
+                default:
             }
         }
 
         throw new InvalidRequestException('Invalid form');
     }
 
-    public function state(ServerRequestInterface $request): RequestActivationKey
+    public function state(ServerRequestInterface $request): WorkflowState
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

@@ -67,24 +67,6 @@ class AccountContext extends BaseIntegrationContext
         $this->userEmail    = 'test@test.com';
         $this->userPassword = 'pa33w0rd';
         $this->userIdentity = '123';
-
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        'Id'        => $this->userIdentity,
-                        'Email'     => $this->userEmail,
-                        'LastLogin' => null,
-                    ]
-                ),
-                self::USER_SERVICE_AUTHENTICATE
-            )
-        );
-
-        $user = $this->container->get(UserService::class)->authenticate($this->userEmail, $this->userPassword);
-
-        Assert::assertEquals($user->getIdentity(), $this->userIdentity);
     }
 
     #[Given('/^I am logged out of the service and taken to the deleted account confirmation page$/')]

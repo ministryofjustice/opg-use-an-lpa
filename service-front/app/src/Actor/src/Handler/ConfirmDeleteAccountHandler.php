@@ -9,9 +9,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -21,16 +18,6 @@ use Psr\Http\Message\ServerRequestInterface;
 class ConfirmDeleteAccountHandler extends AbstractHandler implements UserAware
 {
     use User;
-
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        AuthenticationInterface $authentication,
-    ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authentication);
-    }
 
     /**
      * @param ServerRequestInterface $request

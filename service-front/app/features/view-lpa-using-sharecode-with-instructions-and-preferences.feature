@@ -1,5 +1,5 @@
 @viewer @viewlpaWithInstructionsAndPreferences
-Feature: View an LPA via sharecode
+Feature: View an LPA via sharecode with instructions and preferences
   As an organisation who has been given a share code
   I can enter that code and see the details of an LPA
   So that I can carry out business functions

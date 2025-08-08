@@ -15,7 +15,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class ActivationKey extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_add_activation_key';
+    public const string FORM_NAME = 'lpa_add_activation_key';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

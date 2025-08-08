@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ActorTest\Handler\Factory;
 
-use PHPUnit\Framework\Attributes\Test;
-use Actor\Handler\ActorSessionCheckHandler;
 use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
+use Common\Handler\SessionCheckHandler;
 use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -62,7 +62,7 @@ class ActorSessionCheckHandlerFactoryTest extends TestCase
         $factory             = new ActorSessionCheckHandlerFactory();
         $sessionCheckHandler = $factory($this->containerProphecy->reveal());
 
-        $this->assertInstanceOf(ActorSessionCheckHandler::class, $sessionCheckHandler);
+        $this->assertInstanceOf(SessionCheckHandler::class, $sessionCheckHandler);
     }
 
     #[Test]

@@ -14,6 +14,7 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<RequestActivationKey>
  */
 class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
@@ -69,13 +70,11 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.date-of-birth';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper';
     }
 }

@@ -28,12 +28,12 @@ class SessionAttributeAllowlistMiddleware implements MiddlewareInterface
      * the {@link self::ALLOWLIST} when the pipeline is returning up the stack by setting this session
      * key to any value.
      */
-    public const SESSION_CLEAN_NEEDED = '__SESSION_CLEAN_NEEDED__';
+    public const string SESSION_CLEAN_NEEDED = '__SESSION_CLEAN_NEEDED__';
 
     /**
      * An array of allowed session keys that can persist across session expiry
      */
-    public const ALLOWLIST = [
+    public const array ALLOWLIST = [
         UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE,
         SessionExpiryMiddleware::SESSION_EXPIRED_KEY,
         FlashMessagesInterface::FLASH_NEXT,

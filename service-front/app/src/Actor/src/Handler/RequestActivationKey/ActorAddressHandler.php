@@ -110,7 +110,6 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
         if ($this->hasFutureAnswersInState($state)) {
             return 'lpa.add.check-details-and-consent';
         }
@@ -122,7 +121,6 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state **/
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : 'lpa.check-answers';

@@ -17,7 +17,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_add_reference_number';
+    public const string FORM_NAME = 'lpa_add_reference_number';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

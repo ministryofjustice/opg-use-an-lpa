@@ -13,6 +13,10 @@ resource "aws_lb_target_group" "viewer" {
   deregistration_delay = 0
   depends_on           = [aws_lb.viewer]
 
+  health_check {
+    path = "/home"
+  }
+
   provider = aws.region
 }
 

@@ -4,41 +4,38 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
-use Common\Handler\{AbstractHandler, Traits\Session as SessionTrait, Traits\User, UserAware};
+use Common\Handler\{AbstractHandler, SessionAware, Traits\Session as SessionTrait, Traits\User, UserAware};
 use Common\Service\Features\FeatureEnabled;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
  * @codeCoverageIgnore
  */
-class RequestActivationKeyInfoHandler extends AbstractHandler implements UserAware
+class RequestActivationKeyInfoHandler extends AbstractHandler implements SessionAware, UserAware
 {
     use SessionTrait;
     use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $user = $this->getUser($request);
-            return new HtmlResponse($this->renderer->render(
-                'actor::request-activation-key/before-requesting-activation-key-info',
-                [
-                    'user' => $user,
-                ]
-            ));
+        return new HtmlResponse($this->renderer->render(
+            'actor::request-activation-key/before-requesting-activation-key-info',
+            [
+                'user' => $this->getUser($request),
+            ]
+        ));
     }
 }

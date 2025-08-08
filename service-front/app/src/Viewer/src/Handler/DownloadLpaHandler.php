@@ -4,32 +4,30 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
-use Common\Handler\Traits\Session as SessionTrait;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Session;
 use Common\Middleware\Session\SessionTimeoutException;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfResponse;
 use Common\Service\Pdf\PdfService;
-use DateTimeImmutable;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
-use DateTimeInterface;
-use DateInterval;
 
 /**
  * @codeCoverageIgnore
  */
-class DownloadLpaHandler implements RequestHandlerInterface
+class DownloadLpaHandler implements RequestHandlerInterface, SessionAware
 {
-    use SessionTrait;
+    use Session;
 
     public function __construct(
+        private LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
         private LpaService $lpaService,
         private PdfService $pdfService,
-        private FeatureEnabled $featureEnabled,
-        private LoggerInterface $logger,
     ) {
     }
 
@@ -53,15 +51,7 @@ class DownloadLpaHandler implements RequestHandlerInterface
         $images = null;
 
         if ($lpa->offsetExists('iap')) {
-            // TODO UML-2930 This date logic needs removing 30 days after 4th July (or whenever we go live, whichever
-            //      is later)
-            // necessary for development. Do not uncomment for live environments.
-            $lpa->expires = (new DateTimeImmutable('+60 days'))->format(DateTimeInterface::ATOM);
-            $codeCreated  = (new DateTimeImmutable($lpa->expires))->sub(new DateInterval('P30D'));
-
-            if ($codeCreated > new DateTimeImmutable('2023-07-04T23:59:59+01:00')) {
-                $images = $lpa->iap; // TODO UML-2930 this is the only bit that should be kept
-            }
+            $images = $lpa->iap;
         }
 
         $pdfStream = $this->pdfService->getLpaAsPdf($lpa->lpa, $images);

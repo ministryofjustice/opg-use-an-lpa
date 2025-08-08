@@ -19,13 +19,13 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class UserIdentificationMiddleware implements MiddlewareInterface
 {
-    public const IDENTIFY_ATTRIBUTE = 'identity';
+    public const string IDENTIFY_ATTRIBUTE = 'identity';
 
     /**
      * A list of route names that should bypass identification since browsers are inconsistent about the headers that
      * are sent when using the javascript fetch api.
      */
-    public const EXCLUDED_ROUTES = [
+    public const array EXCLUDED_ROUTES = [
         'session-check',
         'session-refresh',
         'session-expired',

@@ -76,7 +76,6 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state * */
         if ($this->hasFutureAnswersInState($state)) {
             return 'lpa.add.check-details-and-consent';
         }

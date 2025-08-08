@@ -11,7 +11,6 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -20,18 +19,17 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
+class ReferenceNumberHandler extends AbstractRequestKeyHandler
 {
     private RequestReferenceNumber $form;
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
     ) {
-        parent::__construct($renderer, $authenticator, $urlHelper, $logger);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -99,13 +97,11 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler implements UserAw
 
     public function nextPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.your-name';
     }
 
     public function lastPage(WorkflowState $state): string
     {
-        /** @var RequestActivationKey $state */
         return $state->postcode !== null ? 'lpa.check-answers' : 'lpa.add-by-paper-information';
     }
 }

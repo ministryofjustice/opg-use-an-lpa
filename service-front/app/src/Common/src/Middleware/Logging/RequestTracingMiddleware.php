@@ -22,7 +22,7 @@ class RequestTracingMiddleware implements MiddlewareInterface
     {
     }
 
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $delegate): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $traceId = $request->getHeader(RequestTracing::TRACE_HEADER_NAME);
         $traceId = count($traceId) > 0 ? $traceId[0] : '';
@@ -30,6 +30,6 @@ class RequestTracingMiddleware implements MiddlewareInterface
         // for factories to use when making services.
         $this->container->setValue(RequestTracing::TRACE_PARAMETER_NAME, $traceId);
 
-        return $delegate->handle($request->withAttribute(RequestTracing::TRACE_PARAMETER_NAME, $traceId));
+        return $handler->handle($request->withAttribute(RequestTracing::TRACE_PARAMETER_NAME, $traceId));
     }
 }

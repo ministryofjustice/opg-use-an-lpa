@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler;
+namespace Common\Handler;
 
-use Common\Handler\AbstractHandler;
-use Common\Handler\LoggerAware;
-use Common\Handler\SessionAware;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
+use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-class ActorSessionCheckHandler extends AbstractHandler implements UserAware, SessionAware, LoggerAware
+class SessionCheckHandler extends AbstractHandler implements UserAware, SessionAware, LoggerAware
 {
     use Logger;
     use Session;
@@ -28,21 +24,18 @@ class ActorSessionCheckHandler extends AbstractHandler implements UserAware, Ses
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        LoggerInterface $logger,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private int $sessionTime,
         private int $sessionWarningTime,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user    = $this->getUser($request);
-        $session = $this->getSession($request, 'session');
+        $session = $this->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE);
 
         $expiresAt          = $session->get(EncryptedCookiePersistence::SESSION_TIME_KEY) + $this->sessionTime;
         $timeRemaining      = $expiresAt - time();

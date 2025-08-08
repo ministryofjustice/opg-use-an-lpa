@@ -2,49 +2,42 @@
 
 declare(strict_types=1);
 
-namespace ActorTest\Handler;
+namespace CommonTest\Handler;
 
-use PHPUnit\Framework\Attributes\Test;
-use Actor\Handler\ActorSessionCheckHandler;
+use Common\Handler\SessionCheckHandler;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Session\SessionMiddleware;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 
-class ActorSessionCheckHandlerTest extends TestCase
+class SessionCheckHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
     private ObjectProphecy|TemplateRendererInterface $templateRendererProphecy;
     private ObjectProphecy|UrlHelper $urlHelperProphecy;
-    private ObjectProphecy|AuthenticationInterface $authenticatorProphecy;
     private ObjectProphecy|LoggerInterface $loggerProphecy;
     private ObjectProphecy|UserInterface $userProphecy;
 
     public function setUp(): void
     {
         $this->templateRendererProphecy = $this->prophesize(TemplateRendererInterface::class);
-        $this->authenticatorProphecy    = $this->prophesize(AuthenticationInterface::class);
         $this->loggerProphecy           = $this->prophesize(LoggerInterface::class);
         $this->urlHelperProphecy        = $this->prophesize(UrlHelper::class);
         $this->userProphecy             = $this->prophesize(UserInterface::class);
-
-        $this->authenticatorProphecy->authenticate(Argument::type(ServerRequestInterface::class))
-            ->willReturn($this->userProphecy->reveal());
     }
 
     #[Test]
-    public function testReturnsExpectedJsonResponseReturnsFalse(): void
+    public function returnsExpectedJsonResponseReturnsFalse(): void
     {
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
@@ -55,12 +48,15 @@ class ActorSessionCheckHandlerTest extends TestCase
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
+        $requestProphecy
+            ->getAttribute(UserInterface::class)
+            ->shouldBeCalled()
+            ->willReturn($this->userProphecy->reveal());
 
-        $handler = new ActorSessionCheckHandler(
+        $handler = new SessionCheckHandler(
             $this->templateRendererProphecy->reveal(),
-            $this->authenticatorProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             1200,
             300
         );
@@ -78,9 +74,8 @@ class ActorSessionCheckHandlerTest extends TestCase
     }
 
     #[Test]
-    public function testReturnsExpectedJsonResponseReturnsTrue(): void
+    public function returnsExpectedJsonResponseReturnsTrue(): void
     {
-
         $sessionProphecy = $this->prophesize(SessionInterface::class);
         $sessionProphecy->get(EncryptedCookiePersistence::SESSION_TIME_KEY)
             ->willReturn(time() - 950);
@@ -90,12 +85,15 @@ class ActorSessionCheckHandlerTest extends TestCase
             ->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)
             ->shouldBeCalled()
             ->willReturn($sessionProphecy->reveal());
+        $requestProphecy
+            ->getAttribute(UserInterface::class)
+            ->shouldBeCalled()
+            ->willReturn($this->userProphecy->reveal());
 
-        $handler = new ActorSessionCheckHandler(
+        $handler = new SessionCheckHandler(
             $this->templateRendererProphecy->reveal(),
-            $this->authenticatorProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
             $this->urlHelperProphecy->reveal(),
+            $this->loggerProphecy->reveal(),
             1200,
             300
         );

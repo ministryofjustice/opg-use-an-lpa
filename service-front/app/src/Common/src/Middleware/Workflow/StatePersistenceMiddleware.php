@@ -25,7 +25,7 @@ class StatePersistenceMiddleware implements MiddlewareInterface
     /**
      * The attribute name under which workflow state is stored in the request
      */
-    public const WORKFLOW_STATE_ATTRIBUTE = 'workflowStates';
+    public const string WORKFLOW_STATE_ATTRIBUTE = 'workflowStates';
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

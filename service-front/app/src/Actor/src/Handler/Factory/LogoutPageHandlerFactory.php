@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\Factory;
 
 use Actor\Handler\LogoutPageHandler;
-use Common\Service\Features\FeatureEnabled;
-use Common\Service\Authentication\LocalAccountLogout;
 use Common\Service\OneLogin\OneLoginService;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Container\ContainerInterface;
@@ -23,7 +20,6 @@ class LogoutPageHandlerFactory
         return new LogoutPageHandler(
             $container->get(TemplateRendererInterface::class),
             $container->get(UrlHelper::class),
-            $container->get(AuthenticationInterface::class),
             $container->get(LoggerInterface::class),
             $logoutStrategy,
         );

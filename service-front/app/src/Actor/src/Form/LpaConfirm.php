@@ -9,7 +9,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class LpaConfirm extends AbstractForm
 {
-    public const FORM_NAME = 'lpa_add';
+    public const string FORM_NAME = 'lpa_add';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

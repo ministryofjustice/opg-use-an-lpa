@@ -12,13 +12,11 @@ use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
-use Common\Handler\Traits\User;
-use Common\Handler\UserAware;
 use Common\Service\OneLogin\OneLoginService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\AuthenticationInterface;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\ServerUrlHelper;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -31,29 +29,25 @@ use Locale;
 /**
  * @codeCoverageIgnore
  */
-class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware, UserAware
+class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAware, LoggerAware, SessionAware
 {
     use CsrfGuard;
     use Logger;
     use Session;
-    use User;
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        AuthenticationInterface $authenticator,
         private OneLoginService $authenticateOneLoginService,
         private ServerUrlHelper $serverUrlHelper,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        if (!is_null($this->getUser($request))) {
+        if ($this->isUserLoggedIn($request)) {
             return $this->redirectToRoute('lpa.dashboard');
         }
 
@@ -89,5 +83,12 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
         return new HtmlResponse($this->renderer->render('actor::one-login', [
             'form' => $form,
         ]));
+    }
+
+    public function isUserLoggedIn(ServerRequestInterface $request): bool
+    {
+        $userInfo = $request->getAttribute(SessionMiddleware::SESSION_ATTRIBUTE)?->get(UserInterface::class);
+
+        return $userInfo !== null;
     }
 }

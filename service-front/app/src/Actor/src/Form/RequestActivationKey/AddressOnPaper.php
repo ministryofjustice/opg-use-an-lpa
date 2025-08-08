@@ -11,7 +11,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class AddressOnPaper extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'address_on_paper';
+    public const string FORM_NAME = 'address_on_paper';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

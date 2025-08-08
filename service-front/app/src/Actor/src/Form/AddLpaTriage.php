@@ -11,7 +11,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class AddLpaTriage extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'add_lpa_triage';
+    public const string FORM_NAME = 'add_lpa_triage';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

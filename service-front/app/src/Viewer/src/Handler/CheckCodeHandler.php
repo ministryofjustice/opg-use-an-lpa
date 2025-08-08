@@ -22,6 +22,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\Organisation;
 
 /**
@@ -35,11 +36,12 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private RateLimitService $failureRateLimiter,
         private FeatureEnabled $featureEnabled,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

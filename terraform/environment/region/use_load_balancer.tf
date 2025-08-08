@@ -15,6 +15,10 @@ resource "aws_lb_target_group" "use" {
   deregistration_delay = 0
   depends_on           = [aws_lb.use]
 
+  health_check {
+    path = "/home"
+  }
+
   provider = aws.region
 }
 

@@ -10,11 +10,11 @@ use Throwable;
 class ApiException extends AbstractApiException
 {
     // A safe bet for an exception is a 500 error response
-    public const DEFAULT_ERROR = 500;
+    public const int DEFAULT_ERROR = 500;
 
     // The title is suitably generic, further details (from previous Throwables) will be
     // encapsulated in the stacktrace.
-    public const DEFAULT_TITLE = 'An API exception has occurred';
+    public const string DEFAULT_TITLE = 'An API exception has occurred';
 
     /**
      * @var int|null

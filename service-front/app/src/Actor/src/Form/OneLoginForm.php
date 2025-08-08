@@ -9,7 +9,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class OneLoginForm extends AbstractForm
 {
-    public const FORM_NAME = 'one_login';
+    public const string FORM_NAME = 'one_login';
 
     public const ACCESS_DENIED_ERROR           = 'access_denied';
     public const SESSION_MISSING_ERROR         = 'session_missing';
@@ -22,8 +22,8 @@ class OneLoginForm extends AbstractForm
      */
     protected array $messageTemplates = [
         self::ACCESS_DENIED_ERROR           => 'Tried to login however access is denied.',
-        self::SESSION_MISSING_ERROR         => 'We are aware of an issue with people accessing the service using older 
-            versions of iOS (the operating system for iPhones and iPads). We are working to resolve this as soon as 
+        self::SESSION_MISSING_ERROR         => 'We are aware of an issue with people accessing the service using older
+            versions of iOS (the operating system for iPhones and iPads). We are working to resolve this as soon as
             possible. In the meantime, you may wish to try using a different device.',
         self::TEMPORARILY_UNAVAILABLE_ERROR => 'One Login is temporarily unavailable.',
     ];

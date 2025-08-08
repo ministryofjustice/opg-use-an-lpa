@@ -17,6 +17,7 @@ use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
@@ -33,11 +34,12 @@ class CookiesPageHandler extends AbstractHandler implements CsrfGuardAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private UrlValidityCheckService $urlValidityCheckService,
         private TranslatorInterface $translator,
         private string $application = 'actor',
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

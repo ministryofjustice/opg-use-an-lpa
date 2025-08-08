@@ -6,13 +6,16 @@ namespace Common\Workflow;
 
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * @template T of WorkflowState
+ */
 interface WorkflowStep
 {
     /**
      * Provide access to the correct workflow state object for this particular workflow.
      *
      * @param ServerRequestInterface $request
-     * @return WorkflowState The workflow state object associated with this step
+     * @return T The workflow state object associated with this step
      * @throws StateNotInitialisedException
      */
     public function state(ServerRequestInterface $request): WorkflowState;
@@ -29,7 +32,7 @@ interface WorkflowStep
     /**
      * Using the provided workflow state decide what step to execute next
      *
-     * @param WorkflowState $state
+     * @param T $state
      * @return string The route name of the next page in the workflow
      */
     public function nextPage(WorkflowState $state): string;
@@ -39,7 +42,7 @@ interface WorkflowStep
      *
      * It's important to note that this might not always be the 'previous' page as a browser might see it.
      *
-     * @param WorkflowState $state
+     * @param T $state
      * @return string The route name of the previous page in the workflow
      */
     public function lastPage(WorkflowState $state): string;

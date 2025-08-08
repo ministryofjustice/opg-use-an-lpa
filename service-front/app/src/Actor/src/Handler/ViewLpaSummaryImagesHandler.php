@@ -13,11 +13,11 @@ use Common\Service\Lpa\InstAndPrefImagesService;
 use Common\Service\Lpa\LpaService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -29,14 +29,12 @@ class ViewLpaSummaryImagesHandler extends AbstractHandler implements UserAware
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private InstAndPrefImagesService $instAndPrefImagesService,
         private FeatureEnabled $featureEnabled,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

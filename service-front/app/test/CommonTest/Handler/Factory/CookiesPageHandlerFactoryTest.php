@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler\Factory;
 
-use PHPUnit\Framework\Attributes\Test;
-use Common\Handler\CookiesPageHandler;
+use Acpr\I18n\TranslatorInterface;
 use Common\Handler\Factory\CookiesPageHandlerFactory;
 use Common\Service\Url\UrlValidityCheckService;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
-use Acpr\I18n\TranslatorInterface;
 
 class CookiesPageHandlerFactoryTest extends TestCase
 {
@@ -34,6 +34,9 @@ class CookiesPageHandlerFactoryTest extends TestCase
             ->get(UrlHelper::class)
             ->willReturn($this->prophesize(UrlHelper::class)->reveal());
         $containerProphecy
+            ->get(LoggerInterface::class)
+            ->willReturn($this->prophesize(LoggerInterface::class)->reveal());
+        $containerProphecy
             ->get(UrlValidityCheckService::class)
             ->willReturn($this->prophesize(UrlValidityCheckService::class)->reveal());
         $containerProphecy
@@ -42,9 +45,8 @@ class CookiesPageHandlerFactoryTest extends TestCase
 
         $factory = new CookiesPageHandlerFactory();
 
-        $instance = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(CookiesPageHandler::class, $instance);
+        $this->expectNotToPerformAssertions();
+        $factory($containerProphecy->reveal());
     }
 
     #[Test]
@@ -58,6 +60,6 @@ class CookiesPageHandlerFactoryTest extends TestCase
         $factory = new CookiesPageHandlerFactory();
 
         $this->expectException(RuntimeException::class);
-        $instance = $factory($containerProphecy->reveal());
+        $factory($containerProphecy->reveal());
     }
 }

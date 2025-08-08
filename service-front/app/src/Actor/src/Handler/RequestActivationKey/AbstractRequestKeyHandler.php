@@ -16,17 +16,15 @@ use Common\Handler\{AbstractHandler,
 use Common\Handler\Traits\User;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
+use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
-use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
-use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<RequestActivationKey>
  */
 abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     UserAware,
@@ -38,22 +36,12 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     use CsrfGuard;
     use Logger;
     use SessionTrait;
+    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
     protected ?SessionInterface $session;
     protected ?UserInterface $user;
-
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
-    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -75,11 +63,9 @@ abstract class AbstractRequestKeyHandler extends AbstractHandler implements
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * @param ServerRequestInterface $request
-     * @return RequestActivationKey
      * @throws StateNotInitialisedException
      */
-    public function state(ServerRequestInterface $request): RequestActivationKey
+    public function state(ServerRequestInterface $request): WorkflowState
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

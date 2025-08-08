@@ -12,7 +12,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class CSPNonceMiddleware implements MiddlewareInterface
 {
-    public const NONCE_ATTRIBUTE = 'csp-nonce';
+    public const string NONCE_ATTRIBUTE = 'csp-nonce';
 
     public function __construct(private CSPNonce $nonce)
     {

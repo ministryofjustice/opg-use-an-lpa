@@ -10,11 +10,11 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler, CsrfGuardAware, Traits\CsrfGuard, Traits\Session, Traits\User, UserAware};
 use Common\Service\{Lpa\LpaService, Lpa\ViewerCodeService};
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
+use Psr\Log\LoggerInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 
 /**
@@ -30,15 +30,13 @@ class CancelCodeHandler extends AbstractHandler implements UserAware, CsrfGuardA
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
+        UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
-        UrlHelper $urlHelper,
         private TranslatorInterface $translator,
     ) {
-        parent::__construct($renderer, $urlHelper);
-
-        $this->setAuthenticator($authenticator);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

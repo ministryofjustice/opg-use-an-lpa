@@ -14,7 +14,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class DateOfBirth extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_add_dob';
+    public const string FORM_NAME = 'lpa_add_dob';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

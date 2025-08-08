@@ -13,7 +13,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Authentication\LogoutStrategy;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -33,13 +32,10 @@ class LogoutPageHandler extends AbstractHandler implements SessionAware, UserAwa
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authentication,
         LoggerInterface $logger,
         private LogoutStrategy $logoutStrategy,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authentication);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

@@ -14,7 +14,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class RequestPostcode extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'request_activation_key_postcode';
+    public const string FORM_NAME = 'request_activation_key_postcode';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

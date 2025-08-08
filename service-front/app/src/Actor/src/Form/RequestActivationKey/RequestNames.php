@@ -13,7 +13,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class RequestNames extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'request_activation_key_names';
+    public const string FORM_NAME = 'request_activation_key_names';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

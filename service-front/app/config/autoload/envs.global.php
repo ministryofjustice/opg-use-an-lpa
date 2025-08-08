@@ -93,10 +93,6 @@ return [
     'analytics'      => [
         'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: '',
     ],
-    'authentication' => [
-        'username' => 'email',
-        'redirect' => '/login',
-    ],
     'i18n'           => [
         'default_locale' => 'en_GB',
         'default_domain' => 'messages',

@@ -14,7 +14,6 @@ use Common\Handler\UserAware;
 use Common\Service\User\UserService;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -25,30 +24,18 @@ use Psr\Log\LoggerInterface;
 /**
  * @codeCoverageIgnore
  */
-class DeleteAccountHandler extends AbstractHandler implements SessionAware, UserAware, LoggerAware
+class DeleteAccountHandler extends AbstractHandler implements SessionAware, UserAware
 {
-    use Logger;
     use Session;
     use User;
 
-    /**
-     * DeleteAccountHandler constructor
-     *
-     * @param TemplateRendererInterface $renderer
-     * @param UrlHelper $urlHelper
-     * @param UserService $userService
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authentication,
-        private UserService $userService,
         LoggerInterface $logger,
+        private UserService $userService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authentication);
     }
 
     /**
@@ -63,8 +50,8 @@ class DeleteAccountHandler extends AbstractHandler implements SessionAware, User
         $this->userService->deleteAccount($user->getIdentity());
 
         $session = $this->getSession($request, 'session');
-        $session->unset(UserInterface::class);
-        $session->regenerate();
+        $session?->unset(UserInterface::class);
+        $session?->regenerate();
 
         return new HtmlResponse($this->renderer->render('actor::deleted-account-confirmation'));
     }

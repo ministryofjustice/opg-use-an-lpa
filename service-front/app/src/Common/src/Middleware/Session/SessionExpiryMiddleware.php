@@ -24,12 +24,12 @@ class SessionExpiryMiddleware implements MiddlewareInterface
     /**
      * Key used within the session for the current time
      */
-    public const SESSION_TIME_KEY = '__TIME__';
+    public const string SESSION_TIME_KEY = '__TIME__';
 
     /**
      * Key used within the session to flag that the session has been expired
      */
-    public const SESSION_EXPIRED_KEY = '__EXPIRED__';
+    public const string SESSION_EXPIRED_KEY = '__EXPIRED__';
 
     public function __construct(private int $sessionExpiryTime)
     {
