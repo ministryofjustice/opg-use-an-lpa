@@ -127,121 +127,6 @@ class ActorUsers implements ActorUsersInterface
         return array_pop($usersData);
     }
 
-    public function getUserByNewEmail(string $newEmail): array
-    {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'IndexName'                 => 'NewEmailIndex',
-                'KeyConditionExpression'    => 'NewEmail = :newEmail',
-                'ExpressionAttributeValues' => $marshaler->marshalItem(
-                    [
-                        ':newEmail' => $newEmail,
-                    ]
-                ),
-            ]
-        );
-
-        return $this->getDataCollection($result);
-    }
-
-    public function getIdByPasswordResetToken(string $resetToken): string
-    {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'IndexName'                 => 'PasswordResetTokenIndex',
-                'KeyConditionExpression'    => 'PasswordResetToken = :rt',
-                'ExpressionAttributeValues' => $marshaler->marshalItem(
-                    [
-                        ':rt' => $resetToken,
-                    ]
-                ),
-            ]
-        );
-
-        $usersData = $this->getDataCollection($result);
-
-        if (empty($usersData)) {
-            throw new NotFoundException('User not found for password reset token');
-        }
-
-        return array_pop($usersData)['Id'];
-    }
-
-    public function getIdByEmailResetToken(string $resetToken): string
-    {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'IndexName'                 => 'EmailResetTokenIndex',
-                'KeyConditionExpression'    => 'EmailResetToken = :rt',
-                'ExpressionAttributeValues' => $marshaler->marshalItem(
-                    [
-                        ':rt' => $resetToken,
-                    ]
-                ),
-            ]
-        );
-
-        $usersData = $this->getDataCollection($result);
-
-        if (empty($usersData)) {
-            throw new NotFoundException('User not found for email reset token');
-        }
-
-        return array_pop($usersData)['Id'];
-    }
-
-    public function activate(string $activationToken): array
-    {
-        $marshaler = new Marshaler();
-
-        $result = $this->client->query(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'IndexName'                 => 'ActivationTokenIndex',
-                'KeyConditionExpression'    => 'ActivationToken = :activationToken',
-                'ExpressionAttributeValues' => $marshaler->marshalItem(
-                    [
-                        ':activationToken' => $activationToken,
-                    ]
-                ),
-            ]
-        );
-
-        $usersData = $this->getDataCollection($result);
-
-        if (empty($usersData)) {
-            throw new NotFoundException('User not found for token');
-        }
-
-        //  Use the returned value to get the user
-        $userData = array_pop($usersData);
-        $id       = $userData['Id'];
-
-        //  Update the item by removing the activation token
-        $this->client->updateItem(
-            [
-                'TableName'        => $this->actorUsersTable,
-                'Key'              => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression' => 'remove ActivationToken, ExpiresTTL',
-            ]
-        );
-
-        return $this->get($id);
-    }
-
     public function migrateToOAuth(string $id, string $identity): array
     {
         $marshaler = new Marshaler();
@@ -289,30 +174,6 @@ class ActorUsers implements ActorUsersInterface
         return true;
     }
 
-    public function resetPassword(string $id, HiddenString $password): bool
-    {
-        //  Update the item by setting the password and removing the reset token/expiry
-        $this->client->updateItem(
-            [
-                'TableName' => $this->actorUsersTable,
-                'Key'       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression'
-                    => 'SET Password=:p REMOVE PasswordResetToken, PasswordResetExpiry, NeedsReset',
-                'ExpressionAttributeValues' => [
-                    ':p' => [
-                        'S' => $this->hashPassword($password),
-                    ],
-                ],
-            ]
-        );
-
-        return true;
-    }
-
     public function recordSuccessfulLogin(string $id, string $loginTime): void
     {
         $this->client->updateItem(
@@ -331,64 +192,6 @@ class ActorUsers implements ActorUsersInterface
                 ],
             ]
         );
-    }
-
-    public function recordPasswordResetRequest(string $email, string $resetToken, int $resetExpiry): array
-    {
-        $userData = $this->getByEmail($email);
-        $id       = $userData['Id'];
-
-        $user = $this->client->updateItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression'          => 'SET PasswordResetToken=:rt, PasswordResetExpiry=:re',
-                'ExpressionAttributeValues' => [
-                    ':rt' => [
-                        'S' => $resetToken,
-                    ],
-                    ':re' => [
-                        'N' => (string)$resetExpiry,
-                    ],
-                ],
-                'ReturnValues'              => 'ALL_NEW',
-            ]
-        );
-
-        return $this->getData($user);
-    }
-
-    public function recordChangeEmailRequest(string $id, string $newEmail, string $resetToken, int $resetExpiry): array
-    {
-        $user = $this->client->updateItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression'          => 'SET EmailResetToken=:rt, EmailResetExpiry=:re, NewEmail=:ne',
-                'ExpressionAttributeValues' => [
-                    ':rt' => [
-                        'S' => $resetToken,
-                    ],
-                    ':re' => [
-                        'N' => (string)$resetExpiry,
-                    ],
-                    ':ne' => [
-                        'S' => $newEmail,
-                    ],
-                ],
-                'ReturnValues'              => 'ALL_NEW',
-            ]
-        );
-
-        return $this->getData($user);
     }
 
     public function changeEmail(string $id, string $token, string $newEmail): bool
@@ -435,55 +238,6 @@ class ActorUsers implements ActorUsersInterface
         );
 
         return $this->getData($user);
-    }
-
-    public function resetActivationDetails(string $id, HiddenString $password, int $activationTtl): array
-    {
-        //  Update the item by setting the password and restarting the Expiry TTL
-        $result = $this->client->updateItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression'          => 'SET Password=:p, ExpiresTTL=:et',
-                'ExpressionAttributeValues' => [
-                    ':p'  => [
-                        'S' => $this->hashPassword($password),
-                    ],
-                    ':et' => [
-                        'N' => (string)$activationTtl,
-                    ],
-                ],
-                'ReturnValues'              => 'ALL_NEW',
-            ]
-        );
-        return $this->getData($result);
-    }
-
-    public function rehashPassword(string $id, HiddenString $password): bool
-    {
-        //  Update the item by setting the password
-        $this->client->updateItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-                'UpdateExpression'          => 'SET Password=:p',
-                'ExpressionAttributeValues' => [
-                    ':p' => [
-                        'S' => $this->hashPassword($password),
-                    ],
-                ],
-            ]
-        );
-
-        return true;
     }
 
     private function hashPassword(HiddenString $password): string
