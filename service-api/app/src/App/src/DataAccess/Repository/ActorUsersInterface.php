@@ -16,7 +16,7 @@ use ParagonIE\HiddenString\HiddenString;
  *     Identity?: string,
  *     Email: string,
  *     Password?: string,
- *     LastLogin: string,
+ *     LastLogin?: string,
  *     ActivationToken?: string,
  *     ExpiresTTL?: int,
  *     PasswordResetToken?: string,
@@ -34,18 +34,14 @@ interface ActorUsersInterface
      *
      * @param string $id
      * @param string $email
-     * @param HiddenString $password
-     * @param string $activationToken
-     * @param int $activationTtl
+     * @param string $identity
      * @return void
      * @throws CreationException
      */
     public function add(
         string $id,
         string $email,
-        HiddenString $password,
-        string $activationToken,
-        int $activationTtl,
+        string $identity,
     ): void;
 
     /**

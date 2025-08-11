@@ -7,13 +7,11 @@ namespace App\Service\User;
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
-use App\Exception\DateTimeException;
 use App\Exception\NotFoundException;
 use App\Exception\RandomException;
 use App\Service\Log\Output\Email;
 use App\Service\RandomByteGenerator;
 use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -30,47 +28,34 @@ class UserService
     }
 
     /**
-     * @param array{
-     *     email: string,
-     *     password?: HiddenString,
-     * } $data
-     * @return array{
-     *     Id: string,
-     *     ActivationToken: string,
-     *     ExpiresTTL: int,
-     * }
-     * @throws CreationException|ConflictException|RandomException|DateTimeException|NotFoundException
+     * @psalm-return ActorUser The ID of the created user
+     * @throws ConflictException
+     * @throws CreationException
      */
-    public function add(array $data): array
+    public function add(string $email, string $identity): array
     {
-        if ($this->usersRepository->exists($data['email'])) {
+        if ($this->usersRepository->exists($email)) {
             throw new ConflictException(
-                'User already exists with email address ' . $data['email'],
-                ['email' => $data['email']]
+                'User already exists with email address ' . $email,
+                ['email' => $email]
             );
         }
 
         // Generate unique id for user
         $id = $this->generateUniqueId();
 
-        // If a password is not supplied, make a random one.
-        $password = $data['password'] ?? new HiddenString(bin2hex(($this->byteGenerator)(32)));
-
-        //  An unactivated user account can only exist for 24 hours before it is deleted
-        $activationToken = $this->getLinkToken();
-        $activationTtl   = $this->getExpiryTtl();
-
-        $this->usersRepository->add($id, $data['email'], $password, $activationToken, $activationTtl);
+        $this->usersRepository->add($id, $email, $identity);
 
         $this->logger->info(
-            'Account with Id {id} created using email {email}',
+            'Account with Id {id} created for identity {identity} using email {email}',
             [
-                'id'    => $id,
-                'email' => new Email($data['email']),
+                'id'       => $id,
+                'email'    => new Email($email),
+                'identity' => $identity,
             ]
         );
 
-        return ['Id' => $id, 'ActivationToken' => $activationToken, 'ExpiresTTL' => $activationTtl];
+        return ['Id' => $id, 'Email' => $email, 'Identity' => $identity];
     }
 
     /**
@@ -107,27 +92,6 @@ class UserService
         $user = $this->usersRepository->get($accountId);
 
         return $this->usersRepository->delete($user['Id']);
-    }
-
-    /**
-     * Get link token
-     *
-     * @return string
-     * @throws RandomException
-     */
-    private function getLinkToken(): string
-    {
-        return Base64UrlSafe::encode(($this->byteGenerator)(32));
-    }
-
-    /**
-     * get Expiry TTL
-     *
-     * @return int
-     */
-    private function getExpiryTtl(): int
-    {
-        return time() + (60 * 60 * 24);
     }
 
     /**

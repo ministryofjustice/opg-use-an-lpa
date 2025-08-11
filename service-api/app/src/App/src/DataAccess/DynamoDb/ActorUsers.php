@@ -27,19 +27,15 @@ class ActorUsers implements ActorUsersInterface
     public function add(
         string $id,
         string $email,
-        HiddenString $password,
-        string $activationToken,
-        int $activationTtl,
+        string $identity,
     ): void {
         $result = $this->client->putItem(
             [
                 'TableName' => $this->actorUsersTable,
                 'Item'      => [
-                    'Id'              => ['S' => $id],
-                    'Email'           => ['S' => $email],
-                    'Password'        => ['S' => $this->hashPassword($password)],
-                    'ActivationToken' => ['S' => $activationToken],
-                    'ExpiresTTL'      => ['N' => (string)$activationTtl],
+                    'Id'       => ['S' => $id],
+                    'Email'    => ['S' => $email],
+                    'Identity' => ['S' => $identity],
                 ],
             ]
         );

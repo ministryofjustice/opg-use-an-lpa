@@ -6,7 +6,7 @@ namespace App\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Service\Log\EventCodes;
-use App\Exception\{ConflictException, CreationException, DateTimeException, NotFoundException, RandomException};
+use App\Exception\{ConflictException, CreationException, NotFoundException};
 use App\Service\Log\Output\Email;
 use DateTimeInterface;
 use Psr\Clock\ClockInterface;
@@ -57,17 +57,15 @@ class ResolveOAuthUser
             $this->clock->now()->format(DateTimeInterface::ATOM)
         );
 
-        // Ensure we don't return our Password over the wire.
+        // Ensure we don't return our Password over the wire. Although we don't set this anymore
+        // the majority of records still have an associated password.
         unset($user['Password']);
 
         return $user;
     }
 
     /**
-     * @param string $email
-     * @param string $identity
-     * @return ?array
-     * @psalm-return ?ActorUser
+     * @psalm-return ?ActorUser A user if found
      */
     public function attemptToFetchUserByIdentity(string $identity, string $email): ?array
     {
@@ -93,10 +91,7 @@ class ResolveOAuthUser
     }
 
     /**
-     * @param string $identity
-     * @param string $email
-     * @return ?array
-     * @psalm-return ?ActorUser
+     * @psalm-return ?ActorUser A user if found
      */
     public function attemptToFetchUserByEmail(string $identity, string $email): ?array
     {
@@ -119,17 +114,14 @@ class ResolveOAuthUser
     }
 
     /**
-     * @param string $identity
-     * @param string $email
-     * @return array
-     * @throws ConflictException|CreationException|NotFoundException
-     * @psalm-return ActorUser
+     * @psalm-return ActorUser The user just created
+     * @throws ConflictException
+     * @throws CreationException
      */
     public function addNewUser(string $identity, string $email): array
     {
         try {
-            $user = $this->userService->add(['email' => $email]);
-            $user = $this->usersRepository->migrateToOAuth($user['Id'], $identity);
+            $user = $this->userService->add($email, $identity);
 
             $this->logger->info(
                 'Created new OIDC login for account with email {email}',
@@ -148,8 +140,6 @@ class ResolveOAuthUser
             );
 
             throw $e;
-        } catch (DateTimeException | RandomException $e) {
-            throw new CreationException('Low level PHP error occurred whilst attempting to add user', [], $e);
         }
     }
 
