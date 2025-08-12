@@ -5,25 +5,12 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
-use App\Exception\BadRequestException;
-use App\Exception\ConflictException;
-use App\Exception\DateTimeException;
-use App\Exception\ForbiddenException;
-use App\Exception\GoneException;
 use App\Exception\NotFoundException;
-use App\Exception\UnauthorizedException;
-use App\Service\Log\Output\Email;
-use App\Service\RandomByteGenerator;
 use App\Service\User\UserService;
-use DateTime;
-use DateTimeImmutable;
-use Exception;
-use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 

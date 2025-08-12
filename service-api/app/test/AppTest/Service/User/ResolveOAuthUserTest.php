@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
-use App\Exception\ConflictException;
-use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use App\Exception\RandomException;
 use App\Service\User\RecoverAccount;
 use App\Service\User\ResolveOAuthUser;
 use App\Service\User\UserService;
