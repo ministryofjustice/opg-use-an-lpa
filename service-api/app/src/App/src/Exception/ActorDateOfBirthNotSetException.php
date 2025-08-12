@@ -9,9 +9,9 @@ use Throwable;
 
 class ActorDateOfBirthNotSetException extends AbstractApiException
 {
-    public const MESSAGE = 'Actor date of birth is not set';
-    public const TITLE   = 'DOB Not Found';
-    public const CODE    = StatusCodeInterface::STATUS_NOT_FOUND;
+    public const string MESSAGE = 'Actor date of birth is not set';
+    public const string TITLE   = 'DOB Not Found';
+    public const int    CODE    = StatusCodeInterface::STATUS_NOT_FOUND;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {

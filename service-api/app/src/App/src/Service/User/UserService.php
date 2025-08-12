@@ -24,7 +24,7 @@ class UserService
     }
 
     /**
-     * @psalm-return ActorUser The ID of the created user
+     * @psalm-return ActorUser The created user
      * @throws ConflictException
      * @throws CreationException
      */
@@ -57,8 +57,6 @@ class UserService
     /**
      * Get an actor user using the email address
      *
-     * @param string $email
-     * @return array
      * @psalm-return ActorUser
      * @throws NotFoundException
      */
@@ -68,8 +66,6 @@ class UserService
     }
 
     /**
-     * @param string $identity
-     * @return array
      * @psalm-return ActorUser
      * @throws NotFoundException
      */
@@ -79,8 +75,7 @@ class UserService
     }
 
     /**
-     * @param string $accountId
-     * @return array
+     * @psalm-return ActorUser The deleted user details
      * @throws NotFoundException Account was not found
      */
     public function deleteUserAccount(string $accountId): array

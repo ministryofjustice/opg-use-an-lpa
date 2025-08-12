@@ -10,9 +10,6 @@ use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
 use Aws\DynamoDb\Marshaler;
 use Fig\Http\Message\StatusCodeInterface;
-use ParagonIE\HiddenString\HiddenString;
-
-use function password_hash;
 
 class ActorUsers implements ActorUsersInterface
 {
@@ -68,6 +65,10 @@ class ActorUsers implements ActorUsersInterface
         return $userData;
     }
 
+    /**
+     * @psalm-suppress PossiblyUnusedReturnValue
+     * @see https://github.com/vimeo/psalm/issues/10292
+     */
     public function getByEmail(string $email): array
     {
         $marshaler = new Marshaler();
@@ -91,7 +92,8 @@ class ActorUsers implements ActorUsersInterface
             throw new NotFoundException('User not found for email', ['email' => $email]);
         }
 
-        return array_pop($usersData);
+        return array_pop($usersData)
+            ?? throw new NotFoundException('User not found for email', ['email' => $email]);
     }
 
     public function getByIdentity(string $identity): array
@@ -120,7 +122,8 @@ class ActorUsers implements ActorUsersInterface
             throw new NotFoundException('User not found for identity', ['identity' => $identity]);
         }
 
-        return array_pop($usersData);
+        return array_pop($usersData)
+            ?? throw new NotFoundException('User not found for identity', ['identity' => $identity]);
     }
 
     public function migrateToOAuth(string $id, string $identity): array
@@ -190,9 +193,8 @@ class ActorUsers implements ActorUsersInterface
         );
     }
 
-    public function changeEmail(string $id, string $token, string $newEmail): bool
+    public function changeEmail(string $id, string $token, string $newEmail): void
     {
-        //  Update the item by setting the new email and removing the reset token/expiry
         $this->client->updateItem(
             [
                 'TableName'                 => $this->actorUsersTable,
@@ -209,8 +211,6 @@ class ActorUsers implements ActorUsersInterface
                 ],
             ]
         );
-
-        return true;
     }
 
     public function delete(string $accountId): array
@@ -234,16 +234,5 @@ class ActorUsers implements ActorUsersInterface
         );
 
         return $this->getData($user);
-    }
-
-    private function hashPassword(HiddenString $password): string
-    {
-        return password_hash(
-            $password->getString(),
-            PASSWORD_DEFAULT,
-            [
-                'cost' => 13,
-            ]
-        );
     }
 }
