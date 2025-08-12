@@ -8,10 +8,7 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use App\Exception\RandomException;
 use App\Service\Log\Output\Email;
-use App\Service\RandomByteGenerator;
-use ParagonIE\ConstantTime\Base64UrlSafe;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -22,7 +19,6 @@ class UserService
 {
     public function __construct(
         private ActorUsersInterface $usersRepository,
-        private RandomByteGenerator $byteGenerator,
         private LoggerInterface $logger,
     ) {
     }
