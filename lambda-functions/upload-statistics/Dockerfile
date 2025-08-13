@@ -6,6 +6,7 @@ COPY requirements.txt /app
 
 # Install the function's dependencies
 RUN pip install \
+    --no-cache-dir \
     --target /app \
     -r /app/requirements.txt
 

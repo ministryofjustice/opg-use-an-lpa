@@ -13,8 +13,8 @@ FROM golang:1.24.6-alpine@sha256:c8c5f95d64aa79b6547f3b626eb84b16a7ce18a139e3e9c
 
 RUN apk --no-cache add \
   build-base=0.5-r3 \
-  ca-certificates \
-  tzdata \
+  ca-certificates=20250619-r0 \
+  tzdata=2025b-r0 \
   && rm -rf /var/cache/apk/* \
   && adduser -D appuser
 
