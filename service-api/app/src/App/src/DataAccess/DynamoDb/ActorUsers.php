@@ -193,7 +193,7 @@ class ActorUsers implements ActorUsersInterface
         );
     }
 
-    public function changeEmail(string $id, string $token, string $newEmail): void
+    public function changeEmail(string $id, string $newEmail): void
     {
         $this->client->updateItem(
             [

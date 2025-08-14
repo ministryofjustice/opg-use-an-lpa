@@ -82,7 +82,7 @@ interface ActorUsersInterface
     /**
      * Changes the email address for an account to the supplied new email
      */
-    public function changeEmail(string $id, string $token, string $newEmail): void;
+    public function changeEmail(string $id, string $newEmail): void;
 
     /**
      * Deletes a user's account by account id

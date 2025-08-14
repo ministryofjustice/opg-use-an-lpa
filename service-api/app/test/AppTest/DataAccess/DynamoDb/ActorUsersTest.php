@@ -475,6 +475,26 @@ class ActorUsersTest extends TestCase
     }
 
     #[Test]
+    public function will_change_a_users_email(): void
+    {
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(function (array $data) {
+                // we don't care what the array looks like as it's specific to the AWS api and may change
+                // we do care that the data *at least* contains the items we want to affect
+                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
+                $this->assertStringContainsString('fakeId', serialize($data));
+                $this->assertStringContainsString('newemail@example.com', serialize($data));
+
+                return true;
+            })
+        )->shouldBeCalled();
+
+        $sut = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $sut->changeEmail('fakeId', 'newemail@example.com');
+    }
+
+    #[Test]
     public function will_migrate_a_local_account_to_oidc(): void
     {
         $id       = '12345-1234-1234-1234-12345';
