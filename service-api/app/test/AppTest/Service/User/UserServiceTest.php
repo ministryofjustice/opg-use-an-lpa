@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,13 +19,8 @@ class UserServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    // Password hash for password 'test' generated using PASSWORD_DEFAULT
-    private const INSECURE_PASS_HASH = '$2y$10$Ew4y5jzm6fGKAB16huUw6ugZbuhgW5cvBQ6DGVDFzuyBXsCw51dzq';
-    private const PASS               = 'test';
-    private const PASS_HASH          = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
+    private const string PASS_HASH = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
 
-    private string $activationToken;
-    private int $expiresTTL;
     private string $id;
 
     #[Test]
@@ -59,6 +55,24 @@ class UserServiceTest extends TestCase
             ],
             $return
         );
+    }
+
+    #[Test]
+    public function wont_add_a_user_that_already_exists(): void
+    {
+        $email    = 'a@b.com';
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->exists($email)->willReturn(true);
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $this->expectException(ConflictException::class);
+        $us->add($email, $identity);
     }
 
     #[Test]

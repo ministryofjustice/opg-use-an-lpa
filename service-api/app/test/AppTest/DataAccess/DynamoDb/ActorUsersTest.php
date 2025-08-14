@@ -21,7 +21,7 @@ class ActorUsersTest extends TestCase
     use GenerateAwsResultTrait;
     use ProphecyTrait;
 
-    public const TABLE_NAME = 'test-table-name';
+    public const string TABLE_NAME = 'test-table-name';
 
     private ObjectProphecy $dynamoDbClientProphecy;
 
@@ -295,26 +295,18 @@ class ActorUsersTest extends TestCase
         $actorRepo->getByEmail($email);
     }
 
+    #[Test]
     public function will_fail_to_get_a_user_record_by_identity_when_it_doesnt_exist(): void
     {
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
         $this->dynamoDbClientProphecy->query(
             Argument::that(function (array $data) use ($identity) {
-                $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
-
-                //---
-
-                $this->assertArrayHasKey('IndexName', $data);
                 $this->assertEquals('IdentityIndex', $data['IndexName']);
 
-                //---
-
-                $this->assertArrayHasKey('ExpressionAttributeValues', $data);
-                $this->assertArrayHasKey(':identity', $data['ExpressionAttributeValues']);
-
-                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':identity']);
+                $this->assertEquals('Identity', $data['ExpressionAttributeNames']['#sub']);
+                $this->assertEquals(['S' => $identity], $data['ExpressionAttributeValues'][':sub']);
 
                 return true;
             })
