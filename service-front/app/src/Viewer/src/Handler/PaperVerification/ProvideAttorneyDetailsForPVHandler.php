@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Viewer\Handler;
+namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -13,22 +12,31 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\VerificationCodeReceiver;
+use Viewer\Form\AttorneyDetailsForPV;
+use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
  */
-class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
+class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
-    private VerificationCodeReceiver $form;
+    private AttorneyDetailsForPV $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
+
+    private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
@@ -36,7 +44,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new VerificationCodeReceiver($this->getCsrfGuard($request));
+        $this->form           = new AttorneyDetailsForPV($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -44,16 +52,20 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO get donor name and add it to twig template
-        $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
+        $attorneyName  = $this->state($request)->attorneyName;
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
 
-        $template = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::paper-verification/verification-code-sent-to'
-            : 'viewer::enter-code';
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
 
-        return new HtmlResponse($this->renderer->render($template, [
-            'donor_name' => $donorName,
+        if ($noOfAttorneys) {
+            $this->form->setData(['attorneys_name' => $attorneyName]);
+        }
+
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -64,11 +76,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $sentToDonor = $this->form->getData()['verification_code_receiver'];
-
-            if (!$this->state($request)->sentToDonor = $sentToDonor === 'Donor') {
-                $this->state($request)->attorneyName = $this->form->getData()['attorney_name'];
-            }
+            $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
+            $this->state($request)->attorneyName  = $this->form->getData()['attorneys_name'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -85,9 +94,19 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null;
+        return false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->sentToDonor !== null &&
+            $state->lastName !== null &&
+            $state->lpaUid !== null &&
+            $state->code !== null;
     }
 
     /**
@@ -95,8 +114,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'donor-dob';
+        return 'pv.check-answers';
     }
 
     /**
@@ -104,7 +122,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.donor-dob';
     }
 }

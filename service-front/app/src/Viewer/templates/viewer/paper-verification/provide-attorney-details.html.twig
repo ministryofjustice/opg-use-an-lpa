@@ -1,11 +1,11 @@
-{% extends '@actor/layout.html.twig' %}
+{% extends '@viewer/layout.html.twig' %}
 
 {% block html_title %}{% trans %}Attorney details{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('home') }}" class="govuk-back-link"
+            <a href="{{ path(back) }}" class="govuk-back-link"
                id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
