@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "55d5f82d79a0f5ead9d47bfe407ab63d",
+    "content-hash": "3ed0fbed5405798f1c0a999b40f57e53",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -9376,6 +9376,50 @@
                 "source": "https://github.com/cweiske/jsonmapper/tree/v4.5.0"
             },
             "time": "2024-09-08T10:13:13+00:00"
+        },
+        {
+            "name": "nicwortel/behat-unused-step-definitions-extension",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicwortel/behat-unused-step-definitions-extension.git",
+                "reference": "274d76a5ba39352f67d6e538dc68ea97d4afb3ef"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicwortel/behat-unused-step-definitions-extension/zipball/274d76a5ba39352f67d6e538dc68ea97d4afb3ef",
+                "reference": "274d76a5ba39352f67d6e538dc68ea97d4afb3ef",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "^3.9",
+                "php": "^8.1",
+                "symfony/config": "^4.4 || ^5.4 || ^6.0 || ^7.0"
+            },
+            "require-dev": {
+                "nicwortel/coding-standard": "^2.3",
+                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan-symfony": "^1.2",
+                "phpunit/phpunit": "^10.3",
+                "rector/rector": "^0.18.4",
+                "symfony/process": "^6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "NicWortel\\BehatUnusedStepDefinitionsExtension\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A Behat extension that detects unused step definitions",
+            "support": {
+                "issues": "https://github.com/nicwortel/behat-unused-step-definitions-extension/issues",
+                "source": "https://github.com/nicwortel/behat-unused-step-definitions-extension/tree/v1.2.0"
+            },
+            "time": "2024-07-11T14:08:15+00:00"
         },
         {
             "name": "pact-foundation/pact-php",

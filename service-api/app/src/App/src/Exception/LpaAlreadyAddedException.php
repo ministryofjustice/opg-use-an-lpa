@@ -8,9 +8,9 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class LpaAlreadyAddedException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
-    public const MESSAGE = 'LPA already added';
-    public const TITLE   = 'Bad Request';
-    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const string MESSAGE = 'LPA already added';
+    public const string TITLE   = 'Bad Request';
+    public const int    CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {

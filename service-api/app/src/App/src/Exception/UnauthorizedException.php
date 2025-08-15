@@ -9,8 +9,8 @@ use Throwable;
 
 class UnauthorizedException extends AbstractApiException
 {
-    public const TITLE = 'Unauthorized';
-    public const CODE  = StatusCodeInterface::STATUS_UNAUTHORIZED;
+    public const string TITLE = 'Unauthorized';
+    public const int    CODE  = StatusCodeInterface::STATUS_UNAUTHORIZED;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {

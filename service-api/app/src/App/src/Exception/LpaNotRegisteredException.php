@@ -8,9 +8,9 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class LpaNotRegisteredException extends AbstractApiException
 {
-    public const MESSAGE = 'LPA status is not registered';
-    public const TITLE   = 'Bad Request';
-    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const string MESSAGE = 'LPA status is not registered';
+    public const string TITLE   = 'Bad Request';
+    public const int    CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {

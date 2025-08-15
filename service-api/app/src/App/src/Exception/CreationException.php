@@ -9,8 +9,8 @@ use Throwable;
 
 class CreationException extends AbstractApiException
 {
-    public const TITLE = 'Creation error';
-    public const CODE  = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
+    public const string TITLE = 'Creation error';
+    public const int    CODE  = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {
