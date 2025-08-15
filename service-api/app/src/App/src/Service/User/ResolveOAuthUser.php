@@ -165,7 +165,7 @@ class ResolveOAuthUser
     private function updateEmail(array $user, string $email): array
     {
         // update the held email
-        $this->usersRepository->changeEmail($user['Id'], '', $email);
+        $this->usersRepository->changeEmail($user['Id'], $email);
 
         $logEmail      = $email;
         $user['Email'] = $email;

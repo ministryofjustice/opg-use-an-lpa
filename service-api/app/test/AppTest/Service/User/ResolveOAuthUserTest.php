@@ -77,7 +77,7 @@ class ResolveOAuthUserTest extends TestCase
             ->recordSuccessfulLogin('fakeId', Argument::cetera())
             ->shouldBeCalled();
         $actorUsersInterfaceProphecy
-            ->changeEmail('fakeId', '', 'newFakeEmail')
+            ->changeEmail('fakeId', 'newFakeEmail')
             ->shouldBeCalled();
 
         $userServiceProphecy = $this->prophesize(UserService::class);
