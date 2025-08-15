@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session\Encryption;
 
-use PHPUnit\Framework\Attributes\Test;
-use Common\Service\Session\Encryption\KmsEncryptedCookie;
+use Common\Service\Session\Encryption\BlockCipherEncryptedCookie;
 use Common\Service\Session\KeyManager\Key;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Laminas\Crypt\BlockCipher;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class KmsEncryptedCookieTest extends TestCase
+class BlockCipherEncryptedCookieTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -24,9 +24,8 @@ class KmsEncryptedCookieTest extends TestCase
         $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
-
-        $this->assertInstanceOf(KmsEncryptedCookie::class, $sut);
+        $this->expectNotToPerformAssertions();
+        new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
     }
 
     #[Test]
@@ -47,7 +46,7 @@ class KmsEncryptedCookieTest extends TestCase
         $blockCipherProphecy->setKey('encryptionKey')->willReturn($blockCipherProphecy->reveal());
         $blockCipherProphecy->encrypt(Argument::type('string'))->willReturn('encryptedString');
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
 
         $encoded = $sut->encodeCookieValue($data);
 
@@ -62,7 +61,7 @@ class KmsEncryptedCookieTest extends TestCase
         $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
 
         $cookieValue = $sut->encodeCookieValue($data);
 
@@ -86,7 +85,7 @@ class KmsEncryptedCookieTest extends TestCase
         $blockCipherProphecy->setKey('encryptionKey')->willReturn($blockCipherProphecy->reveal());
         $blockCipherProphecy->decrypt(Argument::type('string'))->willReturn('{"session":"data"}');
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
 
         $decoded = $sut->decodeCookieValue('1.ZW5jcnlwdGVkU3RyaW5n');
 
@@ -101,7 +100,7 @@ class KmsEncryptedCookieTest extends TestCase
 
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
 
         $decoded = $sut->decodeCookieValue('1.ZW5jcnlwdGVkU3RyaW5n');
 
@@ -116,7 +115,7 @@ class KmsEncryptedCookieTest extends TestCase
         $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
         $blockCipherProphecy = $this->prophesize(BlockCipher::class);
 
-        $sut = new KmsEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
 
         $sessionData = $sut->decodeCookieValue('');
 

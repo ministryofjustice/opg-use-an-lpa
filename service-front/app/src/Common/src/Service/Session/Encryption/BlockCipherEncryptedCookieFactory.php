@@ -8,11 +8,11 @@ use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Laminas\Crypt\BlockCipher;
 use Psr\Container\ContainerInterface;
 
-class KmsEncryptedCookieFactory
+class BlockCipherEncryptedCookieFactory
 {
     public function __invoke(ContainerInterface $container)
     {
-        return new KmsEncryptedCookie(
+        return new BlockCipherEncryptedCookie(
             $container->get(KeyManagerInterface::class),
             BlockCipher::factory(
                 'openssl',

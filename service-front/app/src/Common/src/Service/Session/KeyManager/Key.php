@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Common\Service\Session\KeyManager;
 
 use ParagonIE\Halite\Symmetric\EncryptionKey;
+use ParagonIE\Halite\Symmetric\SecretKey;
 
 /**
  * Represents a single encryption key, and it ID.
  */
 class Key
 {
-    public function __construct(private string $id, private EncryptionKey $material)
+    public function __construct(private readonly string $id, private readonly EncryptionKey $material)
     {
     }
 
@@ -23,6 +24,16 @@ class Key
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * Retrieve the underlying Halite backed encryption key
+     *
+     * @return EncryptionKey
+     */
+    public function getKey(): EncryptionKey
+    {
+        return $this->material;
     }
 
     /**
