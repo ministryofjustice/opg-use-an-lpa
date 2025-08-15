@@ -9,8 +9,8 @@ use Throwable;
 
 class ConflictException extends AbstractApiException
 {
-    public const TITLE = 'Conflict';
-    public const CODE  = StatusCodeInterface::STATUS_CONFLICT;
+    public const string TITLE = 'Conflict';
+    public const int    CODE  = StatusCodeInterface::STATUS_CONFLICT;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {
