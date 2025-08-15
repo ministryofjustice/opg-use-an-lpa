@@ -9,8 +9,8 @@ use Throwable;
 
 class BadRequestException extends AbstractApiException
 {
-    public const TITLE = 'Bad Request';
-    public const CODE  = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const string TITLE = 'Bad Request';
+    public const int    CODE  = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {

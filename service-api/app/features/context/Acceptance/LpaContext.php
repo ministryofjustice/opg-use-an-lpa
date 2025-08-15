@@ -3646,4 +3646,28 @@ class LpaContext implements Context
         Assert::assertEquals(InstructionsAndPreferencesImagesResult::COLLECTION_COMPLETE->value, $response['status']);
         Assert::assertCount(2, $response['signedUrls']);
     }
+
+    #[When('I request to remove an LPA')]
+    public function iRequestToRemoveAnLpa(): void
+    {
+        // Not needed for this context
+    }
+
+    #[When('I confirm that I want to remove the LPA')]
+    public function iConfirmThatIWantToRemoveTheLpa(): void
+    {
+        // Not needed for this context
+    }
+
+    #[Then('I cannot see my LPA on the dashboard')]
+    public function iCannotSeeMyLpaOnTheDashboard(): void
+    {
+        // Not needed for this context
+    }
+
+    #[Then('I can see a flash message confirming that my LPA has been removed')]
+    public function iCanSeeAFlashMessageConfirmingThatMyLpaHasBeenRemoved(): void
+    {
+        // Not needed for this context
+    }
 }

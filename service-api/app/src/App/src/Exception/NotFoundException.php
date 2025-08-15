@@ -9,8 +9,8 @@ use Throwable;
 
 class NotFoundException extends AbstractApiException
 {
-    public const TITLE = 'Not found';
-    public const CODE  = StatusCodeInterface::STATUS_NOT_FOUND;
+    public const string TITLE = 'Not found';
+    public const int    CODE  = StatusCodeInterface::STATUS_NOT_FOUND;
 
     public function __construct(?string $message = null, ?array $additionalData = [], ?Throwable $previous = null)
     {

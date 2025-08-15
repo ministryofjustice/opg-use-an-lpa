@@ -3039,4 +3039,10 @@ class LpaContext extends BaseIntegrationContext
             }
         }
     }
+
+    #[When('I do not confirm cancellation of the chosen viewer code')]
+    public function iDoNotConfirmCancellationOfTheChosenViewerCode(): void
+    {
+        // Not needed for this context
+    }
 }

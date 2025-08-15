@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
-use App\Exception\ConflictException;
-use App\Exception\CreationException;
 use App\Exception\NotFoundException;
-use App\Exception\RandomException;
 use App\Service\User\RecoverAccount;
 use App\Service\User\ResolveOAuthUser;
 use App\Service\User\UserService;
@@ -80,7 +77,7 @@ class ResolveOAuthUserTest extends TestCase
             ->recordSuccessfulLogin('fakeId', Argument::cetera())
             ->shouldBeCalled();
         $actorUsersInterfaceProphecy
-            ->changeEmail('fakeId', '', 'newFakeEmail')
+            ->changeEmail('fakeId', 'newFakeEmail')
             ->shouldBeCalled();
 
         $userServiceProphecy = $this->prophesize(UserService::class);
@@ -236,9 +233,6 @@ class ResolveOAuthUserTest extends TestCase
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
         $actorUsersInterfaceProphecy
-            ->migrateToOAuth('fakeId', 'fakeSub')
-            ->willThrow(NotFoundException::class);
-        $actorUsersInterfaceProphecy
             ->recordSuccessfulLogin('fakeId', Argument::cetera())
             ->shouldBeCalled();
 
@@ -250,25 +244,14 @@ class ResolveOAuthUserTest extends TestCase
             ->getByEmail('fakeEmail')
             ->willThrow(NotFoundException::class);
         $userServiceProphecy
-            ->add(['email' => 'fakeEmail'])
-            ->will(function () use ($actorUsersInterfaceProphecy) {
-                $actorUsersInterfaceProphecy
-                    ->migrateToOAuth('fakeId', 'fakeSub')
-                    ->willReturn(
-                        [
-                            'Id'       => 'fakeId',
-                            'Identity' => 'fakeSub',
-                            'Email'    => 'fakeEmail',
-                            'Password' => 'fakePassword',
-                        ]
-                    );
-
-                return [
+            ->add('fakeEmail', 'fakeSub')
+            ->willReturn(
+                [
                     'Id'       => 'fakeId',
                     'Email'    => 'fakeEmail',
-                    'Password' => 'fakePassword',
-                ];
-            });
+                    'Identity' => 'fakeSub',
+                ]
+            );
 
         $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
 
@@ -286,88 +269,10 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'fakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertEquals('fakeSub', $user['Identity'] ?? '');
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
-    }
-
-    #[Test]
-    public function new_onelogin_user_fails_due_to_email_change_conflict(): void
-    {
-        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
-        $actorUsersInterfaceProphecy
-            ->migrateToOAuth('fakeId', 'fakeSub')
-            ->willThrow(NotFoundException::class);
-        $actorUsersInterfaceProphecy
-            ->recordSuccessfulLogin(Argument::cetera())
-            ->shouldNotHaveBeenCalled();
-
-        $userServiceProphecy = $this->prophesize(UserService::class);
-        $userServiceProphecy
-            ->getByIdentity('fakeSub')
-            ->willThrow(NotFoundException::class);
-        $userServiceProphecy
-            ->getByEmail('fakeEmail')
-            ->willThrow(NotFoundException::class);
-        $userServiceProphecy
-            ->add(['email' => 'fakeEmail'])
-            ->willThrow(ConflictException::class);
-
-        $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
-
-        $clockProphecy = $this->prophesize(ClockInterface::class);
-        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
-
-        $sut = new ResolveOAuthUser(
-            $actorUsersInterfaceProphecy->reveal(),
-            $userServiceProphecy->reveal(),
-            $recoverAccountProphecy->reveal(),
-            $clockProphecy->reveal(),
-            $this->prophesize(LoggerInterface::class)->reveal(),
-        );
-
-        $this->expectException(ConflictException::class);
-        $user = ($sut)('fakeSub', 'fakeEmail');
-    }
-
-    #[Test]
-    public function new_onelogin_user_fails_due_to_php_exception(): void
-    {
-        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
-        $actorUsersInterfaceProphecy
-            ->migrateToOAuth('fakeId', 'fakeSub')
-            ->willThrow(NotFoundException::class);
-        $actorUsersInterfaceProphecy
-            ->recordSuccessfulLogin(Argument::cetera())
-            ->shouldNotHaveBeenCalled();
-
-        $userServiceProphecy = $this->prophesize(UserService::class);
-        $userServiceProphecy
-            ->getByIdentity('fakeSub')
-            ->willThrow(NotFoundException::class);
-        $userServiceProphecy
-            ->getByEmail('fakeEmail')
-            ->willThrow(NotFoundException::class);
-        $userServiceProphecy
-            ->add(['email' => 'fakeEmail'])
-            ->willThrow(RandomException::class);
-
-        $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
-
-        $clockProphecy = $this->prophesize(ClockInterface::class);
-        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
-
-        $sut = new ResolveOAuthUser(
-            $actorUsersInterfaceProphecy->reveal(),
-            $userServiceProphecy->reveal(),
-            $recoverAccountProphecy->reveal(),
-            $clockProphecy->reveal(),
-            $this->prophesize(LoggerInterface::class)->reveal(),
-        );
-
-        $this->expectException(CreationException::class);
-        $user = ($sut)('fakeSub', 'fakeEmail');
     }
 }
