@@ -363,14 +363,14 @@ jobs:
             aquasec/trivy:0.65.0 image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
-            --format sarif --output ./test-results/trivy.sarif \
+            --format sarif --output ./test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif \
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
         if: always()
         with:
-          sarif_file: './test-results/trivy.sarif'
+          sarif_file: './test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif'
 
       - name: tag and push container
         env:
