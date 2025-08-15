@@ -101,3 +101,21 @@ WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.emai
 GROUP BY a. Item.email.S, a.Item.id.S,b.Item.SiriusUid.S 
 ORDER BY a.Item.email.S
 ```
+
+Here is the Select query to get the count of duplicate user accounts with one login id.
+```SQL
+SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts_With_OneLogin_Id
+FROM actor_users a 
+LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)
+And a.Item.identity.S is NOT NULL;
+```
+
+Here is the Select query to get the count of duplicate user accounts without one login id.
+```SQL
+SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts_With_NO_OneLogin_Id
+FROM actor_users a 
+LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)
+And a.Item.identity.S is NULL;
+```
