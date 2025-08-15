@@ -75,20 +75,6 @@ jobs:
     if: |
       needs.workflow_variables.outputs.specific_path == 'docs'
 
-  slack_notify_documentation_update:
-    name: notify documentation update
-    uses: ./.github/workflows/_slack-notification.yml
-    needs:
-      - update_documentation
-      - workflow_variables
-    with:
-      template: documentation_update.txt
-      documentation_update: ${{ needs.update_documentation.result }}
-      workspace: production
-    secrets:
-      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: needs.workflow_variables.outputs.specific_path == 'docs'
-
   terraform_lint:
     name: lint terraform code
     uses: ./.github/workflows/_lint-terraform.yml
@@ -260,6 +246,20 @@ jobs:
           use_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$use_fqdn/healthcheck)
           [[ $use_response == 200 ]] || (echo "Error with Use health check. HTTP status: ${use_response}" && exit 1)
 
+  slack_notify_documentation_update:
+    name: notify documentation update
+    uses: ./.github/workflows/_slack-notification.yml
+    needs:
+      - update_documentation
+      - workflow_variables
+    with:
+      template: documentation_update.txt
+      documentation_update: ${{ needs.update_documentation.result }}
+      workspace: production
+    secrets:
+      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
+    if: needs.workflow_variables.outputs.specific_path == 'docs'
+
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
@@ -272,7 +272,7 @@ jobs:
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: always()
+    if: ${{ always() && needs.slack_notify_documentation_update.result == 'skipped' }}
 
   # Required end of workflow job
   end_of_workflow:
