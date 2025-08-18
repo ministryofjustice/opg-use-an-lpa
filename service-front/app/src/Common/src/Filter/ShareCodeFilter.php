@@ -20,17 +20,17 @@ class ShareCodeFilter implements FilterInterface
 
         $value = strtoupper($value);
         // replaces other dashes with normal dash
-        $value = preg_replace('/[–—]/u', '-', $value);
+        $value = preg_replace('/[–—]/u', '-', $value) ?? $value;
 
         if (preg_match('/^P[\- ]/', $value)) {
             // remove spaces or multiple hyphens to one
-            $value = preg_replace('/[\- ]+/', '-', $value);
-            return preg_replace('/^P\-*/', 'P-', $value);
+            $value = preg_replace('/[\- ]+/', '-', $value) ?? $value;
+            return preg_replace('/^P\-*/', 'P-', $value) ?? $value;
         }
 
         // V codes - removes V- and hyphens (maintaining current behaviour)
-        $value = preg_replace('/^V[\- ]*/', '', $value);
+        $value = preg_replace('/^V[\- ]*/', '', $value) ?? $value;
 
-        return preg_replace('/[\- ]+/', '', $value);
+        return preg_replace('/[\- ]+/', '', $value) ?? $value;
     }
 }
