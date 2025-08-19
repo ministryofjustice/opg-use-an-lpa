@@ -132,7 +132,7 @@ class AuthenticationMiddlewareTest extends TestCase
     #[Test]
     public function a_handler_can_request_a_logout(): void
     {
-        $session = $this->createStub(SessionInterface::class);
+        $session = $this->createMock(SessionInterface::class);
         $session->method('has')
             ->willReturn(false);
         $session->expects($this->once())
