@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -49,7 +49,7 @@ class AddLpaApiResponseTest extends TestCase
     /**
      * @return array
      */
-    public function validDataTypeProvider()
+    public static function validDataTypeProvider()
     {
         return [
             [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],

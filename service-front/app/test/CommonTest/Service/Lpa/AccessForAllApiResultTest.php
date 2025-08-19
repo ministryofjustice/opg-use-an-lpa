@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(AccessForAllResult::class)]
@@ -68,7 +68,7 @@ class AccessForAllApiResultTest extends TestCase
     /**
      * @return array
      */
-    public function validDataTypeProvider()
+    public static function validDataTypeProvider()
     {
         return [
             [AccessForAllResult::LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
