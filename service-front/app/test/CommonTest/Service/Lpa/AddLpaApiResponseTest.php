@@ -31,7 +31,7 @@ class AddLpaApiResponseTest extends TestCase
      *
      * @return LpaAlreadyAdded
      */
-    private function createAlreadyAddedDTO()
+    private static function createAlreadyAddedDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -52,7 +52,7 @@ class AddLpaApiResponseTest extends TestCase
     public static function validDataTypeProvider()
     {
         return [
-            [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
+            [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, self::createAlreadyAddedDTO()],
             [AddLpaApiResult::ADD_LPA_FOUND, new ArrayObject(['lpa' => 'data'])],
             [AddLpaApiResult::ADD_LPA_NOT_FOUND, []],
             [AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE, []],

@@ -31,7 +31,7 @@ class AccessForAllApiResultTest extends TestCase
      *
      * @return LpaAlreadyAdded
      */
-    private function createAlreadyAddedDTO()
+    private static function createAlreadyAddedDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -51,7 +51,7 @@ class AccessForAllApiResultTest extends TestCase
      *
      * @return ActivationKeyExists
      */
-    private function createActivationKeyExistsDTO()
+    private static function createActivationKeyExistsDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -71,9 +71,9 @@ class AccessForAllApiResultTest extends TestCase
     public static function validDataTypeProvider()
     {
         return [
-            [AccessForAllResult::LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
-            [AccessForAllResult::HAS_ACTIVATION_KEY, $this->createActivationKeyExistsDTO()],
-            [AccessForAllResult::KEY_ALREADY_REQUESTED, $this->createActivationKeyExistsDTO()],
+            [AccessForAllResult::LPA_ALREADY_ADDED, self::createAlreadyAddedDTO()],
+            [AccessForAllResult::HAS_ACTIVATION_KEY, self::createActivationKeyExistsDTO()],
+            [AccessForAllResult::KEY_ALREADY_REQUESTED, self::createActivationKeyExistsDTO()],
             [AccessForAllResult::DOES_NOT_MATCH, []],
             [AccessForAllResult::NOT_ELIGIBLE, []],
             [AccessForAllResult::NOT_FOUND, []],

@@ -148,7 +148,6 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $sut = new AuthenticationMiddleware($this->helper);
 
-        $this->expectNotToPerformAssertions();
         $sut->process($this->request, $this->handler);
     }
 }
