@@ -135,6 +135,18 @@ class AuthenticationMiddlewareTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $session->method('has')
             ->willReturn(false);
+        $session
+            ->method('get')
+            ->with(UserInterface::class)
+            ->willReturn(
+                [
+                    'username' => 'test',
+                    'roles'    => [],
+                    'details'  => [
+                        'Email' => 'test@test.com',
+                    ],
+                ]
+            );
         $session->expects($this->once())
             ->method('set')
             ->with(SessionAttributeAllowlistMiddleware::SESSION_CLEAN_NEEDED, true);
