@@ -132,9 +132,21 @@ class AuthenticationMiddlewareTest extends TestCase
     #[Test]
     public function a_handler_can_request_a_logout(): void
     {
-        $session = $this->createStub(SessionInterface::class);
+        $session = $this->createMock(SessionInterface::class);
         $session->method('has')
             ->willReturn(false);
+        $session
+            ->method('get')
+            ->with(UserInterface::class)
+            ->willReturn(
+                [
+                    'username' => 'test',
+                    'roles'    => [],
+                    'details'  => [
+                        'Email' => 'test@test.com',
+                    ],
+                ]
+            );
         $session->expects($this->once())
             ->method('set')
             ->with(SessionAttributeAllowlistMiddleware::SESSION_CLEAN_NEEDED, true);
@@ -148,7 +160,6 @@ class AuthenticationMiddlewareTest extends TestCase
 
         $sut = new AuthenticationMiddleware($this->helper);
 
-        $this->expectNotToPerformAssertions();
         $sut->process($this->request, $this->handler);
     }
 }
