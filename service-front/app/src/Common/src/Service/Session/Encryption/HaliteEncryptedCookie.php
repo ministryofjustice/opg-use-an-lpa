@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Common\Service\Session\Encryption;
 
+use Common\Exception\SessionEncryptionFailureException;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
+use Common\Service\Session\KeyManager\KeyNotFoundException;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Alerts\HaliteAlert;
-use ParagonIE\Halite\Symmetric\Crypto;
-use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
@@ -33,6 +33,10 @@ readonly class HaliteEncryptedCookie implements EncryptInterface
         $plaintext = json_encode($data);
         $key       = $this->keyManager->getEncryptionKey();
 
+        if ($plaintext === false) {
+            throw new SessionEncryptionFailureException('Unable to json encode session data');
+        }
+
         return $key->getId() . '.' . Base64UrlSafe::encode($this->crypto->encrypt($plaintext, $key));
     }
 
@@ -56,7 +60,7 @@ readonly class HaliteEncryptedCookie implements EncryptInterface
             $ciphertext = Base64UrlSafe::decode($payload);
 
             return json_decode($this->crypto->decrypt($ciphertext, $key), true);
-        } catch (HaliteAlert $alert) {
+        } catch (HaliteAlert | KeyNotFoundException $alert) {
             $this->logger->warning(
                 'Unable to decrypt the provided cookie payload. {message}',
                 [
