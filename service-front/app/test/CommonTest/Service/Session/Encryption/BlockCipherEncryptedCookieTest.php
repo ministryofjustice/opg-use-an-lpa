@@ -9,23 +9,21 @@ use Common\Service\Session\KeyManager\Key;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Laminas\Crypt\BlockCipher;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 
+#[CoversClass(BlockCipherEncryptedCookie::class)]
 class BlockCipherEncryptedCookieTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
     public function it_can_be_instantiated(): void
     {
-        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
+        $keyManagerStub  = $this->createStub(KeyManagerInterface::class);
+        $blockCipherStub = $this->createStub(BlockCipher::class);
 
         $this->expectNotToPerformAssertions();
-        new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        new BlockCipherEncryptedCookie($keyManagerStub, $blockCipherStub);
     }
 
     #[Test]
@@ -35,18 +33,17 @@ class BlockCipherEncryptedCookieTest extends TestCase
             'session' => 'data',
         ];
 
-        $keyProphecy = $this->prophesize(Key::class);
-        $keyProphecy->getKeyMaterial()->willReturn('encryptionKey');
-        $keyProphecy->getId()->willReturn('1');
+        $keyMock = $this->createStub(Key::class);
+        $keyMock->method('getId')->willReturn('1');
 
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
-        $keyManagerProphecy->getEncryptionKey()->willReturn($keyProphecy->reveal());
+        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
+        $keyManagerStub->method('getEncryptionKey')->willReturn($keyMock);
 
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
-        $blockCipherProphecy->setKey('encryptionKey')->willReturn($blockCipherProphecy->reveal());
-        $blockCipherProphecy->encrypt(Argument::type('string'))->willReturn('encryptedString');
+        $cryptoStub = $this->createStub(BlockCipher::class);
+        $cryptoStub->method('setKey')->willReturnSelf();
+        $cryptoStub->method('encrypt')->willReturn('encryptedString');
 
-        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerStub, $cryptoStub);
 
         $encoded = $sut->encodeCookieValue($data);
 
@@ -58,10 +55,10 @@ class BlockCipherEncryptedCookieTest extends TestCase
     {
         $data = [];
 
-        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
+        $keyManagerStub  = $this->createStub(KeyManagerInterface::class);
+        $blockCipherStub = $this->createStub(BlockCipher::class);
 
-        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerStub, $blockCipherStub);
 
         $cookieValue = $sut->encodeCookieValue($data);
 
@@ -75,17 +72,17 @@ class BlockCipherEncryptedCookieTest extends TestCase
             'session' => 'data',
         ];
 
-        $keyProphecy = $this->prophesize(Key::class);
-        $keyProphecy->getKeyMaterial()->willReturn('encryptionKey');
+        $keyMock = $this->createStub(Key::class);
+        $keyMock->method('getId')->willReturn('1');
 
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
-        $keyManagerProphecy->getDecryptionKey('1')->willReturn($keyProphecy->reveal());
+        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
+        $keyManagerStub->method('getDecryptionKey')->willReturn($keyMock);
 
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
-        $blockCipherProphecy->setKey('encryptionKey')->willReturn($blockCipherProphecy->reveal());
-        $blockCipherProphecy->decrypt(Argument::type('string'))->willReturn('{"session":"data"}');
+        $cryptoStub = $this->createStub(BlockCipher::class);
+        $cryptoStub->method('setKey')->willReturnSelf();
+        $cryptoStub->method('decrypt')->willReturn('{"session":"data"}');
 
-        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerStub, $cryptoStub);
 
         $decoded = $sut->decodeCookieValue('1.ZW5jcnlwdGVkU3RyaW5n');
 
@@ -95,12 +92,12 @@ class BlockCipherEncryptedCookieTest extends TestCase
     #[Test]
     public function it_throws_an_exception_when_key_id_not_matched_and_returns_new_session(): void
     {
-        $keyManagerProphecy = $this->prophesize(KeyManagerInterface::class);
-        $keyManagerProphecy->getDecryptionKey('1')->willThrow(new KeyNotFoundException());
+        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
+        $keyManagerStub->method('getDecryptionKey')->willThrowException(new KeyNotFoundException());
 
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
+        $blockCipherStub = $this->createStub(BlockCipher::class);
 
-        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerStub, $blockCipherStub);
 
         $decoded = $sut->decodeCookieValue('1.ZW5jcnlwdGVkU3RyaW5n');
 
@@ -112,10 +109,10 @@ class BlockCipherEncryptedCookieTest extends TestCase
     {
         $data = [];
 
-        $keyManagerProphecy  = $this->prophesize(KeyManagerInterface::class);
-        $blockCipherProphecy = $this->prophesize(BlockCipher::class);
+        $keyManagerStub  = $this->createStub(KeyManagerInterface::class);
+        $blockCipherStub = $this->createStub(BlockCipher::class);
 
-        $sut = new BlockCipherEncryptedCookie($keyManagerProphecy->reveal(), $blockCipherProphecy->reveal());
+        $sut = new BlockCipherEncryptedCookie($keyManagerStub, $blockCipherStub);
 
         $sessionData = $sut->decodeCookieValue('');
 
