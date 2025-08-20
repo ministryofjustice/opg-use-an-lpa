@@ -53,30 +53,15 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $code = $this->state($request)->lpaCode ?? 'P-AB12-CD34-EF56-G7';
-        //$surname = $this->state($request)->donorSurname ?? 'Babara Gilson';
+        $stateData = $this->state($request);
 
-        if (isset($code)) {
-            // TODO - LPA service call to check lpa match
-            //$lpa = $this->lpaService->getLpaByLpaCode($this->code, $surname, null);
-
-            // mocking Lpa data for testing page
-            $lpa = json_decode(
-                file_get_contents(
-                    __DIR__ . '../../../../../../test/fixtures/combined_lpa.json'
-                ),
-                true
-            );
-
-            $combinedSiriusLpa = ($this->lpaDataFormatter)($lpa);
-            $donor             = $combinedSiriusLpa->getDonor()->getFirstname() .
-                ' ' . $combinedSiriusLpa->getDonor()->getSurname();
-        }
+        // TODO get donor name and add it to twig template
+        $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donor_name' => $donor,
-            'lpa_type'   => $combinedSiriusLpa->getLpaType(),
+            'donor_name' => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
+            'lpa_type'   => $this->state($request)->lpaType ?? 'hw',
             'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
@@ -88,7 +73,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            //$this->session->set('organisation', $this->form->getData()['organisation']);
 
             $this->state($request)->organisation = $this->form->getData()['organisation'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
@@ -107,13 +91,14 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === false
-            || $this->state($request)->attorneyName === null
-            || $this->state($request)->noOfAttorneys === 0
-            || $this->state($request)->noOfAttorneys === null;
+        return false;
+//        return $this->state($request)->lastName === null
+//            || $this->state($request)->code === null
+//            || $this->state($request)->lpaUid === null
+//            || $this->state($request)->sentToDonor === false
+//            || $this->state($request)->attorneyName === null
+//            || $this->state($request)->noOfAttorneys === 0
+//            || $this->state($request)->noOfAttorneys === null;
     }
 
     /**
