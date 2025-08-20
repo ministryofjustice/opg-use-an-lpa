@@ -12,6 +12,12 @@ use ParagonIE\Halite\Alerts\HaliteAlert;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
+use function json_encode;
+use function json_decode;
+use function explode;
+use function trim;
+use function preg_replace;
+
 readonly class HaliteEncryptedCookie implements EncryptInterface
 {
     public function __construct(
@@ -34,7 +40,9 @@ readonly class HaliteEncryptedCookie implements EncryptInterface
         $key       = $this->keyManager->getEncryptionKey();
 
         if ($plaintext === false) {
+            // @codeCoverageIgnoreStart
             throw new SessionEncryptionFailureException('Unable to json encode session data');
+            // @codeCoverageIgnoreEnd
         }
 
         return $key->getId() . '.' . Base64UrlSafe::encode($this->crypto->encrypt($plaintext, $key));

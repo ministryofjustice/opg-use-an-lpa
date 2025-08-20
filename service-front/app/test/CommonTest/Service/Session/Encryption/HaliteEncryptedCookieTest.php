@@ -9,6 +9,7 @@ use Common\Service\Session\Encryption\HaliteEncryptedCookie;
 use Common\Service\Session\KeyManager\Key;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
+use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -100,6 +101,30 @@ class HaliteEncryptedCookieTest extends TestCase
         $keyManagerStub->method('getDecryptionKey')->willThrowException(new KeyNotFoundException());
 
         $cryptoMock = $this->createMock(HaliteCrypto::class);
+        $loggerStub = $this->createStub(LoggerInterface::class);
+
+        $sut = new HaliteEncryptedCookie($keyManagerStub, $cryptoMock, $loggerStub);
+
+        $data = $sut->decodeCookieValue($payload);
+        $this->assertEquals([], $data);
+    }
+
+    #[Test]
+    public function it_throws_an_exception_when_decryption_fails_for_some_reason(): void
+    {
+        $payload = '1.ZW5jcnlwdGVkU3RyaW5n';
+
+        $keyStub = $this->createStub(Key::class);
+
+        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
+        $keyManagerStub->method('getDecryptionKey')->willReturn($keyStub);
+
+        $cryptoMock = $this->createMock(HaliteCrypto::class);
+        $cryptoMock
+            ->method('decrypt')
+            ->with('encryptedString', $keyStub)
+            ->willThrowException(new Exception());
+
         $loggerStub = $this->createStub(LoggerInterface::class);
 
         $sut = new HaliteEncryptedCookie($keyManagerStub, $cryptoMock, $loggerStub);
