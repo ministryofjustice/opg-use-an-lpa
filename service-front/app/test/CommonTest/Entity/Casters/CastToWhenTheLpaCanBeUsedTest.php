@@ -32,7 +32,7 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
         );
     }
 
-    public function whenCanTheLpaBeUsedProvider(): array
+    public static function whenCanTheLpaBeUsedProvider(): array
     {
         return [
             ['when registered', 'when-has-capacity'],

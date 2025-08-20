@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use ArrayObject;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -31,7 +31,7 @@ class AddLpaApiResponseTest extends TestCase
      *
      * @return LpaAlreadyAdded
      */
-    private function createAlreadyAddedDTO()
+    private static function createAlreadyAddedDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -49,10 +49,10 @@ class AddLpaApiResponseTest extends TestCase
     /**
      * @return array
      */
-    public function validDataTypeProvider()
+    public static function validDataTypeProvider()
     {
         return [
-            [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
+            [AddLpaApiResult::ADD_LPA_ALREADY_ADDED, self::createAlreadyAddedDTO()],
             [AddLpaApiResult::ADD_LPA_FOUND, new ArrayObject(['lpa' => 'data'])],
             [AddLpaApiResult::ADD_LPA_NOT_FOUND, []],
             [AddLpaApiResult::ADD_LPA_NOT_ELIGIBLE, []],

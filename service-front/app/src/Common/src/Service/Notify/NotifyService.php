@@ -13,24 +13,30 @@ class NotifyService
 {
     private string $locale;
 
-    public const ACTIVATE_ACCOUNT_TEMPLATE                                              = 'AccountActivationEmail';
-    public const ALREADY_REGISTERED_EMAIL_TEMPLATE                                      = 'AlreadyRegisteredEmail';
-    public const ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE                         =
+    public const string ACTIVATE_ACCOUNT_TEMPLATE                                              =
+        'AccountActivationEmail';
+    public const string ALREADY_REGISTERED_EMAIL_TEMPLATE                                      =
+        'AlreadyRegisteredEmail';
+    public const string ACCOUNT_ACTIVATION_CONFIRMATION_EMAIL_TEMPLATE                         =
         'AccountActivatedConfirmationEmail';
-    public const PASSWORD_CHANGE_EMAIL_TEMPLATE                                         = 'PasswordChangedEmail';
-    public const PASSWORD_RESET_EMAIL_TEMPLATE                                          = 'PasswordResetEmail';
-    public const SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE        =
+    public const string PASSWORD_CHANGE_EMAIL_TEMPLATE                                         =
+        'PasswordChangedEmail';
+    public const string PASSWORD_RESET_EMAIL_TEMPLATE                                          =
+        'PasswordResetEmail';
+    public const string SOMEONE_TRIED_TO_USE_YOUR_EMAIL_IN_EMAIL_RESET_REQUEST_TEMPLATE        =
         'SomeoneTriedToUseYourEmailInEmailResetRequest';
-    public const REQUEST_CHANGE_EMAIL_TO_NEW_EMAIL                                      =
+    public const string REQUEST_CHANGE_EMAIL_TO_NEW_EMAIL                                      =
         'RequestChangeEmailToNewEmail';
-    public const REQUEST_CHANGE_EMAIL_TO_CURRENT_EMAIL                                  =
+    public const string REQUEST_CHANGE_EMAIL_TO_CURRENT_EMAIL                                  =
         'RequestChangeEmailToCurrentEmail';
-    public const ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE                     =
+    public const string ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE                     =
         'ActivationKeyRequestConfirmationEmail';
-    public const ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE =
+    public const string ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE =
         'ActivationKeyRequestConfirmationEmailWhenLpaNeedsCleansing';
-    public const NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE                                       = 'NoAccountExistsEmail';
-    public const FORCE_PASSWORD_RESET_EMAIL_TEMPLATE                                    = 'ForcePasswordResetEmail';
+    public const string NO_ACCOUNT_EXISTS_EMAIL_TEMPLATE                                       =
+        'NoAccountExistsEmail';
+    public const string FORCE_PASSWORD_RESET_EMAIL_TEMPLATE                                    =
+        'ForcePasswordResetEmail';
 
     public function __construct(
         private ApiClient $apiClient,

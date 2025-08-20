@@ -4,25 +4,24 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Session;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Mezzio\Router\RouteResult;
 use Mezzio\Session\SessionInterface;
-use Mezzio\Session\SessionMiddleware;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 class SessionExpiryMiddlewareTest extends TestCase
 {
-    private MockObject|RequestHandlerInterface $handler;
-    private MockObject|ServerRequestInterface $request;
+    private Stub&RequestHandlerInterface $handler;
+    private MockObject&ServerRequestInterface $request;
 
     protected function setUp(): void
     {
-        $this->request = $this->createStub(ServerRequestInterface::class);
+        $this->request = $this->createMock(ServerRequestInterface::class);
         $this->handler = $this->createStub(RequestHandlerInterface::class);
 
         parent::setUp();
@@ -48,9 +47,7 @@ class SessionExpiryMiddlewareTest extends TestCase
 
         $sut = new SessionExpiryMiddleware(300);
 
-        $response = $sut->process($this->request, $this->handler);
-
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $sut->process($this->request, $this->handler);
     }
 
     #[Test]
@@ -64,7 +61,7 @@ class SessionExpiryMiddlewareTest extends TestCase
 
         $matcher = $this->exactly(2);
         $session->expects($matcher)
-            ->method('set')->willReturnCallback(function ($param) use ($matcher) {
+            ->method('set')->willReturnCallback(function (string $param) use ($matcher) {
                 match ($matcher->numberOfInvocations()) {
                     1 => self::assertEquals(SessionExpiryMiddleware::SESSION_EXPIRED_KEY, $param),
                     2 => self::assertEquals(SessionExpiryMiddleware::SESSION_TIME_KEY, $param),
@@ -80,9 +77,7 @@ class SessionExpiryMiddlewareTest extends TestCase
 
         $sut = new SessionExpiryMiddleware(300);
 
-        $response = $sut->process($this->request, $this->handler);
-
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $sut->process($this->request, $this->handler);
     }
 
     #[Test]
@@ -96,7 +91,7 @@ class SessionExpiryMiddlewareTest extends TestCase
 
         $matcher = $this->exactly(2);
         $session->expects($matcher)
-            ->method('set')->willReturnCallback(function ($param) use ($matcher) {
+            ->method('set')->willReturnCallback(function (string $param) use ($matcher) {
                 match ($matcher->numberOfInvocations()) {
                     1 => self::assertEquals(SessionExpiryMiddleware::SESSION_EXPIRED_KEY, $param),
                     2 => self::assertEquals(SessionExpiryMiddleware::SESSION_TIME_KEY, $param),
@@ -112,8 +107,6 @@ class SessionExpiryMiddlewareTest extends TestCase
 
         $sut = new SessionExpiryMiddleware(300);
 
-        $response = $sut->process($this->request, $this->handler);
-
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $sut->process($this->request, $this->handler);
     }
 }

@@ -24,7 +24,7 @@ class CSPNonceMiddleware implements MiddlewareInterface
             $request->withAttribute(self::NONCE_ATTRIBUTE, $this->nonce)
         )->withAddedHeader(
             'X-CSP-Nonce',
-            'nonce-' . $this->nonce,
+            'nonce-' . (string)$this->nonce,
         );
     }
 }

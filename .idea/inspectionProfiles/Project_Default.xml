@@ -66,9 +66,9 @@
     <inspection_tool class="CommaExpressionJS" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ComposeErroneousRelation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="ComposeMissingKeys" enabled="false" level="ERROR" enabled_by_default="false" />
-    <inspection_tool class="ComposeUnknownKeys" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="ComposeUnknownValues" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="ComposeUnquotedPorts" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="ComposeUnknownKeys" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="ComposeUnknownValues" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="ComposeUnquotedPorts" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="ComposerJsonFileReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ComposerPackageToModuleInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="ConditionalExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -141,10 +141,12 @@
     <inspection_tool class="DivideByZeroJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DockerFileAddOrCopyPaths" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DockerFileAddOrCopySemantic" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="DockerFileArgumentCount" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="DockerFileAssignments" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="DockerFileArgumentCount" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="DockerFileAssignments" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="DockerFileCopyHeredoc" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="DockerFileDuplicatedStageName" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="DockerFileEntrypointWithoutExec" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="DockerFileHeredocDelimiters" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="DockerFileRunCommandMissingContinuation" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="DockerJsonFormStringLiterals" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="DocumentWriteJS" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -720,6 +722,7 @@
     <inspection_tool class="PhpMethodNamingConventionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMethodOrClassCallIsNotCaseSensitiveInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMethodParametersCountMismatchInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpMissingArrayKeyInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMissingBreakStatementInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpMissingClassConstantTypeInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpMissingDocCommentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -888,7 +891,7 @@
     <inspection_tool class="PhpUnnecessarySpreadOperatorForFunctionCallArgumentInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnnecessaryStaticReferenceInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpUnnecessaryStopStatementInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
-    <inspection_tool class="PhpUnnecessaryStringCastInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="PhpUnnecessaryStringCastInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpUnpackedArgumentTypeMismatchInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="PhpUnpackingArraysWithStringKeysInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpUnreachableStatementInspection" enabled="true" level="WARNING" enabled_by_default="true" />
