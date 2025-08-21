@@ -86,8 +86,6 @@ class ConfigProvider
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
                 Service\User\UserService::class              => Service\User\UserServiceFactory::class,
                 Service\Features\FeatureEnabled::class       => Service\Features\FeatureEnabledFactory::class,
-                Service\Session\Encryption\BlockCipherEncryptedCookie::class
-                    => Service\Session\Encryption\BlockCipherEncryptedCookieFactory::class,
                 Service\Session\Encryption\EncryptionFallbackCookie::class
                     => Service\Session\Encryption\EncryptionFallbackCookieFactory::class,
                 Sdk::class                  => Service\Aws\SdkFactory::class,

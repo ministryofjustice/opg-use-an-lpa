@@ -12,7 +12,6 @@ class EncryptionFallbackCookieFactory
     {
         return new EncryptionFallbackCookie(
             $container->get(HaliteEncryptedCookie::class),
-            $container->get(BlockCipherEncryptedCookie::class),
         );
     }
 }
