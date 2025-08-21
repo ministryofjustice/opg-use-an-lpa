@@ -14,7 +14,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\Organisation;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Common\Service\Lpa\Factory\{LpaDataFormatter};
 
 /**
  * @codeCoverageIgnore
@@ -37,8 +36,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
-        private LpaDataFormatter $lpaDataFormatter,
+        private SystemMessageService $systemMessageService
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -53,10 +51,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $stateData = $this->state($request);
-
-        // TODO get donor name and add it to twig template
-        $donorName = $this->state($request)->donorName ?? '(Donor name to be displayed here)';
+        // TODO: remove hardcoded donor name and lpa type from state and pass it to twig template
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
