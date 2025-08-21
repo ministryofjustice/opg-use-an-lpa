@@ -8,8 +8,9 @@ use Common\Service\Session\KeyManager\KeyManagerInterface;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Laminas\Crypt\BlockCipher;
 use ParagonIE\ConstantTime\Base64UrlSafe;
+use Throwable;
 
-class KmsEncryptedCookie implements EncryptInterface
+class BlockCipherEncryptedCookie implements EncryptInterface
 {
     public function __construct(private KeyManagerInterface $keyManager, private BlockCipher $blockCipher)
     {
@@ -60,7 +61,7 @@ class KmsEncryptedCookie implements EncryptInterface
                 ->decrypt($ciphertext);
 
             return json_decode($plaintext, true);
-        } catch (KeyNotFoundException) {
+        } catch (Throwable) {
             # TODO: add logging
         }
 
