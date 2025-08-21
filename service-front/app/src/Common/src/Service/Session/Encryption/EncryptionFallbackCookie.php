@@ -18,6 +18,10 @@ readonly class EncryptionFallbackCookie implements EncryptInterface
      */
     private array $previous;
 
+    /**
+     * @param EncryptInterface $current The current desired cookie encryption mechanism
+     * @param EncryptInterface ...$previous Zero or more older mechanisms to be tried in sequence
+     */
     public function __construct(private EncryptInterface $current, EncryptInterface ...$previous)
     {
         $this->previous = $previous;
