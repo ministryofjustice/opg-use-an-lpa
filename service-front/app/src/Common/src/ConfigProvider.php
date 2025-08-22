@@ -58,7 +58,7 @@ class ConfigProvider
             'aliases'    => [
                 ClientInterface::class => Client::class,
                 Service\Session\Encryption\EncryptInterface::class
-                    => Service\Session\Encryption\KmsEncryptedCookie::class,
+                    => Service\Session\Encryption\EncryptionFallbackCookie::class,
                 SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
 
                 // Custom Guard factory to handle multiple forms per page
@@ -86,8 +86,8 @@ class ConfigProvider
                 Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
                 Service\User\UserService::class              => Service\User\UserServiceFactory::class,
                 Service\Features\FeatureEnabled::class       => Service\Features\FeatureEnabledFactory::class,
-                Service\Session\Encryption\KmsEncryptedCookie::class
-                    => Service\Session\Encryption\KmsEncryptedCookieFactory::class,
+                Service\Session\Encryption\EncryptionFallbackCookie::class
+                    => Service\Session\Encryption\EncryptionFallbackCookieFactory::class,
                 Sdk::class                  => Service\Aws\SdkFactory::class,
                 KmsClient::class            => Service\Aws\KmsFactory::class,
                 SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
