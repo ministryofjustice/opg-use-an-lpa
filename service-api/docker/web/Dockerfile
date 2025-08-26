@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:ad355ae50852905d133d9d8c2296ccda9a7fe556010a06d877c8bd5d78f0c5b3
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:30f8f41c6ee07e8e3287b69cde389e3501fb65af80889991223068cda0cbfd6f
 USER root
 
 RUN apk upgrade && \

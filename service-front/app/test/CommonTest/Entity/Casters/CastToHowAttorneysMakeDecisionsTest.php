@@ -31,7 +31,7 @@ class CastToHowAttorneysMakeDecisionsTest extends TestCase
         );
     }
 
-    public function howAttorneysMakeDecisionsProvider(): array
+    public static function howAttorneysMakeDecisionsProvider(): array
     {
         return [
             ['singular'],

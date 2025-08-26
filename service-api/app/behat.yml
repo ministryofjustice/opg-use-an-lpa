@@ -20,6 +20,11 @@ default:
         - lpa-codes-pact-mock: lpa-codes-pact-mock:80
         - api-gateway-pact-mock: api-gateway-pact-mock:80
         - iap-images-mock: iap-images-mock:80
+    NicWortel\BehatUnusedStepDefinitionsExtension\Extension:
+      filters:
+        exclude:
+          - '/Behat\\MinkExtension\\Context\\MinkContext/'
+          - '/SmartGamma\\Behat\\PactExtension\\Context\\PactContext/'
 
 integration:
   extensions:

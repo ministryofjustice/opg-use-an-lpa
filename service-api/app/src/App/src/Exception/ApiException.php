@@ -13,8 +13,8 @@ class ApiException extends AbstractApiException implements LoggableAdditionalDat
 {
     // The title is suitably generic, further details (from previous Throwables) will be
     // encapsulated in the stacktrace.
-    public const DEFAULT_TITLE = 'An API exception has occurred';
-    public const DEFAULT_CODE  = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
+    public const string DEFAULT_TITLE = 'An API exception has occurred';
+    public const int    DEFAULT_CODE  = StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR;
 
     public function __construct(
         string $message,

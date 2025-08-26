@@ -85,6 +85,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 ['GET', 'POST'],
                 'pv.number-of-attorneys');
 
+    $app->route('/paper-verification/enter-organisation-name',
+                LpaReadyToViewHandler::class,
+                ['GET', 'POST'],
+                'enter-organisation-name');
+
     $app->route('/paper-verification/check-answers',
                 Viewer\Handler\PaperVerification\CheckAnswersHandler::class,
                 ['GET', 'POST'],

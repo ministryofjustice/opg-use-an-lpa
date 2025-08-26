@@ -12,12 +12,12 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class UserIdentificationMiddleware implements MiddlewareInterface
 {
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate): ResponseInterface
+    public function process(ServerRequestInterface $request, DelegateInterface $handler): ResponseInterface
     {
         $userId = $request->getHeader('User-Token');
 
         if (isset($userId[0])) {
-            return $delegate->handle($request->withAttribute('actor-id', $userId[0]));
+            return $handler->handle($request->withAttribute('actor-id', $userId[0]));
         }
 
         throw new UnauthorizedException('User-Token not specified or invalid');
