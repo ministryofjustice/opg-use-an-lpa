@@ -90,7 +90,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
             || $this->state($request)->code === null
             || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === false
+            || $this->state($request)->sentToDonor === null
             || $this->state($request)->attorneyName === null
             || $this->state($request)->noOfAttorneys === 0
             || $this->state($request)->noOfAttorneys === null;
@@ -111,6 +111,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function lastPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'pv.check-answers';
     }
 }

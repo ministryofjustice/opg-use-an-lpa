@@ -88,7 +88,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'enter-organisation-name';
+        return 'pv.enter-organisation-name';
     }
 
     /**
