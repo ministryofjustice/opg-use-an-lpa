@@ -104,6 +104,7 @@ jobs:
           dockerfile: ${{ matrix.path_to_docker_file }}
           no-fail: true
           failure-threshold: warning
+          verbose: true
 
       - name: cache node modules
         id: cache-npm
