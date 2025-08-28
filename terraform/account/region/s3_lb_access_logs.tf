@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "access_log" {
-  bucket = "opg-ual-${var.environment_name}-lb-access-logs-${data.aws_region.current.name}"
+  bucket = "opg-ual-${var.environment_name}-lb-access-logs-${data.aws_region.current.region}"
 
   provider = aws.region
 }
@@ -36,7 +36,7 @@ resource "aws_s3_bucket_versioning" "access_log" {
 }
 
 data "aws_s3_bucket" "s3_access_logging" {
-  bucket = "${var.account.s3_access_log_bucket_name}-${data.aws_region.current.name}"
+  bucket = "${var.account.s3_access_log_bucket_name}-${data.aws_region.current.region}"
 
   provider = aws.region
 }
@@ -58,7 +58,7 @@ resource "aws_s3_bucket_policy" "access_log" {
 }
 
 data "aws_elb_service_account" "main" {
-  region = data.aws_region.current.name
+  region = data.aws_region.current.region
 
   provider = aws.region
 }
@@ -163,14 +163,14 @@ resource "aws_s3_bucket_public_access_block" "access_log" {
 # Old version of the access log bucket. The new version is suffixed with the region name. We're keeping this around for a while to ensure we don't lose any logs.
 # TODO: Remove all of these resources after 400 days (the retention period for the logs)
 resource "aws_s3_bucket" "old_access_log" {
-  count  = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count  = data.aws_region.current.region == "eu-west-1" ? 1 : 0
   bucket = "opg-ual-${var.environment_name}-lb-access-logs"
 
   provider = aws.region
 }
 
 resource "aws_s3_bucket_public_access_block" "old_access_log" {
-  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count = data.aws_region.current.region == "eu-west-1" ? 1 : 0
 
   bucket                  = aws_s3_bucket.old_access_log[0].id
   block_public_acls       = true
@@ -182,7 +182,7 @@ resource "aws_s3_bucket_public_access_block" "old_access_log" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "old_access_log" {
-  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count = data.aws_region.current.region == "eu-west-1" ? 1 : 0
 
   bucket = aws_s3_bucket.old_access_log[0].id
 
@@ -194,7 +194,7 @@ resource "aws_s3_bucket_ownership_controls" "old_access_log" {
 }
 
 resource "aws_s3_bucket_acl" "old_access_log" {
-  count = data.aws_region.current.name == "eu-west-1" ? 1 : 0
+  count = data.aws_region.current.region == "eu-west-1" ? 1 : 0
 
   bucket = aws_s3_bucket.old_access_log[0].id
   acl    = "private"

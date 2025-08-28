@@ -1,5 +1,5 @@
 resource "aws_cloudtrail" "cloudtrail" {
-  name                          = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  name                          = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
   cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
   enable_log_file_validation    = true
@@ -20,13 +20,13 @@ resource "aws_cloudtrail" "cloudtrail" {
 }
 
 resource "aws_cloudwatch_log_group" "cloudtrail" {
-  name              = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  name              = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
   retention_in_days = 90
   kms_key_id        = aws_kms_alias.cloudtrail_log_group_key.target_key_arn
 }
 
 resource "aws_iam_role" "cloudtrail" {
-  name               = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  name               = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
   assume_role_policy = data.aws_iam_policy_document.cloudtrail_role_assume_role_policy.json
 }
 
@@ -48,7 +48,7 @@ data "aws_iam_policy_document" "cloudtrail_role_assume_role_policy" {
 }
 
 resource "aws_iam_role_policy" "cloudtrail" {
-  name   = "ddb-cloudtrail-${data.aws_region.current.name}-${var.trail_name_suffix}"
+  name   = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
   role   = aws_iam_role.cloudtrail.id
   policy = data.aws_iam_policy_document.cloudtrail_role_policy.json
 }
