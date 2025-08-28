@@ -25,7 +25,7 @@ module "public_facing_view_lasting_power_of_attorney" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.zone_id
   loadbalancer               = aws_lb.viewer
   dns_name                   = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.name
@@ -43,7 +43,7 @@ module "viewer_use_my_lpa" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer               = aws_lb.viewer
   dns_name                   = "view.lastingpowerofattorney"
@@ -64,7 +64,7 @@ module "public_facing_use_lasting_power_of_attorney" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
   dns_name                   = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name
   loadbalancer               = aws_lb.use
@@ -82,7 +82,7 @@ module "actor_use_my_lpa" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer               = aws_lb.use
   dns_name                   = "use.lastingpowerofattorney"
@@ -103,7 +103,7 @@ module "admin_use_my_lpa" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer               = aws_lb.admin
   service_name               = "admin"
@@ -123,7 +123,7 @@ module "mock_onelogin_use_my_lpa" {
 
   dns_namespace_env          = var.dns_namespace_env
   is_active_region           = local.is_active_region
-  current_region             = data.aws_region.current.name
+  current_region             = data.aws_region.current.region
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
   loadbalancer               = aws_lb.mock_onelogin[0]
   service_name               = "mock-onelogin"
