@@ -8,7 +8,7 @@ terraform {
         aws.us-east-1,
         aws.management,
       ]
-      version = "~> 5.98.0"
+      version = "6.9.0"
     }
   }
 }
