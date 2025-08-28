@@ -33,13 +33,6 @@ use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
-use Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler;
-use Viewer\Handler\PaperVerification\CheckAnswersHandler;
-use Viewer\Handler\PaperVerification\CheckLpaCodeHandler;
-use Viewer\Handler\PaperVerification\LpaNotFoundHandler;
-use Viewer\Handler\PaperVerification\NumberOfAttorneysHander;
-use Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler;
-use Viewer\Handler\PaperVerification\LpaReadyToViewHandler;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
@@ -64,46 +57,46 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 
     //Paper Verification Code journey
     $app->route('/paper-verification/check-code',
-                CheckLpaCodeHandler::class,
+                Viewer\Handler\PaperVerification\CheckLpaCodeHandler::class,
                 ['GET', 'POST'],
                 'pv.check-code');
     $app->route('/paper-verification/verification-code-sent-to',
-                Viewer\Handler\PaperVerificationCodeSentToHandler::class,
+                Viewer\Handler\PaperVerification\PaperVerificationCodeSentToHandler::class,
                 ['GET', 'POST'],
                 'pv.verification-code-sent-to');
 
     $app->route('/paper-verification/provide-attorney-details',
-                Viewer\Handler\ProvideAttorneyDetailsForPVHandler::class,
+                Viewer\Handler\PaperVerification\ProvideAttorneyDetailsForPVHandler::class,
                 ['GET', 'POST'],
                 'pv.provide-attorney-details');
 
     $app->route('/paper-verification/donor-dob',
-                PVDonorDateOfBirthHandler::class,
+                Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler::class,
                 ['GET', 'POST'],
-                'donor-dob');
+                'pv.donor-dob');
 
     $app->route('/paper-verification/attorney-dob',
-                AttorneyDateOfBirthHandler::class,
+                Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler::class,
                 ['GET', 'POST'],
-                'attorney-dob');
+                'pv.attorney-dob');
 
     $app->route('/paper-verification/number-of-attorneys',
-                NumberOfAttorneysHander::class,
+                Viewer\Handler\PaperVerification\NumberOfAttorneysHander::class,
                 ['GET', 'POST'],
-                'number-of-attorneys');
+                'pv.number-of-attorneys');
 
     $app->route('/paper-verification/enter-organisation-name',
-                LpaReadyToViewHandler::class,
+                Viewer\Handler\PaperVerification\LpaReadyToViewHandler::class,
                 ['GET', 'POST'],
-                'enter-organisation-name');
+                'pv.enter-organisation-name');
 
     $app->route('/paper-verification/check-answers',
-                CheckAnswersHandler::class,
+                Viewer\Handler\PaperVerification\CheckAnswersHandler::class,
                 ['GET', 'POST'],
-                'check-answers');
+                'pv.check-answers');
 
     $app->route('/paper-verification/lpa-not-found',
-                LpaNotFoundHandler::class,
+                Viewer\Handler\PaperVerification\LpaNotFoundHandler::class,
                 ['GET', 'POST'],
                 'lpa-not-found');
 };

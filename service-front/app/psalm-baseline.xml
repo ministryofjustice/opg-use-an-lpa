@@ -719,47 +719,6 @@
       <code><![CDATA[$featureEnabled]]></code>
     </UnusedProperty>
   </file>
-  <file src="src/Viewer/src/Handler/PaperVerification/AttorneyDateOfBirthHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/PaperVerification/CheckAnswersHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/PaperVerification/LpaNotFoundHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/PaperVerification/NumberOfAttorneysHander.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/PaperVerification/PVDonorDateOfBirthHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/PaperVerificationCodeSentToHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="src/Viewer/src/Handler/ProvideAttorneyDetailsForPVHandler.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->systemMessages]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedVariable>
-      <code><![CDATA[$systemMessages]]></code>
-      <code><![CDATA[$systemMessages]]></code>
-      <code><![CDATA[$systemMessages]]></code>
-      <code><![CDATA[$systemMessages]]></code>
-    </UndefinedVariable>
-  </file>
   <file src="src/Viewer/src/Handler/ViewLpaHandler.php">
     <UndefinedPropertyFetch>
       <code><![CDATA[$lpaData->iap]]></code>

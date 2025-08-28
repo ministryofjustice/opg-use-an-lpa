@@ -13,6 +13,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -20,6 +21,13 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class CheckAnswersHandler extends AbstractPVSCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -48,7 +56,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             'noOfAttorneys' => $stateData->noOfAttorneys,
             'attorneyName'  => $stateData->attorneyName,
             'donorName'     => 'Barbara Gilson',
-            'back'          => $this->lastPage($this->state($request)),
+            'back'          => $this->lastPage($stateData),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -70,7 +78,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
         return $this->state($request)->lastName === null
         || $this->state($request)->code === null
         || $this->state($request)->lpaUid === null
-        || $this->state($request)->sentToDonor === false
+        || $this->state($request)->sentToDonor === null
         || $this->state($request)->attorneyName === null
         || $this->state($request)->dateOfBirth === null;
     }
@@ -80,15 +88,15 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'enter-organisation-name';
+        return 'pv.enter-organisation-name';
     }
 
     /**
-     * @inheritDoc
+     * @return string The route name of the previous page in the workflow
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'pv.provide-attorney-details';
+        /** @var PaperVerificationShareCode $state */
+        return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
     }
 }
