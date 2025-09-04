@@ -11,7 +11,7 @@ data "aws_ecr_repository" "ship_to_opg_metrics" {
 module "clsf_to_sqs" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
-  lambda_name       = "clsf-to-sqs-${data.aws_region.current.name}"
+  lambda_name       = "clsf-to-sqs-${data.aws_region.current.region}"
   working_directory = "/var/task"
   environment_variables = {
     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id,
@@ -65,7 +65,7 @@ data "aws_kms_alias" "opg_metrics_api_key_encryption" {
 module "ship_to_opg_metrics" {
   source            = "./modules/lambda_function"
   count             = var.account.opg_metrics.enabled ? 1 : 0
-  lambda_name       = "ship-to-opg-metrics-${data.aws_region.current.name}"
+  lambda_name       = "ship-to-opg-metrics-${data.aws_region.current.region}"
   working_directory = "/var/task"
   environment_variables = {
     "OPG_METRICS_URL" : var.account.opg_metrics.endpoint_url

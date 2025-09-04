@@ -9,14 +9,14 @@ COPY package.json package-lock.json ./
 RUN npm ci && npm run build
 
 # Build Go app
-FROM golang:1.24.4-alpine@sha256:68932fa6d4d4059845c8f40ad7e654e626f3ebd3706eef7846f319293ab5cb7a AS build-env
+FROM golang:1.24.6-alpine@sha256:c8c5f95d64aa79b6547f3b626eb84b16a7ce18a139e3e9ca19a8c078b85ba80d AS build-env
 
 RUN apk --no-cache add \
   build-base=0.5-r3 \
-  ca-certificates=20241121-r2	\
+  ca-certificates=20250619-r0 \
   tzdata=2025b-r0 \
-  && rm -rf /var/cache/apk/* && update-ca-certificates && \
-  adduser -D appuser
+  && rm -rf /var/cache/apk/* \
+  && adduser -D appuser
 
 WORKDIR /app
 

@@ -9,7 +9,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CreateNewActivationKey extends AbstractForm
 {
-    public const FORM_NAME = 'create_new_activation_key';
+    public const string FORM_NAME = 'create_new_activation_key';
 
     public function __construct(CsrfGuardInterface $csrfGuard, bool $forceActivation = false)
     {

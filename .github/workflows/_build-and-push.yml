@@ -96,7 +96,7 @@ jobs:
             path_to_docker_file: 'lambda-functions/event-receiver/Dockerfile'
             path_to_trivyignore_file: 'lambda-functions/event-receiver/.trivyignore.yaml'
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
       - uses: hadolint/hadolint-action@54c9adbab1582c2ef04b2016b760714a4bfde3cf # v3.1.0
         id: hadolint
@@ -104,10 +104,11 @@ jobs:
           dockerfile: ${{ matrix.path_to_docker_file }}
           no-fail: true
           failure-threshold: warning
+          verbose: true
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
         env:
           cache-name: cache-node-modules
         with:
@@ -126,7 +127,7 @@ jobs:
           inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@b47578312673ae6fa5b5096b330d9fbac3d116df # v4.2.1
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -363,14 +364,14 @@ jobs:
             aquasec/trivy:0.65.0 image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
-            --format sarif --output ./test-results/trivy.sarif \
+            --format sarif --output ./test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif \
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
         if: always()
         with:
-          sarif_file: './test-results/trivy.sarif'
+          sarif_file: './test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif'
 
       - name: tag and push container
         env:

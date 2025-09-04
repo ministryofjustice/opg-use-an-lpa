@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(AccessForAllResult::class)]
@@ -31,7 +31,7 @@ class AccessForAllApiResultTest extends TestCase
      *
      * @return LpaAlreadyAdded
      */
-    private function createAlreadyAddedDTO()
+    private static function createAlreadyAddedDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -51,7 +51,7 @@ class AccessForAllApiResultTest extends TestCase
      *
      * @return ActivationKeyExists
      */
-    private function createActivationKeyExistsDTO()
+    private static function createActivationKeyExistsDTO()
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -68,12 +68,12 @@ class AccessForAllApiResultTest extends TestCase
     /**
      * @return array
      */
-    public function validDataTypeProvider()
+    public static function validDataTypeProvider()
     {
         return [
-            [AccessForAllResult::LPA_ALREADY_ADDED, $this->createAlreadyAddedDTO()],
-            [AccessForAllResult::HAS_ACTIVATION_KEY, $this->createActivationKeyExistsDTO()],
-            [AccessForAllResult::KEY_ALREADY_REQUESTED, $this->createActivationKeyExistsDTO()],
+            [AccessForAllResult::LPA_ALREADY_ADDED, self::createAlreadyAddedDTO()],
+            [AccessForAllResult::HAS_ACTIVATION_KEY, self::createActivationKeyExistsDTO()],
+            [AccessForAllResult::KEY_ALREADY_REQUESTED, self::createActivationKeyExistsDTO()],
             [AccessForAllResult::DOES_NOT_MATCH, []],
             [AccessForAllResult::NOT_ELIGIBLE, []],
             [AccessForAllResult::NOT_FOUND, []],

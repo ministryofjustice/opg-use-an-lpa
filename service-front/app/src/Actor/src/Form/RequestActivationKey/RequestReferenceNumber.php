@@ -14,7 +14,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class RequestReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'request_activation_key_reference_number';
+    public const string FORM_NAME = 'request_activation_key_reference_number';
 
     /**
      * @param CsrfGuardInterface $csrfGuard

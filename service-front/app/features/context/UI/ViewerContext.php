@@ -12,6 +12,7 @@ use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use BehatTest\Context\ViewerContextTrait;
 use DateTime;
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
@@ -26,6 +27,8 @@ class ViewerContext implements Context
 
     private $lpaSurname;
     private $lpaShareCode;
+    private $lpaReferenceNumber;
+    private $paperVerificationCode;
     private $lpaData;
     private $lpaStoredCode;
     private $lpaViewedBy;
@@ -1033,5 +1036,265 @@ class ViewerContext implements Context
         Assert::assertIsArray($params);
         Assert::assertEquals($params['name'], $this->lpaSurname);
         Assert::assertEquals($params['code'], $this->lpaStoredCode);
+    }
+
+    #[Given('/^I have been given access to an LPA via Paper Verification Code$/')]
+    public function iHaveBeenGivenAccessToAnLPAViaPaperVerificationCOde(): void
+    {
+        $this->lpaSurname    = 'Testerson';
+        $this->lpaReferenceNumber    = 'M-1234-1234-1234';
+        $this->paperVerificationCode  = 'P-AB12-CD34-EF56-G7';
+        $this->lpaStoredCode = '111111111111';
+        $this->lpaViewedBy   = 'Santander';
+        $this->lpaData       = [
+            'id'                    => 1,
+            'uId'                   => '700000000000',
+            'receiptDate'           => '2014-09-26',
+            'registrationDate'      => '2014-10-26',
+            'lpaDonorSignatureDate' => '2015-06-30',
+            'donor'                 => [
+                'id'          => 1,
+                'uId'         => '700000000288',
+                'dob'         => '1948-11-01',
+                'salutation'  => 'Mr',
+                'firstname'   => 'Test',
+                'middlenames' => 'Testable',
+                'surname'     => 'Testerson',
+                'addresses'   => [
+                    0 => [
+                        'id'           => 1,
+                        'town'         => 'Test',
+                        'county'       => 'Testershire',
+                        'postcode'     => 'TE57 7ES',
+                        'country'      => '',
+                        'type'         => 'Primary',
+                        'addressLine1' => 'Test House',
+                        'addressLine2' => 'Test Road',
+                        'addressLine3' => '',
+                    ],
+                ],
+            ],
+            'status'                => 'Registered',
+            'caseSubtype'           => 'hw',
+        ];
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+    }
+
+    public function appendSystemMessageFixture(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+    }
+
+    #[When('/^I give a valid LPA Paper Verification Code$/')]
+    public function iGiveAValidLPAPaperVerificationCode(): void
+    {
+        $this->lpaData['status'] = 'Registered';
+
+        $this->ui->assertPageAddress('/home');
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'lpa'     => $this->lpaData,
+                        'expires' => (new DateTime('+30 days'))->format('c'),
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
+
+        $this->ui->fillField('donor_surname', $this->lpaSurname);
+        $this->ui->fillField('lpa_code', $this->paperVerificationCode);
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I will be asked to enter more information$/')]
+    public function iWillBeAskedToEnterMoreInformation(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-code');
+        $this->ui->assertPageContainsText('We need some more details');
+    }
+
+    #[Given('/^I type in a valid LPA reference number$/')]
+    public function iTypeAValidLpaReferenceNumber(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-code');
+        $this->ui->assertPageContainsText('We need some more details');
+
+        $this->ui->fillField('lpa_reference', 'M-1234-1234-1234');
+    }
+
+    #[When('/^I select continue$/')]
+    public function iSelectContinue(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+        $this->appendSystemMessageFixture();
+    }
+
+    #[Then('/^I will be asked who the paper verification code was sent to$/')]
+    public function iWillBeAskedWhoThePaperVerificationCodeWasSentTo(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+    }
+
+    #[Given('/^(.*) was chosen as the person who the paper verification code was sent to$/')]
+    public function attorneyWasChosenAsThePersonWhoThePaperVerificationCodeWasSentTo($codeSentTo): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+
+        $this->ui->fillField('verification_code_receiver', $codeSentTo);
+
+        if ($codeSentTo === 'Attorney') {
+            $this->ui->fillField('attorney_name', 'Barabara');
+        }
+    }
+
+    #[Then('/^they will see a page asking for attorney dob$/')]
+    public function theyWillSeeAPageAskingForAttorneyDob(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/attorney-dob');
+    }
+
+    #[Then('/^they will see a page asking for donor dob$/')]
+    public function theyWillSeeAPageAskingForDonorDob(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/donor-dob');
+    }
+
+    #[Given('/^paper verification code is for the attorney$/')]
+    public function paperVerificationCodeIsForTheAttorney(): void
+    {
+
+    }
+
+    #[Given('/^paper verification code is for the donor/')]
+    public function paperVerificationCodeIsForTheDonor(): void
+    {
+
+    }
+
+    #[When('/^they have entered date of birth for (.*)$/')]
+    public function theyHaveEnteredDateOfBirth($codeSentTo): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/' . $codeSentTo . '-dob');
+
+        $this->ui->fillField('dob[day]', '05');
+        $this->ui->fillField('dob[month]', '10');
+        $this->ui->fillField('dob[year]', '1975');
+
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+    }
+
+    #[When('/^they have entered number of attorneys$/')]
+    public function theyHaveEnteredNumberOfAttorneys(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
+
+        $this->ui->fillField('no_of_attorneys', '2');
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+    }
+
+    #[When('/^they have entered attorney details$/')]
+    public function theyHaveEnteredAttorneyDetails(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->assertPageAddress('/paper-verification/provide-attorney-details');
+
+        $this->ui->fillField('no_of_attorneys', '2');
+        $this->ui->fillField('attorneys_name', 'Barabara');
+
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^they check their answers$/')]
+    public function theyCheckTheirAnswers(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+    }
+
+    #[Given('/^they change LPA Reference on check answers page$/')]
+    public function theyChangeLpaReferenceOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/check-code")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+        $this->appendSystemMessageFixture();
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/check-code');
+     }
+
+    #[When('/^they click continue they return to check answers page$/')]
+    public function theyClickContinueTheyReturnToCheckAnswersPage(): void
+    {
+        $this->appendSystemMessageFixture();
+        $this->ui->pressButton('Continue');
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+    }
+
+    #[Given('/^they change who code sent to on check answers page$/')]
+    public function theyChangeWhoCodeSentToOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/verification-code-sent-to")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+        $this->appendSystemMessageFixture();
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+    }
+
+    #[When('/^they click back they return to check answers page$/')]
+    public function theyClickBackTheyReturnToCheckAnswersPage(): void
+    {
+        $this->ui->clickLink('Back');
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+    }
+
+    #[Given('/^they change attorney dob on check answers page$/')]
+    public function theyChangeAttorneyDobOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/attorney-dob")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+        $this->appendSystemMessageFixture();
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/attorney-dob');
+    }
+
+    #[Given('/^they change number of attorney on check answers page$/')]
+    public function theyChangeNumberOfAttorneyOnCheckAnswersPage(): void
+    {
+        $this->ui->assertPageAddress('/paper-verification/check-answers');
+
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/number-of-attorneys")]');
+        if ($link === null) {
+            throw new Exception('Change link not found');
+        }
+        $this->appendSystemMessageFixture();
+        $link->click();
+        $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
     }
 }

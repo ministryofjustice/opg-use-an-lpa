@@ -14,7 +14,6 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\{LpaService, ViewerCodeService};
 use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
 use Mezzio\Helper\UrlHelper;
@@ -34,15 +33,12 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
+        LoggerInterface $logger,
         private LpaService $lpaService,
         private ViewerCodeService $viewerCodeService,
-        LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
     }
 
     /**

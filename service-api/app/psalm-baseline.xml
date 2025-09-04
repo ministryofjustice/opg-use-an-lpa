@@ -19,13 +19,6 @@
       <code><![CDATA[$codeOwner]]></code>
     </ImplementedParamTypeMismatch>
   </file>
-  <file src="src/App/src/DataAccess/Repository/ActorUsersInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[bool]]></code>
-      <code><![CDATA[bool]]></code>
-      <code><![CDATA[bool]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/App/src/DataAccess/Repository/PaperVerificationCodesInterface.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[startExpiry]]></code>
@@ -174,25 +167,10 @@
       <code><![CDATA[Exception]]></code>
     </UndefinedDocblockClass>
   </file>
-  <file src="src/App/src/Handler/UserHandler.php">
-    <InvalidArgument>
-      <code><![CDATA[$requestData]]></code>
-    </InvalidArgument>
-  </file>
-  <file src="src/App/src/Middleware/Logging/RequestTracingMiddleware.php">
-    <ParamNameMismatch>
-      <code><![CDATA[$delegate]]></code>
-    </ParamNameMismatch>
-  </file>
   <file src="src/App/src/Middleware/RequestObject/RequestParser.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
-  </file>
-  <file src="src/App/src/Middleware/UserIdentificationMiddleware.php">
-    <ParamNameMismatch>
-      <code><![CDATA[$delegate]]></code>
-    </ParamNameMismatch>
   </file>
   <file src="src/App/src/Request/PaperVerificationCodeValidate.php">
     <PossiblyUnusedProperty>

@@ -1,7 +1,7 @@
 module "redacted-logs" {
   source          = "./modules/s3_bucket"
   account_name    = var.environment_name
-  bucket_name     = "opg-use-an-lpa-redacted-logs-${var.environment_name}-${data.aws_region.current.name}"
+  bucket_name     = "opg-use-an-lpa-redacted-logs-${var.environment_name}-${data.aws_region.current.region}"
   expiration_days = 400 # Log Retention is 13 Months/400 Days as Policy
   force_destroy   = false
   kms_key         = aws_kms_key.redacted_s3

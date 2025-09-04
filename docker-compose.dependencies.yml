@@ -57,7 +57,7 @@ services:
   # ---------------------------
   # Cache service
   redis:
-    image: docker.io/redis:7@sha256:2582cc7e28849e4bdca8b991c3ede503ec706112d2eb2feb2191e9e980d37e92
+    image: docker.io/redis:7@sha256:4421962706d7a901cbd435282515704040203d67c653160e3a46a27b79c40e19
 
   # ---------------------------
   # AWS KMS mock service
@@ -73,7 +73,7 @@ services:
   # PDF Generator
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.385.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.390.3
     ports:
       - 9004:80
 

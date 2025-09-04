@@ -8,9 +8,9 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class LpaDetailsDoNotMatchException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
-    public const MESSAGE = 'LPA details do not match';
-    public const TITLE   = 'Bad Request';
-    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const string MESSAGE = 'LPA details do not match';
+    public const string TITLE   = 'Bad Request';
+    public const int    CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {

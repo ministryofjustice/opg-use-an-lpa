@@ -6,13 +6,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     AccessForAllLpaValidationHandler,
     AddLpaConfirmationHandler,
     AddLpaValidationHandler,
-    AuthHandler,
-    CanPasswordResetHandler,
-    CanResetEmailHandler,
-    ChangePasswordHandler,
-    CompleteChangeEmailHandler,
     CompleteDeleteAccountHandler,
-    CompletePasswordResetHandler,
     HealthcheckHandler,
     LpasCollectionHandler,
     LpasResourceCodesCollectionHandler,
@@ -25,12 +19,8 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
     PaperVerificationCodes\ViewHandler,
-    RequestChangeEmailHandler,
     RequestCleanseHandler,
-    RequestPasswordResetHandler,
     SystemMessageHandler,
-    UserActivateHandler,
-    UserHandler,
     ViewerCodeFullHandler,
     ViewerCodeSummaryHandler};
 use App\Middleware\RequestObject\RequestObjectMiddleware;
@@ -144,33 +134,11 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         'lpa.paper-verification.view'
     );
 
-    $app->get('/v1/user', UserHandler::class, 'user.get');
-    $app->post('/v1/user', UserHandler::class, 'user.create');
-    $app->patch('/v1/user-activation', UserActivateHandler::class, 'user.activate');
-
-    $app->patch('/v1/request-password-reset', RequestPasswordResetHandler::class, 'user.password-reset');
-    $app->get('/v1/can-password-reset', CanPasswordResetHandler::class, 'user.can-password-reset');
-    $app->patch(
-        '/v1/complete-password-reset',
-        CompletePasswordResetHandler::class,
-        'user.complete-password-reset'
-    );
-
-    $app->patch('/v1/request-change-email', RequestChangeEmailHandler::class, 'user.request-change-email');
-    $app->get('/v1/can-reset-email', CanResetEmailHandler::class, 'user.can-reset-email');
-    $app->patch(
-        '/v1/complete-change-email',
-        CompleteChangeEmailHandler::class,
-        'user.complete-change-email'
-    );
-    $app->patch('/v1/change-password', ChangePasswordHandler::class, 'user.change-password');
     $app->delete(
         '/v1/delete-account/{account-id:[0-9a-f\-]+}',
         CompleteDeleteAccountHandler::class,
         'user.delete-account'
     );
-
-    $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
 
     $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
     $app->post('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');

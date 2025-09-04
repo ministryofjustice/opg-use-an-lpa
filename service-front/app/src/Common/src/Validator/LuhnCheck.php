@@ -19,10 +19,10 @@ class LuhnCheck extends AbstractValidator
     ];
 
     /**
-     * @param mixed $reference_number
+     * @param mixed $value
      * @return bool
      */
-    public function isValid($reference_number): bool
+    public function isValid($value): bool
     {
         $isValid = true;
 
@@ -32,18 +32,14 @@ class LuhnCheck extends AbstractValidator
          * older journey where both Sirius of Meris numbers could be entered [RequestReferenceNumber.php].
          * Luhn check only applies to Sirius reference
         */
-        if (strlen($reference_number) === 12) {
-            // Force the value to be a string so we can work with it like a string.
-            $value = (string)$reference_number;
-
+        if (($length = strlen($value)) === 12) {
             // Set some initial values up.
-            $length     = strlen($value);
             $checkDigit = $length % 2;
             $sum        = 0;
 
             for ($i = $length - 1; $i >= 0; --$i) {
                 // Extract a character from the value.
-                $char = $value[$i];
+                $char = (int)$value[$i];
 
                 //Every other digit should be multiplied by two.
                 if ($i % 2 === $checkDigit) {
