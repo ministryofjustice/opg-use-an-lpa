@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(ViewCode::class)]
-class CodeViewTest extends TestCase
+class ViewCodeTest extends TestCase
 {
     private function makeSut(): array
     {
@@ -25,12 +25,12 @@ class CodeViewTest extends TestCase
         $lpa    = LpaUtilities::lpaStoreLpaFixture();
 
         $sut = new ViewCode(
-            donorName: 'Barbara Gilson',
-            lpaType: LpaType::PERSONAL_WELFARE,
+            donorName:      'Barbara Gilson',
+            lpaType:        LpaType::PERSONAL_WELFARE,
             codeExpiryDate: $expiry,
-            lpaStatus:  LpaStatus::REGISTERED,
-            lpaSource:  LpaSource::LPASTORE,
-            lpa:        $lpa
+            lpaStatus:      LpaStatus::REGISTERED,
+            lpaSource:      LpaSource::LPASTORE,
+            lpa:            $lpa
         );
 
         $expected = [

@@ -11,7 +11,7 @@ use App\Enum\LpaType;
 use DateTimeInterface;
 use JsonSerializable;
 
-class ViewCode implements JsonSerializable
+readonly class ViewCode implements JsonSerializable
 {
     public function __construct(
         public readonly string $donorName,

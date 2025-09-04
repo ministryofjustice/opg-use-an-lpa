@@ -80,33 +80,29 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
+    /**
+     * @throws NotFoundException supplied information failed to validate against held data.
+     * @throws GoneException     The verification code has been cancelled or has expired, or the Lpa has been cancelled
+     * @throws ApiException|BadRequestException
+     */
     public function view(PaperVerificationCodeView $params): ViewCode
     {
+        $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+        $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
+
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+
         if (empty($params->organisation)) {
             throw new BadRequestException('An organisation must be provided');
         }
 
-        $codeData = [
-            'Uid'     => 'M-789Q-P4DF-4UX3',
-            'Expires' => (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-        ];
-
-        $lpa = $this->lpaManager->getByUid($codeData['Uid'], (string) $params->code);
-
-        if ($lpa === null) {
-            throw new NotFoundException();
-        }
-
-        $lpaObj = $lpa->getData();
-
         return new ViewCode(
-            donorName:      $lpaObj->getDonor()->getFirstnames() . ' ' . $lpaObj->getDonor()->getSurname(),
-            lpaType:        $lpaObj->caseSubtype,
+            donorName: $lpa->donor->firstnames . ' ' . $lpa->donor->surname,
+            lpaType:   $lpa->caseSubtype,
             codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
-            lpaStatus:      LpaStatus::from($lpaObj->status),
-            lpaSource:      LpaSource::LPASTORE,
-            lpa:            $lpaObj,
+            lpaStatus: LpaStatus::from($lpa->status),
+            lpaSource: LpaSource::LPASTORE,
+            lpa:            $lpa,
         );
     }
 
