@@ -9,6 +9,7 @@ use App\DataAccess\Repository\Response\PaperVerificationCode as CodeResponse;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Request\PaperVerificationCodeUsable;
@@ -431,15 +432,6 @@ class PaperVerificationCodeServiceTest extends TestCase
         $logger     = $this->createMock(LoggerInterface::class);
         $lpa        = LpaUtilities::lpaStoreLpaFixture();
 
-
-        $lpaManager
-            ->expects($this->once())
-            ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
-            ->willReturn(LpaUtilities::lpaStoreResponseFixture());
-
-        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
-
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
@@ -450,6 +442,32 @@ class PaperVerificationCodeServiceTest extends TestCase
             noOfAttorneys: 2,
             organisation: 'Company A'
         );
+
+        $paperCodes
+            ->expects($this->once())
+            ->method('validate')
+            ->with($params->code)
+            ->willReturn(
+                LpaUtilities::codesApiResponseFixture(
+                    new CodeResponse(
+                        lpaUid:    $params->lpaUid,
+                        cancelled: false,
+                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                    )
+                )
+            );
+
+        $lpaManager
+            ->expects($this->once())
+            ->method('getByUid')
+            ->with($params->lpaUid, originator: $params->code)
+            ->willReturn(LpaUtilities::lpaStoreResponseFixture());
+
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn(new DateTimeImmutable());
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $result = $sut->view($params);
 
@@ -466,26 +484,17 @@ class PaperVerificationCodeServiceTest extends TestCase
     }
 
     #[Test]
-    public function validation_throws_an_exception_for_a_missing_lpa_view(): void
+    public function view_throws_an_exception_for_a_missing_lpa(): void
     {
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
         $logger     = $this->createMock(LoggerInterface::class);
 
-
-        $lpaManager
-            ->expects($this->once())
-            ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
-            ->willReturn(null);
-
-        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
-
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
-            lpaUid: new LpaUid('M-1111-2222-3333'),
+            lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
             sentToDonor: false,
             attorneyName: 'Michael Clarkson',
             dateOfBirth: new DateTimeImmutable('2020-01-01'),
@@ -493,26 +502,44 @@ class PaperVerificationCodeServiceTest extends TestCase
             organisation: 'Company A'
         );
 
+        $paperCodes
+            ->expects($this->once())
+            ->method('validate')
+            ->with($params->code)
+            ->willReturn(
+                LpaUtilities::codesApiResponseFixture(
+                    new CodeResponse(
+                        lpaUid:    $params->lpaUid,
+                        cancelled: false,
+                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                    )
+                )
+            );
+
+        $lpaManager
+            ->expects($this->once())
+            ->method('getByUid')
+            ->with($params->lpaUid, originator: $params->code)
+            ->willReturn(null);
+
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn(new DateTimeImmutable());
+
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
+
         $this->expectException(NotFoundException::class);
         $sut->view($params);
     }
 
     #[Test]
-    public function validation_throws_if_uid_is_unknown_view(): void
+    public function view_throws_if_uid_is_unknown(): void
     {
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
         $logger     = $this->createMock(LoggerInterface::class);
-
-
-        $lpaManager
-            ->expects($this->any())
-            ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: 'P-1234-1234-1234-12')
-            ->willReturn(null);
-
-        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
@@ -525,7 +552,84 @@ class PaperVerificationCodeServiceTest extends TestCase
             organisation: 'Company A'
         );
 
+        $paperCodes
+            ->expects($this->once())
+            ->method('validate')
+            ->with($params->code)
+            ->willReturn(
+                LpaUtilities::codesApiResponseFixture(
+                    new CodeResponse(
+                        lpaUid:    $params->lpaUid,
+                        cancelled: false,
+                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                    )
+                )
+            );
+
+        $lpaManager
+            ->expects($this->any())
+            ->method('getByUid')
+            ->with($params->lpaUid, originator: $params->code)
+            ->willReturn(null);
+
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn(new DateTimeImmutable());
+
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
+
         $this->expectException(NotFoundException::class);
+        $sut->view($params);
+    }
+
+    #[Test]
+    public function view_throws_if_organisation_is_unknown(): void
+    {
+        $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
+        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $clock      = $this->createMock(ClockInterface::class);
+        $logger     = $this->createMock(LoggerInterface::class);
+
+        $params = new PaperVerificationCodeView(
+            name: 'Bundlaaaa',
+            code: new PaperVerificationCode('P-1234-1234-1234-12'),
+            lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+            sentToDonor: false,
+            attorneyName: 'Michael Clarkson',
+            dateOfBirth: new DateTimeImmutable('2020-01-01'),
+            noOfAttorneys: 2,
+            organisation: ''
+        );
+
+        $paperCodes
+            ->expects($this->once())
+            ->method('validate')
+            ->with($params->code)
+            ->willReturn(
+                LpaUtilities::codesApiResponseFixture(
+                    new CodeResponse(
+                        lpaUid:    $params->lpaUid,
+                        cancelled: false,
+                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                    )
+                )
+            );
+
+        $lpaManager
+            ->expects($this->once())
+            ->method('getByUid')
+            ->with($params->lpaUid, originator: $params->code)
+            ->willReturn(LpaUtilities::lpaStoreResponseFixture());
+
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn(new DateTimeImmutable());
+
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
+
+        $this->expectException(BadRequestException::class);
         $sut->view($params);
     }
 }
