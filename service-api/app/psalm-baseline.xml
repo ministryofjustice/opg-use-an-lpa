@@ -186,7 +186,6 @@
       <code><![CDATA[$attorneyName]]></code>
       <code><![CDATA[$dateOfBirth]]></code>
       <code><![CDATA[$lpaUid]]></code>
-      <code><![CDATA[$name]]></code>
       <code><![CDATA[$noOfAttorneys]]></code>
       <code><![CDATA[$sentToDonor]]></code>
     </PossiblyUnusedProperty>
