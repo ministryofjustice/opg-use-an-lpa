@@ -69,3 +69,53 @@ FROM viewer_codes
 More information is available here
 
 <https://docs.aws.amazon.com/athena/latest/ug/ddl-sql-reference.html>
+
+### Useful queries
+
+#### Query to check duplicate account user login in id's and LPA information
+
+Here is the Select query to get the duplicate Id's, email and count of Lpa's for the duplicate user accounts.
+
+```SQL
+SELECT 
+    a.Item.id.S as User_Id,
+    a.Item.identity.S as One_Login_Id,
+    a.Item.email.S as User_Email,
+    COUNT(b.Item.SiriusUid) AS Lpa_Count 
+FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN 
+    (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) 
+GROUP BY a.Item.email.S, a.Item.id.S, a.Item.identity.S 
+ORDER BY a.Item.email.S
+```
+
+Here is the Select query to get the duplicate Id's, email and the Lpa's for the duplicate user accounts.
+
+```SQL
+SELECT  
+    a.Item.id.S as User_Id, 
+    a.Item.email.S as User_Email,
+    b.Item.SiriusUid.S as Lpa_Id 
+FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1) 
+GROUP BY a. Item.email.S, a.Item.id.S,b.Item.SiriusUid.S 
+ORDER BY a.Item.email.S
+```
+
+Here is the Select query to get the count of duplicate user accounts with one login id.
+```SQL
+SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts_With_OneLogin_Id
+FROM actor_users a 
+LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)
+And a.Item.identity.S is NOT NULL;
+```
+
+Here is the Select query to get the count of duplicate user accounts without one login id.
+```SQL
+SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts_With_NO_OneLogin_Id
+FROM actor_users a 
+LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S 
+WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)
+And a.Item.identity.S is NULL;
+```

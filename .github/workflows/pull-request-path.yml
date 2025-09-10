@@ -40,13 +40,13 @@ jobs:
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
           fetch-depth: 2
 
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@464975f6f9e628ffcece3db87ecb819d8d391ab6 # v3.1.6
+        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
 
       - name: get changed files in the admin folder
         id: changed-files-admin
@@ -279,34 +279,18 @@ jobs:
       always() &&
       needs.run_behat_suite.result == 'success'
 
-  ecr_scan_results:
-    name: ecr scan results
-    uses: ./.github/workflows/_ecr-scanning.yml
-    with:
-      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-    needs:
-      - code_coverage
-      - terraform_apply_environment
-      - workflow_variables
-    secrets: inherit
-    if: |
-      always() &&
-      needs.code_coverage.result == 'success' &&
-      needs.terraform_apply_environment.result == 'success'
-
   # Required end of workflow job
   end_of_workflow:
     name: end of workflow
     runs-on: ubuntu-latest
     needs:
-      - ecr_scan_results
       - workflow_variables
       - update_documentation
       - docker_build_scan_push
       - run_behat_suite
       - terraform_preproduction_plan_environment
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
 
       - name: Calculate Step Duration
         id: calculate_durations
@@ -339,7 +323,7 @@ jobs:
 
       - name: workflow has ended without issue
         run: |
-          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.ecr_scan_results.result, 'success') && contains(needs.terraform_preproduction_plan_environment.result, 'success') }}; then
+          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_preproduction_plan_environment.result, 'success') }}; then
             echo "${{ needs.workflow_variables.outputs.safe_branch_name }} PR environment tested, built and deployed"
             echo "Tag Used: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
             echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"

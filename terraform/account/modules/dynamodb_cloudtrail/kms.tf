@@ -126,7 +126,7 @@ data "aws_iam_policy_document" "cloudtrail_log_group_key" {
     principals {
       type = "Service"
       identifiers = [
-        "logs.${data.aws_region.current.name}.amazonaws.com",
+        "logs.${data.aws_region.current.region}.amazonaws.com",
         "events.amazonaws.com"
       ]
     }

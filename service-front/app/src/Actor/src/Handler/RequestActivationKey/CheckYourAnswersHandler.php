@@ -11,6 +11,7 @@ use Common\Exception\InvalidRequestException;
 use Common\Handler\{AbstractHandler,
     CsrfGuardAware,
     LoggerAware,
+    SessionAware,
     Traits\CsrfGuard,
     Traits\Logger,
     Traits\Session as SessionTrait,
@@ -26,22 +27,28 @@ use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Authentication\{AuthenticationInterface, UserInterface};
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 /**
  * @codeCoverageIgnore
+ * @template-implements WorkflowStep<RequestActivationKey>
  */
-class CheckYourAnswersHandler extends AbstractHandler implements UserAware, CsrfGuardAware, LoggerAware, WorkflowStep
+class CheckYourAnswersHandler extends AbstractHandler implements
+    UserAware,
+    CsrfGuardAware,
+    SessionAware,
+    LoggerAware,
+    WorkflowStep
 {
     use CsrfGuard;
     use Logger;
     use SessionTrait;
+    /** @use State<RequestActivationKey> */
     use State;
     use User;
 
@@ -51,17 +58,14 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
 
     public function __construct(
         TemplateRendererInterface $renderer,
-        AuthenticationInterface $authenticator,
         UrlHelper $urlHelper,
-        private AddAccessForAllLpa $addAccessForAllLpa,
         LoggerInterface $logger,
+        private AddAccessForAllLpa $addAccessForAllLpa,
         private LocalisedDate $localisedDate,
         private FeatureEnabled $featureEnabled,
         private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
     }
 
     /**
@@ -130,7 +134,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
             $state = $this->state($request);
 
             $result = $this->addAccessForAllLpa->validate(
-                $this->user?->getIdentity(), // PHP8 nullsafe operator
+                $this->user?->getIdentity(),
                 $state->referenceNumber,
                 $state->firstNames,
                 $state->lastName,
@@ -260,7 +264,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements UserAware, Csrf
         throw new InvalidRequestException('Invalid CSRF when submitting form');
     }
 
-    public function state(ServerRequestInterface $request): RequestActivationKey
+    public function state(ServerRequestInterface $request): WorkflowState
     {
         return $this->loadState($request, RequestActivationKey::class);
     }

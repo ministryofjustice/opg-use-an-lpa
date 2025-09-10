@@ -11,6 +11,7 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\LpaCheck;
 use Viewer\Handler\AbstractPVSCodeHandler;
 
@@ -20,15 +21,22 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class LpaNotFoundHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     private const TEMPLATE = 'viewer::paper-verification/lpa-not-found';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

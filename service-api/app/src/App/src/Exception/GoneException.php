@@ -9,8 +9,8 @@ use Throwable;
 
 class GoneException extends AbstractApiException
 {
-    public const TITLE = 'Gone';
-    public const CODE  = StatusCodeInterface::STATUS_GONE;
+    public const string TITLE = 'Gone';
+    public const int    CODE  = StatusCodeInterface::STATUS_GONE;
 
     public function __construct(?string $message = null, array $additionalData = [], ?Throwable $previous = null)
     {

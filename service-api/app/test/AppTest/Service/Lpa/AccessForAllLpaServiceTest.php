@@ -8,13 +8,15 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;
-use App\DataAccess\Repository\Response\ActorCode;
+use App\DataAccess\Repository\Response\ActorCodeExists;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -252,10 +254,8 @@ class AccessForAllLpaServiceTest extends TestCase
     {
         $createdDate = (new DateTime('now'))->modify('-15 days')->format('Y-m-d');
 
-        $lpaCodesResponse = new ActorCode(
-            [
-                'Created' => $createdDate,
-            ],
+        $lpaCodesResponse = new UpstreamResponse(
+            new ActorCodeExists(new DateTimeImmutable($createdDate)),
             new DateTime('now')
         );
 
@@ -266,17 +266,15 @@ class AccessForAllLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $codeCreated = $service->hasActivationCode($this->lpaUid, $this->actorUid);
-        $this->assertEquals(DateTime::createFromFormat('Y-m-d', $createdDate), $codeCreated);
+        $this->assertEquals(DateTime::createFromFormat('!Y-m-d', $createdDate), $codeCreated);
     }
 
     #[Test]
     public function returns_null_if_a_code_does_not_exist_for_an_actor(): void
     {
-        $lpaCodesResponse = new ActorCode(
-            [
-                'Created' => null,
-            ],
-            new DateTime()
+        $lpaCodesResponse = new UpstreamResponse(
+            null,
+            new DateTime('now')
         );
 
         $this->actorCodesProphecy

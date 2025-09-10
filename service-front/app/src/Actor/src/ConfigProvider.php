@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace Actor;
 
-use Actor\Handler\ActorSessionCheckHandler;
 use Actor\Handler\CheckLpaHandler;
 use Actor\Handler\Factory\ActorSessionCheckHandlerFactory;
 use Actor\Handler\Factory\CheckLpaHandlerFactory;
-use Actor\Handler\Factory\LoginPageHandlerFactory;
 use Actor\Handler\Factory\LogoutPageHandlerFactory;
-use Actor\Handler\LoginPageHandler;
 use Actor\Handler\LogoutPageHandler;
+use Common\Handler\SessionCheckHandler;
 
 /**
  * The configuration provider for the Actor module
@@ -44,9 +42,8 @@ class ConfigProvider
         return [
             'factories' => [
                 CheckLpaHandler::class          => CheckLpaHandlerFactory::class,
-                LoginPageHandler::class         => LoginPageHandlerFactory::class,
                 LogoutPageHandler::class        => LogoutPageHandlerFactory::class,
-                ActorSessionCheckHandler::class => ActorSessionCheckHandlerFactory::class,
+                SessionCheckHandler::class => ActorSessionCheckHandlerFactory::class,
             ],
         ];
     }

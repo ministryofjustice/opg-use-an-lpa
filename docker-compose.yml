@@ -237,7 +237,6 @@ services:
       DYNAMODB_TABLE_USER_LPA_ACTOR_MAP: "UserLpaActorMap"
       DYNAMODB_TABLE_STATS: "Stats"
       AWS_ENDPOINT_DYNAMODB:
-      CODES_ENDPOINT:
 
   # ---------------------------
   # Lambda to upload stats
@@ -253,11 +252,11 @@ services:
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
     volumes:
-      - ./lambda-functions/upload-statistics/app/upload_statistics.py:/var/task/upload_statistics.py
+      - ./lambda-functions/upload-statistics/app/upload_statistics.py:/function/upload_statistics.py
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
-    entrypoint: [ "/aws-lambda/aws-lambda-rie", "python3", "-m", "awslambdaric" ]
+    entrypoint: [ "/aws-lambda/aws-lambda-rie", "/usr/local/bin/python", "-m", "awslambdaric" ]
     command: [ "upload_statistics.lambda_handler" ]
 
   proxy:

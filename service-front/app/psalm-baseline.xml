@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.13.1@1e3b7f0a8ab32b23197b91107adc0a7ed8a05b51">
+  <file src="config/autoload/envs.global.php">
+    <InvalidOperand>
+      <code><![CDATA[getenv('SESSION_COOKIE_LIFETIME')]]></code>
+      <code><![CDATA[getenv('SESSION_EXPIRES')]]></code>
+      <code><![CDATA[getenv('SESSION_EXPIRY_WARNING')]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="config/pipeline.php">
+    <UnusedClosureParam>
+      <code><![CDATA[$container]]></code>
+      <code><![CDATA[$factory]]></code>
+    </UnusedClosureParam>
+  </file>
+  <file src="config/routes.php">
+    <UnusedClosureParam>
+      <code><![CDATA[$container]]></code>
+      <code><![CDATA[$factory]]></code>
+    </UnusedClosureParam>
+  </file>
+  <file src="src/Actor/src/Form/AddLpa/ActivationKey.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/AddLpa/DateOfBirth.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/AddLpa/LpaReferenceNumber.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/AddLpaTriage.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/CancelCode.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/CreateShareCode.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RemoveLpa.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/ActorRole.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/AddressOnPaper.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/AttorneyDetails.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/DonorDetails.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/RequestDateOfBirth.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/RequestNames.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/RequestPostcode.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+    <UnusedVariable>
+      <code><![CDATA[$emptyValidator]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Actor/src/Form/RequestActivationKey/RequestReferenceNumber.php">
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array]]></code>
+    </LessSpecificImplementedReturnType>
+  </file>
+  <file src="src/Actor/src/Handler/AuthenticateOneLoginHandler.php">
+    <InvalidArgument>
+      <code><![CDATA[$result]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Actor/src/Handler/CancelCodeHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[Session]]></code>
+    </ImplementationRequirementViolation>
+    <UnusedProperty>
+      <code><![CDATA[$lpaService]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/CheckAccessCodesHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[Session]]></code>
+    </ImplementationRequirementViolation>
+  </file>
+  <file src="src/Actor/src/Handler/CheckLpaHandler.php">
+    <MissingTemplateParam>
+      <code><![CDATA[State]]></code>
+    </MissingTemplateParam>
+    <UnusedProperty>
+      <code><![CDATA[$lpaService]]></code>
+      <code><![CDATA[$state]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/ConfirmCancelCodeHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[Session]]></code>
+    </ImplementationRequirementViolation>
+    <UnusedProperty>
+      <code><![CDATA[$lpaService]]></code>
+      <code><![CDATA[$viewerCodeService]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/CreateViewerCodeHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[Session]]></code>
+    </ImplementationRequirementViolation>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpaData->lpa]]></code>
+      <code><![CDATA[$lpaData->lpa]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Actor/src/Handler/LpaDashboardHandler.php">
+    <UnusedProperty>
+      <code><![CDATA[$viewerCodeService]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/RemoveLpaHandler.php">
+    <UndefinedClass>
+      <code><![CDATA[BadRequestException]]></code>
+      <code><![CDATA[BadRequestException]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/AbstractCleansingDetailsHandler.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$session]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/AbstractRequestKeyHandler.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$session]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/ActorRoleHandler.php">
+    <UnhandledMatchCondition>
+      <code><![CDATA[$selected]]></code>
+    </UnhandledMatchCondition>
+    <UnusedParam>
+      <code><![CDATA[$request]]></code>
+    </UnusedParam>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/AttorneyDetailsHandler.php">
+    <MissingTemplateParam>
+      <code><![CDATA[State]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/CheckDetailsAndConsentHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[SessionTrait]]></code>
+    </ImplementationRequirementViolation>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+    </PossiblyUnusedParam>
+    <UnusedProperty>
+      <code><![CDATA[$session]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/CheckYourAnswersHandler.php">
+    <UndefinedMethod>
+      <code><![CDATA[getAttorney]]></code>
+      <code><![CDATA[getAttorney]]></code>
+      <code><![CDATA[getCaseSubtype]]></code>
+      <code><![CDATA[getCaseSubtype]]></code>
+      <code><![CDATA[getDonor]]></code>
+      <code><![CDATA[getDonor]]></code>
+      <code><![CDATA[getDonor]]></code>
+      <code><![CDATA[getDueDate]]></code>
+      <code><![CDATA[getDueDate]]></code>
+      <code><![CDATA[getLpaActorToken]]></code>
+    </UndefinedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$featureEnabled]]></code>
+      <code><![CDATA[$localisedDate]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/CreateActivationKeyHandler.php">
+    <UndefinedMethod>
+      <code><![CDATA[$result->getData()]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/Actor/src/Handler/RequestActivationKey/RequestActivationKeyInfoHandler.php">
+    <UnusedProperty>
+      <code><![CDATA[$featureEnabled]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Actor/src/Handler/ViewLpaSummaryHandler.php">
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpaData->actor]]></code>
+      <code><![CDATA[$lpaData->lpa]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Actor/src/Handler/ViewLpaSummaryImagesHandler.php">
+    <UnusedProperty>
+      <code><![CDATA[$featureEnabled]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Common/src/Entity/Address.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAddressLine1]]></code>
+      <code><![CDATA[getAddressLine2]]></code>
+      <code><![CDATA[getAddressLine3]]></code>
+      <code><![CDATA[getCountry]]></code>
+      <code><![CDATA[getCounty]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getPostcode]]></code>
+      <code><![CDATA[getTown]]></code>
+      <code><![CDATA[getType]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Entity/CaseActor.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[bool]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->systemStatus]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getDob]]></code>
+      <code><![CDATA[getEmail]]></code>
+      <code><![CDATA[getIds]]></code>
+      <code><![CDATA[getOtherNames]]></code>
+      <code><![CDATA[getSystemStatus]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Entity/CombinedLpa.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[HowAttorneysMakeDecisions]]></code>
+      <code><![CDATA[Person]]></code>
+      <code><![CDATA[WhenTheLpaCanBeUsed]]></code>
+      <code><![CDATA[string]]></code>
+      <code><![CDATA[string]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->caseSubtype->value]]></code>
+      <code><![CDATA[$this->donor]]></code>
+      <code><![CDATA[$this->howAttorneysMakeDecisions]]></code>
+      <code><![CDATA[$this->lifeSustainingTreatment->value]]></code>
+      <code><![CDATA[$this->whenTheLpaCanBeUsed]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getActiveAttorneys]]></code>
+      <code><![CDATA[getApplicationHasGuidance]]></code>
+      <code><![CDATA[getApplicationHasRestrictions]]></code>
+      <code><![CDATA[getAttorneys]]></code>
+      <code><![CDATA[getCaseAttorneyJointly]]></code>
+      <code><![CDATA[getCaseAttorneyJointlyAndJointlyAndSeverally]]></code>
+      <code><![CDATA[getCaseAttorneyJointlyAndSeverally]]></code>
+      <code><![CDATA[getCaseAttorneySingular]]></code>
+      <code><![CDATA[getHowAttorneysMakeDecisions]]></code>
+      <code><![CDATA[getLifeSustainingTreatment]]></code>
+      <code><![CDATA[getLpaType]]></code>
+      <code><![CDATA[getTrustCorporations]]></code>
+      <code><![CDATA[getWhenTheLpaCanBeUsed]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$applicationType]]></code>
+      <code><![CDATA[$dispatchDate]]></code>
+      <code><![CDATA[$hasSeveranceWarning]]></code>
+      <code><![CDATA[$invalidDate]]></code>
+      <code><![CDATA[$lpaIsCleansed]]></code>
+      <code><![CDATA[$onlineLpaId]]></code>
+      <code><![CDATA[$receiptDate]]></code>
+      <code><![CDATA[$registrationDate]]></code>
+      <code><![CDATA[$rejectedDate]]></code>
+      <code><![CDATA[$replacementAttorneys]]></code>
+      <code><![CDATA[$restrictionsAndConditions]]></code>
+      <code><![CDATA[$restrictionsAndConditionsImages]]></code>
+      <code><![CDATA[$statusDate]]></code>
+      <code><![CDATA[$withdrawnDate]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Entity/InstructionsAndPreferences/SignedUrl.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$url]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Entity/Lpa.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getActiveAttorneys]]></code>
+      <code><![CDATA[getApplicationHasGuidance]]></code>
+      <code><![CDATA[getApplicationHasRestrictions]]></code>
+      <code><![CDATA[getApplicationType]]></code>
+      <code><![CDATA[getAttorneyActDecisions]]></code>
+      <code><![CDATA[getCancellationDate]]></code>
+      <code><![CDATA[getCaseAttorneyJointly]]></code>
+      <code><![CDATA[getCaseAttorneyJointlyAndJointlyAndSeverally]]></code>
+      <code><![CDATA[getCaseAttorneyJointlyAndSeverally]]></code>
+      <code><![CDATA[getCaseAttorneySingular]]></code>
+      <code><![CDATA[getCaseSubtype]]></code>
+      <code><![CDATA[getCertificateProviders]]></code>
+      <code><![CDATA[getHasSeveranceWarning]]></code>
+      <code><![CDATA[getId]]></code>
+      <code><![CDATA[getInactiveAttorneys]]></code>
+      <code><![CDATA[getLifeSustainingTreatment]]></code>
+      <code><![CDATA[getOnlineLpaId]]></code>
+      <code><![CDATA[getReceiptDate]]></code>
+      <code><![CDATA[getRegistrationDate]]></code>
+      <code><![CDATA[getRejectedDate]]></code>
+      <code><![CDATA[getReplacementAttorneys]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$restrictionsAndConditions]]></code>
+      <code><![CDATA[$restrictionsAndConditionsImages]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Entity/Person.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$email]]></code>
+      <code><![CDATA[$otherNames]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Entity/User.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$roles]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Common/src/Entity/UserFactory.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$container]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Common/src/Enum/HowAttorneysMakeDecisions.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isJointly]]></code>
+      <code><![CDATA[isJointlyAndSeverally]]></code>
+      <code><![CDATA[isJointlyForSomeSeverallyForOthers]]></code>
+      <code><![CDATA[isSingular]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Enum/LifeSustainingTreatment.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isOptionA]]></code>
+      <code><![CDATA[isOptionB]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Enum/LpaType.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isPersonalWelfare]]></code>
+      <code><![CDATA[isPropertyAndAffairs]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Enum/WhenTheLpaCanBeUsed.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[isUnknown]]></code>
+      <code><![CDATA[isWhenHasCapacity]]></code>
+      <code><![CDATA[isWhenHasLostCapacity]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Exception/AbstractApiException.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getTitle]]></code>
+    </PossiblyUnusedMethod>
+    <TypeDoesNotContainType>
+      <code><![CDATA[is_numeric($this->getCode())]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Common/src/Exception/ApiException.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[ResponseInterface]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->response]]></code>
+    </NullableReturnStatement>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getResponse]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$additionalData]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Form/AbstractForm.php">
+    <InvalidPropertyAssignmentValue>
+      <code><![CDATA[$this->errorMessages]]></code>
+    </InvalidPropertyAssignmentValue>
+    <MissingTemplateParam>
+      <code><![CDATA[AbstractForm]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Common/src/Form/Element/Csrf.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[LaminasCsrfValidator]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->csrfValidator]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Common/src/Form/Element/Email.php">
+    <InvalidReturnStatement>
+      <code><![CDATA[[
+            'name'       => $this->getName(),
+            'required'   => true,
+            'filters'    => [
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [],
+        ]]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[array]]></code>
+    </InvalidReturnType>
+  </file>
+  <file src="src/Common/src/Form/Fieldset/DatePrefixFilter.php">
+    <MissingTemplateParam>
+      <code><![CDATA[DatePrefixFilter]]></code>
+    </MissingTemplateParam>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$value]]></code>
+    </MoreSpecificImplementedParamType>
+    <UnusedDocblockParam>
+      <code><![CDATA[$formattedDate]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="src/Common/src/Form/Fieldset/DateTrimFilter.php">
+    <MissingTemplateParam>
+      <code><![CDATA[DateTrimFilter]]></code>
+    </MissingTemplateParam>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[$value]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="src/Common/src/Handler/CookiesPageHandler.php">
+    <UnusedProperty>
+      <code><![CDATA[$translator]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Common/src/Middleware/Routing/ConditionalRoutingMiddleware.php">
+    <UnusedDocblockParam>
+      <code><![CDATA[$container]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="src/Common/src/Middleware/Session/SessionAttributeAllowlistMiddleware.php">
+    <UnusedForeachValue>
+      <code><![CDATA[$value]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="src/Common/src/Middleware/Session/SessionTimeoutMiddleware.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$renderer]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Middleware/Workflow/StatePersistenceMiddleware.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[$reflect->implementsInterface(WorkflowState::class)]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Common/src/Service/ApiClient/Client.php">
+    <MismatchingDocblockParamType>
+      <code><![CDATA[ResponseInterface|null]]></code>
+    </MismatchingDocblockParamType>
+    <RedundantPropertyInitializationCheck>
+      <code><![CDATA[isset($this->token)]]></code>
+    </RedundantPropertyInitializationCheck>
+  </file>
+  <file src="src/Common/src/Service/Cache/RedisAdapterPluginManagerDelegatorFactory.php">
+    <UnusedParam>
+      <code><![CDATA[$container]]></code>
+      <code><![CDATA[$name]]></code>
+    </UnusedParam>
+  </file>
+  <file src="src/Common/src/Service/Container/PhpDiModifiableContainer.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[set]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Common/src/Service/I18n/PotGenerator.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[bool]]></code>
+    </PossiblyUnusedReturnValue>
+    <UndefinedThisPropertyAssignment>
+      <code><![CDATA[$this->catalogues]]></code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/Common/src/Service/Log/LogStderrListener.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$request]]></code>
+      <code><![CDATA[$response]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Common/src/Service/Log/LogStderrListenerDelegatorFactory.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$name]]></code>
+      <code><![CDATA[$options]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Common/src/Service/Log/Output/Email.php">
+    <RedundantFunctionCall>
+      <code><![CDATA[sprintf]]></code>
+    </RedundantFunctionCall>
+  </file>
+  <file src="src/Common/src/Service/Lpa/CleanseLpa.php">
+    <UnusedDocblockParam>
+      <code><![CDATA[$logger]]></code>
+    </UnusedDocblockParam>
+  </file>
+  <file src="src/Common/src/Service/Lpa/LpaService.php">
+    <RedundantCondition>
+      <code><![CDATA[is_array($lpaData)]]></code>
+      <code><![CDATA[is_array($lpaData)]]></code>
+    </RedundantCondition>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpaData->lpa]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Common/src/Service/Lpa/PopulateLpaMetadata.php">
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$shareCodes->activeCodeCount]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Common/src/Service/Lpa/Response/Parse/ParseActivationKeyExists.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[$data['activationKeyDueDate']]]></code>
+    </InvalidArrayOffset>
+  </file>
+  <file src="src/Common/src/Service/Lpa/Response/Parse/ParseLpaAlreadyAdded.php">
+    <InvalidArgument>
+      <code><![CDATA[$data]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Common/src/Service/Lpa/ViewerCodeService.php">
+    <InvalidArgument>
+      <code><![CDATA[$shareCodes]]></code>
+    </InvalidArgument>
+    <RedundantCondition>
+      <code><![CDATA[is_array($lpaData)]]></code>
+      <code><![CDATA[is_array($shareCodes)]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="src/Common/src/Service/Notify/NotifyService.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[bool]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Common/src/Service/Pdf/PdfService.php">
+    <InvalidArgument>
+      <code><![CDATA[$this->generateHeaders()]]></code>
+    </InvalidArgument>
+    <MismatchingDocblockReturnType>
+      <code><![CDATA[string]]></code>
+    </MismatchingDocblockReturnType>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$images]]></code>
+      <code><![CDATA[$lpa]]></code>
+    </PossiblyUnusedParam>
+    <UndefinedClass>
+      <code><![CDATA[HttpException]]></code>
+      <code><![CDATA[Lpa|SiriusLpa|CombinedLpa $lpa]]></code>
+      <code><![CDATA[Lpa|SiriusLpa|CombinedLpa $lpa]]></code>
+    </UndefinedClass>
+    <UnusedMethod>
+      <code><![CDATA[renderLpaAsHtml]]></code>
+      <code><![CDATA[requestPdfFromService]]></code>
+    </UnusedMethod>
+    <UnusedProperty>
+      <code><![CDATA[$renderer]]></code>
+      <code><![CDATA[$styles]]></code>
+      <code><![CDATA[$traceId]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Common/src/Service/Pdf/PdfServiceFactory.php">
+    <PossiblyUnusedParam>
+      <code><![CDATA[$entityClass]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Common/src/Service/Security/RateLimitService.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$logger]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Service/Session/EncryptedCookiePersistence.php">
+    <UnusedProperty>
+      <code><![CDATA[$cookieDomain]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Common/src/Service/Session/Encryption/UnencryptedCookie.php">
+    <UnusedClass>
+      <code><![CDATA[UnencryptedCookie]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Common/src/Service/Session/KeyManager/KeyCache.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[array|bool]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+  <file src="src/Common/src/Validator/CsrfGuardValidator.php">
+    <InvalidArrayAccess>
+      <code><![CDATA[$options['guard']]]></code>
+    </InvalidArrayAccess>
+    <InvalidExtendClass>
+      <code><![CDATA[LaminasCsrf]]></code>
+    </InvalidExtendClass>
+    <MethodSignatureMismatch>
+      <code><![CDATA[protected function generateHash(): void]]></code>
+      <code><![CDATA[public function __construct($options = [])]]></code>
+      <code><![CDATA[public function isValid($value, $context = null): bool]]></code>
+    </MethodSignatureMismatch>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setGuard]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/Validator/NotEmptyConditional.php">
+    <InvalidArgument>
+      <code><![CDATA[$options]]></code>
+      <code><![CDATA[$options]]></code>
+    </InvalidArgument>
+    <InvalidExtendClass>
+      <code><![CDATA[NotEmpty]]></code>
+    </InvalidExtendClass>
+    <MethodSignatureMismatch>
+      <code><![CDATA[public function __construct($options = null)]]></code>
+      <code><![CDATA[public function isValid($value, $context = null): bool]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Common/src/Validator/PasswordValidator.php">
+    <UnusedClass>
+      <code><![CDATA[PasswordValidator]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Common/src/View/Twig/FeatureFlagExtension.php">
+    <InvalidArgument>
+      <code><![CDATA[FeatureFlagRuntime::class . '::featureEnabled']]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Common/src/View/Twig/FeatureFlagRuntime.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[featureEnabled]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Common/src/View/Twig/GovUKLaminasFormExtension.php">
+    <DuplicateArrayKey>
+      <code><![CDATA[Element\Number::class   => 'form_input_number']]></code>
+    </DuplicateArrayKey>
+    <UnusedForeachValue>
+      <code><![CDATA[$blockName]]></code>
+    </UnusedForeachValue>
+  </file>
+  <file src="src/Common/src/View/Twig/LpaExtension.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[IntlDateFormatter]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[IntlDateFormatter::create(
+            $locale,
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::NONE,
+            'Europe/London',
+            IntlDateFormatter::GREGORIAN
+        )]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Common/src/View/Twig/OrdinalNumberExtension.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[NumberFormatter]]></code>
+    </InvalidNullableReturnType>
+    <LessSpecificImplementedReturnType>
+      <code><![CDATA[array|TwigFilter[]]]></code>
+    </LessSpecificImplementedReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$formatter]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="src/Common/src/Workflow/State.php">
+    <TooManyTemplateParams>
+      <code><![CDATA[WorkflowState<T>]]></code>
+    </TooManyTemplateParams>
+  </file>
+  <file src="src/Viewer/src/Handler/CheckCodeHandler.php">
+    <ImplementationRequirementViolation>
+      <code><![CDATA[SessionTrait]]></code>
+    </ImplementationRequirementViolation>
+    <UndefinedDocblockClass>
+      <code><![CDATA[\Http\Client\Exception|\Exception]]></code>
+    </UndefinedDocblockClass>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpa->expires]]></code>
+      <code><![CDATA[$lpa->lpa]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Viewer/src/Handler/DownloadLpaHandler.php">
+    <UndefinedClass>
+      <code><![CDATA[$lpa->lpa]]></code>
+    </UndefinedClass>
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpa->iap]]></code>
+      <code><![CDATA[$lpa->lpa]]></code>
+    </UndefinedPropertyFetch>
+    <UnusedProperty>
+      <code><![CDATA[$featureEnabled]]></code>
+    </UnusedProperty>
+  </file>
+  <file src="src/Viewer/src/Handler/ViewLpaHandler.php">
+    <UndefinedPropertyFetch>
+      <code><![CDATA[$lpaData->iap]]></code>
+      <code><![CDATA[$lpaData->lpa]]></code>
+    </UndefinedPropertyFetch>
+  </file>
+</files>

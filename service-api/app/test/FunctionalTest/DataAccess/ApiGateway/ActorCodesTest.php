@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FunctionalTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\ActorCodes;
-use App\DataAccess\Repository\Response\ActorCode;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Service\Log\RequestTracing;
 use FunctionalTest\AbstractFunctionalTestCase;
 use PhpPact\Consumer\InteractionBuilder;
@@ -57,7 +57,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ->setPath('/v1/validate')
             ->setHeaders(
                 [
-                    'Accept'                          => 'application/json',
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
                     'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
                     'Content-Type'                    => 'application/json',
                     RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),
@@ -88,8 +88,8 @@ class ActorCodesTest extends AbstractFunctionalTestCase
         $actorCode = $sut->validateCode('valid-code', '700000000001', '1959-08-10');
 
         self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(ActorCode::class, $actorCode);
-        self::assertArrayHasKey('actor', $actorCode->getData());
+        self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        self::assertEquals('700000000001', $actorCode->getData()->actorUid);
     }
 
     #[Test]
@@ -103,7 +103,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ->setPath('/v1/revoke')
             ->setHeaders(
                 [
-                    'Accept'                          => 'application/json',
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
                     'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
                     'Content-Type'                    => 'application/json',
                     RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),

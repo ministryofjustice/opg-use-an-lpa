@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Viewer\Handler\PaperVerification;
+
+use Common\Service\SystemMessage\SystemMessageService;
+use Common\Workflow\WorkflowState;
+use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
+use Viewer\Form\Organisation;
+use Viewer\Handler\AbstractPVSCodeHandler;
+
+/**
+ * @codeCoverageIgnore
+ */
+class LpaReadyToViewHandler extends AbstractPVSCodeHandler
+{
+    private Organisation $form;
+
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
+
+    public const TEMPLATE = 'viewer::paper-verification/enter-organisation-name';
+
+    public function __construct(
+        TemplateRendererInterface $renderer,
+        UrlHelper $urlHelper,
+        LoggerInterface $logger,
+        private SystemMessageService $systemMessageService
+    ) {
+        parent::__construct($renderer, $urlHelper, $logger);
+    }
+
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->form           = new Organisation($this->getCsrfGuard($request));
+        $this->systemMessages = $this->systemMessageService->getMessages();
+
+        return parent::handle($request);
+    }
+
+    public function handleGet(ServerRequestInterface $request): ResponseInterface
+    {
+        // TODO: remove hardcoded donor name and lpa type and use from state and pass it to twig template
+        // TODO: The donor name and lpa type will be in the state once UML-3975 is done
+
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'form'       => $this->form->prepare(),
+            'donor_name' => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
+            'lpa_type'   => $this->state($request)->lpaType ?? 'hw',
+            'back'       => $this->lastPage($this->state($request)),
+            'en_message' => $this->systemMessages['view/en'] ?? null,
+            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+        ]));
+    }
+
+    public function handlePost(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->form->setData($request->getParsedBody());
+
+        if ($this->form->isValid()) {
+
+            $this->state($request)->organisation = $this->form->getData()['organisation'];
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
+        }
+
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'organisation' => $this->state($request)->organisation,
+            'form'         => $this->form->prepare(),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
+        ]));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isMissingPrerequisite(ServerRequestInterface $request): bool
+    {
+        return $this->state($request)->lastName === null
+            || $this->state($request)->code === null
+            || $this->state($request)->lpaUid === null
+            || $this->state($request)->sentToDonor === null
+            || $this->state($request)->attorneyName === null
+            || $this->state($request)->noOfAttorneys === 0
+            || $this->state($request)->noOfAttorneys === null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function nextPage(WorkflowState $state): string
+    {
+        //needs changing when next page ready
+        return 'home';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function lastPage(WorkflowState $state): string
+    {
+        //needs changing when next page ready
+        return 'pv.check-answers';
+    }
+}

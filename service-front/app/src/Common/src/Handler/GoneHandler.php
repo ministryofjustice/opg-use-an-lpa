@@ -10,9 +10,11 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
+ * @psalm-suppress UnusedClass
  */
 class GoneHandler extends AbstractHandler
 {
@@ -22,8 +24,9 @@ class GoneHandler extends AbstractHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     /**

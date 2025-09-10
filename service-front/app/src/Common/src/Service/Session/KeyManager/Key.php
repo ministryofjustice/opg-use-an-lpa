@@ -9,7 +9,7 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
 /**
  * Represents a single encryption key, and it ID.
  */
-class Key
+readonly class Key
 {
     public function __construct(private string $id, private EncryptionKey $material)
     {
@@ -26,12 +26,22 @@ class Key
     }
 
     /**
+     * Retrieve the underlying Halite backed encryption key
+     *
+     * @return EncryptionKey
+     */
+    public function getKey(): EncryptionKey
+    {
+        return $this->material;
+    }
+
+    /**
      * Return the key material
      *
      * @return string
      */
     public function getKeyMaterial(): string
     {
-        return $this->material->getRawKeyMaterial();
+        return $this->getKey()->getRawKeyMaterial();
     }
 }

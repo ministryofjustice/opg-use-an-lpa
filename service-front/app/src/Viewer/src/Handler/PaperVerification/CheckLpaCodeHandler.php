@@ -11,8 +11,10 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\LpaCheck;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -34,9 +36,10 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -49,8 +52,11 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO get donor name and add it to twig template
-        //$code = $this->state($request)->code;
+        $lpaUid = $this->state($request)->lpaUid;
+
+        if ($lpaUid) {
+            $this->form->setData(['lpa_reference' => $lpaUid]);
+        }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
@@ -87,10 +93,25 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->noOfAttorneys !== null &&
+            $state->dateOfBirth !== null &&
+            $state->lastName !== null &&
+            $state->lpaUid !== null &&
+            $state->sentToDonor !== null &&
+            $state->attorneyName !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'pv.verification-code-sent-to';
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.verification-code-sent-to';
     }
 
     /**
@@ -98,7 +119,6 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'enter-code-pv';
     }
 }

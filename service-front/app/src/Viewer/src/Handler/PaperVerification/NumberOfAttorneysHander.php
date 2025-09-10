@@ -11,8 +11,10 @@ use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use Viewer\Form\NumberOfAttorneys;
 use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Workflow\PaperVerificationShareCode;
 
 /**
  * @codeCoverageIgnore
@@ -20,15 +22,22 @@ use Viewer\Handler\AbstractPVSCodeHandler;
 class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 {
     private NumberOfAttorneys $form;
-
+    /**
+     * @var array{
+     *     "view/en": string,
+     *     "view/cy": string,
+     * }
+     */
+    private array $systemMessages;
     public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
+        LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
     ) {
-        parent::__construct($renderer, $urlHelper);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -42,6 +51,11 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'         => $this->form->prepare(),
@@ -57,7 +71,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $this->state($request)->dateOfBirth = $this->form->getData()['pv_number_of_attorneys'];
+            $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -84,10 +98,23 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
+    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    {
+        return
+            $state->sentToDonor !== null &&
+            $state->lastName !== null &&
+            $state->dateOfBirth !== null &&
+            $state->lpaUid !== null &&
+            $state->code !== null &&
+            $state->attorneyName !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'pv.check-answers';
     }
 
     /**
@@ -95,7 +122,8 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return $this->hasFutureAnswersInState($state)
+            ? 'pv.check-answers'
+            : 'pv.attorney-dob';
     }
 }

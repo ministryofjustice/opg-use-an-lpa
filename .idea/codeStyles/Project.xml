@@ -17,9 +17,12 @@
       <option name="ALIGN_PHPDOC_COMMENTS" value="true" />
       <option name="COMMA_AFTER_LAST_ARRAY_ELEMENT" value="true" />
       <option name="PHPDOC_BLANK_LINE_BEFORE_TAGS" value="true" />
-      <option name="PHPDOC_BLANK_LINES_AROUND_PARAMETERS" value="true" />
       <option name="PHPDOC_WRAP_LONG_LINES" value="true" />
       <option name="BLANK_LINES_BETWEEN_IMPORTS" value="1" />
+      <option name="THROWS_WEIGHT" value="3" />
+      <option name="PARAM_WEIGHT" value="1" />
+      <option name="RETURN_WEIGHT" value="2" />
+      <option name="API_WEIGHT" value="0" />
       <option name="LOWER_CASE_BOOLEAN_CONST" value="true" />
       <option name="LOWER_CASE_NULL_CONST" value="true" />
       <option name="ELSE_IF_STYLE" value="COMBINE" />

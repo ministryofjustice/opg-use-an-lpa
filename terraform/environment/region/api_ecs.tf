@@ -243,8 +243,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
     ]
   }
 
@@ -255,10 +255,10 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/revoke",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/validate",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/validate",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/exists",
     ]
   }
 
@@ -332,9 +332,9 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/POST/lpas",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/GET/lpas/*",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.lpa_store_account_id}:*/*/GET/health-check",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.lpa_store_account_id}:*/*/POST/lpas",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.lpa_store_account_id}:*/*/GET/lpas/*",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.lpa_store_account_id}:*/*/GET/health-check",
     ]
   }
 
@@ -345,8 +345,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/image-request/*",
-      "arn:aws:execute-api:${data.aws_region.current.name}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/GET/image-request/*",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/GET/healthcheck",
     ]
   }
 
@@ -385,7 +385,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.name,
+          awslogs-region        = data.aws_region.current.region,
           awslogs-stream-prefix = "${var.environment_name}.api-web.use-an-lpa"
         }
       },
@@ -428,7 +428,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.name,
+          awslogs-region        = data.aws_region.current.region,
           awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
       },
@@ -445,7 +445,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.name,
+          awslogs-region        = data.aws_region.current.region,
           awslogs-stream-prefix = "${var.environment_name}.fpm-stats-export.use-an-lpa"
         }
       },
@@ -496,7 +496,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.name,
+          awslogs-region        = data.aws_region.current.region,
           awslogs-stream-prefix = "${var.environment_name}.api-app.use-an-lpa"
         }
       },

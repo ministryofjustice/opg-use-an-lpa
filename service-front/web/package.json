@@ -9,7 +9,6 @@
     "test": "CI=true jest --coverage",
     "test:watch": "jest --watch",
     "build": " npm run build-scss && BABEL_ENV=build babel src --out-dir dist && node build.js",
-    "watch": "webpack --progress --watch --config webpack.development.js",
     "accessibility-check": "node ./pa11y.js",
     "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
   },
@@ -28,9 +27,8 @@
     "@testing-library/jest-dom": "^6.0.0",
     "babel-jest": "^29.2.2",
     "core-js": "^3.26.0",
-    "coveralls": "^3.1.1",
     "es6-promise": "^4.2.8",
-    "esbuild": "0.25.5",
+    "esbuild": "0.25.9",
     "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
@@ -43,7 +41,7 @@
     "sass": "^1.75.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.27.6",
+    "@babel/runtime": "7.28.3",
     "@jest/globals": "^29.6.4",
     "@ministryofjustice/frontend": "2.2.5",
     "govuk-frontend": "^5.3.1",

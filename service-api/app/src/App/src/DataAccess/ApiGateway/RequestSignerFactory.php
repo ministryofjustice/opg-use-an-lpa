@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\JWSPayload\DataStoreLpas;
+use App\Exception\RequestSigningException;
 use App\Service\Secrets\LpaDataStoreSecretManager;
 use Aws\Signature\SignatureV4;
 use Psr\Container\ContainerExceptionInterface;
@@ -29,38 +30,24 @@ class RequestSignerFactory
      * @param mixed ...$additionalSignatureData Additional arguments to be passed to the signature
      *                                          implementation
      * @return RequestSigner
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws RequestSigningException
      */
     public function __invoke(?SignatureType $signature = null, ...$additionalSignatureData): RequestSigner
     {
-        $config = $this->container->get('config');
+        try {
+            $config = $this->container->get('config');
 
-        $additionalHeaders = match ($signature) {
-            SignatureType::ActorCodes => $this->actorCodesHeaders(),
-            SignatureType::DataStoreLpas => $this->dataStoreLpasHeaders(...$additionalSignatureData),
-            default => [],
-        };
+            $additionalHeaders = match ($signature) {
+                SignatureType::DataStoreLpas => $this->dataStoreLpasHeaders(...$additionalSignatureData),
+                default => [], // SignatureType::None
+            };
 
-        $aws_region = $config['aws']['ApiGateway']['endpoint_region'] ?? 'eu-west-1';
+            $aws_region = $config['aws']['ApiGateway']['endpoint_region'] ?? 'eu-west-1';
 
-        return new RequestSigner(new SignatureV4('execute-api', $aws_region), $additionalHeaders);
-    }
-
-    /**
-     * @return array{
-     *     Authorization: ?string
-     * }
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    private function actorCodesHeaders(): array
-    {
-        $config = $this->container->get('config');
-
-        return [
-            'Authorization' => $config['codes_api']['static_auth_token'] ?? null,
-        ];
+            return new RequestSigner(new SignatureV4('execute-api', $aws_region), $additionalHeaders);
+        } catch (ContainerExceptionInterface $e) {
+            throw new RequestSigningException('Failed to sign request', 0, $e);
+        }
     }
 
     /**
@@ -68,7 +55,6 @@ class RequestSignerFactory
      *     X-Jwt-Authorization: string
      * }
      * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function dataStoreLpasHeaders(string $userIdentifier): array
     {

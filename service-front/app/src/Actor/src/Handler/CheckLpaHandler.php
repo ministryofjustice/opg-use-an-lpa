@@ -27,7 +27,6 @@ use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
-use Mezzio\Authentication\AuthenticationInterface;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Flash\FlashMessageMiddleware;
 use Mezzio\Flash\FlashMessagesInterface;
@@ -61,7 +60,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
-        AuthenticationInterface $authenticator,
         LoggerInterface $logger,
         private LpaService $lpaService,
         private RateLimitService $rateLimitService,
@@ -70,8 +68,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-
-        $this->setAuthenticator($authenticator);
     }
 
     /**

@@ -8,9 +8,9 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class LpaActivationKeyAlreadyRequestedException extends AbstractApiException implements LoggableAdditionalDataInterface
 {
-    public const MESSAGE = 'Activation key already requested for LPA';
-    public const TITLE   = 'Bad Request';
-    public const CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
+    public const string MESSAGE = 'Activation key already requested for LPA';
+    public const string TITLE   = 'Bad Request';
+    public const int    CODE    = StatusCodeInterface::STATUS_BAD_REQUEST;
 
     public function __construct(array $additionalData = [])
     {

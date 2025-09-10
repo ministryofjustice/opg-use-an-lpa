@@ -6,13 +6,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     AccessForAllLpaValidationHandler,
     AddLpaConfirmationHandler,
     AddLpaValidationHandler,
-    AuthHandler,
-    CanPasswordResetHandler,
-    CanResetEmailHandler,
-    ChangePasswordHandler,
-    CompleteChangeEmailHandler,
     CompleteDeleteAccountHandler,
-    CompletePasswordResetHandler,
     HealthcheckHandler,
     LpasCollectionHandler,
     LpasResourceCodesCollectionHandler,
@@ -22,14 +16,10 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationCallbackHandler,
     OneLoginAuthenticationLogoutHandler,
     OneLoginAuthenticationRequestHandler,
-    PaperVerificationCodes\UsableHandler,
+    PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
-    RequestChangeEmailHandler,
     RequestCleanseHandler,
-    RequestPasswordResetHandler,
     SystemMessageHandler,
-    UserActivateHandler,
-    UserHandler,
     ViewerCodeFullHandler,
     ViewerCodeSummaryHandler};
 use App\Middleware\RequestObject\RequestObjectMiddleware;
@@ -38,30 +28,7 @@ use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
 
 /**
- * Setup routes with a single request method:
- *
- * $app->get('/', App\Handler\HomePageHandler::class, 'home');
- * $app->post('/album', App\Handler\AlbumCreateHandler::class, 'album.create');
- * $app->put('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.put');
- * $app->patch('/album/{id}', App\Handler\AlbumUpdateHandler::class, 'album.patch');
- * $app->delete('/album/{id}', App\Handler\AlbumDeleteHandler::class, 'album.delete');
- *
- * Or with multiple request methods:
- *
- * $app->route('/contact', App\Handler\ContactHandler::class, ['GET', 'POST', ...], 'contact');
- *
- * Or handling all request methods:
- *
- * $app->route('/contact', App\Handler\ContactHandler::class)->setName('contact');
- *
- * or:
- *
- * $app->route(
- *     '/contact',
- *     App\Handler\ContactHandler::class,
- *     Mezzio\Router\Route::HTTP_METHOD_ANY,
- *     'contact'
- * );
+ * @psalm-suppress UnusedClosureParam
  */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
     $app->get('/healthcheck', HealthcheckHandler::class, 'healthcheck');
@@ -144,41 +111,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         ),
         'lpa.paper-verification.usable'
     );
-
-    $app->get('/v1/user', UserHandler::class, 'user.get');
-    $app->post('/v1/user', UserHandler::class, 'user.create');
-    $app->patch('/v1/user-activation', UserActivateHandler::class, 'user.activate');
-
-    $app->patch('/v1/request-password-reset', RequestPasswordResetHandler::class, 'user.password-reset');
-    $app->get('/v1/can-password-reset', CanPasswordResetHandler::class, 'user.can-password-reset');
-    $app->patch(
-        '/v1/complete-password-reset',
-        CompletePasswordResetHandler::class,
-        'user.complete-password-reset'
-    );
-
-    $app->patch('/v1/request-change-email', RequestChangeEmailHandler::class, 'user.request-change-email');
-    $app->get('/v1/can-reset-email', CanResetEmailHandler::class, 'user.can-reset-email');
-    $app->patch(
-        '/v1/complete-change-email',
-        CompleteChangeEmailHandler::class,
-        'user.complete-change-email'
-    );
-    $app->patch('/v1/change-password', ChangePasswordHandler::class, 'user.change-password');
-    $app->delete(
-        '/v1/delete-account/{account-id:[0-9a-f\-]+}',
-        CompleteDeleteAccountHandler::class,
-        'user.delete-account'
-    );
-
-    $app->patch('/v1/auth', AuthHandler::class, 'user.auth');
-
-    $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
-    $app->post('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
-    $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
-
-    $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
-
     $app->post(
         '/v1/paper-verification/validate',
         $factory->pipeline(
@@ -189,4 +121,15 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         ),
         'lpa.paper-verification.validate'
     );
+    $app->delete(
+        '/v1/delete-account/{account-id:[0-9a-f\-]+}',
+        CompleteDeleteAccountHandler::class,
+        'user.delete-account'
+    );
+
+    $app->get('/v1/auth/start', OneLoginAuthenticationRequestHandler::class, 'user.auth-start');
+    $app->post('/v1/auth/callback', OneLoginAuthenticationCallbackHandler::class, 'user.auth-callback');
+    $app->put('/v1/auth/logout', OneLoginAuthenticationLogoutHandler::class, 'user.auth-logout');
+
+    $app->post('/v1/email-user/{emailTemplate}', NotifyHandler::class, 'lpa.user.notify');
 };

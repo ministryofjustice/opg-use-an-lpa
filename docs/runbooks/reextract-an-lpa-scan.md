@@ -1,1 +1,1 @@
-Instructions for how to re-extract Instructions and Preferences images for a LPA can be found in the [IaP repo runbooks](https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences/blob/main/docs/runbooks/reextract-an-lpa-scan.md)
+Instructions on how to re-extract Instructions and Preferences images for a LPA can be found in the [Instructions and Preferences repo runbooks](https://github.com/ministryofjustice/opg-data-lpa-instructions-preferences/blob/main/docs/runbooks/reextract-an-lpa-scan.md)

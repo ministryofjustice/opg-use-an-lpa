@@ -6,6 +6,6 @@ namespace App\DataAccess\ApiGateway;
 
 enum SignatureType
 {
-    case ActorCodes;
+    case None;
     case DataStoreLpas;
 }

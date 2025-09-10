@@ -11,7 +11,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use ValueError;
 
 class CastToLifeSustainingTreatmentTest extends TestCase
 {
@@ -39,7 +38,7 @@ class CastToLifeSustainingTreatmentTest extends TestCase
         );
     }
 
-    public function lifeSustainingTreatmentProvider(): array
+    public static function lifeSustainingTreatmentProvider(): array
     {
         return [
             ['Option A', 'option-a'],

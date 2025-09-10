@@ -1,8 +1,8 @@
 resource "aws_security_group" "vpc_endpoints_private" {
-  name_prefix = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}"
+  name_prefix = "vpc-endpoint-access-private-subnets-${data.aws_region.current.region}"
   description = "vpc endpoint private sg"
   vpc_id      = aws_default_vpc.default.id
-  tags        = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.name}" }
+  tags        = { Name = "vpc-endpoint-access-private-subnets-${data.aws_region.current.region}" }
   lifecycle {
     create_before_destroy = true
   }
@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "vpc_endpoints_private_subnet_ingress" {
   security_group_id = aws_security_group.vpc_endpoints_private.id
   type              = "ingress"
   cidr_blocks       = aws_subnet.private[*].cidr_block
-  description       = "Allow Services in Private Subnets of ${data.aws_region.current.name} to connect to VPC Interface Endpoints"
+  description       = "Allow Services in Private Subnets of ${data.aws_region.current.region} to connect to VPC Interface Endpoints"
 
   provider = aws.region
 }
@@ -29,7 +29,7 @@ resource "aws_security_group_rule" "vpc_endpoints_public_subnet_ingress" {
   security_group_id = aws_security_group.vpc_endpoints_private.id
   type              = "ingress"
   cidr_blocks       = aws_default_subnet.public[*].cidr_block
-  description       = "Allow Services in Public Subnets of ${data.aws_region.current.name} to connect to VPC Interface Endpoints"
+  description       = "Allow Services in Public Subnets of ${data.aws_region.current.region} to connect to VPC Interface Endpoints"
 
   provider = aws.region
 }
@@ -57,12 +57,12 @@ resource "aws_vpc_endpoint" "private" {
   for_each = var.environment_name == "development" ? local.interface_endpoint_dev : local.interface_endpoint
 
   vpc_id              = aws_default_vpc.default.id
-  service_name        = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
+  service_name        = "com.amazonaws.${data.aws_region.current.region}.${each.value}"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   security_group_ids  = aws_security_group.vpc_endpoints_private[*].id
   subnet_ids          = aws_subnet.private[*].id
-  tags                = { Name = "${each.value}-private-${data.aws_region.current.name}" }
+  tags                = { Name = "${each.value}-private-${data.aws_region.current.region}" }
 
   provider = aws.region
 }
@@ -83,10 +83,10 @@ resource "aws_vpc_endpoint" "private-gw" {
   for_each = var.environment_name == "development" ? local.gateway_endpoint_dev : local.gateway_endpoint
 
   vpc_id            = aws_default_vpc.default.id
-  service_name      = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
+  service_name      = "com.amazonaws.${data.aws_region.current.region}.${each.value}"
   vpc_endpoint_type = "Gateway"
   route_table_ids   = tolist(data.aws_route_tables.application.ids)
-  tags              = { Name = "${each.value}-private-${data.aws_region.current.name}" }
+  tags              = { Name = "${each.value}-private-${data.aws_region.current.region}" }
 
   provider = aws.region
 }

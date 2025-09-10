@@ -42,7 +42,7 @@ trait PSR17PropheciesTrait
             ->withBody(Argument::any())
             ->willReturn($this->requestProphecy->reveal());
         $this->requestProphecy
-            ->withHeader('Accept', 'application/json')
+            ->withHeader('Accept', 'application/vnd.opg-data.v1+json,application/json')
             ->shouldBeCalled()
             ->willReturn($this->requestProphecy->reveal());
         $this->requestProphecy
@@ -52,6 +52,33 @@ trait PSR17PropheciesTrait
         $this->requestProphecy
             ->withHeader('x-amzn-trace-id', $traceId)
             ->shouldBeCalled()
+            ->willReturn($this->requestProphecy->reveal());
+    }
+
+    public function generatePSR17PropheciesWithoutAssertions(
+        ResponseInterface $response,
+        string $traceId,
+        array $data,
+    ): void {
+        $this->generateCleanPSR17Prophecies();
+
+        $this->httpClientProphecy->sendRequest(Argument::any())->willReturn($response);
+
+        $this->streamFactoryProphecy
+            ->createStream(json_encode($data))
+            ->willReturn($this->prophesize(StreamInterface::class)->reveal());
+
+        $this->requestProphecy
+            ->withBody(Argument::any())
+            ->willReturn($this->requestProphecy->reveal());
+        $this->requestProphecy
+            ->withHeader('Accept', 'application/json')
+            ->willReturn($this->requestProphecy->reveal());
+        $this->requestProphecy
+            ->withHeader('Content-Type', 'application/json')
+            ->willReturn($this->requestProphecy->reveal());
+        $this->requestProphecy
+            ->withHeader('x-amzn-trace-id', $traceId)
             ->willReturn($this->requestProphecy->reveal());
     }
 }

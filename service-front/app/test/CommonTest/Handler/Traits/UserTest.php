@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace CommonTest\Handler\Traits;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Handler\Traits\User;
+use Mezzio\Authentication\UserInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Http\Message\ServerRequestInterface;
-use Mezzio\Authentication\AuthenticationInterface;
-use Mezzio\Authentication\UserInterface;
 
 class UserTest extends TestCase
 {
@@ -22,15 +20,10 @@ class UserTest extends TestCase
     {
         $userInterfaceProphecy = $this->prophesize(UserInterface::class);
 
-        $authenticationProhphecy = $this->prophesize(AuthenticationInterface::class);
-        $authenticationProhphecy->authenticate(Argument::type(ServerRequestInterface::class))
-            ->willReturn($userInterfaceProphecy->reveal());
-
         $requestProphecy = $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
+        $requestProphecy->getAttribute(UserInterface::class)->willReturn($userInterfaceProphecy->reveal());
 
         $userTrait = $this->getMockForTrait(User::class);
-
-        $userTrait->setAuthenticator($authenticationProhphecy->reveal());
 
         $user = $userTrait->getUser($requestProphecy->reveal());
 
@@ -40,15 +33,9 @@ class UserTest extends TestCase
     #[Test]
     public function gets_null_when_user_is_not_logged_in(): void
     {
-        $authenticationProhphecy = $this->prophesize(AuthenticationInterface::class);
-        $authenticationProhphecy->authenticate(Argument::type(ServerRequestInterface::class))
-            ->willReturn(null);
-
         $requestProphecy = $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
         $userTrait = $this->getMockForTrait(User::class);
-
-        $userTrait->setAuthenticator($authenticationProhphecy->reveal());
 
         $user = $userTrait->getUser($requestProphecy->reveal());
 
