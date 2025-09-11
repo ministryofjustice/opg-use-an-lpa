@@ -333,7 +333,6 @@ jobs:
 
       - name: Trivy Image Vulnerability Scanner
         id: trivy_scan
-        if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         run: |
           mkdir -p -m 0777 .trivy-cache ./test-results/
           docker run \

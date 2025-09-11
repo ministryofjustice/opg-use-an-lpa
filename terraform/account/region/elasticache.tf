@@ -37,7 +37,8 @@ resource "aws_elasticache_replication_group" "brute_force_cache_replication_grou
   subnet_group_name          = data.aws_default_tags.current.tags.environment-name != "production" ? aws_elasticache_subnet_group.private_subnets_fwn.name : aws_elasticache_subnet_group.private_subnets.name
   security_group_ids         = [aws_security_group.brute_force_cache_service.id]
   auto_minor_version_upgrade = true
-  maintenance_window         = "mon:01:00-mon:04:00"
+  maintenance_window         = "mon:02:00-mon:04:00"
+  snapshot_window            = "00:00-01:00"
 
   provider = aws.region
 }
