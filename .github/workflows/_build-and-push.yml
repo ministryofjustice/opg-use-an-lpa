@@ -110,7 +110,7 @@ jobs:
         if: always()
         id: hadolint_output
         run: |
-          echo "${process.env.HADOLINT_RESULTS}"
+          cat ${process.env.HADOLINT_RESULTS} || echo ${process.env.HADOLINT_RESULTS}
 
 
       - name: cache node modules
