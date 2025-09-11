@@ -102,9 +102,16 @@ jobs:
         id: hadolint
         with:
           dockerfile: ${{ matrix.path_to_docker_file }}
-          no-fail: true
+          no-fail: false
           failure-threshold: warning
           verbose: true
+
+      - name: print hadlint output
+        if: always()
+        id: hadolint_output
+        run: |
+          echo "${process.env.HADOLINT_RESULTS}""
+
 
       - name: cache node modules
         id: cache-npm
