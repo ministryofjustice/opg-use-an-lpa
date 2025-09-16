@@ -169,16 +169,16 @@
     },
     {
       "description": [
-        "front composer minor and patch updates (PHP 8.2, stable for 3 days)",
+        "front composer minor and patch updates (PHP, stable for 3 days)",
         "These might be automerged once we're comfortable with Renovate"
       ],
       "automerge": false,
-      "groupName": "front minor and patch updates (PHP 8.2)",
-      "groupSlug": "front-minor-patch-updates-php82",
+      "groupName": "front minor and patch updates (PHP)",
+      "groupSlug": "front-minor-patch-updates-php",
       "labels": [
         "Dependencies",
         "Renovate",
-        "PHP 8.2"
+        "PHP"
       ],
       "matchManagers": [
         "composer"
@@ -199,16 +199,16 @@
     },
     {
       "description": [
-        "api composer minor and patch updates (PHP 8.2, stable for 3 days)",
+        "api composer minor and patch updates (PHP, stable for 3 days)",
         "These might be automerged once we're comfortable with Renovate"
       ],
       "automerge": false,
-      "groupName": "api minor and patch updates (PHP 8.2)",
-      "groupSlug": "api-minor-patch-updates-php82",
+      "groupName": "api minor and patch updates (PHP)",
+      "groupSlug": "api-minor-patch-updates-php",
       "labels": [
         "Dependencies",
         "Renovate",
-        "PHP 8.2"
+        "PHP"
       ],
       "matchManagers": [
         "composer"
