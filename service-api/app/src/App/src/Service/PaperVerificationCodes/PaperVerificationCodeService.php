@@ -10,6 +10,7 @@ use App\Entity\LpaStore\LpaStore;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Exception\ApiException;
+use App\Exception\BadRequestException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Request\PaperVerificationCodeUsable;
@@ -79,9 +80,30 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
-    public function view(PaperVerificationCodeView $params): void
+    /**
+     * @throws NotFoundException supplied information failed to validate against held data.
+     * @throws GoneException     The verification code has been cancelled or has expired, or the Lpa has been cancelled
+     * @throws ApiException|BadRequestException
+     */
+    public function view(PaperVerificationCodeView $params): ViewCode
     {
+        $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+        $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
+
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+
+        if (empty($params->organisation)) {
+            throw new BadRequestException('An organisation must be provided');
+        }
+
+        return new ViewCode(
+            donorName: $lpa->donor->firstnames . ' ' . $lpa->donor->surname,
+            lpaType:   $lpa->caseSubtype,
+            codeExpiryDate: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+            lpaStatus: LpaStatus::from($lpa->status),
+            lpaSource: LpaSource::LPASTORE,
+            lpa:            $lpa,
+        );
     }
 
     /**
