@@ -11,7 +11,7 @@ services:
       context: .
       dockerfile: service-front/web/Dockerfile
     entrypoint: >
-      sh -c "npm ci --verbose && npm run build"
+      sh -c "npm ci --verbose --ignore-scripts && npm run build"
     volumes:
       - ./service-front/web:/web:rw
       - esbuild:/web/dist
