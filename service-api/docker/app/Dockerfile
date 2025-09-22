@@ -1,11 +1,11 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM composer:2.8.9@sha256:69d57c07ed077bc22d6e584202b6d9160f636abdb6df25c7c437ded589b3fa6c AS composer
+FROM composer:2.8.11@sha256:68e926a477000f12e8645e82a020b84904d49071c895c4951551fe80eed5d103 AS composer
 
-FROM mlocati/php-extension-installer:2.8.28@sha256:a7d3e11e022dbc563c85d3c71827cc3a0a338640bcb4dc629ce3e98bcd5875e4 AS php-extension-installer
+FROM mlocati/php-extension-installer:2.9.8@sha256:d2e141903b339ce765b7f760108e953aa5f93e4122c2d980f189f8922631d1d0 AS php-extension-installer
 
-FROM php:8.3.22-fpm-alpine3.22@sha256:13147c0420a956ae3ecab236c0a8ee8073d9bb100be6dde7f23c4c447e59ec8b AS php-base
+FROM php:8.4.12-fpm-alpine3.22@sha256:999f910cc872e4930d2d5c4b91d80ed712e8cf77ba173c729127bfdc5fddfb88 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
