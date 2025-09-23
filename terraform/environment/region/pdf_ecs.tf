@@ -67,9 +67,10 @@ resource "aws_service_discovery_service" "pdf_ecs" {
   }
 
   health_check_custom_config {
+    failure_threshold = 1
   }
-
   provider = aws.region
+
 }
 
 //

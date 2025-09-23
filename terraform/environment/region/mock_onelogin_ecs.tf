@@ -66,8 +66,8 @@ resource "aws_service_discovery_service" "mock_onelogin_ecs" {
 
     routing_policy = "MULTIVALUE"
   }
-
-  health_check_custom_config {
+  lifecycle {
+    ignore_changes = [health_check_custom_config]
   }
 
   provider = aws.region
