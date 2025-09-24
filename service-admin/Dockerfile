@@ -6,7 +6,7 @@ COPY web/assets web/assets
 COPY build.js .
 COPY package.json package-lock.json ./
 
-RUN npm ci && npm run build
+RUN npm ci --ignore-scripts && npm run build
 
 # Build Go app
 FROM golang:1.24.6-alpine@sha256:c8c5f95d64aa79b6547f3b626eb84b16a7ce18a139e3e9ca19a8c078b85ba80d AS build-env

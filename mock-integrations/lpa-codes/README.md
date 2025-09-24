@@ -15,7 +15,7 @@ $ node -v
 v20.9.0
 
 # Install dependencies
-$ npm ci
+$ npm ci --ignore-scripts
 
 # To rebuild the javascript
 $ node build.mjs
