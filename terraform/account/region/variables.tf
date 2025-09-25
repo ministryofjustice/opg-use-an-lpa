@@ -41,14 +41,6 @@ variable "lambda_container_version" {
   type        = string
 }
 
-variable "vpc_flow_logs_iam_role" {
-  description = "The IAM role for VPC flow logs"
-  type = object({
-    arn = string
-    id  = string
-  })
-}
-
 variable "network_cidr_block" {
   type        = string
   description = "The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using ipv4_netmask_length."
