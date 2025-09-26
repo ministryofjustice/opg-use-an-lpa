@@ -50,7 +50,7 @@ class HaliteEncryptedCookieTest extends TestCase
         $sut = new HaliteEncryptedCookie($keyManagerStub, $cryptoStub, $loggerStub);
 
         $encoded = $sut->encodeCookieValue($data);
-        $this->assertEquals('1.ZW5jcnlwdGVkU3RyaW5n', $encoded);
+        $this->assertEquals('1.encryptedString', $encoded);
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class HaliteEncryptedCookieTest extends TestCase
     #[Test]
     public function it_decodes_a_string_into_session_data(): void
     {
-        $payload = '1.ZW5jcnlwdGVkU3RyaW5n';
+        $payload = '1.encryptedString';
 
         $keyStub = $this->createStub(Key::class);
 

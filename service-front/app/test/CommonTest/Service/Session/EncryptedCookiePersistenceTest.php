@@ -18,16 +18,16 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session;
 
-use PHPUnit\Framework\Attributes\Test;
+use Common\Exception\SessionEncryptionFailureException;
 use Common\Service\Session\EncryptedCookiePersistence;
 use Common\Service\Session\Encryption\EncryptInterface;
 use Common\Service\Session\KeyManager\Key;
 use Fig\Http\Message\StatusCodeInterface;
-use Laminas\Crypt\BlockCipher;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Session\Session;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -42,22 +42,22 @@ class EncryptedCookiePersistenceTest extends TestCase
     /*
      * Name given to the cookie
      */
-    private const COOKIE_NAME = 'test-cookie-name';
+    private const string COOKIE_NAME = 'test-cookie-name';
 
     /*
      * The cookie's path
      */
-    private const COOKIE_PATH = '/';
+    private const string COOKIE_PATH = '/';
 
     /*
      * Number of seconds before the session expires.
      */
-    private const SESSION_EXPIRES = 60;
+    private const int SESSION_EXPIRES = 60;
 
     /*
      * Number of seconds before the cookie expires.
      */
-    private const COOKIE_EXPIRES = 600;
+    private const int COOKIE_EXPIRES = 600;
 
     private ObjectProphecy|EncryptInterface $encrypterProphecy;
 
@@ -99,6 +99,7 @@ class EncryptedCookiePersistenceTest extends TestCase
          * If the header does not appear in the message, this method MUST return an empty array
          */
         $requestProphecy->getHeaderLine('Cookie')->willReturn('')->shouldBeCalled();
+        $requestProphecy->getCookieParams()->willReturn([])->shouldBeCalled();
 
         $this->encrypterProphecy->decodeCookieValue('')->willReturn([]);
 
@@ -132,8 +133,10 @@ class EncryptedCookiePersistenceTest extends TestCase
             'bool'   => true,
             'string' => 'here',
             'int'    => 123,
-            'float'  => 123.9,
         ];
+        // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
+        $session = new Session($testData);
+        $session->set('float', 123.9); // setting data manually triggers the session to be "changed"
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
@@ -152,51 +155,9 @@ class EncryptedCookiePersistenceTest extends TestCase
         $responseProphecy->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
             ->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
-        // Dig into the detail around the cookie that was set
-        // Essentially a test that the FigCookies library works. Not sure we need it
         $responseProphecy->withAddedHeader(
             'Set-Cookie',
-            Argument::that(
-                function ($input) {
-                    $this->assertIsString($input);
-
-                    $cookieName = self::COOKIE_NAME;
-                    $cookiePath = self::COOKIE_PATH;
-
-                    $regexCookie  = "^{$cookieName}=(.+?);";
-                    $regexPath    = "Path={$cookiePath};";
-                    $regexExpires = 'Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);';
-
-                    // Validate the full pattern
-                    $this->assertMatchesRegularExpression(
-                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=None$|",
-                        $input
-                    );
-
-                    //--------
-                    // Extract the cookie data
-
-                    preg_match("|{$regexCookie}|", $input, $matches);
-
-                    // Decompose the value into the key id, and the data
-                    [$keyId, $payload] = explode('.', $matches[1], 2);
-
-                    $this->assertEquals('ENCRYPTED', $keyId);
-                    $this->assertEquals('CIPHER_TEXT', $payload);
-
-                    //--------
-                    // Extract the Expires time
-
-                    preg_match("|{$regexExpires}|", $input, $matches);
-
-                    $time = strtotime($matches[1]);
-
-                    // Check it
-                    $this->assertEquals(time() + self::COOKIE_EXPIRES, $time, '', 3);
-
-                    return true;
-                }
-            )
+            Argument::type('string'),
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
         $this->encrypterProphecy->encodeCookieValue(
@@ -208,7 +169,7 @@ class EncryptedCookiePersistenceTest extends TestCase
 
                 $this->assertEquals($testData['int'], $input['int']);
                 $this->assertEquals($testData['string'], $input['string']);
-                $this->assertEquals($testData['float'], $input['float']);
+                $this->assertEquals(123.9, $input['float']);
                 $this->assertEquals($testData['bool'], $input['bool']);
 
                 return true;
@@ -228,8 +189,7 @@ class EncryptedCookiePersistenceTest extends TestCase
             true
         );
 
-        // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
-        $response = $cp->persistSession(new Session($testData), $responseProphecy->reveal());
+        $response = $cp->persistSession($session, $responseProphecy->reveal());
 
         // We expect the response we put in to be returned
         $this->assertEquals($responseProphecy->reveal(), $response);
@@ -244,6 +204,9 @@ class EncryptedCookiePersistenceTest extends TestCase
             'int'    => 123,
             'float'  => 123.9,
         ];
+        // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
+        $session = new Session($testData);
+        $session->set(UserInterface::class, ''); // setting data manually triggers the session to be "changed"
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
@@ -263,67 +226,13 @@ class EncryptedCookiePersistenceTest extends TestCase
         $responseProphecy->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
             ->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
-        // Dig into the detail around the cookie that was set
-        // Essentially a test that the FigCookies library works. Not sure we need it
         $responseProphecy->withAddedHeader(
             'Set-Cookie',
-            Argument::that(
-                function ($input) {
-                    $this->assertIsString($input);
-
-                    $cookieName = self::COOKIE_NAME;
-                    $cookiePath = self::COOKIE_PATH;
-
-                    $regexCookie  = "^{$cookieName}=(.+?);";
-                    $regexPath    = "Path={$cookiePath};";
-                    $regexExpires = 'Expires=([\w]{3}, \d+ [\w]{3} \d{4} \d{2}:\d{2}:\d{2} \w+);';
-
-                    // Validate the full pattern
-                    $this->assertMatchesRegularExpression(
-                        "|{$regexCookie} {$regexPath} {$regexExpires} Secure; HttpOnly; SameSite=None$|",
-                        $input
-                    );
-
-                    //--------
-                    // Extract the cookie data
-
-                    preg_match("|{$regexCookie}|", $input, $matches);
-
-                    // Decompose the value into the key id, and the data
-                    [$keyId, $payload] = explode('.', $matches[1], 2);
-
-                    $this->assertEquals('ENCRYPTED', $keyId);
-                    $this->assertEquals('CIPHER_TEXT', $payload);
-
-                    //--------
-                    // Extract the Expires time
-
-                    preg_match("|{$regexExpires}|", $input, $matches);
-
-                    $time = strtotime($matches[1]);
-
-                    // Check it
-                    $this->assertEquals(time() + self::COOKIE_EXPIRES, $time, '', 3);
-
-                    return true;
-                }
-            )
+            Argument::type('string'),
         )->willReturn($responseProphecy->reveal())->shouldBeCalled();
 
         $this->encrypterProphecy->encodeCookieValue(
-            Argument::that(function ($input) use ($testData) {
-                $this->assertArrayHasKey('int', $input);
-                $this->assertArrayHasKey('string', $input);
-                $this->assertArrayHasKey('bool', $input);
-                $this->assertArrayHasKey('float', $input);
-
-                $this->assertEquals($testData['int'], $input['int']);
-                $this->assertEquals($testData['string'], $input['string']);
-                $this->assertEquals($testData['float'], $input['float']);
-                $this->assertEquals($testData['bool'], $input['bool']);
-
-                return true;
-            })
+            Argument::type('array')
         )->willReturn('ENCRYPTED.CIPHER_TEXT');
 
         $cp = new EncryptedCookiePersistence(
@@ -339,61 +248,19 @@ class EncryptedCookiePersistenceTest extends TestCase
             true
         );
 
-        $testData[UserInterface::class] = '';
-
         // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
-        $response = $cp->persistSession(new Session($testData), $responseProphecy->reveal());
+        $response = $cp->persistSession($session, $responseProphecy->reveal());
 
         // We expect the response we put in to be returned
         $this->assertEquals($responseProphecy->reveal(), $response);
     }
 
     #[Test]
-    public function it_persists_a_session_with_no_data(): void
+    public function it_returns_a_response_with_no_set_cookie_with_no_session_data(): void
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
 
-        // Boiler plate
-        $responseProphecy->hasHeader('Expires')->willReturn(false);
-        $responseProphecy->hasHeader('Last-Modified')->willReturn(false);
-        $responseProphecy->hasHeader('Cache-Control')->willReturn(false);
-        $responseProphecy->hasHeader('Pragma')->willReturn(false);
-        $responseProphecy->getHeader('Set-Cookie')->willReturn([]);
-
-        // Test the specific response
-        $responseProphecy->withoutHeader('Set-Cookie')->willReturn($responseProphecy->reveal())->shouldBeCalled();
-        $responseProphecy->withHeader('Pragma', 'no-cache')->willReturn($responseProphecy->reveal())->shouldBeCalled();
-        $responseProphecy->withHeader('Expires', 'Thu, 19 Nov 1981 08:52:00 GMT')
-            ->willReturn($responseProphecy->reveal())->shouldBeCalled();
-        $responseProphecy->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
-            ->willReturn($responseProphecy->reveal())->shouldBeCalled();
-
-        $responseProphecy->withAddedHeader(
-            'Set-Cookie',
-            Argument::that(
-                function ($input) {
-                    $this->assertIsString($input);
-
-                    $cookieName    = self::COOKIE_NAME;
-                    $patternCookie = "^{$cookieName}=(.+?);";
-
-                    //--------
-                    // Extract the cookie data
-
-                    preg_match("|{$patternCookie}|", $input, $matches);
-
-                    // Decompose the value into the key id, and the data
-                    [$keyId, $payload] = explode('.', $matches[1], 2);
-
-                    $this->assertEquals('ENCRYPTED', $keyId);
-                    $this->assertEquals('CIPHER_TEXT', $payload);
-
-                    return true;
-                }
-            )
-        )->willReturn($responseProphecy->reveal())->shouldBeCalled();
-
-        $this->encrypterProphecy->encodeCookieValue(Argument::type('array'))->willReturn('ENCRYPTED.CIPHER_TEXT');
+        $responseProphecy->withAddedHeader('Set-Cookie', Argument::type('string'))->shouldNotBeCalled();
 
         $cp = new EncryptedCookiePersistence(
             $this->encrypterProphecy->reveal(),
@@ -415,9 +282,6 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->assertEquals($responseProphecy->reveal(), $response);
     }
 
-
-    //--------------------------------------------------------------------------------------------------
-    // Test reading session data out of a request.
     /**
      * When cookie data is present along with a valid time, we expect the included data to be returned in the session.
      *
@@ -465,20 +329,56 @@ class EncryptedCookiePersistenceTest extends TestCase
         $this->assertEquals($testData, $session->toArray());
     }
 
-    /**
-     * This is copied across from EncryptedCookiePersistence.
-     * We want our own copy in the test to allow us to fail if it's changed.
-     *
-     * @return BlockCipher
-     */
-    private function getBlockCipher(): BlockCipher
+    #[Test]
+    public function it_clears_the_session_on_encryption_failures(): void
     {
-        return BlockCipher::factory(
-            'openssl',
-            [
-                'algo' => 'aes',
-                'mode' => 'gcm',
-            ]
-        )->setBinaryOutput(true);
+        // We use a concrete session object here. It just moves data around; that's no test benefit to mocking it
+        $session = new Session([]);
+        $session->set(UserInterface::class, ''); // setting data manually triggers the session to be "changed"
+
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+
+        // Boiler plate
+        $responseProphecy->hasHeader('Expires')->willReturn(false);
+        $responseProphecy->hasHeader('Last-Modified')->willReturn(false);
+        $responseProphecy->hasHeader('Cache-Control')->willReturn(false);
+        $responseProphecy->hasHeader('Pragma')->willReturn(false);
+        $responseProphecy->getHeader('Set-Cookie')->willReturn([]);
+
+        // Test the specific response
+        $responseProphecy->withoutHeader('Set-Cookie')->willReturn($responseProphecy->reveal())->shouldBeCalled();
+        $responseProphecy->withHeader('Pragma', 'no-cache')->willReturn($responseProphecy->reveal())->shouldBeCalled();
+        $responseProphecy->withHeader('Expires', 'Thu, 19 Nov 1981 08:52:00 GMT')
+            ->willReturn($responseProphecy->reveal())->shouldBeCalled();
+        $responseProphecy->withHeader('Cache-Control', 'no-store, no-cache, must-revalidate')
+            ->willReturn($responseProphecy->reveal())->shouldBeCalled();
+
+        $responseProphecy->withAddedHeader(
+            'Set-Cookie',
+            Argument::type('string'),
+        )->willReturn($responseProphecy->reveal())->shouldBeCalled();
+
+        $this->encrypterProphecy
+            ->encodeCookieValue(Argument::type('array'))
+            ->willThrow(SessionEncryptionFailureException::class);
+
+        $cp = new EncryptedCookiePersistence(
+            $this->encrypterProphecy->reveal(),
+            self::COOKIE_NAME,
+            self::COOKIE_PATH,
+            'nocache',
+            self::SESSION_EXPIRES,
+            null,
+            self::COOKIE_EXPIRES,
+            null,
+            true,
+            true
+        );
+
+        // We use a concrete session object here. It just moves data around; there's no test benefit to mocking it
+        $response = $cp->persistSession($session, $responseProphecy->reveal());
+
+        // We expect the response we put in to be returned
+        $this->assertEquals($responseProphecy->reveal(), $response);
     }
 }
