@@ -55,16 +55,16 @@ class EncryptedCookiePersistenceFactory
         }
 
         return new EncryptedCookiePersistence(
-            $container->get(EncryptInterface::class),
-            $config['session']['cookie_name'],
-            $config['session']['cookie_path'],
-            $config['session']['cache_limiter'],
-            $config['session']['expires'],
-            $config['session']['last_modified'],
-            $config['session']['cookie_ttl'],
-            $config['session']['cookie_domain'],
-            $config['session']['cookie_secure'],
-            $config['session']['cookie_http_only']
+            encrypter:      $container->get(EncryptInterface::class),
+            cookieName:     $config['session']['cookie_name'],
+            cookiePath:     $config['session']['cookie_path'],
+            cacheLimiter:   $config['session']['cache_limiter'],
+            cacheExpire:    $config['session']['expires'],
+            lastModified:   $config['session']['last_modified'],
+            cookieLifetime: $config['session']['cookie_ttl'],
+            cookieDomain:   $config['session']['cookie_domain'],
+            cookieSecure:   $config['session']['cookie_secure'],
+            cookieHttpOnly: $config['session']['cookie_http_only']
         );
     }
 }
