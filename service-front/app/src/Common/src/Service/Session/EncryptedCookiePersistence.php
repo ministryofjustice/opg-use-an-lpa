@@ -61,7 +61,8 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
             ? gmdate(Http::DATE_FORMAT, $lastModified)
             : $this->getLastModified();
 
-        $this->cookieSameSite = 'None';
+        $this->cookieSameSite             = 'None';
+        $this->deleteCookieOnEmptySession = true;
     }
 
     //------------------------------------------------------------------------------------------------------------
@@ -86,6 +87,11 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface
         try {
             $encryptedCookieValue = $this->encrypter->encodeCookieValue($session->toArray());
         } catch (SessionEncryptionFailureException) {
+            // Causes existing session cookie to be cleared via $this->deleteCookieOnEmptySession.
+            // Because this will happen at essentially the last part of a response process this will
+            // *not* visibly log a user out (for instance) on that particular request i.e. they will see the
+            // page they requested. *But* they will have been logged out from that point onwards i.e. their
+            // next request will result in the login page.
             $session->clear();
         }
 
