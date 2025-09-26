@@ -151,7 +151,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30 terraform.plan ${{ inputs.extra_vars }}
+          terraform apply -lock-timeout=500s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }} terraform.plan
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: upload environment cluster config file
