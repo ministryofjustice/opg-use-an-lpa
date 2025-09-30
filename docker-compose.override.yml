@@ -1,0 +1,4 @@
+services:
+  api-app:
+    environment:
+      XDEBUG_TRIGGER: true

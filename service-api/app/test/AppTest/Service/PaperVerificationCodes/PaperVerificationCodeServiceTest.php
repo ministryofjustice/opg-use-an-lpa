@@ -297,6 +297,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $logger     = $this->createMock(LoggerInterface::class);
 
         $expiryDate = (new DateTimeImmutable())->add(new DateInterval('P2Y'));
+        $lpaId = new LpaUid('M-789Q-P4DF-4UX3');
 
         $paperCodes
             ->expects($this->once())
@@ -305,7 +306,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    $lpaId,
                         cancelled: false,
                         expiresAt: $expiryDate,
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -316,7 +317,9 @@ class PaperVerificationCodeServiceTest extends TestCase
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
         $expiredCode = $sut->expire($code, VerificationCodeExpiryReason::FIRST_TIME_USE);
         $this->assertEquals($expiryDate, $expiredCode->expiresAt);
+        $this->assertEquals($lpaId, $expiredCode->lpaUid);
         $this->assertEquals(VerificationCodeExpiryReason::FIRST_TIME_USE, $expiredCode->expiryReason);
+        $this->assertEquals(false, $expiredCode->cancelled);
     }
 
     #[Test]
