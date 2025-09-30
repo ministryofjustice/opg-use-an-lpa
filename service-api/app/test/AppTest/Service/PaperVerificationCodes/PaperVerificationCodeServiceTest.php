@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace AppTest\Service\PaperVerificationCodes;
 
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
-use App\DataAccess\Repository\Response\PaperVerificationCode as CodeResponse;
+use App\DataAccess\Repository\Response\PaperVerificationCode as CodeDTO;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Request\PaperVerificationCodeUsable;
@@ -48,10 +49,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -123,10 +125,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->sub(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -168,10 +171,12 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: true,
+                        // TODO UML-4080 add below needs changing to sub  , to work for cancelled codes that have also have expiry date in the past
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::CANCELLED
                     )
                 )
             );
@@ -213,10 +218,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -257,10 +263,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -275,6 +282,28 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->expectException(NotFoundException::class);
         $sut->usable($params);
+    }
+
+
+    #[Test]
+    public function it_successfully_expires(): void
+    {
+        // assert that expiry date and reason is set
+        $code = new CodeDTO(
+            lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+            cancelled: false,
+            expiresAt: null,
+            expiryReason: null,
+        );
+
+        $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
+        $lpaManager = $this->createMock(LpaManagerInterface::class);
+        $clock      = $this->createMock(ClockInterface::class);
+        $logger     = $this->createMock(LoggerInterface::class);
+
+        $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
+        $expiredCode = $sut->expire($code, VerificationCodeExpiryReason::FIRST_TIME_USE);
+        $this->assertEquals($code, $expiredCode);
     }
 
     #[Test]
@@ -301,10 +330,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    $params->lpaUid,
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -356,10 +386,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
@@ -400,10 +431,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->with($params->code)
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
-                    new CodeResponse(
+                    new CodeDTO(
                         lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
             );
