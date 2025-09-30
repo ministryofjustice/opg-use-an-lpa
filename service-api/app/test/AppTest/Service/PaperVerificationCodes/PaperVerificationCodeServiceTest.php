@@ -286,24 +286,37 @@ class PaperVerificationCodeServiceTest extends TestCase
 
 
     #[Test]
-    public function it_successfully_expires(): void
+    public function it_successfully_expires_first_use(): void
     {
         // assert that expiry date and reason is set
-        $code = new CodeDTO(
-            lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
-            cancelled: false,
-            expiresAt: null,
-            expiryReason: null,
-        );
+        $code = new PaperVerificationCode('P-1234-1234-1234-12');
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
         $logger     = $this->createMock(LoggerInterface::class);
 
+        $expiryDate = (new DateTimeImmutable())->add(new DateInterval('P2Y'));
+
+        $paperCodes
+            ->expects($this->once())
+            ->method('expire')
+            ->with($code, VerificationCodeExpiryReason::FIRST_TIME_USE)
+            ->willReturn(
+                LpaUtilities::codesApiResponseFixture(
+                    new CodeDTO(
+                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        cancelled: false,
+                        expiresAt: $expiryDate,
+                        expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
+                    )
+                )
+            );
+
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
         $expiredCode = $sut->expire($code, VerificationCodeExpiryReason::FIRST_TIME_USE);
-        $this->assertEquals($code, $expiredCode);
+        $this->assertEquals($expiryDate, $expiredCode->expiresAt);
+        $this->assertEquals(VerificationCodeExpiryReason::FIRST_TIME_USE, $expiredCode->expiryReason);
     }
 
     #[Test]

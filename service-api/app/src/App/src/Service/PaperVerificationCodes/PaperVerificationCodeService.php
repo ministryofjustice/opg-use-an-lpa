@@ -94,6 +94,16 @@ class PaperVerificationCodeService
      * @throws ApiException
      * @throws NotFoundException
      */
+    public function expire(Code $codeToExpire, VerificationCodeExpiryReason $expiryReason): PaperVerificationCode
+    {
+        $expiredCode = $this->paperVerificationCodes->expire($codeToExpire, $expiryReason)->getData();
+        return new PaperVerificationCode($expiredCode->lpaUid, false, $expiredCode->expiresAt, $expiryReason);
+    }
+
+    /**
+     * @throws ApiException
+     * @throws NotFoundException
+     */
     private function getLpa(PaperVerificationCode $verifiedCode, string $originator): LpaStore
     {
         $lpa = $this->lpaManager->getByUid((string)$verifiedCode->lpaUid, $originator);
@@ -108,16 +118,6 @@ class PaperVerificationCodeService
         }
 
         return $lpa->getData();
-    }
-
-    /**
-     * @throws ApiException
-     * @throws NotFoundException
-     */
-    public function expire(PaperVerificationCode  $codeToExpire, VerificationCodeExpiryReason $expiryReason) : PaperVerificationCode
-    {
-       $expiredCode = $this->paperVerificationCodes->expire($codeToExpire, $expiryReason)->getData();
-       return new PaperVerificationCode($codeToExpire->lpaUid, false, $expiredCode, $expiryReason);
     }
 
     /**
