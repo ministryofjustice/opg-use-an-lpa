@@ -71,5 +71,5 @@ output "receive_events_sqs_queue_name" {
 }
 
 output "vpc_id" {
-  value = true ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  value = data.aws_vpc.main.id
 }

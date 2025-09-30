@@ -1,36 +1,3 @@
-# old network
-data "aws_vpc" "default" {
-  default = "true"
-
-  provider = aws.region
-}
-
-data "aws_subnets" "private" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-
-  tags = {
-    Name = "private"
-  }
-
-  provider = aws.region
-}
-
-data "aws_subnets" "public" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-
-  tags = {
-    Name = "public"
-  }
-
-  provider = aws.region
-}
-
 # firewalled network
 data "aws_availability_zones" "available" {
   provider = aws.region
