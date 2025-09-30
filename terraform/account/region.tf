@@ -7,7 +7,6 @@ module "eu_west_1" {
   account_name             = local.account_name
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
-  vpc_flow_logs_iam_role   = aws_iam_role.vpc_flow_logs
   network_cidr_block       = "10.162.0.0/16"
 
   depends_on = [
@@ -35,7 +34,6 @@ module "eu_west_2" {
   account_name             = local.account_name
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
-  vpc_flow_logs_iam_role   = aws_iam_role.vpc_flow_logs
   network_cidr_block       = "10.162.0.0/16"
 
   depends_on = [
