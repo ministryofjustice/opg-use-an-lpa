@@ -88,6 +88,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
      * @param VerificationCodeExpiryReason $reason
      * @inheritDoc
      * @codeCoverageIgnore
+     * @psalm-suppress RedundantCondition
      */
     public function expire(Code $code, VerificationCodeExpiryReason $reason): ResponseInterface
     {
