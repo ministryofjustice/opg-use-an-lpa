@@ -42,6 +42,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
                 'expires' => (new DateTimeImmutable())
                     ->sub(new DateInterval('P1Y')) // code has expired
                     ->format(DateTimeInterface::ATOM),
+                'expiry_reason' => 'first_time_use',
             ];
         } elseif ((string)$code === 'P-3456-3456-3456-34') {
             $codeData = [
@@ -50,6 +51,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
                     ->add(new DateInterval('P1Y'))
                     ->format(DateTimeInterface::ATOM),
                 'cancelled' => 'true', // code valid but cancelled
+                'expiry_reason' => 'first_time_use',
             ];
         } else {
             throw new NotFoundException();
