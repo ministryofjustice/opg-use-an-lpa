@@ -23,7 +23,7 @@ interface PaperVerificationCodesInterface
      * Begins the expiry timer on the provided code (if it is not already in-progress)
      *
      * @param VerificationCodeExpiryReason $reason
-     * @psalm-return ResponseInterface<DateTimeInterface>
+     * @psalm-return ResponseInterface<PaperVerificationCode>
      */
     public function expire(Code $code, VerificationCodeExpiryReason $reason): ResponseInterface;
 }
