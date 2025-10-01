@@ -428,7 +428,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                     lpaUid: new LpaUid('M-1111-1111-1111'),
                     sentToDonor: false,
                     attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1970-01-24'),
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
                     noOfAttorneys: 1,
                 ),
             ],
@@ -439,11 +439,11 @@ class PaperVerificationCodeServiceTest extends TestCase
                     lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
                     sentToDonor: false,
                     attorneyName: 'Steven Alexander Miller',
-                    dateOfBirth: new DateTimeImmutable('1970-01-24'),
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
                     noOfAttorneys: 1,
                 ),
             ],
-            'donor_dob_is_incorrect'      => [
+            'attorney_dob_is_incorrect'   => [
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
@@ -454,7 +454,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                     noOfAttorneys: 1,
                 ),
             ],
-            'attorney_dob_is_incorrect'   => [
+            'donor_dob_is_incorrect'      => [
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
@@ -472,7 +472,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                     lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
                     sentToDonor: false,
                     attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1970-01-24'),
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
                     noOfAttorneys: 3,
                 ),
             ],
