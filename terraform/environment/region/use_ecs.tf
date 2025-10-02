@@ -10,7 +10,7 @@ resource "aws_ecs_service" "use" {
 
   network_configuration {
     security_groups  = [aws_security_group.use_ecs_service.id]
-    subnets          = true ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
@@ -61,7 +61,7 @@ moved {
 resource "aws_security_group" "use_ecs_service" {
   name_prefix = "${var.environment_name}-actor-ecs-service"
   description = "Use service security group"
-  vpc_id      = true ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.main.id
   lifecycle {
     create_before_destroy = true
   }
@@ -204,7 +204,7 @@ locals {
     {
       cpu         = 1,
       essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}:${var.container_version}",
+      image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}@${data.aws_ecr_image.use_an_lpa_front_web.image_digest}",
       mountPoints = [],
       name        = "web",
       portMappings = [
@@ -277,7 +277,7 @@ locals {
     {
       cpu         = 1,
       essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}:${var.container_version}",
+      image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}@${data.aws_ecr_image.use_an_lpa_front_app.image_digest}",
       mountPoints = [],
       name        = "app",
       portMappings = [

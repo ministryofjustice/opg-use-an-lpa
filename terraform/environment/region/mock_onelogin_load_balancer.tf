@@ -4,7 +4,7 @@ resource "aws_lb_target_group" "mock_onelogin" {
   port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = true ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id               = data.aws_vpc.main.id
   deregistration_delay = 0
 
   health_check {
@@ -23,7 +23,7 @@ resource "aws_lb" "mock_onelogin" {
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - public alb
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
-  subnets                    = true ? data.aws_subnet.public[*].id : data.aws_subnets.public.ids
+  subnets                    = data.aws_subnet.public[*].id
   enable_deletion_protection = var.load_balancer_deletion_protection_enabled
 
   security_groups = [
@@ -79,7 +79,7 @@ resource "aws_security_group" "mock_onelogin_loadbalancer" {
   count       = var.mock_onelogin_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-mock-onelogin-loadbalancer"
   description = "Mock One Login application load balancer"
-  vpc_id      = true ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.main.id
   lifecycle {
     create_before_destroy = true
   }

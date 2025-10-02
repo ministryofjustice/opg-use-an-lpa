@@ -10,7 +10,7 @@ resource "aws_ecs_service" "pdf" {
 
   network_configuration {
     security_groups  = [aws_security_group.pdf_ecs_service.id]
-    subnets          = true ? data.aws_subnet.application[*].id : data.aws_subnets.private.ids
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
@@ -84,7 +84,7 @@ locals {
 resource "aws_security_group" "pdf_ecs_service" {
   name_prefix = "${var.environment_name}-pdf-ecs-service"
   description = "PDF generator service security group"
-  vpc_id      = true ? data.aws_vpc.main.id : data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.main.id
   lifecycle {
     create_before_destroy = true
   }

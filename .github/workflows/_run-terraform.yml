@@ -120,6 +120,9 @@ jobs:
         working-directory: terraform/${{ inputs.terraform_path }}
         continue-on-error: true
 
+      - name: terraform version info
+        run: terraform version
+
       - name: terraform init
         run: terraform init -input=false
         working-directory: terraform/${{ inputs.terraform_path }}
@@ -131,11 +134,8 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
         run: |
           terraform workspace show
-          terraform plan -input=false -parallelism=30 -lock-timeout=5m ${{ inputs.extra_vars }}
+          terraform plan -input=false -parallelism=30 -lock-timeout=5m -out=terraform.plan ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
-
-      - name: terraform version info
-        run: terraform version
 
       - name: add TTL to dynamodb for environment
         if: inputs.apply == 'true' && inputs.add_ttl == 'true'
@@ -151,7 +151,7 @@ jobs:
           TF_VAR_admin_container_version: ${{ steps.version-output.outputs.admin-tag }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }}
+          terraform apply -lock-timeout=500s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }} terraform.plan
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: upload environment cluster config file
