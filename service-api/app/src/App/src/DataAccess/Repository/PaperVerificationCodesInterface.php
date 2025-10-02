@@ -24,4 +24,11 @@ interface PaperVerificationCodesInterface
      * @psalm-return ResponseInterface<DateTimeInterface>
      */
     public function startExpiry(Code $code): ResponseInterface;
+
+    /**
+     * View the LPA after the organisation has been verified.
+     *
+     * @psalm-return ResponseInterface<PaperVerificationCode>
+     */
+    public function view(Code $code, string $organisation): ResponseInterface;
 }

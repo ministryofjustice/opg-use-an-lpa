@@ -79,9 +79,55 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
-    public function view(PaperVerificationCodeView $params): void
+    /**
+     * @param PaperVerificationCodeView $params
+     * @return ViewCode
+     * @throws ApiException
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function view(PaperVerificationCodeView $params): ViewCode
     {
+        $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+        $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
+
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+
+        $this->paperVerificationCodes->view($params->code, $params->organisation)->getData();
+
+        $this->startCodeExpiry($params->code, $verifiedCode->expiresAt);
+        $this->recordOrganiation($params->code, $params->organisation);
+
+        return new ViewCode(
+            lpaSource: LpaSource::LPASTORE,
+            lpa: $lpa,
+        );
+    }
+
+    /**
+     * @param Code              $code
+     * @param DateTimeInterface $expiryDate
+     * @return void
+     */
+    private function startCodeExpiry(Code $code, DateTimeInterface $expiryDate): void
+    {
+        $this->logger->info('PVC expiry timer START', [
+            'code'       => $code,
+            'expiryDate' => $expiryDate->format(DateTimeInterface::ATOM),
+        ]);
+    }
+
+    /**
+     * @param Code   $code
+     * @param string $organisation
+     * @return void
+     */
+    private function recordOrganiation(Code $code, string $organisation): void
+    {
+        $this->logger->info('PVC organisation recorded', [
+            'code'         => $code,
+            'organisation' => $organisation,
+        ]);
     }
 
     /**

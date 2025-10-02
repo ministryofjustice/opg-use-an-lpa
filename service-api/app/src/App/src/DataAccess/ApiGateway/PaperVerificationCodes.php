@@ -88,4 +88,34 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
     {
         throw new RuntimeException('Not implemented');
     }
+
+    public function view(Code $code, string $organisation): ResponseInterface
+    {
+        if ((string)$code === 'P-1234-1234-1234-12') {
+            $codeData = [
+                'lpa' => 'M-789Q-P4DF-4UX3', // no expiry as it's not been used yet
+            ];
+        } else {
+            throw new NotFoundException();
+        }
+
+        $lpaUid = new LpaUid($codeData['lpa']);
+        // TODO swap when mock available
+//        $response = $this->makePostRequest(
+//            'v1/paper-verification-code/view',
+//            [
+//                'code' => $code,
+//                'organisation' => $organisation,
+//            ]
+//        );
+//
+//        $viewData = json_decode((string) $response->getBody(), true);
+
+
+        return new UpstreamResponse(
+            $lpaUid,
+            new DateTimeImmutable('now', new DateTimeZone('UTC')), // TODO remove when mock available
+        // new DateTimeImmutable($response->getHeaderLine('Date')), // TODO use when mock available
+        );
+    }
 }
