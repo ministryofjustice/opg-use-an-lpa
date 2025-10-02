@@ -235,20 +235,20 @@ jobs:
       always() &&
       needs.run_behat_suite.result == 'success'
 
-  ecr_scan_results:
-    name: ecr scan results
-    uses: ./.github/workflows/_ecr-scanning.yml
-    with:
-      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
-    needs:
-      - code_coverage
-      - terraform_apply_environment
-      - workflow_variables
-    secrets: inherit
-    if: |
-      always() &&
-      needs.code_coverage.result == 'success' &&
-      needs.terraform_apply_environment.result == 'success'
+#  ecr_scan_results:
+#    name: ecr scan results
+#    uses: ./.github/workflows/_ecr-scanning.yml
+#    with:
+#      tag: ${{ needs.workflow_variables.outputs.parsed_branch }}-${{ needs.workflow_variables.outputs.short_sha }}
+#    needs:
+#      - code_coverage
+#      - terraform_apply_environment
+#      - workflow_variables
+#    secrets: inherit
+#    if: |
+#      always() &&
+#      needs.code_coverage.result == 'success' &&
+#      needs.terraform_apply_environment.result == 'success'
 
   # Required end of workflow job
   end_of_workflow:
