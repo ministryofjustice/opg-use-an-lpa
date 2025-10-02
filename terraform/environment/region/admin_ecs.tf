@@ -232,7 +232,7 @@ locals {
     {
       cpu         = 1,
       essential   = true,
-      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}:${var.admin_container_version}",
+      image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}@${data.aws_ecr_image.use_an_lpa_admin_app.image_digest}",
       mountPoints = [],
       name        = "app",
       portMappings = [
