@@ -54,6 +54,7 @@ class PaperVerificationCodeService
             lpaStatus: LpaStatus::from($lpa->status),
             lpaSource: LpaSource::LPASTORE,
             expiresAt: $verifiedCode->expiresAt,
+            expiryReason: $verifiedCode->expiryReason,
         );
     }
 
