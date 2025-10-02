@@ -39,6 +39,9 @@ class CodeUsable implements JsonSerializable
             $data['expiresAt'] = $this->expiresAt->format(DateTimeInterface::ATOM);
         }
 
+        if ($this->expiryReason !== null) {
+            $data['expiryReason'] = $this->expiryReason;
+        }
         return $data;
     }
 }
