@@ -7,6 +7,7 @@ namespace AppTest\Service\PaperVerificationCodes;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Service\PaperVerificationCodes\CodeUsable;
 use DateInterval;
 use DateTimeImmutable;
@@ -29,6 +30,7 @@ class CodeUsableTest extends TestCase
             lpaStatus: LpaStatus::REGISTERED,
             lpaSource: LpaSource::LPASTORE,
             expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1D')),
+            expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
         );
     }
 
@@ -46,5 +48,6 @@ class CodeUsableTest extends TestCase
         $this->assertObjectHasProperty('expiresAt', $obj);
         $this->assertObjectHasProperty('status', $obj);
         $this->assertObjectHasProperty('source', $obj);
+        $this->assertObjectHasProperty('expiryReason', $obj);
     }
 }
