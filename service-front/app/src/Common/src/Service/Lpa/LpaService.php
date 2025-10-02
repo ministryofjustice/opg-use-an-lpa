@@ -186,4 +186,87 @@ class LpaService
 
         return $lpaData;
     }
+
+    /**
+     * Get an LPA
+     *
+     * @param string $pvCode
+     * @param string $donorSurname
+     * @return ArrayObject|null
+     * @throws Exception
+     */
+    public function getLpaByPVCode(string $pvCode, string $donorSurname): ?ArrayObject
+    {
+        //  Filter dashes out of the share code
+        $pvCode = str_replace('-', '', $pvCode);
+        $pvCode = str_replace(' ', '', $pvCode);
+        $pvCode = strtoupper($pvCode);
+
+        $trackRoute  = 'usable';
+        $requestData = [
+            'code' => $pvCode,
+            'name' => $donorSurname,
+        ];
+
+        $this->logger->debug('User requested view of LPA by PV code');
+
+        try {
+            $lpaData = $this->apiClient->httpPost(
+                '/v1/paper-verification/usable',
+                $requestData
+            );
+        } catch (ApiException $apiEx) {
+            switch ($apiEx->getCode()) {
+                case StatusCodeInterface::STATUS_GONE:
+                    if ($apiEx->getMessage() === 'PV code cancelled') {
+                        $this->logger->notice(
+                            'PV code {code} cancelled when attempting to fetch {type}',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_PV_CODE_CANCELLED,
+                                'code'       => $pvCode,
+                                'type'       => $trackRoute,
+                            ]
+                        );
+                    } else {
+                        $this->logger->notice(
+                            'PV code {code} expired when attempting to fetch {type}',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_PV_CODE_EXPIRED,
+                                'code'       => $pvCode,
+                                'type'       => $trackRoute,
+                            ]
+                        );
+                    }
+                    break;
+
+                case StatusCodeInterface::STATUS_NOT_FOUND:
+                    $this->logger->notice(
+                        'PV code not found when attempting to fetch {type}',
+                        [
+                            // attach a code for brute force checking
+                            'event_code' => EventCodes::VIEW_LPA_PV_CODE_NOT_FOUND,
+                            'type'       => $trackRoute,
+                        ]
+                    );
+            }
+
+            // still throw the exception up to the caller since handling of the issue will be done there
+            throw $apiEx;
+        }
+
+        if (is_array($lpaData)) {
+            $lpaData = ($this->parseLpaData)($lpaData);
+        }
+
+        $this->logger->notice(
+            'LPA found with Id {uId} retrieved by pv code',
+            [
+                'event_code' => EventCodes::VIEW_LPA_PV_CODE_SUCCESS,
+                'uId'        => $lpaData->lpa->getUId(),
+            ]
+        );
+
+        return $lpaData;
+    }
+
 }

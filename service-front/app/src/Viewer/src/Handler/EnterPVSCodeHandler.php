@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\PVShareCode;
 use Viewer\Form\ShareCode;
+use Common\Service\Lpa\LpaService;
 
 /**
  * @codeCoverageIgnore
@@ -29,6 +30,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
         private SystemMessageService $systemMessageService,
+        private LpaService $lpaService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -74,6 +76,15 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             $this->state($request)->code     = $this->form->getData()['lpa_code'];
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
+            //UML-3975
+            if (isset($this->state($request)->code)) {
+                $lpa = $this->lpaService->getLpaByPVCode(
+                    $this->state($request)->code,
+                    $this->state($request)->lastName
+                );
+            }
+            ////UML-3975 end
+
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
@@ -83,7 +94,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render($template, [
-            'form'       => $this->form->prepare(),
+            'form' => $this->form->prepare(),
             'en_message' => $systemMessages['view/en'] ?? null,
             'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
