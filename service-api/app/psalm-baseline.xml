@@ -167,15 +167,6 @@
       <code><![CDATA[get]]></code>
     </PossiblyUnusedMethod>
   </file>
-  <file src="src/App/src/Request/PaperVerificationCodeValidate.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$attorneyName]]></code>
-      <code><![CDATA[$dateOfBirth]]></code>
-      <code><![CDATA[$lpaUid]]></code>
-      <code><![CDATA[$noOfAttorneys]]></code>
-      <code><![CDATA[$sentToDonor]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="src/App/src/Request/PaperVerificationCodeView.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$attorneyName]]></code>

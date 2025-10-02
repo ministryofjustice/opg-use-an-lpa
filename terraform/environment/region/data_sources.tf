@@ -48,9 +48,32 @@ data "aws_ecr_repository" "use_an_lpa_front_web" {
   name     = "use_an_lpa/front_web"
 }
 
+data "aws_ecr_image" "use_an_lpa_front_web" {
+  repository_name = "use_an_lpa/front_web"
+  image_tag       = var.container_version
+  provider        = aws.management
+}
+
 data "aws_ecr_repository" "use_an_lpa_front_app" {
   provider = aws.management
   name     = "use_an_lpa/front_app"
+}
+
+data "aws_ecr_image" "use_an_lpa_front_app" {
+  repository_name = "use_an_lpa/front_app"
+  image_tag       = var.container_version
+  provider        = aws.management
+}
+
+data "aws_ecr_repository" "use_an_lpa_api_web" {
+  provider = aws.management
+  name     = "use_an_lpa/api_web"
+}
+
+data "aws_ecr_image" "use_an_lpa_api_web" {
+  repository_name = "use_an_lpa/api_web"
+  image_tag       = var.container_version
+  provider        = aws.management
 }
 
 data "aws_ecr_repository" "use_an_lpa_api_app" {
@@ -58,9 +81,10 @@ data "aws_ecr_repository" "use_an_lpa_api_app" {
   name     = "use_an_lpa/api_app"
 }
 
-data "aws_ecr_repository" "use_an_lpa_api_web" {
-  provider = aws.management
-  name     = "use_an_lpa/api_web"
+data "aws_ecr_image" "use_an_lpa_api_app" {
+  repository_name = "use_an_lpa/api_app"
+  image_tag       = var.container_version
+  provider        = aws.management
 }
 
 data "aws_ecr_repository" "use_an_lpa_pdf" {
@@ -80,6 +104,14 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
   name     = "use_an_lpa/admin_app"
 }
 
+data "aws_ecr_image" "use_an_lpa_admin_app" {
+  repository_name = "use_an_lpa/admin_app"
+  image_tag       = var.admin_container_version
+  provider        = aws.management
+}
+
+
+// Secrets
 data "aws_secretsmanager_secret" "notify_api_key" {
   name = var.notify_key_secret_name
 

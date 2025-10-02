@@ -22,6 +22,7 @@ use AppTest\LpaUtilities;
 use DateInterval;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Clock\ClockInterface;
@@ -330,9 +331,9 @@ class PaperVerificationCodeServiceTest extends TestCase
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
             lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
             sentToDonor: false,
-            attorneyName: 'Michael Clarkson',
-            dateOfBirth: new DateTimeImmutable('2020-01-01'),
-            noOfAttorneys: 2,
+            attorneyName: 'Herman Seakrest',
+            dateOfBirth: new DateTimeImmutable('1982-07-24'),
+            noOfAttorneys: 1,
         );
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
@@ -373,7 +374,7 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
-        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 1);
+        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 3);
         $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
@@ -386,9 +387,9 @@ class PaperVerificationCodeServiceTest extends TestCase
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
             lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
             sentToDonor: false,
-            attorneyName: 'Michael Clarkson',
+            attorneyName: 'Herman Seakrest',
             dateOfBirth: new DateTimeImmutable('2020-01-01'),
-            noOfAttorneys: 2,
+            noOfAttorneys: 1,
         );
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
@@ -424,18 +425,9 @@ class PaperVerificationCodeServiceTest extends TestCase
     }
 
     #[Test]
-    public function validation_throws_if_uid_is_unknown(): void
+    #[DataProvider('validationDataProvider')]
+    public function validation_throws_if_param_does_not_match(PaperVerificationCodeValidate $params): void
     {
-        $params = new PaperVerificationCodeValidate(
-            name: 'Bundlaaaa',
-            code: new PaperVerificationCode('P-1234-1234-1234-12'),
-            lpaUid: new LpaUid('M-1111-1111-1111'),
-            sentToDonor: false,
-            attorneyName: 'Michael Clarkson',
-            dateOfBirth: new DateTimeImmutable('2020-01-01'),
-            noOfAttorneys: 2,
-        );
-
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
@@ -459,12 +451,79 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: $params->code)
-            ->willReturn(null);
+            ->with(uid: 'M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->willReturn(LpaUtilities::lpaStoreResponseFixture());
+
+        $now = new DateTimeImmutable();
+        $clock
+            ->expects($this->any())
+            ->method('now')
+            ->willReturn($now);
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $this->expectException(NotFoundException::class);
         $sut->validate($params);
+    }
+
+    public static function validationDataProvider(): array
+    {
+        return [
+            'uid_is_incorrect'            => [
+                new PaperVerificationCodeValidate(
+                    name: 'Bundlaaaa',
+                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                    lpaUid: new LpaUid('M-1111-1111-1111'),
+                    sentToDonor: false,
+                    attorneyName: 'Herman Seakrest',
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                    noOfAttorneys: 1,
+                ),
+            ],
+            'name_is_incorrect'           => [
+                new PaperVerificationCodeValidate(
+                    name: 'Bundlaaaa',
+                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    sentToDonor: false,
+                    attorneyName: 'Steven Alexander Miller',
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                    noOfAttorneys: 1,
+                ),
+            ],
+            'attorney_dob_is_incorrect'   => [
+                new PaperVerificationCodeValidate(
+                    name: 'Bundlaaaa',
+                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    sentToDonor: false,
+                    attorneyName: 'Herman Seakrest',
+                    dateOfBirth: new DateTimeImmutable('1970-03-12'),
+                    noOfAttorneys: 1,
+                ),
+            ],
+            'donor_dob_is_incorrect'      => [
+                new PaperVerificationCodeValidate(
+                    name: 'Bundlaaaa',
+                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    sentToDonor: true,
+                    attorneyName: 'Herman Seakrest',
+                    dateOfBirth: new DateTimeImmutable('1983-06-19'),
+                    noOfAttorneys: 1,
+                ),
+            ],
+            'attorney_count_is_incorrect' => [
+                new PaperVerificationCodeValidate(
+                    name: 'Bundlaaaa',
+                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    sentToDonor: false,
+                    attorneyName: 'Herman Seakrest',
+                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                    noOfAttorneys: 3,
+                ),
+            ],
+        ];
     }
 }
