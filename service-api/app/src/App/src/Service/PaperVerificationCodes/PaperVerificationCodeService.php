@@ -93,52 +93,65 @@ class PaperVerificationCodeService
 
     /**
      * @param PaperVerificationCodeView $params
-     * @return ViewCode
+     * @return CodeView
      * @throws ApiException
      * @throws GoneException
      * @throws NotFoundException
      */
-    public function view(PaperVerificationCodeView $params): ViewCode
+    public function view(PaperVerificationCodeView $params): CodeView
     {
-        $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+        $verifiedData = $this->paperVerificationCodes->validate($params->code);
+        $verifiedCode = $verifiedData->getData();
+        $lookupTime   = $verifiedData->getLookupTime();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
         $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
 
-        $this->paperVerificationCodes->view($params->code, $params->organisation)->getData();
+        $this->checkCodeValidates(
+            $lpa,
+            $params->code,
+            $params->lpaUid,
+            $params->sentToDonor,
+            $params->attorneyName,
+            $params->dateOfBirth,
+            $params->noOfAttorneys
+        );
 
-        $this->startCodeExpiry($params->code, $verifiedCode->expiresAt);
-        $this->recordOrganiation($params->code, $params->organisation);
+        // TODO implement expire functionality, pulling in param etc
+        $this->expire($params->code, 'cancelled');
+        $this->recordOrganiation($params->lpaUid, $params->organisation, $lookupTime);
 
-        return new ViewCode(
+        return new CodeView(
             lpaSource: LpaSource::LPASTORE,
             lpa: $lpa,
         );
     }
 
     /**
-     * @param Code              $code
-     * @param DateTimeInterface $expiryDate
-     * @return void
+     * @param Code   $codeToExpire
+     * @param string $expiryReason
+     * @return PaperVerificationCode
      */
-    private function startCodeExpiry(Code $code, DateTimeInterface $expiryDate): void
+    public function expire(Code $codeToExpire, string $expiryReason): void
     {
         $this->logger->info('PVC expiry timer START', [
-            'code'       => $code,
-            'expiryDate' => $expiryDate->format(DateTimeInterface::ATOM),
+            'code'         => $codeToExpire,
+            'expiryReason' => $expiryReason,
         ]);
     }
 
     /**
-     * @param Code   $code
+     * @param LpaUid   $lpaUid
      * @param string $organisation
      * @return void
      */
-    private function recordOrganiation(Code $code, string $organisation): void
+    private function recordOrganiation(LpaUid $lpaUid, string $organisation, DateTimeInterface $lookupTime): void
     {
-        $this->logger->info('PVC organisation recorded', [
-            'code'         => $code,
+        $this->logger->notice('PVC organisation recorded', [
+            'event_code'   => EventCodes::PVC_RECORD_ORGANISATION,
+            'lpaId'        => $lpaUid,
             'organisation' => $organisation,
+            'lookup_time'  => $lookupTime,
         ]);
     }
 

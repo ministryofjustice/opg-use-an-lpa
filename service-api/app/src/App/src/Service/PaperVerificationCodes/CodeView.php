@@ -6,12 +6,9 @@ namespace App\Service\PaperVerificationCodes;
 
 use App\Entity\Lpa;
 use App\Enum\LpaSource;
-use App\Enum\LpaStatus;
-use App\Enum\LpaType;
-use DateTimeInterface;
 use JsonSerializable;
 
-readonly class ViewCode implements JsonSerializable
+readonly class CodeView implements JsonSerializable
 {
     public function __construct(
         public readonly LpaSource $lpaSource,

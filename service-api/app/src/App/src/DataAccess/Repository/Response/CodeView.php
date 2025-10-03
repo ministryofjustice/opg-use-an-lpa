@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository\Response;
 
-use App\Entity\Lpa as CombinedFormatLpa;
+use App\Entity\Lpa;
+
 final class CodeView
 {
     /**
-     * @param array|CombinedFormatLpa|null $lpa
+     * @param Lpa $lpa
      */
-    public function __construct(private array|CombinedFormatLpa|null $lpa)
+    public function __construct(private Lpa $lpa)
     {
     }
 
-    public function getData(): array|CombinedFormatLpa|null
+    public function getData(): Lpa
     {
         return $this->lpa;
     }

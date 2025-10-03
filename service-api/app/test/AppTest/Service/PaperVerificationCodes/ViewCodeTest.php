@@ -6,19 +6,19 @@ namespace AppTest\Service\PaperVerificationCodes;
 
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
-use App\Service\PaperVerificationCodes\ViewCode;
+use App\Service\PaperVerificationCodes\CodeView;
 use AppTest\LpaUtilities;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-#[CoversClass(ViewCode::class)]
+#[CoversClass(CodeView::class)]
 class ViewCodeTest extends TestCase
 {
     private function makeSut(): array
     {
         $lpa      = LpaUtilities::lpaStoreLpaFixture();
-        $sut      = new ViewCode(
+        $sut      = new CodeView(
             lpaSource: LpaSource::LPASTORE,
             lpa:       $lpa
         );
