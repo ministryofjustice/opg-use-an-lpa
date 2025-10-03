@@ -598,11 +598,6 @@
       <code><![CDATA[$logger]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/Common/src/Service/Session/EncryptedCookiePersistence.php">
-    <UnusedProperty>
-      <code><![CDATA[$cookieDomain]]></code>
-    </UnusedProperty>
-  </file>
   <file src="src/Common/src/Service/Session/Encryption/UnencryptedCookie.php">
     <UnusedClass>
       <code><![CDATA[UnencryptedCookie]]></code>

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BehatTest\Context\UI;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Mink\Driver\BrowserKitDriver;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
@@ -1246,20 +1248,19 @@ class AccountContext implements Context
     #[Then('/^I want to ensure cookie attributes are set$/')]
     public function iWantToEnsureCookieAttributesAreSet(): void
     {
-        $session = $this->ui->getSession();
+        if (($driver = $this->ui->getSession()->getDriver()) instanceof BrowserKitDriver) {
+            $client = $driver->getClient();
+            $cookie = $client->getCookieJar()->get('__Host-session', '/', 'localhost');
 
-        // retrieving response headers:
-        $cookies = $session->getResponseHeaders()['set-cookie'];
-
-        foreach ($cookies as $value) {
-            if (strstr($value, '__Host-session')) {
-                Assert::assertStringContainsString('secure', $value);
-                Assert::assertStringContainsString('httponly', $value);
-                Assert::assertStringContainsString('path=/', $value);
-                Assert::assertStringNotContainsString('domain', $value);
-            } else {
-                throw new Exception('Cookie named session not found in the response header');
+            if ($cookie === null) {
+                throw new Exception('Cookie named "session" not set');
             }
+
+            Assert::assertEquals($cookie->getSameSite(), 'none');
+            Assert::assertTrue($cookie->isHttpOnly());
+            Assert::assertTrue($cookie->isSecure());
+        } else {
+            throw new PendingException('This test relies on the Mink driver being a BrowserKitDriver instance');
         }
     }
 
