@@ -24,7 +24,7 @@ class PaperVerificationCodeView implements InputFilteredRequest
         #[CastToValueObject(PaperVerificationCode::class)]
         public readonly PaperVerificationCode $code,
         #[Input\Required]
-        #[Input\Validator(Regex::class, ['pattern' => '/^M(-[[:digit:]]{4}){3}$/'])]
+        #[Input\Validator(Regex::class, ['pattern' => '/^M(-[[:alnum:]]{4}){3}$/'])]
         #[CastToValueObject(LpaUid::class)]
         public readonly LpaUid $lpaUid,
         #[Input\Required]

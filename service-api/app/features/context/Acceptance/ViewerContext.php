@@ -24,11 +24,21 @@ class ViewerContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
+    private string $attorneyName;
+    private string $dateOfBirth;
+    private ?int $noOfAttorneys;
+    private bool $sentToDonor;
     private string $viewerCode;
     private string $donorSurname;
     private stdClass $lpa;
     private string $viewerCodeOrganisation;
     private string $lpaViewedBy;
+
+    #[Then('I am told that I cannot view the LPA summary')]
+    public function iAmToldThatICannotViewTheLPASummary(): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+    }
 
     #[Then('I am told that the LPA has been found')]
     public function iAmToldThatTheLPAHasBeenFound(): void
@@ -40,6 +50,43 @@ class ViewerContext implements Context
         Assert::assertArrayHasKey('type', $lpaData);
         Assert::assertArrayHasKey('status', $lpaData);
         Assert::assertEquals('lpastore', $lpaData['source']);
+    }
+
+    #[When('I ask to verify my information')]
+    public function iAskToVerifyMyInformation(): void
+    {
+        // TODO this will need adding when UML-3979 is in place
+        // PaperVerificationCodes::validate
+        //$this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], []));
+
+        // CombinedLpaManager::get
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // TODO this will need adding when UML-3979 is in place
+        // PaperVerificationCodes::startExpiry
+        //$this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], []));
+
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('GetSecretValue', $command->getName());
+                Assert::assertEquals('lpa-data-store-secret', $command['SecretId']);
+
+                return new Result(['SecretString' => 'secret-value-string-at-least-128-bits-long']);
+            }
+        );
+
+        $this->apiPost(
+            '/v1/paper-verification/validate',
+            [
+                'code'          => $this->viewerCode,
+                'name'          => $this->donorSurname,
+                'lpaUid'        => $this->lpa->uid,
+                'sentToDonor'   => $this->sentToDonor,
+                'attorneyName'  => $this->attorneyName,
+                'dateOfBirth'   => $this->dateOfBirth,
+                'noOfAttorneys' => $this->noOfAttorneys,
+            ],
+        );
     }
 
     #[Given('I have access to an LPA via :a paper verification code')]
@@ -259,6 +306,19 @@ class ViewerContext implements Context
         Assert::assertEquals($this->donorSurname, $lpaData['lpa']['donor']['surname']);
     }
 
+    #[Given('I provide :sentToDonor, :attorneyName, :dateOfBirth and :noOfAttorneys as my information')]
+    public function iProvideSentToDonorAttorneyNameDateOfBirthAndNoOfAttorneys(
+        string $sentToDonor,
+        string $attorneyName,
+        string $dateOfBirth,
+        string $noOfAttorneys,
+    ): void {
+        $this->sentToDonor   = filter_var($sentToDonor, FILTER_VALIDATE_BOOLEAN);
+        $this->attorneyName  = $attorneyName;
+        $this->dateOfBirth   = $dateOfBirth;
+        $this->noOfAttorneys = intval($noOfAttorneys);
+    }
+
     #[When('I provide donor surname and paper verification code')]
     public function iProvideDonorSurnameAndPaperVerificationCode(): void
     {
@@ -281,6 +341,15 @@ class ViewerContext implements Context
                 'name' => $this->donorSurname,
             ]
         );
+    }
+
+    #[Given('I provide the correct code holders date of birth, number of attorneys and attorney name')]
+    public function iProvideTheCorrectDateOfBirthNoOfAttorneysAndAttorneyName(): void
+    {
+        $this->sentToDonor   = false;
+        $this->attorneyName  = $this->lpa->attorneys[0]->firstNames . ' ' . $this->lpa->attorneys[0]->lastName;
+        $this->dateOfBirth   = $this->lpa->attorneys[0]->dateOfBirth;
+        $this->noOfAttorneys = count($this->lpa->attorneys);
     }
 
     #[Then('/^I see a message that LPA has been cancelled$/')]
@@ -316,6 +385,18 @@ class ViewerContext implements Context
         // Not used in this context
     }
 
+    #[Then('I will be asked to enter an organisation name')]
+    public function iWillBeAskedToEnterAnOrganisationName(): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+        $lpaData = $this->getResponseAsJson();
+
+        // 'expiresAt' and 'expiryReason' are optional in the response so best not check them
+        Assert::assertArrayHasKey('donorName', $lpaData);
+        Assert::assertArrayHasKey('type', $lpaData);
+        Assert::assertArrayHasKey('status', $lpaData);
+    }
+
     #[Given('/^the LPA has (.*)$/')]
     public function theLPAHasDirective(string $directive): void
     {
@@ -327,5 +408,12 @@ class ViewerContext implements Context
         if (str_contains($directive, 'preferences')) {
             $this->lpa->applicationHasGuidance = true;
         }
+    }
+
+    #[Given('the paper verification code expiry timer is started if necessary')]
+    public function thePaperVerificationCodeExpiryTimerIsStartedIfNecessary(): void
+    {
+        $this->apiFixtures->getLastRequest();
+        throw new PendingException();
     }
 }
