@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Session\Encryption;
 
+use Common\Exception\SessionEncryptionFailureException;
 use Common\Service\Session\Encryption\HaliteCrypto;
 use Common\Service\Session\Encryption\HaliteEncryptedCookie;
 use Common\Service\Session\KeyManager\Key;
@@ -18,17 +19,6 @@ use Psr\Log\LoggerInterface;
 #[CoversClass(HaliteEncryptedCookie::class)]
 class HaliteEncryptedCookieTest extends TestCase
 {
-    #[Test]
-    public function it_can_be_instantiated(): void
-    {
-        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
-        $cryptoStub     = $this->createStub(HaliteCrypto::class);
-        $loggerStub     = $this->createStub(LoggerInterface::class);
-
-        $this->expectNotToPerformAssertions();
-        new HaliteEncryptedCookie($keyManagerStub, $cryptoStub, $loggerStub);
-    }
-
     #[Test]
     public function it_encodes_a_session_array(): void
     {
@@ -50,7 +40,7 @@ class HaliteEncryptedCookieTest extends TestCase
         $sut = new HaliteEncryptedCookie($keyManagerStub, $cryptoStub, $loggerStub);
 
         $encoded = $sut->encodeCookieValue($data);
-        $this->assertEquals('1.ZW5jcnlwdGVkU3RyaW5n', $encoded);
+        $this->assertEquals('1.encryptedString', $encoded);
     }
 
     #[Test]
@@ -71,7 +61,7 @@ class HaliteEncryptedCookieTest extends TestCase
     #[Test]
     public function it_decodes_a_string_into_session_data(): void
     {
-        $payload = '1.ZW5jcnlwdGVkU3RyaW5n';
+        $payload = '1.encryptedString';
 
         $keyStub = $this->createStub(Key::class);
 
@@ -131,6 +121,23 @@ class HaliteEncryptedCookieTest extends TestCase
 
         $data = $sut->decodeCookieValue($payload);
         $this->assertEquals([], $data);
+    }
+
+    #[Test]
+    public function it_throws_an_exception_when_encryption_fails_for_some_reason(): void
+    {
+        $payload = ['some_data'];
+
+        $keyManagerStub = $this->createStub(KeyManagerInterface::class);
+        $keyManagerStub->method('getEncryptionKey')->willThrowException(new Exception());
+
+        $cryptoMock = $this->createMock(HaliteCrypto::class);
+        $loggerStub = $this->createStub(LoggerInterface::class);
+
+        $sut = new HaliteEncryptedCookie($keyManagerStub, $cryptoMock, $loggerStub);
+
+        $this->expectException(SessionEncryptionFailureException::class);
+        $sut->encodeCookieValue($payload);
     }
 
     #[Test]
