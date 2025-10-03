@@ -6,6 +6,7 @@ namespace App\DataAccess\Repository;
 
 use App\DataAccess\Repository\Response\PaperVerificationCode;
 use App\DataAccess\Repository\Response\ResponseInterface;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Value\PaperVerificationCode as Code;
 use DateTimeInterface;
 
@@ -21,7 +22,8 @@ interface PaperVerificationCodesInterface
     /**
      * Begins the expiry timer on the provided code (if it is not already in-progress)
      *
-     * @psalm-return ResponseInterface<DateTimeInterface>
+     * @param VerificationCodeExpiryReason $reason
+     * @psalm-return ResponseInterface
      */
-    public function startExpiry(Code $code): ResponseInterface;
+    public function expire(Code $code, VerificationCodeExpiryReason $reason): ResponseInterface;
 }

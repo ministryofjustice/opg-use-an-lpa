@@ -7,6 +7,7 @@ namespace App\Service\PaperVerificationCodes;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
+use App\Enum\VerificationCodeExpiryReason;
 use DateTimeInterface;
 use JsonSerializable;
 
@@ -18,6 +19,7 @@ class CodeUsable implements JsonSerializable
         public readonly LpaStatus $lpaStatus,
         public readonly LpaSource $lpaSource,
         public readonly ?DateTimeInterface $expiresAt = null,
+        public readonly ?VerificationCodeExpiryReason $expiryReason = null,
     ) {
     }
 
@@ -37,6 +39,9 @@ class CodeUsable implements JsonSerializable
             $data['expiresAt'] = $this->expiresAt->format(DateTimeInterface::ATOM);
         }
 
+        if ($this->expiryReason !== null) {
+            $data['expiryReason'] = $this->expiryReason;
+        }
         return $data;
     }
 }
