@@ -104,6 +104,10 @@ class PaperVerificationCodesTest extends TestCase
         if (isset($response['cancelled'])) {
             $this->assertEquals($response['cancelled'], $data->cancelled);
         }
+
+        if (isset($response['expiry_reason'])) {
+            $this->assertEquals($response['expiry_reason'], $data->expiry_reason);
+        }
     }
 
     public static function codeDataProvider(): array

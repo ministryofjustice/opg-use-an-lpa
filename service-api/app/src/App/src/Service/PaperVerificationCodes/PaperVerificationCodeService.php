@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\PaperVerificationCodes;
 
+use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
 use App\DataAccess\Repository\Response\PaperVerificationCode;
 use App\Entity\LpaStore\LpaStore;
@@ -11,6 +12,7 @@ use App\Entity\Person;
 use App\Enum\ActorStatus;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Enum\LpaType;
 use App\Exception\ApiException;
 use App\Exception\GoneException;
@@ -54,7 +56,7 @@ class PaperVerificationCodeService
             lpaStatus: LpaStatus::from($lpa->status ?? ''),
             lpaSource: LpaSource::LPASTORE,
             expiresAt: $verifiedCode->expiresAt,
-            // TODO add expiry reason
+            expiryReason: $verifiedCode->expiryReason,
         );
     }
 
@@ -94,6 +96,20 @@ class PaperVerificationCodeService
     /** @codeCoverageIgnore  */
     public function view(PaperVerificationCodeView $params): void
     {
+        // this shows how this will work
+        // $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+
+        // $this->expire($verifiedCode, VerificationCodeExpiryReason::FIRST_TIME_USE);
+    }
+
+    /**
+     * @throws ApiException
+     * @throws NotFoundException
+     */
+    public function expire(Code $codeToExpire, VerificationCodeExpiryReason $expiryReason): PaperVerificationCode
+    {
+        $expiredCode = $this->paperVerificationCodes->expire($codeToExpire, $expiryReason)->getData();
+        return new PaperVerificationCode($expiredCode->lpaUid, false, $expiredCode->expiresAt, $expiryReason);
     }
 
     /**
