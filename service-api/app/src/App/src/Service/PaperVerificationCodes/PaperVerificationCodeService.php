@@ -93,13 +93,40 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
-    public function view(PaperVerificationCodeView $params): void
+    /**
+     * @param PaperVerificationCodeView $params
+     * @return CodeView
+     * @throws ApiException
+     * @throws GoneException
+     * @throws NotFoundException
+     */
+    public function view(PaperVerificationCodeView $params): CodeView
     {
-        // this shows how this will work
-        // $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
+        $verifiedData = $this->paperVerificationCodes->validate($params->code);
+        $verifiedCode = $verifiedData->getData();
+        $lookupTime   = $verifiedData->getLookupTime();
+        $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        // $this->expire($verifiedCode, VerificationCodeExpiryReason::FIRST_TIME_USE);
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+
+        $this->checkCodeValidates(
+            $lpa,
+            $params->code,
+            $params->lpaUid,
+            $params->sentToDonor,
+            $params->attorneyName,
+            $params->dateOfBirth,
+            $params->noOfAttorneys
+        );
+
+        // TODO implement expire functionality, pulling in param etc
+        $this->expire($params->code, 'cancelled');
+        $this->recordOrganiation($params->lpaUid, $params->organisation, $lookupTime);
+
+        return new CodeView(
+            lpaSource: LpaSource::LPASTORE,
+            lpa: $lpa,
+        );
     }
 
     /**
@@ -110,6 +137,21 @@ class PaperVerificationCodeService
     {
         $expiredCode = $this->paperVerificationCodes->expire($codeToExpire, $expiryReason)->getData();
         return new PaperVerificationCode($expiredCode->lpaUid, false, $expiredCode->expiresAt, $expiryReason);
+    }
+
+    /**
+     * @param LpaUid   $lpaUid
+     * @param string $organisation
+     * @return void
+     */
+    private function recordOrganiation(LpaUid $lpaUid, string $organisation, DateTimeInterface $lookupTime): void
+    {
+        $this->logger->notice('PVC organisation recorded', [
+            'event_code'   => EventCodes::PVC_RECORD_ORGANISATION,
+            'lpaId'        => $lpaUid,
+            'organisation' => $organisation,
+            'lookup_time'  => $lookupTime,
+        ]);
     }
 
     /**

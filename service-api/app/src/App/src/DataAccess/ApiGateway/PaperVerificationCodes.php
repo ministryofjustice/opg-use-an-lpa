@@ -137,4 +137,5 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
         // new DateTimeImmutable($response->getHeaderLine('Date')), // TODO use when mock available
         );
     }
+
 }
