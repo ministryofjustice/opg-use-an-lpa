@@ -4,30 +4,30 @@ declare(strict_types=1);
 
 namespace Common\Service\Session\KeyManager;
 
-use Aws\Kms\Exception\KmsException;
 use Aws\Kms\KmsClient;
 use ParagonIE\ConstantTime\Base64UrlSafe;
 use ParagonIE\Halite\Alerts\InvalidKey;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
+use Throwable;
 
-class KmsManager implements KeyManagerInterface
+readonly class KmsManager implements KeyManagerInterface
 {
     /**
      * Time to cache encryption data key.
      */
-    public const ENCRYPTION_KEY_TTL = 60 * 60 * 1;
+    public const int ENCRYPTION_KEY_TTL = 60 * 60 * 1;
 
     /**
      * Time to cache decryption data keys.
      * These are held longer to allow for rotation crossover.
      */
-    public const DECRYPTION_KEY_TTL = 60 * 60 * 2;
+    public const int DECRYPTION_KEY_TTL = 60 * 60 * 2;
 
     /**
      * Current Key name within the cache.
      */
-    public const CURRENT_ENCRYPTION_KEY = 'current_session_encryption_key';
+    public const string CURRENT_ENCRYPTION_KEY = 'current_session_encryption_key';
 
     public function __construct(private KmsClient $kmsClient, private KeyCache $cache, private string $kmsAlias)
     {
@@ -37,7 +37,7 @@ class KmsManager implements KeyManagerInterface
      * Returns the key which should be used for encryption.
      *
      * @return Key
-     * @throws InvalidKey
+     * @throws InvalidKey Thrown when creation of a Halite EncryptionKey fails
      */
     public function getEncryptionKey(): Key
     {
@@ -82,24 +82,23 @@ class KmsManager implements KeyManagerInterface
      *
      * @param string $id
      * @return Key
-     * @throws InvalidKey
+     * @throws InvalidKey Thrown when creation of a Halite EncryptionKey fails
+     * @throws KeyNotFoundException Thrown when the provided Ciphertext is not decryptable using KMS
      */
     public function getDecryptionKey(string $id): Key
     {
         $material = $this->cache->get($id);
 
-        if (!($material instanceof HiddenString)) {
-            // Then we don't know the key. Pull it out of KMS.
-
+        // We don't know the key. Pull it out of KMS.
+        // It has to be Base64 decodable and decryptable by KMS. If either fail it's because
+        // the user is providing a bad value
+        if (! $material instanceof HiddenString) {
             try {
                 $key = $this->kmsClient->decrypt([
                     'CiphertextBlob' => Base64UrlSafe::decode($id),
                 ]);
-            } catch (KmsException $e) {
-                if ($e->getAwsErrorCode() === 'InvalidCiphertextException') {
-                    throw new KeyNotFoundException();
-                }
-                throw $e;
+            } catch (Throwable $e) {
+                throw new KeyNotFoundException('Unable to retrieve decryption key', 500, $e);
             }
 
             $material = new HiddenString(

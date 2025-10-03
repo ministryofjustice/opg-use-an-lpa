@@ -16,7 +16,7 @@ readonly class Key
     }
 
     /**
-     * Return ihe key's ID
+     * Return the key's ID
      *
      * @return string
      */

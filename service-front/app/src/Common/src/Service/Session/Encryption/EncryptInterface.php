@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Common\Service\Session\Encryption;
 
+use Common\Exception\SessionEncryptionFailureException;
+
 interface EncryptInterface
 {
     /**
@@ -11,6 +13,7 @@ interface EncryptInterface
      *
      * @param array $data Key/value components of the session
      * @return string An encrypted string ready to be used as a raw cookie value
+     * @throws SessionEncryptionFailureException
      */
     public function encodeCookieValue(array $data): string;
 
