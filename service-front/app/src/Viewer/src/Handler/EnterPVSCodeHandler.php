@@ -76,15 +76,6 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             $this->state($request)->code     = $this->form->getData()['lpa_code'];
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
-            //UML-3975
-            if (isset($this->state($request)->code)) {
-                $lpa = $this->lpaService->getLpaByPVCode(
-                    $this->state($request)->code,
-                    $this->state($request)->lastName
-                );
-            }
-            ////UML-3975 end
-
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
