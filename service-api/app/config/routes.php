@@ -100,7 +100,6 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         ),
         'lpa.viewer-code.full'
     );
-
     $app->post(
         '/v1/paper-verification/usable',
         $factory->pipeline(

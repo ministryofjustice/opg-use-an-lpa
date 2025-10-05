@@ -183,7 +183,6 @@ class LpaService
                 );
             }
         }
-
         return $lpaData;
     }
 
@@ -195,24 +194,24 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByPVCode(string $pvCode, string $donorSurname): ?ArrayObject
+    public function getLpaByPVCode(string $donorSurname, string $pvCode): ?ArrayObject
     {
-        //  Filter dashes out of the share code
+        //  Filter P- and dashes out of the share code
+        $pvCode = str_replace('P-', '', $pvCode);
         $pvCode = str_replace('-', '', $pvCode);
         $pvCode = str_replace(' ', '', $pvCode);
         $pvCode = strtoupper($pvCode);
 
         $trackRoute  = 'usable';
         $requestData = [
-            'code' => $pvCode,
             'name' => $donorSurname,
+            'code' => $pvCode,
         ];
-
         $this->logger->debug('User requested view of LPA by PV code');
 
         try {
             $lpaData = $this->apiClient->httpPost(
-                '/v1/paper-verification/usable',
+                '/v1/paper-verification/' . $trackRoute,
                 $requestData
             );
         } catch (ApiException $apiEx) {

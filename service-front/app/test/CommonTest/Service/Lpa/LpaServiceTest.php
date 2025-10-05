@@ -181,8 +181,7 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])
-            ->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
+        ])->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
@@ -198,8 +197,7 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
             'code' => 'P9H8A6MLD3AM',
             'name' => 'Sanderson',
-        ])
-            ->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
+        ])->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
@@ -265,5 +263,75 @@ class LpaServiceTest extends TestCase
         $this->expectExceptionCode(404);
 
         $this->lpaService->getLpaById($token, $lpaId);
+    }
+
+    #[Test]
+    public function it_gets_an_lpa_by_pv_passcode_and_surname_for_summary(): void
+    {
+        $lpaData = [
+            'lpa' => [
+                'id'  => 1111,
+                'uId' => '700000000997',
+            ],
+        ];
+
+        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+
+        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+                'name' => 'Bundlaaaa',
+                'code' => 'P-1234-1234-1234-12',
+            ])->willReturn($lpaData);
+
+        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+
+        $lpa = $this->lpaService->getLpaByPVCode('Bundlaaaa', 'P-1234-1234-1234-12');
+
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+    }
+
+    #[Test]
+    public function lpa_not_found_by_pv_passcode_and_surname(): void
+    {
+        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+                'name' => 'Bundlaaaa',
+                'code' => 'P-1234-1234-1234-12',
+        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+
+        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
+    }
+
+    #[Test]
+    public function it_finds_an_expired_code_by_pv_passcode_and_surname(): void
+    {
+
+        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+                'name' => 'Bundlaaaa',
+                'code' => 'P-1234-1234-1234-12',
+        ])->willThrow(new ApiException('PV code expired', StatusCodeInterface::STATUS_GONE));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+
+        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
+    }
+
+    #[Test]
+    public function it_finds_a_cancelled__code_by_pv_passcode_and_surname(): void
+    {
+        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+            'name' => 'Bundlaaaa',
+            'code' => 'P-1234-1234-1234-12',
+        ])->willThrow(new ApiException('code cancelled', StatusCodeInterface::STATUS_GONE));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+        $this->expectExceptionMessage('PV code cancelled');
+
+        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
     }
 }
