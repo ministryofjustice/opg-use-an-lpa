@@ -77,3 +77,29 @@ module "vpc_endpoints" {
     aws.region = aws.region
   }
 }
+
+resource "aws_vpc_endpoint" "s3" {
+  provider          = aws.region
+  vpc_id            = module.network.vpc.id
+  service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
+  route_table_ids   = tolist(data.aws_route_tables.firewalled_network_application.ids)
+  vpc_endpoint_type = "Gateway"
+  policy            = data.aws_iam_policy_document.s3_bucket_access.json
+  tags              = { Name = "s3-private" }
+}
+
+data "aws_iam_policy_document" "s3_bucket_access" {
+  statement {
+    sid     = "Access-to-specific-bucket-only"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    resources = [
+      "arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*",
+      "*"
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+  }
+}
