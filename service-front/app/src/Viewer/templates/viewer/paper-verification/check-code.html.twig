@@ -18,8 +18,12 @@
                         <fieldset class="govuk-fieldset">
 
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                                {% set lpaTypeLabel = (lpaType == 'hw') ? 'health and welfare' : 'property and finance' %}
+
                                 <h1 class="govuk-heading-xl">
-                                    {% trans %}We need some more details{% endtrans %}
+                                    {% trans with {'%donorName%': donorName, '%lpaType%': lpaTypeLabel} %}
+                                        We've found %donorName%'s %lpaType% LPA
+                                    {% endtrans %}
                                 </h1>
                             </legend>
 
