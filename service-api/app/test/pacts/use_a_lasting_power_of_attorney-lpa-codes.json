@@ -1,0 +1,104 @@
+{
+  "consumer": {
+    "name": "use_a_lasting_power_of_attorney"
+  },
+  "provider": {
+    "name": "lpa-codes"
+  },
+  "interactions": [
+    {
+      "description": "a POST request to /v1/validate",
+      "providerState": "the provided details match a valid actor code",
+      "request": {
+        "method": "POST",
+        "path": "/v1/validate",
+        "headers": {
+          "Accept": "application/vnd.opg-data.v1+json,application/json",
+          "Authorization": "AWS4-HMAC-SHA256",
+          "Content-Type": "application/json",
+          "x-amzn-trace-id": "trace-id"
+        },
+        "body": {
+          "lpa": "700000000001",
+          "dob": "1959-08-10",
+          "code": "valid-code"
+        },
+        "matchingRules": {
+          "$.headers.Authorization": {
+            "match": "type"
+          },
+          "$.headers.x-amzn-trace-id": {
+            "match": "type"
+          },
+          "$.body.lpa": {
+            "match": "regex",
+            "regex": "7[0-9]{11}"
+          },
+          "$.body.dob": {
+            "match": "regex",
+            "regex": "^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)$"
+          },
+          "$.body.code": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "actor": "700000000001"
+        },
+        "matchingRules": {
+          "$.body.actor": {
+            "match": "regex",
+            "regex": "7[0-9]{11}"
+          }
+        }
+      }
+    },
+    {
+      "description": "a POST request to /v1/revoke",
+      "providerState": "the given actor code is revoked",
+      "request": {
+        "method": "POST",
+        "path": "/v1/revoke",
+        "headers": {
+          "Accept": "application/vnd.opg-data.v1+json,application/json",
+          "Authorization": "AWS4-HMAC-SHA256",
+          "Content-Type": "application/json",
+          "x-amzn-trace-id": "trace-id"
+        },
+        "body": {
+          "code": "valid-code"
+        },
+        "matchingRules": {
+          "$.headers.Authorization": {
+            "match": "type"
+          },
+          "$.headers.x-amzn-trace-id": {
+            "match": "type"
+          },
+          "$.body.code": {
+            "match": "type"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+        },
+        "body": [
+
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
