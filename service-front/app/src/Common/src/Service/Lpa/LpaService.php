@@ -191,23 +191,48 @@ class LpaService
      *
      * @param string $pvCode
      * @param string $donorSurname
+     * @param string|null $lpaReference
+     * @param string|null $pvCodeSendTo
+     * @param string|null $attorneyName
+     * @param string|null $dateOfBirth
+     * @param int|null $noOfAttorneys
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpaByPVCode(string $donorSurname, string $pvCode): ?ArrayObject
-    {
+    public function getLpaByPVCode(
+        string $pvCode,
+        string $donorSurname,
+        ?string $lpaReference = null,
+        ?string $pvCodeSendTo = null,
+        ?string $attorneyName = null,
+        ?string $dateOfBirth = null,
+        ?int $noOfAttorneys = null,
+    ): ?ArrayObject {
         //  Filter P- and dashes out of the share code
-        $pvCode = str_replace('P-', '', $pvCode);
-        $pvCode = str_replace('-', '', $pvCode);
-        $pvCode = str_replace(' ', '', $pvCode);
-        $pvCode = strtoupper($pvCode);
+        //$pvCode = strtoupper(str_replace(['P-', '-', ' '], '', $pvCode));
 
-        $trackRoute  = 'usable';
-        $requestData = [
-            'name' => $donorSurname,
-            'code' => $pvCode,
-        ];
-        $this->logger->debug('User requested view of LPA by PV code');
+        if (!is_null($attorneyName)) {
+            $trackRoute = 'validate';
+
+            //  Filter M- and dashes out of the lpa reference
+           // $lpaReference = strtoupper(str_replace(['M-', '-', ' '], '', $lpaReference));
+
+            $requestData = [
+                'code'          => $pvCode,
+                'name'          => $donorSurname,
+                'lpaUid'        => $lpaReference,
+                'sentToDonor'   => $pvCodeSendTo,
+                'attorneyName'  => $attorneyName,
+                'dateOfBirth'   => $dateOfBirth,
+                'noOfAttorneys' => $noOfAttorneys,
+            ];
+        } else {
+            $trackRoute = 'usable';
+            $requestData = [
+                'code' => $pvCode,
+                'name' => $donorSurname,
+            ];
+        }
 
         try {
             $lpaData = $this->apiClient->httpPost(
@@ -258,14 +283,13 @@ class LpaService
         }
 
         $this->logger->notice(
-            'LPA found with Id {uId} retrieved by pv code',
+            'LPA found retrieved by pv code',
             [
                 'event_code' => EventCodes::VIEW_LPA_PV_CODE_SUCCESS,
-                'uId'        => $lpaData->lpa->getUId(),
+                '$lpaData'   => $lpaData,
             ]
         );
 
         return $lpaData;
     }
-
 }

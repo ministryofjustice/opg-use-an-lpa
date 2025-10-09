@@ -216,7 +216,7 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson',organisation: null);
     }
 
     #[Test]
@@ -269,10 +269,7 @@ class LpaServiceTest extends TestCase
     public function it_gets_an_lpa_by_pv_passcode_and_surname_for_summary(): void
     {
         $lpaData = [
-            'lpa' => [
-                'id'  => 1111,
-                'uId' => '700000000997',
-            ],
+            'lpa' => [],
         ];
 
         $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
@@ -284,8 +281,15 @@ class LpaServiceTest extends TestCase
 
         $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
 
-        $lpa = $this->lpaService->getLpaByPVCode('Bundlaaaa', 'P-1234-1234-1234-12');
-
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Bundlaaaa',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
@@ -302,7 +306,15 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
 
-        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Bundlaaaa',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     #[Test]
@@ -317,7 +329,15 @@ class LpaServiceTest extends TestCase
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
 
-        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Bundlaaaa',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     #[Test]
@@ -326,12 +346,59 @@ class LpaServiceTest extends TestCase
         $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
             'name' => 'Bundlaaaa',
             'code' => 'P-1234-1234-1234-12',
-        ])->willThrow(new ApiException('code cancelled', StatusCodeInterface::STATUS_GONE));
+        ])->willThrow(new ApiException('PV code cancelled', StatusCodeInterface::STATUS_GONE));
 
         $this->expectException(ApiException::class);
         $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
         $this->expectExceptionMessage('PV code cancelled');
 
-        $this->lpaService->getLpaByPVCode('P-1234-1234-1234-12', 'Bundlaaaa');
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Bundlaaaa',
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+    }
+
+    public function it_gets_an_lpa_by_passcode_for_validate(): void
+    {
+        $lpaData = [
+            'lpa' => [],
+        ];
+
+        $requestData = [
+            'code'          => '12341234123412',
+            'name'          => 'Bundlaaaa',
+            'lpaUid'        => '789QP4DF4UX3',
+            'sentToDonor'   => 'Donor',
+            'attorneyName'  => 'AttorneyA',
+            'dateOfBirth'   => '1970-01-24',
+            'noOfAttorneys' => 2,
+        ];
+
+        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+
+        $this->apiClientProphecy->httpPost(
+            '/v1/paper-verification/validate',
+            $requestData
+        )->willReturn($lpaData);
+
+        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Bundlaaaa',
+            'M-789Q-P4DF-4UX3',
+            'Donor',
+            'AttorneyA',
+            '1970-01-24',
+            2
+        );
+
+        $this->assertInstanceOf(ArrayObject::class, $lpa);
+        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 }
