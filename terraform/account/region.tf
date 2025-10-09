@@ -8,6 +8,7 @@ module "eu_west_1" {
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
   network_cidr_block       = "10.162.0.0/16"
+  permitted_s3_buckets     = local.account.permitted_s3_buckets
 
   depends_on = [
     module.cloudwatch_mrk,
@@ -35,6 +36,7 @@ module "eu_west_2" {
   environment_name         = local.environment
   lambda_container_version = var.lambda_container_version
   network_cidr_block       = "10.162.0.0/16"
+  permitted_s3_buckets     = local.account.permitted_s3_buckets
 
   depends_on = [
     module.cloudwatch_mrk,
