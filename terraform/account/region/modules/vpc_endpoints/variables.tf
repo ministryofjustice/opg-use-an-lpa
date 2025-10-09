@@ -26,3 +26,9 @@ variable "public_subnets_cidr_blocks" {
 variable "application_route_tables" {
   type = any
 }
+
+variable "permitted_s3_buckets" {
+  type        = list(string)
+  default     = []
+  description = "S3 buckets permitted through the S3 VPC endpoint"
+}

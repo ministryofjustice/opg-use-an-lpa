@@ -38,6 +38,7 @@ variable "accounts" {
         trail_name_suffix  = string
         bucket_name_suffix = string
       })
+      permitted_s3_buckets      = list(string)
       s3_access_log_bucket_name = string
       regions = map(
         object({

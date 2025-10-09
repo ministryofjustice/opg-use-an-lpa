@@ -117,10 +117,13 @@ data "aws_iam_policy_document" "s3" {
 
 data "aws_iam_policy_document" "s3_bucket_access" {
   statement {
-    sid       = "Access-to-specific-bucket-only"
-    effect    = "Allow"
-    actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*"]
+    sid     = "Access-to-specific-bucket-only"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    resources = concat([
+      "arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*",
+
+    ], var.permitted_s3_buckets)
     principals {
       type        = "AWS"
       identifiers = ["*"]
