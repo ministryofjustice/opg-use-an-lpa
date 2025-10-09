@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Exception\ApiException;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -76,7 +78,41 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             $this->state($request)->code     = $this->form->getData()['lpa_code'];
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
-            return $this->redirectToRoute($this->nextPage($this->state($request)));
+            if (
+                isset($this->state($request)->code) && isset($this->state($request)->lastName)
+            ) {
+                try {
+                    $lpa = $this->lpaService->getLpaByPVCode(
+                        $this->state($request)->code,
+                        $this->state($request)->lastName,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    );
+
+                    return $this->redirectToRoute(
+                        $this->nextPage($this->state($request)),
+                        [
+                            'donorName' => $lpa->donorName,
+                            'lpaType'   => $lpa->type,
+                        ]
+                    );
+                } catch (ApiException $apiEx) {
+                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_GONE) {
+                        if ($apiEx->getMessage() === 'LPA missing from upstream with verified paper verification code given') {
+                            return new HtmlResponse($this->renderer->render('viewer::lpa-not-found-with-pvc'));
+                        }
+                        if ($apiEx->getMessage() === 'Paper verification code cancelled') {
+                            return new HtmlResponse($this->renderer->render('viewer::lpa-cancelled-with-pvc'));
+                        }
+                        if ($apiEx->getMessage() === 'Paper verification code expired') {
+                            return new HtmlResponse($this->renderer->render('viewer::lpa-expired-with-pvc'));
+                        }
+                    }
+                }
+            }
         }
 
         $template       = ($this->featureEnabled)('paper_verification')
@@ -85,7 +121,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render($template, [
-            'form' => $this->form->prepare(),
+            'form'       => $this->form->prepare(),
             'en_message' => $systemMessages['view/en'] ?? null,
             'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));

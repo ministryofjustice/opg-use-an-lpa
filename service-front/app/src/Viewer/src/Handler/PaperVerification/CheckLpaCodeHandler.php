@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
+use Common\Service\Lpa\LpaService;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -38,8 +39,9 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
+        private LpaService $lpaService,
     ) {
-        parent::__construct($renderer, $urlHelper, $logger);
+        parent::__construct($renderer, $urlHelper, $logger, $lpaService);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
@@ -58,8 +60,21 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             $this->form->setData(['lpa_reference' => $lpaUid]);
         }
 
+
+        $lpa = $this->lpaService->getLpaByPVCode(
+            $this->state($request)->code,
+            $this->state($request)->lastName,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'donorName'  => $lpa->donorName,
+            'lpaType'    => $lpa->type,
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
