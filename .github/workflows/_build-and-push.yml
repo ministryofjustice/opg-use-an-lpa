@@ -14,17 +14,17 @@ on:
       tag:
         description: "Tag for docker image"
         required: false
-        default: 'latest'
+        default: "latest"
         type: string
       push_to_ecr:
         description: "Whether to push to ECR"
         required: false
-        default: 'true'
+        default: "true"
         type: string
       specific_path:
         description: "Build on a specific path"
         required: false
-        default: 'all'
+        default: "all"
         type: string
     outputs:
       matrix_job_names:
@@ -39,62 +39,62 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - svc_prefix: 'front'
-            svc_suffix: 'app'
-            build_development_docker: 'true'
-            run_unit_tests: 'true'
-            run_integration_tests: 'true'
-            artifact_to_dl: 'dist-web'
-            path_to_docker_file: 'service-front/docker/app/Dockerfile'
-            path_to_trivyignore_file: 'service-front/docker/app/.trivyignore.yaml'
-          - svc_prefix: 'front'
-            svc_suffix: 'web'
-            build_development_docker: 'false'
-            run_unit_tests: 'false'
-            run_integration_tests: 'false'
-            artifact_to_dl: 'dist-web'
-            path_to_docker_file: 'service-front/docker/web/Dockerfile'
-            path_to_trivyignore_file: 'service-front/docker/web/.trivyignore.yaml'
-          - svc_prefix: 'api'
-            svc_suffix: 'app'
-            build_development_docker: 'true'
-            run_unit_tests: 'true'
-            run_integration_tests: 'true'
-            artifact_to_dl: ''
-            path_to_docker_file: 'service-api/docker/app/Dockerfile'
-            path_to_trivyignore_file: 'service-api/docker/app/.trivyignore.yaml'
-          - svc_prefix: 'api'
-            svc_suffix: 'web'
-            build_development_docker: 'false'
-            run_unit_tests: 'false'
-            run_integration_tests: 'false'
-            artifact_to_dl: ''
-            path_to_docker_file: 'service-api/docker/web/Dockerfile'
-            path_to_trivyignore_file: 'service-api/docker/web/.trivyignore.yaml'
-          - svc_prefix: 'admin'
-            svc_suffix: 'app'
-            build_development_docker: 'false'
-            run_unit_tests: 'true'
-            run_integration_tests: 'false'
-            artifact_to_dl: ''
-            path_to_docker_file: 'service-admin/Dockerfile'
-            path_to_trivyignore_file: 'service-admin/.trivyignore.yaml'
-          - svc_prefix: 'stats_upload'
-            svc_suffix: 'lambda'
-            build_development_docker: 'false'
-            run_unit_tests: 'true'
-            run_integration_tests: 'false'
-            artifact_to_dl: ''
-            path_to_docker_file: 'lambda-functions/upload-statistics/Dockerfile'
-            path_to_trivyignore_file: 'lambda-functions/upload-statistics/.trivyignore.yaml'
-          - svc_prefix: 'event'
-            svc_suffix: 'receiver'
-            build_development_docker: 'false'
-            run_unit_tests: 'true'
-            run_integration_tests: 'false'
-            artifact_to_dl: ''
-            path_to_docker_file: 'lambda-functions/event-receiver/Dockerfile'
-            path_to_trivyignore_file: 'lambda-functions/event-receiver/.trivyignore.yaml'
+          - svc_prefix: "front"
+            svc_suffix: "app"
+            build_development_docker: "true"
+            run_unit_tests: "true"
+            run_integration_tests: "true"
+            artifact_to_dl: "dist-web"
+            path_to_docker_file: "service-front/docker/app/Dockerfile"
+            path_to_trivyignore_file: "service-front/docker/app/.trivyignore.yaml"
+          - svc_prefix: "front"
+            svc_suffix: "web"
+            build_development_docker: "false"
+            run_unit_tests: "false"
+            run_integration_tests: "false"
+            artifact_to_dl: "dist-web"
+            path_to_docker_file: "service-front/docker/web/Dockerfile"
+            path_to_trivyignore_file: "service-front/docker/web/.trivyignore.yaml"
+          - svc_prefix: "api"
+            svc_suffix: "app"
+            build_development_docker: "true"
+            run_unit_tests: "true"
+            run_integration_tests: "true"
+            artifact_to_dl: ""
+            path_to_docker_file: "service-api/docker/app/Dockerfile"
+            path_to_trivyignore_file: "service-api/docker/app/.trivyignore.yaml"
+          - svc_prefix: "api"
+            svc_suffix: "web"
+            build_development_docker: "false"
+            run_unit_tests: "false"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "service-api/docker/web/Dockerfile"
+            path_to_trivyignore_file: "service-api/docker/web/.trivyignore.yaml"
+          - svc_prefix: "admin"
+            svc_suffix: "app"
+            build_development_docker: "false"
+            run_unit_tests: "true"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "service-admin/Dockerfile"
+            path_to_trivyignore_file: "service-admin/.trivyignore.yaml"
+          - svc_prefix: "stats_upload"
+            svc_suffix: "lambda"
+            build_development_docker: "false"
+            run_unit_tests: "true"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "lambda-functions/upload-statistics/Dockerfile"
+            path_to_trivyignore_file: "lambda-functions/upload-statistics/.trivyignore.yaml"
+          - svc_prefix: "event"
+            svc_suffix: "receiver"
+            build_development_docker: "false"
+            run_unit_tests: "true"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
+            path_to_trivyignore_file: "lambda-functions/event-receiver/.trivyignore.yaml"
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
@@ -173,7 +173,7 @@ jobs:
       - name: install python
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
-          python-version: '3.13'
+          python-version: "3.13"
 
       - name: docker unit tests
         env:
@@ -332,6 +332,7 @@ jobs:
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: Trivy Image Vulnerability Scanner
+        if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
         id: trivy_scan
         run: |
           mkdir -p -m 0777 .trivy-cache ./test-results/
@@ -363,14 +364,14 @@ jobs:
             aquasec/trivy:0.65.0 image ${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}:latest \
             --severity HIGH,CRITICAL \
             --exit-code 1 \
-            --format sarif --output ./test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif \
+            --format sarif --output ./test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@ff0a06e83cb2de871e5a09832bc6a81e7276941f # v3.28.18
-        if: always()
+        if: steps.test.trivy_scan == 'failure'
         with:
-          sarif_file: './test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif'
+          sarif_file: "./test-results/${{ matrix.svc_prefix }}_${{ matrix.svc_suffix }}_trivy.sarif"
 
       - name: tag and push container
         env:
