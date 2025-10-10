@@ -92,13 +92,10 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
                         null
                     );
 
-                    return $this->redirectToRoute(
-                        $this->nextPage($this->state($request)),
-                        [
-                            'donorName' => $lpa->donorName,
-                            'lpaType'   => $lpa->type,
-                        ]
-                    );
+                    $this->state($request)->donorName = $lpa->donorName;
+                    $this->state($request)->lpaType   = $lpa->type;
+
+                    return $this->redirectToRoute($this->nextPage($this->state($request)));
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_GONE) {
                         if ($apiEx->getMessage() === 'LPA missing from upstream with verified paper verification code given') {

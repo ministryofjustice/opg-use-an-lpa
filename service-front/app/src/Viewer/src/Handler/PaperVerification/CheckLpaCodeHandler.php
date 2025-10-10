@@ -60,21 +60,10 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             $this->form->setData(['lpa_reference' => $lpaUid]);
         }
 
-
-        $lpa = $this->lpaService->getLpaByPVCode(
-            $this->state($request)->code,
-            $this->state($request)->lastName,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donorName'  => $lpa->donorName,
-            'lpaType'    => $lpa->type,
+            'donorName'  => $this->state($request)->donorName,
+            'lpaType'    => $this->state($request)->lpaType,
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));

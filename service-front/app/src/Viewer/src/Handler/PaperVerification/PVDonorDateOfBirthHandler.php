@@ -63,12 +63,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
              ]);
         }
 
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $donorName = $this->state($request)->attorneyName ?? 'Barbara Gilson';
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donorName'  => $donorName,
+            'donorName'  => $this->state($request)->donorName,
             'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,

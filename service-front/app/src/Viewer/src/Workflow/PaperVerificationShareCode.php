@@ -16,14 +16,16 @@ class PaperVerificationShareCode implements WorkflowState
     public ?DateTimeInterface $dateOfBirth;
 
     public function __construct(
-        public ?string $lastName = null,
-        public ?string $code = null,
-        public ?string $lpaUid = null,
-        public ?bool $sentToDonor = null,
+        public ?string $lastName     = null,
+        public ?string $code         = null,
+        public ?string $lpaUid       = null,
+        public ?bool $sentToDonor    = null,
         public ?string $attorneyName = null,
-        ?string $dateOfBirth = null,
-        public ?int $noOfAttorneys = null,
+        ?string $dateOfBirth         = null,
+        public ?int $noOfAttorneys   = null,
         public ?string $organisation = null,
+        public ?string $donorName    = null,
+        public ?string $lpaType      = null,
     ) {
         $this->dateOfBirth = $dateOfBirth !== null ? new DateTimeImmutable($dateOfBirth) : null;
     }
@@ -38,5 +40,7 @@ class PaperVerificationShareCode implements WorkflowState
         $this->dateOfBirth   = null;
         $this->noOfAttorneys = null;
         $this->organisation  = null;
+        $this->donorName     = null;
+        $this->lpaType       = null;
     }
 }

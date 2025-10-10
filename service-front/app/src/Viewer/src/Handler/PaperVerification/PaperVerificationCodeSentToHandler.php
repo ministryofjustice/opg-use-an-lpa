@@ -69,9 +69,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
             ? 'viewer::paper-verification/verification-code-sent-to'
             : 'viewer::enter-code';
 
-        // TODO get donor name and add it to twig template
         return new HtmlResponse($this->renderer->render($template, [
-            'donor_name'    => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
+            'donor_name'    => $this->state($request)->donorName,
             'sent_to_donor' => $sentToDonor ?? null,
             'attorneyName'  => $attorneyName ?? null,
             'form'          => $this->form->prepare(),
