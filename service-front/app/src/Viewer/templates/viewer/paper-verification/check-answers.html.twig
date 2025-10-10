@@ -67,11 +67,10 @@
                         </tbody>
                     </table>
 
-                    <a href="{{ path('pv.enter-organisation-name')}}" role="button"
-                       draggable="false" class="govuk-button moj-button-menu__item "
-                       data-module="govuk-button">
+                    <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                            class="govuk-button moj-button-menu__item" data-module="govuk-button">
                         {% trans %}Continue{% endtrans %}
-                    </a>
+                    </button>
 
                     <a href="{{ path('home') }}" role="button" draggable="false"
                        class="govuk-button moj-button-menu__item govuk-button--secondary "
