@@ -60,7 +60,7 @@ resource "aws_vpc_endpoint_policy" "private" {
         },
         "Action" : [
           "${startswith(each.value, "ecr") ? "ecr" : each.value}:*",
-          startswith(each.value, "monitoring") ? "cloudwatch:*" : null
+          each.value == "monitoring" ? "cloudwatch:*" : ""
         ],
         "Resource" : "*"
       }
