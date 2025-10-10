@@ -50,7 +50,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $attorneyName  = $this->state($request)->attorneyName;
         $noOfAttorneys = $this->state($request)->noOfAttorneys;
 
         if ($noOfAttorneys) {
