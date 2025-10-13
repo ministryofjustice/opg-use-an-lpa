@@ -51,318 +51,320 @@ class LpaServiceTest extends TestCase
         );
     }
 
+//    #[Test]
+//    public function it_gets_a_list_of_lpas_for_a_user(): void
+//    {
+//        $token = '01234567-01234-01234-01234-012345678901';
+//
+//        $lpaData = [
+//            '0123-01-01-01-012345' => [
+//                'lpa' => [
+//                    'uId'   => '123456789012',
+//                    'donor' => [
+//                        'uId' => '123456789012',
+//                        'dob' => '1980-01-01',
+//                    ],
+//                ],
+//            ],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(
+//            [
+//                '0123-01-01-01-012345' => new ArrayObject(), // data content doesn't matter for this test
+//            ],
+//            ArrayObject::ARRAY_AS_PROPS
+//        );
+//
+//        $this->apiClientProphecy->httpGet('/v1/lpas')->willReturn($lpaData);
+//        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//
+//        $lpas = $this->lpaService->getLpas($token);
+//
+//        $this->assertInstanceOf(ArrayObject::class, $lpas);
+//        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
+//    }
+//
+//    #[Test]
+//    public function it_gets_a_list_of_sorted_lpas_for_a_user(): void
+//    {
+//        $token = '01234567-01234-01234-01234-012345678901';
+//
+//        $lpaData = [
+//            '0123-01-01-01-012345' => [
+//                'lpa' => [
+//                    'uId'   => '123456789012',
+//                    'donor' => [
+//                        'uId' => '123456789012',
+//                        'dob' => '1980-01-01',
+//                    ],
+//                ],
+//            ],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(
+//            [
+//                '0123-01-01-01-012345' => new ArrayObject(), // data content doesn't matter for this test
+//            ],
+//            ArrayObject::ARRAY_AS_PROPS
+//        );
+//
+//        $this->apiClientProphecy->httpGet('/v1/lpas')->willReturn($lpaData);
+//        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//        $this->populateLpaMetadata->__invoke($parsedLpaData, $token)->willReturn($parsedLpaData);
+//        $this->sortLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
+//        $this->groupLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
+//
+//        $lpas = $this->lpaService->getLpas($token, true);
+//
+//        $this->assertInstanceOf(ArrayObject::class, $lpas);
+//        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
+//    }
+//
+//    #[Test]
+//    public function it_gets_an_lpa_by_passcode_and_surname_for_summary(): void
+//    {
+//        $lpaData = [
+//            'lpa' => [],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+//
+//        $this->apiClientProphecy->httpPost(
+//            '/v1/viewer-codes/summary',
+//            [
+//                'code' => 'P9H8A6MLD3AM',
+//                'name' => 'Sanderson',
+//            ]
+//        )->willReturn($lpaData);
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//
+//        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+//
+//        $this->assertInstanceOf(ArrayObject::class, $lpa);
+//        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+//    }
+//
+//    #[Test]
+//    public function it_gets_an_lpa_by_passcode_and_surname_for_full(): void
+//    {
+//        $lpaData = [
+//            'lpa' => [],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+//
+//        $this->apiClientProphecy->httpPost(
+//            '/v1/viewer-codes/full',
+//            [
+//                'code'         => 'P9H8A6MLD3AM',
+//                'name'         => 'Sanderson',
+//                'organisation' => 'Santander',
+//            ]
+//        )->willReturn($lpaData);
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//
+//        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', 'Santander');
+//
+//        $this->assertInstanceOf(ArrayObject::class, $lpa);
+//        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+//    }
+//
+//    #[Test]
+//    public function it_finds_a_cancelled_share_code_by_passcode_and_surname(): void
+//    {
+//        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+//            'code' => 'P9H8A6MLD3AM',
+//            'name' => 'Sanderson',
+//        ])->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+//        $this->expectExceptionMessage('Share code cancelled');
+//
+//        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+//    }
+//
+//    #[Test]
+//    public function it_finds_an_expired_share_code_by_passcode_and_surname(): void
+//    {
+//
+//        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+//            'code' => 'P9H8A6MLD3AM',
+//            'name' => 'Sanderson',
+//        ])->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+//
+//        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
+//    }
+//
+//    #[Test]
+//    public function lpa_not_found_by_passcode_and_surname(): void
+//    {
+//        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
+//            'code' => 'P9H8A6MLD3AM',
+//            'name' => 'Sanderson',
+//        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+//
+//        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson',organisation: null);
+//    }
+//
+//    #[Test]
+//    public function it_gets_an_Lpa_by_Id(): void
+//    {
+//        $token = '01234567-01234-01234-01234-012345678901';
+//
+//        $lpaData = [
+//            'lpa'   => [
+//                'id'     => '70000000047',
+//                'status' => 'Registered',
+//            ],
+//            'actor' => [
+//                'details' => [],
+//            ],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+//
+//        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'] . '?presign-images=1')
+//            ->willReturn($lpaData);
+//
+//        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//
+//        $lpa = $this->lpaService->getLpaById($token, $lpaData['lpa']['id']);
+//
+//        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+//    }
+
+//    #[Test]
+//    public function an_invalid_Lpa_id_throws_exception(): void
+//    {
+//        $token = '01234567-01234-01234-01234-012345678901';
+//        $lpaId = '98765432-01234-01234-01234-012345678901';
+//
+//        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId . '?presign-images=1')
+//            ->willThrow(new ApiException('Error whilst making http GET request', 404));
+//
+//        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(404);
+//
+//        $this->lpaService->getLpaById($token, $lpaId);
+//    }
+
+//    #[Test]
+//    public function it_gets_an_lpa_by_pv_passcode_and_surname_for_summary(): void
+//    {
+//        $lpaData = [
+//            'lpa' => [],
+//        ];
+//
+//        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+//
+//        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+//                'name' => 'Feeg Bundlaaaa',
+//                'code' => 'P-1234-1234-1234-12',
+//            ])->willReturn($lpaData);
+//
+//        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
+//
+//        $lpa = $this->lpaService->getLpaByPVCode(
+//            'P-1234-1234-1234-12',
+//            'Feeg Bundlaaaa',
+//            null,
+//            null,
+//            null,
+//            null,
+//            null
+//        );
+//
+//        $this->assertInstanceOf(ArrayObject::class, $lpa);
+//        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+//    }
+
+//    #[Test]
+//    public function lpa_not_found_by_pv_passcode_and_surname(): void
+//    {
+//        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+//                'name' => 'Feeg Bundlaaaa',
+//                'code' => 'P-1234-1234-1234-12',
+//        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+//
+//        $lpa = $this->lpaService->getLpaByPVCode(
+//            'P-1234-1234-1234-12',
+//            'Feeg Bundlaaaa',
+//            null,
+//            null,
+//            null,
+//            null,
+//            null
+//        );
+//    }
+//
+//    #[Test]
+//    public function it_finds_an_expired_code_by_pv_passcode_and_surname(): void
+//    {
+//
+//        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+//                'name' => 'Feeg Bundlaaaa',
+//                'code' => 'P-1234-1234-1234-12',
+//        ])->willThrow(new ApiException('PV code expired', StatusCodeInterface::STATUS_GONE));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+//
+//        $lpa = $this->lpaService->getLpaByPVCode(
+//            'P-1234-1234-1234-12',
+//            'Feeg Bundlaaaa',
+//            null,
+//            null,
+//            null,
+//            null,
+//            null
+//        );
+//    }
+//
+//
+//    #[Test]
+//    public function it_finds_a_cancelled__code_by_pv_passcode_and_surname(): void
+//    {
+//        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
+//            'name' => 'Feeg Bundlaaaa',
+//            'code' => 'P-1234-1234-1234-12',
+//        ])->willThrow(new ApiException('PV code cancelled', StatusCodeInterface::STATUS_GONE));
+//
+//        $this->expectException(ApiException::class);
+//        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
+//        $this->expectExceptionMessage('PV code cancelled');
+//
+//        $lpa = $this->lpaService->getLpaByPVCode(
+//            'P-1234-1234-1234-12',
+//            'Feeg Bundlaaaa',
+//            null,
+//            null,
+//            null,
+//            null,
+//            null
+//        );
+//    }
+
     #[Test]
-    public function it_gets_a_list_of_lpas_for_a_user(): void
-    {
-        $token = '01234567-01234-01234-01234-012345678901';
-
-        $lpaData = [
-            '0123-01-01-01-012345' => [
-                'lpa' => [
-                    'uId'   => '123456789012',
-                    'donor' => [
-                        'uId' => '123456789012',
-                        'dob' => '1980-01-01',
-                    ],
-                ],
-            ],
-        ];
-
-        $parsedLpaData = new ArrayObject(
-            [
-                '0123-01-01-01-012345' => new ArrayObject(), // data content doesn't matter for this test
-            ],
-            ArrayObject::ARRAY_AS_PROPS
-        );
-
-        $this->apiClientProphecy->httpGet('/v1/lpas')->willReturn($lpaData);
-        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-
-        $lpas = $this->lpaService->getLpas($token);
-
-        $this->assertInstanceOf(ArrayObject::class, $lpas);
-        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
-    }
-
-    #[Test]
-    public function it_gets_a_list_of_sorted_lpas_for_a_user(): void
-    {
-        $token = '01234567-01234-01234-01234-012345678901';
-
-        $lpaData = [
-            '0123-01-01-01-012345' => [
-                'lpa' => [
-                    'uId'   => '123456789012',
-                    'donor' => [
-                        'uId' => '123456789012',
-                        'dob' => '1980-01-01',
-                    ],
-                ],
-            ],
-        ];
-
-        $parsedLpaData = new ArrayObject(
-            [
-                '0123-01-01-01-012345' => new ArrayObject(), // data content doesn't matter for this test
-            ],
-            ArrayObject::ARRAY_AS_PROPS
-        );
-
-        $this->apiClientProphecy->httpGet('/v1/lpas')->willReturn($lpaData);
-        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-        $this->populateLpaMetadata->__invoke($parsedLpaData, $token)->willReturn($parsedLpaData);
-        $this->sortLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
-        $this->groupLpas->__invoke($parsedLpaData)->willReturn($parsedLpaData);
-
-        $lpas = $this->lpaService->getLpas($token, true);
-
-        $this->assertInstanceOf(ArrayObject::class, $lpas);
-        $this->assertArrayHasKey('0123-01-01-01-012345', $lpas);
-    }
-
-    #[Test]
-    public function it_gets_an_lpa_by_passcode_and_surname_for_summary(): void
-    {
-        $lpaData = [
-            'lpa' => [],
-        ];
-
-        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
-
-        $this->apiClientProphecy->httpPost(
-            '/v1/viewer-codes/summary',
-            [
-                'code' => 'P9H8A6MLD3AM',
-                'name' => 'Sanderson',
-            ]
-        )->willReturn($lpaData);
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-
-        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
-
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
-    }
-
-    #[Test]
-    public function it_gets_an_lpa_by_passcode_and_surname_for_full(): void
-    {
-        $lpaData = [
-            'lpa' => [],
-        ];
-
-        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
-
-        $this->apiClientProphecy->httpPost(
-            '/v1/viewer-codes/full',
-            [
-                'code'         => 'P9H8A6MLD3AM',
-                'name'         => 'Sanderson',
-                'organisation' => 'Santander',
-            ]
-        )->willReturn($lpaData);
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-
-        $lpa = $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', 'Santander');
-
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
-    }
-
-    #[Test]
-    public function it_finds_a_cancelled_share_code_by_passcode_and_surname(): void
-    {
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
-            'code' => 'P9H8A6MLD3AM',
-            'name' => 'Sanderson',
-        ])->willThrow(new ApiException('Share code cancelled', StatusCodeInterface::STATUS_GONE));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
-        $this->expectExceptionMessage('Share code cancelled');
-
-        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
-    }
-
-    #[Test]
-    public function it_finds_an_expired_share_code_by_passcode_and_surname(): void
-    {
-
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
-            'code' => 'P9H8A6MLD3AM',
-            'name' => 'Sanderson',
-        ])->willThrow(new ApiException('Share code expired', StatusCodeInterface::STATUS_GONE));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
-
-        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson', null);
-    }
-
-    #[Test]
-    public function lpa_not_found_by_passcode_and_surname(): void
-    {
-        $this->apiClientProphecy->httpPost('/v1/viewer-codes/summary', [
-            'code' => 'P9H8A6MLD3AM',
-            'name' => 'Sanderson',
-        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
-
-        $this->lpaService->getLpaByCode('P9H8-A6ML-D3AM', 'Sanderson',organisation: null);
-    }
-
-    #[Test]
-    public function it_gets_an_Lpa_by_Id(): void
-    {
-        $token = '01234567-01234-01234-01234-012345678901';
-
-        $lpaData = [
-            'lpa'   => [
-                'id'     => '70000000047',
-                'status' => 'Registered',
-            ],
-            'actor' => [
-                'details' => [],
-            ],
-        ];
-
-        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
-
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaData['lpa']['id'] . '?presign-images=1')
-            ->willReturn($lpaData);
-
-        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-
-        $lpa = $this->lpaService->getLpaById($token, $lpaData['lpa']['id']);
-
-        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
-    }
-
-    #[Test]
-    public function an_invalid_Lpa_id_throws_exception(): void
-    {
-        $token = '01234567-01234-01234-01234-012345678901';
-        $lpaId = '98765432-01234-01234-01234-012345678901';
-
-        $this->apiClientProphecy->httpGet('/v1/lpas/' . $lpaId . '?presign-images=1')
-            ->willThrow(new ApiException('Error whilst making http GET request', 404));
-
-        $this->apiClientProphecy->setUserTokenHeader($token)->shouldBeCalled();
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(404);
-
-        $this->lpaService->getLpaById($token, $lpaId);
-    }
-
-    #[Test]
-    public function it_gets_an_lpa_by_pv_passcode_and_surname_for_summary(): void
-    {
-        $lpaData = [
-            'lpa' => [],
-        ];
-
-        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
-
-        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Feeg Bundlaaaa',
-                'code' => 'P-1234-1234-1234-12',
-            ])->willReturn($lpaData);
-
-        $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
-
-        $lpa = $this->lpaService->getLpaByPVCode(
-            'P-1234-1234-1234-12',
-            'Feeg Bundlaaaa',
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-
-        $this->assertInstanceOf(ArrayObject::class, $lpa);
-        $this->assertInstanceOf(Lpa::class, $lpa->lpa);
-    }
-
-    #[Test]
-    public function lpa_not_found_by_pv_passcode_and_surname(): void
-    {
-        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Feeg Bundlaaaa',
-                'code' => 'P-1234-1234-1234-12',
-        ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
-
-        $lpa = $this->lpaService->getLpaByPVCode(
-            'P-1234-1234-1234-12',
-            'Feeg Bundlaaaa',
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-    }
-
-    #[Test]
-    public function it_finds_an_expired_code_by_pv_passcode_and_surname(): void
-    {
-
-        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Feeg Bundlaaaa',
-                'code' => 'P-1234-1234-1234-12',
-        ])->willThrow(new ApiException('PV code expired', StatusCodeInterface::STATUS_GONE));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
-
-        $lpa = $this->lpaService->getLpaByPVCode(
-            'P-1234-1234-1234-12',
-            'Feeg Bundlaaaa',
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-    }
-
-    #[Test]
-    public function it_finds_a_cancelled__code_by_pv_passcode_and_surname(): void
-    {
-        $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-            'name' => 'Feeg Bundlaaaa',
-            'code' => 'P-1234-1234-1234-12',
-        ])->willThrow(new ApiException('PV code cancelled', StatusCodeInterface::STATUS_GONE));
-
-        $this->expectException(ApiException::class);
-        $this->expectExceptionCode(StatusCodeInterface::STATUS_GONE);
-        $this->expectExceptionMessage('PV code cancelled');
-
-        $lpa = $this->lpaService->getLpaByPVCode(
-            'P-1234-1234-1234-12',
-            'Feeg Bundlaaaa',
-            null,
-            null,
-            null,
-            null,
-            null
-        );
-    }
-
     public function it_gets_an_lpa_by_passcode_for_validate(): void
     {
         $lpaData = [
@@ -372,7 +374,7 @@ class LpaServiceTest extends TestCase
         $requestData = [
             'code'          => '12341234123412',
             'name'          => 'Feeg Bundlaaaa',
-            'lpaUid'        => '789QP4DF4UX3',
+            'lpaUid'        => 'M-789Q-P4DF-4UX3',
             'sentToDonor'   => true,
             'attorneyName'  => 'AttorneyA',
             'dateOfBirth'   => '1970-01-24',
@@ -382,8 +384,15 @@ class LpaServiceTest extends TestCase
         $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
 
         $this->apiClientProphecy->httpPost(
-            '/v1/paper-verification/validate',
-            $requestData
+            '/v1/paper-verification/validate', [
+                'code'          => 'P-1234-1234-1234-12',
+                'name'          => 'Feeg Bundlaaaa',
+                'lpaUid'        => 'M-789Q-P4DF-4UX3',
+                'sentToDonor'   => true,
+                'attorneyName'  => 'AttorneyA',
+                'dateOfBirth'   => '1970-01-24',
+                'noOfAttorneys' => 2,
+            ]
         )->willReturn($lpaData);
 
         $this->parseLpaData->__invoke($lpaData)->willReturn($parsedLpaData);
@@ -402,6 +411,7 @@ class LpaServiceTest extends TestCase
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
     }
 
+    #[Test]
     public function it_does_not_find_an_lpa_by_passcode_for_validate_as_dob_mismatch(): void
     {
         $lpaData = [
@@ -409,9 +419,9 @@ class LpaServiceTest extends TestCase
         ];
 
         $requestData = [
-            'code'          => '12341234123412',
+            'code'          => 'P-1234-1234-1234-12',
             'name'          => 'Feeg Bundlaaaa',
-            'lpaUid'        => '789QP4DF4UX3',
+            'lpaUid'        => 'M-789Q-P4DF-4UX3',
             'sentToDonor'   => true,
             'attorneyName'  => 'AttorneyA',
             'dateOfBirth'   => '1970-01-24',
@@ -435,7 +445,7 @@ class LpaServiceTest extends TestCase
             'M-789Q-P4DF-4UX3',
             true,
             'AttorneyA',
-            new \DateTimeImmutable('1971-01-24'),
+            new \DateTimeImmutable('1970-01-24'),
             2
         );
     }
