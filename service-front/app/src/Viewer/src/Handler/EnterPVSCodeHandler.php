@@ -92,8 +92,8 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
                         null
                     );
 
-                    $this->state($request)->donorName = $lpa->donorName;
-                    $this->state($request)->lpaType   = $lpa->type;
+                    $this->state($request)->donorName = $lpa['donorName'] ?? null;
+                    $this->state($request)->lpaType   = $lpa['type'] ?? null;
 
                     return $this->redirectToRoute($this->nextPage($this->state($request)));
                 } catch (ApiException $apiEx) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\Lpa\LpaService;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -39,9 +38,8 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
-        private LpaService $lpaService,
     ) {
-        parent::__construct($renderer, $urlHelper, $logger, $lpaService);
+        parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface

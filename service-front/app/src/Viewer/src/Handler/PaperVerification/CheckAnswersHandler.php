@@ -74,10 +74,9 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
         $this->form->setData($request->getParsedBody());
+        $stateData = $this->state($request);
 
         if ($this->form->isValid()) {
-            $stateData = $this->state($request);
-
             $requiredFields = [
                 'code',
                 'lastName',
@@ -109,7 +108,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
                                         'donorName'     => $stateData->donorName,
                                         'lpaUid'        => $stateData->lpaUid,
                                         'sentToDonor'   => $stateData->sentToDonor,
-                                        'dateOfBirth' => $stateData->dateOfBirth?->format('Y-m-d'),
+                                        'dateOfBirth'   => $stateData->dateOfBirth?->format('Y-m-d'),
                                         'noOfAttorneys' => $stateData->noOfAttorneys,
                                         'attorneyName'  => $stateData->attorneyName,
                                         'en_message'    => $this->systemMessages['view/en'] ?? null,
@@ -122,6 +121,18 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
                 }
             }
         }
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'form'          => $this->form,
+            'lpaUid'        => $stateData->lpaUid,
+            'sentToDonor'   => $stateData->sentToDonor,
+            'dateOfBirth'   => $stateData->dateOfBirth,
+            'noOfAttorneys' => $stateData->noOfAttorneys,
+            'attorneyName'  => $stateData->attorneyName,
+            'donorName'     => $stateData->donorName,
+            'back'          => $this->lastPage($stateData),
+            'en_message'    => $this->systemMessages['view/en'] ?? null,
+            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
+        ]));
     }
 
     /**

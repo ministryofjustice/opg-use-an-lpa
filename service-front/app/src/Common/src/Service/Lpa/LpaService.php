@@ -273,9 +273,7 @@ class LpaService
             throw $apiEx;
         }
 
-        if (is_array($lpaData)) {
-            $lpaData = ($this->parseLpaData)($lpaData);
-        }
+        $lpaData = ($this->parseLpaData)($lpaData);
 
         $this->logger->notice(
             'LPA found retrieved by pv code',
