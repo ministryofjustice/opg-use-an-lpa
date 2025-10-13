@@ -6,17 +6,13 @@ namespace Common\Service\Session\Encryption;
 
 use Common\Exception\SessionEncryptionFailureException;
 use Common\Service\Session\KeyManager\KeyManagerInterface;
-use Common\Service\Session\KeyManager\KeyNotFoundException;
-use ParagonIE\ConstantTime\Base64UrlSafe;
-use ParagonIE\Halite\Alerts\HaliteAlert;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
 use function json_encode;
 use function json_decode;
-use function explode;
-use function trim;
 use function preg_replace;
+use function preg_match;
 
 readonly class HaliteEncryptedCookie implements EncryptInterface
 {
@@ -36,16 +32,27 @@ readonly class HaliteEncryptedCookie implements EncryptInterface
             return '';
         }
 
-        $plaintext = json_encode($data);
-        $key       = $this->keyManager->getEncryptionKey();
+        try {
+            $plaintext = json_encode($data);
+            $key       = $this->keyManager->getEncryptionKey();
 
-        if ($plaintext === false) {
-            // @codeCoverageIgnoreStart
-            throw new SessionEncryptionFailureException('Unable to json encode session data');
-            // @codeCoverageIgnoreEnd
+            if ($plaintext === false) {
+                // @codeCoverageIgnoreStart
+                throw new SessionEncryptionFailureException('Unable to json encode session data');
+                // @codeCoverageIgnoreEnd
+            }
+
+            return $key->getId() . '.' . $this->crypto->encrypt($plaintext, $key);
+        } catch (Throwable $e) {
+            $this->logger->critical(
+                'Failed to encrypt users session data to a cookie',
+                [
+                    'identity' => $data['identity'] ?? null,
+                ]
+            );
+
+            throw new SessionEncryptionFailureException('Encryption of cookie failed', 500, $e);
         }
-
-        return $key->getId() . '.' . Base64UrlSafe::encode($this->crypto->encrypt($plaintext, $key));
     }
 
     /**
@@ -57,26 +64,26 @@ readonly class HaliteEncryptedCookie implements EncryptInterface
             return [];
         }
 
-        // unquote the value if necessary
-        $data = preg_replace('/\\\\(.)|"/', '$1', $data);
+        // Unquote the value if necessary
+        $data = preg_replace('/\\\\(.)|"/', '$1', $data) ?? '';
 
-        // Separate out the key ID and the data
-        [$keyId, $payload] = explode('.', trim($data, '"'), 2);
+        // Grab the key and encrypted value. Both should be base64urlencoded.
+        preg_match('/^([\w-]+=*)\.([\w-]+=*)$/', $data, $matches);
+        if (count($matches) === 3) {
+            list(, $keyId, $payload) = $matches; // Leading comma skips first array value
 
-        try {
-            $key        = $this->keyManager->getDecryptionKey($keyId);
-            $ciphertext = Base64UrlSafe::decode($payload);
+            try {
+                $key = $this->keyManager->getDecryptionKey($keyId);
 
-            return json_decode($this->crypto->decrypt($ciphertext, $key), true);
-        } catch (HaliteAlert | KeyNotFoundException $alert) {
-            $this->logger->warning(
-                'Unable to decrypt the provided cookie payload. {message}',
-                [
-                    'message' => $alert->getMessage(),
-                ],
-            );
-        } catch (Throwable $t) {
-            $this->logger->error($t->getMessage());
+                return json_decode($this->crypto->decrypt($payload, $key), true);
+            } catch (Throwable $alert) {
+                $this->logger->warning(
+                    'Unable to decrypt the provided cookie payload. {message}',
+                    [
+                        'message' => $alert->getMessage(),
+                    ],
+                );
+            }
         }
 
         // Something went wrong. Restart the session.

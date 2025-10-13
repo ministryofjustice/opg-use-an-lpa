@@ -59,7 +59,8 @@ resource "aws_vpc_endpoint_policy" "private" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : [
-          "${startswith(each.value, "ecr") ? "ecr" : each.value}:*"
+          "${startswith(each.value, "ecr") ? "ecr" : each.value}:*",
+          each.value == "monitoring" ? "cloudwatch:*" : ""
         ],
         "Resource" : "*"
       }
@@ -117,10 +118,13 @@ data "aws_iam_policy_document" "s3" {
 
 data "aws_iam_policy_document" "s3_bucket_access" {
   statement {
-    sid       = "Access-to-specific-bucket-only"
-    effect    = "Allow"
-    actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*"]
+    sid     = "Access-to-specific-bucket-only"
+    effect  = "Allow"
+    actions = ["s3:GetObject"]
+    resources = concat([
+      "arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*",
+
+    ], var.permitted_s3_buckets)
     principals {
       type        = "AWS"
       identifiers = ["*"]

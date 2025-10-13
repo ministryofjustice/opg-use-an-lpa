@@ -12,6 +12,7 @@ use Common\Service\Session\KeyManager\KeyCache;
 use Common\Service\Session\KeyManager\KeyNotFoundException;
 use Common\Service\Session\KeyManager\KmsManager;
 use ParagonIE\HiddenString\HiddenString;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -33,61 +34,17 @@ class KmsManagerTest extends TestCase
         $this->kmsClientProphecy = $this->prophesize(KmsClient::class);
     }
 
-    public function testCanInstantiate(): void
-    {
-        $manager = new KmsManager(
-            $this->kmsClientProphecy->reveal(),
-            $this->cacheProphecy->reveal(),
-            self::TEST_KMS_CMK_ALIAS
-        );
-
-        $this->assertInstanceOf(KmsManager::class, $manager);
-    }
-
     //-----------------------------------------------------------------------------------------------------------------
     // Test issues with using KMS
 
-    /*
-     * If KMS is unable to decrypt a key, KmsException will be thrown.
-     * If the exception type is InvalidCiphertextException, we expect a KeyNotFoundException exception back.
-     */
-    public function testExceptionWhenInvalidCiphertextExceptionFromKms(): void
+    #[Test]
+    public function exceptionWhenExceptionFromKms(): void
     {
         $this->expectException(KeyNotFoundException::class);
 
         //---
 
         $exceptionProphecy = $this->prophesize(KmsException::class);
-
-        $exceptionProphecy->getAwsErrorCode()->willReturn('InvalidCiphertextException')->shouldBeCalled();
-
-        $this->kmsClientProphecy->decrypt(Argument::any())->willThrow(
-            $exceptionProphecy->reveal()
-        );
-
-        //---
-
-        $manager = new KmsManager(
-            $this->kmsClientProphecy->reveal(),
-            $this->cacheProphecy->reveal(),
-            self::TEST_KMS_CMK_ALIAS
-        );
-
-        $manager->getDecryptionKey('key-id');
-    }
-
-    /*
-     * If KMS is unable to decrypt a key, KmsException will be thrown.
-     * If the exception type is not InvalidCiphertextException, the exception will be re-throw.
-     */
-    public function testExceptionWhenOtherExceptionFromKms(): void
-    {
-        $this->expectException(KmsException::class);
-
-        //---
-
-        $exceptionProphecy = $this->prophesize(KmsException::class);
-        $exceptionProphecy->getAwsErrorCode()->willReturn('OtherExceptionType')->shouldBeCalled();
 
         $this->kmsClientProphecy->decrypt(Argument::any())->willThrow(
             $exceptionProphecy->reveal()
@@ -110,7 +67,8 @@ class KmsManagerTest extends TestCase
     /*
      * Test for when we need a decryption key that's already in the cache.
      */
-    public function testGetDecryptionKeyWhenKeyIsInCache(): void
+    #[Test]
+    public function getDecryptionKeyWhenKeyIsInCache(): void
     {
         $keyCiphertext = 'test-key';
         $testMaterial  = random_bytes(32);
@@ -137,7 +95,8 @@ class KmsManagerTest extends TestCase
     /*
      * Test that a key is returned when KMS is able to decrypted the passed Key Ciphertext.
      */
-    public function testGetDecryptionKeyWhenKeyIsNotInCache(): void
+    #[Test]
+    public function getDecryptionKeyWhenKeyIsNotInCache(): void
     {
         $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);
@@ -193,7 +152,8 @@ class KmsManagerTest extends TestCase
     /*
      * Key getting the encryption key when one is stored in the cache
      */
-    public function testGetEncryptionKeyWhenKeyIsInCache(): void
+    #[Test]
+    public function getEncryptionKeyWhenKeyIsInCache(): void
     {
         $keyCiphertext = 'test-key';
         $testMaterial  = random_bytes(32);
@@ -220,7 +180,8 @@ class KmsManagerTest extends TestCase
         $this->assertEquals($testMaterial, $key->getKeyMaterial());
     }
 
-    public function testGetEncryptionKeyWhenKeyIsNotInCache(): void
+    #[Test]
+    public function getEncryptionKeyWhenKeyIsNotInCache(): void
     {
         $keyCiphertext        = 'test-key';
         $keyCiphertextEncoded = base64_encode($keyCiphertext);

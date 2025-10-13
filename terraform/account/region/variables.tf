@@ -45,3 +45,9 @@ variable "network_cidr_block" {
   type        = string
   description = "The IPv4 CIDR block for the VPC. CIDR can be explicitly set or it can be derived from IPAM using ipv4_netmask_length."
 }
+
+variable "permitted_s3_buckets" {
+  type        = list(string)
+  default     = []
+  description = "S3 buckets permitted through the S3 VPC endpoint"
+}

@@ -19,11 +19,6 @@
       <code><![CDATA[$codeOwner]]></code>
     </ImplementedParamTypeMismatch>
   </file>
-  <file src="src/App/src/DataAccess/Repository/PaperVerificationCodesInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[startExpiry]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/App/src/DataAccess/Repository/Response/InstructionsAndPreferencesImages.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$signedUrls]]></code>
