@@ -88,7 +88,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             ];
 
             foreach ($requiredFields as $field) {
-                if (empty($state->$field)) {
+                if (empty($stateData->$field)) {
                     try {
                         $this->lpaService->getLpaByPVCode(
                             $stateData->code,
