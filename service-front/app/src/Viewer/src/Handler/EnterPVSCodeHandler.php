@@ -98,7 +98,8 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
                     return $this->redirectToRoute($this->nextPage($this->state($request)));
                 } catch (ApiException $apiEx) {
                     if ($apiEx->getCode() === StatusCodeInterface::STATUS_GONE) {
-                        if ($apiEx->getMessage() === 'LPA missing from upstream with verified paper verification code given') {
+                        if ($apiEx->getMessage(
+                            ) === 'LPA missing from upstream with verified paper verification code given') {
                             return new HtmlResponse($this->renderer->render('viewer::lpa-not-found-with-pvc'));
                         }
                         if ($apiEx->getMessage() === 'Paper verification code cancelled') {

@@ -11,6 +11,7 @@ use Common\Service\Log\EventCodes;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Log\LoggerInterface;
+use DateTimeInterface;
 
 class LpaService
 {
@@ -192,9 +193,9 @@ class LpaService
      * @param string $pvCode
      * @param string $donorSurname
      * @param string|null $lpaReference
-     * @param string|null $pvCodeSendTo
+     * @param bool|null $pvCodeSendTo
      * @param string|null $attorneyName
-     * @param string|null $dateOfBirth
+     * @param DateTimeInterface|null $dateOfBirth
      * @param int|null $noOfAttorneys
      * @return ArrayObject|null
      * @throws Exception
@@ -202,20 +203,14 @@ class LpaService
     public function getLpaByPVCode(
         string $pvCode,
         string $donorSurname,
-        ?string $lpaReference = null,
-        ?string $pvCodeSendTo = null,
-        ?string $attorneyName = null,
-        ?string $dateOfBirth = null,
-        ?int $noOfAttorneys = null,
+        ?string $lpaReference            = null,
+        ?bool $pvCodeSendTo              = null,
+        ?string $attorneyName            = null,
+        ?\DateTimeInterface $dateOfBirth = null,
+        ?int $noOfAttorneys              = null,
     ): ?ArrayObject {
-        //  Filter P- and dashes out of the share code
-        //$pvCode = strtoupper(str_replace(['P-', '-', ' '], '', $pvCode));
-
         if (!is_null($attorneyName)) {
             $trackRoute = 'validate';
-
-            //  Filter M- and dashes out of the lpa reference
-           // $lpaReference = strtoupper(str_replace(['M-', '-', ' '], '', $lpaReference));
 
             $requestData = [
                 'code'          => $pvCode,
@@ -223,11 +218,11 @@ class LpaService
                 'lpaUid'        => $lpaReference,
                 'sentToDonor'   => $pvCodeSendTo,
                 'attorneyName'  => $attorneyName,
-                'dateOfBirth'   => $dateOfBirth,
+                'dateOfBirth'   => $dateOfBirth?->format('Y-m-d'),
                 'noOfAttorneys' => $noOfAttorneys,
             ];
         } else {
-            $trackRoute = 'usable';
+            $trackRoute  = 'usable';
             $requestData = [
                 'code' => $pvCode,
                 'name' => $donorSurname,

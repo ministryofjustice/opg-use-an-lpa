@@ -392,9 +392,9 @@ class LpaServiceTest extends TestCase
             'P-1234-1234-1234-12',
             'Bundlaaaa',
             'M-789Q-P4DF-4UX3',
-            'Donor',
+            true,
             'AttorneyA',
-            '1970-01-24',
+            new \DateTimeImmutable('1970-01-24'),
             2
         );
 
