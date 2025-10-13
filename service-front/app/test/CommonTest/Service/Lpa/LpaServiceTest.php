@@ -275,7 +275,7 @@ class LpaServiceTest extends TestCase
         $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
 
         $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Bundlaaaa',
+                'name' => 'Feeg Bundlaaaa',
                 'code' => 'P-1234-1234-1234-12',
             ])->willReturn($lpaData);
 
@@ -283,7 +283,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $this->lpaService->getLpaByPVCode(
             'P-1234-1234-1234-12',
-            'Bundlaaaa',
+            'Feeg Bundlaaaa',
             null,
             null,
             null,
@@ -299,7 +299,7 @@ class LpaServiceTest extends TestCase
     public function lpa_not_found_by_pv_passcode_and_surname(): void
     {
         $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Bundlaaaa',
+                'name' => 'Feeg Bundlaaaa',
                 'code' => 'P-1234-1234-1234-12',
         ])->willThrow(new ApiException('', StatusCodeInterface::STATUS_NOT_FOUND));
 
@@ -308,7 +308,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $this->lpaService->getLpaByPVCode(
             'P-1234-1234-1234-12',
-            'Bundlaaaa',
+            'Feeg Bundlaaaa',
             null,
             null,
             null,
@@ -322,7 +322,7 @@ class LpaServiceTest extends TestCase
     {
 
         $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-                'name' => 'Bundlaaaa',
+                'name' => 'Feeg Bundlaaaa',
                 'code' => 'P-1234-1234-1234-12',
         ])->willThrow(new ApiException('PV code expired', StatusCodeInterface::STATUS_GONE));
 
@@ -331,7 +331,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $this->lpaService->getLpaByPVCode(
             'P-1234-1234-1234-12',
-            'Bundlaaaa',
+            'Feeg Bundlaaaa',
             null,
             null,
             null,
@@ -344,7 +344,7 @@ class LpaServiceTest extends TestCase
     public function it_finds_a_cancelled__code_by_pv_passcode_and_surname(): void
     {
         $this->apiClientProphecy->httpPost('/v1/paper-verification/usable', [
-            'name' => 'Bundlaaaa',
+            'name' => 'Feeg Bundlaaaa',
             'code' => 'P-1234-1234-1234-12',
         ])->willThrow(new ApiException('PV code cancelled', StatusCodeInterface::STATUS_GONE));
 
@@ -354,7 +354,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $this->lpaService->getLpaByPVCode(
             'P-1234-1234-1234-12',
-            'Bundlaaaa',
+            'Feeg Bundlaaaa',
             null,
             null,
             null,
@@ -371,9 +371,9 @@ class LpaServiceTest extends TestCase
 
         $requestData = [
             'code'          => '12341234123412',
-            'name'          => 'Bundlaaaa',
+            'name'          => 'Feeg Bundlaaaa',
             'lpaUid'        => '789QP4DF4UX3',
-            'sentToDonor'   => 'Donor',
+            'sentToDonor'   => true,
             'attorneyName'  => 'AttorneyA',
             'dateOfBirth'   => '1970-01-24',
             'noOfAttorneys' => 2,
@@ -390,7 +390,7 @@ class LpaServiceTest extends TestCase
 
         $lpa = $this->lpaService->getLpaByPVCode(
             'P-1234-1234-1234-12',
-            'Bundlaaaa',
+            'Feeg Bundlaaaa',
             'M-789Q-P4DF-4UX3',
             true,
             'AttorneyA',
@@ -400,5 +400,43 @@ class LpaServiceTest extends TestCase
 
         $this->assertInstanceOf(ArrayObject::class, $lpa);
         $this->assertInstanceOf(Lpa::class, $lpa->lpa);
+    }
+
+    public function it_does_not_find_an_lpa_by_passcode_for_validate_as_dob_mismatch(): void
+    {
+        $lpaData = [
+            'lpa' => [],
+        ];
+
+        $requestData = [
+            'code'          => '12341234123412',
+            'name'          => 'Feeg Bundlaaaa',
+            'lpaUid'        => '789QP4DF4UX3',
+            'sentToDonor'   => true,
+            'attorneyName'  => 'AttorneyA',
+            'dateOfBirth'   => '1970-01-24',
+            'noOfAttorneys' => 2,
+        ];
+
+        $parsedLpaData = new ArrayObject(['lpa' => new Lpa()], ArrayObject::ARRAY_AS_PROPS);
+
+        $this->apiClientProphecy->httpPost(
+            '/v1/paper-verification/validate',
+            $requestData
+        )->willThrow(new ApiException('Not found', StatusCodeInterface::STATUS_NOT_FOUND));
+
+        $this->expectException(ApiException::class);
+        $this->expectExceptionCode(StatusCodeInterface::STATUS_NOT_FOUND);
+        $this->expectExceptionMessage('Not found');
+
+        $lpa = $this->lpaService->getLpaByPVCode(
+            'P-1234-1234-1234-12',
+            'Feeg Bundlaaaa',
+            'M-789Q-P4DF-4UX3',
+            true,
+            'AttorneyA',
+            new \DateTimeImmutable('1971-01-24'),
+            2
+        );
     }
 }
