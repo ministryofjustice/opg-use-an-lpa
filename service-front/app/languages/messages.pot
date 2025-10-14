@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-08-11T17:24:30+00:00\n"
+"POT-Creation-Date: 2025-10-14T14:00:25+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -334,8 +334,8 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:46
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:51
-#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:68
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:50
+#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:73
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:77
 msgid "Continue"
@@ -1486,8 +1486,8 @@ msgstr ""
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:51
-#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:56
-#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:74
+#: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:54
+#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:79
 #: src/Viewer/templates/viewer/paper-verification/enter-organisation-name.html.twig:51
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:81
@@ -5131,7 +5131,6 @@ msgid "Spell the name as it appears on the notice of registration."
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
 msgid "Enter DOB"
 msgstr ""
@@ -5176,7 +5175,7 @@ msgstr ""
 msgid "The donor, %donor_name%"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:60
+#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:62
 msgid "Change"
 msgstr ""
 
@@ -5185,7 +5184,7 @@ msgstr ""
 msgid "%donorName%'s date of birth"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:56
+#: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:58
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:48
 msgid "Attorney name"
 msgstr ""
@@ -5220,4 +5219,12 @@ msgstr ""
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Textphone: 18001 0300 123 1300 <br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+
+#: src/Actor/templates/actor/one-login.html.twig:34
+msgid "Sign in to use your lasting power of attorney"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
+msgid "Enter Number of Attorneys"
 msgstr ""
