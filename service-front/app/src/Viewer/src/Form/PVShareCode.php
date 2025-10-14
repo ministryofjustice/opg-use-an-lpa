@@ -61,7 +61,7 @@ class PVShareCode extends AbstractForm implements InputFilterProviderInterface
                         'break_chain_on_failure' => true,
                         'options'                => [
                             'encoding' => 'UTF-8',
-                            'min'      => 12,
+                            'min'      => 14,
                             'max'      => 19,
                             'messages' => [
                                 StringLength::TOO_LONG  => 'The code you entered is too long',

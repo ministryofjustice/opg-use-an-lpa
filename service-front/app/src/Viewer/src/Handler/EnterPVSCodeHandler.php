@@ -78,43 +78,46 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             $this->state($request)->code     = $this->form->getData()['lpa_code'];
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
-            if (
-                isset($this->state($request)->code) && isset($this->state($request)->lastName)
-            ) {
-                try {
-                    $lpa = $this->lpaService->getLpaByPVCode(
-                        $this->state($request)->code,
-                        $this->state($request)->lastName,
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                    );
-
-                    $this->state($request)->donorName = $lpa['donorName'] ?? null;
-                    $this->state($request)->lpaType   = $lpa['type'] ?? null;
-
-                    return $this->redirectToRoute($this->nextPage($this->state($request)));
-                } catch (ApiException $apiEx) {
-                    switch ($apiEx->getCode()) {
-                    case StatusCodeInterface::STATUS_GONE:
-                        if ($apiEx->getMessage() === 'PV code cancelled') {
-                            return new HtmlResponse($this->renderer->render('viewer::lpa-cancelled-with-pvc'));
-                        } else {
-                            return new HtmlResponse($this->renderer->render('viewer::lpa-expired-with-pvc'));
-                        }
-
-                    case StatusCodeInterface::STATUS_NOT_FOUND:
-                        return new HtmlResponse(
-                            $this->renderer->render('viewer::paper-verification/lpa-not-found-with-pvc', [
-                                'donor_last_name' => $this->form->getData()['donor_surname'],
-                                'lpa_access_code' => $this->form->getData()['lpa_code'],
-                            ])
+            if (($this->featureEnabled)('paper_verification')) {
+                if (
+                    isset($this->state($request)->code) && isset($this->state($request)->lastName)
+                ) {
+                    try {
+                        $lpa = $this->lpaService->getLpaByPVCode(
+                            $this->state($request)->code,
+                            $this->state($request)->lastName,
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
                         );
+
+                        $this->state($request)->donorName = $lpa['donorName'] ?? null;
+                        $this->state($request)->lpaType = $lpa['type'] ?? null;
+
+                        return $this->redirectToRoute($this->nextPage($this->state($request)));
+                    } catch (ApiException $apiEx) {
+                        switch ($apiEx->getCode()) {
+                            case StatusCodeInterface::STATUS_GONE:
+                                if ($apiEx->getMessage() === 'PV code cancelled') {
+                                    return new HtmlResponse($this->renderer->render('viewer::lpa-cancelled-with-pvc'));
+                                } else {
+                                    return new HtmlResponse($this->renderer->render('viewer::lpa-expired-with-pvc'));
+                                }
+
+                            case StatusCodeInterface::STATUS_NOT_FOUND:
+                                return new HtmlResponse(
+                                    $this->renderer->render('viewer::paper-verification/lpa-not-found-with-pvc', [
+                                        'donor_last_name' => $this->form->getData()['donor_surname'],
+                                        'lpa_access_code' => $this->form->getData()['lpa_code'],
+                                    ])
+                                );
+                        }
                     }
                 }
             }
+            return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         $template       = ($this->featureEnabled)('paper_verification')
