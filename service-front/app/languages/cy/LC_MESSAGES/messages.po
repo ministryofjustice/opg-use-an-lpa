@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-10-14T14:00:25+00:00\n"
+"POT-Creation-Date: 2025-10-14T14:14:04+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -7322,5 +7322,7 @@ msgid "Sign in to use your lasting power of attorney"
 msgstr "Mewngofnodwch i ddefnyddio eich atwrneiaeth arhosol"
 
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
+#, fuzzy
+#| msgid "Number of Attorneys"
 msgid "Enter Number of Attorneys"
 msgstr "Nifer yr atwrneiod"
