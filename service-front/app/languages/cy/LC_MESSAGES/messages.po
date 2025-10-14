@@ -7320,9 +7320,3 @@ msgstr ""
 #: src/Actor/templates/actor/one-login.html.twig:34
 msgid "Sign in to use your lasting power of attorney"
 msgstr "Mewngofnodwch i ddefnyddio eich atwrneiaeth arhosol"
-
-#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:3
-#, fuzzy
-#| msgid "Number of Attorneys"
-msgid "Enter Number of Attorneys"
-msgstr "Nifer yr atwrneiod"
