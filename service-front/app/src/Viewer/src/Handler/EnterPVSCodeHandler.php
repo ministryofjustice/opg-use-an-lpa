@@ -97,17 +97,21 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
 
                     return $this->redirectToRoute($this->nextPage($this->state($request)));
                 } catch (ApiException $apiEx) {
-                    if ($apiEx->getCode() === StatusCodeInterface::STATUS_GONE) {
-                        if ($apiEx->getMessage(
-                            ) === 'LPA missing from upstream with verified paper verification code given') {
-                            return new HtmlResponse($this->renderer->render('viewer::lpa-not-found-with-pvc'));
-                        }
-                        if ($apiEx->getMessage() === 'Paper verification code cancelled') {
+                    switch ($apiEx->getCode()) {
+                    case StatusCodeInterface::STATUS_GONE:
+                        if ($apiEx->getMessage() === 'PV code cancelled') {
                             return new HtmlResponse($this->renderer->render('viewer::lpa-cancelled-with-pvc'));
-                        }
-                        if ($apiEx->getMessage() === 'Paper verification code expired') {
+                        } else {
                             return new HtmlResponse($this->renderer->render('viewer::lpa-expired-with-pvc'));
                         }
+
+                    case StatusCodeInterface::STATUS_NOT_FOUND:
+                        return new HtmlResponse(
+                            $this->renderer->render('viewer::paper-verification/lpa-not-found-with-pvc', [
+                                'donor_last_name' => $this->form->getData()['donor_surname'],
+                                'lpa_access_code' => $this->form->getData()['lpa_code'],
+                            ])
+                        );
                     }
                 }
             }
