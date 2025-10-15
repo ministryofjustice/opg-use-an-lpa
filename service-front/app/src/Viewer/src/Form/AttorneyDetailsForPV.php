@@ -47,7 +47,6 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
             'no_of_attorneys' => [
                 'required'   => true,
                 'filters'    => [
-                    ['name' => StringTrim::class],
                     ['name' => Digits::class],
                     ['name' => ToInt::class],
                 ],

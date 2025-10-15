@@ -84,6 +84,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));

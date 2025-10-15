@@ -71,8 +71,6 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render($template, [
             'donor_name'    => $this->state($request)->donorName,
-            'sent_to_donor' => $sentToDonor ?? null,
-            'attorneyName'  => $attorneyName ?? null,
             'form'          => $this->form->prepare(),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,
@@ -102,6 +100,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'donor_name'    => $this->state($request)->donorName,
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));

@@ -81,6 +81,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             'form'       => $this->form->prepare(),
             'donorName'  => $this->state($request)->donorName,
             'lpaType'    => $this->state($request)->lpaType,
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));

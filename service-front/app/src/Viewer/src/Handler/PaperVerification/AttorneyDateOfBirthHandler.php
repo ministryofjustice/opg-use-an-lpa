@@ -65,8 +65,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
             );
         }
 
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $attorneyName = $this->state($request)->attorneyName;
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'         => $this->form->prepare(),
@@ -93,9 +92,11 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form'         => $this->form->prepare(),
+            'attorneyName' => $this->state($request)->attorneyName,
+            'back'         => $this->lastPage($this->state($request)),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
