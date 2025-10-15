@@ -44,7 +44,6 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         } else {
             $this->form = new ShareCode($this->getCsrfGuard($request));
         }
-
         return parent::handle($request);
     }
 
@@ -59,7 +58,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render($template, [
-            'form' => $this->form->prepare(),
+            'form'       => $this->form->prepare(),
             'en_message' => $systemMessages['view/en'] ?? null,
             'cy_message' => $systemMessages['view/cy'] ?? null,
         ]));
@@ -70,11 +69,18 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
+            // TODO for now set values in session AND state. Once state is implemented on the check
+            //      answers page for share codes then we can remove.
+            $this->session->set('code', $this->form->getData()['lpa_code']);
+            $this->session->set('surname', $this->form->getData()['donor_surname']);
+
             $this->state($request)->code     = $this->form->getData()['lpa_code'];
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
-            if (($this->featureEnabled)('paper_verification') &&
-                (str_starts_with($this->state($request)->code, 'P-'))) {
+            if (
+                (($this->featureEnabled)('paper_verification')) &&
+                (str_starts_with($this->state($request)->code, 'P-'))
+            ) {
                 if (
                     isset($this->state($request)->code) && isset($this->state($request)->lastName)
                 ) {
@@ -82,6 +88,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
                         $lpa = $this->lpaService->getLpaByPVCode(
                             $this->state($request)->code,
                             $this->state($request)->lastName,
+                            null,
                             null,
                             null,
                             null,
@@ -142,7 +149,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         return (($this->featureEnabled)('paper_verification')) &&
-        (str_starts_with($this->form->getData()['lpa_code'], 'P-'))
+        (str_starts_with($state->code, 'P-'))
             ? 'pv.check-code'
             : 'check-code';
     }

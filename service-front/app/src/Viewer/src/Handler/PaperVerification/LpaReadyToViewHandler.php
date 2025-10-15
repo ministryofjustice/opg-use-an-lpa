@@ -70,7 +70,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
             $this->state($request)->organisation = $this->form->getData()['organisation'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'organisation' => $this->state($request)->organisation,
             'form'         => $this->form->prepare(),
@@ -99,7 +98,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         //needs changing when next page ready
-        return 'home';
+        return 'pv.lpa-summary';
     }
 
     /**

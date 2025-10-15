@@ -99,6 +99,11 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 Viewer\Handler\PaperVerification\LpaNotFoundHandler::class,
                 ['GET', 'POST'],
                 'lpa-not-found');
+
+    $app->route('/paper-verification/lpa-summary',
+                Viewer\Handler\PaperVerification\LpaSummaryHandler::class,
+                ['GET', 'POST'],
+                'pv.lpa-summary');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

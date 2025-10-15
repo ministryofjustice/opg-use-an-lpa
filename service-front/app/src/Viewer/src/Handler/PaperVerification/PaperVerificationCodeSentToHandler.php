@@ -70,10 +70,10 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
             : 'viewer::enter-code';
 
         return new HtmlResponse($this->renderer->render($template, [
-            'donor_name'    => $this->state($request)->donorName,
-            'form'          => $this->form->prepare(),
-            'en_message'    => $this->systemMessages['view/en'] ?? null,
-            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
+            'donor_name' => $this->state($request)->donorName,
+            'form'       => $this->form->prepare(),
+            'en_message' => $this->systemMessages['view/en'] ?? null,
+            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 

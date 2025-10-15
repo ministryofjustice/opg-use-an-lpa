@@ -88,17 +88,19 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             ];
 
             foreach ($requiredFields as $field) {
-                if (empty($stateData->$field)) {
+                if (!empty($stateData->$field)) {
                     try {
-                        $this->lpaService->getLpaByPVCode(
+                         $this->lpaService->getLpaByPVCode(
                             $stateData->code,
                             $stateData->lastName,
                             $stateData->lpaUid,
                             $stateData->sentToDonor,
                             $stateData->attorneyName,
                             $stateData->dateOfBirth,
-                            $stateData->noOfAttorneys
+                            $stateData->noOfAttorneys,
+                             null
                         );
+
                         return $this->redirectToRoute($this->nextPage($stateData));
                     } catch (ApiException $apiEx) {
                         if ($apiEx->getCode() === StatusCodeInterface::STATUS_NOT_FOUND) {

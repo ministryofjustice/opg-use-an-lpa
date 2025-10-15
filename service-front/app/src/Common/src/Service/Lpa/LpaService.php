@@ -203,13 +203,27 @@ class LpaService
     public function getLpaByPVCode(
         string $pvCode,
         string $donorSurname,
-        ?string $lpaReference            = null,
-        ?bool $pvCodeSendTo              = null,
-        ?string $attorneyName            = null,
+        ?string $lpaReference = null,
+        ?bool $pvCodeSendTo = null,
+        ?string $attorneyName = null,
         ?\DateTimeInterface $dateOfBirth = null,
-        ?int $noOfAttorneys              = null,
+        ?int $noOfAttorneys = null,
+        ?string $organisation = null,
     ): ?ArrayObject {
-        if (!is_null($attorneyName)) {
+        if (!is_null($organisation)) {
+            $trackRoute = 'view';
+
+            $requestData = [
+                'code'          => $pvCode,
+                'name'          => $donorSurname,
+                'lpaUid'        => $lpaReference,
+                'sentToDonor'   => $pvCodeSendTo,
+                'attorneyName'  => $attorneyName,
+                'dateOfBirth'   => $dateOfBirth?->format('Y-m-d'),
+                'noOfAttorneys' => $noOfAttorneys,
+                'organisation'  => $organisation,
+            ];
+        } elseif (!is_null($attorneyName)) {
             $trackRoute = 'validate';
 
             $requestData = [
