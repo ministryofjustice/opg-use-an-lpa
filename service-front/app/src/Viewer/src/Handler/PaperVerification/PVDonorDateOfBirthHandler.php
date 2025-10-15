@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -63,12 +63,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
              ]);
         }
 
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $donorName = $this->state($request)->attorneyName ?? 'Barbara Gilson';
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donorName'  => $donorName,
+            'donorName'  => $this->state($request)->donorName,
             'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
@@ -92,6 +89,8 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'donorName'  => $this->state($request)->donorName,
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -111,7 +110,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
-    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
             $state->noOfAttorneys !== null &&

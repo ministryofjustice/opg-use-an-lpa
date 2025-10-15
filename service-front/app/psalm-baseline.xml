@@ -720,4 +720,15 @@
       <code><![CDATA[$lpaData->lpa]]></code>
     </UndefinedPropertyFetch>
   </file>
+  <file src="src/Common/src/Service/Lpa/PaperVerificationCodeResult.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$data]]></code>
+    </PossiblyUnusedProperty>
+  </file>
+  <file src="src/Common/src/Service/Lpa/Response/PaperVerificationCode.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$donorName]]></code>
+      <code><![CDATA[$lpaType]]></code>
+    </PossiblyUnusedProperty>
+  </file>
 </files>

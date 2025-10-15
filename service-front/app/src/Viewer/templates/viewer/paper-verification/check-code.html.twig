@@ -18,9 +18,11 @@
                         <fieldset class="govuk-fieldset">
 
                             <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-heading-xl">
-                                    {% trans %}We need some more details{% endtrans %}
-                                </h1>
+                              {% set lpaTypeLabel = (lpaType == 'hw') ? 'health and welfare LPA' | trans : 'property and finance LPA' | trans %}
+
+                              <h1 class="govuk-heading-xl">
+                                {% trans with {'%donorName%': donorName, '%lpaType%': lpaTypeLabel} %}We've found %donorName%'s %lpaType%{% endtrans %}
+                              </h1>
                             </legend>
 
                             <p class="govuk-body">{% trans %}Because the code you entered is a paper verification code, we need some further details:{% endtrans %}</p>

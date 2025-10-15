@@ -1041,14 +1041,14 @@ class ViewerContext implements Context
     #[Given('/^I have been given access to an LPA via Paper Verification Code$/')]
     public function iHaveBeenGivenAccessToAnLPAViaPaperVerificationCOde(): void
     {
-        $this->lpaSurname    = 'Testerson';
+        $this->lpaSurname    = 'Bundlaaaa';
         $this->lpaReferenceNumber    = 'M-1234-1234-1234';
-        $this->paperVerificationCode  = 'P-AB12-CD34-EF56-G7';
+        $this->paperVerificationCode  = 'P-1234-1234-1234-12';
         $this->lpaStoredCode = '111111111111';
         $this->lpaViewedBy   = 'Santander';
         $this->lpaData       = [
             'id'                    => 1,
-            'uId'                   => '700000000000',
+            'uId'                   => 'M-1234-1234-1234',
             'receiptDate'           => '2014-09-26',
             'registrationDate'      => '2014-10-26',
             'lpaDonorSignatureDate' => '2015-06-30',
@@ -1096,25 +1096,29 @@ class ViewerContext implements Context
     public function iGiveAValidLPAPaperVerificationCode(): void
     {
         $this->lpaData['status'] = 'Registered';
-
         $this->ui->assertPageAddress('/home');
+
+        $this->appendSystemMessageFixture();
 
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa'     => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'donorName' => 'Feeg Bundlaaa',
+                        'type' => 'hw',
+                        'status' => 'registered',
+                        'source' => 'lpastore',
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
 
+        $this->appendSystemMessageFixture();
+
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->paperVerificationCode);
-        $this->appendSystemMessageFixture();
         $this->ui->pressButton('Continue');
     }
 
@@ -1236,7 +1240,23 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'donorName' => 'Feeg Bundlaaa',
+                        'type' => 'hw',
+                        'status' => 'registered',
+                        'source' => 'lpastore',
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
         $this->appendSystemMessageFixture();
+
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/check-code');
      }
@@ -1245,6 +1265,7 @@ class ViewerContext implements Context
     public function theyClickContinueTheyReturnToCheckAnswersPage(): void
     {
         $this->appendSystemMessageFixture();
+
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('/paper-verification/check-answers');
     }
@@ -1258,6 +1279,21 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'donorName' => 'Feeg Bundlaaa',
+                        'type' => 'hw',
+                        'status' => 'registered',
+                        'source' => 'lpastore',
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_CODE
+            )
+        );
         $this->appendSystemMessageFixture();
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');

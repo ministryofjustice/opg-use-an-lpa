@@ -81,7 +81,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 'pv.attorney-dob');
 
     $app->route('/paper-verification/number-of-attorneys',
-                Viewer\Handler\PaperVerification\NumberOfAttorneysHander::class,
+                Viewer\Handler\PaperVerification\NumberOfAttorneysHandler::class,
                 ['GET', 'POST'],
                 'pv.number-of-attorneys');
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
+use Common\Service\Lpa\PaperVerificationCodeService;
+use Common\Service\Lpa\PaperVerificationCodeStatus;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -14,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\LpaCheck;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -38,6 +40,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
+        private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -58,8 +61,36 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             $this->form->setData(['lpa_reference' => $lpaUid]);
         }
 
+        $code     = $this->state($request)->code->value;
+        $lastName = $this->state($request)->lastName;
+
+        if (isset($code)) {
+            $result = $this->paperVerificationCodeService->usable($code, $lastName);
+
+            switch ($result->status) {
+            case PaperVerificationCodeStatus::CANCELLED:
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
+                    
+            case PaperVerificationCodeStatus::EXPIRED:
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
+                    
+            case PaperVerificationCodeStatus::NOT_FOUND:
+                return new HtmlResponse(
+                    $this->renderer->render('viewer::lpa-not-found-with-pvc', [
+                        'donor_last_name' => $lastName,
+                        'lpa_access_code' => $code,
+                    ])
+                );                    
+            }
+        }
+
+        $this->state($request)->donorName = $result->data->donorName;
+        $this->state($request)->lpaType   = $result->data->lpaType;
+
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'donorName'  => $this->state($request)->donorName,
+            'lpaType'    => $this->state($request)->lpaType,
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -77,6 +108,8 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'donorName'  => $this->state($request)->donorName,
+            'lpaType'    => $this->state($request)->lpaType,
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -93,7 +126,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
-    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
             $state->noOfAttorneys !== null &&

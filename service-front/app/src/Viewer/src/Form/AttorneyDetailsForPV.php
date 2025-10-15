@@ -8,6 +8,7 @@ use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\ToInt;
 use Laminas\InputFilter\InputFilterProviderInterface;
+use Laminas\Validator\NumberComparison;
 use Mezzio\Csrf\CsrfGuardInterface;
 use Laminas\Filter\Digits;
 use Laminas\Validator\NotEmpty;
@@ -47,15 +48,14 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
             'no_of_attorneys' => [
                 'required'   => true,
                 'filters'    => [
-                    ['name' => StringTrim::class],
-                    ['name' => Digits::class],
                     ['name' => ToInt::class],
                 ],
                 'validators' => [
                     [
-                        'name'                   => NotEmpty::class,
+                        'name'                   => NumberComparison::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
+                            'min'     => 1,
                             'message' => 'Enter number of attorney',
                         ],
                     ],

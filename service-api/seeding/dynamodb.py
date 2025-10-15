@@ -226,7 +226,7 @@ userLpaActorMap = [
     },
     {
         'Id': '1c72b660-0da0-4acf-9c27-2de57c1a255b',
-        'LpaUid': 'M-789Q-P4DF-4UX3',
+        'LpaUid': 'M-7890-0400-4003',
         'ActorId': '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
         'Added': '2024-09-18T12:23:45.742378Z',
         'ActivatedOn': '2024-09-18T12:23:45.742378Z',

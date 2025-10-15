@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
+use Common\Exception\ApiException;
+use Common\Service\Lpa\PaperVerificationCodeService;
+use Common\Service\Lpa\PaperVerificationCodeStatus;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
+use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Viewer\Form\CheckAnswers;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -29,17 +34,21 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     private array $systemMessages;
 
+    private CheckAnswers $form;
+
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private SystemMessageService $systemMessageService,
+        private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->form = new CheckAnswers($this->getCsrfGuard($request));
         $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
@@ -50,12 +59,13 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
         $stateData = $this->state($request);
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'form'          => $this->form,
             'lpaUid'        => $stateData->lpaUid,
             'sentToDonor'   => $stateData->sentToDonor,
             'dateOfBirth'   => $stateData->dateOfBirth,
             'noOfAttorneys' => $stateData->noOfAttorneys,
             'attorneyName'  => $stateData->attorneyName,
-            'donorName'     => 'Barbara Gilson',
+            'donorName'     => $stateData->donorName,
             'back'          => $this->lastPage($stateData),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,
@@ -64,9 +74,51 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
+        $this->form->setData($request->getParsedBody());
+        $stateData = $this->state($request);
+
+        if ($this->form->isValid()) {
+            $result = $this->paperVerificationCodeService->validate(
+                $stateData->code->value,
+                $stateData->lastName,
+                $stateData->lpaUid,
+                $stateData->sentToDonor,
+                $stateData->attorneyName,
+                $stateData->dateOfBirth,
+                $stateData->noOfAttorneys
+            );
+
+            if ($result->status == PaperVerificationCodeStatus::NOT_FOUND) {
+                return new HtmlResponse(
+                    $this->renderer->render('viewer::paper-verification/lpa-not-found', [
+                        'donorName'     => $stateData->donorName,
+                        'lpaUid'        => $stateData->lpaUid,
+                        'sentToDonor'   => $stateData->sentToDonor,
+                        'dateOfBirth'   => $stateData->dateOfBirth->format('Y-m-d'),
+                        'noOfAttorneys' => $stateData->noOfAttorneys,
+                        'attorneyName'  => $stateData->attorneyName,
+                        'en_message'    => $this->systemMessages['view/en'] ?? null,
+                        'cy_message'    => $this->systemMessages['view/cy'] ?? null,
+                    ])
+                );
+            }
+
+            if ($result->status == PaperVerificationCodeStatus::OK) {
+                return $this->redirectToRoute($this->nextPage($stateData));
+            }
+        }
+
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form'          => $this->form,
+            'lpaUid'        => $stateData->lpaUid,
+            'sentToDonor'   => $stateData->sentToDonor,
+            'dateOfBirth'   => $stateData->dateOfBirth,
+            'noOfAttorneys' => $stateData->noOfAttorneys,
+            'attorneyName'  => $stateData->attorneyName,
+            'donorName'     => $stateData->donorName,
+            'back'          => $this->lastPage($stateData),
+            'en_message'    => $this->systemMessages['view/en'] ?? null,
+            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -96,7 +148,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        /** @var PaperVerificationShareCode $state */
+        /** @var PaperVerificationCode $state */
         return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
     }
 }

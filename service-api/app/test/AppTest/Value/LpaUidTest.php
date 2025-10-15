@@ -25,7 +25,7 @@ class LpaUidTest extends TestCase
     {
         return [
             'sirius type'    => ['700000000047', LpaSource::SIRIUS],
-            'lpa store type' => ['M-789Q-P4DF-4UX3', LpaSource::LPASTORE],
+            'lpa store type' => ['M-7890-0400-4003', LpaSource::LPASTORE],
         ];
     }
 }

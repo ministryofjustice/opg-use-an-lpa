@@ -51,13 +51,10 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO: remove hardcoded donor name and lpa type and use from state and pass it to twig template
-        // TODO: The donor name and lpa type will be in the state once UML-3975 is done
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
-            'donor_name' => $this->state($request)->donorName ?? '(Donor name to be displayed here)',
-            'lpa_type'   => $this->state($request)->lpaType ?? 'hw',
+            'donor_name' => $this->state($request)->donorName,
+            'lpa_type'   => $this->state($request)->lpaType,
             'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,

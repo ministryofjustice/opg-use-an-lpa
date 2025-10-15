@@ -73,14 +73,11 @@
                         </table>
                     {% endif %}
 
-                    <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}Continue{% endtrans %}</button>
                     <a href="{{ path('home') }}" role="button" draggable="false"
-                       class="govuk-button moj-button-menu__item govuk-button--secondary "
+                       class="govuk-button moj-button-menu__item "
                        data-module="govuk-button">
-                        {% trans %}Cancel{% endtrans %}
+                        {% trans %}Try again{% endtrans %}
                     </a>
-                    {{ govuk_form_close() }}
                 </div>
             </div>
         </main>
