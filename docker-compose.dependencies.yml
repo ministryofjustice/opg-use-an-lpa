@@ -57,7 +57,7 @@ services:
   # ---------------------------
   # Cache service
   redis:
-    image: docker.io/redis:7@sha256:4421962706d7a901cbd435282515704040203d67c653160e3a46a27b79c40e19
+    image: docker.io/redis:7@sha256:d7432711a2a5c99c2e9dd0e006061cd274d7cb7a9e77f07ffe2ea99e21244677
 
   # ---------------------------
   # AWS KMS mock service
