@@ -6,7 +6,6 @@ namespace Common\Service\Lpa;
 
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
-use Common\Service\Lpa\Response\PaperVerificationCode;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\Parse\ParsePaperVerificationCode;
 use DateTimeInterface;
@@ -18,17 +17,18 @@ class PaperVerificationCodeService
     public function __construct(
         private ApiClient $apiClient,
         private ParsePaperVerificationCode $parsePaperVerificationCode,
+        private ParseLpaData $parseLpaData,
         private LoggerInterface $logger,
     ) {
     }
 
-    public function usable(string $shareCode, string $donorSurname): PaperVerificationCodeResult
+    public function usable(string $code, string $donorSurname): PaperVerificationCodeResult
     {
         $this->logger->debug('User requested usable of LPA by paper verification code');
 
         try {
             $lpaData = $this->apiClient->httpPost('/v1/paper-verification/usable', [
-                'code' => $shareCode,
+                'code' => $code,
                 'name' => $donorSurname,
             ]);
         } catch (ApiException $apiEx) {
@@ -39,7 +39,7 @@ class PaperVerificationCodeService
                             'Paper verification code {code} cancelled when attempting to fetch usable',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_PV_CODE_CANCELLED,
-                                'code'       => $shareCode,
+                                'code'       => $code,
                             ]
                         );
 
@@ -49,7 +49,7 @@ class PaperVerificationCodeService
                             'Paper verification code {code} expired when attempting to fetch usable',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_PV_CODE_EXPIRED,
-                                'code'       => $shareCode,
+                                'code'       => $code,
                             ]
                         );
 
@@ -84,7 +84,7 @@ class PaperVerificationCodeService
     }
 
     public function validate(
-        string $shareCode,
+        string $code,
         string $donorSurname,
         string $lpaReference,
         bool $sentToDonor,
@@ -92,11 +92,11 @@ class PaperVerificationCodeService
         DateTimeInterface $dateOfBirth,
         int $noOfAttorneys,
     ): PaperVerificationCodeResult {
-        $this->logger->debug('User requested validate of LPA by share code');
+        $this->logger->debug('User requested validate of LPA by paper verification code');
 
         try {
             $lpaData = $this->apiClient->httpPost('/v1/paper-verification/validate', [
-                'code'          => $shareCode,
+                'code'          => $code,
                 'name'          => $donorSurname,
                 'lpaUid'        => $lpaReference,
                 'sentToDonor'   => $sentToDonor,
@@ -112,7 +112,7 @@ class PaperVerificationCodeService
                             'Paper verification code {code} cancelled when attempting to validate',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_PV_CODE_CANCELLED,
-                                'code'       => $shareCode,
+                                'code'       => $code,
                             ]
                         );
 
@@ -122,7 +122,7 @@ class PaperVerificationCodeService
                             'Paper verification code {code} expired when attempting to validate',
                             [
                                 'event_code' => EventCodes::VIEW_LPA_PV_CODE_EXPIRED,
-                                'code'       => $shareCode,
+                                'code'       => $code,
                             ]
                         );
 
@@ -146,6 +146,74 @@ class PaperVerificationCodeService
         return new PaperVerificationCodeResult(
             PaperVerificationCodeStatus::OK,
             ($this->parsePaperVerificationCode)($lpaData),
+        );
+    }
+
+    public function view(
+        string $code,
+        string $donorSurname,
+        string $lpaReference,
+        bool $sentToDonor,
+        string $attorneyName,
+        DateTimeInterface $dateOfBirth,
+        int $noOfAttorneys,
+        string $organisation,
+    ): PaperVerificationCodeViewResult {
+        $this->logger->debug('User requested view of LPA by paper verification code');
+
+        try {
+            $lpaData = $this->apiClient->httpPost('/v1/paper-verification/view', [
+                'code'          => $code,
+                'name'          => $donorSurname,
+                'lpaUid'        => $lpaReference,
+                'sentToDonor'   => $sentToDonor,
+                'attorneyName'  => $attorneyName,
+                'dateOfBirth'   => $dateOfBirth->format('Y-m-d'),
+                'noOfAttorneys' => $noOfAttorneys,
+                'organisation'  => $organisation,
+            ]);
+        } catch (ApiException $apiEx) {
+            switch ($apiEx->getCode()) {
+                case StatusCodeInterface::STATUS_GONE:
+                    if ($apiEx->getAdditionalData()['reason'] === 'cancelled') {
+                        $this->logger->notice(
+                            'Paper verification code {code} cancelled when attempting to view',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_PV_CODE_CANCELLED,
+                                'code'       => $code,
+                            ]
+                        );
+
+                        return new PaperVerificationCodeViewResult(PaperVerificationCodeStatus::CANCELLED);
+                    } else {
+                        $this->logger->notice(
+                            'Paper verification code {code} expired when attempting to view',
+                            [
+                                'event_code' => EventCodes::VIEW_LPA_PV_CODE_EXPIRED,
+                                'code'       => $code,
+                            ]
+                        );
+
+                        return new PaperVerificationCodeViewResult(PaperVerificationCodeStatus::EXPIRED);
+                    }
+
+                case StatusCodeInterface::STATUS_NOT_FOUND:
+                    $this->logger->notice(
+                        'Paper verification code not found when attempting to view',
+                        [
+                            'event_code' => EventCodes::VIEW_LPA_PV_CODE_NOT_FOUND,
+                        ]
+                    );
+
+                    return new PaperVerificationCodeViewResult(PaperVerificationCodeStatus::NOT_FOUND);
+            }
+
+            throw $apiEx;
+        }
+
+        return new PaperVerificationCodeViewResult(
+            PaperVerificationCodeStatus::OK,
+            ($this->parseLpaData)($lpaData)['lpa'],
         );
     }
 }

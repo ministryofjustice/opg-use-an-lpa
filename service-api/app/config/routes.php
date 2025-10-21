@@ -18,6 +18,7 @@ use App\Handler\{AccessForAllLpaConfirmationHandler,
     OneLoginAuthenticationRequestHandler,
     PaperVerification\UsableHandler,
     PaperVerification\ValidateHandler,
+    PaperVerification\ViewHandler,
     RequestCleanseHandler,
     SystemMessageHandler,
     ViewerCodeFullHandler,
@@ -121,6 +122,18 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
         ),
         'lpa.paper-verification.validate'
     );
+
+    $app->post(
+        '/v1/paper-verification/view',
+        $factory->pipeline(
+            [
+                RequestObjectMiddleware::class,
+                ViewHandler::class,
+            ],
+        ),
+        'lpa.paper-verification.view'
+    );
+
     $app->delete(
         '/v1/delete-account/{account-id:[0-9a-f\-]+}',
         CompleteDeleteAccountHandler::class,

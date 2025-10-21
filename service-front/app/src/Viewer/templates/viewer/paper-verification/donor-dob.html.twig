@@ -16,41 +16,25 @@
                     {{ govuk_form_open(form) }}
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
+                    {{ govuk_form_fieldset(form.get('dob'), {
+                         'heading': 'Enter %donorName%’s date of birth'| trans({ '%donorName%': donorName }),
+                         'hint': 'For example, 31 03 1980'| trans,
+                    }) }}
 
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                                <h1 class="govuk-heading-xl">
-                                    {% trans with { '%donorName%': donorName } %}Enter %donorName%'s date of birth{% endtrans %}
-                                </h1>
-                            </legend>
-
-                            {{ govuk_form_fieldset(form.get('dob'), {
-                                'hint': 'For example, 31 03 1980'| trans,
-                                'value': 'Donor DOB',
-                                'aria_labelledby': 'donor_dob'
-                            }) }}
-
-                        </fieldset>
-
+                    <div class="govuk-button-group">
+                        <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
+                                class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                            {% trans %}Continue{% endtrans %}
+                        </button>
+                        <a href="{{ path('home') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item govuk-button--secondary "
+                           data-module="govuk-button">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
                     </div>
-                    <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
-
-                            <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
-                                    class="govuk-button moj-button-menu__item" data-module="govuk-button">
-                                {% trans %}Continue{% endtrans %}
-                            </button>
-                            <a href="{{ path('home') }}" role="button" draggable="false"
-                               class="govuk-button moj-button-menu__item govuk-button--secondary "
-                               data-module="govuk-button">
-                                {% trans %}Cancel{% endtrans %}
-                            </a>
-                        </div>
-                    </div>
+                    
                     {{ govuk_form_close() }}
                 </div>
-
             </div>
         </main>
     </div>

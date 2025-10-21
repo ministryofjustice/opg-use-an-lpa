@@ -36,7 +36,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService
+        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -66,7 +66,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-
             $this->state($request)->organisation = $this->form->getData()['organisation'];
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -98,8 +97,7 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
-        return 'home';
+        return 'pv.view';
     }
 
     /**
@@ -107,7 +105,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'pv.check-answers';
     }
 }

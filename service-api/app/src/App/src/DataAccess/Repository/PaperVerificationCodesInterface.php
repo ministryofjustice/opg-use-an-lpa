@@ -8,7 +8,6 @@ use App\DataAccess\Repository\Response\PaperVerificationCode;
 use App\DataAccess\Repository\Response\ResponseInterface;
 use App\Enum\VerificationCodeExpiryReason;
 use App\Value\PaperVerificationCode as Code;
-use DateTimeInterface;
 
 interface PaperVerificationCodesInterface
 {
