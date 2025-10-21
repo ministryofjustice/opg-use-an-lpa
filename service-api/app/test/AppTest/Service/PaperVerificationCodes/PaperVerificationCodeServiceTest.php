@@ -51,7 +51,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -62,7 +62,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->with('M-7890-0400-4003', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $now = new DateTimeImmutable();
@@ -127,7 +127,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->sub(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -138,7 +138,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->with('M-7890-0400-4003', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
@@ -173,7 +173,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: true,
                         // TODO UML-4080 add below needs changing to sub  , to work for cancelled codes that have also have expiry date in the past
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
@@ -185,7 +185,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->with('M-7890-0400-4003', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
@@ -220,7 +220,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -231,7 +231,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->with('M-7890-0400-4003', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
@@ -265,7 +265,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -276,7 +276,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: $params->code)
+            ->with('M-7890-0400-4003', originator: $params->code)
             ->willReturn(null);
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
@@ -298,7 +298,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $logger     = $this->createMock(LoggerInterface::class);
 
         $expiryDate = (new DateTimeImmutable())->add(new DateInterval('P2Y'));
-        $lpaId = new LpaUid('M-789Q-P4DF-4UX3');
+        $lpaId = new LpaUid('M-7890-0400-4003');
 
         $paperCodes
             ->expects($this->once())
@@ -329,7 +329,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $params = new PaperVerificationCodeValidate(
             name: 'Bundlaaaa',
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
-            lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+            lpaUid: new LpaUid('M-7890-0400-4003'),
             sentToDonor: false,
             attorneyName: 'Herman Seakrest',
             dateOfBirth: new DateTimeImmutable('1982-07-24'),
@@ -385,7 +385,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $params = new PaperVerificationCodeValidate(
             name: 'Bundlaaaa',
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
-            lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+            lpaUid: new LpaUid('M-7890-0400-4003'),
             sentToDonor: false,
             attorneyName: 'Herman Seakrest',
             dateOfBirth: new DateTimeImmutable('2020-01-01'),
@@ -404,7 +404,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -415,7 +415,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with('M-789Q-P4DF-4UX3', originator: $params->code)
+            ->with('M-7890-0400-4003', originator: $params->code)
             ->willReturn(null);
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
@@ -440,7 +440,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
-                        lpaUid:    new LpaUid('M-789Q-P4DF-4UX3'),
+                        lpaUid:    new LpaUid('M-7890-0400-4003'),
                         cancelled: false,
                         expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
@@ -451,7 +451,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
-            ->with(uid: 'M-789Q-P4DF-4UX3', originator: (string) $params->code)
+            ->with(uid: 'M-7890-0400-4003', originator: (string) $params->code)
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $now = new DateTimeImmutable();
@@ -484,7 +484,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    lpaUid: new LpaUid('M-7890-0400-4003'),
                     sentToDonor: false,
                     attorneyName: 'Steven Alexander Miller',
                     dateOfBirth: new DateTimeImmutable('1982-07-24'),
@@ -495,7 +495,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    lpaUid: new LpaUid('M-7890-0400-4003'),
                     sentToDonor: false,
                     attorneyName: 'Herman Seakrest',
                     dateOfBirth: new DateTimeImmutable('1970-03-12'),
@@ -506,7 +506,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    lpaUid: new LpaUid('M-7890-0400-4003'),
                     sentToDonor: true,
                     attorneyName: 'Herman Seakrest',
                     dateOfBirth: new DateTimeImmutable('1983-06-19'),
@@ -517,7 +517,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                 new PaperVerificationCodeValidate(
                     name: 'Bundlaaaa',
                     code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-789Q-P4DF-4UX3'),
+                    lpaUid: new LpaUid('M-7890-0400-4003'),
                     sentToDonor: false,
                     attorneyName: 'Herman Seakrest',
                     dateOfBirth: new DateTimeImmutable('1982-07-24'),

@@ -14,14 +14,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\NumberOfAttorneys;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class NumberOfAttorneysHander extends AbstractPVSCodeHandler
+class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
 {
     private NumberOfAttorneys $form;
+
     /**
      * @var array{
      *     "view/en": string,
@@ -29,6 +30,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
      * }
      */
     private array $systemMessages;
+
     public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
 
     public function __construct(
@@ -50,7 +52,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
+        $attorneyName  = $this->state($request)->attorneyName;
         $noOfAttorneys = $this->state($request)->noOfAttorneys;
 
         if ($noOfAttorneys) {
@@ -76,9 +78,11 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form'         => $this->form->prepare(),
+            'attorneyName' => $this->state($request)->attorneyName,
+            'back'         => $this->lastPage($this->state($request)),
+            'en_message'   => $this->systemMessages['view/en'] ?? null,
+            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -98,7 +102,7 @@ class NumberOfAttorneysHander extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
-    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
             $state->sentToDonor !== null &&

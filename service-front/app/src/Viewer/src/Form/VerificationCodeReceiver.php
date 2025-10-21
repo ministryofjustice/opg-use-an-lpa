@@ -71,7 +71,6 @@ class VerificationCodeReceiver extends AbstractForm implements InputFilterProvid
             'attorney_name'              => [
                 'filters'    => [
                     ['name' => StringTrim::class],
-                    ['name' => StringToUpper::class],
                 ],
                 'validators' => [
                     [

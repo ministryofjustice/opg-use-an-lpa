@@ -142,7 +142,7 @@ class PaperVerificationCodeService
         Code $code,
         string $donorSurname,
         bool $cancelled,
-        ?DateTimeInterface $expiresAt,
+            ?DateTimeInterface $expiresAt,
     ): void {
         // Does the donor match? If not then return nothing (Lpa not found with those details)
         if (
@@ -197,7 +197,7 @@ class PaperVerificationCodeService
         if ((string) $lpaUid !== $lpa->uId) {
             $this->logger->info(
                 'The the LpaUid entered by the user does not match the one found using the paper verification ' .
-                'code {code}',
+                    'code {code}',
                 ['code' => (string) $code]
             );
             throw new NotFoundException();

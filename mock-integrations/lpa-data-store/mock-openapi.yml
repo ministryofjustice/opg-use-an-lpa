@@ -56,7 +56,7 @@ paths:
         schema:
           type: string
           pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-789Q-P4DF-4UX3
+          example: M-7890-0400-4003
     put:
       operationId: putLpa
       summary: Store an LPA
@@ -119,7 +119,7 @@ paths:
         schema:
           type: string
           pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-789Q-P4DF-4UX3
+          example: M-7890-0400-4003
     post:
       operationId: createUpdate
       summary: Update an LPA
@@ -240,7 +240,7 @@ components:
           items:
             type: string
             pattern: M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})
-            example: M-789Q-P4DF-4UX3
+            example: M-7890-0400-4003
     GetListResponse:
       type: object
       required:

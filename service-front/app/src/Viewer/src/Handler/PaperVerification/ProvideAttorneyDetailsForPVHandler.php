@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\AttorneyDetailsForPV;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -84,6 +84,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'       => $this->form->prepare(),
+            'back'       => $this->lastPage($this->state($request)),
             'en_message' => $this->systemMessages['view/en'] ?? null,
             'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
@@ -100,7 +101,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
-    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
             $state->sentToDonor !== null &&

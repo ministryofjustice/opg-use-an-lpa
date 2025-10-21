@@ -15,7 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\PVDateOfBirth;
 use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -113,7 +113,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
     /**
      * @inheritDoc
      */
-    public function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
             $state->noOfAttorneys !== null &&

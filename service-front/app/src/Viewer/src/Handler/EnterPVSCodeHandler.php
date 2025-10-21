@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Viewer\Handler;
 
+use Common\Entity\Code;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -66,13 +67,12 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            // TODO for now set values in session AND state. Once state is implemented on the check
-            //      answers page for share codes then we can remove.
-            $this->session->set('code', $this->form->getData()['lpa_code']);
-            $this->session->set('surname', $this->form->getData()['donor_surname']);
-
-            $this->state($request)->code     = $this->form->getData()['lpa_code'];
+            $this->state($request)->code     = new Code($this->form->getData()['lpa_code']);
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
+
+            // to allow the non-paper verification code CheckCodeHandler to work
+            $this->session->set('code', $this->state($request)->code->value);
+            $this->session->set('surname', $this->state($request)->lastName);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
@@ -102,7 +102,11 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return ($this->featureEnabled)('paper_verification') ? 'pv.check-code' : 'check-code';
+        if (($this->featureEnabled)('paper_verification') && $state->code->isPaperVerificationCode()) {
+            return 'pv.check-code';
+        }
+
+        return 'check-code';
     }
 
     /**

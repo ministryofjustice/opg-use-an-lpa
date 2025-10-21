@@ -323,7 +323,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_lpastore_uid()
     {
-        $testUid     = 'M-789Q-P4DF-4UX3';
+        $testUid     = 'M-7890-0400-4003';
         $testUserId  = 'test-user-id';
 
         $lpaResponse = new Lpa(
@@ -525,7 +525,7 @@ class CombinedLpaManagerTest extends TestCase
         $userLpaActorMapResponse = [
             'Id'      => $testLpaToken,
             'UserId'  => $testUserId,
-            'LpaUid'  => 'M-789Q-P4DF-4UX34',
+            'LpaUid'  => 'M-7890-0400-40034',
             'ActorId' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
             'Added'   => new DateTimeImmutable('now'),
         ];
@@ -536,7 +536,7 @@ class CombinedLpaManagerTest extends TestCase
             ->willReturn(
                 [
                     [],
-                    ['M-789Q-P4DF-4UX34'],
+                    ['M-7890-0400-40034'],
                 ]
             );
         $this->dataStoreLpasProphecy
@@ -544,7 +544,7 @@ class CombinedLpaManagerTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
-            ->get('M-789Q-P4DF-4UX34')
+            ->get('M-7890-0400-40034')
             ->willReturn(null);
 
         $service = $this->getLpaService();

@@ -34,11 +34,11 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
         //    c. If expired throw PaperVerificationCode\ExpiredException is GoneException
         if ((string)$code === 'P-1234-1234-1234-12') {
             $codeData = [
-                'lpa' => 'M-789Q-P4DF-4UX3', // no expiry as it's not been used yet
+                'lpa' => 'M-7890-0400-4003', // no expiry as it's not been used yet
             ];
         } elseif ((string)$code === 'P-5678-5678-5678-56') {
             $codeData = [
-                'lpa'     => 'M-789Q-P4DF-4UX3',
+                'lpa'     => 'M-7890-0400-4003',
                 'expires' => (new DateTimeImmutable())
                     ->sub(new DateInterval('P1Y')) // code has expired
                     ->format(DateTimeInterface::ATOM),
@@ -46,7 +46,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
             ];
         } elseif ((string)$code === 'P-3456-3456-3456-34') {
             $codeData = [
-                'lpa'       => 'M-789Q-P4DF-4UX3',
+                'lpa'       => 'M-7890-0400-4003',
                 'expires'   => (new DateTimeImmutable())
                     ->add(new DateInterval('P1Y'))
                     ->format(DateTimeInterface::ATOM),
@@ -104,7 +104,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
                  (new DateTimeImmutable())->add($dateInterval)->format(DateTimeInterface::ATOM));
         if ((string)$code === 'P-1234-1234-1234-12') {
             $codeData = [
-                'lpa'     => 'M-789Q-P4DF-4UX3',
+                'lpa'     => 'M-7890-0400-4003',
                 'expires' => $expiryDate,
                 'expiry_reason' => $reason,
             ];

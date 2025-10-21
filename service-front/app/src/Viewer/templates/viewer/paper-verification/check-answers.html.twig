@@ -27,7 +27,13 @@
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Who the paper verification code was sent to{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ donorName }}</td>
+                            <td class="govuk-table__cell">
+                              {% if sentToDonor %}
+                                {{ donorName }}
+                              {% else %}
+                                {{ attorneyName }}
+                              {% endif %}
+                            </td>
                             <td class="govuk-table__cell">
                                 <a href="{{ path('pv.verification-code-sent-to') }}" role="button" draggable="false" class="moj-button-menu__item">
                                     {% trans %}Change{% endtrans %}
@@ -35,13 +41,22 @@
                             </td>
                         </tr>
                         <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">{% trans with { '%donorName%': donorName } %}%donorName%'s date of birth{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa_date(dateOfBirth) }}</td>
-                            <td class="govuk-table__cell">
-                                <a href="{{ path(sentToDonor == true ? 'pv.donor-dob' : 'pv.attorney-dob') }}" role="button" draggable="false" class="moj-button-menu__item">
-                                    {% trans %}Change{% endtrans %}
-                                </a>
-                            </td>
+                          {% if sentToDonor %}
+                            <th class="govuk-table__header" scope="row">
+                              {% trans with { '%name%': donorName } %}%name%'s date of birth{% endtrans %}
+                            </th>
+                          {% else %}
+                            <th class="govuk-table__header" scope="row">
+                              {% trans with { '%name%': attorneyName } %}%name%'s date of birth{% endtrans %}
+                            </th>
+                          {% endif %}
+                          <td class="govuk-table__cell">{{ lpa_date(dateOfBirth) }}</td>
+                          <td class="govuk-table__cell">
+                            <a href="{{ path(sentToDonor == true ? 'pv.donor-dob' : 'pv.attorney-dob') }}"
+                               role="button" draggable="false" class="moj-button-menu__item">
+                              {% trans %}Change{% endtrans %}
+                            </a>
+                          </td>
                         </tr>
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" scope="row">{% trans %}Number of attorneys{% endtrans %}</th>
@@ -67,17 +82,21 @@
                         </tbody>
                     </table>
 
-                    <a href="{{ path('pv.enter-organisation-name')}}" role="button"
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <button role="button" type="submit" data-prevent-double-click="true"
                        draggable="false" class="govuk-button moj-button-menu__item "
                        data-module="govuk-button">
                         {% trans %}Continue{% endtrans %}
-                    </a>
+                    </button>
 
                     <a href="{{ path('home') }}" role="button" draggable="false"
                        class="govuk-button moj-button-menu__item govuk-button--secondary "
                        data-module="govuk-button">
                         {% trans %}Cancel{% endtrans %}
                     </a>
+
                     {{ govuk_form_close() }}
                 </div>
             </div>

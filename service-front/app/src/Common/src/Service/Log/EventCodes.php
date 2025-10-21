@@ -204,4 +204,24 @@ class EventCodes
      * An LPA has been found using a share code
      */
     public const string VIEW_LPA_SHARE_CODE_SUCCESS = 'VIEW_LPA_SHARE_CODE_SUCCESS';
+
+    /**
+     * A paper verification code has been attempted and not found
+     */
+    public const string VIEW_LPA_PV_CODE_NOT_FOUND = 'VIEW_LPA_PV_CODE_NOT_FOUND';
+
+    /**
+     * A paper verification code has been attempted to be used but had expired
+     */
+    public const string VIEW_LPA_PV_CODE_EXPIRED = 'VIEW_LPA_PV_CODE_EXPIRED';
+
+    /**
+     * A paper verification code has been attempted to be used but was cancelled
+     */
+    public const string VIEW_LPA_PV_CODE_CANCELLED = 'VIEW_LPA_PV_CODE_CANCELLED';
+
+    /**
+     * An LPA has been found using a pv code
+     */
+    public const string VIEW_LPA_PV_CODE_SUCCESS = 'VIEW_LPA_PV_CODE_SUCCESS';
 }

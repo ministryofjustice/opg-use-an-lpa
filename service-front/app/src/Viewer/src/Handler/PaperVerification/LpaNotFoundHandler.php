@@ -58,7 +58,7 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
             'dateOfBirth'   => $stateData->dateOfBirth,
             'noOfAttorneys' => $stateData->noOfAttorneys,
             'attorneyName'  => $stateData->attorneyName,
-            'donorName'     => 'Barbara Gilson',
+            'donorName'     => $stateData->donorName,
             'back'          => $this->lastPage($this->state($request)),
             'en_message'    => $this->systemMessages['view/en'] ?? null,
             'cy_message'    => $this->systemMessages['view/cy'] ?? null,

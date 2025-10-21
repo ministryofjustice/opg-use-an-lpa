@@ -17,24 +17,24 @@ use Common\Workflow\WorkflowStep;
 use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Viewer\Workflow\PaperVerificationShareCode;
+use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * A base for our workflow for both Share Code and Paper Verification codes
  *
  * @codeCoverageIgnore
- * @template-implements WorkflowStep<PaperVerificationShareCode>
+ * @template-implements WorkflowStep<PaperVerificationCode>
  */
 abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
-    SessionAware,
     LoggerAware,
+    SessionAware,
     WorkflowStep
 {
     use CsrfGuard;
     use Logger;
     use Session;
-    /** @use State<PaperVerificationShareCode> */
+    /** @use State<PaperVerificationCode> */
     use State;
 
     protected ?SessionInterface $session;
@@ -57,19 +57,21 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
 
     abstract public function handlePost(ServerRequestInterface $request): ResponseInterface;
 
+    abstract public function isMissingPrerequisite(ServerRequestInterface $request): bool;
+
     /**
      * @inheritDoc
      */
     public function state(ServerRequestInterface $request): WorkflowState
     {
-        return $this->loadState($request, PaperVerificationShareCode::class);
+        return $this->loadState($request, PaperVerificationCode::class);
     }
 
     /**
-     * @param PaperVerificationShareCode $state
+     * @param PaperVerificationCode $state
      * @return bool
      */
-    protected function hasFutureAnswersInState(PaperVerificationShareCode $state): bool
+    protected function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return false;
     }
