@@ -7,7 +7,7 @@
 ## Building
 
 ```shell
-# To update the OpenAPI spec file.
+# To update the OpenAPI spec file from https://github.com/ministryofjustice/opg-data-lpa-codes
 $ ./update.sh
 
 # Ensure Node v20+ is installed and available.
