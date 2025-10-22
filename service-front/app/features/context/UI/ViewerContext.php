@@ -1143,6 +1143,15 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText($reason);
     }
 
+    #[Given('/^I access the viewer service and provide the required details to view lpa$/')]
+    public function iAccessTheViewerServiceAndProvideTheRequiredDetailsToViewLpa(): void
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaPaperVerificationCOde();
+        $this->iAccessTheViewerService();
+        $this->iGiveAValidLPAPaperVerificationCode();
+        $this->iWillBeAskedToEnterMoreInformation();
+    }
+
     #[Given('/^I type in a valid LPA reference number$/')]
     public function iTypeAValidLpaReferenceNumber(): void
     {

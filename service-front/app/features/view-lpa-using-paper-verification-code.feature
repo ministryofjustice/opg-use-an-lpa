@@ -1,4 +1,4 @@
-@viewer @viewlpa
+@viewer @viewlpa @123
 Feature: View an LPA via Paper Verification Code
   As an organisation who has been given a paper verification code
   I can enter that code and see the details of an LPA
@@ -61,7 +61,8 @@ Feature: View an LPA via Paper Verification Code
 
   @ui @ff:paper_verification:true
   Scenario Outline: User is corrected when entering wrong format lpa reference number
-    Given I am on the page to enter Lpa reference number
+    Given I access the viewer service and provide the required details to view lpa
+    And I am on the page to enter Lpa reference number
     When I request to search for an LPA with an invalid format <reference>
     Then I am told that my entry is invalid because <reason>
 
