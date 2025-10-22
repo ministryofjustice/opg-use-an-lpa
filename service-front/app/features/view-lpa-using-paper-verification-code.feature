@@ -1,4 +1,4 @@
-@viewer @viewlpa @123
+@viewer @viewlpa
 Feature: View an LPA via Paper Verification Code
   As an organisation who has been given a paper verification code
   I can enter that code and see the details of an LPA
