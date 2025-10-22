@@ -38,6 +38,14 @@
   // src/codes/codes.ts
   var import_types = __toESM(require_types());
 
+  // src/enum.ts
+  var ExpiryReason = /* @__PURE__ */ ((ExpiryReason2) => {
+    ExpiryReason2[ExpiryReason2["cancelled"] = 0] = "cancelled";
+    ExpiryReason2[ExpiryReason2["paper_to_digital"] = 30] = "paper_to_digital";
+    ExpiryReason2[ExpiryReason2["first_time_use"] = 730] = "first_time_use";
+    return ExpiryReason2;
+  })(ExpiryReason || {});
+
   // src/codes/seeding-data.json
   var seeding_data_default = [
     {
@@ -243,6 +251,37 @@
       generated_date: "2020-06-22",
       status_details: "Imported",
       Comment: "Seeded Data:"
+    },
+    {
+      code: "P-1234-1234-1234-12",
+      actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+      last_updated_date: "2025-01-10",
+      lpa: "M-7890-0400-4003",
+      dob: "1982-07-24",
+      generated_date: "2025-01-10",
+      Comment: "Seeded Data:"
+    },
+    {
+      code: "P-5678-5678-5678-56",
+      actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+      last_updated_date: "2025-01-10",
+      lpa: "M-7890-0400-4003",
+      dob: "1982-07-24",
+      generated_date: "2024-01-10",
+      expiry_date: 1736499995,
+      expiry_reason: "first_time_use",
+      Comment: "Seeded Data:"
+    },
+    {
+      code: "P-3456-3456-3456-34",
+      actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
+      last_updated_date: "2025-01-10",
+      lpa: "M-7890-0400-4003",
+      dob: "1982-07-24",
+      generated_date: "2025-01-10",
+      expiry_date: 1736499995,
+      expiry_reason: "cancelled",
+      Comment: "Seeded Data:"
     }
   ];
 
@@ -295,6 +334,21 @@
     store.save(code2.code, JSON.stringify(code2));
     return code2;
   }
+  function expireCode(paperVerificationCode, reason) {
+    import_types.logger.debug("Expired code " + reason);
+    let code2 = getCode(paperVerificationCode);
+    if (code2 === null) {
+      return null;
+    }
+    const now = /* @__PURE__ */ new Date();
+    now.setHours(0, 0, 0, 0);
+    const expiry = now.setDate(now.getDate() + reason);
+    code2.expiry_date = Math.floor(expiry / 1e3);
+    code2.expiry_reason = ExpiryReason[reason];
+    const store = import_types.stores.open("codeData");
+    store.save(code2.code, JSON.stringify(code2));
+    return code2;
+  }
   function isNotExpired(code2) {
     if (code2.expiry_date === "valid") {
       import_types.logger.debug("Code " + code2.code + " will never expire");
@@ -302,7 +356,9 @@
     }
     const ttl = Math.floor((/* @__PURE__ */ new Date()).getTime() / 1e3);
     import_types.logger.debug("code date: " + code2.expiry_date + " ttl: " + ttl);
-    return parseInt(code2.expiry_date) > ttl;
+    if (typeof code2.expiry_date === "number") {
+      return code2.expiry_date > ttl;
+    }
   }
 
   // src/index.ts
@@ -312,7 +368,7 @@
   var response = "";
   if (opId === "api.resources.handle_healthcheck") {
     code = 200;
-    response = "OK";
+    response = JSON.stringify("OK");
   } else if (opId === "api.resources.validate_route") {
     if (import_types2.context.request.body !== null) {
       let params = JSON.parse(import_types2.context.request.body);
@@ -351,6 +407,48 @@
         response = JSON.stringify({ "Created": null });
       }
       code = 200;
+    }
+  } else if (opId === "api.resources.pvc_validate_route") {
+    if (import_types2.context.request.body !== null) {
+      let params = JSON.parse(import_types2.context.request.body);
+      let activationCode = getCode(params.code);
+      import_types2.logger.debug("Loaded code " + JSON.stringify(activationCode));
+      if (activationCode !== null) {
+        import_types2.logger.info("Code " + activationCode.code + " matched parameters");
+        const responseData = {
+          lpa: activationCode.lpa,
+          actor: activationCode.actor
+        };
+        if (activationCode.expiry_date !== void 0) {
+          responseData.expiry_date = activationCode.expiry_date;
+          responseData.expiry_reason = activationCode.expiry_reason;
+        }
+        response = JSON.stringify(responseData);
+        code = 200;
+      } else {
+        code = 404;
+      }
+    }
+  } else if (opId === "api.resources.pvc_expire_route") {
+    if (import_types2.context.request.body !== null) {
+      let params = JSON.parse(import_types2.context.request.body);
+      let activationCode = expireCode(
+        params.code,
+        ExpiryReason[params.expiry_reason]
+      );
+      import_types2.logger.debug("Loaded code " + JSON.stringify(activationCode));
+      if (activationCode !== null) {
+        import_types2.logger.info(
+          "Code " + activationCode.code + " expires in " + ExpiryReason[activationCode.expiry_reason] + " days"
+        );
+        const responseData = {
+          expiry_date: activationCode.expiry_date
+        };
+        response = JSON.stringify(responseData);
+        code = 200;
+      } else {
+        code = 404;
+      }
     }
   }
   if (response === "") {
