@@ -91,6 +91,12 @@ function isNotExpired(code: LpaCode): boolean {
   if (typeof code.expiry_date === 'number') {
     return code.expiry_date > ttl
   }
+
+  throw Error(
+    'expiry_date field for code ' +
+    code.lpa +
+    ' in seeding-data.json is incorrectly formatted'
+  )
 }
 
 export {codeExists, getCode, revokeCode, expireCode, isNotExpired}

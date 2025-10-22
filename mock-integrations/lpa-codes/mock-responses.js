@@ -259,7 +259,7 @@
       lpa: "M-7890-0400-4003",
       dob: "1982-07-24",
       generated_date: "2025-01-10",
-      Comment: "Seeded Data:"
+      Comment: "Seeded Data: Active, unused code"
     },
     {
       code: "P-5678-5678-5678-56",
@@ -270,7 +270,7 @@
       generated_date: "2024-01-10",
       expiry_date: 1736499995,
       expiry_reason: "first_time_use",
-      Comment: "Seeded Data:"
+      Comment: "Seeded Data: Expired as used initially over 2 years ago."
     },
     {
       code: "P-3456-3456-3456-34",
@@ -281,7 +281,7 @@
       generated_date: "2025-01-10",
       expiry_date: 1736499995,
       expiry_reason: "cancelled",
-      Comment: "Seeded Data:"
+      Comment: "Seeded Data: Expired as cancelled by external process"
     }
   ];
 
@@ -359,6 +359,9 @@
     if (typeof code2.expiry_date === "number") {
       return code2.expiry_date > ttl;
     }
+    throw Error(
+      "expiry_date field for code " + code2.lpa + " in seeding-data.json is incorrectly formatted"
+    );
   }
 
   // src/index.ts
