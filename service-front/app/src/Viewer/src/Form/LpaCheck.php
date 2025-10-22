@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
+use Laminas\Filter\Callback;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
@@ -45,6 +46,37 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
+                    [
+                        // If user enters below, automatically correct to M-7890-0400-4003
+                        // m789004004003
+                        //m 7890 0400 4003
+                        //M-789004004003
+                        'name'    => Callback::class,
+                        'options' => [
+                            'callback' => static function (?string $value): ?string {
+                                if ($value === null) {
+                                    return null;
+                                }
+
+                                // Remove all spaces and non-alphanumeric characters
+                                $clean = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $value));
+
+                                // Must start with M and have 12 digits
+                                if (preg_match('/^M\d{12}$/', $clean)) {
+                                    // Insert dashes: M-####-####-####
+                                    return sprintf(
+                                        'M-%s-%s-%s',
+                                        substr($clean, 1, 4),
+                                        substr($clean, 5, 4),
+                                        substr($clean, 9, 4)
+                                    );
+                                }
+
+                                // If it doesn’t match expected raw pattern, return as-is
+                                return $value;
+                            },
+                        ],
+                    ],
                 ],
                 'validators' => [
                     [
@@ -71,7 +103,7 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'pattern' => '/M[-\s]?(\d{4}[-\s]?){2}\d{4}$/',
+                            'pattern' => '/^[Mm]-\d{4}-\d{4}-\d{4}$/',
                             'message' => 'Enter LPA reference number in the correct format',
                         ],
                     ],
