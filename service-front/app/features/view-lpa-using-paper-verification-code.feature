@@ -58,3 +58,17 @@ Feature: View an LPA via Paper Verification Code
     And they have entered date of birth for donor
     And they have entered attorney details
     Then they check their answers
+
+  @ui @ff:paper_verification:true
+  Scenario Outline: User is corrected when entering wrong format lpa reference number
+    Given I am on the page to enter Lpa reference number
+    When I request to search for an LPA with an invalid format <reference>
+    Then I am told that my entry is invalid because <reason>
+
+    Examples:
+      | reference               | reason                                               |
+      | 7890-0400-4003          |  Enter LPA reference number in the correct format    |
+      | M789004004XU3           |  Enter LPA reference number in the correct format    |
+      | X-7890-0400-4003        |  Enter LPA reference number in the correct format    |
+      | M-7890-0400             | The LPA reference number you entered is too short    |
+      | M-78900-04000-4003      | The LPA reference number you entered is too long     |
