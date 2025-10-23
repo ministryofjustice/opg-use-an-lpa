@@ -20,36 +20,37 @@
                     <h1 class="govuk-heading-xl">{% trans %}The LPA is ready to view{% endtrans %}</h1>
                     <table id="confirmation-table" class="govuk-table">
                         <tbody class="govuk-table__body">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ donor_name }}</td>
-                        </tr>
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
-                            <td class="govuk-table__cell">{{ lpa_type == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}</td>
-                        </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row">{% trans %}Donor name{% endtrans %}</th>
+                                <td class="govuk-table__cell">{{ donor_name }}</td>
+                            </tr>
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" scope="row">{% trans %}Type of LPA{% endtrans %}</th>
+                                <td class="govuk-table__cell">{{ lpa_type == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}</td>
+                            </tr>
                         </tbody>
                     </table>
 
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <h2 class="govuk-heading-m" id="org_name_heading">{% trans %}Your organisation name{% endtrans %}</h2>
-
                     {{ govuk_form_element(form.get('organisation'),
                         {
+                            'label': 'Your organisation name' | trans,
                             'hint': 'This will be displayed to the attorneys and donor on the LPA' | trans,
-                            'attr': { 'class': 'govuk-heading-m' },
-                            'aria_labelledby': 'org_name_heading',
+                            'attr': { 'class': 'govuk-heading-m', 'label_class': 'govuk-label--m' },
                         }
                     ) }}
-
-                    <button data-prevent-double-click="true" type="submit"
-                            class="govuk-button">{% trans %}View this LPA{% endtrans %}</button>
-                    <a href="{{ path('home') }}" role="button" draggable="false"
-                       class="govuk-button moj-button-menu__item govuk-button--secondary "
-                       data-module="govuk-button">
-                        {% trans %}Cancel{% endtrans %}
-                    </a>
+                    
+                    <div class="govuk-button-group">
+                        <button data-prevent-double-click="true" type="submit"
+                                class="govuk-button">{% trans %}View this LPA{% endtrans %}</button>
+                        
+                        <a href="{{ path('home') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item govuk-button--secondary "
+                           data-module="govuk-button">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
+                    </div>
                     {{ govuk_form_close() }}
                 </div>
             </div>
