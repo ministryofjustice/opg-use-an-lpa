@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
@@ -22,29 +21,19 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
 {
     private Organisation $form;
 
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-
     public const TEMPLATE = 'viewer::paper-verification/enter-organisation-name';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new Organisation($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new Organisation($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -56,8 +45,6 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
             'donor_name' => $this->state($request)->donorName,
             'lpa_type'   => $this->state($request)->lpaType,
             'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -73,8 +60,9 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'organisation' => $this->state($request)->organisation,
             'form'         => $this->form->prepare(),
-            'en_message'   => $this->systemMessages['view/en'] ?? null,
-            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
+            'donor_name'   => $this->state($request)->donorName,
+            'lpa_type'     => $this->state($request)->lpaType,
+            'back'         => $this->lastPage($this->state($request)),
         ]));
     }
 

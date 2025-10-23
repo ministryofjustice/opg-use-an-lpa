@@ -1098,8 +1098,6 @@ class ViewerContext implements Context
         $this->lpaData['status'] = 'Registered';
         $this->ui->assertPageAddress('/home');
 
-        $this->appendSystemMessageFixture();
-
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
@@ -1114,8 +1112,6 @@ class ViewerContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
-
-        $this->appendSystemMessageFixture();
 
         $this->ui->fillField('donor_surname', $this->lpaSurname);
         $this->ui->fillField('lpa_code', $this->paperVerificationCode);
@@ -1141,9 +1137,7 @@ class ViewerContext implements Context
     #[When('/^I select continue$/')]
     public function iSelectContinue(): void
     {
-        $this->appendSystemMessageFixture();
         $this->ui->pressButton('Continue');
-        $this->appendSystemMessageFixture();
     }
 
     #[Then('/^I will be asked who the paper verification code was sent to$/')]
@@ -1197,25 +1191,21 @@ class ViewerContext implements Context
         $this->ui->fillField('dob[month]', '10');
         $this->ui->fillField('dob[year]', '1975');
 
-        $this->appendSystemMessageFixture();
         $this->ui->pressButton('Continue');
     }
 
     #[When('/^they have entered number of attorneys$/')]
     public function theyHaveEnteredNumberOfAttorneys(): void
     {
-        $this->appendSystemMessageFixture();
         $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
 
         $this->ui->fillField('no_of_attorneys', '2');
-        $this->appendSystemMessageFixture();
         $this->ui->pressButton('Continue');
     }
 
     #[When('/^they have entered attorney details$/')]
     public function theyHaveEnteredAttorneyDetails(): void
     {
-        $this->appendSystemMessageFixture();
         $this->ui->assertPageAddress('/paper-verification/provide-attorney-details');
 
         $this->ui->fillField('no_of_attorneys', '2');
@@ -1227,7 +1217,6 @@ class ViewerContext implements Context
     #[Then('/^they check their answers$/')]
     public function theyCheckTheirAnswers(): void
     {
-        $this->appendSystemMessageFixture();
         $this->ui->assertPageAddress('/paper-verification/check-answers');
     }
 
@@ -1255,7 +1244,6 @@ class ViewerContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
-        $this->appendSystemMessageFixture();
 
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/check-code');
@@ -1264,8 +1252,6 @@ class ViewerContext implements Context
     #[When('/^they click continue they return to check answers page$/')]
     public function theyClickContinueTheyReturnToCheckAnswersPage(): void
     {
-        $this->appendSystemMessageFixture();
-
         $this->ui->pressButton('Continue');
         $this->ui->assertPageAddress('/paper-verification/check-answers');
     }
@@ -1294,7 +1280,7 @@ class ViewerContext implements Context
                 self::LPA_SERVICE_GET_LPA_BY_CODE
             )
         );
-        $this->appendSystemMessageFixture();
+
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
     }
@@ -1315,7 +1301,7 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-        $this->appendSystemMessageFixture();
+
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/attorney-dob');
     }
@@ -1329,7 +1315,7 @@ class ViewerContext implements Context
         if ($link === null) {
             throw new Exception('Change link not found');
         }
-        $this->appendSystemMessageFixture();
+
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
     }

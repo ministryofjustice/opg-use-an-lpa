@@ -7,7 +7,6 @@ namespace Viewer\Handler\PaperVerification;
 use Common\Exception\ApiException;
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -26,13 +25,6 @@ use Viewer\Workflow\PaperVerificationCode;
 class CheckAnswersHandler extends AbstractPVSCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
 
     private CheckAnswers $form;
 
@@ -40,7 +32,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
         private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
@@ -49,7 +40,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckAnswers($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
 
         return parent::handle($request);
     }
@@ -67,8 +57,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             'attorneyName'  => $stateData->attorneyName,
             'donorName'     => $stateData->donorName,
             'back'          => $this->lastPage($stateData),
-            'en_message'    => $this->systemMessages['view/en'] ?? null,
-            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -97,8 +85,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
                         'dateOfBirth'   => $stateData->dateOfBirth->format('Y-m-d'),
                         'noOfAttorneys' => $stateData->noOfAttorneys,
                         'attorneyName'  => $stateData->attorneyName,
-                        'en_message'    => $this->systemMessages['view/en'] ?? null,
-                        'cy_message'    => $this->systemMessages['view/cy'] ?? null,
                     ])
                 );
             }
@@ -117,8 +103,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
             'attorneyName'  => $stateData->attorneyName,
             'donorName'     => $stateData->donorName,
             'back'          => $this->lastPage($stateData),
-            'en_message'    => $this->systemMessages['view/en'] ?? null,
-            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 

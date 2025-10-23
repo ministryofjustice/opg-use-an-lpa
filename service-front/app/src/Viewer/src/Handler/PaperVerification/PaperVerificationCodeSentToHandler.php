@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\Features\FeatureEnabled;
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
@@ -24,14 +23,6 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
 {
     private VerificationCodeReceiver $form;
 
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-
     private const TEMPLATE = 'viewer::paper-verification/verification-code-sent-to';
 
     public function __construct(
@@ -39,15 +30,13 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new VerificationCodeReceiver($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new VerificationCodeReceiver($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -74,8 +63,6 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
             'sent_to_donor' => $this->state($request)->sentToDonor ?? null,
             'attorneyName'  => $this->state($request)->attorneyName ?? null,
             'form'          => $this->form->prepare(),
-            'en_message'    => $this->systemMessages['view/en'] ?? null,
-            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -105,8 +92,6 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
             'sent_to_donor' => $this->state($request)->sentToDonor ?? null,
             'attorneyName'  => $this->state($request)->attorneyName ?? null,
             'form'          => $this->form->prepare(),
-            'en_message'    => $this->systemMessages['view/en'] ?? null,
-            'cy_message'    => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
