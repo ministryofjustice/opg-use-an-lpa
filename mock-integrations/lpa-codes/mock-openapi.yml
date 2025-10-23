@@ -448,17 +448,13 @@ paths:
                 actor:
                   type: string
                   pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
-                donor_surname:
-                  type: string
               required:
                 - lpa
                 - actor
-                - donor_surname
               additionalProperties: false
               example:
                 lpa: "M-1234-1234-1234"
                 actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
-                donor_surname: Gilson
       responses:
         200:
           description: Code successfully created
@@ -496,15 +492,11 @@ paths:
               properties:
                 code:
                   $ref: '#/components/schemas/PaperVerificationCode'
-                donor_surname:
-                  type: string
               required:
                 - code
-                - donor_surname
               additionalProperties: false
               example:
                 code: "P-DY38-H2XP-49GY-2Q"
-                donor_surname: Gilson
       responses:
         200:
           description: A code was found for those details

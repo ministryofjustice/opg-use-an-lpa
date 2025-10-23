@@ -257,7 +257,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2025-01-10",
       Comment: "Seeded Data: Active, unused code"
     },
@@ -266,7 +265,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2024-01-10",
       expiry_date: 1736499995,
       expiry_reason: "first_time_use",
@@ -277,7 +275,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2025-01-10",
       expiry_date: 1736499995,
       expiry_reason: "cancelled",
