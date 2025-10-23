@@ -1,5 +1,6 @@
 import { context, logger, respond } from '@imposter-js/types';
-import { codeExists, getCode, isNotExpired, revokeCode } from './codes/codes';
+import { codeExists, expireCode, getCode, isNotExpired, revokeCode } from './codes/codes';
+import { ExpiryReason } from './enum';
 
 // @ts-ignore
 const opId = context.operation.operationId
@@ -71,6 +72,65 @@ if (opId === 'api.resources.handle_healthcheck') {
     }
 
     code = 200
+  }
+} else if (opId === 'api.resources.pvc_validate_route') {
+  if (context.request.body !== null) {
+    let params = JSON.parse(context.request.body)
+
+    let activationCode = getCode(params.code)
+    logger.debug('Loaded code ' + JSON.stringify(activationCode))
+
+    if (
+      activationCode !== null
+    ) {
+      logger.info('Code ' + activationCode.code + ' matched parameters')
+
+      const responseData: Record<string, any> = {
+        lpa: activationCode.lpa,
+        actor: activationCode.actor,
+      }
+
+      if (activationCode.expiry_date !== undefined) {
+        responseData.expiry_date = activationCode.expiry_date
+        responseData.expiry_reason = activationCode.expiry_reason
+      }
+
+      response = JSON.stringify(responseData)
+      code = 200
+    } else {
+      code = 404
+    }
+  }
+} else if (opId === 'api.resources.pvc_expire_route') {
+  if (context.request.body !== null) {
+    let params = JSON.parse(context.request.body)
+
+    let activationCode = expireCode(
+      params.code,
+      ExpiryReason[params.expiry_reason as keyof typeof ExpiryReason],
+    )
+    logger.debug('Loaded code ' + JSON.stringify(activationCode))
+
+    if (
+      activationCode !== null
+    ) {
+      logger.info(
+        'Code ' +
+        activationCode.code +
+        ' expires in ' +
+        ExpiryReason[activationCode.expiry_reason] +
+        ' days'
+      )
+
+      const responseData: Record<string, any> = {
+        expiry_date: activationCode.expiry_date,
+      }
+
+      response = JSON.stringify(responseData)
+      code = 200
+    } else {
+      code = 404
+    }
   }
 }
 

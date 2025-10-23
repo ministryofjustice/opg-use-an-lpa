@@ -59,3 +59,58 @@ Content-Type: application/json
   "lpa": "700000000526",
   "actor": "700000001805"
 }
+
+### Validate paper verification code (valid)
+POST http://localhost:4015/v1/paper-verification-code/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "P-1234-1234-1234-12",
+  "donor_surname": "Bundlaaaa"
+}
+
+### Validate paper verification code (expired)
+POST http://localhost:4015/v1/paper-verification-code/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "P-5678-5678-5678-56",
+  "donor_surname": "Bundlaaaa"
+}
+
+### Validate paper verification code (cancelled)
+POST http://localhost:4015/v1/paper-verification-code/validate
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "P-3456-3456-3456-34",
+  "donor_surname": "Bundlaaaa"
+}
+
+### Start paper verification code expiry (720 days)
+POST http://localhost:4015/v1/paper-verification-code/expire
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "P-1234-1234-1234-12",
+  "expiry_reason": "first_time_use"
+}
+
+### Convert paper verification code to digital (30 days)
+POST http://localhost:4015/v1/paper-verification-code/expire
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "code": "P-1234-1234-1234-12",
+  "expiry_reason": "paper_to_digital"
+}

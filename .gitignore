@@ -8,6 +8,7 @@ geckodriver.log
 build/**
 scripts/getStatsResultDemo.json
 
+.idea/httpRequests/*
 .python-version
 .pytest_cache
 .coverage
