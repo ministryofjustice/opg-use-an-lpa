@@ -18,19 +18,22 @@ class ShareCodeFilter implements FilterInterface
             throw new Exception('Invalid filter value - expecting string');
         }
 
-        $value = strtoupper($value);
-        // replaces other dashes with normal dash
-        $value = preg_replace('/[–—]/u', '-', $value) ?? $value;
+        $value = preg_replace('/[^A-Z0-9]/', '', strtoupper($value)) ?? $value;
 
-        if (preg_match('/^P[\- ]/', $value)) {
-            // remove spaces or multiple hyphens to one
-            $value = preg_replace('/[\- ]+/', '-', $value) ?? $value;
-            return preg_replace('/^P\-*/', 'P-', $value) ?? $value;
+        if (strlen($value) === 15 && $value[0] === 'P') {
+            return sprintf(
+                'P-%s-%s-%s-%s',
+                substr($value, 1, 4),
+                substr($value, 5, 4),
+                substr($value, 9, 4),
+                substr($value, 13, 2)
+            );
         }
 
-        // V codes - removes V- and hyphens (maintaining current behaviour)
-        $value = preg_replace('/^V[\- ]*/', '', $value) ?? $value;
+        if (strlen($value) === 13 && $value[0] === 'V') {
+            return substr($value, 1, 12);
+        }
 
-        return preg_replace('/[\- ]+/', '', $value) ?? $value;
+        return $value;
     }
 }
