@@ -40,6 +40,8 @@ class ShareCodeFilterTest extends TestCase
     public static function codeFormatProvider(): array
     {
         return [
+            ['VBCD-1234-EFGH', 'VBCD1234EFGH'],
+            ['PBCD-1234-EFGH', 'PBCD1234EFGH'],
             ['V-ABCD-1234-EFGH', 'ABCD1234EFGH'],
             ['v-abCd-1234-EfgH', 'ABCD1234EFGH'],
             ['V abcd 1234 efgh', 'ABCD1234EFGH'],
@@ -52,6 +54,7 @@ class ShareCodeFilterTest extends TestCase
             ['P   AB12   CD34   EF56   G7', 'P-AB12-CD34-EF56-G7'],
             ['P - AB12 - CD34 - EF56 - G7', 'P-AB12-CD34-EF56-G7'],
             ['P--AB12--CD34--EF56--G7', 'P-AB12-CD34-EF56-G7'],
+            ['PAB12CD34EF56G7', 'P-AB12-CD34-EF56-G7'],
         ];
     }
 }
