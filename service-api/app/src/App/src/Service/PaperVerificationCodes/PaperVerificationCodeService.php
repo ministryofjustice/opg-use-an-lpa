@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\PaperVerificationCodes;
 
-use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
 use App\DataAccess\Repository\Response\PaperVerificationCode;
 use App\Entity\LpaStore\LpaStore;
@@ -140,6 +139,7 @@ class PaperVerificationCodeService
 
         $this->logger->notice('Paper verification code organisation recorded', [
             'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
+            'code'         => $params->code,
             'lpa_uid'      => $params->lpaUid,
             'organisation' => $params->organisation,
             'lookup_time'  => $lookupTime,
