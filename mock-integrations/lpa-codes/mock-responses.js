@@ -257,7 +257,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2025-01-10",
       Comment: "Seeded Data: Active, unused code"
     },
@@ -266,7 +265,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2024-01-10",
       expiry_date: 1736499995,
       expiry_reason: "first_time_use",
@@ -277,7 +275,6 @@
       actor: "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
       last_updated_date: "2025-01-10",
       lpa: "M-7890-0400-4003",
-      dob: "1982-07-24",
       generated_date: "2025-01-10",
       expiry_date: 1736499995,
       expiry_reason: "cancelled",
@@ -369,6 +366,10 @@
   import_types2.logger.info("Operation is " + opId);
   var code = 400;
   var response = "";
+  function unix2date(date) {
+    const dateObj = new Date(date * 1e3);
+    return dateObj.toISOString().substring(0, 10);
+  }
   if (opId === "api.resources.handle_healthcheck") {
     code = 200;
     response = JSON.stringify("OK");
@@ -423,7 +424,7 @@
           actor: activationCode.actor
         };
         if (activationCode.expiry_date !== void 0) {
-          responseData.expiry_date = activationCode.expiry_date;
+          responseData.expiry_date = unix2date(activationCode.expiry_date);
           responseData.expiry_reason = activationCode.expiry_reason;
         }
         response = JSON.stringify(responseData);
@@ -445,7 +446,7 @@
           "Code " + activationCode.code + " expires in " + ExpiryReason[activationCode.expiry_reason] + " days"
         );
         const responseData = {
-          expiry_date: activationCode.expiry_date
+          expiry_date: unix2date(activationCode.expiry_date)
         };
         response = JSON.stringify(responseData);
         code = 200;
