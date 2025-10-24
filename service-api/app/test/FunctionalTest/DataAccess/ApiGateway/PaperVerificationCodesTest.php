@@ -6,6 +6,8 @@ namespace FunctionalTest\DataAccess\ApiGateway;
 
 use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\Repository\Response\PaperVerificationCode as PaperVerificationCodeResponse;
+use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Exception\NotFoundException;
 use App\Service\Log\RequestTracing;
 use App\Value\PaperVerificationCode;
@@ -226,5 +228,64 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         }
 
         self::fail('Expected NotFoundException was not thrown');
+    }
+
+    #[Test]
+    public function it_expires_a_provided_code_with_a_reason(): void
+    {
+        $expiryDate = (new DateTimeImmutable('now'))
+            ->add(new DateInterval('P1Y'))
+            ->format('Y-m-d');
+
+        $matcher = new Matcher();
+
+        $request = new ConsumerRequest();
+        $request
+            ->setMethod('POST')
+            ->setPath('/v1/paper-verification-code/expire')
+            ->setHeaders(
+                [
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
+                    'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
+                    'Content-Type'                    => 'application/json',
+                    RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),
+                ]
+            )
+            ->setBody(
+                [
+                    'code'          => $matcher->regex(
+                        'P-1234-1234-1234-12',
+                        'P(-[A-Z0-9]{4}){3}-[A-Z0-9]{2}'
+                    ),
+                    'expiry_reason' => VerificationCodeExpiryReason::FIRST_TIME_USE,
+                ]
+            );
+
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(200)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody(
+                [
+                    'expiry_date' => $matcher->dateISO8601($expiryDate),
+                ]
+            );
+
+        $this->builder
+            ->given('the paper verification code P-1234-1234-1234-12 has not got an expiry date')
+            ->uponReceiving('a request to expire the code P-5678-5678-5678-56 as a first_time_use')
+            ->with($request)
+            ->willRespondWith($response);
+
+        $sut = $this->container->get(PaperVerificationCodes::class);
+
+        $pvc = $sut->expire(
+            new PaperVerificationCode('P-1234-1234-1234-12'),
+            VerificationCodeExpiryReason::FIRST_TIME_USE
+        );
+
+        self::assertTrue($this->builder->verify());
+        self::assertInstanceOf(PaperVerificationCodeExpiry::class, $pvc->getData());
+        self::assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
     }
 }
