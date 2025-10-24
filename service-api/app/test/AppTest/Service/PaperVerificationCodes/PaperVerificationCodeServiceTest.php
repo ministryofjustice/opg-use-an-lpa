@@ -557,6 +557,23 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->method('now')
             ->willReturn($now);
 
+        $logger
+            ->expects($this->once())
+            ->method('notice')
+            ->with(
+                message: 'Paper verification code organisation recorded',
+                context: $this->callback(
+                    function (array $context = []) use ($params): bool {
+                        $this->assertArrayHasKey('event_code', $context);
+                        $this->assertEquals((string) $params->code, $context['code']);
+                        $this->assertEquals((string) $params->lpaUid, $context['lpa_uid']);
+                        $this->assertEquals($params->organisation, $context['organisation']);
+                        $this->assertArrayHasKey('lookup_time', $context);
+                        return true;
+                    }
+                ),
+            );
+
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
         $result = $sut->view($params);
