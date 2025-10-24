@@ -366,6 +366,10 @@
   import_types2.logger.info("Operation is " + opId);
   var code = 400;
   var response = "";
+  function unix2date(date) {
+    const dateObj = new Date(date * 1e3);
+    return dateObj.toISOString().substring(0, 10);
+  }
   if (opId === "api.resources.handle_healthcheck") {
     code = 200;
     response = JSON.stringify("OK");
@@ -420,7 +424,7 @@
           actor: activationCode.actor
         };
         if (activationCode.expiry_date !== void 0) {
-          responseData.expiry_date = activationCode.expiry_date;
+          responseData.expiry_date = unix2date(activationCode.expiry_date);
           responseData.expiry_reason = activationCode.expiry_reason;
         }
         response = JSON.stringify(responseData);
@@ -442,7 +446,7 @@
           "Code " + activationCode.code + " expires in " + ExpiryReason[activationCode.expiry_reason] + " days"
         );
         const responseData = {
-          expiry_date: activationCode.expiry_date
+          expiry_date: unix2date(activationCode.expiry_date)
         };
         response = JSON.stringify(responseData);
         code = 200;
