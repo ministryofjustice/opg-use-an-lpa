@@ -6,6 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
 use App\DataAccess\Repository\Response\PaperVerificationCode;
+use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
 use App\DataAccess\Repository\Response\ResponseInterface;
 use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\Enum\VerificationCodeExpiryReason;
@@ -15,7 +16,6 @@ use App\Value\LpaUid;
 use App\Value\PaperVerificationCode as Code;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Psr\Http\Message\ResponseInterface as PSRResponseInterface;
 
 class PaperVerificationCodes extends AbstractApiClient implements PaperVerificationCodesInterface
 {
@@ -36,31 +36,6 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
             ]
         );
 
-        return $this->processResponse($response);
-    }
-
-    /**
-     * @inheritDoc
-     * @param VerificationCodeExpiryReason $reason
-     * @return ResponseInterface<PaperVerificationCode>
-     * @throws ApiException
-     * @throws NotFoundException
-     */
-    public function expire(Code $code, VerificationCodeExpiryReason $reason): ResponseInterface
-    {
-        $response = $this->makePostRequest(
-            'v1/paper-verification-code/expire',
-            [
-                'code'   => (string) $code,
-                'reason' => $reason->value,
-            ]
-        );
-
-        return $this->processResponse($response);
-    }
-
-    private function processResponse(PSRResponseInterface $response): ResponseInterface
-    {
         $codeData = json_decode((string) $response->getBody(), true);
 
         $lpaUid       = new LpaUid($codeData['lpa']);
@@ -73,6 +48,33 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
 
         return new UpstreamResponse(
             new PaperVerificationCode($lpaUid, $expiresAt, $expiryReason),
+            new DateTimeImmutable($response->getHeaderLine('Date')),
+        );
+    }
+
+    /**
+     * @inheritDoc
+     * @param VerificationCodeExpiryReason $reason
+     * @return ResponseInterface<PaperVerificationCodeExpiry>
+     * @throws ApiException
+     * @throws NotFoundException
+     */
+    public function expire(Code $code, VerificationCodeExpiryReason $reason): ResponseInterface
+    {
+        $response = $this->makePostRequest(
+            'v1/paper-verification-code/expire',
+            [
+                'code'          => (string) $code,
+                'expiry_reason' => $reason->value,
+            ]
+        );
+
+        $codeData = json_decode((string) $response->getBody(), true);
+
+        $expiresAt = $this->processExpiryDate($codeData['expiry_date']);
+
+        return new UpstreamResponse(
+            new PaperVerificationCodeExpiry($expiresAt),
             new DateTimeImmutable($response->getHeaderLine('Date')),
         );
     }
