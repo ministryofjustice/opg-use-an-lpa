@@ -135,7 +135,7 @@ class PaperVerificationCodeService
             $params->noOfAttorneys
         );
 
-        if ($verifiedCode->expiryReason !== null) {
+        if ($verifiedCode->expiryReason === null) {
             $_ = $this->paperVerificationCodes->expire(
                 $params->code,
                 VerificationCodeExpiryReason::FIRST_TIME_USE
