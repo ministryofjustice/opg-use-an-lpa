@@ -103,7 +103,7 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'pattern' => '/^[Mm]-\d{4}-\d{4}-\d{4}$/',
+                            'pattern' => '/^M-\d{4}-\d{4}-\d{4}$/',
                             'message' => 'Enter LPA reference number in the correct format',
                         ],
                     ],
