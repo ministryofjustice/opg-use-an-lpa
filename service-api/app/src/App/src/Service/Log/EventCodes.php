@@ -74,4 +74,9 @@ class EventCodes
      * Record the organisation name viewing the LPA during the Paper Verification Journey
      */
     public const string PAPER_VERIFICATION_CODE_ORGANISATION_VIEW = 'PAPER_VERIFICATION_CODE_ORGANISATION_VIEW';
+
+    /**
+     * A paper verification code has been used for the first time and the expiry period started
+     */
+    public const string PAPER_VERIFICATION_CODE_FIRST_TIME_USE = 'PAPER_VERIFICATION_CODE_FIRST_TIME_USE';
 }

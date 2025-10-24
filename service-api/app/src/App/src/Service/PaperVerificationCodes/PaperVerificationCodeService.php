@@ -135,15 +135,30 @@ class PaperVerificationCodeService
             $params->noOfAttorneys
         );
 
-        $_ = $this->paperVerificationCodes->expire($params->code, VerificationCodeExpiryReason::FIRST_TIME_USE);
+        if ($verifiedCode->expiryReason !== null) {
+            $_ = $this->paperVerificationCodes->expire(
+                $params->code,
+                VerificationCodeExpiryReason::FIRST_TIME_USE
+            );
 
-        $this->logger->notice('Paper verification code organisation recorded', [
-            'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
-            'code'         => $params->code,
-            'lpa_uid'      => $params->lpaUid,
-            'organisation' => $params->organisation,
-            'lookup_time'  => $lookupTime,
-        ]);
+            $this->logger->notice(
+                'First use of paper verification code, started expiry period',
+                [
+                    'event_code' => EventCodes::PAPER_VERIFICATION_CODE_FIRST_TIME_USE,
+                ]
+            );
+        }
+
+        $this->logger->notice(
+            'Paper verification code organisation recorded',
+            [
+                'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
+                'code'         => $params->code,
+                'lpa_uid'      => $params->lpaUid,
+                'organisation' => $params->organisation,
+                'lookup_time'  => $lookupTime,
+            ]
+        );
 
         return new CodeView(
             lpaSource: LpaSource::LPASTORE,
