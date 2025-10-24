@@ -192,8 +192,16 @@ class ViewerContext implements Context
     }
 
     #[Then('I can see a message the LPA has been cancelled')]
-    #[Then('I am told that the paper verification code has been cancelled')]
     public function iCanSeeAMessageTheLPAHasBeenCancelled(): void
+    {
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
+        $lpaData = $this->getResponseAsJson();
+        Assert::assertEquals($lpaData['title'], 'Gone');
+        Assert::assertStringContainsString('cancelled', $lpaData['details']);
+    }
+
+    #[Then('I am told that the paper verification code has been cancelled')]
+    public function iAmToldThatThePaperVerificationCodeHasBeenCancelled(): void
     {
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
