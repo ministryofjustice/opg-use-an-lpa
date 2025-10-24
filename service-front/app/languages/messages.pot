@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-10-24T08:06:14+00:00\n"
+"POT-Creation-Date: 2025-10-24T16:55:40+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -4381,7 +4381,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-cancelled.html.twig:17
 #: src/Viewer/templates/viewer/check-code-expired.html.twig:18
-#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:26
 #: src/Viewer/templates/viewer/paper-verification/check-code-expired.html.twig:15
 msgid "Enter another code"
 msgstr ""
@@ -5292,4 +5292,12 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:20
 msgid "Enter %donorName%’s date of birth"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
+msgid "To view this LPA, ask the person you're dealing with for a new one. If needed, they can request a new paper verification code from the Office of the Public Guardian."
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:20
+msgid "If they’re now using the LPA online, they’ll be able to make an access code for you to use instead."
 msgstr ""
