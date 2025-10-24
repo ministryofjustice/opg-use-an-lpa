@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\DataAccess\ApiGateway;
 
 use App\Exception\ApiException;
+use App\Exception\NotFoundException;
 use App\Exception\RequestSigningException;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -18,6 +19,7 @@ trait PostRequest
      * @param SignatureType $signature
      * @return ResponseInterface
      * @throws ApiException
+     * @throws NotFoundException
      */
     protected function makePostRequest(
         string $url,
@@ -43,10 +45,14 @@ trait PostRequest
             throw ApiException::create('Error whilst communicating with upstream service', null, $ce);
         }
 
-        if ($response->getStatusCode() !== StatusCodeInterface::STATUS_OK) {
-            throw ApiException::create('Upstream service returned non-ok response', $response);
-        }
-
-        return $response;
+        // TODO keep default message the same for now even though it doesn't makes sense
+        return match ($response->getStatusCode()) {
+            StatusCodeInterface::STATUS_OK        => $response,
+            StatusCodeInterface::STATUS_NOT_FOUND => throw new NotFoundException(),
+            default                               => throw ApiException::create(
+                'Upstream service returned non-ok response',
+                $response
+            ),
+        };
     }
 }
