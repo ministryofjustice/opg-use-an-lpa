@@ -14,6 +14,7 @@ use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
@@ -55,16 +56,42 @@ class ViewerContext implements Context
     #[When('I ask to verify my information')]
     public function iAskToVerifyMyInformation(): void
     {
-        // TODO this will need adding when UML-3979 is in place
+        $codeData = match ($this->viewerCode) {
+            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4003', 'actor' => ''],
+            'P-5678-5678-5678-56' => [
+                'lpa'           => 'M-7890-0400-4003',
+                'actor'         => '',
+                'expiry_date'   => '2024-12-13',
+                'expiry_reason' => 'first_time_use',
+            ],
+            'P-3456-3456-3456-34' => [
+                'lpa'           => 'M-7890-0400-4003',
+                'actor'         => '',
+                'expiry_date'   => '2025-10-24',
+                'expiry_reason' => 'cancelled',
+            ],
+        };
+
         // PaperVerificationCodes::validate
-        //$this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], []));
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeData)));
 
         // CombinedLpaManager::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        // TODO this will need adding when UML-3979 is in place
-        // PaperVerificationCodes::startExpiry
-        //$this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], []));
+        if ($this->viewerCode === 'P-1234-1234-1234-12') {
+            // PaperVerificationCodes::expire
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'expiry_date' => (new DateTimeImmutable('now'))->format('Y-m-d'),
+                        ]
+                    )
+                )
+            );
+        }
 
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
@@ -171,7 +198,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertStringContainsString('cancelled', $lpaData['details']);
+        Assert::assertEquals('cancelled', $lpaData['data']['reason']);
     }
 
     #[Then('I am told that the paper verification code has expired')]
@@ -180,7 +207,7 @@ class ViewerContext implements Context
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_GONE);
         $lpaData = $this->getResponseAsJson();
         Assert::assertEquals($lpaData['title'], 'Gone');
-        Assert::assertStringContainsString('expired', $lpaData['details']);
+        Assert::assertEquals('first_time_use', $lpaData['data']['reason']);
     }
 
     #[Given('/^I can see (.*) images$/')]
@@ -322,6 +349,25 @@ class ViewerContext implements Context
     #[When('I provide donor surname and paper verification code')]
     public function iProvideDonorSurnameAndPaperVerificationCode(): void
     {
+        $codeData = match ($this->viewerCode) {
+            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4003', 'actor' => ''],
+            'P-5678-5678-5678-56' => [
+                'lpa'           => 'M-7890-0400-4003',
+                'actor'         => '',
+                'expiry_date'   => '2024-12-13',
+                'expiry_reason' => 'first_time_use',
+            ],
+            'P-3456-3456-3456-34' => [
+                'lpa'           => 'M-7890-0400-4003',
+                'actor'         => '',
+                'expiry_date'   => '2025-10-24',
+                'expiry_reason' => 'cancelled',
+            ],
+        };
+
+        // PaperVerificationCodes::validate
+        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeData)));
+
         // CombinedLpaManager::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
