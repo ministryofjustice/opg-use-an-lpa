@@ -11,7 +11,6 @@ use App\DataAccess\Repository\Response\PaperVerificationCode as PaperVerificatio
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -44,7 +43,7 @@ class PaperVerificationCodesTest extends TestCase
 
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerFactoryProphecy
-            ->__invoke()
+            ->__invoke(Argument::any())
             ->willReturn($requestSignerProphecy->reveal());
     }
 
@@ -67,7 +66,7 @@ class PaperVerificationCodesTest extends TestCase
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         // TODO once the code actually implements upstream API calls swap this for "generatePSR17Prophecies"
-        $this->generatePSR17PropheciesWithoutAssertions(
+        $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
             'test-trace-id',
             [
@@ -78,7 +77,7 @@ class PaperVerificationCodesTest extends TestCase
         $this->requestFactoryProphecy
             ->createRequest(
                 'POST',
-                Argument::containingString('localhost/v1/paper-verification-codes/validate'),
+                Argument::containingString('localhost/v1/paper-verification-code/validate'),
                 Argument::any()
             )
             ->willReturn($this->requestProphecy->reveal());
@@ -97,16 +96,12 @@ class PaperVerificationCodesTest extends TestCase
         $this->assertInstanceOf(PaperVerificationCodeResponse::class, $data);
         $this->assertEquals($response['lpa'], (string)$data->lpaUid);
 
-        if (isset($response['expires'])) {
-            $this->assertEqualsWithDelta(new DateTimeImmutable($response['expires']), $data->expiresAt, 5);
-        }
-
-        if (isset($response['cancelled'])) {
-            $this->assertEquals($response['cancelled'], $data->cancelled);
+        if (isset($response['expiry_date'])) {
+            $this->assertEqualsWithDelta(new DateTimeImmutable($response['expiry_date']), $data->expiresAt, 5);
         }
 
         if (isset($response['expiry_reason'])) {
-            $this->assertEquals($response['expiry_reason'], $data->expiry_reason);
+            $this->assertEquals($response['expiry_reason'], $data->expiryReason->value);
         }
     }
 
@@ -122,20 +117,21 @@ class PaperVerificationCodesTest extends TestCase
             [
                 'P-5678-5678-5678-56',
                 [
-                    'lpa'     => 'M-7890-0400-4003',
-                    'expires' => (new DateTimeImmutable())
+                    'lpa'           => 'M-7890-0400-4003',
+                    'expiry_date'   => (new DateTimeImmutable())
                         ->sub(new DateInterval('P1Y')) // code has expired
-                        ->format(DateTimeInterface::ATOM),
+                        ->format('Y-m-d'),
+                    'expiry_reason' => 'cancelled',
                 ],
             ],
             [
                 'P-3456-3456-3456-34',
                 [
-                    'lpa'       => 'M-7890-0400-4003',
-                    'expires'   => (new DateTimeImmutable())
+                    'lpa'           => 'M-7890-0400-4003',
+                    'expiry_date'   => (new DateTimeImmutable())
                         ->add(new DateInterval('P1Y'))
-                        ->format(DateTimeInterface::ATOM),
-                    'cancelled' => 'true', // code valid but cancelled
+                        ->format('Y-m-d'),
+                    'expiry_reason' => 'first_time_use',
                 ],
             ],
         ];
