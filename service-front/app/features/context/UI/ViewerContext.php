@@ -1119,10 +1119,33 @@ class ViewerContext implements Context
     }
 
     #[Then('/^I will be asked to enter more information$/')]
+    #[Then('/^I am on the page to enter Lpa reference number$/')]
     public function iWillBeAskedToEnterMoreInformation(): void
     {
         $this->ui->assertPageAddress('/paper-verification/check-code');
         $this->ui->assertPageContainsText('We need some more details');
+    }
+
+    #[When('/^I request to search for an LPA with an invalid format (.*)$/')]
+    public function iRequestToSearchForAnLpaWithAnInvalidFormat(string $lpaReference): void
+    {
+        $this->ui->fillField('lpa_reference', $lpaReference);
+        $this->ui->pressButton('Continue');
+    }
+
+    #[Then('/^I am told that my entry is invalid because (.*)$/')]
+    public function iAmToldThatMyEntryIsInvalidBecause($reason): void
+    {
+        $this->ui->assertPageContainsText($reason);
+    }
+
+    #[Given('/^I access the viewer service and provide the required details to view lpa$/')]
+    public function iAccessTheViewerServiceAndProvideTheRequiredDetailsToViewLpa(): void
+    {
+        $this->iHaveBeenGivenAccessToAnLPAViaPaperVerificationCOde();
+        $this->iAccessTheViewerService();
+        $this->iGiveAValidLPAPaperVerificationCode();
+        $this->iWillBeAskedToEnterMoreInformation();
     }
 
     #[Given('/^I type in a valid LPA reference number$/')]

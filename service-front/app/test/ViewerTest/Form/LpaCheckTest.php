@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ViewerTest\Form;
 
+use Laminas\InputFilter\InputFilter;
 use Viewer\Form\LpaCheck;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
@@ -12,6 +13,7 @@ use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Viewer\Form\PVShareCode;
 
 class LpaCheckTest extends TestCase implements TestsLaminasForm
 {
@@ -42,5 +44,19 @@ class LpaCheckTest extends TestCase implements TestsLaminasForm
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
         $this->form    = new LpaCheck($guardProphecy->reveal());
+    }
+
+    public function testIsAForm(): void
+    {
+        $this->assertInstanceOf(AbstractForm::class, $this->form);
+        $this->assertInstanceOf(LpaCheck::class, $this->form);
+
+        $this->assertEquals('lpa_check', $this->form->getName());
+    }
+
+    public function testInputFilter(): void
+    {
+        $this->assertIsArray($this->form->getInputFilterSpecification());
+        $this->assertInstanceOf(InputFilter::class, $this->form->getInputFilter());
     }
 }

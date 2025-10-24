@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-10-24T16:55:40+00:00\n"
+"POT-Creation-Date: 2025-10-24T17:33:29+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -7326,112 +7326,86 @@ msgstr "Mewngofnodwch i ddefnyddio eich atwrneiaeth arhosol"
 
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:3
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:3
-#, fuzzy
-#| msgctxt "error"
-#| msgid "Enter your date of birth"
 msgid "Enter date of birth"
-msgstr "Teipiwch eich dyddiad geni"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/attorney-dob.html.twig:20
-#, fuzzy
-#| msgid "Enter %attorneyName%'s date of birth"
 msgid "Enter %attorneyName%’s date of birth"
-msgstr "Rhowch ddyddiad geni %attorneyName%"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:22
-#, fuzzy
-#| msgid ""
-#| "Enter the total number of attorneys listed on the notice of registration "
-#| "including"
 msgid ""
 "Enter the total number of attorneys listed on the notice of registration "
 "including %attorneyName%"
 msgstr ""
-"Nodwch gyfanswm yr atwrneiod a restrir ar yr hysbysiad cofrestru, gan gynnwys"
 
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:17
-#, fuzzy
-#| msgctxt "flashMessage"
-#| msgid "health and welfare"
 msgid "health and welfare LPA"
-msgstr "iechyd a lles"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:17
-#, fuzzy
-#| msgctxt "flashMessage"
-#| msgid "property and finance"
 msgid "property and finance LPA"
-msgstr "eiddo a materion ariannol"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code.html.twig:20
-#, fuzzy
-#| msgctxt "flashMessage"
-#| msgid "You've removed %donor%'s %lpaType% LPA"
 msgid "We've found %donorName%'s %lpaType%"
-msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:40
-#, fuzzy
-#| msgid "Change<span class=\"govuk-visually-hidden\"> email address</span>"
 msgid ""
 "Change<span class=\"govuk-visually-hidden\"> who the paper verification code "
 "was sent to</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\">fy nghyfeiriad e-bost</span>"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:47
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:48
-#, fuzzy
-#| msgid "%donorName%'s date of birth"
 msgid "%name%’s date of birth"
-msgstr "Dyddiad geni %donorName%"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:54
-#, fuzzy
-#| msgid ""
-#| "Change<span class=\"govuk-visually-hidden\"> donor's date of birth</span>"
 msgid ""
 "Change<span class=\"govuk-visually-hidden\"> %name%’s date of birth</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> donor’s date of birth</span>"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:68
-#, fuzzy
-#| msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgid "Change<span class=\"govuk-visually-hidden\"> number of attorneys</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:83
-#, fuzzy
-#| msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney name</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:3
-#, fuzzy
-#| msgid "Paper verification codes"
 msgid "Paper verification code cancelled"
-msgstr "Codau gwirio papur"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:10
 msgid "The paper verification code you entered has been cancelled"
 msgstr "Mae’r cod dilysu papur rydych wedi’i nodi wedi cael ei ganslo"
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-expired.html.twig:3
-#, fuzzy
-#| msgid "Paper verification codes"
 msgid "Paper verification code expired"
-msgstr "Codau gwirio papur"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-expired.html.twig:10
-#, fuzzy
-#| msgid "the LPA paper verification code you entered is incorrect"
 msgid "The paper verification code you entered has expired"
-msgstr "mae’r cod gwirio papur ar gyfer yr atwrneiaeth arhosol yn anghywir"
+msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:20
-#, fuzzy
-#| msgid "Enter %donorName%'s date of birth"
 msgid "Enter %donorName%’s date of birth"
-msgstr "Rhowch ddyddiad geni %donorName%"
+msgstr ""
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:17
+msgctxt "error"
+msgid "Enter an access or paper verification code in the correct format"
+msgstr "Rhowch god mynediad neu god dilysu papur yn y fformat cywir"
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:18
+msgctxt "error"
+msgid "Enter the donor’s last name"
+msgstr "Rhowch enw olaf y rhoddwr"
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
 msgid ""

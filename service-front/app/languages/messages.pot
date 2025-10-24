@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-10-24T16:55:40+00:00\n"
+"POT-Creation-Date: 2025-10-24T17:33:29+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -5292,6 +5292,18 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/donor-dob.html.twig:20
 msgid "Enter %donorName%’s date of birth"
+msgstr ""
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:17
+msgctxt "error"
+msgid "Enter an access or paper verification code in the correct format"
+msgstr ""
+
+#. Check code
+#: src/Viewer/templates/viewer/form-error-messages.html.twig:18
+msgctxt "error"
+msgid "Enter the donor’s last name"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
