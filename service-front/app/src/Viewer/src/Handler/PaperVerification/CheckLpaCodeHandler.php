@@ -6,7 +6,6 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
@@ -25,21 +24,12 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-
     private const TEMPLATE = 'viewer::paper-verification/check-code';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
         private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
@@ -47,8 +37,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new LpaCheck($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new LpaCheck($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -91,8 +80,6 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             'form'       => $this->form->prepare(),
             'donorName'  => $this->state($request)->donorName,
             'lpaType'    => $this->state($request)->lpaType,
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -110,8 +97,6 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             'form'       => $this->form->prepare(),
             'donorName'  => $this->state($request)->donorName,
             'lpaType'    => $this->state($request)->lpaType,
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 

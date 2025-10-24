@@ -26,3 +26,5 @@ docs/diagrams/dsl/**/workspace.json
 
 *.pem
 tests/vendor
+
+docker-compose.override.yml

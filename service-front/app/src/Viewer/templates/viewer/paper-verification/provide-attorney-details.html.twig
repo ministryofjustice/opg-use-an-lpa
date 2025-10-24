@@ -5,20 +5,18 @@
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path(back) }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
-
             {{ govuk_error_summary(form) }}
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl" id="attorney_details_heading">{% trans %}Attorney details{% endtrans %}</h1>
-
                     {{ govuk_form_open(form) }}
                     {{ govuk_form_element(form.get('__csrf')) }}
+
+                    <h1 class="govuk-heading-xl" id="attorney_details_heading">{% trans %}Attorney details{% endtrans %}</h1>
 
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
@@ -28,13 +26,13 @@
                         </legend>
 
                         {{ govuk_form_element(form.get('no_of_attorneys'), {
-                        'label': 'Enter the number of attorneys listed on the notice of registration.' | trans,
-                        'hint': 'For example, 2.'| trans,
-                        'attr' : {
-                            'class': 'govuk-input--width-5',
-                            'label_class': 'govuk-label'
-                        },
-                        'aria_labelledby': 'number_of_attorneys_heading'
+                               'label': 'Enter the number of attorneys listed on the notice of registration.' | trans,
+                               'hint': 'For example, 2.'| trans,
+                               'attr' : {
+                                   'class': 'govuk-input--width-5',
+                                   'label_class': 'govuk-label'
+                               },
+                               'aria_labelledby': 'number_of_attorneys_heading'
                         }) }}
                     </fieldset>
 
@@ -46,27 +44,26 @@
                         </legend>
 
                         {{ govuk_form_element(form.get('attorneys_name'), {
-                        'label': 'Enter the name of an attorney listed on the notice of registration. It does not matter which attorney you enter.' | trans,
-                        'hint': 'Spell the name as it appears on the notice of registration.'| trans,
-                        'attr' : {
-                            'class': 'govuk-input--width-20',
-                            'label_class': 'govuk-label'
-                        },
-                        'aria_labelledby': 'attorney_name_heading'
+                               'label': 'Enter the name of an attorney listed on the notice of registration. It does not matter which attorney you enter.' | trans,
+                               'hint': 'Spell the name as it appears on the notice of registration.'| trans,
+                               'attr' : {
+                                   'class': 'govuk-input--width-20',
+                                   'label_class': 'govuk-label'
+                               },
+                               'aria_labelledby': 'attorney_name_heading'
                         }) }}
                     </fieldset>
 
                     <div class="govuk-button-group">
-                        <button data-prevent-double-click="true" type="submit"
-                                class="govuk-button govuk-!-margin-right-1">{% trans %}Continue{% endtrans %}</button>
+                        <button type="submit" data-prevent-double-click="true" class="govuk-button" data-module="govuk-button">
+                          {% trans %}Continue{% endtrans %}
+                        </button>
 
-                        <a href="{{ path('home') }}" role="button" draggable="false"
-                           class="govuk-button moj-button-menu__item govuk-button--secondary "
-                           data-module="govuk-button">
+                        <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
                             {% trans %}Cancel{% endtrans %}
                         </a>
                     </div>
-                    
+
                     {{ govuk_form_close() }}
                 </div>
             </div>

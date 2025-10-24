@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -23,28 +22,20 @@ use Viewer\Workflow\PaperVerificationCode;
 class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-    public const TEMPLATE = 'viewer::paper-verification/attorney-dob';
+
+    private const TEMPLATE = 'viewer::paper-verification/attorney-dob';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new PVDateOfBirth($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -65,15 +56,10 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
             );
         }
 
-        // TODO - Remove temporary name (as its for testing) and utilise the attorney name in the state
-        $attorneyName = $this->state($request)->attorneyName ?? 'Michael Clarke';
-
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form'         => $this->form->prepare(),
-            'attorneyName' => $attorneyName,
+            'attorneyName' => $this->state($request)->attorneyName,
             'back'         => $this->lastPage($this->state($request)),
-            'en_message'   => $this->systemMessages['view/en'] ?? null,
-            'cy_message'   => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -93,9 +79,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form' => $this->form->prepare(),
         ]));
     }
 

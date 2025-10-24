@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Exception\ApiException;
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -24,21 +21,12 @@ use Viewer\Handler\AbstractPVSCodeHandler;
  */
 class ViewHandler extends AbstractPVSCodeHandler
 {
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-
     public const TEMPLATE = 'viewer::view-lpa-combined-lpa';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
         private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
@@ -46,8 +34,6 @@ class ViewHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->systemMessages = $this->systemMessageService->getMessages();
-
         return parent::handle($request);
     }
 
@@ -69,10 +55,8 @@ class ViewHandler extends AbstractPVSCodeHandler
         switch ($response->status) {
             case PaperVerificationCodeStatus::OK:
                 return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-                    'lpa'        => $response->data,
-                    'back'       => $this->lastPage($this->state($request)),
-                    'en_message' => $this->systemMessages['view/en'] ?? null,
-                    'cy_message' => $this->systemMessages['view/cy'] ?? null,
+                    'lpa'  => $response->data,
+                    'back' => $this->lastPage($this->state($request)),
                 ]));
 
             case PaperVerificationCodeStatus::CANCELLED:
