@@ -12,7 +12,6 @@ final class PaperVerificationCode
 {
     public function __construct(
         public readonly LpaUid $lpaUid,
-        public readonly bool $cancelled,
         public readonly ?DateTimeInterface $expiresAt,
         public readonly ?VerificationCodeExpiryReason $expiryReason,
     ) {
