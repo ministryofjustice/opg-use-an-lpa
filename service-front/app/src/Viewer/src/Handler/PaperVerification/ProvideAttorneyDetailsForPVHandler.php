@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
@@ -23,29 +22,19 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
     private AttorneyDetailsForPV $form;
 
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
-
     private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new AttorneyDetailsForPV($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new AttorneyDetailsForPV($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -64,10 +53,8 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form' => $this->form->prepare(),
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -83,10 +70,8 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
+            'form' => $this->form->prepare(),
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

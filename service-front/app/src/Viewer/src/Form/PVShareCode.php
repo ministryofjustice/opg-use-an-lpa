@@ -10,6 +10,7 @@ use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
+use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
@@ -53,20 +54,15 @@ class PVShareCode extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message' => 'Enter your access code or paper verification code',
+                            'message' => 'Enter an access or paper verification code in the correct format',
                         ],
                     ],
                     [
-                        'name'                   => StringLength::class,
+                        'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'encoding' => 'UTF-8',
-                            'min'      => 12,
-                            'max'      => 19,
-                            'messages' => [
-                                StringLength::TOO_LONG  => 'The code you entered is too long',
-                                StringLength::TOO_SHORT => 'The code you entered is too short',
-                            ],
+                            'pattern' => '/^([A-Z0-9]{12}|P(-[A-Z0-9]{4}){3}-[A-Z0-9]{2})$/',
+                            'message' => 'Enter an access or paper verification code in the correct format',
                         ],
                     ],
                 ],
@@ -82,7 +78,7 @@ class PVShareCode extends AbstractForm implements InputFilterProviderInterface
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message' => 'Enter the donor\'s last name',
+                            'message' => 'Enter the donor’s last name',
                         ],
                     ],
                 ],

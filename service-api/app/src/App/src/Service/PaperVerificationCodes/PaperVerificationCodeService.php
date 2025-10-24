@@ -93,23 +93,45 @@ class PaperVerificationCodeService
         );
     }
 
-    /** @codeCoverageIgnore  */
-    public function view(PaperVerificationCodeView $params): void
-    {
-        // this shows how this will work
-        // $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
-
-        // $this->expire($verifiedCode, VerificationCodeExpiryReason::FIRST_TIME_USE);
-    }
-
     /**
+     * @param PaperVerificationCodeView $params
+     * @return CodeView
      * @throws ApiException
+     * @throws GoneException
      * @throws NotFoundException
      */
-    public function expire(Code $codeToExpire, VerificationCodeExpiryReason $expiryReason): PaperVerificationCode
+    public function view(PaperVerificationCodeView $params): CodeView
     {
-        $expiredCode = $this->paperVerificationCodes->expire($codeToExpire, $expiryReason)->getData();
-        return new PaperVerificationCode($expiredCode->lpaUid, false, $expiredCode->expiresAt, $expiryReason);
+        $verifiedData = $this->paperVerificationCodes->validate($params->code);
+        $verifiedCode = $verifiedData->getData();
+        $lookupTime   = $verifiedData->getLookupTime();
+        $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
+
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+
+        $this->checkCodeValidates(
+            $lpa,
+            $params->code,
+            $params->lpaUid,
+            $params->sentToDonor,
+            $params->attorneyName,
+            $params->dateOfBirth,
+            $params->noOfAttorneys
+        );
+
+        $_ = $this->paperVerificationCodes->expire($params->code, VerificationCodeExpiryReason::FIRST_TIME_USE);
+
+        $this->logger->notice('Paper verification code organisation recorded', [
+            'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
+            'lpa_uid'      => $params->lpaUid,
+            'organisation' => $params->organisation,
+            'lookup_time'  => $lookupTime,
+        ]);
+
+        return new CodeView(
+            lpaSource: LpaSource::LPASTORE,
+            lpa: $lpa,
+        );
     }
 
     /**
@@ -197,7 +219,7 @@ class PaperVerificationCodeService
         if ((string) $lpaUid !== $lpa->uId) {
             $this->logger->info(
                 'The the LpaUid entered by the user does not match the one found using the paper verification ' .
-                    'code {code}',
+                'code {code}',
                 ['code' => (string) $code]
             );
             throw new NotFoundException();

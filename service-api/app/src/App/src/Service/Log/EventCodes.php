@@ -69,4 +69,9 @@ class EventCodes
      * the LPA was not found.
      */
     public const string EXPECTED_LPA_MISSING = 'EXPECTED_LPA_MISSING';
+
+    /**
+     * Record the organisation name viewing the LPA during the Paper Verification Journey
+     */
+    public const string PAPER_VERIFICATION_CODE_ORGANISATION_VIEW = 'PAPER_VERIFICATION_CODE_ORGANISATION_VIEW';
 }

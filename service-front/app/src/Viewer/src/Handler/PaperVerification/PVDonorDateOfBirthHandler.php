@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -23,28 +22,20 @@ use Viewer\Workflow\PaperVerificationCode;
 class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
-    /**
-     * @var array{
-     *     "view/en": string,
-     *     "view/cy": string,
-     * }
-     */
-    private array $systemMessages;
+
     public const TEMPLATE = 'viewer::paper-verification/donor-dob';
 
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private SystemMessageService $systemMessageService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form           = new PVDateOfBirth($this->getCsrfGuard($request));
-        $this->systemMessages = $this->systemMessageService->getMessages();
+        $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -67,8 +58,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
             'form'       => $this->form->prepare(),
             'donorName'  => $this->state($request)->donorName,
             'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 
@@ -91,8 +80,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
             'form'       => $this->form->prepare(),
             'donorName'  => $this->state($request)->donorName,
             'back'       => $this->lastPage($this->state($request)),
-            'en_message' => $this->systemMessages['view/en'] ?? null,
-            'cy_message' => $this->systemMessages['view/cy'] ?? null,
         ]));
     }
 

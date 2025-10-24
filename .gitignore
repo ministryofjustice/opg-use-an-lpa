@@ -8,6 +8,7 @@ geckodriver.log
 build/**
 scripts/getStatsResultDemo.json
 
+.idea/httpRequests/*
 .python-version
 .pytest_cache
 .coverage
@@ -25,3 +26,5 @@ docs/diagrams/dsl/**/workspace.json
 
 *.pem
 tests/vendor
+
+docker-compose.override.yml

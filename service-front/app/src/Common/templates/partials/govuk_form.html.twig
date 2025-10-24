@@ -149,6 +149,13 @@
                     </label>
                 </legend>
             {% endif %}
+            {% if heading is defined %}
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                    <label class="govuk-fieldset__heading {{- block('input_extra_label_class') -}}" for="{{ fieldset.getName() }}">
+                        {{ heading | raw }}
+                    </label>
+                </legend>
+            {% endif %}
 
             {% with { element: fieldset } %}
                 {{- block('input_hint') -}}

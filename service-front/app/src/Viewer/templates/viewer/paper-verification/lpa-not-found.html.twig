@@ -9,11 +9,10 @@
         </div>
 
         <main class="govuk-main-wrapper " id="main-content" role="main">
-
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-
                     <h1 class="govuk-heading-xl">{% trans with { '%donorName%': donorName } %}We cannot show %donorName%'s lasting power of attorney{% endtrans %}</h1>
+
                     <p class="govuk-body">{% trans %}This is because some of the information you entered is incorrect. To view the LPA, try again making sure you enter the correct:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
@@ -25,57 +24,56 @@
 
                     <h3 class="govuk-heading-m">{% trans %}Your answers{% endtrans %}</h3>
 
-                    {% if sentToDonor %}
-                        <table id="confirmation-table" class="govuk-table">
-                            <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}LPA reference number{% endtrans %}</th>
-                                <td class="govuk-table__cell govuk-!-width-one-half">{{ lpaUid }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}Who the paper verification code was sent to{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ donorName }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans with { '%donorName%': donorName } %}%donorName%'s date of birth{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ lpa_date(dateOfBirth) }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}Number of attorneys{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ noOfAttorneys }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}Attorney name{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ attorneyName }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <table id="confirmation-table" class="govuk-table">
-                            <tbody class="govuk-table__body">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}LPA reference number{% endtrans %}</th>
-                                <td class="govuk-table__cell govuk-!-width-one-half">{{ lpaUid }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}Who the paper verification code was sent to{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ donorName }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans with { '%attorneyName%': attorneyName } %}%attorneyName%'s date of birth{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ dateOfBirth }}</td>
-                            </tr>
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="row">{% trans %}Number of attorneys{% endtrans %}</th>
-                                <td class="govuk-table__cell">{{ noOfAttorneys }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    {% endif %}
+                    <dl class="govuk-summary-list">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}LPA reference number{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpaUid }}
+                            </dd>
+                        </div>
 
-                    <a href="{{ path('home') }}" role="button" draggable="false"
-                       class="govuk-button moj-button-menu__item "
-                       data-module="govuk-button">
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Who the paper verification code was sent to{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ sentToDonor ? donorName : attorneyName }}
+                            </dd>
+                        </div>
+
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans with { '%name%': sentToDonor ? donorName : attorneyName } %}%name%’s date of birth{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ lpa_date(dateOfBirth) }}
+                            </dd>
+                        </div>
+
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                {% trans %}Number of attorneys{% endtrans %}
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+                                {{ noOfAttorneys }}
+                            </dd>
+                        </div>
+
+                        {% if sentToDonor %}
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+                                    {% trans %}Attorney name{% endtrans %}
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    {{ attorneyName }}
+                                </dd>
+                            </div>
+                        {% endif %}
+                    </dl>
+
+                    <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
                         {% trans %}Try again{% endtrans %}
                     </a>
                 </div>
