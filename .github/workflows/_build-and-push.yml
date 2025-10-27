@@ -195,13 +195,13 @@ jobs:
             go test
           elif [ ${SVC_PREFIX} == 'api' ]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa
             docker run -d --rm --name lpa-data-store-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-data-store
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-store
             docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-instructions-preferences
 
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
@@ -238,13 +238,13 @@ jobs:
         run: |
           if [[ "${SVC_PREFIX}" = "api" ]]; then
             docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-codes
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-codes
             docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider api-gateway
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa
             docker run -d --rm --name lpa-data-store-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider lpa-data-store
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-store
             docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use_a_lasting_power_of_attorney --provider iap-api-gateway
+              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-instructions-preferences
 
             export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
             export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
@@ -286,6 +286,16 @@ jobs:
         if: |
           (success() || failure()) && contains(fromJson('["front", "api"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
+          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
+      - name: fetch pact results
+        env:
+          SVC_PREFIX: ${{ matrix.svc_prefix }}
+        run: |
+          mkdir -p build/service-${SVC_PREFIX}
+          docker cp tests:/app/build/pacts build/service-${SVC_PREFIX}/pacts
+        if: |
+          (success() || failure()) && matrix.svc_prefix == 'api' && matrix.svc_suffix == 'app' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
