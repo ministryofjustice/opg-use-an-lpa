@@ -219,10 +219,10 @@ jobs:
             docker exec tests /usr/local/bin/php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit
 
             mkdir -p build/service-${SVC_PREFIX}
-            docker cp lpa-codes-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
-            docker cp api-gateway-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
-            docker cp lpa-data-store-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
-            docker cp iap-images-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
+            docker cp lpa-codes-pact-mock:/tmp/pacts build/service-${SVC_PREFIX}/pacts
+            docker cp api-gateway-pact-mock:/tmp/pacts build/service-${SVC_PREFIX}/pacts
+            docker cp lpa-data-store-pact-mock:/tmp/pacts build/service-${SVC_PREFIX}/pacts
+            docker cp iap-images-mock:/tmp/pacts build/service-${SVC_PREFIX}/pacts
 
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
