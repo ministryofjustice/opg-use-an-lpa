@@ -40,7 +40,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         $mockServer->setPort(80);
         $mockServer->setConsumer('use-an-lpa');
         $mockServer->setProvider('data-lpa-codes');
-        $mockServer->setPactDir('/tmp/pacts');
+        $mockServer->setPactDir('./build/pacts');
         $mockServer->setPactFileWriteMode('merge');
 
         $this->builder = new InteractionBuilder($mockServer);
