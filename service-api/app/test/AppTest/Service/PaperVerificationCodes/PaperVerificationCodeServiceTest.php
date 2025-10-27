@@ -561,7 +561,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->expects($this->once())
             ->method('notice')
             ->with(
-                message: 'Paper verification code organisation recorded',
+                message: 'First use of paper verification code, started expiry period',
                 context: $this->callback(
                     function (array $context = []) use ($params): bool {
                         $this->assertArrayHasKey('event_code', $context);
