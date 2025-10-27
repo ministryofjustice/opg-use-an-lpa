@@ -259,6 +259,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/revoke",
       "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/validate",
       "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/paper-verification-code/expire",
+      "arn:aws:execute-api:${data.aws_region.current.region}:${var.sirius_account_id}:*/*/POST/paper-verification-code/validate",
     ]
   }
 
