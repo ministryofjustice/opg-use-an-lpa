@@ -524,6 +524,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             noOfAttorneys: 1,
             organisation: 'Company A'
         );
+        $auditLog = false;
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
@@ -558,20 +559,22 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn($now);
 
         $logger
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('notice')
-            ->with(
-                message: 'First use of paper verification code, started expiry period',
-                context: $this->callback(
-                    function (array $context = []) use ($params): bool {
+            ->willReturnCallback(
+                function (string $message, array $context = []) use ($params, &$auditLog): bool {
+                    if ($message === 'Paper verification code organisation recorded') {
                         $this->assertArrayHasKey('event_code', $context);
-                        $this->assertEquals((string) $params->code, $context['code']);
-                        $this->assertEquals((string) $params->lpaUid, $context['lpa_uid']);
+                        $this->assertEquals((string)$params->code, $context['code']);
+                        $this->assertEquals((string)$params->lpaUid, $context['lpa_uid']);
                         $this->assertEquals($params->organisation, $context['organisation']);
                         $this->assertArrayHasKey('lookup_time', $context);
-                        return true;
+
+                        $auditLog = true;
                     }
-                ),
+
+                    return true;
+                }
             );
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
@@ -580,6 +583,7 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
         $this->assertEquals($lpa, $result->lpa);
+        $this->assertTrue($auditLog);
     }
 
     #[Test]
