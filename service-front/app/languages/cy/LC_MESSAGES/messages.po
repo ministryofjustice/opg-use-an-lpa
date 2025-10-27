@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-10-24T09:14:19+00:00\n"
+"POT-Creation-Date: 2025-10-24T13:51:08+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -5980,7 +5980,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/check-code-cancelled.html.twig:17
 #: src/Viewer/templates/viewer/check-code-expired.html.twig:18
-#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:21
 #: src/Viewer/templates/viewer/paper-verification/check-code-expired.html.twig:15
 msgid "Enter another code"
 msgstr "Rhowch god arall i mewn"
@@ -7381,7 +7381,7 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:10
 msgid "The paper verification code you entered has been cancelled"
-msgstr ""
+msgstr "Mae’r cod dilysu papur rydych wedi’i nodi wedi cael ei ganslo"
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-expired.html.twig:3
 msgid "Paper verification code expired"
@@ -7406,3 +7406,21 @@ msgstr "Rhowch god mynediad neu god dilysu papur yn y fformat cywir"
 msgctxt "error"
 msgid "Enter the donor’s last name"
 msgstr "Rhowch enw olaf y rhoddwr"
+
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:13
+msgid ""
+"To view this LPA, ask the person you’re dealing with for a new one. If needed, "
+"they can request a new paper verification code from the Office of the Public "
+"Guardian."
+msgstr ""
+"I weld yr LPA hon, gofynnwch i’r unigolyn rydych yn ymdrin â nhw am un newydd. "
+"Os oes angen, gallant wneud cais am god dilysu papur newydd gan Swyddfa’r "
+"Gwarcheidwad Cyhoeddus."
+
+#: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:17
+msgid ""
+"If they’re now using the LPA online, they’ll be able to make an access code "
+"for you to use instead."
+msgstr ""
+"Os ydynt bellach yn defnyddio’r LPA ar-lein, byddant yn gallu creu cod "
+"mynediad i chi ei ddefnyddio."

@@ -48,7 +48,7 @@ class PaperVerificationCodeService
         $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->expiryReason, $verifiedCode->expiresAt);
 
         return new CodeUsable(
             donorName: ($lpa->donor->firstnames ?? '') . ' ' . ($lpa->donor->surname ?? ''),
@@ -71,7 +71,7 @@ class PaperVerificationCodeService
         $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->expiryReason, $verifiedCode->expiresAt);
 
         $this->checkCodeValidates(
             $lpa,
@@ -107,7 +107,7 @@ class PaperVerificationCodeService
         $lookupTime   = $verifiedData->getLookupTime();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->expiryReason, $verifiedCode->expiresAt);
 
         $this->checkCodeValidates(
             $lpa,
@@ -163,13 +163,11 @@ class PaperVerificationCodeService
         LpaStore $lpa,
         Code $code,
         string $donorSurname,
-        bool $cancelled,
-            ?DateTimeInterface $expiresAt,
+        ?VerificationCodeExpiryReason $expiryReason,
+        ?DateTimeInterface $expiresAt,
     ): void {
         // Does the donor match? If not then return nothing (Lpa not found with those details)
-        if (
-            strtolower($lpa->donor->surname ?? '') !== strtolower($donorSurname)
-        ) {
+        if (strtolower($lpa->donor->surname ?? '') !== strtolower($donorSurname)) {
             $this->logger->info(
                 'The donor name entered by the user to view the lpa with {code} does not match',
                 ['code' => (string) $code]
@@ -177,30 +175,27 @@ class PaperVerificationCodeService
             throw new NotFoundException();
         }
 
-        if ($expiresAt !== null && $this->clock->now() > $expiresAt) {
-            $this->logger->info(
-                'The paper verification code {code} entered by user to view LPA has expired.',
-                ['code' => (string) $code]
-            );
-            throw new GoneException(
-                'Paper verification code expired',
-                [
-                    'reason' => 'expired',
-                ]
-            );
-        }
-
-        if ($cancelled) {
+        switch ($expiryReason) {
+        case VerificationCodeExpiryReason::CANCELLED:
             $this->logger->info(
                 'The paper verification code {code} entered by user is cancelled.',
                 ['code' => (string) $code]
             );
-            throw new GoneException(
-                'Paper verification code cancelled',
-                [
-                    'reason' => 'cancelled',
-                ]
-            );
+
+            throw new GoneException('Paper verification code cancelled', ['reason' => 'cancelled']);
+
+        case VerificationCodeExpiryReason::FIRST_TIME_USE:
+        case VerificationCodeExpiryReason::PAPER_TO_DIGITAL:
+            if ($this->clock->now() > $expiresAt) {
+                $this->logger->info(
+                    'The paper verification code {code} entered by user to view LPA has expired.',
+                    ['code' => (string) $code]
+                );
+
+                throw new GoneException('Paper verification code expired', ['reason' => 'expired']);
+            }
+
+            break;
         }
     }
 

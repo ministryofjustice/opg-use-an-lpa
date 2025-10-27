@@ -8,6 +8,7 @@ use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\Response\PaperVerificationCode as PaperVerificationCodeResponse;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
@@ -53,7 +54,7 @@ class PaperVerificationCodesTest extends TestCase
      * @param array{
      *      lpa: string,
      *      expires?: string,
-     *      cancelled?: string
+     *      expiry_reason?: VerificationCodeExpiryReason
      * }  $response
      * @return void
      */
@@ -101,12 +102,8 @@ class PaperVerificationCodesTest extends TestCase
             $this->assertEqualsWithDelta(new DateTimeImmutable($response['expires']), $data->expiresAt, 5);
         }
 
-        if (isset($response['cancelled'])) {
-            $this->assertEquals($response['cancelled'], $data->cancelled);
-        }
-
         if (isset($response['expiry_reason'])) {
-            $this->assertEquals($response['expiry_reason'], $data->expiry_reason);
+            $this->assertEquals($response['expiry_reason'], $data->expiryReason);
         }
     }
 
@@ -135,7 +132,7 @@ class PaperVerificationCodesTest extends TestCase
                     'expires'   => (new DateTimeImmutable())
                         ->add(new DateInterval('P1Y'))
                         ->format(DateTimeInterface::ATOM),
-                    'cancelled' => 'true', // code valid but cancelled
+                    'expiry_reason' => VerificationCodeExpiryReason::CANCELLED, // code valid but cancelled
                 ],
             ],
         ];

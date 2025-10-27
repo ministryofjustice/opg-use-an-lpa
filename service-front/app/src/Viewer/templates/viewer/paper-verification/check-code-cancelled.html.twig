@@ -9,6 +9,14 @@
                 <div class="govuk-grid-column-two-thirds">
                     <h1 class="govuk-heading-xl">{% trans %}The paper verification code you entered has been cancelled{% endtrans %}</h1>
 
+                    <p class="govuk-body">
+                        {% trans %}To view this LPA, ask the person you’re dealing with for a new one. If needed, they can request a new paper verification code from the Office of the Public Guardian.{% endtrans %}
+                    </p>
+
+                    <p class="govuk-body">
+                        {% trans %}If they’re now using the LPA online, they’ll be able to make an access code for you to use instead.{% endtrans %}
+                    </p>
+
                     <a href="{{ path('home') }}" role="button" draggable="false" class="govuk-button" data-module="govuk-button">
                         {% trans %}Enter another code{% endtrans %}
                     </a>

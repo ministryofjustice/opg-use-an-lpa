@@ -42,7 +42,15 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
                 'expires' => (new DateTimeImmutable())
                     ->sub(new DateInterval('P1Y')) // code has expired
                     ->format(DateTimeInterface::ATOM),
-                'expiry_reason' => 'first_time_use',
+                'expiry_reason' => VerificationCodeExpiryReason::FIRST_TIME_USE,
+            ];
+        } elseif ((string)$code === 'P-5678-5678-5678-65') {
+            $codeData = [
+                'lpa'     => 'M-7890-0400-4003',
+                'expires' => (new DateTimeImmutable())
+                    ->add(new DateInterval('P1Y')) // code has not yet expired
+                    ->format(DateTimeInterface::ATOM),
+                'expiry_reason' => VerificationCodeExpiryReason::FIRST_TIME_USE,
             ];
         } elseif ((string)$code === 'P-3456-3456-3456-34') {
             $codeData = [
@@ -50,8 +58,23 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
                 'expires'   => (new DateTimeImmutable())
                     ->add(new DateInterval('P1Y'))
                     ->format(DateTimeInterface::ATOM),
-                'cancelled' => 'true', // code valid but cancelled
-                'expiry_reason' => 'first_time_use',
+                'expiry_reason' => VerificationCodeExpiryReason::CANCELLED,
+            ];
+        } elseif ((string)$code === 'P-4321-4321-4321-21') {
+            $codeData = [
+                'lpa'       => 'M-7890-0400-4003',
+                'expires'   => (new DateTimeImmutable())
+                    ->add(new DateInterval('P1D'))
+                    ->format(DateTimeInterface::ATOM),
+                'expiry_reason' => VerificationCodeExpiryReason::PAPER_TO_DIGITAL, // moved to digital but not expired yet
+            ];
+        } elseif ((string)$code === 'P-4321-4321-4321-43') {
+            $codeData = [
+                'lpa'       => 'M-7890-0400-4003',
+                'expires'   => (new DateTimeImmutable())
+                    ->sub(new DateInterval('P1D'))
+                    ->format(DateTimeInterface::ATOM),
+                'expiry_reason' => VerificationCodeExpiryReason::PAPER_TO_DIGITAL, // moved to digital and expired
             ];
         } else {
             throw new NotFoundException();
@@ -69,18 +92,12 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
 //        $codeData = json_decode((string) $response->getBody(), true);
 
         $lpaUid    = new LpaUid($codeData['lpa']);
-        $cancelled = isset($codeData['cancelled'])
-            ? filter_var($codeData['cancelled'], FILTER_VALIDATE_BOOLEAN)
-            : false;
         $expiresAt = isset($codeData['expires'])
             ? new DateTimeImmutable($codeData['expires'])
             : null;
-        $expiryReason = isset($codeData['expiry_reason'])
-            ? VerificationCodeExpiryReason::tryFrom($codeData['expiry_reason'])
-            : null;
 
         return new UpstreamResponse(
-            new PaperVerificationCode($lpaUid, $cancelled, $expiresAt, $expiryReason),
+            new PaperVerificationCode($lpaUid, $expiresAt, $codeData['expiry_reason'] ?? null),
             new DateTimeImmutable('now', new DateTimeZone('UTC')), // TODO remove when mock available
             // new DateTimeImmutable($response->getHeaderLine('Date')), // TODO use when mock available
         );
@@ -132,7 +149,7 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
             : null;
 
         return new UpstreamResponse(
-            new PaperVerificationCode($lpaUid, false, $expiresAt, $expiryReason),
+            new PaperVerificationCode($lpaUid, $expiresAt, $expiryReason),
             new DateTimeImmutable('now', new DateTimeZone('UTC')), // TODO remove when mock available
         // new DateTimeImmutable($response->getHeaderLine('Date')), // TODO use when mock available
         );
