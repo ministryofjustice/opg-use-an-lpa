@@ -218,6 +218,12 @@ jobs:
             docker exec tests docker-php-ext-enable xdebug
             docker exec tests /usr/local/bin/php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit
 
+            mkdir -p build/service-${SVC_PREFIX}
+            docker cp lpa-codes-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
+            docker cp api-gateway-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
+            docker cp lpa-data-store-pact-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
+            docker cp iap-images-mock:/tmp/pacts/* build/service-${SVC_PREFIX}/pacts
+
             docker stop lpa-codes-pact-mock
             docker stop api-gateway-pact-mock
             docker stop lpa-data-store-pact-mock
@@ -286,16 +292,6 @@ jobs:
         if: |
           (success() || failure()) && contains(fromJson('["front", "api"]'), matrix.svc_prefix) &&
           matrix.svc_suffix == 'app' &&
-          (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
-
-      - name: fetch pact results
-        env:
-          SVC_PREFIX: ${{ matrix.svc_prefix }}
-        run: |
-          mkdir -p build/service-${SVC_PREFIX}
-          docker cp tests:/app/build/pacts build/service-${SVC_PREFIX}/pacts
-        if: |
-          (success() || failure()) && matrix.svc_prefix == 'api' && matrix.svc_suffix == 'app' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
       - name: archive test results
