@@ -95,7 +95,7 @@ resource "aws_lb_listener_rule" "redirect_use_root_to_gov" {
 
     redirect {
       host        = "www.gov.uk"
-      path        = "/use-lasting-power-of-attorney"
+      path        = "/manage-lasting-power-attorney/use-lasting-power-of-attorney"
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"

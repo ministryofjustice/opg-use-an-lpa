@@ -6,7 +6,7 @@ Feature: User Journeys start on Gov.uk
 
   Background:
     # This feature is implemented at the load balancer level and can be found in the terraform
-    # terraform/environment/region/actor_load_balancer.tf:76
+    # terraform/environment/region/use_load_balancer.tf:90
     # terraform/environment/region/viewer_load_balancer.tf:77
 
   @smoke @viewer
