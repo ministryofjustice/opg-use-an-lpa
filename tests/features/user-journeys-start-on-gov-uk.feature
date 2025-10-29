@@ -6,7 +6,7 @@ Feature: User Journeys start on Gov.uk
 
   Background:
     # This feature is implemented at the load balancer level and can be found in the terraform
-    # terraform/environment/region/actor_load_balancer.tf:76
+    # terraform/environment/region/use_load_balancer.tf:90
     # terraform/environment/region/viewer_load_balancer.tf:77
 
   @smoke @viewer
@@ -17,4 +17,4 @@ Feature: User Journeys start on Gov.uk
   @smoke @actor
   Scenario: I start a use journey
     Given I access the service root path
-    Then the service should redirect me to "https://www.gov.uk/use-lasting-power-attorney/start-lasting-power-of-attorney"
+    Then the service should redirect me to "https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney"
