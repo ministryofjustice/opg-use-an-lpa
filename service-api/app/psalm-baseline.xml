@@ -26,6 +26,11 @@
       <code><![CDATA[$uId]]></code>
     </PossiblyUnusedProperty>
   </file>
+  <file src="src/App/src/DataAccess/Repository/Response/PaperVerificationCodeExpiry.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$expiresAt]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="src/App/src/DataAccess/Repository/UserLpaActorMapInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[array]]></code>

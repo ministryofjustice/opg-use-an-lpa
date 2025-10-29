@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service\PaperVerificationCodes;
 
-use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
 use App\DataAccess\Repository\Response\PaperVerificationCode;
 use App\Entity\LpaStore\LpaStore;
@@ -48,7 +47,13 @@ class PaperVerificationCodeService
         $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable(
+            $lpa,
+            $params->code,
+            $params->name,
+            $verifiedCode->expiresAt,
+            $verifiedCode->expiryReason
+        );
 
         return new CodeUsable(
             donorName: ($lpa->donor->firstnames ?? '') . ' ' . ($lpa->donor->surname ?? ''),
@@ -71,7 +76,13 @@ class PaperVerificationCodeService
         $verifiedCode = $this->paperVerificationCodes->validate($params->code)->getData();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable(
+            $lpa,
+            $params->code,
+            $params->name,
+            $verifiedCode->expiresAt,
+            $verifiedCode->expiryReason
+        );
 
         $this->checkCodeValidates(
             $lpa,
@@ -89,7 +100,6 @@ class PaperVerificationCodeService
             lpaStatus: LpaStatus::from($lpa->status ?? ''),
             lpaSource: LpaSource::LPASTORE,
             expiresAt: $verifiedCode->expiresAt,
-            // TODO add expiry reason
         );
     }
 
@@ -107,7 +117,13 @@ class PaperVerificationCodeService
         $lookupTime   = $verifiedData->getLookupTime();
         $lpa          = $this->getLpa($verifiedCode, (string) $params->code);
 
-        $this->checkCodeUsable($lpa, $params->code, $params->name, $verifiedCode->cancelled, $verifiedCode->expiresAt);
+        $this->checkCodeUsable(
+            $lpa,
+            $params->code,
+            $params->name,
+            $verifiedCode->expiresAt,
+            $verifiedCode->expiryReason
+        );
 
         $this->checkCodeValidates(
             $lpa,
@@ -119,14 +135,30 @@ class PaperVerificationCodeService
             $params->noOfAttorneys
         );
 
-        $_ = $this->paperVerificationCodes->expire($params->code, VerificationCodeExpiryReason::FIRST_TIME_USE);
+        if ($verifiedCode->expiryReason === null) {
+            $_ = $this->paperVerificationCodes->expire(
+                $params->code,
+                VerificationCodeExpiryReason::FIRST_TIME_USE
+            );
 
-        $this->logger->notice('Paper verification code organisation recorded', [
-            'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
-            'lpa_uid'      => $params->lpaUid,
-            'organisation' => $params->organisation,
-            'lookup_time'  => $lookupTime,
-        ]);
+            $this->logger->notice(
+                'First use of paper verification code, started expiry period',
+                [
+                    'event_code' => EventCodes::PAPER_VERIFICATION_CODE_FIRST_TIME_USE,
+                ]
+            );
+        }
+
+        $this->logger->notice(
+            'Paper verification code organisation recorded',
+            [
+                'event_code'   => EventCodes::PAPER_VERIFICATION_CODE_ORGANISATION_VIEW,
+                'code'         => $params->code,
+                'lpa_uid'      => $params->lpaUid,
+                'organisation' => $params->organisation,
+                'lookup_time'  => $lookupTime,
+            ]
+        );
 
         return new CodeView(
             lpaSource: LpaSource::LPASTORE,
@@ -163,12 +195,14 @@ class PaperVerificationCodeService
         LpaStore $lpa,
         Code $code,
         string $donorSurname,
-        bool $cancelled,
-            ?DateTimeInterface $expiresAt,
+        ?DateTimeInterface $expiresAt,
+        ?VerificationCodeExpiryReason $expiryReason,
     ): void {
         // Does the donor match? If not then return nothing (Lpa not found with those details)
         if (
-            strtolower($lpa->donor->surname ?? '') !== strtolower($donorSurname)
+            $this->turnUnicodeCharToAscii(strtolower($lpa->donor->surname ?? ''))
+            !==
+            $this->turnUnicodeCharToAscii(strtolower($donorSurname))
         ) {
             $this->logger->info(
                 'The donor name entered by the user to view the lpa with {code} does not match',
@@ -179,26 +213,13 @@ class PaperVerificationCodeService
 
         if ($expiresAt !== null && $this->clock->now() > $expiresAt) {
             $this->logger->info(
-                'The paper verification code {code} entered by user to view LPA has expired.',
-                ['code' => (string) $code]
+                'The paper verification code {code} entered by user to view LPA has expired',
+                ['code' => (string) $code],
             );
             throw new GoneException(
                 'Paper verification code expired',
                 [
-                    'reason' => 'expired',
-                ]
-            );
-        }
-
-        if ($cancelled) {
-            $this->logger->info(
-                'The paper verification code {code} entered by user is cancelled.',
-                ['code' => (string) $code]
-            );
-            throw new GoneException(
-                'Paper verification code cancelled',
-                [
-                    'reason' => 'cancelled',
+                    'reason' => $expiryReason?->value,
                 ]
             );
         }

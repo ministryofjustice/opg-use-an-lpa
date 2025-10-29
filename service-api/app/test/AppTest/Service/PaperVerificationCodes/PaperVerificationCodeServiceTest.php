@@ -9,7 +9,6 @@ use App\DataAccess\Repository\Response\PaperVerificationCode as CodeDTO;
 use App\Enum\LpaSource;
 use App\Enum\LpaStatus;
 use App\Enum\LpaType;
-use App\Exception\BadRequestException;
 use App\Enum\VerificationCodeExpiryReason;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
@@ -54,8 +53,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -79,7 +79,11 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
-        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 1);
+        $this->assertEqualsWithDelta(
+            $now->setTime(0, 0)->add(new DateInterval('P1Y')),
+            $result->expiresAt,
+            0
+        );
         $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
@@ -130,8 +134,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->sub(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->sub(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -176,9 +181,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: true,
-                        // TODO UML-4080 add below needs changing to sub  , to work for cancelled codes that have also have expiry date in the past
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->sub(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::CANCELLED
                     )
                 )
@@ -197,9 +202,15 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
 
-        $this->expectException(GoneException::class);
-        $this->expectExceptionMessage('Paper verification code cancelled');
-        $sut->usable($params);
+        try {
+            $sut->usable($params);
+        } catch (GoneException $e) {
+            $this->assertEquals('Paper verification code expired', $e->getMessage());
+            $this->assertEquals('cancelled', $e->getAdditionalData()['reason']);
+            return;
+        }
+
+        $this->fail('An expected GoneException has not been raised.');
     }
 
     #[Test]
@@ -223,8 +234,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -268,8 +280,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -313,8 +326,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    $params->lpaUid,
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -338,7 +352,11 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
         $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
-        $this->assertEqualsWithDelta($now->add(new DateInterval('P1Y')), $result->expiresAt, 3);
+        $this->assertEqualsWithDelta(
+            $now->add(new DateInterval('P1Y'))->setTime(0, 0),
+            $result->expiresAt,
+            0
+        );
         $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
     }
@@ -369,8 +387,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -405,8 +424,9 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    new LpaUid('M-7890-0400-4003'),
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: (new DateTimeImmutable())
+                                       ->setTime(0, 0)
+                                       ->add(new DateInterval('P1Y')),
                         expiryReason: VerificationCodeExpiryReason::FIRST_TIME_USE,
                     )
                 )
@@ -492,7 +512,7 @@ class PaperVerificationCodeServiceTest extends TestCase
     }
 
     #[Test]
-    public function it_successfully_view(): void
+    public function it_successfully_views_and_records_organisation(): void
     {
         $params = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
@@ -504,13 +524,14 @@ class PaperVerificationCodeServiceTest extends TestCase
             noOfAttorneys: 1,
             organisation: 'Company A'
         );
+        $auditLog = false;
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
         $logger     = $this->createMock(LoggerInterface::class);
         $lpa        = LpaUtilities::lpaStoreLpaFixture();
- 
+
         $paperCodes
             ->expects($this->once())
             ->method('validate')
@@ -519,13 +540,12 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    $params->lpaUid,
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: null,
                         expiryReason: null,
                     )
                 )
             );
-        
+
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
@@ -537,13 +557,33 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->expects($this->any())
             ->method('now')
             ->willReturn($now);
-        
+
+        $logger
+            ->expects($this->atLeastOnce())
+            ->method('notice')
+            ->willReturnCallback(
+                function (string $message, array $context = []) use ($params, &$auditLog): bool {
+                    if ($message === 'Paper verification code organisation recorded') {
+                        $this->assertArrayHasKey('event_code', $context);
+                        $this->assertEquals((string)$params->code, $context['code']);
+                        $this->assertEquals((string)$params->lpaUid, $context['lpa_uid']);
+                        $this->assertEquals($params->organisation, $context['organisation']);
+                        $this->assertArrayHasKey('lookup_time', $context);
+
+                        $auditLog = true;
+                    }
+
+                    return true;
+                }
+            );
+
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
-        
+
         $result = $sut->view($params);
 
         $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
         $this->assertEquals($lpa, $result->lpa);
+        $this->assertTrue($auditLog);
     }
 
     #[Test]
@@ -564,7 +604,7 @@ class PaperVerificationCodeServiceTest extends TestCase
         $lpaManager = $this->createMock(LpaManagerInterface::class);
         $clock      = $this->createMock(ClockInterface::class);
         $logger     = $this->createMock(LoggerInterface::class);
-        
+
         $paperCodes
             ->expects($this->once())
             ->method('validate')
@@ -573,24 +613,23 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    $params->lpaUid,
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: null,
                         expiryReason: null,
                     )
                 )
             );
-        
+
         $lpaManager
             ->expects($this->once())
             ->method('getByUid')
             ->with($params->lpaUid, originator: $params->code)
             ->willReturn(null);
-        
+
         $clock
             ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
-        
+
         $sut = new PaperVerificationCodeService($paperCodes, $lpaManager, $clock, $logger);
         $this->expectException(NotFoundException::class);
         $sut->view($params);
@@ -623,8 +662,7 @@ class PaperVerificationCodeServiceTest extends TestCase
                 LpaUtilities::codesApiResponseFixture(
                     new CodeDTO(
                         lpaUid:    $params->lpaUid,
-                        cancelled: false,
-                        expiresAt: (new DateTimeImmutable())->add(new DateInterval('P1Y')),
+                        expiresAt: null,
                         expiryReason: null,
                     )
                 )

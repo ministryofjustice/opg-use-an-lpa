@@ -8,10 +8,11 @@ use App\DataAccess\ApiGateway\PaperVerificationCodes;
 use App\DataAccess\ApiGateway\RequestSigner;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\DataAccess\Repository\Response\PaperVerificationCode as PaperVerificationCodeResponse;
+use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
+use App\Enum\VerificationCodeExpiryReason;
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
-use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -44,7 +45,7 @@ class PaperVerificationCodesTest extends TestCase
 
         $this->requestSignerFactoryProphecy = $this->prophesize(RequestSignerFactory::class);
         $this->requestSignerFactoryProphecy
-            ->__invoke()
+            ->__invoke(Argument::any())
             ->willReturn($requestSignerProphecy->reveal());
     }
 
@@ -66,8 +67,7 @@ class PaperVerificationCodesTest extends TestCase
         $responseProphecy->getBody()->willReturn(json_encode($response));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
-        // TODO once the code actually implements upstream API calls swap this for "generatePSR17Prophecies"
-        $this->generatePSR17PropheciesWithoutAssertions(
+        $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
             'test-trace-id',
             [
@@ -78,7 +78,7 @@ class PaperVerificationCodesTest extends TestCase
         $this->requestFactoryProphecy
             ->createRequest(
                 'POST',
-                Argument::containingString('localhost/v1/paper-verification-codes/validate'),
+                Argument::containingString('localhost/v1/paper-verification-code/validate'),
                 Argument::any()
             )
             ->willReturn($this->requestProphecy->reveal());
@@ -97,16 +97,12 @@ class PaperVerificationCodesTest extends TestCase
         $this->assertInstanceOf(PaperVerificationCodeResponse::class, $data);
         $this->assertEquals($response['lpa'], (string)$data->lpaUid);
 
-        if (isset($response['expires'])) {
-            $this->assertEqualsWithDelta(new DateTimeImmutable($response['expires']), $data->expiresAt, 5);
-        }
-
-        if (isset($response['cancelled'])) {
-            $this->assertEquals($response['cancelled'], $data->cancelled);
+        if (isset($response['expiry_date'])) {
+            $this->assertEqualsWithDelta(new DateTimeImmutable($response['expiry_date']), $data->expiresAt, 5);
         }
 
         if (isset($response['expiry_reason'])) {
-            $this->assertEquals($response['expiry_reason'], $data->expiry_reason);
+            $this->assertEquals($response['expiry_reason'], $data->expiryReason->value);
         }
     }
 
@@ -122,22 +118,69 @@ class PaperVerificationCodesTest extends TestCase
             [
                 'P-5678-5678-5678-56',
                 [
-                    'lpa'     => 'M-7890-0400-4003',
-                    'expires' => (new DateTimeImmutable())
+                    'lpa'           => 'M-7890-0400-4003',
+                    'expiry_date'   => (new DateTimeImmutable())
                         ->sub(new DateInterval('P1Y')) // code has expired
-                        ->format(DateTimeInterface::ATOM),
+                        ->format('Y-m-d'),
+                    'expiry_reason' => 'cancelled',
                 ],
             ],
             [
                 'P-3456-3456-3456-34',
                 [
-                    'lpa'       => 'M-7890-0400-4003',
-                    'expires'   => (new DateTimeImmutable())
+                    'lpa'           => 'M-7890-0400-4003',
+                    'expiry_date'   => (new DateTimeImmutable())
                         ->add(new DateInterval('P1Y'))
-                        ->format(DateTimeInterface::ATOM),
-                    'cancelled' => 'true', // code valid but cancelled
+                        ->format('Y-m-d'),
+                    'expiry_reason' => 'first_time_use',
                 ],
             ],
         ];
+    }
+
+    #[Test]
+    public function it_expires_provided_codes(): void
+    {
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
+        $responseProphecy->getBody()->willReturn(json_encode(['expiry_date' => '2025-10-24']));
+        $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
+
+        $this->generatePSR17Prophecies(
+            $responseProphecy->reveal(),
+            'test-trace-id',
+            [
+                'code'          => 'P-1234-1234-1234-12',
+                'expiry_reason' => 'paper_to_digital',
+            ]
+        );
+
+        $this->requestFactoryProphecy
+            ->createRequest(
+                'POST',
+                Argument::containingString('localhost/v1/paper-verification-code/expire'),
+                Argument::any()
+            )
+            ->willReturn($this->requestProphecy->reveal());
+
+        $sut = new PaperVerificationCodes(
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
+            'localhost',
+            'test-trace-id',
+        );
+
+        $data = $sut->expire(
+            new PaperVerificationCode('P-1234-1234-1234-12'),
+            VerificationCodeExpiryReason::PAPER_TO_DIGITAL
+        )->getData();
+
+        $this->assertInstanceOf(PaperVerificationCodeExpiry::class, $data);
+        $this->assertEquals(
+            (new DateTimeImmutable('2025-10-24'))->setTime(0, 0),
+            $data->expiresAt
+        );
     }
 }

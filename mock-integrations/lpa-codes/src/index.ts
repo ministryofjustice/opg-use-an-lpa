@@ -9,6 +9,11 @@ logger.info('Operation is ' + opId)
 let code = 400
 let response = ""
 
+function unix2date(date: number): string {
+  const dateObj = new Date(date * 1000);
+  return dateObj.toISOString().substring(0, 10)
+}
+
 if (opId === 'api.resources.handle_healthcheck') {
   code = 200
   response = JSON.stringify('OK')
@@ -91,7 +96,7 @@ if (opId === 'api.resources.handle_healthcheck') {
       }
 
       if (activationCode.expiry_date !== undefined) {
-        responseData.expiry_date = activationCode.expiry_date
+        responseData.expiry_date = unix2date(activationCode.expiry_date as number)
         responseData.expiry_reason = activationCode.expiry_reason
       }
 
@@ -123,7 +128,7 @@ if (opId === 'api.resources.handle_healthcheck') {
       )
 
       const responseData: Record<string, any> = {
-        expiry_date: activationCode.expiry_date,
+        expiry_date: unix2date(activationCode.expiry_date as number)
       }
 
       response = JSON.stringify(responseData)
