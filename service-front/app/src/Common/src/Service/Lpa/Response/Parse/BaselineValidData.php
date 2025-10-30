@@ -7,8 +7,15 @@ namespace Common\Service\Lpa\Response\Parse;
 trait BaselineValidData
 {
     /**
-     * @param array{donor: array, caseSubtype: string} $data
-     * @return bool
+     * @param array{
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     caseSubtype: string,
+     * } $data
+ * @return bool
      */
     private function isValidData(array $data): bool
     {
@@ -18,8 +25,7 @@ trait BaselineValidData
             return false;
         }
 
-        $hasDonorName   = array_key_exists('firstname', $data['donor'])
-            && array_key_exists('middlenames', $data['donor'])
+        $hasDonorName   = array_key_exists('firstnames', $data['donor'])
             && array_key_exists('surname', $data['donor']);
         $hasCaseSubType = isset($data['caseSubtype']);
 

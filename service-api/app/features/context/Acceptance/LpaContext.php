@@ -437,10 +437,15 @@ class LpaContext implements Context
 
         $expectedResponse = [
             'donor'                => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'        => $this->lpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $this->lpa->donor->firstname,
+                        $this->lpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $this->lpa->donor->surname,
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'lpaActorToken'        => (int)$this->userLpaActorToken,
@@ -702,10 +707,15 @@ class LpaContext implements Context
 
         $expectedResponse = [
             'donor'                => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'        => $this->lpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $this->lpa->donor->firstname,
+                        $this->lpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $this->lpa->donor->surname,
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
@@ -2365,14 +2375,14 @@ class LpaContext implements Context
     #[Then('/^The LPA is removed and I am taken back to dashboard page$/')]
     public function theLPAIsRemoved(): void
     {
-        $actorId = 700000000054;
+        $actorId           = 700000000054;
         $expected_response = [
-                'donor' => [
-                    'uId' => '700000000053',
-                    'firstname' => 'Ian',
-                    'surname' => 'Deputy',
-                ],
-                'caseSubtype' => 'hw'
+            'donor'       => [
+                'uId'        => '700000000053',
+                'firstnames' => 'Ian Deputy',
+                'surname'    => 'Deputy',
+            ],
+            'caseSubtype' => 'hw',
         ];
 
         // UserLpaActorMap::get
@@ -2866,15 +2876,19 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($this->lpa->donor), true),
             'role'        => 'donor',
             'lpa-id'      => $this->lpaUid,
             'caseSubtype' => $this->lpa->caseSubtype,
             'donor'       => [
-                'uId'         => $this->lpa->donor->uId,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
+                'uId'        => $this->lpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $this->lpa->donor->firstname,
+                        $this->lpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $this->lpa->donor->surname,
             ],
         ];
 
@@ -2984,16 +2998,15 @@ class LpaContext implements Context
 
         $expectedResponse = [
             'donor'                => [
-                'id'          => $this->lpa->donor->id,
-                'uId'         => $this->lpa->donor->uId,
-                'email'       => $this->lpa->donor->email,
-                'dob'         => $this->lpa->donor->dob,
-                'salutation'  => $this->lpa->donor->salutation,
-                'firstname'   => $this->lpa->donor->firstname,
-                'middlenames' => $this->lpa->donor->middlenames,
-                'surname'     => $this->lpa->donor->surname,
-                'companyName' => $this->lpa->donor->companyName,
-                'addresses'   => json_decode(json_encode($this->lpa->donor->addresses), true),
+                'uId'        => $this->lpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $this->lpa->donor->firstname,
+                        $this->lpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $this->lpa->donor->surname,
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
@@ -3272,21 +3285,30 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->attorneys[0]), true),
             'role'        => 'attorney',
             'lpa-id'      => $sanitizedSiriusLpa->uId,
             'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $sanitizedSiriusLpa->donor->uId,
-                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
-                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
-                'surname'     => $sanitizedSiriusLpa->donor->surname,
+                'uId'        => $sanitizedSiriusLpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $sanitizedSiriusLpa->donor->firstname,
+                        $sanitizedSiriusLpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $sanitizedSiriusLpa->donor->surname,
             ],
             'attorney'    => [
-                'uId'         => $sanitizedSiriusLpa->attorneys[0]->uId,
-                'firstname'   => $sanitizedSiriusLpa->attorneys[0]->firstname,
-                'middlenames' => $sanitizedSiriusLpa->attorneys[0]->middlenames,
-                'surname'     => $sanitizedSiriusLpa->attorneys[0]->surname,
+                'uId'        => $sanitizedSiriusLpa->attorneys[0]->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $sanitizedSiriusLpa->attorneys[0]->firstname,
+                        $sanitizedSiriusLpa->attorneys[0]->middlenames,
+                    )
+                ),
+                'surname'    => $sanitizedSiriusLpa->attorneys[0]->surname,
             ],
         ];
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson());
@@ -3302,7 +3324,7 @@ class LpaContext implements Context
         $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
         $this->lpaUid         = '700000000047';
-        $this->userFirstnames = 'Rachel';
+        $this->userFirstnames = 'Rachel Emma';
         $this->userSurname    = 'Sanderson';
         $this->userDob        = '1948-11-01';
         $this->userPostCode   = 'DN37 5SH';
@@ -3340,15 +3362,19 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->donor), true),
             'role'        => 'donor',
             'lpa-id'      => $this->lpaUid,
             'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $sanitizedSiriusLpa->donor->uId,
-                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
-                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
-                'surname'     => $sanitizedSiriusLpa->donor->surname,
+                'uId'        => $sanitizedSiriusLpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $sanitizedSiriusLpa->donor->firstname,
+                        $sanitizedSiriusLpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $sanitizedSiriusLpa->donor->surname,
             ],
         ];
 
@@ -3403,21 +3429,30 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'actor'       => json_decode(json_encode($sanitizedSiriusLpa->attorneys[0]), true),
             'role'        => 'attorney',
             'lpa-id'      => $this->lpaUid,
             'attorney'    => [
-                'uId'         => $sanitizedSiriusLpa->attorneys[0]->uId,
-                'firstname'   => $sanitizedSiriusLpa->attorneys[0]->firstname,
-                'middlenames' => $sanitizedSiriusLpa->attorneys[0]->middlenames,
-                'surname'     => $sanitizedSiriusLpa->attorneys[0]->surname,
+                'uId'        => $sanitizedSiriusLpa->attorneys[0]->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $sanitizedSiriusLpa->attorneys[0]->firstname,
+                        $sanitizedSiriusLpa->attorneys[0]->middlenames,
+                    )
+                ),
+                'surname'    => $sanitizedSiriusLpa->attorneys[0]->surname,
             ],
             'caseSubtype' => $sanitizedSiriusLpa->caseSubtype,
             'donor'       => [
-                'uId'         => $sanitizedSiriusLpa->donor->uId,
-                'firstname'   => $sanitizedSiriusLpa->donor->firstname,
-                'middlenames' => $sanitizedSiriusLpa->donor->middlenames,
-                'surname'     => $sanitizedSiriusLpa->donor->surname,
+                'uId'        => $sanitizedSiriusLpa->donor->uId,
+                'firstnames' => trim(
+                    sprintf(
+                        '%s %s',
+                        $sanitizedSiriusLpa->donor->firstname,
+                        $sanitizedSiriusLpa->donor->middlenames,
+                    )
+                ),
+                'surname'    => $sanitizedSiriusLpa->donor->surname,
             ],
         ];
 

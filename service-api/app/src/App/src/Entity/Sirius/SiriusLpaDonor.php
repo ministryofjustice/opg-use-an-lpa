@@ -99,24 +99,4 @@ class SiriusLpaDonor extends Person implements
     {
         return $this->middlenames ?? '';
     }
-
-    public function getFirstnames(): string
-    {
-        return $this->firstname ?? '';
-    }
-
-    public function getSurname(): string
-    {
-        return $this->surname ?? '';
-    }
-
-    public function getUid(): string
-    {
-        return $this->uId ?? '';
-    }
-
-    public function getDob(): DateTimeInterface
-    {
-        return $this->dob;
-    }
 }

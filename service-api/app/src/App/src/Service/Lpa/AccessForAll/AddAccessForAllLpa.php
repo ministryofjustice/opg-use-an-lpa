@@ -88,7 +88,11 @@ class AddAccessForAllLpa
 
         throw new LpaActivationKeyAlreadyRequestedException(
             [
-                'donor'                => $lpaAddedData['donor'],
+                'donor'                => [
+                    'uId'        => $lpaAddedData['donor']['uId'],
+                    'firstnames' => $lpaAddedData['donor']['firstnames'],
+                    'surname'    => $lpaAddedData['donor']['surname'],
+                ],
                 'caseSubtype'          => $lpaAddedData['caseSubtype'],
                 'activationKeyDueDate' => $activationKeyDueDate,
             ],
@@ -129,7 +133,11 @@ class AddAccessForAllLpa
 
             throw new LpaAlreadyHasActivationKeyException(
                 [
-                    'donor'                => $validationData->lpa->getDonor(),
+                    'donor'                => [
+                        'uId'        => $validationData->lpa->getDonor()->getUid(),
+                        'firstnames' => $validationData->lpa->getDonor()->getFirstnames(),
+                        'surname'    => $validationData->lpa->getDonor()->getSurname(),
+                    ],
                     'caseSubtype'          => $validationData->getCaseSubtype(),
                     'activationKeyDueDate' => $activationKeyDueDate,
                 ]

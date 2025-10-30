@@ -57,19 +57,19 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
             $result = $this->paperVerificationCodeService->usable($code, $lastName);
 
             switch ($result->status) {
-            case PaperVerificationCodeStatus::CANCELLED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
-                    
-            case PaperVerificationCodeStatus::EXPIRED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
-                    
-            case PaperVerificationCodeStatus::NOT_FOUND:
-                return new HtmlResponse(
-                    $this->renderer->render('viewer::lpa-not-found-with-pvc', [
-                        'donor_last_name' => $lastName,
-                        'lpa_access_code' => $code,
-                    ])
-                );                    
+                case PaperVerificationCodeStatus::CANCELLED:
+                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
+
+                case PaperVerificationCodeStatus::EXPIRED:
+                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
+
+                case PaperVerificationCodeStatus::NOT_FOUND:
+                    return new HtmlResponse(
+                        $this->renderer->render('viewer::lpa-not-found-with-pvc', [
+                            'donor_last_name' => $lastName,
+                            'lpa_access_code' => $code,
+                        ])
+                    );
             }
         }
 
@@ -77,9 +77,9 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
         $this->state($request)->lpaType   = $result->data->lpaType;
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'donorName'  => $this->state($request)->donorName,
-            'lpaType'    => $this->state($request)->lpaType,
+            'form'      => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'lpaType'   => $this->state($request)->lpaType,
         ]));
     }
 
