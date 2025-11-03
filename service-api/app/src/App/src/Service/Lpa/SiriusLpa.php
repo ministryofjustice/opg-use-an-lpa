@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpaInterface;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
+use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
@@ -34,6 +35,8 @@ class SiriusLpa implements
     LpaRemovedInterface,
     AddLpaInterface,
     RestrictSendingLpaForCleansingInterface,
+    FilterActiveActorsInterface,
+    HasRestrictionsInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
@@ -158,5 +161,33 @@ class SiriusLpa implements
     public function getLpaIsCleansed(): bool
     {
         return $this->lpa['lpaIsCleansed'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withAttorneys(array $attorneys): FilterActiveActorsInterface
+    {
+        $this->lpa['attorneys'] = $attorneys;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withTrustCorporations(array $trustCorporations): FilterActiveActorsInterface
+    {
+        $this->lpa['trustCorporations'] = $trustCorporations;
+        return $this;
+    }
+
+    public function hasGuidance(): bool
+    {
+        return $this->lpa['applicationHasGuidance'] ?? false;
+    }
+
+    public function hasRestrictions(): bool
+    {
+        return $this->lpa['applicationHasRestrictions'] ?? false;
     }
 }

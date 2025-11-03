@@ -6,12 +6,12 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
-use App\Service\Lpa\SiriusLpa;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
+use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
 use DateTimeImmutable;
 use Monolog\Logger;
@@ -39,7 +39,7 @@ class LpaAlreadyAddedTest extends TestCase
     {
         $this->lpaManagerProphecy      = $this->prophesize(LpaManagerInterface::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
+        $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
 
         $this->userId            = '12345';
         $this->lpaUid            = '700000000543';
@@ -93,10 +93,9 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertEquals(
             [
                 'donor'                => [
-                    'uId'         => '700000000444',
-                    'firstname'   => 'Another',
-                    'middlenames' => '',
-                    'surname'     => 'Person',
+                    'uId'        => '700000000444',
+                    'firstnames' => 'Another',
+                    'surname'    => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
                 'lpaActorToken'        => $this->userLpaActorToken,
@@ -157,8 +156,7 @@ class LpaAlreadyAddedTest extends TestCase
             [
                 'donor'                => [
                     'uId'         => '700000000444',
-                    'firstname'   => 'Another',
-                    'middlenames' => '',
+                    'firstnames'   => 'Another',
                     'surname'     => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
@@ -197,8 +195,7 @@ class LpaAlreadyAddedTest extends TestCase
             [
                 'donor'                => [
                     'uId'         => '700000001111',
-                    'firstname'   => 'Donor',
-                    'middlenames' => '',
+                    'firstnames'   => 'Donor',
                     'surname'     => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
@@ -242,8 +239,7 @@ class LpaAlreadyAddedTest extends TestCase
             [
                 'donor'                => [
                     'uId'         => '700000000444',
-                    'firstname'   => 'Another',
-                    'middlenames' => '',
+                    'firstnames'   => 'Another',
                     'surname'     => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
@@ -290,24 +286,24 @@ class LpaAlreadyAddedTest extends TestCase
             channel:                                   null,
             dispatchDate:                              null,
             donor:                                     new SiriusLpaDonor(
-                                                           addressLine1: '81 Front Street',
-                                                           addressLine2: 'xxxxx',
-                                                           addressLine3: '',
-                                                           country:      '',
-                                                           county:       '',
-                                                           dob:          null,
-                                                           email:        'AnotherPerson@opgtest.com',
-                                                           firstname:    'Another',
-                                                           id:           '123456789',
-                                                           linked:       [],
-                                                           middlenames:  null,
-                                                           otherNames:   null,
-                                                           postcode:     'DN37 5SH',
-                                                           surname:      'Person',
-                                                           systemStatus: null,
-                                                           town:         '',
-                                                           uId:          '700000000444',
-                                                       ),
+                addressLine1: '81 Front Street',
+                addressLine2: 'xxxxx',
+                addressLine3: '',
+                country:      '',
+                county:       '',
+                dob:          null,
+                email:        'AnotherPerson@opgtest.com',
+                firstname:    'Another',
+                id:           '123456789',
+                linked:       [],
+                middlenames:  null,
+                otherNames:   null,
+                postcode:     'DN37 5SH',
+                surname:      'Person',
+                systemStatus: null,
+                town:         '',
+                uId:          '700000000444',
+            ),
             hasSeveranceWarning:                       null,
             invalidDate:                               null,
             lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
@@ -331,10 +327,10 @@ class LpaAlreadyAddedTest extends TestCase
     {
         return new SiriusLpa(
             [
-                'uId'       => '700000012346',
+                'uId'         => '700000012346',
                 'caseSubtype' => 'hw',
-                'donor'     => $this->donorFixtureOld(),
-                'attorneys' => [],
+                'donor'       => $this->donorFixtureOld(),
+                'attorneys'   => [],
             ],
             $this->loggerProphecy->reveal(),
         );
@@ -358,5 +354,3 @@ class LpaAlreadyAddedTest extends TestCase
         );
     }
 }
-
-
