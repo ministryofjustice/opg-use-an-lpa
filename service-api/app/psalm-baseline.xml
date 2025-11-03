@@ -119,14 +119,6 @@
       <code><![CDATA[$this->caseSubtype->value]]></code>
     </NullableReturnStatement>
   </file>
-  <file src="src/App/src/Entity/Sirius/SiriusLpaDonor.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[DateTimeInterface]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->dob]]></code>
-    </NullableReturnStatement>
-  </file>
   <file src="src/App/src/Entity/Sirius/SiriusLpaTrustCorporation.php">
     <PossiblyUnusedProperty>
       <code><![CDATA[$companyName]]></code>
@@ -136,11 +128,6 @@
     <UnusedClass>
       <code><![CDATA[InvalidActorTypeException]]></code>
     </UnusedClass>
-  </file>
-  <file src="src/App/src/Exception/LpaAlreadyHasActivationKeyInterface.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getUid]]></code>
-    </PossiblyUnusedMethod>
   </file>
   <file src="src/App/src/Exception/RequiredOverrideException.php">
     <UnusedClass>
@@ -192,7 +179,6 @@
   <file src="src/App/src/Service/Lpa/AccessForAll/AccessForAllValidation.php">
     <UndefinedInterfaceMethod>
       <code><![CDATA[getFirstnames]]></code>
-      <code><![CDATA[getMiddleNames]]></code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="src/App/src/Service/Lpa/AccessForAll/AddAccessForAllLpa.php">
@@ -225,12 +211,6 @@
       <code><![CDATA[getDonor]]></code>
       <code><![CDATA[getDonor]]></code>
     </UndefinedMethod>
-  </file>
-  <file src="src/App/src/Service/Lpa/ResolveActor/SiriusHasActorTrait.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[$attorney]]></code>
-      <code><![CDATA[$attorney]]></code>
-    </UndefinedInterfaceMethod>
   </file>
   <file src="src/App/src/Service/Lpa/RestrictSendingLpaForCleansing.php">
     <InvalidMethodCall>
