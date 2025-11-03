@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response\Parse;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -27,10 +26,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     {
         $this->response = [
             'donor'                => [
-                'uId'         => '12345',
-                'firstname'   => 'Example',
-                'middlenames' => 'Donor',
-                'surname'     => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Example Donor',
+                'surname'    => 'Person',
             ],
             'caseSubtype'          => 'hw',
             'activationKeyDueDate' => '2021-12-06',
@@ -38,8 +36,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
 
         $this->donor = new CaseActor();
         $this->donor->setUId('12345');
-        $this->donor->setFirstname('Example');
-        $this->donor->setMiddlenames('Donor');
+        $this->donor->setFirstname('Example Donor');
         $this->donor->setSurname('Person');
 
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
@@ -55,7 +52,6 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $sut    = new ParseActivationKeyExists($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(ActivationKeyExists::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertEquals('2021-12-06', $result->getDueDate());
@@ -64,9 +60,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     #[Test]
     public function it_creates_a_dto_from_array_data_if_name_fields_are_null(): void
     {
-        $this->response['donor']['firstname']   = null;
-        $this->response['donor']['middlenames'] = null;
-        $this->response['donor']['surname']     = null;
+        $this->response['donor']['firstnames'] = null;
+        $this->response['donor']['surname']    = null;
 
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -78,7 +73,6 @@ class ParseActivationKeyExistsResponseTest extends TestCase
         $sut    = new ParseActivationKeyExists($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(ActivationKeyExists::class, $result);
         $this->assertNull($result->getDonor()->getFirstname());
         $this->assertNull($result->getDonor()->getMiddlenames());
         $this->assertNull($result->getDonor()->getSurname());
@@ -86,7 +80,7 @@ class ParseActivationKeyExistsResponseTest extends TestCase
     }
 
     #[Test]
-    public function it_will_fail_if_donor_firstname_array_key_doesnt_exist(): void
+    public function it_will_fail_if_donor_firstnames_array_key_doesnt_exist(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
@@ -96,31 +90,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
 
         $data = [
             'donor'       => [
-                'uId'         => '12345',
-                'middlenames' => 'Donor',
-                'surname'     => 'Person',
-            ],
-            'caseSubtype' => null,
-        ];
-
-        $sut = new ParseActivationKeyExists($this->lpaFactory->reveal());
-        ($sut)($data);
-    }
-
-    #[Test]
-    public function it_will_fail_if_donor_middlenames_array_key_doesnt_exist(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseActivationKeyExists::__invoke ' .
-            'does not contain the required fields'
-        );
-
-        $data = [
-            'donor'       => [
-                'uId'       => '12345',
-                'firstname' => 'Donor',
-                'surname'   => 'Person',
+                'uId'     => '12345',
+                'surname' => 'Person',
             ],
             'caseSubtype' => null,
         ];
@@ -140,9 +111,8 @@ class ParseActivationKeyExistsResponseTest extends TestCase
 
         $data = [
             'donor'       => [
-                'uId'         => '12345',
-                'firstname'   => 'Donor',
-                'middlenames' => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Donor Person',
             ],
             'caseSubtype' => null,
         ];
@@ -162,10 +132,9 @@ class ParseActivationKeyExistsResponseTest extends TestCase
 
         $data = [
             'donor'       => [
-                'uId'         => '12345',
-                'firstname'   => 'Example',
-                'middlenames' => 'Donor',
-                'surname'     => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Example Donor',
+                'surname'    => 'Person',
             ],
             'caseSubtype' => null,
         ];
