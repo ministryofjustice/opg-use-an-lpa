@@ -177,7 +177,7 @@ class SiriusLpa implements
     /**
      * @inheritDoc
      */
-    public function withAttorneys(array $attorneys): FilterActiveActorsInterface
+    public function withAttorneys(array $attorneys): self
     {
         $this->lpa['attorneys'] = $attorneys;
         return $this;
@@ -186,7 +186,7 @@ class SiriusLpa implements
     /**
      * @inheritDoc
      */
-    public function withTrustCorporations(array $trustCorporations): FilterActiveActorsInterface
+    public function withTrustCorporations(array $trustCorporations): self
     {
         $this->lpa['trustCorporations'] = $trustCorporations;
         return $this;
