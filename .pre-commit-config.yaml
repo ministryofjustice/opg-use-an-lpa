@@ -22,3 +22,27 @@ repos:
     hooks:
     -   id: detect-secrets
         args: ['--baseline', '.secrets.baseline']
+  - repo: local
+    hooks:
+      - name: phpcbf-front
+        id: phpcbf-front
+        language: script
+        entry: ./pre-commit-hooks/phpcbf.sh front
+        files: service-front\/app\/.*\.(php)$
+        fail_fast: true
+      - name: phpcbf-api
+        id: phpcbf-api
+        language: script
+        entry: ./pre-commit-hooks/phpcbf.sh api
+        files: service-api\/app\/.*\.(php)$
+        fail_fast: true
+      - name: phpcs-api
+        id: phpcs-api
+        language: script
+        entry: ./pre-commit-hooks/phpcs.sh api
+        files: service-api\/app\/.*\.(php)$
+      - name: phpcs-front
+        id: phpcs-front
+        language: script
+        entry: ./pre-commit-hooks/phpcs.sh front
+        files: service-front\/app\/.*\.(php)$
