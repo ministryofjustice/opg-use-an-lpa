@@ -11,12 +11,7 @@ RUN npm ci --ignore-scripts && npm run build
 # Build Go app
 FROM golang:1.25.3-alpine@sha256:aee43c3ccbf24fdffb7295693b6e33b21e01baec1b2a55acc351fde345e9ec34 AS build-env
 
-RUN apk --no-cache add \
-  build-base=0.5-r3 \
-  ca-certificates=20250619-r0 \
-  tzdata=2025b-r0 \
-  && rm -rf /var/cache/apk/* \
-  && adduser -D appuser
+RUN adduser -D appuser
 
 WORKDIR /app
 
