@@ -13,7 +13,13 @@ trait BaselineValidData
      *         firstnames: string,
      *         surname: string,
      *     },
+     *     attorney?: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
      *     caseSubtype: string,
+     *     activationKeyDueDate?: string
      * } $data
  * @return bool
      */
