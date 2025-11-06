@@ -17,7 +17,7 @@ use Psr\Log\LoggerInterface;
 class NotifyServiceTest extends TestCase
 {
     use ProphecyTrait;
-    
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     private EmailClient|ObjectProphecy $emailClientProphecy;

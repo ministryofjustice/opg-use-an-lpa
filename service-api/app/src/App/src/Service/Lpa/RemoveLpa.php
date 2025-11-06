@@ -114,7 +114,7 @@ class RemoveLpa
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array
     {
-        $uid = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
+        $uid       = $userActorLpa['SiriusUid'] ?? $userActorLpa['LpaUid'];
         $siriusUid = new LpaUid($uid);
 
         //Lookup records in ViewerCodes table using siriusUid

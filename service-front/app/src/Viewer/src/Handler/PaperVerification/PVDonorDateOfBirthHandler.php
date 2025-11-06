@@ -55,9 +55,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'donorName'  => $this->state($request)->donorName,
-            'back'       => $this->lastPage($this->state($request)),
+            'form'      => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -77,9 +77,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'donorName'  => $this->state($request)->donorName,
-            'back'       => $this->lastPage($this->state($request)),
+            'form'      => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 

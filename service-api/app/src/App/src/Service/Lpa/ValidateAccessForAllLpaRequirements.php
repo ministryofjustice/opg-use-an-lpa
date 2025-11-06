@@ -35,7 +35,6 @@ class ValidateAccessForAllLpaRequirements
     /**
      * @param string $lpaUid
      * @param string $status
-     *
      * @return void
      * @throws BadRequestException
      */

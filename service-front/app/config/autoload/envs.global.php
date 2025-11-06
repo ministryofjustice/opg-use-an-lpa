@@ -3,27 +3,27 @@
 declare(strict_types=1);
 
 return [
-    'application'    => getenv('CONTEXT') ?: null,
-    'version'        => getenv('CONTAINER_VERSION') ?: 'dev',
-    'api'            => [
+    'application' => getenv('CONTEXT') ?: null,
+    'version'     => getenv('CONTAINER_VERSION') ?: 'dev',
+    'api'         => [
         'uri' => getenv('API_SERVICE_URL') ?: null,
     ],
-    'pdf'            => [
+    'pdf'         => [
         'uri' => getenv('PDF_SERVICE_URL') ?: null,
     ],
-    'aws'            => [
+    'aws'         => [
         'region'  => getenv('AWS_REGION') ?: 'eu-west-1',
         'version' => 'latest',
         'Kms'     => [
             'endpoint' => getenv('AWS_ENDPOINT_KMS') ?: null,
         ],
     ],
-    'notify'         => [
+    'notify'      => [
         'api' => [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
         ],
     ],
-    'session'        => [
+    'session'     => [
 
         // Time in seconds after which a session will expire.
         'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
@@ -90,15 +90,15 @@ return [
         // the below flag is toggled off.
         'persistent' => false,
     ],
-    'analytics'      => [
+    'analytics'   => [
         'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: '',
     ],
-    'i18n'           => [
+    'i18n'        => [
         'default_locale' => 'en_GB',
         'default_domain' => 'messages',
         'locale_path'    => '/app/languages/',
     ],
-    'ratelimits'     => [
+    'ratelimits'  => [
         'viewer_code_failure' => [
             'type'    => 'keyed',
             'storage' => [

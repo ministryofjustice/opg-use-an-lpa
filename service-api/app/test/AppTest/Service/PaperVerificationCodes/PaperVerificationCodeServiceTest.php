@@ -514,7 +514,7 @@ class PaperVerificationCodeServiceTest extends TestCase
     #[Test]
     public function it_successfully_views_and_records_organisation(): void
     {
-        $params = new PaperVerificationCodeView(
+        $params   = new PaperVerificationCodeView(
             name: 'Bundlaaaa',
             code: new PaperVerificationCode('P-1234-1234-1234-12'),
             lpaUid: new LpaUid('M-7890-0400-4003'),

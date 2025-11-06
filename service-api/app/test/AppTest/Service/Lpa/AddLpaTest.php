@@ -306,6 +306,4 @@ class AddLpaTest extends TestCase
             withdrawnDate:                             null
         );
     }
-
-
 }

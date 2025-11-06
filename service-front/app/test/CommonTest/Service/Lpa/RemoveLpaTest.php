@@ -38,8 +38,8 @@ class RemoveLpaTest extends TestCase
         $this->actorLpaToken = '0123-01-01-01-012345';
         $this->userToken     = '12-1-1-1-1234';
 
-        $this->apiClientProphecy    = $this->prophesize(ApiClient::class);
-        $this->loggerProphecy       = $this->prophesize(LoggerInterface::class);
+        $this->apiClientProphecy = $this->prophesize(ApiClient::class);
+        $this->loggerProphecy    = $this->prophesize(LoggerInterface::class);
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
 
@@ -62,11 +62,11 @@ class RemoveLpaTest extends TestCase
 
         $this->lpaArrayData = [
             'lpa' => [
-                'donor'  => [
-                    'uId'   =>  '700000000997',
-                    'firstname' => 'Firstname',
+                'donor'       => [
+                    'uId'        =>  '700000000997',
+                    'firstname'  => 'Firstname',
                     'middlename' => 'Middlename',
-                    'surname' => 'Surname',
+                    'surname'    => 'Surname',
                 ],
                 'caseSubtype' => 'hw',
             ],
@@ -82,7 +82,7 @@ class RemoveLpaTest extends TestCase
 
         $result = ($this->removeLpa)($this->userToken, $this->actorLpaToken);
 
-        $this>self::assertEquals($result, new ArrayObject($this->lpaArrayData));
+        $this > self::assertEquals($result, new ArrayObject($this->lpaArrayData));
     }
 
     #[Test]

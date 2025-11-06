@@ -122,7 +122,7 @@ class IsValidLpaTest extends TestCase
         );
 
         $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
+        $result   = $resolver($lpa);
         $this->assertTrue($result);
     }
 
@@ -160,7 +160,7 @@ class IsValidLpaTest extends TestCase
         );
 
         $resolver = $this->isValidLpaResolver();
-        $result = $resolver($lpa);
+        $result   = $resolver($lpa);
         $this->assertTrue($result);
     }
 
@@ -189,7 +189,7 @@ class IsValidLpaTest extends TestCase
             registrationDate:                          null,
             rejectedDate:                              null,
             replacementAttorneys:                      null,
-            status:                                    "Revoked",
+            status:                                    'Revoked',
             statusDate:                                null,
             trustCorporations:                         null,
             uId:                                       '700000000001',

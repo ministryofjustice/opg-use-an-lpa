@@ -48,7 +48,7 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
             [
                 'invalid value',
                 '',
-            ]
+            ],
         ];
     }
 }

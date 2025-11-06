@@ -177,7 +177,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
                     'attorney'    => [
                         'uId'        => null,
                         'firstnames' => 'Example Attorney',
-                        'surname'   => 'Person',
+                        'surname'    => 'Person',
                     ],
                     'donor'       => [
                         'uId'        => null,

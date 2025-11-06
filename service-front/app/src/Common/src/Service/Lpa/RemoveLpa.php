@@ -19,7 +19,7 @@ class RemoveLpa
      */
     public function __construct(
         private ApiClient $apiClient,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

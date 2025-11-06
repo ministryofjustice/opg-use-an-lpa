@@ -204,7 +204,6 @@ class ViewerCodesTest extends TestCase
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-                $testActorId,
             ) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -259,7 +258,6 @@ class ViewerCodesTest extends TestCase
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-                $testActorId,
             ) {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);

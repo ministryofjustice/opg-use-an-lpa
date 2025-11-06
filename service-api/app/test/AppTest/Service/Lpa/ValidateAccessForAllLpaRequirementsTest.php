@@ -207,6 +207,4 @@ class ValidateAccessForAllLpaRequirementsTest extends TestCase
         $response = $this->validateLpaRequirements()($lpa->getUid(), $lpa->getStatus());
         $this->assertNull($response);
     }
-
-
 }
