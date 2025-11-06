@@ -22,7 +22,19 @@ class ParseLpaMatch
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string} $data
+     * @param array{
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     attorney?: array{
+     *          uId: string,
+     *          firstnames: string,
+     *          surname: string,
+     *      },
+     *     caseSubtype: string,
+     * } $data
      * @return LpaMatch
      * @throws Exception
      */

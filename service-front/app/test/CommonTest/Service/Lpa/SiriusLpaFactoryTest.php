@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
-use Common\Entity\Lpa;
 use Common\Service\Lpa\Factory\Sirius;
 use DateTime;
 use Laminas\Stdlib\Exception\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
@@ -67,7 +66,6 @@ class SiriusLpaFactoryTest extends TestCase
 
         $lpa = $factory->createLpaFromData(['uId' => '1234']);
 
-        $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('1234', $lpa->getUId());
     }
 
@@ -78,7 +76,6 @@ class SiriusLpaFactoryTest extends TestCase
 
         $lpa = $factory->createLpaFromData($this->fullExampleFixtureData);
 
-        $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('700000000054', $lpa->getUId()); // from full_example.json
         $this->assertNull($lpa->getCancellationDate());
 
@@ -100,7 +97,6 @@ class SiriusLpaFactoryTest extends TestCase
         $factory = new Sirius();
 
         $lpa = $factory->createLpaFromData($this->simpleExampleFixtureData);
-        $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from simple_example.json
         $this->assertEquals(new DateTime('2020-02-02'), $lpa->getCancellationDate());
         $this->assertEquals(null, $lpa->getRejectedDate());
@@ -169,7 +165,6 @@ class SiriusLpaFactoryTest extends TestCase
         ];
 
         $lpa = $factory->createLpaFromData($data);
-        $this->assertInstanceOf(Lpa::class, $lpa);
         $this->assertEquals('7000-0000-0054', $lpa->getUId()); // from simple_example.json
 
         $this->assertEquals(null, $lpa->getRejectedDate());
@@ -185,5 +180,21 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertCount(0, $lpa->getReplacementAttorneys());
 
         $this->assertEquals([5, 6], $lpa->getDonor()->getIds());
+    }
+
+    #[Test]
+    public function firstnames_is_an_alias_of_firstname(): void
+    {
+        $factory = new Sirius();
+
+        $data = [
+            'uId'        => '7000-0000-0033',
+            'firstnames' => 'John Stewart',
+            'surname'    => 'Doe',
+        ];
+
+        $donor = $factory->createCaseActorFromData($data);
+
+        $this->assertEquals('John Stewart', $donor->getFirstname());
     }
 }

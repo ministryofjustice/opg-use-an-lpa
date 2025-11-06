@@ -26,17 +26,15 @@ class AccessForAllValidation implements JsonSerializable
     public function jsonSerialize(): array
     {
         $data = [
-            'actor'  => $this->actorMatch->actor,
             'role'   => $this->actorMatch->role,
             'lpa-id' => $this->actorMatch->lpaUId,
         ];
 
         if ($this->actorMatch->role === 'attorney') {
             $data['attorney'] = [
-                'uId'         => $this->actorMatch->actor->getUid(),
-                'firstname'   => $this->actorMatch->actor->getFirstnames(),
-                'middlenames' => $this->actorMatch->actor->getMiddleNames(),
-                'surname'     => $this->actorMatch->actor->getSurname(),
+                'uId'        => $this->actorMatch->actor->getUid(),
+                'firstnames' => $this->actorMatch->actor->getFirstnames(),
+                'surname'    => $this->actorMatch->actor->getSurname(),
             ];
         }
 
@@ -46,10 +44,9 @@ class AccessForAllValidation implements JsonSerializable
 
         $data['caseSubtype'] = $this->getCaseSubtype();
         $data['donor']       = [
-            'uId'         => $this->lpa->getDonor()->getUId(),
-            'firstname'   => $this->lpa->getDonor()->getFirstnames(),
-            'middlenames' => $this->lpa->getDonor()->getMiddleNames(),
-            'surname'     => $this->lpa->getDonor()->getSurname(),
+            'uId'        => $this->lpa->getDonor()->getUId(),
+            'firstnames' => $this->lpa->getDonor()->getFirstnames(),
+            'surname'    => $this->lpa->getDonor()->getSurname(),
         ];
 
         return $data;

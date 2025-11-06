@@ -70,7 +70,8 @@ class RemoveLpa
                     );
                 }
 
-                //Actor id in codeOwner array is an int in the case of an old lpa, however is a string in the case of a M-lpa
+                // Actor id in codeOwner array is an int in the case of an old lpa, however is a
+                // string in the case of a M-lpa
                 $this->viewerCodesRepository->removeActorAssociation(
                     $viewerCodeRecord['ViewerCode'],
                     (string)$codeOwner['ActorId'],
@@ -81,7 +82,7 @@ class RemoveLpa
         // get the LPA to display the donor name and lpa type in the flash message
         // we don't use getByUserLpaActorToken as it returns null if actor is inactive
 
-        $uid            = isset($userActorLpa['SiriusUid']) ? $userActorLpa['SiriusUid'] : $userActorLpa['LpaUid'];
+        $uid            = $userActorLpa['SiriusUid'] ?? $userActorLpa['LpaUid'];
         $lpaRemovedData = $this->lpaManager->getByUid($uid, $userActorLpa['UserId'])->getData();
 
         $deletedData = $this->userLpaActorMapRepository->delete($token);
@@ -94,25 +95,21 @@ class RemoveLpa
                     'expectedId' => $deletedData['Id'],
                     'deletedId'  => $userActorLpa['Id'],
                 ]
-          );
+            );
             throw new ApiException('Incorrect LPA data deleted from users account');
         }
 
         $lpaDonorData = $lpaRemovedData->getDonor();
 
-        /*
-        //TODO UML-3914 Return a response object here
-        */
-        $response = [
+        // TODO UML-3914 Return a response object here
+        return [
             'donor'       => [
-                'uId'       => $lpaDonorData->getUid(),
-                'firstname' => $lpaDonorData->getFirstnames(),
-                'surname'   => $lpaDonorData->getSurname(),
+                'uId'        => $lpaDonorData->getUid(),
+                'firstnames' => $lpaDonorData->getFirstnames(),
+                'surname'    => $lpaDonorData->getSurname(),
             ],
-            'caseSubtype'   => $lpaRemovedData->getCaseSubType(),
+            'caseSubtype' => $lpaRemovedData->getCaseSubType(),
         ];
-
-        return $response;
     }
 
     private function getListOfViewerCodesToBeUpdated(array $userActorLpa): ?array

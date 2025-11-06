@@ -179,7 +179,7 @@ class ViewerContext extends BaseIntegrationContext
         // organisation parameter is null when doing a summary check
         $lpaData = $this->lpaService->getByViewerCode($this->viewerCode, $this->donorSurname, null);
 
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
+        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
         Assert::assertEquals($lpaExpiry, $lpaData['expires']);
 
         Assert::assertArrayHasKey('iap', $lpaData);

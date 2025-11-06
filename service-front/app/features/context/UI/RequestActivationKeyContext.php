@@ -165,13 +165,15 @@ class RequestActivationKeyContext implements Context
                     [
                         'title'   => 'Bad request',
                         'details' => 'LPA already added',
-                        'data'
-                        => [
+                        'data'    => [
                             'donor'         => [
-                                'uId'         => $this->lpa->donor->uId,
-                                'firstname'   => $this->lpa->donor->firstname,
-                                'middlenames' => $this->lpa->donor->middlenames,
-                                'surname'     => $this->lpa->donor->surname,
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
                             ],
                             'caseSubtype'   => $this->lpa->caseSubtype,
                             'lpaActorToken' => $this->userLpaActorToken,
@@ -910,10 +912,13 @@ class RequestActivationKeyContext implements Context
                     json_encode(
                         [
                             'donor'       => [
-                                'uId'         => $this->lpa->donor->uId,
-                                'firstname'   => $this->lpa->donor->firstname,
-                                'middlenames' => $this->lpa->donor->middlenames,
-                                'surname'     => $this->lpa->donor->surname,
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
                             ],
                             'lpa-id'      => $this->lpa->uId,
                             'caseSubtype' => $this->lpa->caseSubtype,
@@ -934,10 +939,13 @@ class RequestActivationKeyContext implements Context
                             'details' => 'LPA has an activation key already',
                             'data'    => [
                                 'donor'                => [
-                                    'uId'         => $this->lpa->donor->uId,
-                                    'firstname'   => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname'     => $this->lpa->donor->surname,
+                                    'uId'        => $this->lpa->donor->uId,
+                                    'firstnames' => sprintf(
+                                        '%s %s',
+                                        $this->lpa->donor->firstname,
+                                        $this->lpa->donor->middlenames,
+                                    ),
+                                    'surname'    => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype'          => $this->lpa->caseSubtype,
                                 'lpaActorToken'        => $this->userLpaActorToken,
@@ -965,10 +973,13 @@ class RequestActivationKeyContext implements Context
                         'details' => 'LPA already added',
                         'data'    => [
                             'donor'         => [
-                                'uId'         => $this->lpa->donor->uId,
-                                'firstname'   => $this->lpa->donor->firstname,
-                                'middlenames' => $this->lpa->donor->middlenames,
-                                'surname'     => $this->lpa->donor->surname,
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
                             ],
                             'caseSubtype'   => $this->lpa->caseSubtype,
                             'lpaActorToken' => $this->userLpaActorToken,
@@ -1125,7 +1136,6 @@ class RequestActivationKeyContext implements Context
     {
         $this->ui->clickLink('Cancel');
     }
-
 
     #[When('/^I select that I cannot take calls$/')]
     public function iSelectThatICannotTakeCalls(): void
@@ -1340,10 +1350,13 @@ class RequestActivationKeyContext implements Context
                         'details' => 'Activation key already requested for LPA',
                         'data'    => [
                             'donor'                => [
-                                'uId'         => $this->lpa->donor->uId,
-                                'firstname'   => $this->lpa->donor->firstname,
-                                'middlenames' => $this->lpa->donor->middlenames,
-                                'surname'     => $this->lpa->donor->surname,
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
                             ],
                             'caseSubtype'          => $this->lpa->caseSubtype,
                             'activationKeyDueDate' => '2022-01-30',
@@ -1451,10 +1464,13 @@ class RequestActivationKeyContext implements Context
                         [
                             'data' => [
                                 'donor'       => [
-                                    'uId'         => $this->lpa->donor->uId,
-                                    'firstname'   => $this->lpa->donor->firstname,
-                                    'middlenames' => $this->lpa->donor->middlenames,
-                                    'surname'     => $this->lpa->donor->surname,
+                                    'uId'        => $this->lpa->donor->uId,
+                                    'firstnames' => sprintf(
+                                        '%s %s',
+                                        $this->lpa->donor->firstname,
+                                        $this->lpa->donor->middlenames,
+                                    ),
+                                    'surname'    => $this->lpa->donor->surname,
                                 ],
                                 'caseSubtype' => $this->lpa->caseSubtype,
                                 'lpa-id'      => $this->lpa->uId,

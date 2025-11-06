@@ -24,7 +24,15 @@ class ParseLpaAlreadyAdded
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string, lpaActorToken: string} $data
+     * @param array{
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     caseSubtype: string,
+     *     lpaActorToken: string
+     * } $data
      * @return LpaAlreadyAdded
      * @throws Exception
      */
@@ -44,7 +52,15 @@ class ParseLpaAlreadyAdded
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string, lpaActorToken: string} $data
+     * @param array{
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     caseSubtype: string,
+     *     lpaActorToken: string
+     * } $data
      * @return bool
      */
     private function isValidData(array $data): bool

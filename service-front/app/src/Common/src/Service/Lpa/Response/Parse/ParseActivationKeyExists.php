@@ -22,7 +22,15 @@ class ParseActivationKeyExists
     }
 
     /**
-     * @param array{donor: array, caseSubtype: string} $data
+     * @param array{
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     caseSubtype: string,
+     *     activationKeyDueDate?: string
+     * } $data
      * @return ActivationKeyExists
      * @throws Exception
      */

@@ -63,12 +63,12 @@ class RequestCleanseHandler implements RequestHandlerInterface
         $this->logger->notice(
             'Successfully submitted cleanse for partially matched LPA {uId} for account {id} ',
             [
-                'event_code' => $lpaData['caseSubtype'] === 'hw' ?
+                'event_code' => $lpaData->getCaseSubType() === 'hw' ?
                     EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_HW :
                     EventCodes::PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA,
                 'id'         => $userId,
                 'uId'        => (string) $requestData['reference_number'],
-                'lpaType'    => $lpaData['caseSubtype'],
+                'lpaType'    => $lpaData->getCaseSubType(),
             ],
         );
 

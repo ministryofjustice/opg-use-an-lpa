@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\SiriusPerson;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -103,6 +104,7 @@ class SiriusLpaTest extends TestCase
             json_encode($sut),
         );
     }
+
     #[Test]
     public function it_typecasts_on_getters(): void
     {
@@ -120,5 +122,64 @@ class SiriusLpaTest extends TestCase
         $this->assertSame('Registered', $sut->getStatus());
         $this->assertEquals(new DateTimeImmutable('2019-08-31'), $sut->getRegistrationDate());
         $this->assertSame(false, $sut->getLpaIsCleansed());
+    }
+
+    #[Test]
+    public function it_implements_with_thing_functionality(): void
+    {
+        $sut = new SiriusLpa(
+            [
+                'uId'               => 700000000000,
+                'status'            => 'Registered',
+                'registrationDate'  => '2019-08-31',
+                'lpaIsCleansed'     => false,
+                'donor'             => [
+                    'uId' => 700000000001,
+                ],
+                'attorneys'         => [
+                    [
+                        'uId'       => 700000000002,
+                        'firstname' => 'Attorney1',
+                    ],
+                ],
+                'trustCorporations' => [
+                    [
+                        'uId'       => 700000000003,
+                        'firstname' => 'Trust Corporation1',
+                    ],
+                ],
+            ],
+            $this->loggerProphecy->reveal(),
+        );
+
+        $sut = $sut->withAttorneys(
+            [
+                new SiriusPerson(
+                    [
+                        'uId'       => 700000000004,
+                        'firstname' => 'Attorney2',
+                    ],
+                    $this->loggerProphecy->reveal(),
+                ),
+            ]
+        );
+
+        $this->assertCount(1, $sut->getAttorneys());
+        $this->assertSame('Attorney2', $sut->getAttorneys()[0]->getFirstnames());
+
+        $sut = $sut->withTrustCorporations(
+            [
+                new SiriusPerson(
+                    [
+                        'uId'       => 700000000005,
+                        'firstname' => 'Trust Corporation2',
+                    ],
+                    $this->loggerProphecy->reveal(),
+                ),
+            ]
+        );
+
+        $this->assertCount(1, $sut->getTrustCorporations());
+        $this->assertSame('Trust Corporation2', $sut->getTrustCorporations()[0]->getFirstnames());
     }
 }

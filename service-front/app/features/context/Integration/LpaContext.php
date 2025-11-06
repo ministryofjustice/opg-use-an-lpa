@@ -1466,10 +1466,13 @@ class LpaContext extends BaseIntegrationContext
                         'details' => 'LPA has an activation key already',
                         'data'    => [
                             'donor'                => [
-                                'uId'         => $this->lpa['donor']['uId'],
-                                'firstname'   => $this->lpa['donor']['firstname'],
-                                'middlenames' => $this->lpa['donor']['middlenames'],
-                                'surname'     => $this->lpa['donor']['surname'],
+                                'uId'        => $this->lpa['donor']['uId'],
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa['donor']['firstname'],
+                                    $this->lpa['donor']['middlenames'],
+                                ),
+                                'surname'    => $this->lpa['donor']['surname'],
                             ],
                             'caseSubtype'          => $this->lpa['caseSubtype'],
                             'activationKeyDueDate' => $createdDate->format('c'),
@@ -1493,8 +1496,13 @@ class LpaContext extends BaseIntegrationContext
 
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname($this->lpa['donor']['firstname']);
-        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setFirstname(
+            sprintf(
+                '%s %s',
+                $this->lpa['donor']['firstname'],
+                $this->lpa['donor']['middlenames'],
+            ),
+        );
         $donor->setSurname($this->lpa['donor']['surname']);
 
         $keyExistsDTO = new ActivationKeyExists();
@@ -1522,10 +1530,13 @@ class LpaContext extends BaseIntegrationContext
                         'details' => 'LPA already added',
                         'data'    => [
                             'donor'         => [
-                                'uId'         => $this->lpa['donor']['uId'],
-                                'firstname'   => $this->lpa['donor']['firstname'],
-                                'middlenames' => $this->lpa['donor']['middlenames'],
-                                'surname'     => $this->lpa['donor']['surname'],
+                                'uId'        => $this->lpa['donor']['uId'],
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa['donor']['firstname'],
+                                    $this->lpa['donor']['middlenames'],
+                                ),
+                                'surname'    => $this->lpa['donor']['surname'],
                             ],
                             'caseSubtype'   => $this->lpa['caseSubtype'],
                             'lpaActorToken' => $this->actorLpaToken,
@@ -1545,13 +1556,17 @@ class LpaContext extends BaseIntegrationContext
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
             $this->userPostCode,
-            false
         );
 
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname($this->lpa['donor']['firstname']);
-        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setFirstname(
+            sprintf(
+                '%s %s',
+                $this->lpa['donor']['firstname'],
+                $this->lpa['donor']['middlenames'],
+            ),
+        );
         $donor->setSurname($this->lpa['donor']['surname']);
 
         $alreadyAddedDTO = new LpaAlreadyAdded();
@@ -1586,10 +1601,13 @@ class LpaContext extends BaseIntegrationContext
                         'details' => 'LPA already added',
                         'data'    => [
                             'donor'         => [
-                                'uId'         => $this->lpa['donor']['uId'],
-                                'firstname'   => $this->lpa['donor']['firstname'],
-                                'middlenames' => $this->lpa['donor']['middlenames'],
-                                'surname'     => $this->lpa['donor']['surname'],
+                                'uId'        => $this->lpa['donor']['uId'],
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa['donor']['firstname'],
+                                    $this->lpa['donor']['middlenames'],
+                                ),
+                                'surname'    => $this->lpa['donor']['surname'],
                             ],
                             'caseSubtype'   => $this->lpa['caseSubtype'],
                             'lpaActorToken' => $this->actorLpaToken,
@@ -1602,8 +1620,13 @@ class LpaContext extends BaseIntegrationContext
 
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname($this->lpa['donor']['firstname']);
-        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setFirstname(
+            sprintf(
+                '%s %s',
+                $this->lpa['donor']['firstname'],
+                $this->lpa['donor']['middlenames'],
+            ),
+        );
         $donor->setSurname($this->lpa['donor']['surname']);
 
         $addLpa          = $this->container->get(AddLpa::class);
@@ -1633,10 +1656,13 @@ class LpaContext extends BaseIntegrationContext
                 json_encode(
                     [
                         'donor'       => [
-                            'uId'         => $this->lpa['donor']['uId'],
-                            'firstname'   => $this->lpa['donor']['firstname'],
-                            'middlenames' => $this->lpa['donor']['middlenames'],
-                            'surname'     => $this->lpa['donor']['surname'],
+                            'uId'        => $this->lpa['donor']['uId'],
+                            'firstnames' => sprintf(
+                                '%s %s',
+                                $this->lpa['donor']['firstname'],
+                                $this->lpa['donor']['middlenames'],
+                            ),
+                            'surname'    => $this->lpa['donor']['surname'],
                         ],
                         'caseSubtype' => $this->lpa['caseSubtype'],
                         'role'        => 'donor',
@@ -1660,8 +1686,13 @@ class LpaContext extends BaseIntegrationContext
 
         $donor = new CaseActor();
         $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname($this->lpa['donor']['firstname']);
-        $donor->setMiddlenames($this->lpa['donor']['middlenames']);
+        $donor->setFirstname(
+            sprintf(
+                '%s %s',
+                $this->lpa['donor']['firstname'],
+                $this->lpa['donor']['middlenames'],
+            ),
+        );
         $donor->setSurname($this->lpa['donor']['surname']);
 
         $foundMatchLpaDTO = new LpaMatch();

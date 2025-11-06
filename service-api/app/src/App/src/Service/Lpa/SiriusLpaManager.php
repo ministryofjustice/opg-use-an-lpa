@@ -6,11 +6,12 @@ namespace App\Service\Lpa;
 
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\GetTrustCorporationStatus\TrustCorporationStatus;
+use App\Service\Lpa\Combined\FilterActiveActors;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
+    Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
@@ -18,7 +19,6 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
 use App\Exception\GoneException;
 use DateTime;
 use Psr\Log\LoggerInterface;
-use App\Service\Lpa\GetAttorneyStatus\AttorneyStatus;
 
 class SiriusLpaManager implements LpaManagerInterface
 {
@@ -29,9 +29,8 @@ class SiriusLpaManager implements LpaManagerInterface
         private ViewerCodeActivityInterface $viewerCodeActivityRepository,
         private InstructionsAndPreferencesImagesInterface $iapRepository,
         private ResolveActor $resolveActor,
-        private GetAttorneyStatus $getAttorneyStatus,
         private IsValidLpa $isValidLpa,
-        private GetTrustCorporationStatus $getTrustCorporationStatus,
+        private FilterActiveActors $filterActiveActors,
         private LoggerInterface $logger,
     ) {
     }
@@ -43,26 +42,12 @@ class SiriusLpaManager implements LpaManagerInterface
             return null;
         }
 
-        $lpaData = $lpa->getData();
+        $lpaData = ($this->filterActiveActors)($lpa->getData());
 
-        if ($lpaData['attorneys'] !== null) {
-            $lpaData['attorneys'] = array_values(
-                array_filter($lpaData['attorneys'], function ($attorney) {
-                    return ($this->getAttorneyStatus)($attorney) === AttorneyStatus::ACTIVE_ATTORNEY;
-                })
-            );
-        }
-
-        if ($lpaData['trustCorporations'] !== null) {
-            $lpaData['trustCorporations'] = array_values(
-                array_filter($lpaData['trustCorporations'], function ($trustCorporation) {
-                    return ($this->getTrustCorporationStatus)($trustCorporation)
-                        === TrustCorporationStatus::ACTIVE_TC;
-                })
-            );
-        }
-
-        return $lpa;
+        return new Lpa(
+            $lpaData,
+            $lpa->getLookupTime(),
+        );
     }
 
     public function getByUserLpaActorToken(string $token, string $userId): ?array
@@ -141,8 +126,7 @@ class SiriusLpaManager implements LpaManagerInterface
 
         if (
             is_null($lpa)
-            || !isset($lpa->getData()['donor']['surname'])
-            || strtolower($lpa->getData()['donor']['surname']) !== strtolower($donorSurname)
+            || strtolower($lpa->getData()->getDonor()->getSurname()) !== strtolower($donorSurname)
         ) {
             throw new NotFoundException();
         }
@@ -179,10 +163,10 @@ class SiriusLpaManager implements LpaManagerInterface
         ];
 
         if (
-            ($lpaData['applicationHasGuidance'] ?? false) || ($lpaData['applicationHasRestrictions'] ?? false)
+            ($lpaData->hasGuidance() ?? false) || ($lpaData->hasRestrictions() ?? false)
         ) {
             $this->logger->info('The LPA has instructions and/or preferences. Fetching images');
-            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData['uId']);
+            $result['iap'] = $this->iapRepository->getInstructionsAndPreferencesImages((int) $lpaData->getUid());
         }
 
         if (!is_null($organisation)) {

@@ -7,7 +7,6 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use App\Enum\ActorStatus;
-use App\Exception\LpaAlreadyHasActivationKeyInterface;
 use App\Service\ActorCodes\Validation\CodesApiValidationInterface;
 use App\Service\Lpa\AccessForAll\AddAccessForAllActorInterface;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
@@ -16,7 +15,6 @@ use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 use App\Entity\Sirius\Casters\{CastToSiriusActorStatus, CastToUnhyphenatedUId, LinkedDonorCaster};
-use DateTimeInterface;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToType;
 
@@ -25,8 +23,7 @@ class SiriusLpaDonor extends Person implements
     AddAccessForAllActorInterface,
     DonorInformationInterface,
     LpaRemovedDonorInformationInterface,
-    CodesApiValidationInterface,
-    LpaAlreadyHasActivationKeyInterface
+    CodesApiValidationInterface
 {
     public function __construct(
         #[MapFrom('addresses')]
@@ -98,25 +95,5 @@ class SiriusLpaDonor extends Person implements
     public function getMiddleNames(): string
     {
         return $this->middlenames ?? '';
-    }
-
-    public function getFirstnames(): string
-    {
-        return $this->firstname ?? '';
-    }
-
-    public function getSurname(): string
-    {
-        return $this->surname ?? '';
-    }
-
-    public function getUid(): string
-    {
-        return $this->uId ?? '';
-    }
-
-    public function getDob(): DateTimeInterface
-    {
-        return $this->dob;
     }
 }

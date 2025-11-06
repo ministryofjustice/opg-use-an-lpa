@@ -10,7 +10,11 @@ default:
     Behat\MinkExtension:
       base_url: 'https://localhost/'
       psr: ~
-    NicWortel\BehatUnusedStepDefinitionsExtension\Extension: ~
+    NicWortel\BehatUnusedStepDefinitionsExtension\Extension:
+      filters:
+        exclude:
+          - '/Behat\\MinkExtension\\Context\\MinkContext/'
+          - '/SmartGamma\\Behat\\PactExtension\\Context\\PactContext/'
 
 integration:
   suites:

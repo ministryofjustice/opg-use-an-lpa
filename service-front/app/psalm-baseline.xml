@@ -538,11 +538,6 @@
       <code><![CDATA[$shareCodes->activeCodeCount]]></code>
     </UndefinedPropertyFetch>
   </file>
-  <file src="src/Common/src/Service/Lpa/Response/Parse/ParseActivationKeyExists.php">
-    <InvalidArrayOffset>
-      <code><![CDATA[$data['activationKeyDueDate']]]></code>
-    </InvalidArrayOffset>
-  </file>
   <file src="src/Common/src/Service/Lpa/Response/Parse/ParseLpaAlreadyAdded.php">
     <InvalidArgument>
       <code><![CDATA[$data]]></code>

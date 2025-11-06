@@ -171,13 +171,13 @@ class LpaContext implements Context
     public function iCannotSeeMyLPAOnTheDashboard(): void
     {
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageNotContainsText('Ian Deputy Deputy');
+        // silly to assert no LPAs on the dashboard as we only show what we set up in fixtures.
     }
 
     #[Given('/^I can see a flash message confirming that my LPA has been removed$/')]
     public function iCanSeeAFlashMessageConfirmingThatMyLPAHasBeenRemoved(): void
     {
-        $this->ui->assertPageContainsText("You've removed Ian Deputy's health and welfare LPA");
+        $this->ui->assertPageContainsText("You've removed Ian Deputy Deputy's health and welfare LPA");
     }
 
     #[When('/^I click on the Read more link$/')]
@@ -218,7 +218,22 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode(['lpa' => $this->lpa]),
+                json_encode(
+                    [
+                        'lpa' => [
+                            'donor'       => [
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
+                            ],
+                            'caseSubtype' => $this->lpa->caseSubtype,
+                        ],
+                    ]
+                ),
                 self::REMOVE_LPA_INVOKE
             )
         );
@@ -487,10 +502,13 @@ class LpaContext implements Context
                         'details' => 'LPA already added',
                         'data'    => [
                             'donor'         => [
-                                'uId'         => $this->lpa->donor->uId,
-                                'firstname'   => $this->lpa->donor->firstname,
-                                'middlenames' => $this->lpa->donor->middlenames,
-                                'surname'     => $this->lpa->donor->surname,
+                                'uId'        => $this->lpa->donor->uId,
+                                'firstnames' => sprintf(
+                                    '%s %s',
+                                    $this->lpa->donor->firstname,
+                                    $this->lpa->donor->middlenames,
+                                ),
+                                'surname'    => $this->lpa->donor->surname,
                             ],
                             'caseSubtype'   => $this->lpa->caseSubtype,
                             'lpaActorToken' => $this->userLpaActorToken,

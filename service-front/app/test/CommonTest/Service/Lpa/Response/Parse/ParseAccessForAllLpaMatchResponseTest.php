@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa\Response\Parse;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\LpaFactory;
-use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
 use Exception;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -32,30 +31,26 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     {
         $this->response = [
             'donor'       => [
-                'uId'         => '12345',
-                'firstname'   => 'Example',
-                'middlenames' => 'Donor',
-                'surname'     => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Example Donor',
+                'surname'    => 'Person',
             ],
             'attorney'    => [
-                'uId'         => '12345',
-                'firstname'   => 'Example',
-                'middlenames' => 'Attorney',
-                'surname'     => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Example Attorney',
+                'surname'    => 'Person',
             ],
             'caseSubtype' => 'hw',
         ];
 
         $this->donor = new CaseActor();
         $this->donor->setUId('12345');
-        $this->donor->setFirstname('Example');
-        $this->donor->setMiddlenames('Donor');
+        $this->donor->setFirstname('Example Donor');
         $this->donor->setSurname('Person');
 
         $this->attorney = new CaseActor();
         $this->attorney->setUId('12378');
-        $this->attorney->setFirstname('Example');
-        $this->attorney->setMiddlenames('Attorney');
+        $this->attorney->setFirstname('Example Attorney');
         $this->attorney->setSurname('Person');
 
         $this->lpaFactory = $this->prophesize(LpaFactory::class);
@@ -78,7 +73,6 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $sut    = new ParseLpaMatch($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(LpaMatch::class, $result);
         $this->assertEquals($this->donor, $result->getDonor());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertNotNull($result->getAttorney());
@@ -90,9 +84,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
     #[Test]
     public function it_creates_a_lpa_match_actor_details_dto_from_array_data_with_null_name_fields(): void
     {
-        $this->response['donor']['firstname']   = null;
-        $this->response['donor']['middlenames'] = null;
-        $this->response['donor']['surname']     = null;
+        $this->response['donor']['firstnames'] = null;
+        $this->response['donor']['surname']    = null;
 
         $donor = new CaseActor();
         $donor->setUId('12345');
@@ -108,9 +101,7 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
         $sut    = new ParseLpaMatch($this->lpaFactory->reveal());
         $result = ($sut)($this->response);
 
-        $this->assertInstanceOf(LpaMatch::class, $result);
         $this->assertNull($result->getDonor()->getFirstname());
-        $this->assertNull($result->getDonor()->getMiddlenames());
         $this->assertNull($result->getDonor()->getSurname());
         $this->assertEquals('hw', $result->getCaseSubtype());
         $this->assertNotNull($result->getAttorney());
@@ -127,31 +118,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
 
         $data = [
             'donor'       => [
-                'uId'         => '12345',
-                'middlenames' => 'Donor',
-                'surname'     => 'Person',
-            ],
-            'caseSubtype' => 'hw',
-        ];
-
-        $sut = new ParseLpaMatch($this->lpaFactory->reveal());
-        ($sut)($data);
-    }
-
-    #[Test]
-    public function it_will_fail_if_lpa_match_actor_donor_middlenames_array_key_doesnt_exist(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'The data array passed to Common\Service\Lpa\Response\Parse\ParseLpaMatch::__invoke ' .
-            'does not contain the required fields'
-        );
-
-        $data = [
-            'donor'       => [
-                'uId'       => '12345',
-                'firstname' => 'Donor',
-                'surname'   => 'Person',
+                'uId'     => '12345',
+                'surname' => 'Person',
             ],
             'caseSubtype' => 'hw',
         ];
@@ -171,9 +139,8 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
 
         $data = [
             'donor'       => [
-                'uId'         => '12345',
-                'firstname'   => 'Donor',
-                'middlenames' => 'Person',
+                'uId'        => '12345',
+                'firstnames' => 'Donor Person',
             ],
             'caseSubtype' => 'hw',
         ];
@@ -208,16 +175,14 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
             [
                 [
                     'attorney'    => [
-                        'uId'         => null,
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Attorney',
-                        'surname'     => 'Person',
+                        'uId'        => null,
+                        'firstnames' => 'Example Attorney',
+                        'surname'   => 'Person',
                     ],
                     'donor'       => [
-                        'uId'         => null,
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Donor',
-                        'surname'     => 'Person',
+                        'uId'        => null,
+                        'firstnames' => 'Example Donor',
+                        'surname'    => 'Person',
                     ],
                     'caseSubtype' => 'hw',
                 ],
@@ -225,16 +190,14 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
             [
                 [
                     'attorney'    => [
-                        'uId'         => '12378',
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Attorney',
-                        'surname'     => 'Person',
+                        'uId'        => '12378',
+                        'firstnames' => 'Example Attorney',
+                        'surname'    => 'Person',
                     ],
                     'donor'       => [
-                        'uId'         => '12345',
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Donor',
-                        'surname'     => 'Person',
+                        'uId'        => '12345',
+                        'firstnames' => 'Example Donor',
+                        'surname'    => 'Person',
                     ],
                     'caseSubtype' => null,
                 ],
@@ -242,16 +205,14 @@ class ParseAccessForAllLpaMatchResponseTest extends TestCase
             [
                 [
                     'attorney'    => [
-                        'uId'         => '12378',
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Attorney',
-                        'surname'     => 'Person',
+                        'uId'        => '12378',
+                        'firstnames' => 'Example Attorney',
+                        'surname'    => 'Person',
                     ],
                     'donor'       => [
-                        'uId'         => '12345',
-                        'firstname'   => 'Example',
-                        'middlenames' => 'Donor',
-                        'surname'     => 'Person',
+                        'uId'        => '12345',
+                        'firstnames' => 'Example Donor',
+                        'surname'    => 'Person',
                     ],
                     'caseSubtype' => null,
                 ],

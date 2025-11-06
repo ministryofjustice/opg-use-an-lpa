@@ -178,6 +178,15 @@ class CombinedSiriusLpaTest extends TestCase
     {
         $sut = $this->getExpectedLpa();
 
-        $this->assertEquals(true, $sut->getLpaIsCleansed());;
+        $this->assertEquals(true, $sut->getLpaIsCleansed());
+    }
+
+    #[Test]
+    public function it_can_get_guidance_and_restrictions_flags(): void
+    {
+        $sut = $this->getExpectedLpa();
+
+        $this->assertEquals(false, $sut->hasGuidance());
+        $this->assertEquals(false, $sut->hasRestrictions());
     }
 }

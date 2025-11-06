@@ -48,15 +48,7 @@ class SiriusPerson implements
 
     public function getFirstnames(): string
     {
-        /**
-         * Although technically we should be doing
-         *
-         *     trim(sprintf('%s %s', $this->person['firstname'], $this->person['middlenames']));
-         *
-         * to produce an accurate "firstNames" field the interim object and current frontend code
-         * are not setup to handle that so we'll just return the firstname field here.
-         */
-        return $this->getFirstname();
+        return  trim(sprintf('%s %s', $this->person['firstname'], $this->person['middlenames']));
     }
 
     public function getMiddleNames(): string

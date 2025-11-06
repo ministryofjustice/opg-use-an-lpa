@@ -16,7 +16,7 @@ class LpaAlreadyAdded
      */
     public function __construct(
         private LpaManagerInterface $lpaManager,
-        private UserLpaActorMapInterface $userLpaActorMapRepository
+        private UserLpaActorMapInterface $userLpaActorMapRepository,
     ) {
     }
 
@@ -55,10 +55,9 @@ class LpaAlreadyAdded
 
         $response = [
             'donor'                => [
-                'uId'         => $donorDetails->getUid(),
-                'firstname'   => $donorDetails->getFirstnames(),
-                'middlenames' => $donorDetails->getMiddleNames(),
-                'surname'     => $donorDetails->getSurname(),
+                'uId'        => $donorDetails->getUid(),
+                'firstnames' => $donorDetails->getFirstnames(),
+                'surname'    => $donorDetails->getSurname(),
             ],
             'caseSubtype'          => $lpa['lpa']->getCaseSubtype(),
             'lpaActorToken'        => $record['Id'],

@@ -120,7 +120,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             $pfa = $this->translator->translate('property and finance', [], null, 'flashMessage');
 
             //data to be used in flash message
-            $donor   = $removedLpaData['lpa']['donor']['firstname']
+            $donor   = $removedLpaData['lpa']['donor']['firstnames']
                 . ' ' . $removedLpaData['lpa']['donor']['surname'];
             $lpaType = $removedLpaData['lpa']['caseSubtype'] === 'hw' ? $hw : $pfa;
 

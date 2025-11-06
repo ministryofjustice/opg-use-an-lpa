@@ -5,22 +5,23 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
-use App\DataAccess\Repository\Response\LpaInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
+use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
-use App\Entity\LpaStore\LpaStore as LpaStore;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\LpaDataFormatter;
+use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use DateTime;
+use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -28,8 +29,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Service\Lpa\LpaManagerInterface;
-use DateTimeImmutable;
 
 class RemoveLpaTest extends TestCase
 {
@@ -124,28 +123,28 @@ class RemoveLpaTest extends TestCase
         );
 
         $this->old_lpa_response = [
-            'donor' => [
-                'uId'           => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
-                'firstname'     => $this->getLpaDataFixtureOld()->getDonor()->getFirstnames(),
-                'surname'       => $this->getLpaDataFixtureOld()->getDonor()->getSurname(),
+            'donor'       => [
+                'uId'        => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
+                'firstnames' => $this->getLpaDataFixtureOld()->getDonor()->getFirstnames(),
+                'surname'    => $this->getLpaDataFixtureOld()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->getLpaDataFixtureOld()->getCaseSubType(),
         ];
 
         $this->new_lpa_response = [
-            'donor' => [
-                'uId'           => $this->getLpaDataFixtureNew()->getDonor()->getUid(),
-                'firstname'     => $this->getLpaDataFixtureNew()->getDonor()->getFirstnames(),
-                'surname'       => $this->getLpaDataFixtureNew()->getDonor()->getSurname(),
+            'donor'       => [
+                'uId'        => $this->getLpaDataFixtureNew()->getDonor()->getUid(),
+                'firstnames' => $this->getLpaDataFixtureNew()->getDonor()->getFirstnames(),
+                'surname'    => $this->getLpaDataFixtureNew()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->getLpaDataFixtureNew()->getCaseSubType(),
         ];
 
         $this->new_lpa_store_format_response = [
-            'donor' => [
-                'uId'           => $this->loadTestLpaStoreLpaFixture()->getDonor()->getUid(),//'eda719db-8880-4dda-8c5d-bb9ea12c236f',
-                'firstname'     => $this->loadTestLpaStoreLpaFixture()->getDonor()->getFirstnames(),
-                'surname'       => $this->loadTestLpaStoreLpaFixture()->getDonor()->getSurname(),
+            'donor'       => [
+                'uId'        => $this->loadTestLpaStoreLpaFixture()->getDonor()->getUid(),
+                'firstnames' => $this->loadTestLpaStoreLpaFixture()->getDonor()->getFirstnames(),
+                'surname'    => $this->loadTestLpaStoreLpaFixture()->getDonor()->getSurname(),
             ],
             'caseSubtype' => $this->loadTestLpaStoreLpaFixture()->getCaseSubType(),
         ];
@@ -181,11 +180,11 @@ class RemoveLpaTest extends TestCase
     public function it_can_remove_new_format_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
         $userActorLpa = [
-            'LpaUid' => 'M-7890-0400-4003',
-            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
-            'Id'        => $this->actorLpaToken,
-            'ActorId'   => '1',
-            'UserId'    => $this->userId,
+            'LpaUid'  => 'M-7890-0400-4003',
+            'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'      => $this->actorLpaToken,
+            'ActorId' => '1',
+            'UserId'  => $this->userId,
         ];
 
         $this->userLpaActorMapInterfaceProphecy
@@ -271,11 +270,11 @@ class RemoveLpaTest extends TestCase
     public function it_removes_a_new_lpa_from_a_user_account_and_cancels_their_active_codes_only(): void
     {
         $userActorLpa = [
-            'LpaUid' => 'M-7890-0400-4003',
-            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
-            'Id'        => $this->actorLpaToken,
-            'ActorId'   => '1',
-            'UserId'    => $this->userId,
+            'LpaUid'  => 'M-7890-0400-4003',
+            'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'      => $this->actorLpaToken,
+            'ActorId' => '1',
+            'UserId'  => $this->userId,
         ];
 
         $this->userLpaActorMapInterfaceProphecy
@@ -397,11 +396,11 @@ class RemoveLpaTest extends TestCase
     public function it_can_remove_new_lpa_store_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
         $userActorLpa = [
-            'LpaUid' => 'M-7890-0400-4003',
-            'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
-            'Id'        => $this->actorLpaToken,
-            'ActorId'   => '1',
-            'UserId'    => $this->userId,
+            'LpaUid'  => 'M-7890-0400-4003',
+            'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
+            'Id'      => $this->actorLpaToken,
+            'ActorId' => '1',
+            'UserId'  => $this->userId,
         ];
 
         $this->userLpaActorMapInterfaceProphecy
@@ -461,24 +460,24 @@ class RemoveLpaTest extends TestCase
             channel:                                   null,
             dispatchDate:                              null,
             donor:                                     new SiriusLpaDonor(
-                                                           addressLine1: '81 Front Street',
-                                                           addressLine2: 'xxxxx',
-                                                           addressLine3: '',
-                                                           country:      '',
-                                                           county:       '',
-                                                           dob:          null,
-                                                           email:        'AnotherPerson@opgtest.com',
-                                                           firstname:    'Donor',
-                                                           id:           '123456789',
-                                                           linked:       [],
-                                                           middlenames:  null,
-                                                           otherNames:   null,
-                                                           postcode:     'DN37 5SH',
-                                                           surname:      'Person',
-                                                           systemStatus: null,
-                                                           town:         '',
-                                                           uId:          '700000055554',
-                                                       ),
+                addressLine1: '81 Front Street',
+                addressLine2: 'xxxxx',
+                addressLine3: '',
+                country:      '',
+                county:       '',
+                dob:          null,
+                email:        'AnotherPerson@opgtest.com',
+                firstname:    'Donor',
+                id:           '123456789',
+                linked:       [],
+                middlenames:  null,
+                otherNames:   null,
+                postcode:     'DN37 5SH',
+                surname:      'Person',
+                systemStatus: null,
+                town:         '',
+                uId:          '700000055554',
+            ),
             hasSeveranceWarning:                       null,
             invalidDate:                               null,
             lifeSustainingTreatment:                   LifeSustainingTreatment::OPTION_A,
@@ -503,10 +502,10 @@ class RemoveLpaTest extends TestCase
         return
             new SiriusLpa(
                 [
-                    'uId' => '700000055554',
+                    'uId'         => '700000055554',
                     'caseSubtype' => 'hw',
-                    'donor' => $this->donorFixtureOld(),
-                    'attorneys' => [],
+                    'donor'       => $this->donorFixtureOld(),
+                    'attorneys'   => [],
                 ],
                 $this->loggerProphecy->reveal(),
             );

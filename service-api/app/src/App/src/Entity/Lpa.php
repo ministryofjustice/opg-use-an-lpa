@@ -10,6 +10,7 @@ use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
+use App\Service\Lpa\HasRestrictionsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
@@ -25,6 +26,7 @@ class Lpa implements
     HasActorInterface,
     IsValidInterface,
     AddLpaInterface,
+    HasRestrictionsInterface,
     FilterActiveActorsInterface,
     RestrictSendingLpaForCleansingInterface
 {
@@ -117,5 +119,15 @@ class Lpa implements
     public function getLpaIsCleansed(): bool
     {
         return $this->lpaIsCleansed;
+    }
+
+    public function hasGuidance(): bool
+    {
+        return $this->applicationHasGuidance ?? false;
+    }
+
+    public function hasRestrictions(): bool
+    {
+        return $this->applicationHasRestrictions ?? false;
     }
 }

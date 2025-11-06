@@ -6,7 +6,11 @@ namespace App\Service\Lpa;
 
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpaInterface;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
+use App\Service\Lpa\Combined\FilterActiveActorsInterface;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\LpaRemoved\LpaRemovedInterface;
@@ -34,6 +38,8 @@ class SiriusLpa implements
     LpaRemovedInterface,
     AddLpaInterface,
     RestrictSendingLpaForCleansingInterface,
+    FilterActiveActorsInterface,
+    HasRestrictionsInterface,
     ArrayAccess,
     IteratorAggregate,
     JsonSerializable
@@ -51,8 +57,12 @@ class SiriusLpa implements
         $this->transformArrayToSiriusPersons('trustCorporations');
     }
 
+    /**
+     * @return SiriusPerson[]
+     */
     public function getAttorneys(): array
     {
+        /** @var SiriusPerson[] */
         return $this->lpa['attorneys'];
     }
 
@@ -82,8 +92,12 @@ class SiriusLpa implements
             : new SiriusPerson($entity, $this->logger);
     }
 
+    /**
+     * @return SiriusPerson[]
+     */
     public function getTrustCorporations(): array
     {
+        /** @var SiriusPerson[] */
         return $this->lpa['trustCorporations'];
     }
 
@@ -158,5 +172,33 @@ class SiriusLpa implements
     public function getLpaIsCleansed(): bool
     {
         return $this->lpa['lpaIsCleansed'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withAttorneys(array $attorneys): self
+    {
+        $this->lpa['attorneys'] = $attorneys;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function withTrustCorporations(array $trustCorporations): self
+    {
+        $this->lpa['trustCorporations'] = $trustCorporations;
+        return $this;
+    }
+
+    public function hasGuidance(): bool
+    {
+        return $this->lpa['applicationHasGuidance'] ?? false;
+    }
+
+    public function hasRestrictions(): bool
+    {
+        return $this->lpa['applicationHasRestrictions'] ?? false;
     }
 }
