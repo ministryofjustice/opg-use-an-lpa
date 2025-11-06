@@ -72,6 +72,7 @@ class GetTrustCorporationStatusTest extends TestCase
 
         $this->assertEquals(TrustCorporationStatus::ACTIVE_TC, ($status)($trustCorporation));
     }
+
     #[Test]
     public function returns_ghost_if_trustCorporation_is_a_ghost(): void
     {
@@ -91,6 +92,7 @@ class GetTrustCorporationStatusTest extends TestCase
 
         $this->assertEquals(TrustCorporationStatus::GHOST_TC, ($status)($trustCorporation));
     }
+
     #[Test]
     public function returns_ghost_if_trustCorporation_is_a_ghost_combined_format_lpastore(): void
     {
@@ -136,6 +138,7 @@ class GetTrustCorporationStatusTest extends TestCase
 
         $this->assertEquals(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
     }
+
     #[Test]
     public function returns_inactive_if_trustCorporation_is_inactive_combined_format_lpastore(): void
     {
@@ -162,6 +165,7 @@ class GetTrustCorporationStatusTest extends TestCase
 
         $this->assertEquals(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
     }
+
     #[Test]
     public function returns_inactive_if_trustCorporation_is_inactive_combined_format_sirius(): void
     {

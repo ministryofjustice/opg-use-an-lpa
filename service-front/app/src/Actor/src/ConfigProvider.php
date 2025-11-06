@@ -41,8 +41,8 @@ class ConfigProvider
     {
         return [
             'factories' => [
-                CheckLpaHandler::class          => CheckLpaHandlerFactory::class,
-                LogoutPageHandler::class        => LogoutPageHandlerFactory::class,
+                CheckLpaHandler::class     => CheckLpaHandlerFactory::class,
+                LogoutPageHandler::class   => LogoutPageHandlerFactory::class,
                 SessionCheckHandler::class => ActorSessionCheckHandlerFactory::class,
             ],
         ];

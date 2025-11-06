@@ -68,6 +68,7 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
+
     #[Test]
     public function returns_0_if_attorney_is_active_combined_format_sirius(): void
     {
@@ -96,6 +97,7 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
+
     #[Test]
     public function returns_1_if_attorney_is_a_ghost(): void
     {
@@ -110,6 +112,7 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
+
     #[Test]
     public function returns_1_if_attorney_is_a_ghost_combined_format_lpastore(): void
     {
@@ -164,6 +167,7 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
+
     #[Test]
     public function returns_2_if_attorney_is_inactive(): void
     {
@@ -204,6 +208,7 @@ class GetAttorneyStatusTest extends TestCase
 
         $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
+
     #[Test]
     public function returns_2_if_attorney_is_inactive_combined_format_sirius(): void
     {

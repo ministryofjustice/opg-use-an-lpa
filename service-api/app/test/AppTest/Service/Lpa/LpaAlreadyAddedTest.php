@@ -155,9 +155,9 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertEquals(
             [
                 'donor'                => [
-                    'uId'         => '700000000444',
-                    'firstnames'   => 'Another',
-                    'surname'     => 'Person',
+                    'uId'        => '700000000444',
+                    'firstnames' => 'Another',
+                    'surname'    => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
                 'lpaActorToken'        => $this->userLpaActorToken,
@@ -194,9 +194,9 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertEquals(
             [
                 'donor'                => [
-                    'uId'         => '700000001111',
-                    'firstnames'   => 'Donor',
-                    'surname'     => 'Person',
+                    'uId'        => '700000001111',
+                    'firstnames' => 'Donor',
+                    'surname'    => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
                 'lpaActorToken'        => $this->userLpaActorToken,
@@ -205,7 +205,6 @@ class LpaAlreadyAddedTest extends TestCase
             $lpaAddedData
         );
     }
-
 
     #[Test]
     public function correctly_handles_records_without_sirius_uids_if_lpa_already_added(): void
@@ -238,9 +237,9 @@ class LpaAlreadyAddedTest extends TestCase
         $this->assertEquals(
             [
                 'donor'                => [
-                    'uId'         => '700000000444',
-                    'firstnames'   => 'Another',
-                    'surname'     => 'Person',
+                    'uId'        => '700000000444',
+                    'firstnames' => 'Another',
+                    'surname'    => 'Person',
                 ],
                 'caseSubtype'          => 'hw',
                 'lpaActorToken'        => $this->userLpaActorToken,

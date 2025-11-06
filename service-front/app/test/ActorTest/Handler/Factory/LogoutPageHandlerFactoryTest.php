@@ -44,7 +44,8 @@ class LogoutPageHandlerFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_creates_an_appropriate_logout_page_handler(): void {
+    public function it_creates_an_appropriate_logout_page_handler(): void
+    {
         $this->container
             ->get(OneLoginService::class)
             ->shouldBeCalled()

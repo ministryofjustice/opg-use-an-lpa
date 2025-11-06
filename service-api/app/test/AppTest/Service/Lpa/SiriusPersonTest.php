@@ -108,9 +108,9 @@ class SiriusPersonTest extends TestCase
     {
         $sut = new SiriusPerson(
             [
-                'uId' => 700000000000,
+                'uId'          => 700000000000,
                 'systemStatus' => 1,
-                'companyName' => null,
+                'companyName'  => null,
             ],
             $this->loggerProphecy->reveal(),
         );

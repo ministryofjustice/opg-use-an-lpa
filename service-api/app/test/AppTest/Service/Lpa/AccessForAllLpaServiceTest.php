@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 class AccessForAllLpaServiceTest extends TestCase
 {
     use ProphecyTrait;
+
     private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
     private RequestLetterInterface|ObjectProphecy $requestLetterInterfaceProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
@@ -48,12 +49,12 @@ class AccessForAllLpaServiceTest extends TestCase
 
     public function setUp(): void
     {
-        $this->lpasInterfaceProphecy   = $this->prophesize(LpasInterface::class);
-        $this->requestLetterInterfaceProphecy   = $this->prophesize(RequestLetterInterface::class);
-        $this->loggerProphecy          = $this->prophesize(LoggerInterface::class);
-        $this->actorCodesProphecy      = $this->prophesize(ActorCodes::class);
-        $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMap::class);
-        $this->resolveActorProphecy    = $this->prophesize(ResolveActor::class);
+        $this->lpasInterfaceProphecy          = $this->prophesize(LpasInterface::class);
+        $this->requestLetterInterfaceProphecy = $this->prophesize(RequestLetterInterface::class);
+        $this->loggerProphecy                 = $this->prophesize(LoggerInterface::class);
+        $this->actorCodesProphecy             = $this->prophesize(ActorCodes::class);
+        $this->userLpaActorMapProphecy        = $this->prophesize(UserLpaActorMap::class);
+        $this->resolveActorProphecy           = $this->prophesize(ResolveActor::class);
 
         $this->userId         = 'user-zxywq-54321';
         $this->lpaUid         = '700000012345';

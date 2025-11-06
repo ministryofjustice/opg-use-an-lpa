@@ -86,8 +86,8 @@ class CodesApiValidationStrategyTest extends TestCase
                 new LpaActor(
                     new SiriusPerson(
                         [
-                            'uId'          => 'actor-uid',
-                            'dob'          => '1948-11-01',
+                            'uId' => 'actor-uid',
+                            'dob' => '1948-11-01',
                         ],
                         $this->loggerProphecy->reveal(),
                     ),

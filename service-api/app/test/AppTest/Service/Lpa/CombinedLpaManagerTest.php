@@ -323,8 +323,8 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_lpastore_uid()
     {
-        $testUid     = 'M-7890-0400-4003';
-        $testUserId  = 'test-user-id';
+        $testUid    = 'M-7890-0400-4003';
+        $testUserId = 'test-user-id';
 
         $lpaResponse = new Lpa(
             $this->loadTestLpaStoreLpaFixture(

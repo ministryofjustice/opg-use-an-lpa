@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 class SiriusHasActorTraitTest extends TestCase
 {
     use ProphecyTrait;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
     private HasActorInterface $mock;
 

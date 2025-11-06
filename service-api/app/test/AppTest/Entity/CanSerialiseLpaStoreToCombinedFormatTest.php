@@ -23,10 +23,10 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
     private function getExpectedLpa(): array
     {
         return [
-            'applicationHasGuidance'     => null,
-            'applicationHasRestrictions' => null,
-            'applicationType'            => null,
-            'attorneys'                  => [
+            'applicationHasGuidance'          => null,
+            'applicationHasRestrictions'      => null,
+            'applicationType'                 => null,
+            'attorneys'                       => [
                 [
                     'addressLine1' => '81 NighOnTimeWeBuiltIt Street',
                     'addressLine2' => null,
@@ -45,10 +45,10 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'uId'          => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
                 ],
             ],
-            'caseSubtype'                => 'hw',
-            'channel'                    => 'online',
-            'dispatchDate'               => null,
-            'donor'                      => [
+            'caseSubtype'                     => 'hw',
+            'channel'                         => 'online',
+            'dispatchDate'                    => null,
+            'donor'                           => [
                 'addressLine1' => '74 Cloob Close',
                 'addressLine2' => null,
                 'addressLine3' => null,
@@ -65,22 +65,22 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                 'town'         => 'Mahhhhhhhhhh',
                 'uId'          => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
             ],
-            'hasSeveranceWarning'        => null,
-            'howAttorneysMakeDecisions'  => 'jointly',
-            'invalidDate'                => null,
-            'lifeSustainingTreatment'    => 'option-a',
-            'lpaDonorSignatureDate'      => '2024-01-10T23:00:00Z',
-            'lpaIsCleansed'              => null,
-            'onlineLpaId'                => null,
-            'receiptDate'                => null,
-            'registrationDate'           => '2024-01-12T00:00:00Z',
-            'rejectedDate'               => null,
-            'replacementAttorneys'       => [],
-            'restrictionsAndConditions'  => 'my restrictions and conditions',
+            'hasSeveranceWarning'             => null,
+            'howAttorneysMakeDecisions'       => 'jointly',
+            'invalidDate'                     => null,
+            'lifeSustainingTreatment'         => 'option-a',
+            'lpaDonorSignatureDate'           => '2024-01-10T23:00:00Z',
+            'lpaIsCleansed'                   => null,
+            'onlineLpaId'                     => null,
+            'receiptDate'                     => null,
+            'registrationDate'                => '2024-01-12T00:00:00Z',
+            'rejectedDate'                    => null,
+            'replacementAttorneys'            => [],
+            'restrictionsAndConditions'       => 'my restrictions and conditions',
             'restrictionsAndConditionsImages' => null,
-            'status'                     => 'registered',
-            'statusDate'                 => '2024-01-12T23:00:00Z',
-            'trustCorporations'          => [
+            'status'                          => 'registered',
+            'statusDate'                      => '2024-01-12T23:00:00Z',
+            'trustCorporations'               => [
                 [
                     'addressLine1' => '103 Line 1',
                     'addressLine2' => null,
@@ -99,9 +99,9 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'uId'          => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ],
             ],
-            'uId'                        => 'M-7890-0400-4003',
-            'whenTheLpaCanBeUsed'        => 'when-capacity-lost',
-            'withdrawnDate'              => null,
+            'uId'                             => 'M-7890-0400-4003',
+            'whenTheLpaCanBeUsed'             => 'when-capacity-lost',
+            'withdrawnDate'                   => null,
         ];
     }
 

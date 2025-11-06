@@ -66,8 +66,9 @@ class ActorUsers implements ActorUsersInterface
     }
 
     /**
-     * @psalm-suppress PossiblyUnusedReturnValue
      * @see https://github.com/vimeo/psalm/issues/10292
+     *
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function getByEmail(string $email): array
     {

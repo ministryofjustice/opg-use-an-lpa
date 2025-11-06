@@ -15,10 +15,14 @@ use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
 use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Psr\Container\ContainerInterface;
+use App\Middleware\Logging\RequestTracingMiddleware;
+use App\Middleware\ProblemDetailsMiddleware;
+use App\Middleware\UserIdentificationMiddleware;
 
 /**
  * @psalm-suppress UnusedClosureParam
  */
+
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
@@ -43,7 +47,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - $app->pipe('/docs', $apiDocMiddleware);
     // - $app->pipe('/files', $filesMiddleware);
 
-    $app->pipe(App\Middleware\Logging\RequestTracingMiddleware::class);
+    $app->pipe(RequestTracingMiddleware::class);
 
     // Register the routing middleware in the middleware pipeline.
     // This middleware registers the Mezzio\Router\RouteResult request attribute.
@@ -61,7 +65,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->pipe(BodyParamsMiddleware::class);
 
     //  Handle any API problem exception types
-    $app->pipe(App\Middleware\ProblemDetailsMiddleware::class);
+    $app->pipe(ProblemDetailsMiddleware::class);
 
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
@@ -72,9 +76,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // - route-based authentication
     // - route-based validation
     // - etc.
-    $app->pipe('/v1/actor-codes', App\Middleware\UserIdentificationMiddleware::class);
-    $app->pipe('/v1/lpas', App\Middleware\UserIdentificationMiddleware::class);
-    $app->pipe('/v1/older-lpa', App\Middleware\UserIdentificationMiddleware::class);
+    $app->pipe('/v1/actor-codes', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/lpas', UserIdentificationMiddleware::class);
+    $app->pipe('/v1/older-lpa', UserIdentificationMiddleware::class);
 
     // Register the dispatch middleware in the middleware pipeline
     $app->pipe(DispatchMiddleware::class);

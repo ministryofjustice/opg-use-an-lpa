@@ -76,7 +76,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
                 $stateData->noOfAttorneys
             );
 
-            if ($result->status == PaperVerificationCodeStatus::NOT_FOUND) {
+            if ($result->status === PaperVerificationCodeStatus::NOT_FOUND) {
                 return new HtmlResponse(
                     $this->renderer->render('viewer::paper-verification/lpa-not-found', [
                         'donorName'     => $stateData->donorName,
@@ -89,7 +89,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
                 );
             }
 
-            if ($result->status == PaperVerificationCodeStatus::OK) {
+            if ($result->status === PaperVerificationCodeStatus::OK) {
                 return $this->redirectToRoute($this->nextPage($stateData));
             }
         }
@@ -133,6 +133,8 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
     public function lastPage(WorkflowState $state): string
     {
         /** @var PaperVerificationCode $state */
-        return $state->sentToDonor === false ? 'pv.number-of-attorneys' : 'pv.provide-attorney-details';
+        return $state->sentToDonor === false
+            ? 'pv.number-of-attorneys'
+            : 'pv.provide-attorney-details';
     }
 }

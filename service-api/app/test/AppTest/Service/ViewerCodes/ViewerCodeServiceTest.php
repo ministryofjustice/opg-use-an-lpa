@@ -109,7 +109,7 @@ class ViewerCodeServiceTest extends TestCase
             ->add(
                 Argument::type('string'),
                 'id',
-                Argument::that(fn(LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
+                Argument::that(fn (LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
                 $codeExpiry,
                 'token name',
                 '1234'
@@ -148,7 +148,6 @@ class ViewerCodeServiceTest extends TestCase
         $this->assertArrayHasKey('organisation', $result);
         $this->assertEquals('token name', $result['organisation']);
     }
-
 
     #[Test]
     public function it_wont_create_a_code_if_user_does_not_match(): void

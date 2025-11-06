@@ -111,8 +111,6 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
             $template = ($this->featureEnabled)('paper_verification') && strlen($code) === 14
                 ? 'viewer::lpa-not-found-with-pvc'
                 : 'viewer::check-code-not-found';
-            //
-
             return new HtmlResponse(
                 $this->renderer->render(
                     $template,

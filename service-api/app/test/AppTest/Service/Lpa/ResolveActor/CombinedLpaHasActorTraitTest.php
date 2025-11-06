@@ -108,11 +108,11 @@ class CombinedLpaHasActorTraitTest extends TestCase
                 id:           '123456789',
                 linked:       [
                                   [
-                                      'id' => '123456789',
+                                      'id'  => '123456789',
                                       'uId' => '7123456789',
                                   ],
                                   [
-                                      'id' => '234567890',
+                                      'id'  => '234567890',
                                       'uId' => '7234567890',
                                   ],
                               ],
