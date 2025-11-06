@@ -165,7 +165,7 @@ jobs:
 
   pact_upload:
     name: upload contracts to pact
-    uses: ./.github/workflows/_pact_upload.yml
+    uses: ./.github/workflows/_pact-upload.yml
     with:
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
