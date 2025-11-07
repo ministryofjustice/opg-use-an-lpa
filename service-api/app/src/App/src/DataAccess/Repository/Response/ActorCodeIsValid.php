@@ -8,6 +8,7 @@ final class ActorCodeIsValid
 {
     public function __construct(
         public readonly ?string $actorUid,
+        public readonly ?bool $hasPaperVerificationCode,
     ) {
     }
 }

@@ -80,6 +80,45 @@ class ActorCodesTest extends TestCase
     }
 
     #[Test]
+    public function it_validates_a_correct_code_when_has_paper_verification_code(): void
+    {
+        $testData = [
+            'lpa'  => 'test-uid',
+            'dob'  => 'test-dob',
+            'code' => 'test-code',
+        ];
+
+        $responseProphecy = $this->prophesize(ResponseInterface::class);
+        $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
+        $responseProphecy->getBody()->willReturn(json_encode([
+            'actor'                       => 'test-actor',
+            'has_paper_verification_code' => true,
+        ]));
+        $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
+
+        $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
+
+        $this->requestFactoryProphecy
+            ->createRequest('POST', Argument::containingString('localhost/v1/validate'))
+            ->willReturn($this->requestProphecy->reveal());
+
+        $service = new ActorCodes(
+            $this->httpClientProphecy->reveal(),
+            $this->requestFactoryProphecy->reveal(),
+            $this->streamFactoryProphecy->reveal(),
+            $this->requestSignerFactoryProphecy->reveal(),
+            'localhost',
+            'test-trace-id',
+        );
+
+        $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
+
+        $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
+        $this->assertTrue($actorCode->getData()->hasPaperVerificationCode);
+    }
+
+    #[Test]
     public function it_handles_a_client_exception_when_validating_a_code(): void
     {
         $testData = [

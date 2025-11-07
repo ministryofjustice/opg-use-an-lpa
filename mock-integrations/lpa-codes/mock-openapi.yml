@@ -653,6 +653,8 @@ components:
           type: string
           nullable: true
           pattern: '7[0-9]{11}|^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
+        has_paper_verification_code:
+          type: boolean
       additionalProperties: false
       required:
         - actor

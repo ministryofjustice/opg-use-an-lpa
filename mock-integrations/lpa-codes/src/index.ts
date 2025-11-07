@@ -33,7 +33,11 @@ if (opId === 'api.resources.handle_healthcheck') {
     ) {
       logger.info('Code ' + activationCode.code + ' matched parameters')
 
-      response = JSON.stringify({'actor': activationCode.actor})
+      if (activationCode.has_paper_verification_code) {
+        response = JSON.stringify({'actor': activationCode.actor, 'has_paper_verification_code': true})
+      } else {
+        response = JSON.stringify({'actor': activationCode.actor})
+      }
     } else {
       response = JSON.stringify({'actor': null})
     }

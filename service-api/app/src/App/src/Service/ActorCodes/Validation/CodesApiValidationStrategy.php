@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ActorCodes\Validation;
 
 use App\DataAccess\ApiGateway\ActorCodes;
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
@@ -24,7 +25,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
     ) {
     }
 
-    public function validateCode(string $code, string $uid, string $dob): string
+    public function validateCode(string $code, string $uid, string $dob): ActorCodeIsValid
     {
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
@@ -32,7 +33,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
             $actorUid = $actorCode->getData()->actorUid;
 
             if ($actorUid !== null && $this->verifyAgainstLpa($uid, $actorUid, $dob)) {
-                return $actorUid;
+                return $actorCode->getData();
             }
         } catch (ActorCodeValidationException $acve) {
             throw $acve;
