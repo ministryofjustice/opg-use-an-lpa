@@ -155,7 +155,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $sut = $this->container->get(PaperVerificationCodes::class);
 
-        $pvc = $sut->validate(new PaperVerificationCode('P-1234-1234-1234-12'));
+        $pvc = $sut->validate(new PaperVerificationCode('P-5678-5678-5678-56'));
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
@@ -273,7 +273,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $this->builder
             ->given('the paper verification code P-1234-1234-1234-12 has not got an expiry date')
-            ->uponReceiving('a request to expire the code P-5678-5678-5678-56 as a first_time_use')
+            ->uponReceiving('a request to expire the code P-1234-1234-1234-12 as a first_time_use')
             ->with($request)
             ->willRespondWith($response);
 
