@@ -56,7 +56,6 @@ variable "environments" {
       gov_uk_onelogin_identity_public_key_secret_name  = string
       gov_uk_onelogin_identity_private_key_secret_name = string
       gov_uk_onelogin_discovery_url                    = string
-      have_a_backup_plan                               = bool
       is_production                                    = bool
       log_retention_in_days                            = number
       logging_level                                    = number
@@ -87,6 +86,11 @@ variable "environments" {
         allow_meris_lpas       = bool
         support_datastore_lpas = bool
         paper_verification     = bool
+      })
+      dynamodb_backups = object({
+        daily_backup_deletion_in_days   = number
+        monthly_backup_deletion_in_days = number
+        have_a_backup_plan              = bool
       })
       dynamodb_tables = object({
         actor_codes = object({

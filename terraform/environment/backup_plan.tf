@@ -1,5 +1,5 @@
 resource "aws_backup_plan" "main" {
-  count = local.environment.have_a_backup_plan ? 1 : 0
+  count = local.environment.dynamodb_backups.have_a_backup_plan ? 1 : 0
   name  = "${local.environment_name}_main_backup_plan"
 
   rule {
@@ -12,7 +12,7 @@ resource "aws_backup_plan" "main" {
 
     lifecycle {
       cold_storage_after = 0
-      delete_after       = 90
+      delete_after       = local.environment.dynamodb_backups.daily_backup_deletion_in_days
     }
   }
   rule {
@@ -25,7 +25,7 @@ resource "aws_backup_plan" "main" {
 
     lifecycle {
       cold_storage_after = 30
-      delete_after       = 365
+      delete_after       = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
     }
   }
 }
@@ -39,7 +39,7 @@ data "aws_iam_role" "aws_backup_role" {
 }
 
 resource "aws_backup_selection" "main" {
-  count        = local.environment.have_a_backup_plan ? 1 : 0
+  count        = local.environment.dynamodb_backups.have_a_backup_plan ? 1 : 0
   iam_role_arn = data.aws_iam_role.aws_backup_role.arn
   name         = "${local.environment_name}_main_backup_selection"
   plan_id      = aws_backup_plan.main[0].id
