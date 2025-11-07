@@ -11,7 +11,7 @@ resource "aws_backup_plan" "main" {
     target_vault_name   = data.aws_backup_vault.main.name
 
     lifecycle {
-      cold_storage_after = 0
+      cold_storage_after = local.environment.dynamodb_backups.daily_cold_storage_in_days
       delete_after       = local.environment.dynamodb_backups.daily_backup_deletion_in_days
     }
   }
@@ -24,7 +24,7 @@ resource "aws_backup_plan" "main" {
     target_vault_name   = data.aws_backup_vault.main.name
 
     lifecycle {
-      cold_storage_after = 30
+      cold_storage_after = local.environment.dynamodb_backups.monthly_cold_storage_in_days
       delete_after       = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
     }
   }
