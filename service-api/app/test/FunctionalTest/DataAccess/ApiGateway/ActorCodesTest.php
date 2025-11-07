@@ -67,7 +67,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
                 [
                     'lpa'  => $matcher->regex('700000000001', '7[0-9]{11}'),
                     'dob'  => $matcher->dateISO8601('1959-08-10'),
-                    'code' => $matcher->like('valid-code'),
+                    'code' => $matcher->like('ISAVALIDCODE'),
                 ]
             );
 
@@ -78,14 +78,14 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ->setBody(['actor' => $matcher->regex('700000000001', '7[0-9]{11}')]);
 
         $this->builder
-            ->given('the provided details match a valid actor code')
-            ->uponReceiving('a POST request to /v1/validate')
+            ->given('the activation key ISAVALIDCODE exists')
+            ->uponReceiving('a request to validate the code ISAVALIDCODE')
             ->with($request)
             ->willRespondWith($response);
 
         $sut = $this->container->get(ActorCodes::class);
 
-        $actorCode = $sut->validateCode('valid-code', '700000000001', '1959-08-10');
+        $actorCode = $sut->validateCode('ISAVALIDCODE', '700000000001', '1959-08-10');
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
@@ -161,24 +161,28 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             )
             ->setBody(
                 [
-                    'code' => $matcher->like('valid-code'),
+                    'code' => $matcher->like('ISAVALIDCODE'),
                 ]
             );
 
         $response = new ProviderResponse();
         $response
             ->setStatus(200)
-            ->setBody([]);
+            ->setBody(
+                [
+                    'codes_revoked' => 1,
+                ]
+            );
 
         $this->builder
-            ->given('the given actor code is revoked')
-            ->uponReceiving('a POST request to /v1/revoke')
+            ->given('the activation key ISAVALIDCODE exists')
+            ->uponReceiving('a request to revoke the code ISAVALIDCODE')
             ->with($request)
             ->willRespondWith($response);
 
         $sut = $this->container->get(ActorCodes::class);
 
-        $sut->flagCodeAsUsed('valid-code');
+        $sut->flagCodeAsUsed('ISAVALIDCODE');
 
         self::assertTrue($this->builder->verify());
     }

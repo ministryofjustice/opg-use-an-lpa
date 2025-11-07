@@ -198,15 +198,8 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
                 [
                     'errors' => $matcher->eachLike(
                         [
-                            'id'     => $matcher->like('A123BCD'),
-                            'code'   => 'OPGDATA-API-NOTFOUND',
-                            'title'  => 'Page not found',
-                            'detail' => 'That URL is not a valid route, or the item resource does not exist',
-                            'meta'   => $matcher->eachLike(
-                                [
-                                    'x-ray' => $matcher->like('93c330d4-7d84-4c1b-8fdb-54cec5bfe747'),
-                                ]
-                            ),
+                            'code'  => 'OPGDATA-API-NOTFOUND',
+                            'title' => 'Code not found',
                         ]
                     ),
                 ]
