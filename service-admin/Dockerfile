@@ -1,4 +1,4 @@
-FROM node:22.16.0-alpine3.22@sha256:41e4389f3d988d2ed55392df4db1420ad048ae53324a8e2b7c6d19508288107e AS asset-env
+FROM node:22.21.1-alpine3.22@sha256:b2358485e3e33bc3a33114d2b1bdb18cdbe4df01bd2b257198eb51beb1f026c5 AS asset-env
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY package.json package-lock.json ./
 RUN npm ci --ignore-scripts && npm run build
 
 # Build Go app
-FROM golang:1.25.3-alpine@sha256:aee43c3ccbf24fdffb7295693b6e33b21e01baec1b2a55acc351fde345e9ec34 AS build-env
+FROM golang:1.25.4-alpine@sha256:d3f0cf7723f3429e3f9ed846243970b20a2de7bae6a5b66fc5914e228d831bbb AS build-env
 
 RUN adduser -D appuser
 
