@@ -34,7 +34,7 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
         $responseData = json_decode((string) $response->getBody(), true);
 
         return new UpstreamResponse(
-            new ActorCodeIsValid($responseData['actor']),
+            new ActorCodeIsValid($responseData['actor'], $responseData['has_paper_verification_code'] ?? null),
             new DateTimeImmutable($response->getHeaderLine('Date'))
         );
     }

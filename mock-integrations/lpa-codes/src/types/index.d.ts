@@ -7,11 +7,12 @@ interface LpaCode {
   last_updated_date: string,
   lpa: string,
   dob: string,
-  expiry_date?: number|string,
-  expiry_reason?: ExpiryReason|string,
+  expiry_date?: number | string,
+  expiry_reason?: ExpiryReason | string,
   generated_date: string,
   status_details?: string,
   comment: string
+  has_paper_verification_code?: boolean,
 }
 
-export { LpaCode }
+export { LpaCode };

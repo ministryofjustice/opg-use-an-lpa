@@ -88,6 +88,7 @@ class AddLpaTest extends TestCase
         $expectedResponse = new ValidatedActorCode(
             $this->prophesize(LpaActor::class)->reveal(),
             $this->oldLpaFixture(),
+            true,
         );
 
         $this->lpaAlreadyAddedProphecy
@@ -121,6 +122,7 @@ class AddLpaTest extends TestCase
         $expectedResponse = new ValidatedActorCode(
             $this->prophesize(LpaActor::class)->reveal(),
             $this->newLpaFixture('Registered'),
+            false,
         );
 
         $this->lpaAlreadyAddedProphecy
@@ -195,6 +197,7 @@ class AddLpaTest extends TestCase
                         ],
                         $this->loggerProphecy->reveal(),
                     ),
+                    false,
                 ),
             );
 
@@ -222,6 +225,7 @@ class AddLpaTest extends TestCase
                 new ValidatedActorCode(
                     $this->prophesize(LpaActor::class)->reveal(),
                     $this->newLpaFixture('Cancelled'),
+                    false,
                 ),
             );
 
@@ -242,6 +246,7 @@ class AddLpaTest extends TestCase
         $expectedResponse = new ValidatedActorCode(
             $this->prophesize(LpaActor::class)->reveal(),
             $this->oldLpaFixture(),
+            false,
         );
 
         $this->lpaAlreadyAddedProphecy

@@ -20,30 +20,18 @@ class ActorCodeService
     }
 
     /**
-     * Removes TTL from entry that is already inside the database
-     *
-     * @param string $userLpaActorMapId the database id to remove the TTL from
-     * @return string returns the database ID of the LPA that has had it's TTL removed
-     */
-    private function activateRecord(string $userLpaActorMapId, string $actorId, string $code): string
-    {
-        $this->userLpaActorMapRepository->activateRecord($userLpaActorMapId, $actorId, $code);
-
-        return $userLpaActorMapId;
-    }
-
-    /**
      * @throws ApiException
      */
     public function validateDetails(string $code, string $uid, string $dob): ?ValidatedActorCode
     {
         try {
-            $actorUid = $this->codeValidator->validateCode($code, $uid, $dob);
-            $lpa      = $this->lpaManager->getByUid($uid);
-            $actor    = ($this->resolveActor)($lpa->getData(), $actorUid);
-            $lpaData  = $lpa->getData();
+            $actorCodeIsValid = $this->codeValidator->validateCode($code, $uid, $dob);
 
-            return new ValidatedActorCode($actor, $lpaData);
+            $lpa     = $this->lpaManager->getByUid($uid);
+            $actor   = ($this->resolveActor)($lpa->getData(), $actorCodeIsValid->actorUid);
+            $lpaData = $lpa->getData();
+
+            return new ValidatedActorCode($actor, $lpaData, $actorCodeIsValid->hasPaperVerificationCode ?? false);
         } catch (ActorCodeValidationException) {
             return null;
         }
@@ -80,15 +68,21 @@ class ActorCodeService
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {
-            $id = $this->activateRecord($idToLpaMap[$lpaId], $details->actor->actor->getUid(), $code);
+            $id = $idToLpaMap[$lpaId];
+
+            $this->userLpaActorMapRepository->activateRecord(
+                $id,
+                $details->actor->actor->getUid(),
+                $code,
+                $details->hasPaperVerificationCode,
+            );
         } else {
             $id = $this->userLpaActorMapRepository->create(
-                $userId,
-                $lpaId,
-                (string) $details->actor->actor->getUid(),
-                null,
-                null,
-                $code
+                userId: $userId,
+                siriusUid: $lpaId,
+                actorId: (string) $details->actor->actor->getUid(),
+                code: $code,
+                hasPaperVerificationCode: $details->hasPaperVerificationCode,
             );
         }
 

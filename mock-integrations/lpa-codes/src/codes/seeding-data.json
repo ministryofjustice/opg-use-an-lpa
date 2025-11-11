@@ -141,7 +141,8 @@
     "expiry_date": "valid",
     "generated_date": "2020-06-22",
     "status_details": "Imported",
-    "Comment": "Seeded Data:"
+    "Comment": "Seeded Data:",
+    "has_paper_verification_code": true
   },
   {
     "code": "6CFKNNFLPCP4",

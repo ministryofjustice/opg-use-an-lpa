@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\ActorCodes;
 
+use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
@@ -77,7 +78,8 @@ class ActorCodeServiceTest extends TestCase
             $this->testActorUid,
             null,
             null,
-            'test-code'
+            'test-code',
+            true,
         )
             ->willReturn('00000000-0000-4000-A000-000000000000')
             ->shouldBeCalled();
@@ -102,8 +104,9 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->activateRecord(
             'token-3',
             $this->testActorUid,
-            'test-code'
-        )->shouldBeCalled();
+            'test-code',
+            true,
+        )->willReturn([]);
 
         $mapResults = [
             [
@@ -140,7 +143,8 @@ class ActorCodeServiceTest extends TestCase
             $this->testActorUid,
             null,
             null,
-            'test-code'
+            'test-code',
+            true,
         )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')
@@ -283,13 +287,13 @@ class ActorCodeServiceTest extends TestCase
         );
 
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
-            ->willReturn($this->testActorUid);
+            ->willReturn(new ActorCodeIsValid($this->testActorUid, true));
         $this->lpaManagerProphecy->getByUid($testUid)->willReturn(
             new Lpa($mockLpa, new DateTime())
         );
 
         $this->codeValidatorProphecy->validateCode($testCode, $testCombinedUid, $testDob)
-            ->willReturn($this->testActorUid);
+            ->willReturn(new ActorCodeIsValid($this->testActorUid, null));
         $this->lpaManagerProphecy->getByUid($testCombinedUid)->willReturn(
             new Lpa($mockCombinedLpa, new DateTime())
         );

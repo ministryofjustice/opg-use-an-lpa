@@ -190,7 +190,8 @@
       expiry_date: "valid",
       generated_date: "2020-06-22",
       status_details: "Imported",
-      Comment: "Seeded Data:"
+      Comment: "Seeded Data:",
+      has_paper_verification_code: true
     },
     {
       code: "6CFKNNFLPCP4",
@@ -380,7 +381,11 @@
       import_types2.logger.debug("Loaded code " + JSON.stringify(activationCode));
       if (activationCode !== null && activationCode.dob === params.dob && activationCode.lpa === params.lpa && activationCode.active === true && isNotExpired(activationCode)) {
         import_types2.logger.info("Code " + activationCode.code + " matched parameters");
-        response = JSON.stringify({ "actor": activationCode.actor });
+        if (activationCode.has_paper_verification_code) {
+          response = JSON.stringify({ "actor": activationCode.actor, "has_paper_verification_code": true });
+        } else {
+          response = JSON.stringify({ "actor": activationCode.actor });
+        }
       } else {
         response = JSON.stringify({ "actor": null });
       }

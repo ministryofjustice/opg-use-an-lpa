@@ -14,6 +14,7 @@ class ValidatedActorCode implements JsonSerializable
     public function __construct(
         public readonly LpaActor $actor,
         public readonly Lpa|SiriusLpa $lpa,
+        public readonly bool $hasPaperVerificationCode,
     ) {
     }
 

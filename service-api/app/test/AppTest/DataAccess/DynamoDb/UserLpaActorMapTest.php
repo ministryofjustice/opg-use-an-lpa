@@ -150,7 +150,7 @@ class UserLpaActorMapTest extends TestCase
             $testSiriusUid,
             $testUserId,
             $testActorId,
-            $testCode
+            $testCode,
         ) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -173,6 +173,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertIsString($data['Item']['ActorId']['N']);
             $this->assertEquals(['S' => $testCode], $data['Item']['ActivationCode']);
             $this->assertIsString($data['Item']['ActivationCode']['S']);
+            $this->assertEquals(['BOOL' => true], $data['Item']['HasPaperVerificationCode']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
@@ -186,7 +187,7 @@ class UserLpaActorMapTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode);
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode, true);
     }
 
     #[Test]
@@ -453,7 +454,69 @@ class UserLpaActorMapTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
-        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken, $testActorId, $testActivationCode);
+        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken, $testActorId, $testActivationCode, false);
+        $this->assertEquals($testToken, $removeActorMap['Id']);
+    }
+
+    #[Test]
+    public function can_activate_record_when_has_paper_verification_code(): void
+    {
+        $testToken          = 'test-token';
+        $testSiriusUid      = 'test-uid';
+        $testUserId         = 'test-user-id';
+        $testActorId        = '1';
+        $testActivationCode = '8EFXFEF48WJ4';
+        $testAdded          = gmdate('c');
+        $testActivated      = gmdate('c');
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals(
+                'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c, :HasPaperVerificationCode = :d ' .
+                    'remove ActivateBy, DueBy',
+                $data['UpdateExpression']
+            );
+
+            return true;
+        }))->willReturn($this->createAWSResult([
+            'Item' => [
+                'Id'                       => [
+                    'S' => $testToken,
+                ],
+                'SiriusUid'                => [
+                    'S' => $testSiriusUid,
+                ],
+                'Added'                    => [
+                    'S' => $testAdded,
+                ],
+                'ActorId'                  => [
+                    'S' => $testActorId,
+                ],
+                'UserId'                   => [
+                    'S' => $testUserId,
+                ],
+                'ActivatedOn'              => [
+                    'S' => $testActivated,
+                ],
+                'HasPaperVerificationCode' => [
+                    'BOOL' => true,
+                ],
+            ],
+        ]));
+
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $removeActorMap = $userLpaActorMapRepo->activateRecord($testToken, $testActorId, $testActivationCode, true);
         $this->assertEquals($testToken, $removeActorMap['Id']);
     }
 

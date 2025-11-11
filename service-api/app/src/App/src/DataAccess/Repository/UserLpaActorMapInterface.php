@@ -21,6 +21,7 @@ use DateInterval;
  *     ActivateBy?: int,
  *     DueBy?: string,
  *     ActivatedOn?: string,
+ *     HasPaperVerificationCode?: bool
  * }
  */
 interface UserLpaActorMapInterface
@@ -46,6 +47,7 @@ interface UserLpaActorMapInterface
         ?DateInterval $expiryInterval = null,
         ?DateInterval $intervalTillDue = null,
         ?string $code = null,
+        ?bool $hasPaperVerificationCode = null,
     ): string;
 
     /**
@@ -77,12 +79,14 @@ interface UserLpaActorMapInterface
     /**
      * Activates a LPA relation record, enabling it for use by the user
      *
-     * @param string $lpaActorToken
-     * @param string $actorId
-     * @param string $activationCode
      * @return array The record that was activated
      */
-    public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array;
+    public function activateRecord(
+        string $lpaActorToken,
+        string $actorId,
+        string $activationCode,
+        bool $hasPaperVerificationCode,
+    ): array;
 
     /**
      * Renews the LPA relation records activation period and due by date using the supplied intervals.
