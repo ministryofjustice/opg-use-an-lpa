@@ -72,6 +72,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         ?DateInterval $expiryInterval = null,
         ?DateInterval $intervalTillDue = null,
         ?string $code = null,
+        ?bool $hasPaperVerificationCode = null,
     ): string {
         $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
@@ -87,6 +88,10 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         if ($code !== null) {
             $array['ActivationCode'] = ['S' => $code];
+        }
+
+        if ($hasPaperVerificationCode) {
+            $array['HasPaperVerificationCode'] = ['BOOL' => true];
         }
 
         // Add ActivateBy field to array if expiry interval is present
@@ -154,10 +159,34 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function activateRecord(string $lpaActorToken, string $actorId, string $activationCode): array
-    {
+    public function activateRecord(
+        string $lpaActorToken,
+        string $actorId,
+        string $activationCode,
+        bool $hasPaperVerificationCode,
+    ): array {
         $current       = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
         $activatedTime = $current->format(DateTimeInterface::ATOM);
+
+        $setter = '';
+        $attrs  = [
+            ':a' => [
+                'N' => $actorId,
+            ],
+            ':b' => [
+                'S' => $activationCode,
+            ],
+            ':c' => [
+                'S' => $activatedTime,
+            ],
+        ];
+
+        if ($hasPaperVerificationCode) {
+            $setter      = ', :HasPaperVerificationCode = :d';
+            $attrs[':d'] = [
+                'BOOL' => $hasPaperVerificationCode,
+            ];
+        }
 
         $response = $this->client->updateItem(
             [
@@ -167,18 +196,9 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                         'S' => $lpaActorToken,
                     ],
                 ],
-                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c remove ActivateBy, DueBy',
-                'ExpressionAttributeValues' => [
-                    ':a' => [
-                        'N' => $actorId,
-                    ],
-                    ':b' => [
-                        'S' => $activationCode,
-                    ],
-                    ':c' => [
-                        'S' => $activatedTime,
-                    ],
-                ],
+                'UpdateExpression'          => 'set ActorId = :a, ActivationCode = :b, ActivatedOn = :c' .
+                    $setter . ' remove ActivateBy, DueBy',
+                'ExpressionAttributeValues' => $attrs,
                 'ReturnValues'              => 'ALL_NEW',
             ]
         );

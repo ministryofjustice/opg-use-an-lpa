@@ -93,6 +93,56 @@ class ActorCodesTest extends AbstractFunctionalTestCase
     }
 
     #[Test]
+    public function it_validates_a_code_that_is_valid_when_paper_verification_code_also_exists(): void
+    {
+        $matcher = new Matcher();
+
+        $request = new ConsumerRequest();
+        $request
+            ->setMethod('POST')
+            ->setPath('/v1/validate')
+            ->setHeaders(
+                [
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
+                    'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
+                    'Content-Type'                    => 'application/json',
+                    RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),
+                ]
+            )
+            ->setBody(
+                [
+                    'lpa'  => $matcher->regex('M-1234-1234-1234', 'M(-[0-9]{4}){3}'),
+                    'dob'  => $matcher->dateISO8601('1959-08-10'),
+                    'code' => $matcher->like('valid-code'),
+                ]
+            );
+
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(200)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody([
+                'actor'                       => $matcher->uuid('74673c83-05ba-4886-beb1-daaa36fb7984'),
+                'has_paper_verification_code' => $matcher->like(true),
+            ]);
+
+        $this->builder
+            ->given('the provided details match a valid actor code who also has a paper verification code')
+            ->uponReceiving('a POST request to /v1/validate')
+            ->with($request)
+            ->willRespondWith($response);
+
+        $sut = $this->container->get(ActorCodes::class);
+
+        $actorCode = $sut->validateCode('valid-code', 'M-1234-1234-1234', '1959-08-10');
+
+        self::assertTrue($this->builder->verify());
+        self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        self::assertEquals('74673c83-05ba-4886-beb1-daaa36fb7984', $actorCode->getData()->actorUid);
+        self::assertTrue($actorCode->getData()->hasPaperVerificationCode);
+    }
+
+    #[Test]
     public function it_marks_a_code_as_used(): void
     {
         $matcher = new Matcher();
