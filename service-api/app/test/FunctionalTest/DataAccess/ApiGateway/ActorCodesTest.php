@@ -113,7 +113,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
                 [
                     'lpa'  => $matcher->regex('M-1234-1234-1234', 'M(-[0-9]{4}){3}'),
                     'dob'  => $matcher->dateISO8601('1959-08-10'),
-                    'code' => $matcher->like('valid-code'),
+                    'code' => $matcher->like('ISAVALIDCODE'),
                 ]
             );
 
@@ -127,14 +127,14 @@ class ActorCodesTest extends AbstractFunctionalTestCase
             ]);
 
         $this->builder
-            ->given('the provided details match a valid actor code who also has a paper verification code')
-            ->uponReceiving('a POST request to /v1/validate')
+            ->given('the activation key ISAVALIDCODE exists for an actor with a paper verification code')
+            ->uponReceiving('a request to validate the code ISAVALIDCODE')
             ->with($request)
             ->willRespondWith($response);
 
         $sut = $this->container->get(ActorCodes::class);
 
-        $actorCode = $sut->validateCode('valid-code', 'M-1234-1234-1234', '1959-08-10');
+        $actorCode = $sut->validateCode('ISAVALIDCODE', 'M-1234-1234-1234', '1959-08-10');
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
