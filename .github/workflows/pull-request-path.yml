@@ -163,6 +163,22 @@ jobs:
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
 
+  pact_upload:
+    name: upload contracts to pact
+    uses: ./.github/workflows/_pact-upload.yml
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
+      branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+      commit_sha: ${{ github.event.pull_request.head.sha }}
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    secrets: inherit
+    if: |
+      always() &&
+      needs.docker_build_scan_push.result == 'success'
+
   code_coverage:
     name: upload to code coverage
     uses: ./.github/workflows/_codecov.yml

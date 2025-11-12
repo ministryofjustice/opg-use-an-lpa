@@ -1,0 +1,52 @@
+name: "[PACT] Upload contracts"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    inputs:
+      specific_path:
+        description: 'Path to run on'
+        required: true
+        type: string
+      tag:
+        description: 'Tag for docker image'
+        required: true
+        type: string
+      branch:
+        description: 'The branch the workflow relates to'
+        required: true
+        type: string
+      commit_sha:
+        description: 'The commit SHA the workflow relates to'
+        required: true
+        type: string
+    secrets:
+      pact_broker_password:
+        description: 'Password for central OPG pact broker'
+        required: true
+jobs:
+  code_coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: download artifact for api tests
+        id: download-artifact-api-tests
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        continue-on-error: true
+        with:
+          name: service-api
+          path: service-api
+        if: inputs.specific_path == 'all'
+      - name: Publish pacts
+        run: |
+          docker run --rm -v $(pwd)/service-api/pacts:/tmp/pacts pactfoundation/pact-cli:latest \
+            pact-broker publish /tmp/pacts \
+            --consumer-app-version ${{ inputs.commit_sha }} \
+            --branch ${{ inputs.branch }} \
+            --tag ${{ inputs.tag }} \
+            --broker-base-url https://pact-broker.api.opg.service.justice.gov.uk \
+            --broker-username admin \
+            --broker-password ${{ secrets.pact_broker_password }}
