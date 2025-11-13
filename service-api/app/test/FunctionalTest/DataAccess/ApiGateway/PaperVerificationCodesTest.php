@@ -155,7 +155,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $sut = $this->container->get(PaperVerificationCodes::class);
 
-        $pvc = $sut->validate(new PaperVerificationCode('P-1234-1234-1234-12'));
+        $pvc = $sut->validate(new PaperVerificationCode('P-5678-5678-5678-56'));
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
@@ -198,15 +198,8 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
                 [
                     'errors' => $matcher->eachLike(
                         [
-                            'id'     => $matcher->like('A123BCD'),
-                            'code'   => 'OPGDATA-API-NOTFOUND',
-                            'title'  => 'Page not found',
-                            'detail' => 'That URL is not a valid route, or the item resource does not exist',
-                            'meta'   => $matcher->eachLike(
-                                [
-                                    'x-ray' => $matcher->like('93c330d4-7d84-4c1b-8fdb-54cec5bfe747'),
-                                ]
-                            ),
+                            'code'  => 'OPGDATA-API-NOTFOUND',
+                            'title' => 'Code not found',
                         ]
                     ),
                 ]
@@ -273,7 +266,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $this->builder
             ->given('the paper verification code P-1234-1234-1234-12 has not got an expiry date')
-            ->uponReceiving('a request to expire the code P-5678-5678-5678-56 as a first_time_use')
+            ->uponReceiving('a request to expire the code P-1234-1234-1234-12 as a first_time_use')
             ->with($request)
             ->willRespondWith($response);
 
