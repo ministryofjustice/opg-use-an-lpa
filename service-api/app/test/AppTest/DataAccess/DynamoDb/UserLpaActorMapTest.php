@@ -31,7 +31,7 @@ class UserLpaActorMapTest extends TestCase
     public function assertIsValidUuid($uuid, string $message = ''): void
     {
         $pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
-        self::assertMatchesRegularExpression($pattern, $uuid, $message);
+        $this->assertMatchesRegularExpression($pattern, $uuid, $message);
     }
 
     protected function setUp(): void
@@ -92,9 +92,9 @@ class UserLpaActorMapTest extends TestCase
 
         $result = $repo->get($testToken);
 
-        $this->assertEquals($testToken, $result['Id']);
-        $this->assertEquals($testSiriusUid, $result['SiriusUid']);
-        $this->assertEquals($testUserId, $result['UserId']);
+        $this->assertSame($testToken, $result['Id']);
+        $this->assertSame($testSiriusUid, $result['SiriusUid']);
+        $this->assertSame($testUserId, $result['UserId']);
         $this->assertInstanceOf(DateTime::class, $result['Added']);
         $this->assertEquals($testAdded, $result['Added']->format('c'));
         $this->assertEquals($testActorId, $result['ActorId']);

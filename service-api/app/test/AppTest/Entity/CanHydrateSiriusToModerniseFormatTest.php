@@ -148,8 +148,8 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
 
         // double check that our source data contains hyphenated sirius uids as these have
         // been mistakenly removed in the past.
-        $this->assertStringContainsString('-', $lpa['uId']);
-        $this->assertStringContainsString('-', $lpa['donor']['uId']);
+        $this->assertStringContainsString('-', (string) $lpa['uId']);
+        $this->assertStringContainsString('-', (string) $lpa['donor']['uId']);
 
         $expectedSiriusLpa = $this->expectedSiriusLpa();
 

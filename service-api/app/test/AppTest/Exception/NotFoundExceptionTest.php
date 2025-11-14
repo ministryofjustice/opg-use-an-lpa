@@ -20,10 +20,10 @@ class NotFoundExceptionTest extends TestCase
 
         $nfe = new NotFoundException($message, $additionalData);
 
-        $this->assertEquals('Not found', $nfe->getTitle());
-        $this->assertEquals($additionalData, $nfe->getAdditionalData());
+        $this->assertSame('Not found', $nfe->getTitle());
+        $this->assertSame($additionalData, $nfe->getAdditionalData());
 
-        $this->assertEquals($message, $nfe->getMessage());
+        $this->assertSame($message, $nfe->getMessage());
         $this->assertEquals(404, $nfe->getCode());
     }
 }

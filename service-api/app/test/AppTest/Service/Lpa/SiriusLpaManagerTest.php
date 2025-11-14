@@ -13,7 +13,6 @@ use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, Lpa};
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     ResolveActor,
@@ -44,8 +43,6 @@ class SiriusLpaManagerTest extends TestCase
     private ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
-    private FilterActiveActors|ObjectProphecy $filterActiveActorProphecy;
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
@@ -59,7 +56,6 @@ class SiriusLpaManagerTest extends TestCase
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->filterActiveActorsProphecy          = $this->prophesize(FilterActiveActors::class);
-        $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 

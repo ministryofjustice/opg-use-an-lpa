@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Service\SystemMessage;
 
-use App\Service\SystemMessage\SystemMessage;
 use App\Service\SystemMessage\SystemMessageFactory;
 use Aws\Ssm\SsmClient;
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
@@ -63,9 +62,7 @@ class SystemMessageFactoryTest extends TestCase
 
         $systemMessageService = $systemMessageFactory($this->container, 'systemMessageFactory');
 
-        $this->assertInstanceOf(SystemMessage::class, $systemMessageService);
-
-        $this->assertEquals('/system-message/', $systemMessageService->getPrefix());
+        $this->assertSame('/system-message/', $systemMessageService->getPrefix());
     }
 
     /**
@@ -88,8 +85,6 @@ class SystemMessageFactoryTest extends TestCase
 
         $systemMessageService = $systemMessageFactory($this->container, 'systemMessageFactory');
 
-        $this->assertInstanceOf(SystemMessage::class, $systemMessageService);
-
-        $this->assertEquals('/system-message/production/', $systemMessageService->getPrefix());
+        $this->assertSame('/system-message/production/', $systemMessageService->getPrefix());
     }
 }

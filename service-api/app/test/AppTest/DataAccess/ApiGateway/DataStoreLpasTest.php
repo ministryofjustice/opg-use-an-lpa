@@ -78,7 +78,7 @@ class DataStoreLpasTest extends TestCase
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
-            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
         }
 
         $this->requestSignerFactoryProphecy
@@ -90,7 +90,7 @@ class DataStoreLpasTest extends TestCase
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
-            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
         }
 
         // Third
@@ -108,7 +108,7 @@ class DataStoreLpasTest extends TestCase
             $moderniseLpas->get($uid);
         } catch (ApiException $e) {
             $this->assertInstanceOf(OriginatorIdNotSetException::class, $e->getPrevious());
-            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
         }
     }
 
@@ -264,7 +264,7 @@ class DataStoreLpasTest extends TestCase
 
         $shouldBeANull = $moderniseLpas->setOriginatorId($originatorId)->get($uid);
 
-        $this->assertNull($shouldBeANull);
+        $this->assertNotInstanceOf(LpaInterface::class, $shouldBeANull);
     }
 
     #[Test]

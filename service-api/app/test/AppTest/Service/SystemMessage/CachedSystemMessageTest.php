@@ -50,7 +50,7 @@ class CachedSystemMessageTest extends TestCase
             'use/cy' => 'Use Welsh',
         ];
 
-        $this->assertEquals($expected, $systemMessages);
+        $this->assertSame($expected, $systemMessages);
     }
 
     #[Test]
@@ -70,6 +70,6 @@ class CachedSystemMessageTest extends TestCase
             'use/cy' => 'Uncached Use Welsh',
         ];
 
-        $this->assertEquals($expected, $systemMessages);
+        $this->assertSame($expected, $systemMessages);
     }
 }

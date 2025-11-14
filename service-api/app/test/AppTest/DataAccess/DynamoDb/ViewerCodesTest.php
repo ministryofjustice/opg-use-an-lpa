@@ -15,15 +15,16 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodesTest extends TestCase
 {
     use GenerateAwsResultTrait;
     use ProphecyTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    private const TABLE_NAME = 'test-table-name';
 
-    private $dynamoDbClientProphecy;
+    private ObjectProphecy|DynamoDbClient $dynamoDbClientProphecy;
 
     protected function setUp(): void
     {
@@ -70,8 +71,8 @@ class ViewerCodesTest extends TestCase
 
         $result = $repo->get($testCode);
 
-        $this->assertEquals($testCode, $result['ViewerCode']);
-        $this->assertEquals('123456789012', $result['SiriusUid']);
+        $this->assertSame($testCode, $result['ViewerCode']);
+        $this->assertSame('123456789012', $result['SiriusUid']);
         $this->assertEquals(new DateTime('2019-01-01 12:34:56'), $result['Expires']);
     }
 

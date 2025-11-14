@@ -61,7 +61,7 @@ class RequestSignerFactoryTest extends TestCase
             ->will(function (array $args) {
                 Assert::assertStringContainsString(
                     'urn:opg:poas:use:users:my_user_identifier',
-                    $args[1]->getPayload()
+                    (string) $args[1]->getPayload()
                 );
 
                 return 'signed_jwt_string';

@@ -14,6 +14,7 @@ use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
+use Iterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -106,34 +107,32 @@ class PaperVerificationCodesTest extends TestCase
         }
     }
 
-    public static function codeDataProvider(): array
+    public static function codeDataProvider(): Iterator
     {
-        return [
+        yield [
+            'P-1234-1234-1234-12',
             [
-                'P-1234-1234-1234-12',
-                [
-                    'lpa' => 'M-7890-0400-4003', // no expiry as it's not been used yet
-                ],
+                'lpa' => 'M-7890-0400-4003', // no expiry as it's not been used yet
             ],
+        ];
+        yield [
+            'P-5678-5678-5678-56',
             [
-                'P-5678-5678-5678-56',
-                [
-                    'lpa'           => 'M-7890-0400-4003',
-                    'expiry_date'   => (new DateTimeImmutable())
-                        ->sub(new DateInterval('P1Y')) // code has expired
-                        ->format('Y-m-d'),
-                    'expiry_reason' => 'cancelled',
-                ],
+                'lpa'           => 'M-7890-0400-4003',
+                'expiry_date'   => (new DateTimeImmutable())
+                    ->sub(new DateInterval('P1Y')) // code has expired
+                    ->format('Y-m-d'),
+                'expiry_reason' => 'cancelled',
             ],
+        ];
+        yield [
+            'P-3456-3456-3456-34',
             [
-                'P-3456-3456-3456-34',
-                [
-                    'lpa'           => 'M-7890-0400-4003',
-                    'expiry_date'   => (new DateTimeImmutable())
-                        ->add(new DateInterval('P1Y'))
-                        ->format('Y-m-d'),
-                    'expiry_reason' => 'first_time_use',
-                ],
+                'lpa'           => 'M-7890-0400-4003',
+                'expiry_date'   => (new DateTimeImmutable())
+                    ->add(new DateInterval('P1Y'))
+                    ->format('Y-m-d'),
+                'expiry_reason' => 'first_time_use',
             ],
         ];
     }

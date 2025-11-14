@@ -7,6 +7,7 @@ namespace AppTest\Entity;
 use App\Entity\Casters\CastToCaseSubtype;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use InvalidArgumentException;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -40,17 +41,15 @@ class CastToCaseSubtypeTest extends TestCase
         $this->castToCaseSubtype->cast('invalid-value', $this->mockHydrator);
     }
 
-    public static function caseSubtypeProvider(): array
+    public static function caseSubtypeProvider(): Iterator
     {
-        return [
-            [
-                'personal-welfare',
-                'hw',
-            ],
-            [
-                'property-and-affairs',
-                'pfa',
-            ],
+        yield [
+            'personal-welfare',
+            'hw',
+        ];
+        yield [
+            'property-and-affairs',
+            'pfa',
         ];
     }
 }

@@ -109,6 +109,6 @@ class LpaDataStoreSecretManagerTest extends TestCase
 
         $alg = $lpaDataStoreSecretManager->getAlgorithm();
 
-        $this->assertEquals('HS256', $alg);
+        $this->assertSame('HS256', $alg);
     }
 }

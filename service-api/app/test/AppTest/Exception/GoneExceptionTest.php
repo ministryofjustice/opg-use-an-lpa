@@ -20,10 +20,10 @@ class GoneExceptionTest extends TestCase
 
         $ge = new GoneException($message, $additionalData);
 
-        $this->assertEquals('Gone', $ge->getTitle());
-        $this->assertEquals($additionalData, $ge->getAdditionalData());
+        $this->assertSame('Gone', $ge->getTitle());
+        $this->assertSame($additionalData, $ge->getAdditionalData());
 
-        $this->assertEquals($message, $ge->getMessage());
+        $this->assertSame($message, $ge->getMessage());
         $this->assertEquals(410, $ge->getCode());
     }
 }
