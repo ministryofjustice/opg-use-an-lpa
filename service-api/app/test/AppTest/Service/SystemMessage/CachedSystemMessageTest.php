@@ -8,6 +8,7 @@ use App\Service\SystemMessage\CachedSystemMessage;
 use App\Service\SystemMessage\SystemMessageService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\SimpleCache\CacheInterface;
@@ -16,13 +17,10 @@ class CachedSystemMessageTest extends TestCase
 {
     use ProphecyTrait;
 
-    private SystemMessageService $systemMessage;
+    private MockObject $systemMessage;
 
-    private CacheInterface $cache;
+    private MockObject $cache;
 
-    /**
-     * @throws Exception
-     */
     protected function setUp(): void
     {
         parent::setUp();

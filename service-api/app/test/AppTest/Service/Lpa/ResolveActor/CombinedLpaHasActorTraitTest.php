@@ -26,9 +26,10 @@ use PHPUnit\Framework\TestCase;
 class CombinedLpaHasActorTraitTest extends TestCase
 {
     private HasActorInterface $siriusMock;
+
     private HasActorInterface $lpaStoreMock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->siriusMock = new SiriusLpa(
             applicationHasGuidance:     false,
@@ -107,15 +108,15 @@ class CombinedLpaHasActorTraitTest extends TestCase
                 firstname:    'Rachel',
                 id:           '123456789',
                 linked:       [
-                                  [
-                                      'id'  => '123456789',
-                                      'uId' => '7123456789',
-                                  ],
-                                  [
-                                      'id'  => '234567890',
-                                      'uId' => '7234567890',
-                                  ],
-                              ],
+                    [
+                        'id'  => '123456789',
+                        'uId' => '7123456789',
+                    ],
+                    [
+                        'id'  => '234567890',
+                        'uId' => '7234567890',
+                    ],
+                ],
                 middlenames:  null,
                 otherNames:   null,
                 postcode:     'DN37 5SH',

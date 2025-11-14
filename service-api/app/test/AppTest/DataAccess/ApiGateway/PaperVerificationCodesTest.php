@@ -37,7 +37,7 @@ class PaperVerificationCodesTest extends TestCase
 
     private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
@@ -51,13 +51,11 @@ class PaperVerificationCodesTest extends TestCase
     }
 
     /**
-     * @param string $code
      * @param array{
      *      lpa: string,
      *      expires?: string,
      *      cancelled?: string
      * }  $response
-     * @return void
      */
     #[Test]
     #[DataProvider('codeDataProvider')]

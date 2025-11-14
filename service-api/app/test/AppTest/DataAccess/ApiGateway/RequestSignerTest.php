@@ -18,7 +18,7 @@ class RequestSignerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         // Keys from the documentation
         // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
@@ -26,7 +26,7 @@ class RequestSignerTest extends TestCase
         putenv('AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');
@@ -48,7 +48,7 @@ class RequestSignerTest extends TestCase
 
         $signer = new RequestSigner($signatureV4Prophecy->reveal(), ['Authorization' => 'test_token']);
 
-        $request = $signer->sign($requestProphecy->reveal());
+        $signer->sign($requestProphecy->reveal());
     }
 
     #[Test]
@@ -64,6 +64,6 @@ class RequestSignerTest extends TestCase
 
         $signer = new RequestSigner($signatureV4Prophecy->reveal());
 
-        $request = $signer->sign($requestProphecy->reveal());
+        $signer->sign($requestProphecy->reveal());
     }
 }

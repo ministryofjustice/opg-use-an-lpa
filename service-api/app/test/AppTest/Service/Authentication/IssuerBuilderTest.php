@@ -15,7 +15,7 @@ class IssuerBuilderTest extends TestCase
 {
     private IssuerBuilder $issuerBuilder;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->issuerBuilder = new IssuerBuilder();
     }
@@ -24,13 +24,13 @@ class IssuerBuilderTest extends TestCase
     #[DoesNotPerformAssertions]
     public function can_set_metadata_provider_builder(): void
     {
-        $_ = $this->issuerBuilder->setMetadataProviderBuilder(new MetadataProviderBuilder());
+        $this->issuerBuilder->setMetadataProviderBuilder(new MetadataProviderBuilder());
     }
 
     #[Test]
     #[DoesNotPerformAssertions]
     public function can_set_jwks_provider_builder(): void
     {
-        $_ = $this->issuerBuilder->setJwksProviderBuilder(new JwksProviderBuilder());
+        $this->issuerBuilder->setJwksProviderBuilder(new JwksProviderBuilder());
     }
 }

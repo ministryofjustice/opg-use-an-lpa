@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
+use App\Entity\Lpa as CombinedFormatLpa;
 use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
@@ -43,25 +44,37 @@ class AddAccessForAllLpaTest extends TestCase
     use ProphecyTrait;
 
     private FindActorInLpa|ObjectProphecy $findActorInLpaProphecy;
+
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
+
     private LpaAlreadyAdded|ObjectProphecy $lpaAlreadyAddedProphecy;
+
     private AccessForAllLpaService|ObjectProphecy $accessForAllLpaServiceProphecy;
+
     private ValidateAccessForAllLpaRequirements|ObjectProphecy $validateAccessForAllLpaRequirementsProphecy;
+
     private RestrictSendingLpaForCleansing|ObjectProphecy $restrictSendingLpaForCleansingProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     private string $userId;
+
     private int $lpaUid;
+
+    public Lpa $siriusLpa;
+
+    public SiriusLpa|CombinedFormatLpa $siriusLpaData;
 
     /** @var array<string, mixed> */
     private array $dataToMatch;
 
     private ActorMatch $resolvedActor;
+
     private Lpa $lpa;
 
     private SiriusLpa $lpaData;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->findActorInLpaProphecy                      = $this->prophesize(FindActorInLpa::class);
         $this->lpaManagerProphecy                          = $this->prophesize(LpaManagerInterface::class);
@@ -843,8 +856,6 @@ class AddAccessForAllLpaTest extends TestCase
 
     /**
      * Returns the lpa data needed for checking in the older LPA journey
-     *
-     * @return Lpa
      */
     public function older_lpa_get_by_uid_response(): Lpa
     {

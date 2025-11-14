@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
@@ -14,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 
 #[CoversClass(RestrictSendingLpaForCleansing::class)]
 class RestrictSendingLpaForCleansingTest extends TestCase
@@ -23,7 +23,7 @@ class RestrictSendingLpaForCleansingTest extends TestCase
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }

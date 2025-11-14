@@ -25,9 +25,9 @@ class SystemMessageFactoryTest extends TestCase
      */
     use ProphecyTrait;
 
-    private ContainerInterface $container;
+    private MockObject $container;
 
-    private SsmClient $ssmClient;
+    private MockObject $ssmClient;
 
     /**
      * @throws NoPreviousThrowableException

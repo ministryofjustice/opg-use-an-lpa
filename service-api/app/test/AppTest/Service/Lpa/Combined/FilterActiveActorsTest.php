@@ -30,13 +30,18 @@ class FilterActiveActorsTest extends TestCase
     use ProphecyTrait;
 
     private GetAttorneyStatusInterface $attorney;
+
     private FilterActiveActors $filterActiveActors;
+
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatus;
+
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatus;
+
     private FilterActiveActorsInterface $lpa;
+
     private GetTrustCorporationStatusInterface $trustCorporation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->getAttorneyStatus         = $this->prophesize(GetAttorneyStatus::class);
         $this->getTrustCorporationStatus = $this->prophesize(GetTrustCorporationStatus::class);

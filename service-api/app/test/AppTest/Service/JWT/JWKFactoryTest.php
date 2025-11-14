@@ -22,7 +22,7 @@ class JWKFactoryTest extends TestCase
 
     private ObjectProphecy|OneLoginIdentityKeyPairManager $keyPairManager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $key = openssl_pkey_new(
             [
@@ -33,6 +33,7 @@ class JWKFactoryTest extends TestCase
         if ($key === false) {
             throw new InvalidArgumentException('Unable to create the key');
         }
+
         $details = openssl_pkey_get_details($key);
         if (! is_array($details)) {
             throw new InvalidArgumentException('Unable to get key details');
@@ -44,6 +45,7 @@ class JWKFactoryTest extends TestCase
         if (!$success) {
             throw new InvalidArgumentException('Unable to export key to string');
         }
+
         $keyPair = new KeyPair('public', new HiddenString($key1, false, true));
 
         $this->keyPairManager = $this->prophesize(OneLoginIdentityKeyPairManager::class);

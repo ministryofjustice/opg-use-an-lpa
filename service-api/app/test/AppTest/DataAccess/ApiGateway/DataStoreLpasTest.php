@@ -34,8 +34,11 @@ class DataStoreLpasTest extends TestCase
     use PSR17PropheciesTrait;
 
     private ClientInterface|ObjectProphecy $httpClientProphecy;
+
     private RequestSigner|ObjectProphecy $requestSignerProphecy;
+
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
+
     private LpaDataFormatter|ObjectProphecy $lpaDataFormatterProphecy;
 
     protected function setUp(): void
@@ -76,9 +79,9 @@ class DataStoreLpasTest extends TestCase
         // First of three possible exceptions that can be thrown
         try {
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
-        } catch (ApiException $e) {
-            $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
-            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
+        } catch (ApiException $apiException) {
+            $this->assertInstanceOf(NotFoundExceptionInterface::class, $apiException->getPrevious());
+            $this->assertSame('Unable to build a request signer instance', $apiException->getMessage());
         }
 
         $this->requestSignerFactoryProphecy
@@ -88,9 +91,9 @@ class DataStoreLpasTest extends TestCase
         // Second
         try {
             $moderniseLpas->setOriginatorId($originatorId)->get($uid);
-        } catch (ApiException $e) {
-            $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
-            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
+        } catch (ApiException $apiException) {
+            $this->assertInstanceOf(ContainerExceptionInterface::class, $apiException->getPrevious());
+            $this->assertSame('Unable to build a request signer instance', $apiException->getMessage());
         }
 
         // Third
@@ -106,9 +109,9 @@ class DataStoreLpasTest extends TestCase
             );
 
             $moderniseLpas->get($uid);
-        } catch (ApiException $e) {
-            $this->assertInstanceOf(OriginatorIdNotSetException::class, $e->getPrevious());
-            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
+        } catch (ApiException $apiException) {
+            $this->assertInstanceOf(OriginatorIdNotSetException::class, $apiException->getPrevious());
+            $this->assertSame('Unable to build a request signer instance', $apiException->getMessage());
         }
     }
 

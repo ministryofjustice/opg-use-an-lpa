@@ -28,14 +28,18 @@ class LpaAlreadyAddedTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     private string $userId;
+
     private string $lpaUid;
+
     private string $userLpaActorToken;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->lpaManagerProphecy      = $this->prophesize(LpaManagerInterface::class);
         $this->userLpaActorMapProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -335,7 +339,7 @@ class LpaAlreadyAddedTest extends TestCase
         );
     }
 
-    private static function donorFixtureOld(): SiriusPerson
+    private function donorFixtureOld(): SiriusPerson
     {
         return new SiriusPerson(
             [

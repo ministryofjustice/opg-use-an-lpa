@@ -21,8 +21,21 @@ return RectorConfig::configure()
         ]
     )
     ->withComposerBased(phpunit: true)
-    ->withPreparedSets(phpunitCodeQuality: true)
-    ->withImportNames(importShortClasses: false);
+    ->withPreparedSets(
+        deadCode:           true,
+        codeQuality:        true,
+        codingStyle:        true,
+        typeDeclarations:   true,
+        privatization:      true,
+        instanceOf:         true,
+        earlyReturn:        true,
+        strictBooleans:     true,
+        phpunitCodeQuality: true,
+    )
+    ->withImportNames(
+        importShortClasses: false,
+        removeUnusedImports: true,
+    );
 
 ///**
 // * Behat Upgrades
