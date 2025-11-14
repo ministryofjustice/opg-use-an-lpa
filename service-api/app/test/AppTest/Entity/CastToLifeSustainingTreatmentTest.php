@@ -7,6 +7,7 @@ namespace AppTest\Entity;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use EventSauce\ObjectHydrator\ObjectMapper;
 use InvalidArgumentException;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -40,17 +41,15 @@ class CastToLifeSustainingTreatmentTest extends TestCase
         $this->castToLifeSustainingTreatment->cast('invalid-value', $this->mockHydrator);
     }
 
-    public static function lifeSustainingTreatmentProvider(): array
+    public static function lifeSustainingTreatmentProvider(): Iterator
     {
-        return [
-            [
-                'Option A',
-                'option-a',
-            ],
-            [
-                'Option B',
-                'option-b',
-            ],
+        yield [
+            'Option A',
+            'option-a',
+        ];
+        yield [
+            'Option B',
+            'option-b',
         ];
     }
 }

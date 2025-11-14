@@ -15,6 +15,6 @@ class RandomByteGeneratorTest extends TestCase
     {
         $sut = new RandomByteGenerator();
 
-        $this->assertEquals(15, strlen(($sut)(15)));
+        $this->assertSame(15, strlen(($sut)(15)));
     }
 }

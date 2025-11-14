@@ -10,7 +10,6 @@ use App\Service\Secrets\OneLoginIdentityKeyPairManager;
 use App\Service\Secrets\Secret;
 use App\Service\Secrets\SecretManagerInterface;
 use InvalidArgumentException;
-use Jose\Component\Core\JWK;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -56,11 +55,10 @@ class JWKFactoryTest extends TestCase
     public function can_create_an_async_keypair_jwk(): void
     {
         $jwk = (new JWKFactory())($this->keyPairManager->reveal());
-        self::assertInstanceOf(JWK::class, $jwk);
-        self::assertTrue($jwk->has('alg'));
-        self::assertTrue($jwk->has('use'));
-        self::assertEquals('RS256', $jwk->get('alg'));
-        self::assertEquals('sig', $jwk->get('use'));
+        $this->assertTrue($jwk->has('alg'));
+        $this->assertTrue($jwk->has('use'));
+        $this->assertEquals('RS256', $jwk->get('alg'));
+        $this->assertEquals('sig', $jwk->get('use'));
     }
 
     #[Test]
@@ -72,11 +70,10 @@ class JWKFactoryTest extends TestCase
         $secretManager->getAlgorithm()->willReturn('HS256');
 
         $jwk = (new JWKFactory())($secretManager->reveal());
-        self::assertInstanceOf(JWK::class, $jwk);
-        self::assertTrue($jwk->has('alg'));
-        self::assertTrue($jwk->has('use'));
-        self::assertEquals('HS256', $jwk->get('alg'));
-        self::assertEquals('sig', $jwk->get('use'));
-        self::assertEquals('dGVzdF9zZWNyZXQ', $jwk->get('k')); // Base64UrlEncoded 'test_secret'
+        $this->assertTrue($jwk->has('alg'));
+        $this->assertTrue($jwk->has('use'));
+        $this->assertEquals('HS256', $jwk->get('alg'));
+        $this->assertEquals('sig', $jwk->get('use'));
+        $this->assertEquals('dGVzdF9zZWNyZXQ', $jwk->get('k')); // Base64UrlEncoded 'test_secret'
     }
 }

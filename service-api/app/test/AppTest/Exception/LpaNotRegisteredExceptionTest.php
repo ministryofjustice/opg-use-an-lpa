@@ -21,10 +21,10 @@ class LpaNotRegisteredExceptionTest extends TestCase
 
         $sut = new LpaNotRegisteredException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('LPA status is not registered', $sut->getMessage());
+        $this->assertSame('LPA status is not registered', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 }

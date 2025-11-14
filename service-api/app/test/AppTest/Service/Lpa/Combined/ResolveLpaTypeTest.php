@@ -32,8 +32,8 @@ class ResolveLpaTypeTest extends TestCase
 
         [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        $this->assertEquals(['700000000001', '700000000003'], $siriusUids);
-        $this->assertEquals(
+        $this->assertSame(['700000000001', '700000000003'], $siriusUids);
+        $this->assertSame(
             [
                 'M-8000-0000-0002',
                 'M-6000-0000-0004',
@@ -56,7 +56,7 @@ class ResolveLpaTypeTest extends TestCase
 
         [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
-        $this->assertEquals(['700000000001', '700000000002'], $siriusUids);
+        $this->assertSame(['700000000001', '700000000002'], $siriusUids);
         $this->assertEmpty($datastoreUids);
     }
 
@@ -71,7 +71,7 @@ class ResolveLpaTypeTest extends TestCase
         [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
 
         $this->assertEmpty($siriusUids);
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'M-8000-0000-0001',
                 'M-9000-0000-0002',

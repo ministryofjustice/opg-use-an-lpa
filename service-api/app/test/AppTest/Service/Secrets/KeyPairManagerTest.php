@@ -10,6 +10,7 @@ use App\Service\Secrets\OneLoginIdentityKeyPairManager;
 use Aws\Result;
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -32,22 +33,15 @@ class KeyPairManagerTest extends TestCase
     }
 
     /**
-     * @return array{
-     *     type: class-string<KeyPairManagerInterface>,
-     *     algorithm: string,
-     *     public: string,
-     *     private?: string,
-     * }
+     * @return Iterator<('algorithm' | 'private' | 'public' | 'type'), string>
      */
-    public static function keyPairManagerTypes(): array
+    public static function keyPairManagerTypes(): Iterator
     {
-        return [
-            'OneLoginIdentityKeyPairManager' => [
-                'type'      => OneLoginIdentityKeyPairManager::class,
-                'algorithm' => 'RS256',
-                'public'    => 'gov-uk-onelogin-identity-public-key',
-                'private'   => 'gov-uk-onelogin-identity-private-key',
-            ],
+        yield 'OneLoginIdentityKeyPairManager' => [
+            OneLoginIdentityKeyPairManager::class,
+            'RS256',
+            'gov-uk-onelogin-identity-public-key',
+            'gov-uk-onelogin-identity-private-key',
         ];
     }
 
@@ -61,10 +55,10 @@ class KeyPairManagerTest extends TestCase
         $keyPairManager = new $type($this->secretsManagerClient->reveal(), $this->logger->reveal());
         $this->assertInstanceOf(KeyPairManagerInterface::class, $keyPairManager);
 
-        $this->assertEquals($public, $keyPairManager::PUBLIC_KEY);
-        $this->assertEquals($algorithm, $keyPairManager->getAlgorithm());
+        $this->assertSame($keyPairManager::PUBLIC_KEY, $public);
+        $this->assertSame($algorithm, $keyPairManager->getAlgorithm());
 
-        $private === null ?: $this->assertEquals($private, $keyPairManager::PRIVATE_KEY);
+        $private === null ?: $this->assertSame($keyPairManager::PRIVATE_KEY, $private);
     }
 
     /**
@@ -103,10 +97,10 @@ class KeyPairManagerTest extends TestCase
         $keyPair        = $keyPairManager->getKeyPair();
 
         $this->assertInstanceOf(KeyPair::class, $keyPair);
-        $this->assertEquals($testPublicKey, $keyPair->public);
+        $this->assertSame($testPublicKey, $keyPair->public);
 
         if ($private !== null) {
-            $this->assertEquals($testPrivateKey, $keyPair->private->getString());
+            $this->assertSame($testPrivateKey, $keyPair->private->getString());
         }
     }
 

@@ -40,7 +40,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -66,7 +66,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -95,7 +95,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::ACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -110,7 +110,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -136,7 +136,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -165,7 +165,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::GHOST_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -180,7 +180,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -206,7 +206,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -235,7 +235,7 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::INACTIVE_ATTORNEY, ($status)($attorney));
     }
 
     #[Test]
@@ -261,6 +261,6 @@ class GetAttorneyStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(AttorneyStatus::REPLACEMENT_ATTORNEY, ($status)($attorney));
+        $this->assertSame(AttorneyStatus::REPLACEMENT_ATTORNEY, ($status)($attorney));
     }
 }

@@ -20,10 +20,10 @@ class ConflictExceptionTest extends TestCase
 
         $ce = new ConflictException($message, $additionalData);
 
-        $this->assertEquals('Conflict', $ce->getTitle());
-        $this->assertEquals($additionalData, $ce->getAdditionalData());
+        $this->assertSame('Conflict', $ce->getTitle());
+        $this->assertSame($additionalData, $ce->getAdditionalData());
 
-        $this->assertEquals($message, $ce->getMessage());
+        $this->assertSame($message, $ce->getMessage());
         $this->assertEquals(409, $ce->getCode());
     }
 }

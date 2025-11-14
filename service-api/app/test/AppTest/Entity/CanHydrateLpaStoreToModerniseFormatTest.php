@@ -13,19 +13,16 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
 {
     use ProphecyTrait;
 
-    private FeatureEnabled|ObjectProphecy $featureEnabled;
     private LpaDataFormatter $lpaDataFormatter;
 
     public function setUp(): void

@@ -40,7 +40,7 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
         $repositoryMock
             ->expects($this->once())
             ->method('getInstructionsAndPreferencesImages')
-            ->with($this->equalTo(700000000001))
+            ->with(700000000001)
             ->willReturn($images);
 
         $sut = new GetInstructionsAndPreferencesImages($repositoryMock);

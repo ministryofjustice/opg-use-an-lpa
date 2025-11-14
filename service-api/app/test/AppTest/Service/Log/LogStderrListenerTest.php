@@ -32,7 +32,7 @@ class LogStderrListenerTest extends TestCase
 
                 $this->assertEquals('It is an error!', $exceptionArray['message']);
                 $this->assertIsInt($exceptionArray['line']);
-                $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
+                $this->assertStringContainsString('LogStderrListenerTest.php', (string) $exceptionArray['file']);
                 $this->assertEquals(40, $exceptionArray['code']);
                 return true;
             })
@@ -66,9 +66,9 @@ class LogStderrListenerTest extends TestCase
 
                 $this->assertEquals('It is an error!', $exceptionArray['message']);
                 $this->assertIsInt($exceptionArray['line']);
-                $this->assertStringContainsString('LogStderrListenerTest.php', $exceptionArray['file']);
+                $this->assertStringContainsString('LogStderrListenerTest.php', (string) $exceptionArray['file']);
                 $this->assertEquals(40, $exceptionArray['code']);
-                $this->assertStringContainsString('LogStderrListenerTest', $exceptionArray['trace']);
+                $this->assertStringContainsString('LogStderrListenerTest', (string) $exceptionArray['trace']);
 
                 return true;
             })

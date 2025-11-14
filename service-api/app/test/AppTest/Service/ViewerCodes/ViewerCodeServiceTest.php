@@ -231,7 +231,7 @@ class ViewerCodeServiceTest extends TestCase
 
         $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
 
-        $this->assertTrue($callCount > 0);
+        $this->assertGreaterThan(0, $callCount);
     }
 
     #[Test]

@@ -6,6 +6,7 @@ namespace AppTest\Entity;
 
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use EventSauce\ObjectHydrator\ObjectMapper;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -30,25 +31,23 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
         $this->assertEquals($expectedWhenLpaCanBeUsed, $result);
     }
 
-    public static function whenTheLpaCanBeUsedProvider(): array
+    public static function whenTheLpaCanBeUsedProvider(): Iterator
     {
-        return [
-            [
-                'when registered',
-                'when-has-capacity',
-            ],
-            [
-                'loss of capacity',
-                'when-capacity-lost',
-            ],
-            [
-                '',
-                '',
-            ],
-            [
-                'invalid value',
-                '',
-            ],
+        yield [
+            'when registered',
+            'when-has-capacity',
+        ];
+        yield [
+            'loss of capacity',
+            'when-capacity-lost',
+        ];
+        yield [
+            '',
+            '',
+        ];
+        yield [
+            'invalid value',
+            '',
         ];
     }
 }

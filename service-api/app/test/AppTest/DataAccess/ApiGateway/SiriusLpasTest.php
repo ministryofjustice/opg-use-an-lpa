@@ -19,6 +19,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Psr7\Response;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -93,7 +94,7 @@ class SiriusLpasTest extends TestCase
             $fails = $this->getLpas()->get('700000055554');
         } catch (ApiException $e) {
             $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
-            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
         }
 
         $this->requestSignerFactoryProphecy
@@ -105,7 +106,7 @@ class SiriusLpasTest extends TestCase
             $fails = $this->getLpas()->get('700000055554');
         } catch (ApiException $e) {
             $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
-            $this->assertEquals('Unable to build a request signer instance', $e->getMessage());
+            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
         }
     }
 
@@ -281,6 +282,7 @@ class SiriusLpasTest extends TestCase
             ->willReturn($this->prophesize(Lpa::class)->reveal());
 
         $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+        $this->assertInstanceOf(LpaInterface::class, $shouldBeAnLPA);
 
         $this->assertInstanceOf(Lpa::class, $shouldBeAnLPA->getData());
     }
@@ -313,7 +315,7 @@ class SiriusLpasTest extends TestCase
 
         $shouldBeNull = $this->getLpas()->get('700000055554');
 
-        $this->assertNull($shouldBeNull);
+        $this->assertNotInstanceOf(LpaInterface::class, $shouldBeNull);
     }
 
     #[Test]
@@ -356,27 +358,25 @@ class SiriusLpasTest extends TestCase
         $service->requestLetter($caseUid, $actorUid, $additionalInfo);
     }
 
-    public static function letterRequestDataProvider(): array
+    public static function letterRequestDataProvider(): Iterator
     {
-        return [
-            '204 No Content response' => [
-                'caseUid'        => 700000055554,
-                'responseCode'   => StatusCodeInterface::STATUS_NO_CONTENT,
-                'actorUid'       => 700000055554,
-                'additionalInfo' => null,
-            ],
-            '200 OK response'         => [
-                'caseUid'        => 700000055554,
-                'responseCode'   => StatusCodeInterface::STATUS_OK,
-                'actorUid'       => 700000055554,
-                'additionalInfo' => null,
-            ],
-            'Null Actor Id'           => [
-                'caseUid'        => 700000055554,
-                'responseCode'   => StatusCodeInterface::STATUS_NO_CONTENT,
-                'actorUid'       => null,
-                'additionalInfo' => 'Some random string',
-            ],
+        yield '204 No Content response' => [
+            700000055554,
+            StatusCodeInterface::STATUS_NO_CONTENT,
+            700000055554,
+            null,
+        ];
+        yield '200 OK response' => [
+            700000055554,
+            StatusCodeInterface::STATUS_OK,
+            700000055554,
+            null,
+        ];
+        yield 'Null Actor Id' => [
+            700000055554,
+            StatusCodeInterface::STATUS_NO_CONTENT,
+            null,
+            'Some random string',
         ];
     }
 

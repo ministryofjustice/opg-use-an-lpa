@@ -35,7 +35,7 @@ class OneLoginServiceTest extends TestCase
             unset($configuration['state']);
             unset($configuration['nonce']);
 
-            $this->assertEquals(
+            $this->assertSame(
                 [
                     'scope'        => 'openid email',
                     'redirect_uri' => $fakeRedirect,

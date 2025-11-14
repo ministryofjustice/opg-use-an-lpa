@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\ActorStatus;
 use App\Enum\LifeSustainingTreatment;
@@ -15,7 +17,6 @@ use App\Exception\LpaAlreadyAddedException;
 use App\Exception\LpaAlreadyHasActivationKeyException;
 use App\Exception\LpaDetailsDoNotMatchException;
 use App\Exception\NotFoundException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\AccessForAll\AccessForAllValidation;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
@@ -26,7 +27,6 @@ use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
-use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
@@ -37,7 +37,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 
 class AddAccessForAllLpaTest extends TestCase
 {
@@ -50,7 +49,6 @@ class AddAccessForAllLpaTest extends TestCase
     private ValidateAccessForAllLpaRequirements|ObjectProphecy $validateAccessForAllLpaRequirementsProphecy;
     private RestrictSendingLpaForCleansing|ObjectProphecy $restrictSendingLpaForCleansingProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     private string $userId;
     private int $lpaUid;
@@ -73,7 +71,6 @@ class AddAccessForAllLpaTest extends TestCase
             = $this->prophesize(ValidateAccessForAllLpaRequirements::class);
         $this->restrictSendingLpaForCleansingProphecy      = $this->prophesize(RestrictSendingLpaForCleansing::class);
         $this->loggerProphecy                              = $this->prophesize(LoggerInterface::class);
-        $this->featureEnabledProphecy                      = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
         $this->lpaUid = 700000012345;
@@ -815,7 +812,7 @@ class AddAccessForAllLpaTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_lookup_throws_exception_if_lpa_already_has_activation_key_but_force_flag_true_combined_format(): void
+    public function older_lpa_lookup_throws_exception_if_lpa_has_activation_key_force_flag_true_combined_format(): void
     {
         $this->dataToMatch['force_activation_key'] = true;
 

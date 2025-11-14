@@ -9,19 +9,10 @@ use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 
 class LpaAlreadyHasActivationKeyExceptionTest extends TestCase
 {
     use ProphecyTrait;
-
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
-
-    public function setUp(): void
-    {
-        $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
-    }
 
     #[Test]
     public function it_can_be_instantiated(): void
@@ -33,10 +24,10 @@ class LpaAlreadyHasActivationKeyExceptionTest extends TestCase
 
         $sut = new LpaAlreadyHasActivationKeyException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('LPA has an activation key already', $sut->getMessage());
+        $this->assertSame('LPA has an activation key already', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 
@@ -56,7 +47,7 @@ class LpaAlreadyHasActivationKeyExceptionTest extends TestCase
 
         $sut = new LpaAlreadyHasActivationKeyException($additionalData);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'donor'                => [
                     'uId' => '700000000047',

@@ -74,8 +74,8 @@ class AddLpaTest extends TestCase
             );
         } catch (LpaAlreadyAddedException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertEquals('LPA already added', $ex->getMessage());
-            $this->assertEquals(['lpa added data'], $ex->getAdditionalData());
+            $this->assertSame('LPA already added', $ex->getMessage());
+            $this->assertSame(['lpa added data'], $ex->getAdditionalData());
             return;
         }
 
@@ -172,7 +172,7 @@ class AddLpaTest extends TestCase
             );
         } catch (NotFoundException $ex) {
             $this->assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            $this->assertEquals('Code validation failed', $ex->getMessage());
+            $this->assertSame('Code validation failed', $ex->getMessage());
             return;
         }
 

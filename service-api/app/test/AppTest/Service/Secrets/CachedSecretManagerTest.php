@@ -84,6 +84,6 @@ class CachedSecretManagerTest extends TestCase
 
         $alg = $cachedSecretManager->getAlgorithm();
 
-        $this->assertEquals('HS256', $alg);
+        $this->assertSame('HS256', $alg);
     }
 }

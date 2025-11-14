@@ -99,9 +99,9 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $pvc = $sut->validate(new PaperVerificationCode('P-1234-1234-1234-12'));
 
-        self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
-        self::assertEquals('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
+        $this->assertTrue($this->builder->verify());
+        $this->assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
+        $this->assertSame('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
     }
 
     #[Test]
@@ -157,11 +157,11 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $pvc = $sut->validate(new PaperVerificationCode('P-5678-5678-5678-56'));
 
-        self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
-        self::assertEquals('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
-        self::assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
-        self::assertEquals('first_time_use', $pvc->getData()->expiryReason->value);
+        $this->assertTrue($this->builder->verify());
+        $this->assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
+        $this->assertSame('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
+        $this->assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
+        $this->assertEquals('first_time_use', $pvc->getData()->expiryReason->value);
     }
 
     #[Test]
@@ -216,7 +216,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         try {
             $sut->validate(new PaperVerificationCode('P-6789-6789-6789-67'));
         } catch (NotFoundException) {
-            self::assertTrue($this->builder->verify());
+            $this->assertTrue($this->builder->verify());
             return;
         }
 
@@ -277,8 +277,8 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
             VerificationCodeExpiryReason::FIRST_TIME_USE
         );
 
-        self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(PaperVerificationCodeExpiry::class, $pvc->getData());
-        self::assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
+        $this->assertTrue($this->builder->verify());
+        $this->assertInstanceOf(PaperVerificationCodeExpiry::class, $pvc->getData());
+        $this->assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
     }
 }

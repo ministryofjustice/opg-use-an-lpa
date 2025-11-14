@@ -18,7 +18,6 @@ use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpa;
-use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
 use DateTime;
 use DateTimeImmutable;
@@ -35,17 +34,19 @@ class RemoveLpaTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private SiriusLpaManager|ObjectProphecy $lpaServiceProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
-
     private string $actorLpaToken;
-    private Lpa $lpa;
-    private string $lpaUid;
+
+    /** @var array<string, mixed> */
     private array $deletedData;
+
+    /** @var array<string, mixed> */
     private array $userActorLpa;
     private string $userId;
+
+    /** @var array<string, mixed> */
     private array $viewerCodes;
 
     public function setUp(): void
@@ -53,15 +54,14 @@ class RemoveLpaTest extends TestCase
         $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
         $this->viewerCodesInterfaceProphecy     = $this->prophesize(ViewerCodesInterface::class);
-        $this->lpaServiceProphecy               = $this->prophesize(SiriusLpaManager::class);
         $this->lpaManagerProphecy               = $this->prophesize(LpaManagerInterface::class);
 
-        $this->lpaUid        = '700000055554';
+        $lpaUid              = '700000055554';
         $this->actorLpaToken = '2345Token0123';
         $this->userId        = '1234-0000-1234-0000';
 
         $this->userActorLpa = [
-            'SiriusUid' => $this->lpaUid,
+            'SiriusUid' => $lpaUid,
             'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'Id'        => $this->actorLpaToken,
             'ActorId'   => 1,
@@ -72,7 +72,7 @@ class RemoveLpaTest extends TestCase
             0 => [ // this code is active
                 'Id'           => '1',
                 'ViewerCode'   => '123ABCD6789R',
-                'SiriusUid'    => $this->lpaUid,
+                'SiriusUid'    => $lpaUid,
                 'Added'        => (new DateTime())->format('Y-m-d'),
                 'Expires'      => (new DateTime())->modify('+1 month')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
@@ -81,7 +81,7 @@ class RemoveLpaTest extends TestCase
             1 => [ // this code has expired
                 'Id'           => '2',
                 'ViewerCode'   => 'YG41BCD693FH',
-                'SiriusUid'    => $this->lpaUid,
+                'SiriusUid'    => $lpaUid,
                 'Added'        => (new DateTime())->modify('-3 months')->format('Y-m-d'),
                 'Expires'      => (new DateTime())->modify('-1 month')->format('Y-m-d'),
                 'UserLpaActor' => $this->actorLpaToken,
@@ -90,7 +90,7 @@ class RemoveLpaTest extends TestCase
             2 => [ // this code is already cancelled
                 'Id'           => '3',
                 'ViewerCode'   => 'RL2AD1936KV2',
-                'SiriusUid'    => $this->lpaUid,
+                'SiriusUid'    => $lpaUid,
                 'Added'        => (new DateTime())->modify('-3 months')->format('Y-m-d'),
                 'Expires'      => (new DateTime())->modify('-1 month')->format('Y-m-d'),
                 'Cancelled'    => (new DateTime())->modify('-2 months')->format('Y-m-d'),
@@ -101,7 +101,7 @@ class RemoveLpaTest extends TestCase
 
         $this->deletedData = [
             'Id'        => $this->actorLpaToken,
-            'SiriusUid' => $this->lpaUid,
+            'SiriusUid' => $lpaUid,
             'Added'     => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'ActorId'   => '1',
             'UserId'    => $this->userId,
