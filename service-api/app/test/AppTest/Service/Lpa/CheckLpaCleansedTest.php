@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Exception\LpaNeedsCleansingException;
 use App\Service\Lpa\CheckLpaCleansed;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusLpaManager;
 use App\Service\Lpa\SiriusPerson;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use DateTime;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -27,9 +27,10 @@ class CheckLpaCleansedTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private SiriusLpaManager|ObjectProphecy $lpaServiceProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy     = $this->prophesize(LoggerInterface::class);
         $this->lpaServiceProphecy = $this->prophesize(SiriusLpaManager::class);
@@ -44,7 +45,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed_and_registered_before_sep2019(): void
+    public function older_lpa_add_confirmation_throws_exception_lpa_not_cleansed_and_registered_before_sep2019(): void
     {
         $userId = '1234';
         $lpa    = $this->oldLpaFixture(false, '2018-05-26');
@@ -71,7 +72,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_add_confirmation_throws_an_exception_if_lpa_not_cleansed_and_registered_before_sep2019_combined_format(): void
+    public function older_lpa_add_confirmation_throws_exception_not_cleansed_before_sep2019_combined_format(): void
     {
         $userId = '1234';
         $lpa    = $this->newSiriusFixture(false, '2018-05-26');
@@ -123,7 +124,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_add_confirmation_accepts_a_cleansed_lpa_and_registered_before_sep2019_combined_format(): void
+    public function older_lpa_add_confirmation_accepts_a_cleansed_lpa_registered_before_sep2019_combined_format(): void
     {
         $userId = '1234';
         $lpa    = $this->newSiriusFixture(true, '2018-05-26');
@@ -173,7 +174,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_add_confirmation_accepts_a_lpa_not_cleansed_and_registered_after_sep2019_combined_format(): void
+    public function older_lpa_add_confirmation_accepts_lpa_not_cleansed_registered_after_sep2019_combined_format(): void
     {
         $userId = '1234';
         $lpa    = $this->newSiriusFixture(false, '2019-09-01');
@@ -223,7 +224,7 @@ class CheckLpaCleansedTest extends TestCase
     }
 
     #[Test]
-    public function older_lpa_add_confirmation_accepts_an_lpa_cleansed_and_registered_after_sep2019_combined_format(): void
+    public function older_lpa_add_confirmation_accepts_lpa_cleansed_registered_after_sep2019_combined_format(): void
     {
         $userId = '1234';
         $lpa    = $this->newSiriusFixture(true, '2019-09-01');
@@ -247,7 +248,7 @@ class CheckLpaCleansedTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function oldLpaFixture(bool $lpaIsCleansed, string $registrationDate)
+    public function oldLpaFixture(bool $lpaIsCleansed, string $registrationDate): Lpa
     {
         return new Lpa(
             new SiriusLpa(
@@ -261,7 +262,7 @@ class CheckLpaCleansedTest extends TestCase
         );
     }
 
-    public function newSiriusFixture(bool $lpaIsCleansed, string $registrationDate)
+    public function newSiriusFixture(bool $lpaIsCleansed, string $registrationDate): Lpa
     {
         return new Lpa(
             new CombinedSiriusLpa(

@@ -32,7 +32,7 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->exists($email)->willReturn(false);
         $repoProphecy->add(
-            Argument::that(function (string $data) {
+            Argument::that(function (string $data): bool {
                 $this->id = $data;
                 return Uuid::isValid($data);
             }),
@@ -47,7 +47,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->add($email, $identity);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'Id'       => $this->id,
                 'Email'    => $email,
@@ -89,7 +89,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->getByEmail('a@b.com');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
+        $this->assertSame(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
     }
 
     #[Test]
@@ -112,7 +112,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->getByIdentity('urn:fdc:one-login:2023:HASH=');
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'Email'    => 'a@b.com',
                 'Identity' => 'urn:fdc:one-login:2023:HASH=',

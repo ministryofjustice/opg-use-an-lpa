@@ -20,10 +20,10 @@ class UnauthorizedExceptionTest extends TestCase
 
         $ue = new UnauthorizedException($message, $additionalData);
 
-        $this->assertEquals('Unauthorized', $ue->getTitle());
-        $this->assertEquals($additionalData, $ue->getAdditionalData());
+        $this->assertSame('Unauthorized', $ue->getTitle());
+        $this->assertSame($additionalData, $ue->getAdditionalData());
 
-        $this->assertEquals($message, $ue->getMessage());
+        $this->assertSame($message, $ue->getMessage());
         $this->assertEquals(401, $ue->getCode());
     }
 }

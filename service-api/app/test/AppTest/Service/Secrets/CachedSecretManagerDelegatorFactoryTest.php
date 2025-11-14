@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Secrets;
 
-use App\Service\Authentication\KeyPairManager\CachedKeyPairManager;
-use App\Service\Authentication\KeyPairManager\CachedKeyPairManagerDelegatorFactory;
-use App\Service\Authentication\KeyPairManager\KeyPairManagerInterface;
 use App\Service\Cache\CacheFactory;
 use App\Service\Secrets\CachedSecretManager;
 use App\Service\Secrets\CachedSecretManagerDelegatorFactory;

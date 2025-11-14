@@ -62,9 +62,9 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'fakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertSame('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
-        $this->assertEquals('fakeEmail', $user['Email']);
+        $this->assertSame('fakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
     }
@@ -109,9 +109,9 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'newFakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertSame('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
-        $this->assertEquals('newFakeEmail', $user['Email']);
+        $this->assertSame('newFakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
     }
@@ -167,9 +167,9 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'newFakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertSame('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
-        $this->assertEquals('newFakeEmail', $user['Email']);
+        $this->assertSame('newFakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
     }
@@ -221,9 +221,9 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'fakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertSame('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
-        $this->assertEquals('fakeEmail', $user['Email']);
+        $this->assertSame('fakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
     }
@@ -269,9 +269,9 @@ class ResolveOAuthUserTest extends TestCase
         $user = ($sut)('fakeSub', 'fakeEmail');
 
         $this->assertArrayHasKey('Identity', $user);
-        $this->assertEquals('fakeSub', $user['Identity'] ?? '');
+        $this->assertSame('fakeSub', $user['Identity'] ?? '');
         $this->assertArrayHasKey('Email', $user);
-        $this->assertEquals('fakeEmail', $user['Email']);
+        $this->assertSame('fakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
     }

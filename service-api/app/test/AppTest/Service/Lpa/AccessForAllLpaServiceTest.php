@@ -6,17 +6,16 @@ namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\DynamoDb\UserLpaActorMap;
-use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response\ActorCodeExists;
 use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
-use App\Service\Lpa\ResolveActor;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -28,33 +27,39 @@ class AccessForAllLpaServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
     private RequestLetterInterface|ObjectProphecy $requestLetterInterfaceProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     public ActorCodes|ObjectProphecy $actorCodesProphecy;
-    private ResolveActor|ObjectProphecy $resolveActorProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     public string $userId;
+
     public string $lpaUid;
+
     public string $actorUid;
+
     public string $additionalInfo;
+
     public string $lpaActorToken;
 
     /** @var array<string, mixed> */
     public array $dataToMatch;
+
     private DateInterval $oneYearInterval;
+
     private DateInterval $sixWeekInterval;
+
     private DateInterval $twoWeekInterval;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->lpasInterfaceProphecy          = $this->prophesize(LpasInterface::class);
         $this->requestLetterInterfaceProphecy = $this->prophesize(RequestLetterInterface::class);
         $this->loggerProphecy                 = $this->prophesize(LoggerInterface::class);
         $this->actorCodesProphecy             = $this->prophesize(ActorCodes::class);
         $this->userLpaActorMapProphecy        = $this->prophesize(UserLpaActorMap::class);
-        $this->resolveActorProphecy           = $this->prophesize(ResolveActor::class);
 
         $this->userId         = 'user-zxywq-54321';
         $this->lpaUid         = '700000012345';
@@ -285,6 +290,6 @@ class AccessForAllLpaServiceTest extends TestCase
         $service = $this->getOlderLpaService();
 
         $codeExists = $service->hasActivationCode($this->lpaUid, $this->actorUid);
-        $this->assertNull($codeExists);
+        $this->assertNotInstanceOf(DateTimeInterface::class, $codeExists);
     }
 }

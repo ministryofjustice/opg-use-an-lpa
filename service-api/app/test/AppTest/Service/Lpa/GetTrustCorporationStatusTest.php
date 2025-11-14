@@ -22,7 +22,7 @@ class GetTrustCorporationStatusTest extends TestCase
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }
@@ -43,7 +43,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::ACTIVE_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::ACTIVE_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -70,7 +70,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::ACTIVE_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::ACTIVE_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -90,7 +90,7 @@ class GetTrustCorporationStatusTest extends TestCase
         );
 
 
-        $this->assertEquals(TrustCorporationStatus::GHOST_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::GHOST_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -117,7 +117,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::GHOST_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::GHOST_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -136,7 +136,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -163,7 +163,7 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
     }
 
     #[Test]
@@ -193,6 +193,6 @@ class GetTrustCorporationStatusTest extends TestCase
             $this->loggerProphecy->reveal()
         );
 
-        $this->assertEquals(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
+        $this->assertSame(TrustCorporationStatus::INACTIVE_TC, ($status)($trustCorporation));
     }
 }

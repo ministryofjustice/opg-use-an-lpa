@@ -57,6 +57,6 @@ class SiriusLpaSanitiserTest extends TestCase
 
         $lpa = $sanitiser->sanitise($originalLpa);
 
-        $this->assertEquals($cleanedLpa, $lpa);
+        $this->assertSame($cleanedLpa, $lpa);
     }
 }

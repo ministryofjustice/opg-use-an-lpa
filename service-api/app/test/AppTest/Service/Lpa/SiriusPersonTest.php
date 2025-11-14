@@ -45,13 +45,13 @@ class SiriusPersonTest extends TestCase
             $this->loggerProphecy->reveal(),
         );
 
-        $this->assertEquals(700000000000, $sut['uId']);
+        $this->assertSame(700000000000, $sut['uId']);
 
         $sut['status'] = 'active';
-        $this->assertEquals('active', $sut['status']);
+        $this->assertSame('active', $sut['status']);
 
         unset($sut['status']);
-        $this->assertFalse(isset($sut['status']));
+        $this->assertArrayNotHasKey('status', $sut);
     }
 
     #[Test]
@@ -79,7 +79,7 @@ class SiriusPersonTest extends TestCase
             $this->loggerProphecy->reveal(),
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'uId' => 700000000000,
             ],
@@ -116,7 +116,7 @@ class SiriusPersonTest extends TestCase
         );
 
         $this->assertSame('700000000000', $sut->getUid());
-        $this->assertSame(true, $sut->getStatus());
+        $this->assertTrue($sut->getStatus());
         $this->assertSame('', $sut->getCompanyName());
     }
 }

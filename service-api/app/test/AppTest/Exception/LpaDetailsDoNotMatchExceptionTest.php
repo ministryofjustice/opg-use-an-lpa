@@ -21,10 +21,10 @@ class LpaDetailsDoNotMatchExceptionTest extends TestCase
 
         $sut = new LpaDetailsDoNotMatchException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('LPA details do not match', $sut->getMessage());
+        $this->assertSame('LPA details do not match', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 
@@ -39,7 +39,7 @@ class LpaDetailsDoNotMatchExceptionTest extends TestCase
 
         $sut = new LpaDetailsDoNotMatchException($additionalData);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'lpaRegDate' => '2024-12-02',
             ],

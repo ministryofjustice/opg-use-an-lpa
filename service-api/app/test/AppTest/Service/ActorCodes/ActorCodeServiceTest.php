@@ -13,6 +13,7 @@ use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
+use App\Service\ActorCodes\ValidatedActorCode;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
 use App\Service\Lpa\ResolveActor\ActorType;
@@ -35,13 +36,18 @@ class ActorCodeServiceTest extends TestCase
     use ProphecyTrait;
 
     private CodeValidationStrategyInterface|ObjectProphecy $codeValidatorProphecy;
+
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
+
     private string $testActorUid;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->codeValidatorProphecy            = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaManagerProphecy               = $this->prophesize(LpaManagerInterface::class);
@@ -90,7 +96,7 @@ class ActorCodeServiceTest extends TestCase
 
         $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
 
-        $this->assertEquals('00000000-0000-4000-A000-000000000000', $result);
+        $this->assertSame('00000000-0000-4000-A000-000000000000', $result);
     }
 
     #[Test]
@@ -126,7 +132,7 @@ class ActorCodeServiceTest extends TestCase
         $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
 
         // We expect a uuid4 back.
-        $this->assertEquals('token-3', $result);
+        $this->assertSame('token-3', $result);
     }
 
     #[Test]
@@ -156,7 +162,7 @@ class ActorCodeServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
+        $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
     }
 
     #[Test]
@@ -178,6 +184,7 @@ class ActorCodeServiceTest extends TestCase
         $service = $this->getActorCodeService();
 
         $result = $service->validateDetails($testCode, $testUid, $testDob);
+        $this->assertInstanceOf(ValidatedActorCode::class, $result);
 
         $this->assertArrayHasKey('lpa', $result->jsonSerialize());
         $this->assertArrayHasKey('actor', $result->jsonSerialize());
@@ -204,6 +211,7 @@ class ActorCodeServiceTest extends TestCase
         $service = $this->getActorCodeService();
 
         $result = $service->validateDetails($testCode, $testCombinedUid, $testDob);
+        $this->assertInstanceOf(ValidatedActorCode::class, $result);
 
         $this->assertArrayHasKey('lpa', $result->jsonSerialize());
         $this->assertArrayHasKey('actor', $result->jsonSerialize());
@@ -226,7 +234,7 @@ class ActorCodeServiceTest extends TestCase
 
         $result = $service->validateDetails($testCode, $testUid, $testDob);
 
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(ValidatedActorCode::class, $result);
     }
 
     private function getActorCodeService(): ActorCodeService
@@ -300,12 +308,11 @@ class ActorCodeServiceTest extends TestCase
 
         $this->resolveActorProphecy
             ->__invoke(Argument::type(HasActorInterface::class), Argument::type('string'))
-            ->will(function ($args) use ($mockActor, $mockCombinedActor) {
+            ->will(function ($args) use ($mockActor, $mockCombinedActor): LpaActor {
                 if ($args[0] instanceof SiriusLpa) {
                     return $mockActor;
-                } else {
-                    return $mockCombinedActor;
                 }
+                return $mockCombinedActor;
             })
             ->shouldBeCalled();
 

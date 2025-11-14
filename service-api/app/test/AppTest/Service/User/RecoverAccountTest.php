@@ -9,6 +9,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\NotFoundException;
 use App\Service\User\RecoverAccount;
 use Exception;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -73,85 +74,83 @@ class RecoverAccountTest extends TestCase
         $this->assertSame($expects, $result);
     }
 
-    public static function recoverableUserAccounts(): array
+    public static function recoverableUserAccounts(): Iterator
     {
-        return [
-            'It does not find an existing user and returns null'            => [
-                'user'         => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'existingUser' => NotFoundException::class,
-                'newEmail'     => 'fakeEmail',
-                'foundLpas'    => [],
-                'expects'      => null,
+        yield 'It does not find an existing user and returns null' => [
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
             ],
-            'It sanity checks that the account is not the same'             => [
-                'user'         => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'existingUser' => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'newEmail'     => 'fakeEmail',
-                'foundLpas'    => [],
-                'expects'      => null,
+            NotFoundException::class,
+            'fakeEmail',
+            [],
+            null,
+        ];
+        yield 'It sanity checks that the account is not the same' => [
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
             ],
-            'It does not recover from an account that has LPAs'             => [
-                'user'         => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'existingUser' => [
-                    'Id'       => 'originalFakeId',
-                    'Identity' => 'originalFakeSub',
-                    'Email'    => 'originalFakeEmail',
-                ],
-                'newEmail'     => 'originalFakeEmail',
-                'foundLpas'    => [
-                    700000000047 => [],
-                    700000000138 => [],
-                ],
-                'expects'      => null,
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
             ],
-            'It does not recover to an account that is already OIDC linked' => [
-                'user'         => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'existingUser' => [
-                    'Id'       => 'originalFakeId',
-                    'Identity' => 'originalFakeSub',
-                    'Email'    => 'originalFakeEmail',
-                ],
-                'newEmail'     => 'originalFakeEmail',
-                'foundLpas'    => [],
-                'expects'      => null,
+            'fakeEmail',
+            [],
+            null,
+        ];
+        yield 'It does not recover from an account that has LPAs' => [
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
             ],
-            'It recovers to an account that has LPAs'                       => [
-                'user'         => [
-                    'Id'       => 'fakeId',
-                    'Identity' => 'fakeSub',
-                    'Email'    => 'fakeEmail',
-                ],
-                'existingUser' => [
-                    'Id'    => 'originalFakeId',
-                    'Email' => 'originalFakeEmail',
-                ],
-                'newEmail'     => 'originalFakeId',
-                'foundLpas'    => [],
-                'expects'      => [
-                    'Id'       => 'originalFakeId',
-                    'Email'    => 'originalFakeEmail',
-                    'Identity' => 'fakeSub',
-                ],
+            [
+                'Id'       => 'originalFakeId',
+                'Identity' => 'originalFakeSub',
+                'Email'    => 'originalFakeEmail',
+            ],
+            'originalFakeEmail',
+            [
+                700000000047 => [],
+                700000000138 => [],
+            ],
+            null,
+        ];
+        yield 'It does not recover to an account that is already OIDC linked' => [
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
+            ],
+            [
+                'Id'       => 'originalFakeId',
+                'Identity' => 'originalFakeSub',
+                'Email'    => 'originalFakeEmail',
+            ],
+            'originalFakeEmail',
+            [],
+            null,
+        ];
+        yield 'It recovers to an account that has LPAs' => [
+            [
+                'Id'       => 'fakeId',
+                'Identity' => 'fakeSub',
+                'Email'    => 'fakeEmail',
+            ],
+            [
+                'Id'    => 'originalFakeId',
+                'Email' => 'originalFakeEmail',
+            ],
+            'originalFakeId',
+            [],
+            [
+                'Id'       => 'originalFakeId',
+                'Email'    => 'originalFakeEmail',
+                'Identity' => 'fakeSub',
             ],
         ];
     }

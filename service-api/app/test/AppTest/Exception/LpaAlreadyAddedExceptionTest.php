@@ -21,10 +21,10 @@ class LpaAlreadyAddedExceptionTest extends TestCase
 
         $sut = new LpaAlreadyAddedException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('LPA already added', $sut->getMessage());
+        $this->assertSame('LPA already added', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 
@@ -43,7 +43,7 @@ class LpaAlreadyAddedExceptionTest extends TestCase
 
         $sut = new LpaAlreadyAddedException($additionalData);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'donor'                => [
                     'uId' => '700000000047',

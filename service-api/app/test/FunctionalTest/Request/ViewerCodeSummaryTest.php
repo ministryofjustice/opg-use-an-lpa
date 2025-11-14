@@ -42,8 +42,8 @@ class ViewerCodeSummaryTest extends AbstractFunctionalTestCase
 
         try {
             $request->get(ViewerCodeSummary::class);
-        } catch (BadRequestException $e) {
-            $this->assertArrayHasKey('code', $e->getAdditionalData());
+        } catch (BadRequestException $badRequestException) {
+            $this->assertArrayHasKey('code', $badRequestException->getAdditionalData());
         }
     }
 }

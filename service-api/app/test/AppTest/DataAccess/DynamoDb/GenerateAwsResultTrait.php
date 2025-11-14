@@ -32,9 +32,6 @@ trait GenerateAwsResultTrait
      *   ]
      * ])
      * ```
-     *
-     * @param array $items
-     * @return Result
      */
     private function createAWSResult(array $items = []): Result
     {
@@ -48,14 +45,14 @@ trait GenerateAwsResultTrait
         $awsResult
             ->method('offsetExists')
             ->with($this->isType('string'))
-            ->will($this->returnCallback(function ($index) use ($iterator) {
+            ->will($this->returnCallback(function ($index) use ($iterator): bool {
                 return $iterator->offsetExists($index);
             }));
 
         $awsResult
             ->method('hasKey')
             ->with($this->isType('string'))
-            ->will($this->returnCallback(function ($index) use ($iterator) {
+            ->will($this->returnCallback(function ($index) use ($iterator): bool {
                 return $iterator->offsetExists($index);
             }));
 

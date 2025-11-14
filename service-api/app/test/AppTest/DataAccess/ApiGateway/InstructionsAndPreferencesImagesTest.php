@@ -27,7 +27,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
     private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
@@ -72,12 +72,12 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
         $instructionsAndPreferencesImages = $service->getInstructionsAndPreferencesImages($testData['uId']);
 
-        $this->assertEquals($testData['uId'], $instructionsAndPreferencesImages->uId);
+        $this->assertSame($testData['uId'], $instructionsAndPreferencesImages->uId);
         $this->assertEquals(
             InstructionsAndPreferencesImagesResult::from($testData['status']),
             $instructionsAndPreferencesImages->status,
         );
-        $this->assertEquals($testData['signedUrls'], $instructionsAndPreferencesImages->signedUrls);
+        $this->assertSame($testData['signedUrls'], $instructionsAndPreferencesImages->signedUrls);
     }
 
     #[Test]

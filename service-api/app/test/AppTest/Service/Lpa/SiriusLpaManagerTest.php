@@ -13,7 +13,6 @@ use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, Lpa};
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
-use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     ResolveActor,
@@ -37,18 +36,25 @@ class SiriusLpaManagerTest extends TestCase
 {
     use ProphecyTrait;
 
+    private FilterActiveActors|ObjectProphecy $filterActiveActorsProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+
     private LpasInterface|ObjectProphecy $lpasInterfaceProphecy;
+
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+
     private InstructionsAndPreferencesImagesInterface|ObjectProphecy $iapRepositoryProphecy;
+
     private ViewerCodeActivityInterface|ObjectProphecy $viewerCodeActivityInterfaceProphecy;
+
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
+
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
-    private FilterActiveActors|ObjectProphecy $filterActiveActorProphecy;
-    private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userLpaActorMapInterfaceProphecy    = $this->prophesize(UserLpaActorMapInterface::class);
         $this->lpasInterfaceProphecy               = $this->prophesize(LpasInterface::class);
@@ -59,7 +65,6 @@ class SiriusLpaManagerTest extends TestCase
         $this->resolveActorProphecy                = $this->prophesize(ResolveActor::class);
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->filterActiveActorsProphecy          = $this->prophesize(FilterActiveActors::class);
-        $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 
@@ -149,7 +154,7 @@ class SiriusLpaManagerTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getByUserLpaActorToken()
 
-    private function init_valid_user_token_test($validState = true): stdClass
+    private function init_valid_user_token_test(bool $validState = true): stdClass
     {
         $t = new stdClass();
 
@@ -421,7 +426,7 @@ class SiriusLpaManagerTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getAllForUser()
 
-    private function init_valid_get_all_users(bool $includeActivated)
+    private function init_valid_get_all_users(bool $includeActivated): stdClass
     {
         $t = new stdClass();
 
@@ -597,7 +602,7 @@ class SiriusLpaManagerTest extends TestCase
     //-------------------------------------------------------------------------
     // Test getByViewerCode()
 
-    private function init_valid_get_by_viewer_account()
+    private function init_valid_get_by_viewer_account(): stdClass
     {
         $t = new stdClass();
 
@@ -725,7 +730,7 @@ class SiriusLpaManagerTest extends TestCase
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn(null)->shouldBeCalled();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
     #[Test]
@@ -739,7 +744,7 @@ class SiriusLpaManagerTest extends TestCase
         $this->lpasInterfaceProphecy->get($t->SiriusUid)->willReturn(null)->shouldBeCalled();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
+        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
 
     #[Test]
@@ -750,7 +755,7 @@ class SiriusLpaManagerTest extends TestCase
         $service = $this->getLpaService();
 
         $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode($t->ViewerCode, 'different-donor-name', null);
+        $service->getByViewerCode($t->ViewerCode, 'different-donor-name', null);
     }
 
     #[Test]

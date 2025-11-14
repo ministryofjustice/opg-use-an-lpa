@@ -20,10 +20,10 @@ class BadRequestExceptionTest extends TestCase
 
         $bre = new BadRequestException($message, $additionalData);
 
-        $this->assertEquals('Bad Request', $bre->getTitle());
-        $this->assertEquals($additionalData, $bre->getAdditionalData());
+        $this->assertSame('Bad Request', $bre->getTitle());
+        $this->assertSame($additionalData, $bre->getAdditionalData());
 
-        $this->assertEquals($message, $bre->getMessage());
+        $this->assertSame($message, $bre->getMessage());
         $this->assertEquals(400, $bre->getCode());
     }
 }

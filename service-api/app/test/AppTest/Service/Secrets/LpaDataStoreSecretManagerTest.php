@@ -21,9 +21,10 @@ class LpaDataStoreSecretManagerTest extends TestCase
     use ProphecyTrait;
 
     private ObjectProphecy|SecretsManagerClient $secretsManagerClient;
+
     private ObjectProphecy|LoggerInterface $logger;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
         $this->logger               = $this->prophesize(LoggerInterface::class);
@@ -109,6 +110,6 @@ class LpaDataStoreSecretManagerTest extends TestCase
 
         $alg = $lpaDataStoreSecretManager->getAlgorithm();
 
-        $this->assertEquals('HS256', $alg);
+        $this->assertSame('HS256', $alg);
     }
 }

@@ -25,14 +25,22 @@ class HealthcheckHandlerTest extends TestCase
     use ProphecyTrait;
 
     private ObjectProphecy|ActorUsersInterface $actorUsersProphecy;
+
     private ObjectProphecy|ClientInterface $clientProphecy;
+
     private ObjectProphecy|RequestFactoryInterface $requestFactoryProphecy;
+
     private ObjectProphecy|RequestFactoryInterface $requestSignerFactoryProphecy;
 
     private string $version;
+
     private string $siriusApiUrl;
+
     private string $codesApiUrl;
+
     private string $iapImagesApiUrl;
+
+    public string $lpaStoreApiUrl;
 
     protected function setUp(): void
     {

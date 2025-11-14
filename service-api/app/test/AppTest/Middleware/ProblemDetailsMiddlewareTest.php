@@ -56,7 +56,7 @@ class ProblemDetailsMiddlewareTest extends TestCase
         $data = $response->getPayload();
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertSame(404, $response->getStatusCode());
         $this->assertEquals('Exception message', $data['details']);
     }
 }

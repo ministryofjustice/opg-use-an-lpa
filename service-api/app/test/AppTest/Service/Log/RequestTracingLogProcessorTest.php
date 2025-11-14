@@ -27,7 +27,7 @@ class RequestTracingLogProcessorTest extends TestCase
 
         $result = $processor([]);
 
-        $this->assertEquals(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'abc']], $result);
+        $this->assertSame(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'abc']], $result);
     }
 
     #[Test]
@@ -41,6 +41,6 @@ class RequestTracingLogProcessorTest extends TestCase
 
         $result = $processor([]);
 
-        $this->assertEquals(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'NO-TRACE-ID-DISCOVERED']], $result);
+        $this->assertSame(['extra' => [RequestTracing::TRACE_PARAMETER_NAME => 'NO-TRACE-ID-DISCOVERED']], $result);
     }
 }

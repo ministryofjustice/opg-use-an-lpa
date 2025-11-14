@@ -22,7 +22,8 @@ class SystemMessageTest extends TestCase
      */
     use ProphecyTrait;
 
-    private SsmClient $ssmClient;
+    private MockObject $ssmClient;
+
     private SystemMessage $systemMessage;
 
     /**
@@ -63,7 +64,7 @@ class SystemMessageTest extends TestCase
             'use/cy' => 'Welsh usage message',
         ];
 
-        $this->assertEquals($expected, $systemMessages);
+        $this->assertSame($expected, $systemMessages);
     }
 
     /**
@@ -90,6 +91,6 @@ class SystemMessageTest extends TestCase
             'use/cy' => '',
         ];
 
-        $this->assertEquals($expected, $systemMessages);
+        $this->assertSame($expected, $systemMessages);
     }
 }

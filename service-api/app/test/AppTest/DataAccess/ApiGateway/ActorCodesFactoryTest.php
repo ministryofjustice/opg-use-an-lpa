@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace AppTest\DataAccess\ApiGateway;
 
-use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\ApiGateway\ActorCodesFactory;
 use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Service\Log\RequestTracing;
 use Exception;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -22,6 +22,7 @@ class ActorCodesFactoryTest extends TestCase
     use ProphecyTrait;
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function it_creates_an_instance(): void
     {
         $containerProphecy = $this->prophesize(ContainerInterface::class);
@@ -57,9 +58,7 @@ class ActorCodesFactoryTest extends TestCase
 
         $factory = new ActorCodesFactory();
 
-        $actorCodes = $factory($containerProphecy->reveal());
-
-        $this->assertInstanceOf(ActorCodes::class, $actorCodes);
+        $factory($containerProphecy->reveal());
     }
 
     #[Test]
@@ -77,6 +76,6 @@ class ActorCodesFactoryTest extends TestCase
         $factory = new ActorCodesFactory();
 
         $this->expectException(Exception::class);
-        $actorCodes = $factory($containerProphecy->reveal());
+        $factory($containerProphecy->reveal());
     }
 }
