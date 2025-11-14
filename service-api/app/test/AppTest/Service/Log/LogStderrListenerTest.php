@@ -24,7 +24,7 @@ class LogStderrListenerTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
             Argument::type('string'),
-            Argument::that(function ($exceptionArray) {
+            Argument::that(function (array $exceptionArray): true {
                 $this->assertArrayHasKey('message', $exceptionArray);
                 $this->assertArrayHasKey('code', $exceptionArray);
                 $this->assertArrayHasKey('line', $exceptionArray);
@@ -57,7 +57,7 @@ class LogStderrListenerTest extends TestCase
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
         $loggerProphecy->error(
             Argument::type('string'),
-            Argument::that(function ($exceptionArray) {
+            Argument::that(function (array $exceptionArray): true {
                 $this->assertArrayHasKey('message', $exceptionArray);
                 $this->assertArrayHasKey('code', $exceptionArray);
                 $this->assertArrayHasKey('line', $exceptionArray);

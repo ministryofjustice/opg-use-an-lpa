@@ -24,9 +24,10 @@ class KeyPairManagerTest extends TestCase
     use ProphecyTrait;
 
     private ObjectProphecy|SecretsManagerClient $secretsManagerClient;
+
     private ObjectProphecy|LoggerInterface $logger;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->secretsManagerClient = $this->prophesize(SecretsManagerClient::class);
         $this->logger               = $this->prophesize(LoggerInterface::class);

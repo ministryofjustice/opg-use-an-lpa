@@ -202,9 +202,9 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         try {
             $sut->usable($params);
-        } catch (GoneException $e) {
-            $this->assertSame('Paper verification code expired', $e->getMessage());
-            $this->assertEquals('cancelled', $e->getAdditionalData()['reason']);
+        } catch (GoneException $goneException) {
+            $this->assertSame('Paper verification code expired', $goneException->getMessage());
+            $this->assertEquals('cancelled', $goneException->getAdditionalData()['reason']);
             return;
         }
 

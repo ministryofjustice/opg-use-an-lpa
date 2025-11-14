@@ -39,13 +39,18 @@ class SiriusLpasTest extends TestCase
     use PSR17PropheciesTrait;
 
     private GuzzleClient|ObjectProphecy $guzzleClientProphecy;
+
     private DataSanitiserStrategy|ObjectProphecy $dataSanitiserStrategy;
+
     private LoggerInterface|ObjectProphecy $loggerInterface;
+
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
+
     private FeatureEnabled|ObjectProphecy $featureEnabled;
+
     private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->guzzleClientProphecy  = $this->prophesize(GuzzleClient::class);
         $this->dataSanitiserStrategy = $this->prophesize(DataSanitiserStrategy::class);
@@ -92,9 +97,9 @@ class SiriusLpasTest extends TestCase
         // First of two possible exceptions that can be thrown
         try {
             $fails = $this->getLpas()->get('700000055554');
-        } catch (ApiException $e) {
-            $this->assertInstanceOf(NotFoundExceptionInterface::class, $e->getPrevious());
-            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
+        } catch (ApiException $apiException) {
+            $this->assertInstanceOf(NotFoundExceptionInterface::class, $apiException->getPrevious());
+            $this->assertSame('Unable to build a request signer instance', $apiException->getMessage());
         }
 
         $this->requestSignerFactoryProphecy
@@ -104,9 +109,9 @@ class SiriusLpasTest extends TestCase
         // Second
         try {
             $fails = $this->getLpas()->get('700000055554');
-        } catch (ApiException $e) {
-            $this->assertInstanceOf(ContainerExceptionInterface::class, $e->getPrevious());
-            $this->assertSame('Unable to build a request signer instance', $e->getMessage());
+        } catch (ApiException $apiException) {
+            $this->assertInstanceOf(ContainerExceptionInterface::class, $apiException->getPrevious());
+            $this->assertSame('Unable to build a request signer instance', $apiException->getMessage());
         }
     }
 
@@ -143,7 +148,7 @@ class SiriusLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Not possible to create LPA from response data');
-        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+        $this->getLpas()->get('700000055554');
     }
 
     #[Test]
@@ -187,7 +192,7 @@ class SiriusLpasTest extends TestCase
 
         $this->expectException(ApiException::class);
         $this->expectExceptionMessage('Not possible to create LPA from response data');
-        $shouldBeAnLPA = $this->getLpas()->get('700000055554');
+        $this->getLpas()->get('700000055554');
     }
 
     #[Test]
@@ -225,7 +230,7 @@ class SiriusLpasTest extends TestCase
                 // given the mocked code below is basically all the data sanitiser does right now
                 // it could probably just be instantiated and used.
                 $lpa = $args[0];
-                array_walk_recursive($lpa, function (&$item, $key) {
+                array_walk_recursive($lpa, function (&$item, $key): void {
                     if ($key === 'uId') {
                         $item = str_replace('-', '', $item);
                     }

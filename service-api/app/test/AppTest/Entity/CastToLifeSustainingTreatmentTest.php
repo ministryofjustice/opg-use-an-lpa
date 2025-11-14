@@ -10,14 +10,16 @@ use InvalidArgumentException;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CastToLifeSustainingTreatmentTest extends TestCase
 {
-    private ObjectMapper $mockHydrator;
+    private MockObject $mockHydrator;
+
     private CastToLifeSustainingTreatment $castToLifeSustainingTreatment;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mockHydrator                  = $this->createMock(ObjectMapper::class);
         $this->castToLifeSustainingTreatment = new CastToLifeSustainingTreatment();
@@ -25,8 +27,10 @@ class CastToLifeSustainingTreatmentTest extends TestCase
 
     #[DataProvider('lifeSustainingTreatmentProvider')]
     #[Test]
-    public function can_cast_life_sustaining_treatment($lifeSustainingTreatment, $expectedLifeSustainingTreatment): void
-    {
+    public function can_cast_life_sustaining_treatment(
+        string $lifeSustainingTreatment,
+        string $expectedLifeSustainingTreatment,
+    ): void {
         $result = $this->castToLifeSustainingTreatment->cast($lifeSustainingTreatment, $this->mockHydrator);
 
         $this->assertEquals($expectedLifeSustainingTreatment, $result);

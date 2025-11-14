@@ -27,7 +27,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
     private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy

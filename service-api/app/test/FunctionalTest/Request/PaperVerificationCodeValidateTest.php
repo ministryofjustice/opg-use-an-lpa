@@ -58,9 +58,9 @@ class PaperVerificationCodeValidateTest extends AbstractFunctionalTestCase
 
         try {
             $request->get(PaperVerificationCodeValidate::class);
-        } catch (BadRequestException $e) {
-            $this->assertCount(1, $e->getAdditionalData());
-            $this->assertArrayHasKey('code', $e->getAdditionalData());
+        } catch (BadRequestException $badRequestException) {
+            $this->assertCount(1, $badRequestException->getAdditionalData());
+            $this->assertArrayHasKey('code', $badRequestException->getAdditionalData());
         }
     }
 
@@ -82,8 +82,8 @@ class PaperVerificationCodeValidateTest extends AbstractFunctionalTestCase
 
         try {
             $request->get(PaperVerificationCodeValidate::class);
-        } catch (BadRequestException $e) {
-            $this->assertArrayHasKey('sentToDonor', $e->getAdditionalData());
+        } catch (BadRequestException $badRequestException) {
+            $this->assertArrayHasKey('sentToDonor', $badRequestException->getAdditionalData());
         }
     }
 
@@ -105,8 +105,8 @@ class PaperVerificationCodeValidateTest extends AbstractFunctionalTestCase
 
         try {
             $request->get(PaperVerificationCodeValidate::class);
-        } catch (BadRequestException $e) {
-            $this->assertArrayHasKey('dateOfBirth', $e->getAdditionalData());
+        } catch (BadRequestException $badRequestException) {
+            $this->assertArrayHasKey('dateOfBirth', $badRequestException->getAdditionalData());
         }
     }
 }

@@ -48,7 +48,7 @@ class FeatureEnabledFactoryTest extends TestCase
         $factory = new FeatureEnabledFactory();
 
         $this->expectException(UnexpectedValueException::class);
-        $instance = $factory($containerProphecy->reveal());
+        $factory($containerProphecy->reveal());
     }
 
     #[Test]
@@ -66,6 +66,6 @@ class FeatureEnabledFactoryTest extends TestCase
         $factory = new FeatureEnabledFactory();
 
         $this->expectException(UnexpectedValueException::class);
-        $instance = $factory($containerProphecy->reveal());
+        $factory($containerProphecy->reveal());
     }
 }

@@ -28,7 +28,7 @@ class UserLpaActorMapTest extends TestCase
 
     private DynamoDbClient|ObjectProphecy $dynamoDbClientProphecy;
 
-    public function assertIsValidUuid($uuid, string $message = ''): void
+    public function assertIsValidUuid(string $uuid, string $message = ''): void
     {
         $pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
         $this->assertMatchesRegularExpression($pattern, $uuid, $message);
@@ -51,7 +51,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId   = 1;
         $testAdded     = gmdate('c');
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -105,7 +105,7 @@ class UserLpaActorMapTest extends TestCase
     {
         $testToken = 'test-token';
 
-        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -151,7 +151,7 @@ class UserLpaActorMapTest extends TestCase
             $testUserId,
             $testActorId,
             $testCode,
-        ) {
+        ): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -199,7 +199,7 @@ class UserLpaActorMapTest extends TestCase
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
             $testUserId
-        ) {
+        ): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -248,7 +248,7 @@ class UserLpaActorMapTest extends TestCase
             $testSiriusUid,
             $testUserId,
             $testActorId
-        ) {
+        ): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -358,7 +358,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId   = 1;
         $testAdded     = gmdate('c');
 
-        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->deleteItem(Argument::that(function (array $data) use ($testToken): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -411,7 +411,7 @@ class UserLpaActorMapTest extends TestCase
         $testAdded          = gmdate('c');
         $testActivated      = gmdate('c');
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -469,7 +469,7 @@ class UserLpaActorMapTest extends TestCase
         $testAdded          = gmdate('c');
         $testActivated      = gmdate('c');
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -532,7 +532,7 @@ class UserLpaActorMapTest extends TestCase
         $testActorId   = 1;
         $testAdded     = gmdate('c');
 
-        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($testUserId) {
+        $this->dynamoDbClientProphecy->query(Argument::that(function (array $data) use ($testUserId): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -610,24 +610,28 @@ class UserLpaActorMapTest extends TestCase
         $now    = new DateTimeImmutable();
         $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
-            $this->assertArrayHasKey('TableName', $data);
-            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(
+                function (array $data) use ($testToken, $expiry): true {
+                    $this->assertArrayHasKey('TableName', $data);
+                    $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-            $this->assertArrayHasKey('Key', $data);
-            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+                    $this->assertArrayHasKey('Key', $data);
+                    $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
-            $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a, DueBy = :b, ActorId = :c', $data['UpdateExpression']);
+                    $this->assertArrayHasKey('UpdateExpression', $data);
+                    $this->assertEquals('set ActivateBy = :a, DueBy = :b, ActorId = :c', $data['UpdateExpression']);
 
-            $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
-            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+                    $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
+                    $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
+                    $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
 
-            $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
-            return true;
-        }))->willReturn($this->createAWSResult(
+                    $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
+                    $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
+                    return true;
+                }
+            )
+        )->willReturn($this->createAWSResult(
             [
                 'Item' => [
                     'Id'         => [
@@ -682,27 +686,31 @@ class UserLpaActorMapTest extends TestCase
         $now    = new DateTimeImmutable();
         $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
 
-        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
-            $this->assertArrayHasKey('TableName', $data);
-            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+        $this->dynamoDbClientProphecy->updateItem(
+            Argument::that(
+                function (array $data) use ($testToken, $expiry): true {
+                    $this->assertArrayHasKey('TableName', $data);
+                    $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
-            $this->assertArrayHasKey('Key', $data);
-            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+                    $this->assertArrayHasKey('Key', $data);
+                    $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
 
-            $this->assertArrayHasKey('UpdateExpression', $data);
-            $this->assertEquals('set ActivateBy = :a, DueBy = :b', $data['UpdateExpression']);
+                    $this->assertArrayHasKey('UpdateExpression', $data);
+                    $this->assertEquals('set ActivateBy = :a, DueBy = :b', $data['UpdateExpression']);
 
-            $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
-            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+                    $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
+                    $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
+                    $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
 
-            $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
-            $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
+                    $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
+                    $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
 
-            $this->assertArrayNotHasKey(':c', $data['ExpressionAttributeValues']);
+                    $this->assertArrayNotHasKey(':c', $data['ExpressionAttributeValues']);
 
-            return true;
-        }))->willReturn($this->createAWSResult(
+                    return true;
+                }
+            )
+        )->willReturn($this->createAWSResult(
             [
                 'Item' => [
                     'Id'         => [

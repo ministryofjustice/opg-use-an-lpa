@@ -28,23 +28,33 @@ class AccessForAllLpaServiceTest extends TestCase
     use ProphecyTrait;
 
     private RequestLetterInterface|ObjectProphecy $requestLetterInterfaceProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     public ActorCodes|ObjectProphecy $actorCodesProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapProphecy;
 
     public string $userId;
+
     public string $lpaUid;
+
     public string $actorUid;
+
     public string $additionalInfo;
+
     public string $lpaActorToken;
 
     /** @var array<string, mixed> */
     public array $dataToMatch;
+
     private DateInterval $oneYearInterval;
+
     private DateInterval $sixWeekInterval;
+
     private DateInterval $twoWeekInterval;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->requestLetterInterfaceProphecy = $this->prophesize(RequestLetterInterface::class);
         $this->loggerProphecy                 = $this->prophesize(LoggerInterface::class);

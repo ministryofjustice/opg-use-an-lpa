@@ -11,7 +11,7 @@ use Psr\Container\ContainerInterface;
 
 class TestClientFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Client
     {
         $handlerStack = HandlerStack::create($container->get(MockHandler::class));
         return new Client(['handler' => $handlerStack, 'timeout' => 2]);

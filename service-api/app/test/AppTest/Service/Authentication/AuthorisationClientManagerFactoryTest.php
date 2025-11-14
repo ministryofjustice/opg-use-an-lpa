@@ -66,6 +66,6 @@ class AuthorisationClientManagerFactoryTest extends TestCase
         $sut = new AuthorisationClientManagerFactory();
 
         $this->expectException(RuntimeException::class);
-        $service = ($sut)($container->reveal());
+        ($sut)($container->reveal());
     }
 }

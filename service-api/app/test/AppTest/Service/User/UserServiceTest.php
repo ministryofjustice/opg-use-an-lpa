@@ -32,7 +32,7 @@ class UserServiceTest extends TestCase
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->exists($email)->willReturn(false);
         $repoProphecy->add(
-            Argument::that(function (string $data) {
+            Argument::that(function (string $data): bool {
                 $this->id = $data;
                 return Uuid::isValid($data);
             }),

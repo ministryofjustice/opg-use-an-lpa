@@ -11,15 +11,16 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodeActivityTest extends TestCase
 {
     use GenerateAwsResultTrait;
     use ProphecyTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    public const TABLE_NAME = 'test-table-name';
 
-    private $dynamoDbClient;
+    private DynamoDbClient|ObjectProphecy $dynamoDbClient;
 
     protected function setUp(): void
     {
@@ -31,7 +32,7 @@ class ViewerCodeActivityTest extends TestCase
         $testCode     = '123456789ABC';
         $organisation = 'HSBC';
 
-        $this->dynamoDbClient->putItem(Argument::that(function ($v) use ($testCode) {
+        $this->dynamoDbClient->putItem(Argument::that(function (array $v) use ($testCode): true {
             $this->assertArrayHasKey('TableName', $v);
             $this->assertEquals(self::TABLE_NAME, $v['TableName']);
 
@@ -74,7 +75,7 @@ class ViewerCodeActivityTest extends TestCase
                 ],
         ];
 
-        $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {
+        $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -118,12 +119,11 @@ class ViewerCodeActivityTest extends TestCase
 
         $result = $repo->getStatusesForViewerCodes($testCodes);
 
-        $viewerCode = $testCodes[0]['ViewerCode'];
-
-        foreach ($result[0]['Viewed'] as $viewedInstance => $viewedData) {
+        foreach ($result[0]['Viewed'] as $viewedData) {
             $this->assertEquals($testCodes[0]['ViewerCode'], $viewedData['ViewerCode']);
             $this->assertNotEmpty($viewedData['Viewed']);
         }
+
         $this->assertEquals('Some organisation1', $result[0]['Viewed'][0]['ViewedBy']);
         $this->assertEquals('Some organisation2', $result[0]['Viewed'][1]['ViewedBy']);
     }
@@ -134,7 +134,7 @@ class ViewerCodeActivityTest extends TestCase
 
         $testCodes = [['ViewerCode' => 'RT6Y98VEF7A2']];
 
-        $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {
+        $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes): true {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 

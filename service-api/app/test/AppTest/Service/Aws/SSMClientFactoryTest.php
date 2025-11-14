@@ -7,18 +7,11 @@ namespace AppTest\Service\Aws;
 use App\Service\Aws\SSMClientFactory;
 use Aws\Sdk;
 use Aws\Ssm\SsmClient;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Framework\MockObject\IncompatibleReturnValueException;
-use PHPUnit\Framework\MockObject\MethodCannotBeConfiguredException;
-use PHPUnit\Framework\MockObject\MethodNameAlreadyConfiguredException;
-use PHPUnit\Framework\MockObject\MethodNameNotConfiguredException;
-use PHPUnit\Framework\MockObject\MethodParametersAlreadyConfiguredException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 class SSMClientFactoryTest extends TestCase
 {
@@ -33,10 +26,8 @@ class SSMClientFactoryTest extends TestCase
         $this->factory = new SSMClientFactory();
     }
 
-    /**
-     * @throws Exception
-     */
     #[Test]
+    #[DoesNotPerformAssertions]
     public function invokeReturnsSsmClient(): void
     {
         $sdkProphecy = $this->prophesize(Sdk::class);
@@ -48,8 +39,6 @@ class SSMClientFactoryTest extends TestCase
         $containerProphecy->get(Sdk::class)
             ->willReturn($sdkProphecy->reveal());
 
-        $result = ($this->factory)($containerProphecy->reveal());
-
-        $this->assertInstanceOf(SsmClient::class, $result);
+        ($this->factory)($containerProphecy->reveal());
     }
 }

@@ -36,13 +36,18 @@ class ActorCodeServiceTest extends TestCase
     use ProphecyTrait;
 
     private CodeValidationStrategyInterface|ObjectProphecy $codeValidatorProphecy;
+
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
+
     private string $testActorUid;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->codeValidatorProphecy            = $this->prophesize(CodeValidationStrategyInterface::class);
         $this->lpaManagerProphecy               = $this->prophesize(LpaManagerInterface::class);
@@ -157,7 +162,7 @@ class ActorCodeServiceTest extends TestCase
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
+        $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
     }
 
     #[Test]
@@ -303,12 +308,11 @@ class ActorCodeServiceTest extends TestCase
 
         $this->resolveActorProphecy
             ->__invoke(Argument::type(HasActorInterface::class), Argument::type('string'))
-            ->will(function ($args) use ($mockActor, $mockCombinedActor) {
+            ->will(function ($args) use ($mockActor, $mockCombinedActor): LpaActor {
                 if ($args[0] instanceof SiriusLpa) {
                     return $mockActor;
-                } else {
-                    return $mockCombinedActor;
                 }
+                return $mockCombinedActor;
             })
             ->shouldBeCalled();
 

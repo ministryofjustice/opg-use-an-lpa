@@ -109,7 +109,7 @@ class ViewerCodeServiceTest extends TestCase
             ->add(
                 Argument::type('string'),
                 'id',
-                Argument::that(fn (LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
+                Argument::that(fn (LpaUid $value): bool => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
                 $codeExpiry,
                 'token name',
                 '1234'
@@ -196,7 +196,7 @@ class ViewerCodeServiceTest extends TestCase
                 '1234'
             )
             ->shouldBeCalledTimes(2)
-            ->will(function () use (&$callCount) {
+            ->will(function () use (&$callCount): void {
                 if ($callCount >= 1) {
                     return;
                 }
@@ -229,7 +229,7 @@ class ViewerCodeServiceTest extends TestCase
             $loggerProphecy->reveal(),
         );
 
-        $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
+        $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
 
         $this->assertGreaterThan(0, $callCount);
     }
@@ -309,7 +309,7 @@ class ViewerCodeServiceTest extends TestCase
         // merge our two data fixtures like the repo does
         $mergedFixtures = array_reduce(
             $activities,
-            function (array $codes, array $activity) {
+            function (array $codes, array $activity): array {
                 foreach ($codes as $index => $code) {
                     if ($code['ViewerCode'] === $activity['ViewerCode']) {
                         $codes[$index]['Viewed'] = $activity['Viewed'];

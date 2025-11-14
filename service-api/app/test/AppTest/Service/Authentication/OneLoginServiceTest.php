@@ -65,7 +65,7 @@ class OneLoginServiceTest extends TestCase
             $randomByteGenerator->reveal(),
         );
 
-        $authorisationRequest = $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
+        $authorisationRequestService->createAuthenticationRequest('en', $fakeRedirect);
     }
 
     #[Test]
@@ -167,7 +167,7 @@ class OneLoginServiceTest extends TestCase
         );
 
         $this->expectException(AuthorisationServiceException::class);
-        $user = $sut->handleCallback(
+        $sut->handleCallback(
             'fake_code',
             'fake_state',
             $fakeSession,

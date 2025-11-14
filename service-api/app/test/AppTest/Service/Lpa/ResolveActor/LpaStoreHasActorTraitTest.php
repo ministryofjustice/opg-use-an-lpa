@@ -23,7 +23,7 @@ class LpaStoreHasActorTraitTest extends TestCase
 
     private HasActorInterface $mock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mock = new class (
             $this->prophesize(LoggerInterface::class)->reveal()

@@ -22,7 +22,8 @@ class SystemMessageTest extends TestCase
      */
     use ProphecyTrait;
 
-    private SsmClient $ssmClient;
+    private MockObject $ssmClient;
+
     private SystemMessage $systemMessage;
 
     /**

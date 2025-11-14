@@ -42,8 +42,8 @@ class PaperVerificationCodeUsableTest extends AbstractFunctionalTestCase
 
         try {
             $request->get(PaperVerificationCodeUsable::class);
-        } catch (BadRequestException $e) {
-            $this->assertArrayHasKey('code', $e->getAdditionalData());
+        } catch (BadRequestException $badRequestException) {
+            $this->assertArrayHasKey('code', $badRequestException->getAdditionalData());
         }
     }
 }

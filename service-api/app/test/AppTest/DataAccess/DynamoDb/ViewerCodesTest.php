@@ -37,7 +37,7 @@ class ViewerCodesTest extends TestCase
         $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->getItem(
-            Argument::that(function (array $data) use ($testCode) {
+            Argument::that(function (array $data) use ($testCode): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -82,7 +82,7 @@ class ViewerCodesTest extends TestCase
         $testCode = 'test-code';
 
         $this->dynamoDbClientProphecy->getItem(
-            Argument::that(function (array $data) use ($testCode) {
+            Argument::that(function (array $data) use ($testCode): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -118,7 +118,7 @@ class ViewerCodesTest extends TestCase
         $testSiriusUid = new LpaUid('98765-43210');
 
         $this->dynamoDbClientProphecy->query(
-            Argument::that(function (array $data) use ($testSiriusUid) {
+            Argument::that(function (array $data) use ($testSiriusUid): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -159,7 +159,7 @@ class ViewerCodesTest extends TestCase
         $testSiriusUid = new LpaUid('98765-43210');
 
         $this->dynamoDbClientProphecy->query(
-            Argument::that(function (array $data) use ($testSiriusUid) {
+            Argument::that(function (array $data) use ($testSiriusUid): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -205,7 +205,7 @@ class ViewerCodesTest extends TestCase
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-            ) {
+            ): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -259,7 +259,7 @@ class ViewerCodesTest extends TestCase
                 $testLpaUid,
                 $testExpires,
                 $testOrganisation,
-            ) {
+            ): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -360,7 +360,7 @@ class ViewerCodesTest extends TestCase
             Argument::that(function (array $data) use (
                 $testCode,
                 $currentDate
-            ) {
+            ): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 
@@ -392,7 +392,7 @@ class ViewerCodesTest extends TestCase
         $this->dynamoDbClientProphecy->updateItem(
             Argument::that(function (array $data) use (
                 $testCode
-            ) {
+            ): true {
                 $this->assertArrayHasKey('TableName', $data);
                 $this->assertEquals(self::TABLE_NAME, $data['TableName']);
 

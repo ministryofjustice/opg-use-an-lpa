@@ -23,7 +23,7 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
 
     private LpaDataFormatter $lpaDataFormatter;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->lpaDataFormatter = new LpaDataFormatter();
     }

@@ -34,9 +34,13 @@ class RemoveLpaTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+
     private ViewerCodesInterface|ObjectProphecy $viewerCodesInterfaceProphecy;
+
     private LpaManagerInterface|ObjectProphecy $lpaManagerProphecy;
+
     private string $actorLpaToken;
 
     /** @var array<string, mixed> */
@@ -44,12 +48,28 @@ class RemoveLpaTest extends TestCase
 
     /** @var array<string, mixed> */
     private array $userActorLpa;
+
     private string $userId;
 
     /** @var array<string, mixed> */
     private array $viewerCodes;
 
-    public function setUp(): void
+    private Lpa $lpaRemovedData;
+
+    private Lpa $combinedLpaRemovedData;
+
+    private Lpa $lpaStoreResponse;
+
+    /** @var array<string, mixed> */
+    private array $old_lpa_response;
+
+    /** @var array<string, mixed> */
+    private array $new_lpa_response;
+
+    /** @var array<string, mixed> */
+    private array $new_lpa_store_format_response;
+
+    protected function setUp(): void
     {
         $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
         $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
@@ -288,7 +308,7 @@ class RemoveLpaTest extends TestCase
 
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], (string)$userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[0]['ViewerCode'], $userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -298,7 +318,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], (string)$userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[1]['ViewerCode'], $userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 
@@ -307,7 +327,7 @@ class RemoveLpaTest extends TestCase
             ->shouldNotBeCalled();
 
         $this->viewerCodesInterfaceProphecy
-            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], (string)$userActorLpa['ActorId'])
+            ->removeActorAssociation($this->viewerCodes[2]['ViewerCode'], $userActorLpa['ActorId'])
             ->willReturn(true)
             ->shouldBeCalled();
 

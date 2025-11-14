@@ -30,9 +30,10 @@ class FindActorInLpaTest extends TestCase
     use ProphecyTrait;
 
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatusProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->getAttorneyStatusProphecy = $this->prophesize(GetAttorneyStatus::class);
         $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);

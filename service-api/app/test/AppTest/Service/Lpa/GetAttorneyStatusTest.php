@@ -23,7 +23,7 @@ class GetAttorneyStatusTest extends TestCase
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy = $this->prophesize(LoggerInterface::class);
     }

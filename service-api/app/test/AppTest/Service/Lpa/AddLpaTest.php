@@ -27,15 +27,20 @@ class AddLpaTest extends TestCase
     use ProphecyTrait;
 
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private ActorCodeService|ObjectProphecy $actorCodeServiceProphecy;
+
     private LpaAlreadyAdded|ObjectProphecy $lpaAlreadyAddedProphecy;
 
     private string $userId;
+
     private string $actorCode;
+
     private string $lpaUid;
+
     private string $dob;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy           = $this->prophesize(LoggerInterface::class);
         $this->actorCodeServiceProphecy = $this->prophesize(ActorCodeService::class);
@@ -72,10 +77,10 @@ class AddLpaTest extends TestCase
                 ],
                 $this->userId
             );
-        } catch (LpaAlreadyAddedException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $ex->getCode());
-            $this->assertSame('LPA already added', $ex->getMessage());
-            $this->assertSame(['lpa added data'], $ex->getAdditionalData());
+        } catch (LpaAlreadyAddedException $lpaAlreadyAddedException) {
+            $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyAddedException->getCode());
+            $this->assertSame('LPA already added', $lpaAlreadyAddedException->getMessage());
+            $this->assertSame(['lpa added data'], $lpaAlreadyAddedException->getAdditionalData());
             return;
         }
 
@@ -170,9 +175,9 @@ class AddLpaTest extends TestCase
                 ],
                 $this->userId
             );
-        } catch (NotFoundException $ex) {
-            $this->assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $ex->getCode());
-            $this->assertSame('Code validation failed', $ex->getMessage());
+        } catch (NotFoundException $notFoundException) {
+            $this->assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
+            $this->assertSame('Code validation failed', $notFoundException->getMessage());
             return;
         }
 

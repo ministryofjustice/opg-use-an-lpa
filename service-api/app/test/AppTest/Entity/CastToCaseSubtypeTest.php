@@ -10,14 +10,16 @@ use InvalidArgumentException;
 use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CastToCaseSubtypeTest extends TestCase
 {
-    private ObjectMapper $mockHydrator;
+    private MockObject $mockHydrator;
+
     private CastToCaseSubtype $castToCaseSubtype;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mockHydrator      = $this->createMock(ObjectMapper::class);
         $this->castToCaseSubtype = new CastToCaseSubtype();
@@ -25,11 +27,10 @@ class CastToCaseSubtypeTest extends TestCase
 
     #[DataProvider('caseSubtypeProvider')]
     #[Test]
-    public function can_cast_case_subtype($caseSubType, $expectedCaseSubType): void
+    public function can_cast_case_subtype(string $caseSubType, string $expectedCaseSubType): void
     {
         $result = $this->castToCaseSubtype->cast($caseSubType, $this->mockHydrator);
-
-        $this->assertEquals($expectedCaseSubType, $result);
+        $this->assertSame($expectedCaseSubType, $result);
     }
 
     #[Test]

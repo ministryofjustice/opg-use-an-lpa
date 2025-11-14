@@ -19,9 +19,10 @@ use PHPUnit\Framework\TestCase;
 class AccessForAllValidationTest extends TestCase
 {
     private ActorMatch $actorMatch;
+
     private SiriusLpa|OldSiriusLpa $lpa;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->actorMatch = new ActorMatch(
             new SiriusLpaAttorney(
