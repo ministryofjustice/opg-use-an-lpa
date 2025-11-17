@@ -21,6 +21,7 @@ permissions:
   packages: none
   repository-projects: none
   statuses: none
+  id-token: write
 
 jobs:
   cleanup_pr_workspaces:
