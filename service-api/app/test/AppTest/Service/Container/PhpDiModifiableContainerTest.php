@@ -22,7 +22,7 @@ class PhpDiModifiableContainerTest extends TestCase
         $containerProphecy = $this->prophesize(ContainerInterface::class);
 
         $this->expectException(InvalidArgumentException::class);
-        $di = new PhpDiModifiableContainer($containerProphecy->reveal());
+        new PhpDiModifiableContainer($containerProphecy->reveal());
     }
 
     #[Test]

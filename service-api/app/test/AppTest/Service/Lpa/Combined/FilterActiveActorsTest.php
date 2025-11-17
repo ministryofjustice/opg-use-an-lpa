@@ -24,25 +24,27 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 
 class FilterActiveActorsTest extends TestCase
 {
     use ProphecyTrait;
 
     private GetAttorneyStatusInterface $attorney;
+
     private FilterActiveActors $filterActiveActors;
+
     private GetAttorneyStatus|ObjectProphecy $getAttorneyStatus;
+
     private GetTrustCorporationStatus|ObjectProphecy $getTrustCorporationStatus;
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private FilterActiveActorsInterface $lpa;
+
     private GetTrustCorporationStatusInterface $trustCorporation;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->getAttorneyStatus         = $this->prophesize(GetAttorneyStatus::class);
         $this->getTrustCorporationStatus = $this->prophesize(GetTrustCorporationStatus::class);
-        $this->loggerProphecy            = $this->prophesize(LoggerInterface::class);
         $this->filterActiveActors        = new FilterActiveActors(
             $this->getAttorneyStatus->reveal(),
             $this->getTrustCorporationStatus->reveal()

@@ -46,10 +46,10 @@ class CodeValidateTest extends TestCase
     {
         [$sut] = $this->makeSut();
 
-        self::assertSame('Barbara Gilson', $sut->donorName);
-        self::assertSame(LpaType::PERSONAL_WELFARE, $sut->lpaType);
-        self::assertSame(LpaStatus::REGISTERED, $sut->lpaStatus);
-        self::assertSame(LpaSource::LPASTORE, $sut->lpaSource);
+        $this->assertSame('Barbara Gilson', $sut->donorName);
+        $this->assertSame(LpaType::PERSONAL_WELFARE, $sut->lpaType);
+        $this->assertSame(LpaStatus::REGISTERED, $sut->lpaStatus);
+        $this->assertSame(LpaSource::LPASTORE, $sut->lpaSource);
     }
 
     #[Test]
@@ -57,6 +57,6 @@ class CodeValidateTest extends TestCase
     {
         [$sut, $expected] = $this->makeSut();
 
-        self::assertSame($expected, $sut->jsonSerialize());
+        $this->assertSame($expected, $sut->jsonSerialize());
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AppTest\Exception;
 
-use App\Exception\AbstractApiException;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -22,10 +21,7 @@ class ApiExceptionTest extends TestCase
     {
         $instance = ApiException::create('test');
 
-        $this->assertInstanceOf(ApiException::class, $instance);
-        $this->assertInstanceOf(AbstractApiException::class, $instance);
-
-        $this->assertEquals('test', $instance->getMessage());
+        $this->assertSame('test', $instance->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $instance->getCode());
     }
 
@@ -52,14 +48,11 @@ class ApiExceptionTest extends TestCase
 
         $ex = ApiException::create($message, $responseProphecy->reveal());
 
-        $this->assertInstanceOf(ApiException::class, $ex);
-        $this->assertInstanceOf(AbstractApiException::class, $ex);
+        $this->assertSame(ApiException::DEFAULT_TITLE, $ex->getTitle());
+        $this->assertSame($additionalData, $ex->getAdditionalData());
+        $this->assertSame($additionalData, $ex->getAdditionalDataForLogging());
 
-        $this->assertEquals(ApiException::DEFAULT_TITLE, $ex->getTitle());
-        $this->assertEquals($additionalData, $ex->getAdditionalData());
-        $this->assertEquals($additionalData, $ex->getAdditionalDataForLogging());
-
-        $this->assertEquals($message, $ex->getMessage());
+        $this->assertSame($message, $ex->getMessage());
         $this->assertEquals(404, $ex->getCode());
     }
 
@@ -85,10 +78,7 @@ class ApiExceptionTest extends TestCase
 
         $instance = ApiException::create($message, $responseProphecy->reveal());
 
-        $this->assertInstanceOf(ApiException::class, $instance);
-        $this->assertInstanceOf(AbstractApiException::class, $instance);
-
-        $this->assertEquals('test exception message', $instance->getMessage());
+        $this->assertSame('test exception message', $instance->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $instance->getCode());
     }
 
@@ -112,10 +102,7 @@ class ApiExceptionTest extends TestCase
 
         $instance = ApiException::create($message, $responseProphecy->reveal());
 
-        $this->assertInstanceOf(ApiException::class, $instance);
-        $this->assertInstanceOf(AbstractApiException::class, $instance);
-
-        $this->assertEquals('HTTP: 500 - ' . print_r($body, true), $instance->getMessage());
+        $this->assertSame('HTTP: 500 - ' . print_r($body, true), $instance->getMessage());
 
         $this->assertEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $instance->getCode());
     }
@@ -137,10 +124,7 @@ class ApiExceptionTest extends TestCase
 
         $instance = ApiException::create($message, $responseProphecy->reveal());
 
-        $this->assertInstanceOf(ApiException::class, $instance);
-        $this->assertInstanceOf(AbstractApiException::class, $instance);
-
-        $this->assertEquals('HTTP: 500 - Unexpected API response', $instance->getMessage());
+        $this->assertSame('HTTP: 500 - Unexpected API response', $instance->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $instance->getCode());
     }
 
@@ -149,10 +133,7 @@ class ApiExceptionTest extends TestCase
     {
         $instance = ApiException::create('This is an exception', null);
 
-        $this->assertInstanceOf(ApiException::class, $instance);
-        $this->assertInstanceOf(AbstractApiException::class, $instance);
-
-        $this->assertEquals('This is an exception', $instance->getMessage());
+        $this->assertSame('This is an exception', $instance->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_INTERNAL_SERVER_ERROR, $instance->getCode());
         $this->assertIsArray($instance->getAdditionalData());
         $this->assertIsArray($instance->getAdditionalDataForLogging());

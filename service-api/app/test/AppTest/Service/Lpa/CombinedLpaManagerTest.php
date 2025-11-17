@@ -13,6 +13,7 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
+use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
 use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
@@ -23,6 +24,8 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     LpaDataFormatter,
     ResolveActor};
+use App\Service\Lpa\ResolveActor\ActorType;
+use App\Service\Lpa\ResolveActor\LpaActor;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -40,23 +43,34 @@ class CombinedLpaManagerTest extends TestCase
     use ProphecyTrait;
 
     private DataStoreLpas|ObjectProphecy $dataStoreLpasProphecy;
+
     private FilterActiveActors|ObjectProphecy $filterActiveActorsProphecy;
+
     private ObjectProphecy|InstructionsAndPreferencesImagesInterface $instructionsAndPreferencesImagesProphecy;
+
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
+
     private LoggerInterface|ObjectProphecy $loggerProphecy;
+
     private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
+
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
+
     private ResolveLpaTypes|ObjectProphecy $resolveLpaTypesProphecy;
+
     private SiriusLpas|ObjectProphecy $siriusLpasProphecy;
+
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
+
     private ObjectProphecy|ViewerCodes $viewerCodesActivityProphecy;
+
     private ObjectProphecy|ViewerCodes $viewerCodesProphecy;
 
     /**
      * @throws InterfaceNotFoundException
      * @throws DoubleException
      */
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->userLpaActorMapInterfaceProphecy         = $this->prophesize(UserLpaActorMapInterface::class);
         $this->siriusLpasProphecy                       = $this->prophesize(SiriusLpas::class);
@@ -74,7 +88,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function can_get_all_active_for_user()
+    public function can_get_all_active_for_user(): void
     {
         $testUserId = 'test-user-id';
 
@@ -125,9 +139,9 @@ class CombinedLpaManagerTest extends TestCase
                 $dataStoreLpaResponse->getData(),
                 $userLpaActorMapResponse[0]['ActorId'],
             )->willReturn(
-                new ResolveActor\LpaActor(
+                new LpaActor(
                     $dataStoreLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
+                    ActorType::ATTORNEY
                 )
             );
         $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
@@ -138,12 +152,12 @@ class CombinedLpaManagerTest extends TestCase
         $this->assertCount(1, $result);
         $this->assertArrayHasKey('token-2', $result);
         $this->assertArrayNotHasKey('token-3', $result);
-        $this->assertSame($result['token-2']['user-lpa-actor-token'], 'token-2');
+        $this->assertSame('token-2', $result['token-2']['user-lpa-actor-token']);
         $this->assertEquals($dataStoreLpaResponse->getData(), $result['token-2']['lpa']);
     }
 
     #[Test]
-    public function can_get_all_for_user()
+    public function can_get_all_for_user(): void
     {
         $testUserId = 'test-user-id';
 
@@ -200,9 +214,9 @@ class CombinedLpaManagerTest extends TestCase
                 $siriusLpaResponse->getData(),
                 $userLpaActorMapResponse[0]['ActorId'],
             )->willReturn(
-                new ResolveActor\LpaActor(
+                new LpaActor(
                     $siriusLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
+                    ActorType::ATTORNEY
                 )
             );
         $this->resolveActorProphecy
@@ -210,9 +224,9 @@ class CombinedLpaManagerTest extends TestCase
                 $dataStoreLpaResponse->getData(),
                 $userLpaActorMapResponse[1]['ActorId'],
             )->willReturn(
-                new ResolveActor\LpaActor(
+                new LpaActor(
                     $dataStoreLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
+                    ActorType::ATTORNEY
                 )
             );
         $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
@@ -224,14 +238,14 @@ class CombinedLpaManagerTest extends TestCase
         $this->assertCount(2, $result);
         $this->assertArrayHasKey('token-1', $result);
         $this->assertArrayHasKey('token-2', $result);
-        $this->assertSame($result['token-1']['user-lpa-actor-token'], 'token-1');
-        $this->assertSame($result['token-2']['user-lpa-actor-token'], 'token-2');
+        $this->assertSame('token-1', $result['token-1']['user-lpa-actor-token']);
+        $this->assertSame('token-2', $result['token-2']['user-lpa-actor-token']);
         $this->assertEquals($siriusLpaResponse->getData(), $result['token-1']['lpa']);
         $this->assertEquals($dataStoreLpaResponse->getData(), $result['token-2']['lpa']);
     }
 
     #[Test]
-    public function returns_missing_if_lpa_not_fetched()
+    public function returns_missing_if_lpa_not_fetched(): void
     {
         $testUserId = 'test-user-id';
 
@@ -262,12 +276,12 @@ class CombinedLpaManagerTest extends TestCase
 
         $this->assertCount(1, $result);
         $this->assertArrayHasKey('token-1', $result);
-        $this->assertSame($result['token-1']['user-lpa-actor-token'], 'token-1');
-        $this->assertSame($result['token-1']['error'], 'NO_LPA_FOUND');
+        $this->assertSame('token-1', $result['token-1']['user-lpa-actor-token']);
+        $this->assertSame('NO_LPA_FOUND', $result['token-1']['error']);
     }
 
     #[Test]
-    public function can_get_by_sirius_uid()
+    public function can_get_by_sirius_uid(): void
     {
         $testUid = '700000000047';
 
@@ -316,12 +330,13 @@ class CombinedLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid);
+        $this->assertInstanceOf(LpaInterface::class, $result);
 
         $this->assertEquals($filteredLpa, $result->getData());
     }
 
     #[Test]
-    public function can_get_by_lpastore_uid()
+    public function can_get_by_lpastore_uid(): void
     {
         $testUid    = 'M-7890-0400-4003';
         $testUserId = 'test-user-id';
@@ -365,12 +380,13 @@ class CombinedLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid, $testUserId);
+        $this->assertInstanceOf(LpaInterface::class, $result);
 
         $this->assertEquals($filteredLpa, $result->getData());
     }
 
     #[Test]
-    public function get_by_sirius_uid_returns_null_when_no_lpa_data()
+    public function get_by_sirius_uid_returns_null_when_no_lpa_data(): void
     {
         $testUid = '700000000047';
 
@@ -379,11 +395,11 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid);
 
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaInterface::class, $result);
     }
 
     #[Test]
-    public function can_get_by_user_lpa_actor_token_sirius()
+    public function can_get_by_user_lpa_actor_token_sirius(): void
     {
         $testLpaToken = 'token-1';
         $testUserId   = 'userId-1';
@@ -422,9 +438,9 @@ class CombinedLpaManagerTest extends TestCase
                 $siriusLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(
-                new ResolveActor\LpaActor(
+                new LpaActor(
                     $siriusLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
+                    ActorType::ATTORNEY
                 )
             );
         $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
@@ -437,7 +453,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function can_get_by_user_lpa_actor_token_lpastore()
+    public function can_get_by_user_lpa_actor_token_lpastore(): void
     {
         $testLpaToken = 'token-2';
         $testUserId   = 'userId-1';
@@ -480,9 +496,9 @@ class CombinedLpaManagerTest extends TestCase
                 $dataStoreLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(
-                new ResolveActor\LpaActor(
+                new LpaActor(
                     $dataStoreLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
+                    ActorType::ATTORNEY
                 )
             );
         $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
@@ -495,7 +511,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function get_by_user_lpa_actor_token_sirius_returns_null_when_user_not_match()
+    public function get_by_user_lpa_actor_token_sirius_returns_null_when_user_not_match(): void
     {
         $testLpaToken = 'token-1';
         $testUserId   = 'userId-1';
@@ -517,7 +533,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function get_by_user_lpa_actor_token_datastore_returns_null_when_lpa_data_missing()
+    public function get_by_user_lpa_actor_token_datastore_returns_null_when_lpa_data_missing(): void
     {
         $testLpaToken = 'token-1';
         $testUserId   = 'userId-1';
@@ -554,7 +570,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_get_by_viewer_code_when_not_in_database()
+    public function cannot_get_by_viewer_code_when_not_in_database(): void
     {
         $service = $this->getLpaService();
 
@@ -563,7 +579,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_get_siriuslpa_by_viewer_code_when_lpa_no_longer_available()
+    public function cannot_get_siriuslpa_by_viewer_code_when_lpa_no_longer_available(): void
     {
         $this->viewerCodesProphecy
             ->get('code')
@@ -588,7 +604,7 @@ class CombinedLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_get_lpastore_by_viewer_code_when_lpa_no_longer_available()
+    public function cannot_get_lpastore_by_viewer_code_when_lpa_no_longer_available(): void
     {
         $testCode = 'code';
 

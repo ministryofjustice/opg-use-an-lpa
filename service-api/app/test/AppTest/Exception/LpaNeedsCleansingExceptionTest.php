@@ -21,10 +21,10 @@ class LpaNeedsCleansingExceptionTest extends TestCase
 
         $sut = new LpaNeedsCleansingException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('LPA needs cleansing', $sut->getMessage());
+        $this->assertSame('LPA needs cleansing', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 
@@ -39,7 +39,7 @@ class LpaNeedsCleansingExceptionTest extends TestCase
 
         $sut = new LpaNeedsCleansingException($additionalData);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'actor_id' => '1234',
             ],

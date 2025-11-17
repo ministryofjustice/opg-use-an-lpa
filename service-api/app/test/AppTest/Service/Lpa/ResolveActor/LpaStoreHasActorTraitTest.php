@@ -15,18 +15,15 @@ use App\Service\Lpa\ResolveActor\LpaStoreHasActorTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class LpaStoreHasActorTraitTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
-
     private HasActorInterface $mock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mock = new class (
             $this->prophesize(LoggerInterface::class)->reveal()
@@ -35,11 +32,9 @@ class LpaStoreHasActorTraitTest extends TestCase
 
             public function __construct(private LoggerInterface $logger)
             {
-                $this->attorneys = $this->getAttorneys();
-
+                $this->attorneys         = $this->getAttorneys();
                 $this->trustCorporations = $this->getTrustCorporations();
-
-                $this->donor = $this->getDonor();
+                $this->donor             = $this->getDonor();
             }
 
             private function getDonor(): LpaStoreDonor
@@ -157,7 +152,7 @@ class LpaStoreHasActorTraitTest extends TestCase
     {
         $result = $this->mock->hasActor('012345678');
 
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
     }
 
     #[Test]
@@ -166,7 +161,7 @@ class LpaStoreHasActorTraitTest extends TestCase
         $result = $this->mock->hasActor('123456789');
 
         $this->assertInstanceOf(LpaActor::class, $result);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
     }
 
     #[Test]
@@ -176,7 +171,7 @@ class LpaStoreHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->firstnames);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
     }
 
     #[Test]
@@ -186,6 +181,6 @@ class LpaStoreHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->name);
-        $this->assertEquals(ActorType::TRUST_CORPORATION, $result->actorType);
+        $this->assertSame(ActorType::TRUST_CORPORATION, $result->actorType);
     }
 }

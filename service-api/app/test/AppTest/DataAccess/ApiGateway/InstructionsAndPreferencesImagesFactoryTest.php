@@ -77,6 +77,6 @@ class InstructionsAndPreferencesImagesFactoryTest extends TestCase
         $factory = new InstructionsAndPreferencesImagesFactory();
 
         $this->expectException(Exception::class);
-        $instructionsAndPreferencesImages = $factory($containerProphecy->reveal());
+        $factory($containerProphecy->reveal());
     }
 }

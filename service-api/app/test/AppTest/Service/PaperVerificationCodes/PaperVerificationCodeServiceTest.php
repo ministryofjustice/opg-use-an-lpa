@@ -22,6 +22,7 @@ use App\Value\PaperVerificationCode;
 use AppTest\LpaUtilities;
 use DateInterval;
 use DateTimeImmutable;
+use Iterator;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -69,7 +70,6 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $now = new DateTimeImmutable();
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn($now);
 
@@ -77,15 +77,15 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $result = $sut->usable($params);
 
-        $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
-        $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
+        $this->assertSame('Feeg Bundlaaaa', $result->donorName);
+        $this->assertSame(LpaType::PERSONAL_WELFARE, $result->lpaType);
         $this->assertEqualsWithDelta(
             $now->setTime(0, 0)->add(new DateInterval('P1Y')),
             $result->expiresAt,
             0
         );
-        $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
-        $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
+        $this->assertSame(LpaStatus::REGISTERED, $result->lpaStatus);
+        $this->assertSame(LpaSource::LPASTORE, $result->lpaSource);
     }
 
     #[Test]
@@ -149,7 +149,6 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
 
@@ -196,7 +195,6 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
 
@@ -204,9 +202,9 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         try {
             $sut->usable($params);
-        } catch (GoneException $e) {
-            $this->assertEquals('Paper verification code expired', $e->getMessage());
-            $this->assertEquals('cancelled', $e->getAdditionalData()['reason']);
+        } catch (GoneException $goneException) {
+            $this->assertSame('Paper verification code expired', $goneException->getMessage());
+            $this->assertEquals('cancelled', $goneException->getAdditionalData()['reason']);
             return;
         }
 
@@ -249,7 +247,6 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(LpaUtilities::lpaStoreResponseFixture());
 
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
 
@@ -342,7 +339,6 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $now = new DateTimeImmutable();
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn($now);
 
@@ -350,15 +346,15 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $result = $sut->validate($params);
 
-        $this->assertEquals('Feeg Bundlaaaa', $result->donorName);
-        $this->assertEquals(LpaType::PERSONAL_WELFARE, $result->lpaType);
+        $this->assertSame('Feeg Bundlaaaa', $result->donorName);
+        $this->assertSame(LpaType::PERSONAL_WELFARE, $result->lpaType);
         $this->assertEqualsWithDelta(
             $now->add(new DateInterval('P1Y'))->setTime(0, 0),
             $result->expiresAt,
             0
         );
-        $this->assertEquals(LpaStatus::REGISTERED, $result->lpaStatus);
-        $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
+        $this->assertSame(LpaStatus::REGISTERED, $result->lpaStatus);
+        $this->assertSame(LpaSource::LPASTORE, $result->lpaSource);
     }
 
     #[Test]
@@ -440,7 +436,6 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $now = new DateTimeImmutable();
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn($now);
 
@@ -450,64 +445,62 @@ class PaperVerificationCodeServiceTest extends TestCase
         $sut->validate($params);
     }
 
-    public static function validationDataProvider(): array
+    public static function validationDataProvider(): Iterator
     {
-        return [
-            'uid_is_incorrect'            => [
-                new PaperVerificationCodeValidate(
-                    name: 'Bundlaaaa',
-                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-1111-1111-1111'),
-                    sentToDonor: false,
-                    attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
-                    noOfAttorneys: 1,
-                ),
-            ],
-            'name_is_incorrect'           => [
-                new PaperVerificationCodeValidate(
-                    name: 'Bundlaaaa',
-                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-7890-0400-4003'),
-                    sentToDonor: false,
-                    attorneyName: 'Steven Alexander Miller',
-                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
-                    noOfAttorneys: 1,
-                ),
-            ],
-            'attorney_dob_is_incorrect'   => [
-                new PaperVerificationCodeValidate(
-                    name: 'Bundlaaaa',
-                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-7890-0400-4003'),
-                    sentToDonor: false,
-                    attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1970-03-12'),
-                    noOfAttorneys: 1,
-                ),
-            ],
-            'donor_dob_is_incorrect'      => [
-                new PaperVerificationCodeValidate(
-                    name: 'Bundlaaaa',
-                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-7890-0400-4003'),
-                    sentToDonor: true,
-                    attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1983-06-19'),
-                    noOfAttorneys: 1,
-                ),
-            ],
-            'attorney_count_is_incorrect' => [
-                new PaperVerificationCodeValidate(
-                    name: 'Bundlaaaa',
-                    code: new PaperVerificationCode('P-1234-1234-1234-12'),
-                    lpaUid: new LpaUid('M-7890-0400-4003'),
-                    sentToDonor: false,
-                    attorneyName: 'Herman Seakrest',
-                    dateOfBirth: new DateTimeImmutable('1982-07-24'),
-                    noOfAttorneys: 3,
-                ),
-            ],
+        yield 'uid_is_incorrect' => [
+            new PaperVerificationCodeValidate(
+                name: 'Bundlaaaa',
+                code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                lpaUid: new LpaUid('M-1111-1111-1111'),
+                sentToDonor: false,
+                attorneyName: 'Herman Seakrest',
+                dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                noOfAttorneys: 1,
+            ),
+        ];
+        yield 'name_is_incorrect' => [
+            new PaperVerificationCodeValidate(
+                name: 'Bundlaaaa',
+                code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                lpaUid: new LpaUid('M-7890-0400-4003'),
+                sentToDonor: false,
+                attorneyName: 'Steven Alexander Miller',
+                dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                noOfAttorneys: 1,
+            ),
+        ];
+        yield 'attorney_dob_is_incorrect' => [
+            new PaperVerificationCodeValidate(
+                name: 'Bundlaaaa',
+                code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                lpaUid: new LpaUid('M-7890-0400-4003'),
+                sentToDonor: false,
+                attorneyName: 'Herman Seakrest',
+                dateOfBirth: new DateTimeImmutable('1970-03-12'),
+                noOfAttorneys: 1,
+            ),
+        ];
+        yield 'donor_dob_is_incorrect' => [
+            new PaperVerificationCodeValidate(
+                name: 'Bundlaaaa',
+                code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                lpaUid: new LpaUid('M-7890-0400-4003'),
+                sentToDonor: true,
+                attorneyName: 'Herman Seakrest',
+                dateOfBirth: new DateTimeImmutable('1983-06-19'),
+                noOfAttorneys: 1,
+            ),
+        ];
+        yield 'attorney_count_is_incorrect' => [
+            new PaperVerificationCodeValidate(
+                name: 'Bundlaaaa',
+                code: new PaperVerificationCode('P-1234-1234-1234-12'),
+                lpaUid: new LpaUid('M-7890-0400-4003'),
+                sentToDonor: false,
+                attorneyName: 'Herman Seakrest',
+                dateOfBirth: new DateTimeImmutable('1982-07-24'),
+                noOfAttorneys: 3,
+            ),
         ];
     }
 
@@ -554,7 +547,6 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $now = new DateTimeImmutable();
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn($now);
 
@@ -581,7 +573,7 @@ class PaperVerificationCodeServiceTest extends TestCase
 
         $result = $sut->view($params);
 
-        $this->assertEquals(LpaSource::LPASTORE, $result->lpaSource);
+        $this->assertSame(LpaSource::LPASTORE, $result->lpaSource);
         $this->assertEquals($lpa, $result->lpa);
         $this->assertTrue($auditLog);
     }
@@ -626,7 +618,6 @@ class PaperVerificationCodeServiceTest extends TestCase
             ->willReturn(null);
 
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
 
@@ -669,13 +660,11 @@ class PaperVerificationCodeServiceTest extends TestCase
             );
 
         $lpaManager
-            ->expects($this->any())
             ->method('getByUid')
             ->with($params->lpaUid, originator: $params->code)
             ->willReturn(null);
 
         $clock
-            ->expects($this->any())
             ->method('now')
             ->willReturn(new DateTimeImmutable());
 

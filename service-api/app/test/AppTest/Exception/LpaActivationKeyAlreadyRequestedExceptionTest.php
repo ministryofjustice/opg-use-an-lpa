@@ -21,10 +21,10 @@ class LpaActivationKeyAlreadyRequestedExceptionTest extends TestCase
 
         $sut = new LpaActivationKeyAlreadyRequestedException($additionalData);
 
-        $this->assertEquals('Bad Request', $sut->getTitle());
-        $this->assertEquals($additionalData, $sut->getAdditionalData());
+        $this->assertSame('Bad Request', $sut->getTitle());
+        $this->assertSame($additionalData, $sut->getAdditionalData());
 
-        $this->assertEquals('Activation key already requested for LPA', $sut->getMessage());
+        $this->assertSame('Activation key already requested for LPA', $sut->getMessage());
         $this->assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $sut->getCode());
     }
 
@@ -43,7 +43,7 @@ class LpaActivationKeyAlreadyRequestedExceptionTest extends TestCase
 
         $sut = new LpaActivationKeyAlreadyRequestedException($additionalData);
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'donor'                => [
                     'uId' => '700000000047',

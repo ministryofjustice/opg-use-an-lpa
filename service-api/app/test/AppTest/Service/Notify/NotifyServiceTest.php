@@ -22,7 +22,7 @@ class NotifyServiceTest extends TestCase
 
     private EmailClient|ObjectProphecy $emailClientProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->loggerProphecy      = $this->prophesize(LoggerInterface::class);
         $this->emailClientProphecy = $this->prophesize(EmailClient::class);
@@ -63,7 +63,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -93,7 +93,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -151,7 +151,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -177,7 +177,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -207,7 +207,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -237,7 +237,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -265,7 +265,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -299,7 +299,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -317,7 +317,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameter not set to send an email');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -349,7 +349,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -365,7 +365,7 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 
     #[Test]
@@ -393,6 +393,6 @@ class NotifyServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Parameters count do not match expected');
-        $result = $notify($emailTemplate, $requestData);
+        $notify($emailTemplate, $requestData);
     }
 }

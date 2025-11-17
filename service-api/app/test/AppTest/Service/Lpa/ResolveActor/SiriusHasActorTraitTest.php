@@ -12,17 +12,15 @@ use App\Service\Lpa\SiriusPerson;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class SiriusHasActorTraitTest extends TestCase
 {
     use ProphecyTrait;
 
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
     private HasActorInterface $mock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mock = new class (
             $this->prophesize(LoggerInterface::class)->reveal()
@@ -84,7 +82,7 @@ class SiriusHasActorTraitTest extends TestCase
     {
         $result = $this->mock->hasActor('012345678');
 
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
     }
 
     #[Test]
@@ -94,7 +92,7 @@ class SiriusHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals(1, $result->actor['id']);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
     }
 
     #[Test]
@@ -104,7 +102,7 @@ class SiriusHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor['firstname']);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
     }
 
     #[Test]
@@ -114,6 +112,6 @@ class SiriusHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor['companyName']);
-        $this->assertEquals(ActorType::TRUST_CORPORATION, $result->actorType);
+        $this->assertSame(ActorType::TRUST_CORPORATION, $result->actorType);
     }
 }

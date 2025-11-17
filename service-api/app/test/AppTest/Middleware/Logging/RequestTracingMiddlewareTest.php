@@ -32,8 +32,8 @@ class RequestTracingMiddlewareTest extends TestCase
             ->handle($requestProphecy->reveal())
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
-        $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
+        $rtm = new RequestTracingMiddleware($containerProphecy->reveal());
+        $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class RequestTracingMiddlewareTest extends TestCase
             ->handle($requestProphecy->reveal())
             ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
 
-        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
-        $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
+        $rtm = new RequestTracingMiddleware($containerProphecy->reveal());
+        $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
     }
 }

@@ -12,10 +12,12 @@ use Psr\Container\ContainerInterface;
 class AbstractFunctionalTestCase extends TestCase
 {
     protected Application $application;
+
     protected ContainerInterface $container;
+
     protected PhpDiModifiableContainer $containerModifier;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -29,7 +31,7 @@ class AbstractFunctionalTestCase extends TestCase
         $this->application       = $this->container->get(Application::class);
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');

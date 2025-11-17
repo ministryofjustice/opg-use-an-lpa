@@ -6,6 +6,7 @@ namespace AppTest\Value;
 
 use App\Enum\LpaSource;
 use App\Value\LpaUid;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -21,11 +22,9 @@ class LpaUidTest extends TestCase
         $this->assertEquals($source, $sut->getLpaSource());
     }
 
-    public static function lpaData(): array
+    public static function lpaData(): Iterator
     {
-        return [
-            'sirius type'    => ['700000000047', LpaSource::SIRIUS],
-            'lpa store type' => ['M-7890-0400-4003', LpaSource::LPASTORE],
-        ];
+        yield 'sirius type' => ['700000000047', LpaSource::SIRIUS];
+        yield 'lpa store type' => ['M-7890-0400-4003', LpaSource::LPASTORE];
     }
 }

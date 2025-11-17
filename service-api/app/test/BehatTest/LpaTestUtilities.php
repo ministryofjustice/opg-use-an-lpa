@@ -17,9 +17,6 @@ class LpaTestUtilities
     /**
      * Iterates recursively through an Lpa stdClass object (e.g. as returned out of a json_decode) and transforms
      * Sirius style UIDs by removing the hyphens.
-     *
-     * @param stdClass $data
-     * @return stdClass
      */
     public static function SanitiseSiriusLpaUIds(stdClass $data): stdClass
     {
@@ -33,6 +30,7 @@ class LpaTestUtilities
                 foreach ($value as $item) {
                     $sanitisedItems[] = self::SanitiseSiriusLpaUIds($item);
                 }
+
                 $value = $sanitisedItems;
             }
         }
@@ -42,10 +40,7 @@ class LpaTestUtilities
 
     /**
      * @template T
-     * @param array  $data
-     * @param string $entity
      * @psalm-param class-string<T> $entity
-     * @return Lpa|Person
      * @psalm-return T
      * @throws UnableToHydrateObject
      */

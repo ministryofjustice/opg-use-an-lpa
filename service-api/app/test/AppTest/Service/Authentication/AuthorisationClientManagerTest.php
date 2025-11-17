@@ -12,6 +12,7 @@ use App\Service\Secrets\KeyPairManagerInterface;
 use Facile\OpenIDClient\Issuer\IssuerInterface;
 use Jose\Component\Core\JWK;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -26,12 +27,16 @@ class AuthorisationClientManagerTest extends TestCase
     use ProphecyTrait;
 
     private ObjectProphecy|CacheFactory $cacheFactory;
+
     private ObjectProphecy|ClientInterface $httpClient;
+
     private ObjectProphecy|IssuerBuilder $issuerBuilder;
+
     private ObjectProphecy|JWKFactory $jwkFactory;
+
     private ObjectProphecy|KeyPairManagerInterface $keyPairManager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->httpClient     = $this->prophesize(ClientInterface::class);
         $this->cacheFactory   = $this->prophesize(CacheFactory::class);
@@ -41,9 +46,10 @@ class AuthorisationClientManagerTest extends TestCase
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function it_can_be_instantiated(): void
     {
-        $sut = new AuthorisationClientManager(
+        new AuthorisationClientManager(
             'fakeClientId',
             'http://fakeUrl',
             $this->jwkFactory->reveal(),
@@ -52,8 +58,6 @@ class AuthorisationClientManagerTest extends TestCase
             $this->cacheFactory->reveal(),
             $this->httpClient->reveal(),
         );
-
-        $this->assertInstanceOf(AuthorisationClientManager::class, $sut);
     }
 
     #[Test]

@@ -16,8 +16,8 @@ class CodeGeneratorTest extends TestCase
          * They should therefore only be changed with caution and consideration.
          * Thus them appearing here.
          */
-        $this->assertEquals(12, CodeGenerator::CODE_LENGTH);
-        $this->assertEquals('36789BDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
+        $this->assertSame(12, CodeGenerator::CODE_LENGTH);
+        $this->assertSame('36789BDFGHJKMPQRTVWXY', CodeGenerator::ALLOWED_CHARACTERS);
     }
 
     /**
@@ -43,7 +43,7 @@ class CodeGeneratorTest extends TestCase
             //---
 
             // All should be 12 characters
-            $this->assertEquals(CodeGenerator::CODE_LENGTH, strlen($code));
+            $this->assertSame(CodeGenerator::CODE_LENGTH, strlen($code));
 
             //---
 

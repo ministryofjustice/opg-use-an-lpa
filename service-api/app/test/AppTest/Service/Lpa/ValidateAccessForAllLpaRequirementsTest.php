@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 use App\Exception\BadRequestException;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
+use DateTimeImmutable;
 use Exception;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
-use DateTimeImmutable;
 
 #[CoversClass(ValidateAccessForAllLpaRequirements::class)]
 class ValidateAccessForAllLpaRequirementsTest extends TestCase
 {
-    private LoggerInterface|MockObject $mockLogger;
+    private MockObject $mockLogger;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->mockLogger = $this->createMock(LoggerInterface::class);
     }

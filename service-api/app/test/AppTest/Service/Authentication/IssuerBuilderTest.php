@@ -7,6 +7,7 @@ namespace AppTest\Service\Authentication;
 use App\Service\Authentication\IssuerBuilder;
 use Facile\JoseVerifier\JWK\JwksProviderBuilder;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -14,22 +15,22 @@ class IssuerBuilderTest extends TestCase
 {
     private IssuerBuilder $issuerBuilder;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->issuerBuilder = new IssuerBuilder();
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_set_metadata_provider_builder(): void
     {
-        $issuerBuilder = $this->issuerBuilder->setMetadataProviderBuilder(new MetadataProviderBuilder());
-        self::assertInstanceOf(IssuerBuilder::class, $issuerBuilder);
+        $this->issuerBuilder->setMetadataProviderBuilder(new MetadataProviderBuilder());
     }
 
     #[Test]
+    #[DoesNotPerformAssertions]
     public function can_set_jwks_provider_builder(): void
     {
-        $issuerBuilder = $this->issuerBuilder->setJwksProviderBuilder(new JwksProviderBuilder());
-        self::assertInstanceOf(IssuerBuilder::class, $issuerBuilder);
+        $this->issuerBuilder->setJwksProviderBuilder(new JwksProviderBuilder());
     }
 }

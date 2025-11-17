@@ -16,7 +16,7 @@ use RuntimeException;
  */
 class SdkFactory
 {
-    public function __invoke(ContainerInterface $container)
+    public function __invoke(ContainerInterface $container): Sdk
     {
         $config = $container->get('config');
 

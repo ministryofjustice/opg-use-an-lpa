@@ -101,7 +101,6 @@ class OidcUtilities
     /**
      * Generates an elliptic-curve keypair
      *
-     * @param array $options
      * @return array{
      *     string,
      *     string,
@@ -125,7 +124,6 @@ class OidcUtilities
             throw new Exception('Unable to export key to string');
         }
 
-        /** @var array{string, string} */
         return [$privateKey, $details['key']];
     }
 
@@ -134,7 +132,6 @@ class OidcUtilities
      *
      * @param string $payload A json encoded array structure representing a JWT.
      * @param string $key A public or private key in PEM format. Must be an EC key.
-     * @return string
      */
     public static function signToken(string $payload, string $key): string
     {

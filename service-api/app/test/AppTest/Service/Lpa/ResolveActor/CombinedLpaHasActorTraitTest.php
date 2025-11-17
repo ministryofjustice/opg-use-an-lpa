@@ -26,9 +26,10 @@ use PHPUnit\Framework\TestCase;
 class CombinedLpaHasActorTraitTest extends TestCase
 {
     private HasActorInterface $siriusMock;
+
     private HasActorInterface $lpaStoreMock;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->siriusMock = new SiriusLpa(
             applicationHasGuidance:     false,
@@ -107,15 +108,15 @@ class CombinedLpaHasActorTraitTest extends TestCase
                 firstname:    'Rachel',
                 id:           '123456789',
                 linked:       [
-                                  [
-                                      'id'  => '123456789',
-                                      'uId' => '7123456789',
-                                  ],
-                                  [
-                                      'id'  => '234567890',
-                                      'uId' => '7234567890',
-                                  ],
-                              ],
+                    [
+                        'id'  => '123456789',
+                        'uId' => '7123456789',
+                    ],
+                    [
+                        'id'  => '234567890',
+                        'uId' => '7234567890',
+                    ],
+                ],
                 middlenames:  null,
                 otherNames:   null,
                 postcode:     'DN37 5SH',
@@ -297,10 +298,10 @@ class CombinedLpaHasActorTraitTest extends TestCase
     public function does_not_find_nonexistent_actor(): void
     {
         $result = $this->siriusMock->hasActor('012345678');
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
 
         $result = $this->lpaStoreMock->hasActor('012345678');
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
     }
 
     #[Test]
@@ -308,11 +309,11 @@ class CombinedLpaHasActorTraitTest extends TestCase
     {
         $result = $this->siriusMock->hasActor('7123456789');
         $this->assertInstanceOf(LpaActor::class, $result);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
 
         $result = $this->lpaStoreMock->hasActor('7123456789');
         $this->assertInstanceOf(LpaActor::class, $result);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
     }
 
     #[Test]
@@ -320,14 +321,14 @@ class CombinedLpaHasActorTraitTest extends TestCase
     {
         $result = $this->siriusMock->hasActor('123456789');
         $this->assertInstanceOf(LpaActor::class, $result);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
 
         $result = $this->lpaStoreMock->hasActor('123456789');
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
 
         $result = $this->lpaStoreMock->hasActor('7123456789');
         $this->assertInstanceOf(LpaActor::class, $result);
-        $this->assertEquals(ActorType::DONOR, $result->actorType);
+        $this->assertSame(ActorType::DONOR, $result->actorType);
     }
 
     #[Test]
@@ -336,12 +337,12 @@ class CombinedLpaHasActorTraitTest extends TestCase
         $result = $this->siriusMock->hasActor('7456789012');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->firstname);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
 
         $result = $this->lpaStoreMock->hasActor('7456789012');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->firstnames);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
     }
 
     #[Test]
@@ -350,15 +351,15 @@ class CombinedLpaHasActorTraitTest extends TestCase
         $result = $this->siriusMock->hasActor('567890123');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('C', $result->actor->firstname);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
 
         $result = $this->lpaStoreMock->hasActor('567890123');
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
 
         $result = $this->lpaStoreMock->hasActor('7567890123');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('C', $result->actor->firstnames);
-        $this->assertEquals(ActorType::ATTORNEY, $result->actorType);
+        $this->assertSame(ActorType::ATTORNEY, $result->actorType);
     }
 
     #[Test]
@@ -368,7 +369,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
 
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('A', $result->actor->name);
-        $this->assertEquals(ActorType::TRUST_CORPORATION, $result->actorType);
+        $this->assertSame(ActorType::TRUST_CORPORATION, $result->actorType);
     }
 
     #[Test]
@@ -377,14 +378,14 @@ class CombinedLpaHasActorTraitTest extends TestCase
         $result = $this->siriusMock->hasActor('789012345');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->name);
-        $this->assertEquals(ActorType::TRUST_CORPORATION, $result->actorType);
+        $this->assertSame(ActorType::TRUST_CORPORATION, $result->actorType);
 
         $result = $this->lpaStoreMock->hasActor('789012345');
-        $this->assertNull($result);
+        $this->assertNotInstanceOf(LpaActor::class, $result);
 
         $result = $this->lpaStoreMock->hasActor('7789012345');
         $this->assertInstanceOf(LpaActor::class, $result);
         $this->assertEquals('B', $result->actor->name);
-        $this->assertEquals(ActorType::TRUST_CORPORATION, $result->actorType);
+        $this->assertSame(ActorType::TRUST_CORPORATION, $result->actorType);
     }
 }

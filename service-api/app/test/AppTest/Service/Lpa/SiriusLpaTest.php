@@ -47,13 +47,13 @@ class SiriusLpaTest extends TestCase
             $this->loggerProphecy->reveal(),
         );
 
-        $this->assertEquals(700000000000, $sut['uId']);
+        $this->assertSame(700000000000, $sut['uId']);
 
         $sut['status'] = 'active';
-        $this->assertEquals('active', $sut['status']);
+        $this->assertSame('active', $sut['status']);
 
         unset($sut['status']);
-        $this->assertFalse(isset($sut['status']));
+        $this->assertArrayNotHasKey('status', $sut);
     }
 
     #[Test]
@@ -81,7 +81,7 @@ class SiriusLpaTest extends TestCase
             $this->loggerProphecy->reveal(),
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             [
                 'uId' => 700000000000,
             ],
@@ -121,7 +121,7 @@ class SiriusLpaTest extends TestCase
         $this->assertSame('700000000000', $sut->getUid());
         $this->assertSame('Registered', $sut->getStatus());
         $this->assertEquals(new DateTimeImmutable('2019-08-31'), $sut->getRegistrationDate());
-        $this->assertSame(false, $sut->getLpaIsCleansed());
+        $this->assertFalse($sut->getLpaIsCleansed());
     }
 
     #[Test]

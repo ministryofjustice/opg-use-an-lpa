@@ -23,7 +23,7 @@ class RequestSignerFactoryTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         // Keys from the documentation
         // https://docs.aws.amazon.com/sdk-for-php/v3/developer-guide/guide_credentials_environment.html
@@ -31,7 +31,7 @@ class RequestSignerFactoryTest extends TestCase
         putenv('AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY');
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         putenv('AWS_ACCESS_KEY_ID=');
         putenv('AWS_SECRET_ACCESS_KEY=');
@@ -58,10 +58,10 @@ class RequestSignerFactoryTest extends TestCase
         $jwtGenerator
             ->__invoke(Argument::any(), Argument::any())
             ->shouldBeCalled()
-            ->will(function (array $args) {
+            ->will(function (array $args): string {
                 Assert::assertStringContainsString(
                     'urn:opg:poas:use:users:my_user_identifier',
-                    $args[1]->getPayload()
+                    (string) $args[1]->getPayload()
                 );
 
                 return 'signed_jwt_string';

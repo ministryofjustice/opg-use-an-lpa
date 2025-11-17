@@ -87,9 +87,9 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
         $actorCode = $sut->validateCode('ISAVALIDCODE', '700000000001', '1959-08-10');
 
-        self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
-        self::assertEquals('700000000001', $actorCode->getData()->actorUid);
+        $this->assertTrue($this->builder->verify());
+        $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        $this->assertSame('700000000001', $actorCode->getData()->actorUid);
     }
 
     #[Test]
@@ -136,10 +136,10 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
         $actorCode = $sut->validateCode('ISAVALIDCODE', 'M-1234-1234-1234', '1959-08-10');
 
-        self::assertTrue($this->builder->verify());
-        self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
-        self::assertEquals('74673c83-05ba-4886-beb1-daaa36fb7984', $actorCode->getData()->actorUid);
-        self::assertTrue($actorCode->getData()->hasPaperVerificationCode);
+        $this->assertTrue($this->builder->verify());
+        $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
+        $this->assertSame('74673c83-05ba-4886-beb1-daaa36fb7984', $actorCode->getData()->actorUid);
+        $this->assertTrue($actorCode->getData()->hasPaperVerificationCode);
     }
 
     #[Test]
@@ -184,6 +184,6 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
         $sut->flagCodeAsUsed('ISAVALIDCODE');
 
-        self::assertTrue($this->builder->verify());
+        $this->assertTrue($this->builder->verify());
     }
 }

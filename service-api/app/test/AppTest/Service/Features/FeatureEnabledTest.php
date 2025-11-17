@@ -40,7 +40,7 @@ class FeatureEnabledTest extends TestCase
         $sut = new FeatureEnabled($flags);
 
         $this->expectException(RuntimeException::class);
-        $enabled = $sut('other_feature_name');
+        $sut('other_feature_name');
     }
 
     #[Test]
@@ -53,6 +53,6 @@ class FeatureEnabledTest extends TestCase
         $sut = new FeatureEnabled($flags);
 
         $this->expectException(RuntimeException::class);
-        $enabled = $sut('feature_name');
+        $sut('feature_name');
     }
 }

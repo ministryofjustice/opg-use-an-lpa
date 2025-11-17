@@ -21,9 +21,10 @@ class EmailClientTest extends TestCase
     private string $defaultLocale;
 
     private const EN_LOCALE = 'en_GB';
+
     private const CY_LOCALE = 'cy_GB';
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->notifyClientProphecy = $this->prophesize(NotifyClient::class);
         $this->defaultLocale        = self::EN_LOCALE;
@@ -435,7 +436,7 @@ class EmailClientTest extends TestCase
     }
 
     #[Test]
-    public function can_send_account_activation_key_request_confirmation_email_when_lpa_needs_cleanse_if_locale_is_cy(): void
+    public function can_send_account_activation_key_request_confirmation_email_lpa_needs_cleanse_locale_is_cy(): void
     {
         $recipient          = 'a@b.com';
         $referenceNumber    = '700000000138';

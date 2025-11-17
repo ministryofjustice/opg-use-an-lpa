@@ -12,7 +12,9 @@ use App\DataAccess\Repository\Response\ActorCodeExists;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Exception\ApiException;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
+use Iterator;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +33,7 @@ class ActorCodesTest extends TestCase
 
     private ObjectProphecy|RequestSignerFactory $requestSignerFactoryProphecy;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
@@ -76,7 +78,7 @@ class ActorCodesTest extends TestCase
         $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
 
         $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
-        $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
+        $this->assertSame('test-actor', $actorCode->getData()->actorUid);
     }
 
     #[Test]
@@ -114,7 +116,7 @@ class ActorCodesTest extends TestCase
         $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
 
         $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
-        $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
+        $this->assertSame('test-actor', $actorCode->getData()->actorUid);
         $this->assertTrue($actorCode->getData()->hasPaperVerificationCode);
     }
 
@@ -336,16 +338,14 @@ class ActorCodesTest extends TestCase
                 $actorCode->getData()->createdAt
             );
         } else {
-            $this->assertNull($actorCode->getData()->createdAt);
+            $this->assertNotInstanceOf(DateTimeInterface::class, $actorCode->getData()->createdAt);
         }
     }
 
-    public static function codeExistsResponse(): array
+    public static function codeExistsResponse(): Iterator
     {
-        return [
-            'code does not exist' => [null],
-            'code exists'         => ['2021-01-01'],
-        ];
+        yield 'code does not exist' => [null];
+        yield 'code exists' => ['2021-01-01'];
     }
 
     #[Test]

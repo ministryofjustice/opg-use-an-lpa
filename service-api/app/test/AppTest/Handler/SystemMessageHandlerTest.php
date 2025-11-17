@@ -17,7 +17,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class SystemMessageHandlerTest extends TestCase
 {
-    private SystemMessage|MockObject $systemMessageService;
+    private MockObject $systemMessageService;
+
     private SystemMessageHandler $handler;
 
     /**

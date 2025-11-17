@@ -10,7 +10,6 @@ use App\Service\Secrets\OneLoginIdentityKeyPairManager;
 use App\Service\Secrets\Secret;
 use App\Service\Secrets\SecretManagerInterface;
 use InvalidArgumentException;
-use Jose\Component\Core\JWK;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +22,7 @@ class JWKFactoryTest extends TestCase
 
     private ObjectProphecy|OneLoginIdentityKeyPairManager $keyPairManager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $key = openssl_pkey_new(
             [
@@ -34,6 +33,7 @@ class JWKFactoryTest extends TestCase
         if ($key === false) {
             throw new InvalidArgumentException('Unable to create the key');
         }
+
         $details = openssl_pkey_get_details($key);
         if (! is_array($details)) {
             throw new InvalidArgumentException('Unable to get key details');
@@ -45,6 +45,7 @@ class JWKFactoryTest extends TestCase
         if (!$success) {
             throw new InvalidArgumentException('Unable to export key to string');
         }
+
         $keyPair = new KeyPair('public', new HiddenString($key1, false, true));
 
         $this->keyPairManager = $this->prophesize(OneLoginIdentityKeyPairManager::class);
@@ -56,11 +57,10 @@ class JWKFactoryTest extends TestCase
     public function can_create_an_async_keypair_jwk(): void
     {
         $jwk = (new JWKFactory())($this->keyPairManager->reveal());
-        self::assertInstanceOf(JWK::class, $jwk);
-        self::assertTrue($jwk->has('alg'));
-        self::assertTrue($jwk->has('use'));
-        self::assertEquals('RS256', $jwk->get('alg'));
-        self::assertEquals('sig', $jwk->get('use'));
+        $this->assertTrue($jwk->has('alg'));
+        $this->assertTrue($jwk->has('use'));
+        $this->assertEquals('RS256', $jwk->get('alg'));
+        $this->assertEquals('sig', $jwk->get('use'));
     }
 
     #[Test]
@@ -72,11 +72,10 @@ class JWKFactoryTest extends TestCase
         $secretManager->getAlgorithm()->willReturn('HS256');
 
         $jwk = (new JWKFactory())($secretManager->reveal());
-        self::assertInstanceOf(JWK::class, $jwk);
-        self::assertTrue($jwk->has('alg'));
-        self::assertTrue($jwk->has('use'));
-        self::assertEquals('HS256', $jwk->get('alg'));
-        self::assertEquals('sig', $jwk->get('use'));
-        self::assertEquals('dGVzdF9zZWNyZXQ', $jwk->get('k')); // Base64UrlEncoded 'test_secret'
+        $this->assertTrue($jwk->has('alg'));
+        $this->assertTrue($jwk->has('use'));
+        $this->assertEquals('HS256', $jwk->get('alg'));
+        $this->assertEquals('sig', $jwk->get('use'));
+        $this->assertEquals('dGVzdF9zZWNyZXQ', $jwk->get('k')); // Base64UrlEncoded 'test_secret'
     }
 }
