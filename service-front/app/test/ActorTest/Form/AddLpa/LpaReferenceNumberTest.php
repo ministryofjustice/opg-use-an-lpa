@@ -41,6 +41,6 @@ class LpaReferenceNumberTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new LpaReferenceNumber($guardProphecy->reveal());
+        $this->form    = new LpaReferenceNumber($guardProphecy->reveal(), false);
     }
 }

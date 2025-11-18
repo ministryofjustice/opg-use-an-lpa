@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ActorTest\Form\RequestActivationKey;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Actor\Form\RequestActivationKey\RequestReferenceNumber;
 use Common\Form\AbstractForm;
@@ -49,7 +50,7 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $this->guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form          = new RequestReferenceNumber($this->guardProphecy->reveal(), true);
+        $this->form          = new RequestReferenceNumber($this->guardProphecy->reveal(), true, false);
     }
 
     #[Test]
@@ -67,11 +68,51 @@ class RequestReferenceNumberTest extends TestCase implements TestsLaminasForm
     #[Test]
     public function it_sets_correct_validator_when_flag_set_to_false(): void
     {
-        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false);
+        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), false, false);
 
         $validators = $this->getForm()->getInputFilterSpecification()['opg_reference_number']['validators'];
         $key        = array_search(StringLength::class, array_column($validators, 'name'));
 
         $this->assertStringContainsString($validators[$key]['name'], StringLength::class);
+    }
+
+    public static function validationProvider(): array
+    {
+        return [
+            'sirius valid when all disabled'          => [true, '700000000047', false, false],
+            'sirius valid when all enabled'           => [true, '700000000047', true, true],
+            'sirius invalid when too short'           => [false, '70000000047', false, false],
+            'sirius invalid when too long'            => [false, '7000000000047', false, false],
+            'sirius invalid with bad check digit'     => [false, '700000000046', false, false],
+            'sirius invalid with letters'             => [false, '7000000X0047', false, false],
+            'meris (2) valid when enabled'            => [true, '2000000', true, false],
+            'meris (3) valid when enabled'            => [true, '3000000', true, false],
+            'meris must start with 2 or 3'            => [false, '4000000', true, false],
+            'meris must have length of 7'             => [false, '200000', true, false],
+            'meris invalid when disabled'             => [false, '2000000', false, false],
+            'modernised valid when enabled'           => [true, 'M-1234-5678-9018', false, true],
+            'modernised valid lowercase'              => [true, 'm-1234-5678-9018', false, true],
+            'modernised invalid when disbled'         => [false, 'M-1234-5678-9018', false, false],
+            'modernised invalid when too short'       => [false, 'M-1234-5678-901', false, true],
+            'modernised invalid when too long'        => [false, 'M-1234-5678-90181', false, true],
+            'modernised invalid with bad check digit' => [false, 'M-1234-5678-9017', false, true],
+        ];
+    }
+
+    #[Test]
+    #[DataProvider('validationProvider')]
+    public function it_validates(bool $isValid, string $referenceNumber, bool $meris, bool $paperVerification): void
+    {
+        $this->guardProphecy->generateToken()->willReturn('abcdef');
+        $this->guardProphecy->validateToken('abcdef')->willReturn(true);
+        $this->form = new RequestReferenceNumber($this->guardProphecy->reveal(), $meris, $paperVerification);
+
+        $this->form->prepare();
+        $this->form->setData([
+            '__csrf'               => 'abcdef',
+            'opg_reference_number' => $referenceNumber,
+        ]);
+
+        $this->assertEquals($isValid, $this->form->isValid());
     }
 }

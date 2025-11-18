@@ -27,7 +27,7 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_element(form.get('reference_number'), {
-                        'hint': 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>'| trans,
+                        'hint': feature_enabled('paper_verification') ? 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333.' | trans : 'LPA reference numbers are 12 numbers long, for example 7000-0000-0000.' | trans,
                         'attr' : {'class': 'govuk-input--width-20', 'label_class': 'govuk-label--m'},
                         'aria_labelledby': 'ref_number_heading'
                     }) }}

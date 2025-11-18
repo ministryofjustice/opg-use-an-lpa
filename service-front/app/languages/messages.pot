@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-10-24T17:33:29+00:00\n"
+"POT-Creation-Date: 2025-11-18T14:03:27+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -1632,7 +1632,7 @@ msgid "The reference number is in the same letter that has your activation key."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
-msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
+msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
 msgstr ""
 
 #: src/Actor/templates/actor/login-notification.html.twig:15
@@ -5312,4 +5312,9 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-code-cancelled.html.twig:20
 msgid "If they’re now using the LPA online, they’ll be able to make an access code for you to use instead."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
 msgstr ""
