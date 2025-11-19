@@ -6,6 +6,7 @@ namespace Actor\Form\AddLpa;
 
 use Common\Filter\StripSpacesAndHyphens;
 use Common\Form\AbstractForm;
+use Common\Validator\DammCheck;
 use Common\Validator\LuhnCheck;
 use Common\Validator\SiriusReferenceStartsWithCheck;
 use Laminas\Filter\StringTrim;
@@ -19,7 +20,7 @@ class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInte
 {
     public const string FORM_NAME = 'lpa_add_reference_number';
 
-    public function __construct(CsrfGuardInterface $csrfGuard)
+    public function __construct(CsrfGuardInterface $csrfGuard, private bool $paperVerification)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
@@ -57,7 +58,7 @@ class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInte
                         'options'                => [
                             'encoding' => 'UTF-8',
                             'min'      => 12,
-                            'max'      => 12,
+                            'max'      => $this->paperVerification ? 13 : 12,
                             'messages' => [
                                 StringLength::TOO_LONG  => 'The LPA reference number you entered is too long',
                                 StringLength::TOO_SHORT => 'The LPA reference number you entered is too short',
@@ -68,7 +69,7 @@ class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInte
                         'name'                   => Regex::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'pattern' => '/^\d{12}$/',
+                            'pattern' => $this->paperVerification ? '/^(M|m)?\d{12}$/' : '/^\d{12}$/',
                             'message' => 'Enter the LPA reference number in the correct format',
                         ],
                     ],
@@ -78,6 +79,9 @@ class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInte
                     ],
                     [
                         'name' => LuhnCheck::class,
+                    ],
+                    [
+                        'name' => DammCheck::class,
                     ],
                 ],
             ],

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-10-24T17:33:29+00:00\n"
+"POT-Creation-Date: 2025-11-18T14:03:27+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.8\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
 msgid "We've got your activation key request"
@@ -2371,9 +2371,9 @@ msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 msgid ""
-"LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br><br>"
+"LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
 msgstr ""
-"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000.<br><br>"
+"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
 
 #: src/Actor/templates/actor/login-notification.html.twig:15
 msgid "We are changing the way you sign in to Use a lasting power of attorney"
@@ -7424,3 +7424,12 @@ msgid ""
 msgstr ""
 "Os ydynt bellach yn defnyddio’r LPA ar-lein, byddant yn gallu creu cod "
 "mynediad i chi ei ddefnyddio."
+
+#: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+msgid ""
+"LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some "
+"LPA reference numbers start with an M, for example M-1111-2222-3333."
+msgstr ""
+"Mae cyfeirnodau LPA yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae "
+"rhai cyfeirnodau LPA yn dechrau gyda M, er enghraifft M-1111-2222-3333."

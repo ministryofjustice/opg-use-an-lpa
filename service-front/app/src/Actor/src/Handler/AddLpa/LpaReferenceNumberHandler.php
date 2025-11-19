@@ -5,11 +5,15 @@ declare(strict_types=1);
 namespace Actor\Handler\AddLpa;
 
 use Actor\Form\AddLpa\LpaReferenceNumber;
+use Common\Service\Features\FeatureEnabled;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Helper\UrlHelper;
+use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * @codeCoverageIgnore
@@ -18,6 +22,14 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
 {
     private LpaReferenceNumber $form;
 
+    public function __construct(
+        protected TemplateRendererInterface $renderer,
+        protected UrlHelper $urlHelper,
+        protected LoggerInterface $logger,
+        private FeatureEnabled $featureEnabled,
+    ) {
+    }
+
     /**
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -25,7 +37,10 @@ class LpaReferenceNumberHandler extends AbstractAddLpaHandler
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new LpaReferenceNumber($this->getCsrfGuard($request));
+        $this->form = new LpaReferenceNumber(
+            $this->getCsrfGuard($request),
+            ($this->featureEnabled)('paper_verification'),
+        );
         return parent::handle($request);
     }
 

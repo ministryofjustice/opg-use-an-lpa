@@ -11,6 +11,7 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Validator\ValidatorChainFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
@@ -36,7 +37,8 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
     {
         $this->form = new RequestReferenceNumber(
             $this->getCsrfGuard($request),
-            ($this->featureEnabled)('allow_meris_lpas')
+            ($this->featureEnabled)('allow_meris_lpas'),
+            ($this->featureEnabled)('paper_verification')
         );
 
         return parent::handle($request);
