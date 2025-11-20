@@ -23,6 +23,7 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     LpaDataFormatter,
     ResolveActor};
+use App\Value\LpaUid;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -269,7 +270,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_sirius_uid()
     {
-        $testUid = '700000000047';
+        $testUid = new LpaUid('700000000047');
 
         $lpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(
@@ -323,7 +324,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_lpastore_uid()
     {
-        $testUid    = 'M-7890-0400-4003';
+        $testUid    = new LpaUid('M-7890-0400-4003');
         $testUserId = 'test-user-id';
 
         $lpaResponse = new Lpa(
@@ -372,7 +373,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function get_by_sirius_uid_returns_null_when_no_lpa_data()
     {
-        $testUid = '700000000047';
+        $testUid = new LpaUid('700000000047');
 
         $this->siriusLpasProphecy->get($testUid)->willReturn(null);
 

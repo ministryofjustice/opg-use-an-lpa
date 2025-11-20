@@ -22,6 +22,7 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     SiriusLpa,
     SiriusLpaManager,
     SiriusPerson};
+use App\Value\LpaUid;
 use DateInterval;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
@@ -81,7 +82,7 @@ class SiriusLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_id(): void
     {
-        $testUid = '700012349874';
+        $testUid = new LpaUid('700012349874');
 
         $lpaResponse = new Lpa(
             new SiriusLpa(

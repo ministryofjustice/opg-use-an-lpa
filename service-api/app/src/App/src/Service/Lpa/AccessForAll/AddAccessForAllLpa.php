@@ -16,6 +16,7 @@ use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
+use App\Value\LpaUid;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -152,7 +153,7 @@ class AddAccessForAllLpa
      */
     private function fetchLPAData(int $referenceNumber): SiriusLpa|CombinedSiriusLpa
     {
-        $lpa = $this->lpaManager->getByUid((string) $referenceNumber);
+        $lpa = $this->lpaManager->getByUid(new LpaUid((string) $referenceNumber));
         if ($lpa === null) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',

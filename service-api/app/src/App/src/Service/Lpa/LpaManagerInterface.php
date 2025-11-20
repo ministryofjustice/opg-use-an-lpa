@@ -11,18 +11,19 @@ use App\Exception\ApiException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Value\LpaUid;
 
 interface LpaManagerInterface
 {
     /**
      * Get an LPA using the ID value
      *
-     * @param string $uid           Unique ID of LPA to fetch
+     * @param LpaUid $uid           Unique ID of LPA to fetch
      * @param ?string $originatorId A unique identifier that allows upstread auditing of requests
      * @return LpaInterface|null    A processed LPA data transfer object
      * @throws ApiException
      */
-    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface;
+    public function getByUid(LpaUid $uid, ?string $originatorId = null): ?LpaInterface;
 
     /**
      * Given a user token and a user id (who should own the token), return the actor and LPA details

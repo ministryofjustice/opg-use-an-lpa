@@ -9,6 +9,7 @@ use App\Service\Log\EventCodes;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\LpaManagerInterface;
+use App\Value\LpaUid;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -46,7 +47,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
             throw new BadRequestException('Required data missing to request an lpa cleanse');
         }
 
-        $lpa     = $this->lpaManager->getByUid((string) $requestData['reference_number']);
+        $lpa     = $this->lpaManager->getByUid(new LpaUid((string) $requestData['reference_number']));
         $lpaData = $lpa->getData();
 
         $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);

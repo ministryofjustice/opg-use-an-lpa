@@ -7,6 +7,7 @@ namespace App\Service\ActorCodes;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Exception\ActorCodeMarkAsUsedException;
 use App\Exception\ActorCodeValidationException;
+use App\Value\LpaUid;
 
 interface CodeValidationStrategyInterface
 {
@@ -16,7 +17,7 @@ interface CodeValidationStrategyInterface
      *
      * @throws ActorCodeValidationException Thrown when the validation of a set of details fails
      */
-    public function validateCode(string $code, string $uid, string $dob): ActorCodeIsValid;
+    public function validateCode(string $code, LpaUid $uid, string $dob): ActorCodeIsValid;
 
     /**
      * Marks a one-time-use actor code as used and returns the id of the UserLpaActorMap linking record.

@@ -11,6 +11,7 @@ use App\DataAccess\ApiGateway\SignatureType;
 use App\DataAccess\Repository\Response\ActorCodeExists;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Exception\ApiException;
+use App\Value\LpaUid;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -73,7 +74,7 @@ class ActorCodesTest extends TestCase
             'test-trace-id',
         );
 
-        $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
+        $actorCode = $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
 
         $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
         $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
@@ -111,7 +112,7 @@ class ActorCodesTest extends TestCase
             'test-trace-id',
         );
 
-        $actorCode = $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
+        $actorCode = $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
 
         $this->assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
         $this->assertEquals('test-actor', $actorCode->getData()->actorUid);
@@ -150,7 +151,7 @@ class ActorCodesTest extends TestCase
         );
 
         $this->expectException(ApiException::class);
-        $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
+        $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
     }
 
     #[Test]
@@ -190,7 +191,7 @@ class ActorCodesTest extends TestCase
         );
 
         $this->expectException(ApiException::class);
-        $service->validateCode($testData['code'], $testData['lpa'], $testData['dob']);
+        $service->validateCode($testData['code'], new LpaUid($testData['lpa']), $testData['dob']);
     }
 
     #[Test]

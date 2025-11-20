@@ -10,6 +10,7 @@ use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\DataAccess\Repository\Response\ResponseInterface;
 use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\Exception\ApiException;
+use App\Value\LpaUid;
 use DateTimeImmutable;
 
 class ActorCodes extends AbstractApiClient implements ActorCodesInterface
@@ -20,16 +21,12 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
      * @psalm-return ResponseInterface<ActorCodeIsValid>
      * @throws ApiException
      */
-    public function validateCode(string $code, string $uid, string $dob): ResponseInterface
+    public function validateCode(string $code, LpaUid $uid, string $dob): ResponseInterface
     {
-        if ($uid[0] === 'M' && strlen($uid) === 13) {
-            $uid = 'M-' . substr($uid, 1, 4) . '-' . substr($uid, 5, 4) . '-' . substr($uid, 9, 4);
-        }
-
         $response = $this->makePostRequest(
             'v1/validate',
             [
-                'lpa'  => $uid,
+                'lpa'  => $uid->getLpaUid(),
                 'dob'  => $dob,
                 'code' => $code,
             ],

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Enum\LpaSource;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\Combined\FilterActiveActors;
@@ -17,6 +18,7 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
+use App\Value\LpaUid;
 use DateTime;
 use Psr\Log\LoggerInterface;
 
@@ -35,9 +37,9 @@ class SiriusLpaManager implements LpaManagerInterface
     ) {
     }
 
-    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface
+    public function getByUid(LpaUid $uid, ?string $originatorId = null): ?LpaInterface
     {
-        $lpa = $this->lpaRepository->get($uid);
+        $lpa = $this->lpaRepository->get($uid->getLpaUid());
         if ($lpa === null) {
             return null;
         }
@@ -59,7 +61,7 @@ class SiriusLpaManager implements LpaManagerInterface
             return null;
         }
 
-        $lpa = $this->getByUid($map['SiriusUid']);
+        $lpa = $this->getByUid(new LpaUid($map['SiriusUid']));
 
         if ($lpa === null) {
             return null;
@@ -118,7 +120,7 @@ class SiriusLpaManager implements LpaManagerInterface
             throw new NotFoundException();
         }
 
-        $lpa = $this->getByUid($viewerCodeData['SiriusUid']);
+        $lpa = $this->getByUid(new LpaUid($viewerCodeData['SiriusUid']));
 
         //---
 

@@ -7,6 +7,7 @@ namespace App\DataAccess\Repository;
 use App\DataAccess\Repository\Response\ActorCodeExists;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\DataAccess\Repository\Response\ResponseInterface;
+use App\Value\LpaUid;
 
 interface ActorCodesInterface
 {
@@ -16,7 +17,7 @@ interface ActorCodesInterface
      *
      * @psalm-return ResponseInterface<ActorCodeIsValid>
      */
-    public function validateCode(string $code, string $uid, string $dob): ResponseInterface;
+    public function validateCode(string $code, LpaUid $uid, string $dob): ResponseInterface;
 
     /**
      * Marks a given actor code as used. It will not be able to be used again.

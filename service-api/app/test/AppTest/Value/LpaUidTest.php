@@ -14,18 +14,20 @@ class LpaUidTest extends TestCase
 {
     #[Test]
     #[DataProvider('lpaData')]
-    public function it_correctly_identifies_the_lpa_type(string $uid, LpaSource $source): void
+    public function it_correctly_identifies_the_lpa_type(string $input, string $lpaUid, LpaSource $source): void
     {
-        $sut = new LpaUid($uid);
+        $sut = new LpaUid($input);
 
+        $this->assertEquals($lpaUid, $sut->getLpaUid());
         $this->assertEquals($source, $sut->getLpaSource());
     }
 
     public static function lpaData(): array
     {
         return [
-            'sirius type'    => ['700000000047', LpaSource::SIRIUS],
-            'lpa store type' => ['M-7890-0400-4003', LpaSource::LPASTORE],
+            'sirius type'                => ['700000000047', '700000000047', LpaSource::SIRIUS],
+            'lpa store type'             => ['M-7890-0400-4003', 'M-7890-0400-4003', LpaSource::LPASTORE],
+            'lpa store type unformatted' => ['M789004004003', 'M-7890-0400-4003', LpaSource::LPASTORE],
         ];
     }
 }

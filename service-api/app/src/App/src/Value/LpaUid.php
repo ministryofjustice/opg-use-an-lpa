@@ -13,8 +13,15 @@ use App\Enum\LpaSource;
  */
 class LpaUid
 {
-    public function __construct(private string $lpaUid)
+    private string $lpaUid;
+
+    public function __construct(string $value)
     {
+        if ($value[0] === 'M' && strlen($value) === 13) {
+            $this->lpaUid = 'M-' . substr($value, 1, 4) . '-' . substr($value, 5, 4) . '-' . substr($value, 9, 4);
+        } else {
+            $this->lpaUid = $value;
+        }
     }
 
     public function getLpaUid(): string
