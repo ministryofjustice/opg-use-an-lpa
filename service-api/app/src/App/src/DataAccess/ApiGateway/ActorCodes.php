@@ -22,6 +22,10 @@ class ActorCodes extends AbstractApiClient implements ActorCodesInterface
      */
     public function validateCode(string $code, string $uid, string $dob): ResponseInterface
     {
+        if ($uid[0] === 'M' && strlen($uid) === 13) {
+            $uid = 'M-' . substr($uid, 1, 4) . '-' . substr($uid, 5, 4) . '-' . substr($uid, 9, 4);
+        }
+
         $response = $this->makePostRequest(
             'v1/validate',
             [

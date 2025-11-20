@@ -44,9 +44,13 @@ class CombinedLpaManager implements LpaManagerInterface
      */
     public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface
     {
+        if ($uid[0] === 'M' && strlen($uid) === 13) {
+            $uid = 'M-' . substr($uid, 1, 4) . '-' . substr($uid, 5, 4) . '-' . substr($uid, 9, 4);
+        }
+
         $lpa = str_starts_with($uid, '7')
             ? $this->siriusLpas->get($uid)
-            : $this->dataStoreLpas->setOriginatorId($originatorId)->get($uid);
+            : $this->dataStoreLpas->setOriginatorId($originatorId ?? '')->get($uid);
 
         if ($lpa === null) {
             return null;

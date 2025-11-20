@@ -103,6 +103,7 @@ services:
       DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
       SUPPORT_DATASTORE_LPAS: "true"
+      PAPER_VERIFICATION: "true"
 
       # Local only
       API_SERVICE_URL:
