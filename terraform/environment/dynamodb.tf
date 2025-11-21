@@ -27,9 +27,10 @@ resource "aws_dynamodb_table" "use_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
-
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
@@ -67,8 +68,10 @@ resource "aws_dynamodb_table" "stats_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
@@ -163,8 +166,10 @@ resource "aws_dynamodb_table" "use_users_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
@@ -215,8 +220,10 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
@@ -257,8 +264,10 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
@@ -331,8 +340,10 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
   }
 
