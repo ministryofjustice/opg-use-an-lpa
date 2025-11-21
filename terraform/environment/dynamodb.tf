@@ -1,9 +1,10 @@
 resource "aws_dynamodb_table" "use_codes_table" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "ActorCode"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "ActorCode"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
   server_side_encryption {
     enabled = true
   }
@@ -12,8 +13,6 @@ resource "aws_dynamodb_table" "use_codes_table" {
     name = "ActorCode"
     type = "S"
   }
-
-  deletion_protection_enabled = local.environment.is_production
 
   point_in_time_recovery {
     enabled = true
@@ -28,25 +27,25 @@ resource "aws_dynamodb_table" "use_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
-
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "stats_table" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "TimePeriod"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "TimePeriod"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+
+
   #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled = true
@@ -57,7 +56,6 @@ resource "aws_dynamodb_table" "stats_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = local.environment.is_production
 
   point_in_time_recovery {
     enabled = true
@@ -70,24 +68,24 @@ resource "aws_dynamodb_table" "stats_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "use_users_table" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "Id"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "Id"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+
   server_side_encryption {
     enabled = true
   }
@@ -120,8 +118,6 @@ resource "aws_dynamodb_table" "use_users_table" {
     name = "EmailResetToken"
     type = "S"
   }
-
-  deletion_protection_enabled = local.environment.is_production
 
   global_secondary_index {
     name            = "IdentityIndex"
@@ -170,24 +166,23 @@ resource "aws_dynamodb_table" "use_users_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "viewer_codes_table" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "ViewerCode"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "ViewerCode"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
   server_side_encryption {
     enabled = true
   }
@@ -207,8 +202,6 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = local.environment.is_production
-
   global_secondary_index {
     name            = "SiriusUidIndex"
     hash_key        = "SiriusUid"
@@ -227,26 +220,25 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "viewer_activity_table" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_activity.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "ViewerCode"
-  range_key        = "Viewed"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_activity.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "ViewerCode"
+  range_key                   = "Viewed"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+
   server_side_encryption {
     enabled = true
   }
@@ -260,7 +252,6 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     type = "S"
   }
 
-  deletion_protection_enabled = local.environment.is_production
 
   point_in_time_recovery {
     enabled = true
@@ -273,25 +264,24 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
 }
 
 resource "aws_dynamodb_table" "user_lpa_actor_map" {
-  name             = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}"
-  billing_mode     = "PAY_PER_REQUEST"
-  hash_key         = "Id"
-  stream_enabled   = true
-  stream_view_type = "NEW_AND_OLD_IMAGES"
+  name                        = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}"
+  billing_mode                = "PAY_PER_REQUEST"
+  hash_key                    = "Id"
+  stream_enabled              = true
+  stream_view_type            = "NEW_AND_OLD_IMAGES"
+  deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+
   server_side_encryption {
     enabled = true
   }
@@ -315,8 +305,6 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     name = "SiriusUid"
     type = "S"
   }
-
-  deletion_protection_enabled = local.environment.is_production
 
   global_secondary_index {
     name            = "ActivationCodeIndex"
@@ -352,13 +340,11 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     ]
 
     content {
-      region_name    = replica.value.name
-      propagate_tags = true
+      region_name                 = replica.value.name
+      propagate_tags              = true
+      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      point_in_time_recovery      = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = false
   }
 
   provider = aws.eu_west_1
