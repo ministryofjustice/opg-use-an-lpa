@@ -33,10 +33,6 @@ resource "aws_dynamodb_table" "use_codes_table" {
     }
   }
 
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
-  }
-
   provider = aws.eu_west_1
 }
 
@@ -74,10 +70,6 @@ resource "aws_dynamodb_table" "stats_table" {
       region_name    = replica.value.name
       propagate_tags = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
   }
 
   provider = aws.eu_west_1
@@ -176,10 +168,6 @@ resource "aws_dynamodb_table" "use_users_table" {
     }
   }
 
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
-  }
-
   provider = aws.eu_west_1
 }
 
@@ -232,10 +220,6 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     }
   }
 
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
-  }
-
   provider = aws.eu_west_1
 }
 
@@ -276,11 +260,6 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
       region_name    = replica.value.name
       propagate_tags = true
     }
-  }
-
-
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
   }
 
   provider = aws.eu_west_1
@@ -355,10 +334,6 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
       region_name    = replica.value.name
       propagate_tags = true
     }
-  }
-
-  lifecycle {
-    prevent_destroy = local.environment.dynamodb_tables.deletion_protection_enabled
   }
 
   provider = aws.eu_west_1
