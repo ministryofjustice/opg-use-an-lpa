@@ -48,7 +48,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function throws_api_exception_for_request_signing_errors_on_single_lpa(): void
     {
-        $uid          = 'M-7890-0400-4003';
+        $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -115,7 +115,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function throws_api_exception_when_hydration_fails_on_single_lpa(): void
     {
-        $uid          = 'M-7890-0400-4003';
+        $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -167,7 +167,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function can_get_an_lpa(): void
     {
-        $uid          = 'M-7890-0400-4003';
+        $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -221,7 +221,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function handles_a_not_found_response_from_the_api(): void
     {
-        $uid          = 'M-7890-0400-4003';
+        $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -270,7 +270,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function can_lookup_multiple_lpas(): void
     {
-        $uids         = ['M-7890-0400-4003', 'M-789Q-X7DT-5PDP', 'M-WILL-FAIL-HYDR'];
+        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP', 'M-WILL-FAIL-HYDR'];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -282,7 +282,7 @@ class DataStoreLpasTest extends TestCase
                 json_encode(
                     [
                         'lpas' => [
-                            ['uid' => 'M-7890-0400-4003', 'registrationDate' => '2022-02-16'],
+                            ['uid' => 'M-7890-0400-4000', 'registrationDate' => '2022-02-16'],
                             ['uid' => 'M-789Q-X7DT-5PDP', 'registrationDate' => null],
                             ['uid' => 'M-WILL-FAIL-HYDR', 'registrationDate' => null],
                         ],
@@ -317,7 +317,7 @@ class DataStoreLpasTest extends TestCase
             ->willReturn($responseProphecy->reveal());
 
         $this->lpaDataFormatterProphecy
-            ->__invoke(['uid' => 'M-7890-0400-4003', 'registrationDate' => '2022-02-16'])
+            ->__invoke(['uid' => 'M-7890-0400-4000', 'registrationDate' => '2022-02-16'])
             ->shouldBeCalled()
             ->willReturn($this->prophesize(Lpa::class)->reveal());
 
@@ -354,7 +354,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_response_error_during_multiple_lpa_lookup(): void
     {
-        $uids         = ['M-7890-0400-4003', 'M-789Q-X7DT-5PDP'];
+        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP'];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -407,7 +407,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_client_error(): void
     {
-        $uid          = 'M-7890-0400-4003';
+        $uid          = 'M-7890-0400-4000';
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -457,7 +457,7 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_client_error_for_multiple_lpa_fetches(): void
     {
-        $uids         = ['M-7890-0400-4003', 'M-789Q-X7DT-5PDP'];
+        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP'];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';

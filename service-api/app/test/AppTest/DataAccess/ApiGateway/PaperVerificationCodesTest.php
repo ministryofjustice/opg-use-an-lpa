@@ -112,13 +112,13 @@ class PaperVerificationCodesTest extends TestCase
             [
                 'P-1234-1234-1234-12',
                 [
-                    'lpa' => 'M-7890-0400-4003', // no expiry as it's not been used yet
+                    'lpa' => 'M-7890-0400-4000', // no expiry as it's not been used yet
                 ],
             ],
             [
                 'P-5678-5678-5678-56',
                 [
-                    'lpa'           => 'M-7890-0400-4003',
+                    'lpa'           => 'M-7890-0400-4000',
                     'expiry_date'   => (new DateTimeImmutable())
                         ->sub(new DateInterval('P1Y')) // code has expired
                         ->format('Y-m-d'),
@@ -128,7 +128,7 @@ class PaperVerificationCodesTest extends TestCase
             [
                 'P-3456-3456-3456-34',
                 [
-                    'lpa'           => 'M-7890-0400-4003',
+                    'lpa'           => 'M-7890-0400-4000',
                     'expiry_date'   => (new DateTimeImmutable())
                         ->add(new DateInterval('P1Y'))
                         ->format('Y-m-d'),

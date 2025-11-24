@@ -68,8 +68,8 @@ Feature: View an LPA via Paper Verification Code
 
     Examples:
       | reference               | reason                                               |
-      | 7890-0400-4003          |  Enter LPA reference number in the correct format    |
+      | 7890-0400-4000          |  Enter LPA reference number in the correct format    |
       | M789004004XU3           |  Enter LPA reference number in the correct format    |
-      | X-7890-0400-4003        |  Enter LPA reference number in the correct format    |
+      | X-7890-0400-4000        |  Enter LPA reference number in the correct format    |
       | M-7890-0400             | The LPA reference number you entered is too short    |
-      | M-78900-04000-4003      | The LPA reference number you entered is too long     |
+      | M-78900-04000-4000      | The LPA reference number you entered is too long     |

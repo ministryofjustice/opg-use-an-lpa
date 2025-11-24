@@ -99,7 +99,7 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'uId'          => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ],
             ],
-            'uId'                             => 'M-7890-0400-4003',
+            'uId'                             => 'M-7890-0400-4000',
             'whenTheLpaCanBeUsed'             => 'when-capacity-lost',
             'withdrawnDate'                   => null,
         ];

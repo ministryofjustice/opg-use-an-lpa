@@ -19,7 +19,7 @@ class PaperVerificationCodeViewTest extends AbstractFunctionalTestCase
         $data = [
             'name'          => 'Test',
             'code'          => 'P-1111-1111-1111-11',
-            'lpaUid'        => 'M-7890-0400-4003',
+            'lpaUid'        => 'M-7890-0400-4000',
             'sentToDonor'   => false,
             'attorneyName'  => 'Test Test',
             'dateOfBirth'   => '1999-01-01',
@@ -48,7 +48,7 @@ class PaperVerificationCodeViewTest extends AbstractFunctionalTestCase
         $data = [
             'name'          => 'Test',
             'code'          => '1111-1111-1111',
-            'lpaUid'        => 'M-7890-0400-4003',
+            'lpaUid'        => 'M-7890-0400-4000',
             'sentToDonor'   => false,
             'attorneyName'  => 'Test Test',
             'dateOfBirth'   => '1999-01-01',
@@ -73,7 +73,7 @@ class PaperVerificationCodeViewTest extends AbstractFunctionalTestCase
         $data = [
             'name'          => 'Test',
             'code'          => 'P-1111-1111-1111-11',
-            'lpaUid'        => 'M-7890-0400-4003',
+            'lpaUid'        => 'M-7890-0400-4000',
             'sentToDonor'   => 'true',
             'attorneyName'  => 'Test Test',
             'dateOfBirth'   => '1999-01-01',
@@ -97,7 +97,7 @@ class PaperVerificationCodeViewTest extends AbstractFunctionalTestCase
         $data = [
             'name'          => 'Test',
             'code'          => 'P-1111-1111-1111-11',
-            'lpaUid'        => 'M-7890-0400-4003',
+            'lpaUid'        => 'M-7890-0400-4000',
             'sentToDonor'   => false,
             'attorneyName'  => 'Test Test',
             'dateOfBirth'   => '01/01/2001',
