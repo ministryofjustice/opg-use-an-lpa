@@ -23,6 +23,7 @@ use App\Service\Lpa\{Combined\FilterActiveActors,
     IsValidLpa,
     LpaDataFormatter,
     ResolveActor};
+use App\Value\LpaUid;
 use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -269,7 +270,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_sirius_uid()
     {
-        $testUid = '700000000047';
+        $testUid = new LpaUid('700000000047');
 
         $lpaResponse = new Lpa(
             $this->loadTestSiriusLpaFixture(
@@ -323,7 +324,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function can_get_by_lpastore_uid()
     {
-        $testUid    = 'M-7890-0400-4003';
+        $testUid    = new LpaUid('M-7890-0400-4000');
         $testUserId = 'test-user-id';
 
         $lpaResponse = new Lpa(
@@ -372,7 +373,7 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function get_by_sirius_uid_returns_null_when_no_lpa_data()
     {
-        $testUid = '700000000047';
+        $testUid = new LpaUid('700000000047');
 
         $this->siriusLpasProphecy->get($testUid)->willReturn(null);
 
@@ -525,7 +526,7 @@ class CombinedLpaManagerTest extends TestCase
         $userLpaActorMapResponse = [
             'Id'      => $testLpaToken,
             'UserId'  => $testUserId,
-            'LpaUid'  => 'M-7890-0400-40034',
+            'LpaUid'  => 'M-7890-0400-4000',
             'ActorId' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
             'Added'   => new DateTimeImmutable('now'),
         ];
@@ -536,7 +537,7 @@ class CombinedLpaManagerTest extends TestCase
             ->willReturn(
                 [
                     [],
-                    ['M-7890-0400-40034'],
+                    ['M-7890-0400-4000'],
                 ]
             );
         $this->dataStoreLpasProphecy
@@ -544,7 +545,7 @@ class CombinedLpaManagerTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->dataStoreLpasProphecy->reveal());
         $this->dataStoreLpasProphecy
-            ->get('M-7890-0400-40034')
+            ->get('M-7890-0400-4000')
             ->willReturn(null);
 
         $service = $this->getLpaService();

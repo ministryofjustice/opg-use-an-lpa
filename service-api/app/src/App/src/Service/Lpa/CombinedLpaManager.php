@@ -11,10 +11,12 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
+use App\Enum\LpaSource;
 use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
 use App\Service\Lpa\Combined\{FilterActiveActors, RejectInvalidLpa, ResolveLpaTypes};
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
+use App\Value\LpaUid;
 use DateTimeInterface;
 use Psr\Log\LoggerInterface;
 
@@ -42,11 +44,12 @@ class CombinedLpaManager implements LpaManagerInterface
     /**
      * @inheritDoc
      */
-    public function getByUid(string $uid, ?string $originatorId = null): ?LpaInterface
+    public function getByUid(LpaUid $uid, ?string $originatorId = null): ?LpaInterface
     {
-        $lpa = str_starts_with($uid, '7')
-            ? $this->siriusLpas->get($uid)
-            : $this->dataStoreLpas->setOriginatorId($originatorId)->get($uid);
+        $lpa = match ($uid->getLpaSource()) {
+            LpaSource::SIRIUS => $this->siriusLpas->get($uid->getLpaUid()),
+            LpaSource::LPASTORE => $this->dataStoreLpas->setOriginatorId($originatorId ?? '')->get($uid->getLpaUid()),
+        };
 
         if ($lpa === null) {
             return null;
@@ -141,7 +144,7 @@ class CombinedLpaManager implements LpaManagerInterface
             throw new NotFoundException();
         }
 
-        $lpaId = $viewerCodeData['LpaUid'] ?? $viewerCodeData['SiriusUid'];
+        $lpaId = new LpaUid($viewerCodeData['LpaUid'] ?? $viewerCodeData['SiriusUid']);
         $lpa   = $this->getByUid($lpaId, 'V-' . $viewerCode);
 
         if ($lpa === null) {

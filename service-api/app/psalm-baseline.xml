@@ -251,9 +251,4 @@
       <code><![CDATA[$emailClient]]></code>
     </UnusedDocblockParam>
   </file>
-  <file src="src/App/src/Value/LpaUid.php">
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getLpaSource]]></code>
-    </PossiblyUnusedMethod>
-  </file>
 </files>

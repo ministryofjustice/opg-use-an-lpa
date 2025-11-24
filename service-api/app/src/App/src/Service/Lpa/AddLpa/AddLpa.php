@@ -10,6 +10,7 @@ use App\Exception\LpaNotRegisteredException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
 use App\Service\ActorCodes\ValidatedActorCode;
+use App\Value\LpaUid;
 use Psr\Log\LoggerInterface;
 
 class AddLpa
@@ -45,7 +46,7 @@ class AddLpa
             }
         }
 
-        $validatedDetails = $this->actorCodeService->validateDetails($data['actor-code'], $data['uid'], $data['dob']);
+        $validatedDetails = $this->actorCodeService->validateDetails($data['actor-code'], new LpaUid($data['uid']), $data['dob']);
 
         if (! $validatedDetails instanceof ValidatedActorCode) {
             $this->logger->notice(

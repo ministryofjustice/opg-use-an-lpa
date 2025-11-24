@@ -57,15 +57,15 @@ class ViewerContext implements Context
     public function iAskToVerifyMyInformation(): void
     {
         $codeData = match ($this->viewerCode) {
-            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4003', 'actor' => ''],
+            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4000', 'actor' => ''],
             'P-5678-5678-5678-56' => [
-                'lpa'           => 'M-7890-0400-4003',
+                'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
                 'expiry_date'   => '2024-12-13',
                 'expiry_reason' => 'first_time_use',
             ],
             'P-3456-3456-3456-34' => [
-                'lpa'           => 'M-7890-0400-4003',
+                'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
                 'expiry_date'   => '2025-10-24',
                 'expiry_reason' => 'cancelled',
@@ -358,15 +358,15 @@ class ViewerContext implements Context
     public function iProvideDonorSurnameAndPaperVerificationCode(): void
     {
         $codeData = match ($this->viewerCode) {
-            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4003', 'actor' => ''],
+            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4000', 'actor' => ''],
             'P-5678-5678-5678-56' => [
-                'lpa'           => 'M-7890-0400-4003',
+                'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
                 'expiry_date'   => '2024-12-13',
                 'expiry_reason' => 'first_time_use',
             ],
             'P-3456-3456-3456-34' => [
-                'lpa'           => 'M-7890-0400-4003',
+                'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
                 'expiry_date'   => '2025-10-24',
                 'expiry_reason' => 'cancelled',

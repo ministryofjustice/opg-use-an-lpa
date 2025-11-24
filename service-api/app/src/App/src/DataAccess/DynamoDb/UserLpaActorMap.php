@@ -83,7 +83,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         ];
 
         if ($actorId !== null) {
-            $array['ActorId'] = ['N' => $actorId];
+            $array['ActorId'] = is_numeric($actorId) ? ['N' => $actorId] : ['S' => $actorId];
         }
 
         if ($code !== null) {
@@ -170,15 +170,9 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         $setter = '';
         $attrs  = [
-            ':a' => [
-                'N' => $actorId,
-            ],
-            ':b' => [
-                'S' => $activationCode,
-            ],
-            ':c' => [
-                'S' => $activatedTime,
-            ],
+            ':a' => is_numeric($actorId) ? ['N' => $actorId] : ['S' => $actorId],
+            ':b' => ['S' => $activationCode],
+            ':c' => ['S' => $activatedTime],
         ];
 
         if ($hasPaperVerificationCode) {

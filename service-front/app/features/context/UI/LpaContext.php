@@ -36,12 +36,12 @@ class LpaContext implements Context
     private const INPSERVICE_GET_BY_ID                  = 'InstAndPrefImagesService::getImagesById';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
-    private array $dashboardLPAs;
+    private mixed $dashboardLPAs;
     private mixed $lpa;
     private string $userLpaActorToken;
     private int $actorId;
-    private array $lpaData;
-    private array $systemMessageData;
+    private mixed $lpaData;
+    private mixed $systemMessageData;
     private string $organisation;
     private string $accessCode;
     private string $userFirstName;
@@ -2078,6 +2078,28 @@ class LpaContext implements Context
         Assert::assertEquals($storedCode, $params['actor-code']);
     }
 
+    #[When('/^I request to add an LPA with valid details for a modernised LPA using (.*)$/')]
+    public function iRequestToAddAnLPAWithValidDetailsForModernisedUsing(string $code): void
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        // API call for checking LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            ),
+        );
+
+        $this->fillAddLpaPages($code, '24', '07', '1982', 'M-7890-0400-4000');
+
+        $request = $this->apiFixtures->getLastRequest();
+        $params  = json_decode($request->getBody()->getContents(), true);
+
+        Assert::assertEquals($code, $params['actor-code']);
+    }
+
     #[When('/^I request to give an organisation access$/')]
     public function iRequestToGiveAnOrganisationAccess(): void
     {
@@ -2846,14 +2868,17 @@ class LpaContext implements Context
         string $year,
         string $reference_number,
     ): void {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
         $this->ui->fillField('activation_key', $code);
         $this->ui->pressButton('Continue');
 
+        $this->ui->assertPageAddress('/lpa/add-by-key/date-of-birth');
         $this->ui->fillField('dob[day]', $day);
         $this->ui->fillField('dob[month]', $month);
         $this->ui->fillField('dob[year]', $year);
         $this->ui->pressButton('Continue');
 
+        $this->ui->assertPageAddress('/lpa/add-by-key/lpa-reference-number');
         $this->ui->fillField('reference_number', $reference_number);
         $this->ui->pressButton('Continue');
     }

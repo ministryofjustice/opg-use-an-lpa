@@ -172,7 +172,7 @@ class PaperVerificationCodeService
      */
     private function getLpa(PaperVerificationCode $verifiedCode, string $originator): LpaStore
     {
-        $lpa = $this->lpaManager->getByUid((string)$verifiedCode->lpaUid, $originator);
+        $lpa = $this->lpaManager->getByUid($verifiedCode->lpaUid, $originator);
 
         if ($lpa === null) {
             throw new NotFoundException(

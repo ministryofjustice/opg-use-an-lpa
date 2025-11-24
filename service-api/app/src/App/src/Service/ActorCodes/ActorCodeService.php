@@ -8,6 +8,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\{ActorCodeMarkAsUsedException, ActorCodeValidationException, ApiException};
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
+use App\Value\LpaUid;
 
 class ActorCodeService
 {
@@ -22,7 +23,7 @@ class ActorCodeService
     /**
      * @throws ApiException
      */
-    public function validateDetails(string $code, string $uid, string $dob): ?ValidatedActorCode
+    public function validateDetails(string $code, LpaUid $uid, string $dob): ?ValidatedActorCode
     {
         try {
             $actorCodeIsValid = $this->codeValidator->validateCode($code, $uid, $dob);
@@ -55,7 +56,7 @@ class ActorCodeService
      */
     public function confirmDetails(string $code, string $uid, string $dob, string $userId): ?string
     {
-        $details = $this->validateDetails($code, $uid, $dob);
+        $details = $this->validateDetails($code, new LpaUid($uid), $dob);
 
         // If the details don't validate, stop here.
         if (is_null($details)) {

@@ -109,7 +109,7 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ),
                                        ],
-            uId:                       'M-7890-0400-4003',
+            uId:                       'M-7890-0400-4000',
             updatedAt:                 new DateTimeImmutable('2024-01-12T23:00:00Z'),
             whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
         );

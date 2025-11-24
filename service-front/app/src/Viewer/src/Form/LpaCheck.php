@@ -47,10 +47,10 @@ class LpaCheck extends AbstractForm implements InputFilterProviderInterface
                 'filters'    => [
                     ['name' => StringTrim::class],
                     [
-                        // If user enters below, automatically correct to M-7890-0400-4003
-                        // m789004004003
-                        //m 7890 0400 4003
-                        //M-789004004003
+                        // If user enters below, automatically correct to M-7890-0400-4000
+                        // m789004004000
+                        //m 7890 0400 4000
+                        //M-789004004000
                         'name'    => Callback::class,
                         'options' => [
                             'callback' => static function (?string $value): ?string {

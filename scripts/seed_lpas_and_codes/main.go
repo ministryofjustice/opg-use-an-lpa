@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	lpaUID              = "M-1542-2786-9263"
+	lpaUID              = "M-7890-0400-4000"
 	donorUID            = "eda719db-8880-4dda-8c5d-bb9ea12c236f"
 	attorneyUID         = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
 	trustCorporationUID = "1d95993a-ffbb-484c-b2fe-f4cca51801da"
