@@ -26,8 +26,8 @@ class RequestActivationKeyContext implements Context
     use BaseUiContextTrait;
 
     private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
-    private const ADD_OLDER_LPA_CONFIRM = 'AddOlderLpa::confirm';
-    private const CLEANSE_LPA_CLEANSE = 'CleanseLpa::cleanse';
+    private const ADD_OLDER_LPA_CONFIRM  = 'AddOlderLpa::confirm';
+    private const CLEANSE_LPA_CLEANSE    = 'CleanseLpa::cleanse';
 
     /**
      * @var RequestInterface Used to store external requests made to a mocked handler for
@@ -38,7 +38,7 @@ class RequestActivationKeyContext implements Context
     private string $userLpaActorToken;
     private int $actorId;
     private string $actorUId;
-    private array $lpaData;
+    private mixed $lpaData;
     private ?string $activationCode;
     private string $codeCreatedDate;
     private string $live_in_uk;
@@ -741,6 +741,55 @@ class RequestActivationKeyContext implements Context
         ];
     }
 
+    #[Given('I have a modernised LPA')]
+    public function iHaveAModernisedLpa(): void
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'));
+
+        $this->activationCode = null;
+
+        // reset as unused
+        $this->userLpaActorToken = '';
+        $this->actorId           = 0;
+        $this->actorUId          = '';
+
+        $this->lpaData = [
+            'user-lpa-actor-token'       => $this->userLpaActorToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1982-07-24',
+                    'email'        => 'string',
+                    'firstname'    => 'Herman',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => null,
+                    'surname'      => 'Seakrest',
+                    'systemStatus' => true,
+                    'uId'          => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $this->lpa,
+        ];
+    }
+
     #[Given('/^I have reached the check details and consent page as the Attorney$/')]
     public function iHaveReachedTheCheckDetailsAndConsentPageAsTheAttorney(): void
     {
@@ -910,7 +959,7 @@ class RequestActivationKeyContext implements Context
                 ContextUtilities::newResponse(
                     StatusCodeInterface::STATUS_OK,
                     json_encode(
-                        [
+                        isset($this->lpa->uId) ? [
                             'donor'       => [
                                 'uId'        => $this->lpa->donor->uId,
                                 'firstnames' => sprintf(
@@ -922,6 +971,15 @@ class RequestActivationKeyContext implements Context
                             ],
                             'lpa-id'      => $this->lpa->uId,
                             'caseSubtype' => $this->lpa->caseSubtype,
+                            'role'        => 'donor',
+                        ] : [
+                            'donor'       => [
+                                'uId'        => $this->lpa->donor->uid,
+                                'firstnames' => $this->lpa->donor->firstNames,
+                                'surname'    => $this->lpa->donor->lastName,
+                            ],
+                            'lpa-id'      => $this->lpa->uid,
+                            'caseSubtype' => $this->lpa->lpaType,
                             'role'        => 'donor',
                         ]
                     ),
@@ -1260,26 +1318,50 @@ class RequestActivationKeyContext implements Context
 
     protected function fillAndSubmitOlderLpaForm()
     {
-        $this->ui->fillField('opg_reference_number', $this->lpa->uId);
-        $this->ui->pressButton('Continue');
+        if (isset($this->lpa->uId)) {
+            $this->ui->fillField('opg_reference_number', $this->lpa->uId);
+            $this->ui->pressButton('Continue');
 
-        $this->ui->fillField(
-            'first_names',
-            $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames
-        );
-        $this->ui->fillField('last_name', $this->lpa->donor->surname);
-        $this->ui->pressButton('Continue');
+            $this->ui->fillField(
+                'first_names',
+                $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames
+            );
+            $this->ui->fillField('last_name', $this->lpa->donor->surname);
+            $this->ui->pressButton('Continue');
 
-        $date = new DateTime($this->lpa->donor->dob);
-        $this->ui->fillField('dob[day]', $date->format('d'));
-        $this->ui->fillField('dob[month]', $date->format('m'));
-        $this->ui->fillField('dob[year]', $date->format('Y'));
-        $this->ui->pressButton('Continue');
+            $date = new DateTime($this->lpa->donor->dob);
+            $this->ui->fillField('dob[day]', $date->format('d'));
+            $this->ui->fillField('dob[month]', $date->format('m'));
+            $this->ui->fillField('dob[year]', $date->format('Y'));
+            $this->ui->pressButton('Continue');
 
-        $this->live_in_uk = 'Yes';
-        $this->ui->fillField('live_in_uk', 'Yes');
-        $this->ui->fillField('postcode', $this->lpa->donor->addresses[0]->postcode);
-        $this->ui->pressButton('Continue');
+            $this->live_in_uk = 'Yes';
+            $this->ui->fillField('live_in_uk', 'Yes');
+            $this->ui->fillField('postcode', $this->lpa->donor->addresses[0]->postcode);
+            $this->ui->pressButton('Continue');
+        } else {
+            $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
+            $this->ui->fillField('opg_reference_number', $this->lpa->uid);
+            $this->ui->pressButton('Continue');
+
+            $this->ui->assertPageAddress('/lpa/request-code/your-name');
+            $this->ui->fillField('first_names', $this->lpa->donor->firstNames);
+            $this->ui->fillField('last_name', $this->lpa->donor->lastName);
+            $this->ui->pressButton('Continue');
+
+            $this->ui->assertPageAddress('/lpa/request-code/date-of-birth');
+            $date = new DateTime($this->lpa->donor->dateOfBirth);
+            $this->ui->fillField('dob[day]', $date->format('d'));
+            $this->ui->fillField('dob[month]', $date->format('m'));
+            $this->ui->fillField('dob[year]', $date->format('Y'));
+            $this->ui->pressButton('Continue');
+
+            $this->ui->assertPageAddress('/lpa/request-code/postcode');
+            $this->live_in_uk = 'Yes';
+            $this->ui->fillField('live_in_uk', 'Yes');
+            $this->ui->fillField('postcode', $this->lpa->donor->address->postcode ?? 'x'); // TODO: this is broken
+            $this->ui->pressButton('Continue');
+        }
     }
 
     private function fillForm(array $array): void

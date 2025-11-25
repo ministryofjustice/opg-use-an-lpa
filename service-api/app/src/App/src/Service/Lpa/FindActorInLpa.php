@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
+use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Exception\ActorDateOfBirthNotSetException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;

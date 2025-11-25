@@ -53,7 +53,7 @@ class AddAccessForAllLpaTest extends TestCase
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
 
     private string $userId;
-    private int $lpaUid;
+    private string $lpaUid;
 
     /** @var array<string, mixed> */
     private array $dataToMatch;
@@ -76,7 +76,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->featureEnabledProphecy                      = $this->prophesize(FeatureEnabled::class);
 
         $this->userId = 'user-zxywq-54321';
-        $this->lpaUid = 700000012345;
+        $this->lpaUid = '700000012345';
 
         $this->lpa     = $this->older_lpa_get_by_uid_response();
         $this->lpaData = $this->lpa->getData();

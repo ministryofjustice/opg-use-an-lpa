@@ -118,7 +118,7 @@ class Lpa implements
 
     public function getLpaIsCleansed(): bool
     {
-        return $this->lpaIsCleansed;
+        return $this->lpaIsCleansed ?? false;
     }
 
     public function hasGuidance(): bool

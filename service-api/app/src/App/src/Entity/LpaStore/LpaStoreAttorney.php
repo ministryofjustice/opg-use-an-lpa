@@ -7,11 +7,12 @@ namespace App\Entity\LpaStore;
 use App\Entity\Casters\ExtractAddressFieldFrom;
 use App\Entity\Person;
 use App\Enum\ActorStatus;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastToDateTimeImmutable;
 
-class LpaStoreAttorney extends Person
+class LpaStoreAttorney extends Person implements ActorMatchingInterface
 {
     public function __construct(
         #[MapFrom('address')]
@@ -59,5 +60,10 @@ class LpaStoreAttorney extends Person
             town:         $town,
             uId:          $uId,
         );
+    }
+
+    public function getFirstname(): string
+    {
+        return $this->getFirstnames();
     }
 }

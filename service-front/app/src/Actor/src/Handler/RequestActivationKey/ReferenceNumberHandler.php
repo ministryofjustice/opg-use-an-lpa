@@ -75,7 +75,7 @@ class ReferenceNumberHandler extends AbstractRequestKeyHandler
             $postData = $this->form->getData();
 
             //  Set the data in the session and pass to the check your answers handler
-            $this->state($request)->referenceNumber = (int) $postData['opg_reference_number'];
+            $this->state($request)->referenceNumber = $postData['opg_reference_number'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }

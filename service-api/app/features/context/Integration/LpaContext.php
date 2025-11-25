@@ -30,6 +30,7 @@ use App\Service\Lpa\RemoveLpa;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
 use App\Service\ViewerCodes\ViewerCodeService;
+use App\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
@@ -110,7 +111,7 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
-            $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId);
+            $olderLpaService->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorLpaId, $this->userId);
         } catch (ApiException) {
             throw new Exception('Failed to request access code letter');
         }
@@ -136,7 +137,7 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
-            $olderLpaService->requestAccessByLetter($this->lpaUid, $this->actorLpaId, $this->userId, '00-0-0-0-00');
+            $olderLpaService->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorLpaId, $this->userId, '00-0-0-0-00');
         } catch (ApiException) {
             throw new Exception('Failed to request access code letter');
         }
@@ -324,15 +325,6 @@ class LpaContext extends BaseIntegrationContext
         $this->lpa          = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
-        $data = [
-            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
-            'dob'                  => $this->lpa->attorneys[0]->dob,
-            'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
-            'first_names'          => $this->lpa->attorneys[0]->firstname,
-            'last_name'            => $this->lpa->attorneys[0]->surname,
-            'force_activation_key' => false,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
 
@@ -360,7 +352,14 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => (string) $sanitizedSiriusLpa->uId,
+            'dob'                  => $this->lpa->attorneys[0]->dob,
+            'postcode'             => $this->lpa->attorneys[0]->addresses[0]->postcode,
+            'first_names'          => $this->lpa->attorneys[0]->firstname,
+            'last_name'            => $this->lpa->attorneys[0]->surname,
+            'force_activation_key' => false,
+        ]);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
 
@@ -1532,15 +1531,6 @@ class LpaContext extends BaseIntegrationContext
         $lpa                = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($lpa);
 
-        $data = [
-            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
-            'dob'                  => $this->lpa->donor->dob,
-            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'          => $this->lpa->donor->firstname,
-            'last_name'            => $this->lpa->donor->surname,
-            'force_activation_key' => true,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -1558,7 +1548,14 @@ class LpaContext extends BaseIntegrationContext
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => (string) $sanitizedSiriusLpa->uId,
+            'dob'                  => $this->lpa->donor->dob,
+            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
+            'first_names'          => $this->lpa->donor->firstname,
+            'last_name'            => $this->lpa->donor->surname,
+            'force_activation_key' => true,
+        ]);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
 
@@ -1690,14 +1687,6 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa->registrationDate = '2019-08-31';
 
-        $data = [
-            'reference_number' => (int) $this->lpaUid,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -1713,7 +1702,13 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+            'reference_number' => $this->lpaUid,
+            'dob'              => $this->userDob,
+            'postcode'         => $this->userPostCode,
+            'first_names'      => $this->userFirstname,
+            'last_name'        => $this->userSurname,
+            ]);
         } catch (BadRequestException $badRequestException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $badRequestException->getCode());
             Assert::assertEquals('LPA not eligible due to registration date', $badRequestException->getMessage());
@@ -1724,16 +1719,7 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I provide details of an LPA that does not exist$/')]
     public function iProvideDetailsOfAnLPAThatDoesNotExist(): void
     {
-        $invalidLpaId = 700000004321;
-
-        $data = [
-            'reference_number'     => $invalidLpaId,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
-        ];
+        $invalidLpaId = '700000004321';
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1750,7 +1736,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => $invalidLpaId,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
+            ]);
         } catch (NotFoundException $notFoundException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
             Assert::assertEquals('LPA not found', $notFoundException->getMessage());
@@ -1763,15 +1756,6 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I provide details "([^"]*)" "([^"]*)" "([^"]*)" "([^"]*)" that do not match the paper document$/')]
     public function iProvideDetailsThatDoNotMatchThePaperDocument($firstnames, $lastname, $postcode, $dob): void
     {
-        $data = [
-            'reference_number'     => (int) $this->lpaUid,
-            'dob'                  => $dob,
-            'postcode'             => $postcode,
-            'first_names'          => $firstnames,
-            'last_name'            => $lastname,
-            'force_activation_key' => false,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -1787,7 +1771,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => $this->lpaUid,
+            'dob'                  => $dob,
+            'postcode'             => $postcode,
+            'first_names'          => $firstnames,
+            'last_name'            => $lastname,
+            'force_activation_key' => false,
+            ]);
         } catch (NotFoundException $notFoundException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
             Assert::assertEquals('LPA not found', $notFoundException->getMessage());
@@ -1802,15 +1793,6 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa          = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
         $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
-
-        $data = [
-            'reference_number'     => (int) $sanitizedSiriusLpa->uId,
-            'dob'                  => $this->lpa->donor->dob,
-            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
-            'first_names'          => $this->lpa->donor->firstname,
-            'last_name'            => $this->lpa->donor->surname,
-            'force_activation_key' => false,
-        ];
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -1840,7 +1822,14 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
-        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, $data);
+        $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => (string) $sanitizedSiriusLpa->uId,
+            'dob'                  => $this->lpa->donor->dob,
+            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
+            'first_names'          => $this->lpa->donor->firstname,
+            'last_name'            => $this->lpa->donor->surname,
+            'force_activation_key' => false,
+        ]);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
 
@@ -1888,15 +1877,6 @@ class LpaContext extends BaseIntegrationContext
     #[When('/^I provide the details from a valid paper document that already has an activation key$/')]
     public function iProvideTheDetailsFromAValidPaperDocumentThatAlreadyHasAnActivationKey(): void
     {
-        $data = [
-            'reference_number'     => (int) $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -1933,7 +1913,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+                'reference_number'     => $this->lpaUid,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
+                'first_names'          => $this->userFirstname,
+                'last_name'            => $this->userSurname,
+                'force_activation_key' => false,
+            ]);
         } catch (LpaAlreadyHasActivationKeyException $lpaAlreadyHasActivationKeyException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyHasActivationKeyException->getCode());
             Assert::assertEquals('LPA has an activation key already', $lpaAlreadyHasActivationKeyException->getMessage());
@@ -1945,7 +1932,7 @@ class LpaContext extends BaseIntegrationContext
                          true
                      ),
                      SiriusLpaDonor::class,
-                );
+                 );
                 $expectedDonor = [
                     'uId'        => $donor->getUid(),
                     'firstnames' => $donor->getFirstnames(),
@@ -2069,11 +2056,11 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'LpaUid'    => $lpaUid,
-                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'        => $this->userLpaActorToken,
-                            'ActorId'   => (string)$actorLpaId,
-                            'UserId'    => $this->userId,
+                            'LpaUid'  => $lpaUid,
+                            'Added'   => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'      => $this->userLpaActorToken,
+                            'ActorId' => (string)$actorLpaId,
+                            'UserId'  => $this->userId,
                         ]
                     ),
                 ]
@@ -2660,15 +2647,6 @@ class LpaContext extends BaseIntegrationContext
     {
         $sanitizedSiriusLpa = LpaTestUtilities::SanitiseSiriusLpaUIds($this->lpa);
 
-        $data = [
-            'reference_number'     => (int) $this->lpa->uId,
-            'first_names'          => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
-            'last_name'            => $this->lpa->donor->surname,
-            'dob'                  => $this->lpa->donor->dob,
-            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
-            'force_activation_key' => true,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2682,7 +2660,14 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
-        $response    = $addOlderLpa->validateRequest($this->userId, $data);
+        $response    = $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => (string) $this->lpa->uId,
+            'first_names'          => $this->lpa->donor->firstname . ' ' . $this->lpa->donor->middlenames,
+            'last_name'            => $this->lpa->donor->surname,
+            'dob'                  => $this->lpa->donor->dob,
+            'postcode'             => $this->lpa->donor->addresses[0]->postcode,
+            'force_activation_key' => true,
+        ]);
 
         $expectedLpaArray = json_decode(json_encode($sanitizedSiriusLpa), true);
 
@@ -2731,15 +2716,6 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyAddedToMyAccount(): void
     {
         $differentLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/test_lpa.json'));
-
-        $data = [
-            'reference_number'     => (int) $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
-        ];
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
@@ -2811,7 +2787,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => $this->lpaUid,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
+            ]);
         } catch (LpaAlreadyAddedException $lpaAlreadyAddedException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyAddedException->getCode());
             Assert::assertEquals('LPA already added', $lpaAlreadyAddedException->getMessage());
@@ -2826,15 +2809,6 @@ class LpaContext extends BaseIntegrationContext
     public function iProvideTheDetailsFromAValidPaperLPAWhichIHaveAlreadyRequestedAnActivationKeyFor(): void
     {
         $createdDate = (new DateTime())->modify('-14 days');
-
-        $data = [
-            'reference_number'     => (int) $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
-        ];
 
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
@@ -2920,7 +2894,14 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+            'reference_number'     => $this->lpaUid,
+            'dob'                  => $this->userDob,
+            'postcode'             => $this->userPostCode,
+            'first_names'          => $this->userFirstname,
+            'last_name'            => $this->userSurname,
+            'force_activation_key' => false,
+            ]);
         } catch (LpaActivationKeyAlreadyRequestedException $lpaActivationKeyAlreadyRequestedException) {
             Assert::assertEquals(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
@@ -2944,14 +2925,6 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa->status = 'Pending';
 
-        $data = [
-            'reference_number' => (int) $this->lpaUid,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
-        ];
-
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
             new Result([])
@@ -2967,7 +2940,13 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, $data);
+            $addOlderLpa->validateRequest($this->userId, [
+                'reference_number' => $this->lpaUid,
+                'dob'              => $this->userDob,
+                'postcode'         => $this->userPostCode,
+                'first_names'      => $this->userFirstname,
+                'last_name'        => $this->userSurname,
+            ]);
         } catch (NotFoundException $notFoundException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
             Assert::assertEquals('LPA status invalid', $notFoundException->getMessage());
@@ -3008,7 +2987,7 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
-            $olderLpaService->requestAccessAndCleanseByLetter((string)$this->lpaUid, $this->userId, 'notes');
+            $olderLpaService->requestAccessAndCleanseByLetter(new LpaUid($this->lpaUid), $this->userId, 'notes');
         } catch (ApiException) {
             throw new Exception('Failed to request access code letter');
         }
@@ -3019,7 +2998,7 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->lpa->status = 'Registered';
         $data              = [
-            'reference_number'     => (int) $this->lpaUid,
+            'reference_number'     => $this->lpaUid,
             'dob'                  => $this->userDob,
             'postcode'             => 'WRONG',
             'first_names'          => $this->userFirstname,

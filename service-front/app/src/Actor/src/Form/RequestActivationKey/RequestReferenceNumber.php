@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Actor\Form\RequestActivationKey;
 
-use Common\Filter\StripSpacesAndHyphens;
+use Common\Filter\{LpaUidFormat, StripSpacesAndHyphens};
 use Common\Form\AbstractForm;
 use Common\Validator\{DammCheck, LuhnCheck, MerisReferenceCheckValidator, SiriusReferenceStartsWithCheck};
 use Laminas\Filter\StringTrim;
@@ -97,8 +97,8 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                     'break_chain_on_failure' => true,
                     'options'                => [
                         'pattern' => $this->merisEntryEnabled
-                            ? '/^(7\d{11}|(M|m)\d{12}|(2|3)\d{6})$/'
-                            : '/^(7\d{11}|(M|m)\d{12})$/i',
+                            ? '/^(7\d{11}|(M|m)(-\d{4}){3}|(2|3)\d{6})$/'
+                            : '/^(7\d{11}|(M|m)(-\d{4}){3})$/i',
                         'message' => 'Enter the LPA reference number in the correct format',
                     ],
                 ],
@@ -116,6 +116,7 @@ class RequestReferenceNumber extends AbstractForm implements InputFilterProvider
                 'filters'    => [
                     ['name' => StringTrim::class],
                     ['name' => StripSpacesAndHyphens::class],
+                    ['name' => LpaUidFormat::class],
                 ],
                 'validators' => $validators,
             ],

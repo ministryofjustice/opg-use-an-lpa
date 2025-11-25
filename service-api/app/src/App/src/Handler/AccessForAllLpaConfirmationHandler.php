@@ -10,6 +10,7 @@ use App\Service\Log\EventCodes;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpa;
 use App\Service\Lpa\CheckLpaCleansed;
+use App\Value\LpaUid;
 use Exception;
 use Laminas\Diactoros\Response\EmptyResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -54,7 +55,7 @@ class AccessForAllLpaConfirmationHandler implements RequestHandlerInterface
             ($this->checkLpaCleansed)($userId, $lpaMatchResponse->actorMatch);
 
         $this->accessForAllLpaService->requestAccessByLetter(
-            (string) $requestData['reference_number'],
+            new LpaUid($requestData['reference_number']),
             $lpaMatchResponse->actorMatch->actor->getUid(),
             $userId,
             $lpaMatchResponse->lpaActorToken,
