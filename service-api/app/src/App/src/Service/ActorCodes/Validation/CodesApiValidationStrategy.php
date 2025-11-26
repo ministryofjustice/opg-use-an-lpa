@@ -11,6 +11,7 @@ use App\Exception\ActorCodeValidationException;
 use App\Service\ActorCodes\CodeValidationStrategyInterface;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\ResolveActor;
+use App\Value\LpaUid;
 use ParagonIE\HiddenString\HiddenString;
 use Psr\Log\LoggerInterface;
 use Exception;
@@ -25,7 +26,7 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
     ) {
     }
 
-    public function validateCode(string $code, string $uid, string $dob): ActorCodeIsValid
+    public function validateCode(string $code, LpaUid $uid, string $dob): ActorCodeIsValid
     {
         try {
             $actorCode = $this->actorCodesApi->validateCode($code, $uid, $dob);
@@ -84,13 +85,13 @@ class CodesApiValidationStrategy implements CodeValidationStrategyInterface
      * Attempts further validation against sirius lpa data so that we can be sure that we're using
      * the authoritative source.
      *
-     * @param string $uid
+     * @param LpaUid $uid
      * @param string $actorUid
      * @param string $dob
      * @return bool
      * @throws ActorCodeValidationException
      */
-    private function verifyAgainstLpa(string $uid, string $actorUid, string $dob): bool
+    private function verifyAgainstLpa(LpaUid $uid, string $actorUid, string $dob): bool
     {
         $lpa = $this->lpaManager->getByUid($uid);
 

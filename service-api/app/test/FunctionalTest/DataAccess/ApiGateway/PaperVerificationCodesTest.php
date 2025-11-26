@@ -84,7 +84,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
             ->addHeader('Content-Type', 'application/json')
             ->setBody(
                 [
-                    'lpa'   => $matcher->regex('M-7890-0400-4003', 'M(-[0-9]{4}){3}'),
+                    'lpa'   => $matcher->regex('M-7890-0400-4000', 'M(-[0-9]{4}){3}'),
                     'actor' => $matcher->uuid(),
                 ]
             );
@@ -101,7 +101,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
-        self::assertEquals('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
+        self::assertEquals('M-7890-0400-4000', (string) $pvc->getData()->lpaUid);
     }
 
     #[Test]
@@ -140,7 +140,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
             ->addHeader('Content-Type', 'application/json')
             ->setBody(
                 [
-                    'lpa'           => $matcher->regex('M-7890-0400-4003', 'M(-[0-9]{4}){3}'),
+                    'lpa'           => $matcher->regex('M-7890-0400-4000', 'M(-[0-9]{4}){3}'),
                     'actor'         => $matcher->uuid(),
                     'expiry_date'   => $matcher->dateISO8601($expiryDate),
                     'expiry_reason' => 'first_time_use',
@@ -159,7 +159,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(PaperVerificationCodeResponse::class, $pvc->getData());
-        self::assertEquals('M-7890-0400-4003', (string) $pvc->getData()->lpaUid);
+        self::assertEquals('M-7890-0400-4000', (string) $pvc->getData()->lpaUid);
         self::assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
         self::assertEquals('first_time_use', $pvc->getData()->expiryReason->value);
     }

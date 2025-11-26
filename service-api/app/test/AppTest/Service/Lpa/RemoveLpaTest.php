@@ -180,7 +180,7 @@ class RemoveLpaTest extends TestCase
     public function it_can_remove_new_format_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
         $userActorLpa = [
-            'LpaUid'  => 'M-7890-0400-4003',
+            'LpaUid'  => 'M-7890-0400-4000',
             'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'Id'      => $this->actorLpaToken,
             'ActorId' => '1',
@@ -270,7 +270,7 @@ class RemoveLpaTest extends TestCase
     public function it_removes_a_new_lpa_from_a_user_account_and_cancels_their_active_codes_only(): void
     {
         $userActorLpa = [
-            'LpaUid'  => 'M-7890-0400-4003',
+            'LpaUid'  => 'M-7890-0400-4000',
             'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'Id'      => $this->actorLpaToken,
             'ActorId' => '1',
@@ -396,7 +396,7 @@ class RemoveLpaTest extends TestCase
     public function it_can_remove_new_lpa_store_lpa_from_a_user_account_with_no_viewer_codes_to_update(): void
     {
         $userActorLpa = [
-            'LpaUid'  => 'M-7890-0400-4003',
+            'LpaUid'  => 'M-7890-0400-4000',
             'Added'   => (new DateTime())->modify('-6 months')->format('Y-m-d'),
             'Id'      => $this->actorLpaToken,
             'ActorId' => '1',
@@ -491,7 +491,7 @@ class RemoveLpaTest extends TestCase
             status:                                    'Registered',
             statusDate:                                null,
             trustCorporations:                         [],
-            uId:                                       'M-7890-0400-4003',
+            uId:                                       'M-7890-0400-4000',
             whenTheLpaCanBeUsed:                       null,
             withdrawnDate:                             null
         );

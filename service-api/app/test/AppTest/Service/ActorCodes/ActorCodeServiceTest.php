@@ -20,6 +20,7 @@ use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\ResolveActor\LpaActor;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
+use App\Value\LpaUid;
 use BehatTest\LpaTestUtilities;
 use DateInterval;
 use DateTime;
@@ -215,7 +216,7 @@ class ActorCodeServiceTest extends TestCase
     public function validation_fails(): void
     {
         $testCode = 'test-code';
-        $testUid  = 'test-uid';
+        $testUid  = new LpaUid('test-uid');
         $testDob  = '1982-10-28';
 
         $this->codeValidatorProphecy->validateCode($testCode, $testUid, $testDob)
@@ -311,8 +312,8 @@ class ActorCodeServiceTest extends TestCase
 
         return [
             $testCode,
-            $testUid,
-            $testCombinedUid,
+            new LpaUid($testUid),
+            new LpaUid($testCombinedUid),
             $testDob,
             $testActorId,
             $this->testActorUid,

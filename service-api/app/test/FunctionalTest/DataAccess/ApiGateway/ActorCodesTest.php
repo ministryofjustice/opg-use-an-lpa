@@ -7,6 +7,7 @@ namespace FunctionalTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\Response\ActorCodeIsValid;
 use App\Service\Log\RequestTracing;
+use App\Value\LpaUid;
 use FunctionalTest\AbstractFunctionalTestCase;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
@@ -85,7 +86,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
         $sut = $this->container->get(ActorCodes::class);
 
-        $actorCode = $sut->validateCode('ISAVALIDCODE', '700000000001', '1959-08-10');
+        $actorCode = $sut->validateCode('ISAVALIDCODE', new LpaUid('700000000001'), '1959-08-10');
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());
@@ -134,7 +135,7 @@ class ActorCodesTest extends AbstractFunctionalTestCase
 
         $sut = $this->container->get(ActorCodes::class);
 
-        $actorCode = $sut->validateCode('ISAVALIDCODE', 'M-1234-1234-1234', '1959-08-10');
+        $actorCode = $sut->validateCode('ISAVALIDCODE', new LpaUid('M-1234-1234-1234'), '1959-08-10');
 
         self::assertTrue($this->builder->verify());
         self::assertInstanceOf(ActorCodeIsValid::class, $actorCode->getData());

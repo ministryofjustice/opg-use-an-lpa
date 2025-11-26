@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Exception\LpaNeedsCleansingException;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
+use App\Value\LpaUid;
 use DateTimeImmutable;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -28,7 +29,7 @@ class CheckLpaCleansed
      */
     public function __invoke(string $userId, ActorMatch $actorDetailsMatch): void
     {
-        $lpa = $this->lpaManager->getByUid($actorDetailsMatch->lpaUId)->getData();
+        $lpa = $this->lpaManager->getByUid(new LpaUid($actorDetailsMatch->lpaUId))->getData();
 
         if (
             !$lpa->getLpaIsCleansed() &&

@@ -1,7 +1,7 @@
 (() => {
   // src/lpas/4UX3.json
   var UX3_default = {
-    uid: "M-7890-0400-4003",
+    uid: "M-7890-0400-4000",
     status: "registered",
     registrationDate: "2024-01-12",
     updatedAt: "2024-01-12T23:00:00Z",
