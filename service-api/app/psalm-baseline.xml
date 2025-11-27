@@ -49,10 +49,8 @@
   <file src="src/App/src/Entity/Lpa.php">
     <InvalidNullableReturnType>
       <code><![CDATA[DateTimeInterface]]></code>
-      <code><![CDATA[bool]]></code>
     </InvalidNullableReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[$this->lpaIsCleansed]]></code>
       <code><![CDATA[$this->registrationDate]]></code>
     </NullableReturnStatement>
     <PossiblyUnusedProperty>
@@ -84,7 +82,6 @@
     </NullableReturnStatement>
     <PossiblyUnusedMethod>
       <code><![CDATA[getCaseSubType]]></code>
-      <code><![CDATA[getDonor]]></code>
     </PossiblyUnusedMethod>
   </file>
   <file src="src/App/src/Entity/Person.php">

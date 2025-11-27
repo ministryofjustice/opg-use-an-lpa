@@ -255,7 +255,9 @@ class UserLpaActorMap implements UserLpaActorMapInterface
 
         if ($actorId !== null) {
             $updateRequest['UpdateExpression']                = $updateRequest['UpdateExpression'] . ', ActorId = :c';
-            $updateRequest['ExpressionAttributeValues'][':c'] = ['N' => $actorId];
+            $updateRequest['ExpressionAttributeValues'][':c'] = is_numeric($actorId)
+                ? ['N' => $actorId]
+                : ['S' => $actorId];
         }
 
         $response = $this->client->updateItem($updateRequest);

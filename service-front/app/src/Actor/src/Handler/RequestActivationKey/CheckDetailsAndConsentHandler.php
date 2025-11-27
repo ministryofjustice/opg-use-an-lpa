@@ -215,7 +215,7 @@ class CheckDetailsAndConsentHandler extends AbstractHandler implements
                 $this->notifyService->sendEmailToUser(
                     NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_LPA_NEEDS_CLEANSING_EMAIL_TEMPLATE,
                     $this->data['email'],
-                    referenceNumber:(string) $state->referenceNumber,
+                    referenceNumber: $state->referenceNumber,
                     letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                 );
 

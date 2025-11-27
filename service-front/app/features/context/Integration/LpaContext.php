@@ -56,7 +56,7 @@ class LpaContext extends BaseIntegrationContext
 
     private mixed $lpa;
     private string $lpaJson;
-    private array $lpaData;
+    private mixed $lpaData;
     private string $activation_key;
     private string $referenceNo;
     private string $userDob;
@@ -100,7 +100,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -141,11 +141,11 @@ class LpaContext extends BaseIntegrationContext
     public function theLPAIsRemoved(): void
     {
         $removedLpaDetails = [
-                'donor' => [
-                    'uId' => $this->lpa['donor']['uId'],
-                    'firstname' => $this->lpa['donor']['firstname'],
+                'donor'       => [
+                    'uId'         => $this->lpa['donor']['uId'],
+                    'firstname'   => $this->lpa['donor']['firstname'],
                     'middlenames' => $this->lpa['donor']['middlenames'],
-                    'surname' => $this->lpa['donor']['surname'],
+                    'surname'     => $this->lpa['donor']['surname'],
                 ],
                 'caseSubtype' => $this->lpa['caseSubtype'],
         ];
@@ -236,7 +236,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->confirm(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -284,7 +284,7 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result      = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -331,7 +331,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1025,6 +1025,54 @@ class LpaContext extends BaseIntegrationContext
         ];
     }
 
+    #[Given('I have a modernised LPA')]
+    public function iHaveAModernisedLpa(): void
+    {
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+
+        $this->activation_key = 'XYUPHWQRECHV';
+        $this->referenceNo    = '700000000138';
+        $this->userDob        = '1982-07-24';
+        $this->actorLpaToken  = '24680';
+        $this->actorId        = 0;
+
+        $this->lpaData = [
+            'user-lpa-actor-token'       => $this->actorLpaToken,
+            'date'                       => 'today',
+            'actor'                      => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addresses'    => [
+                        [
+                            'addressLine1' => '',
+                            'addressLine2' => '',
+                            'addressLine3' => '',
+                            'country'      => '',
+                            'county'       => '',
+                            'id'           => 0,
+                            'postcode'     => '',
+                            'town'         => '',
+                            'type'         => 'Primary',
+                        ],
+                    ],
+                    'companyName'  => null,
+                    'dob'          => '1982-07-24',
+                    'email'        => 'string',
+                    'firstname'    => 'Herman',
+                    'id'           => 0,
+                    'middlenames'  => null,
+                    'salutation'   => null,
+                    'surname'      => 'Seakrest',
+                    'systemStatus' => true,
+                    'uId'          => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                ],
+            ],
+            'applicationHasRestrictions' => true,
+            'applicationHasGuidance'     => false,
+            'lpa'                        => $this->lpa,
+        ];
+    }
+
     #[Given('/^I have created an access code$/')]
     public function iHaveCreatedAnAccessCode(): void
     {
@@ -1099,7 +1147,7 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result      = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1144,6 +1192,12 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertInstanceOf(AddLpaApiResult::class, $lpaData);
         Assert::assertEquals(AddLpaApiResult::ADD_LPA_FOUND, $lpaData->getResponse());
         Assert::assertEquals(($lpaData->getData()['lpa'])->getUId(), $this->lpa['uId']);
+    }
+
+    #[When('/^I request to add an LPA with valid details for a modernised LPA using (.*)$/')]
+    public function iRequestToAddAnLPAWithValidDetailsForModernisedUsing(string $code): void
+    {
+        // TODO
     }
 
     #[When('/^I request to give an organisation access to one of my LPAs$/')]
@@ -1487,7 +1541,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1551,7 +1605,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1650,11 +1704,7 @@ class LpaContext extends BaseIntegrationContext
     #[Given('/^I am on the check LPA details page$/')]
     public function iAmShownTheDetailsOfAnLPA(): void
     {
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
+        $apiData = isset($this->lpa['uId']) ? [
                         'donor'       => [
                             'uId'        => $this->lpa['donor']['uId'],
                             'firstnames' => sprintf(
@@ -1666,8 +1716,20 @@ class LpaContext extends BaseIntegrationContext
                         ],
                         'caseSubtype' => $this->lpa['caseSubtype'],
                         'role'        => 'donor',
-                    ]
-                ),
+                    ] : [
+                        'donor'       => [
+                            'uId'        => $this->lpa['donor']['uid'],
+                            'firstnames' => $this->lpa['donor']['firstNames'],
+                            'surname'    => $this->lpa['donor']['lastName'],
+                        ],
+                        'caseSubtype' => $this->lpa['lpaType'],
+                        'role'        => 'donor',
+                    ];
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($apiData),
                 self::ADD_OLDER_LPA_VALIDATE
             )
         );
@@ -1676,7 +1738,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $addOlderLpa->validate(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             $this->userFirstname,
             $this->userSurname,
             DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1685,19 +1747,13 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $donor = new CaseActor();
-        $donor->setUId($this->lpa['donor']['uId']);
-        $donor->setFirstname(
-            sprintf(
-                '%s %s',
-                $this->lpa['donor']['firstname'],
-                $this->lpa['donor']['middlenames'],
-            ),
-        );
-        $donor->setSurname($this->lpa['donor']['surname']);
+        $donor->setUId($apiData['donor']['uId']);
+        $donor->setFirstname($apiData['donor']['firstnames']);
+        $donor->setSurname($apiData['donor']['surname']);
 
         $foundMatchLpaDTO = new LpaMatch();
         $foundMatchLpaDTO->setDonor($donor);
-        $foundMatchLpaDTO->setCaseSubtype($this->lpa['caseSubtype']);
+        $foundMatchLpaDTO->setCaseSubtype($apiData['caseSubtype']);
 
         $response = new AccessForAllApiResult(
             AccessForAllResult::FOUND,
@@ -1780,7 +1836,7 @@ class LpaContext extends BaseIntegrationContext
 
             $result = $addOlderLpa->confirm(
                 $this->userIdentity,
-                intval($this->referenceNo),
+                $this->referenceNo,
                 $this->userFirstname,
                 $this->userSurname,
                 DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1804,7 +1860,7 @@ class LpaContext extends BaseIntegrationContext
 
             $result = $addOlderLpa->confirm(
                 $this->userIdentity,
-                intval($this->referenceNo),
+                $this->referenceNo,
                 $this->userFirstname,
                 $this->userSurname,
                 DateTime::createFromFormat('Y-m-d', $this->userDob),
@@ -1832,7 +1888,7 @@ class LpaContext extends BaseIntegrationContext
 
         $result = $cleanseLpa->cleanse(
             $this->userIdentity,
-            intval($this->referenceNo),
+            $this->referenceNo,
             'Notes',
             null
         );

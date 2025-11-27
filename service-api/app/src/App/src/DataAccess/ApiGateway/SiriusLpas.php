@@ -9,11 +9,13 @@ use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\Response\Lpa;
 use App\DataAccess\Repository\Response\LpaInterface;
+use App\Enum\LpaSource;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\SiriusLpa;
+use App\Value\LpaUid;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
@@ -130,14 +132,19 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         return $results;
     }
 
-    public function requestLetter(int $caseId, ?int $actorId, ?string $additionalInfo): void
+    public function requestLetter(LpaUid $caseId, ?string $actorId, ?string $additionalInfo): void
     {
-        $payloadContent = ['case_uid' => $caseId];
+        if ($caseId->getLpaSource() === LpaSource::LPASTORE) {
+            $this->logger->info('TODO request a letter from Sirius');
+            return;
+        }
+
+        $payloadContent = ['case_uid' => (int)$caseId->getLpaUid()];
 
         if ($actorId === null) {
             $payloadContent['notes'] = $additionalInfo;
         } else {
-            $payloadContent['actor_uid'] = $actorId;
+            $payloadContent['actor_uid'] = (int)$actorId;
         }
 
         // construct request for API gateway

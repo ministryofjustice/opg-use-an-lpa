@@ -12,6 +12,8 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
+use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
+use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
@@ -19,7 +21,7 @@ use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
 use Exception;
 
-class LpaStore extends Lpa
+class LpaStore extends Lpa implements FindActorInLpaInterface
 {
     public function __construct(
         #[CastListToType(LpaStoreAttorney::class)]
@@ -85,11 +87,17 @@ class LpaStore extends Lpa
         );
     }
 
-    public function getDonor(): ResolveActorInterface
+    public function getDonor(): ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface
     {
-        if (!($this->donor instanceof ResolveActorInterface)) {
+        if (
+            !(
+                $this->donor instanceof ResolveActorInterface &&
+                $this->donor instanceof GetAttorneyStatusInterface &&
+                $this->donor instanceof ActorMatchingInterface
+            )
+        ) {
             throw new Exception(
-                'Donor is not a valid ResolveActorInterface instance'
+                'Donor is not a valid ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface instance'
             );
         }
 
