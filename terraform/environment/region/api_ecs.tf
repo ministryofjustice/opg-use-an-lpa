@@ -235,6 +235,17 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
+    sid    = "${local.policy_region_prefix}EventBridgeAccess"
+    effect = "Allow"
+
+    actions = [
+      "events:PutEvents",
+    ]
+
+    resources = module.event_bus.receive_events_bus_arn == "" ? [] : [module.event_bus.receive_events_bus_arn]
+  }
+
+  statement {
     sid    = "${local.policy_region_prefix}LpaCollectionAccess"
     effect = "Allow"
 
@@ -536,6 +547,10 @@ locals {
         {
           name  = "DYNAMODB_TABLE_STATS",
           value = var.dynamodb_tables.stats_table.name
+        },
+        {
+          name  = "EVENTBRIDGE_BUS_NAME",
+          value = module.event_bus.receive_events_bus_arn,
         },
         {
           name  = "CONTAINER_VERSION",
