@@ -266,7 +266,7 @@ class PaperVerificationCodeService
             throw new NotFoundException();
         }
 
-        if ($noOfAttorneys !== count($lpa->attorneys)) {
+        if ($noOfAttorneys !== count($lpa->attorneys) + count($lpa->trustCorporations)) {
             $this->logger->info(
                 'The the no. of attorneys entered by the user does not match the number found in the LPA',
                 ['code' => (string) $code]
