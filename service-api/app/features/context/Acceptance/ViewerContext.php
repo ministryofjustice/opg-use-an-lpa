@@ -403,7 +403,7 @@ class ViewerContext implements Context
         $this->sentToDonor   = false;
         $this->attorneyName  = $this->lpa->attorneys[0]->firstNames . ' ' . $this->lpa->attorneys[0]->lastName;
         $this->dateOfBirth   = $this->lpa->attorneys[0]->dateOfBirth;
-        $this->noOfAttorneys = count($this->lpa->attorneys);
+        $this->noOfAttorneys = count($this->lpa->attorneys) + count($this->lpa->trustCorporations);
     }
 
     #[Then('/^I see a message that LPA has been cancelled$/')]

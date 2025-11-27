@@ -42,9 +42,9 @@ Feature: View an LPA using a paper verification code
 
     Examples:
       | sentToDonor | attorneyName | dateOfBirth | noOfAttorneys | description |
-      | true  | "Herman Seakrest" | "1982-07-24" | 1 | Not the donor date of birth     |
-      | false | "John Seakrest"   | "1982-07-24" | 1 | Not an attorneys name           |
-      | true  | "John Seakrest"   | "1982-07-24" | 1 | Not an attorneys name           |
-      | false | "Herman Seakrest" | "1970-12-08" | 1 | Not the attorneys date of birth |
-      | true  | "Herman Seakrest" | "1970-12-08" | 1 | Not the donors date of birth    |
-      | false | "Herman Seakrest" | "1982-07-24" | 2 | Incorrect attorney count        |
+      | true  | "Herman Seakrest" | "1982-07-24" | 2 | Not the donor date of birth     |
+      | false | "John Seakrest"   | "1982-07-24" | 2 | Not an attorneys name           |
+      | true  | "John Seakrest"   | "1982-07-24" | 2 | Not an attorneys name           |
+      | false | "Herman Seakrest" | "1970-12-08" | 2 | Not the attorneys date of birth |
+      | true  | "Herman Seakrest" | "1970-12-08" | 2 | Not the donors date of birth    |
+      | false | "Herman Seakrest" | "1982-07-24" | 1 | Incorrect attorney count        |
