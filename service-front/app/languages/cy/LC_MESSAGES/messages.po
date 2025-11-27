@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-11-18T14:03:27+00:00\n"
+"POT-Creation-Date: 2025-11-27T22:00:46+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2370,10 +2370,8 @@ msgid "The reference number is in the same letter that has your activation key."
 msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
-msgid ""
-"LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
-msgstr ""
-"Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
+msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
+msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
 
 #: src/Actor/templates/actor/login-notification.html.twig:15
 msgid "We are changing the way you sign in to Use a lasting power of attorney"
@@ -7433,3 +7431,11 @@ msgid ""
 msgstr ""
 "Mae cyfeirnodau LPA yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae "
 "rhai cyfeirnodau LPA yn dechrau gyda M, er enghraifft M-1111-2222-3333."
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
+msgid ""
+"If a professional, such as a solicitor, helped to make the LPA, they should be "
+"able to give you the reference number."
+msgstr ""
+"Os oedd gweithiwr proffesiynol, fel cyfreithiwr wedi helpu i wneud yr LPA, "
+"dylent allu rhoi’r cyfeirnod ichi. "

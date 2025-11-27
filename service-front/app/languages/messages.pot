@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-11-18T14:03:27+00:00\n"
+"POT-Creation-Date: 2025-11-27T22:00:46+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
@@ -5317,4 +5317,8 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br>Some LPA reference numbers start with an M, for example M-1111-2222-3333."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
+msgid "If a professional, such as a solicitor, helped to make the LPA, they should be able to give you the reference number."
 msgstr ""
