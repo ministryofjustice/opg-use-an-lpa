@@ -36,7 +36,7 @@ class RequestActivationKey implements WorkflowState
         ?string $dob = null,
         public ?string $postcode = null,
         // these should be reset across runs
-        public ?int $referenceNumber = null,
+        public ?string $referenceNumber = null,
         ?string $actorType = null,
         public ?string $donorFirstNames = null,
         public ?string $donorLastName = null,
@@ -52,7 +52,7 @@ class RequestActivationKey implements WorkflowState
         public ?string $telephone = null,
         public ?bool $noTelephone = null,
         // not used for entered data but to track workflow path
-        public ?int $actorUid = null,
+        public ?string $actorUid = null,
         public ?bool $needsCleansing = null,
         public ?string $actorAddressResponse = null,
         public ?string $liveInUK = null,

@@ -39,6 +39,7 @@ const (
 		"address": {
 			"line1": "74 Cloob Close",
 			"town": "Mahhhhhhhhhh",
+			"postcode": "TP6 8EX",
 			"country": "GB"
 		},
 		"dateOfBirth": "1970-01-24",
@@ -53,6 +54,7 @@ const (
 			"address": {
 				"line1": "81 NighOnTimeWeBuiltIt Street",
 				"town": "Mahhhhhhhhhh",
+				"postcode": "PC4 6UZ",
 				"country": "GB"
 			},
 			"dateOfBirth": "1982-07-24",

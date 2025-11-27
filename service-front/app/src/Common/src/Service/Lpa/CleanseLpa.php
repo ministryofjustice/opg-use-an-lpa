@@ -24,9 +24,9 @@ class CleanseLpa
 
     public function cleanse(
         string $userToken,
-        int $lpaUid,
+        string $lpaUid,
         string $additionalInformation,
-        ?int $actorId,
+        ?string $actorId,
     ): AccessForAllApiResult {
         $data = [
             'reference_number' => $lpaUid,

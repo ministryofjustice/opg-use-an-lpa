@@ -94,7 +94,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements
                     $this->notifyService->sendEmailToUser(
                         NotifyService::ACTIVATION_KEY_REQUEST_CONFIRMATION_EMAIL_TEMPLATE,
                         $user->getDetails()['Email'],
-                        referenceNumber:(string) $state->referenceNumber,
+                        referenceNumber: $state->referenceNumber,
                         postCode:strtoupper($state->postcode),
                         letterExpectedDate:($this->localisedDate)($letterExpectedDate),
                     );
@@ -110,7 +110,7 @@ class CreateActivationKeyHandler extends AbstractHandler implements
                     );
                 case AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING:
                     $state->needsCleansing = true;
-                    $state->actorUid       = (int) $result->getData()['actor_id'];
+                    $state->actorUid       = $result->getData()['actor_id'];
 
                     return $this->redirectToRoute('lpa.add.contact-details');
                 default:
