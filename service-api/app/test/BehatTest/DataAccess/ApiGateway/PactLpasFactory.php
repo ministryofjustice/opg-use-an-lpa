@@ -11,6 +11,7 @@ use App\DataAccess\Repository\LpasInterface;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaDataFormatter;
+use Aws\EventBridge\EventBridgeClient;
 use DI\NotFoundException;
 use Exception;
 use GuzzleHttp\Client;
@@ -51,11 +52,13 @@ class PactLpasFactory
             $container->get(StreamFactoryInterface::class),
             $container->get(RequestSignerFactory::class),
             parse_url($config['sirius_api']['endpoint'], PHP_URL_HOST),
+            $config['eventbridge_bus_name'],
             $container->get(RequestTracing::TRACE_PARAMETER_NAME),
             $container->get(SiriusLpaSanitiser::class),
             $container->get(LoggerInterface::class),
             $container->get(FeatureEnabled::class),
-            $container->get(LpaDataFormatter::class)
+            $container->get(LpaDataFormatter::class),
+            $container->get(EventBridgeClient::class),
         );
     }
 }

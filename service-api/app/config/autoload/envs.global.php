@@ -5,26 +5,27 @@ declare(strict_types=1);
 use Laminas\Cache\Storage\Adapter\Apcu;
 
 return [
-    'version'            => getenv('CONTAINER_VERSION') ?: 'dev',
-    'environment_name'   => getenv('ENVIRONMENT_NAME') ?: '',
-    'sirius_api'         => [
+    'version'              => getenv('CONTAINER_VERSION') ?: 'dev',
+    'environment_name'     => getenv('ENVIRONMENT_NAME') ?: '',
+    'sirius_api'           => [
         'endpoint' => getenv('SIRIUS_API_ENDPOINT') ?: null,
     ],
-    'lpa_data_store_api' => [
+    'lpa_data_store_api'   => [
         'endpoint' => getenv('LPA_DATA_STORE_API_ENDPOINT') ?: null,
     ],
-    'codes_api'          => [
+    'codes_api'            => [
         'endpoint'          => getenv('LPA_CODES_API_ENDPOINT') ?: null,
         'static_auth_token' => getenv('LPA_CODES_STATIC_AUTH_TOKEN') ?: null,
     ],
-    'iap_images_api'     => [
+    'iap_images_api'       => [
         'endpoint' => getenv('IAP_IMAGES_API_ENDPOINT') ?: null,
     ],
-    'one_login'          => [
+    'one_login'            => [
         'client_id'     => getenv('ONE_LOGIN_CLIENT_ID') ?: null,
         'discovery_url' => getenv('ONE_LOGIN_DISCOVERY_URL') ?: null,
     ],
-    'aws'                => [
+    'eventbridge_bus_name' => getenv('EVENTBRIDGE_BUS_NAME') ?: 'default',
+    'aws'                  => [
         'region'         => getenv('AWS_REGION') ?: 'eu-west-1',
         'version'        => 'latest',
         'ApiGateway'     => [
@@ -33,6 +34,9 @@ return [
         'DynamoDb'       => [
             'endpoint' => getenv('AWS_ENDPOINT_DYNAMODB') ?: null,
         ],
+        'EventBridge'    => [
+            'endpoint' => getenv('AWS_ENDPOINT_EVENTBRIDGE') ?: null,
+        ],
         'SecretsManager' => [
             'endpoint' => getenv('AWS_ENDPOINT_SECRETSMANAGER') ?: null,
         ],
@@ -40,7 +44,7 @@ return [
             'endpoint' => getenv('AWS_ENDPOINT_SSM') ?: null,
         ],
     ],
-    'repositories'       => [
+    'repositories'         => [
         'dynamodb' => [
             'actor-codes-table'     => getenv('DYNAMODB_TABLE_ACTOR_CODES') ?: null,
             'actor-users-table'     => getenv('DYNAMODB_TABLE_ACTOR_USERS') ?: null,
@@ -49,12 +53,12 @@ return [
             'user-lpa-actor-map'    => getenv('DYNAMODB_TABLE_USER_LPA_ACTOR_MAP') ?: null,
         ],
     ],
-    'notify'             => [
+    'notify'               => [
         'api' => [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
         ],
     ],
-    'cache'              => [
+    'cache'                => [
         'one-login'      => [
             'adapter' => Apcu::class,
             'options' => [

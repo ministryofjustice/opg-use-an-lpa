@@ -16,6 +16,7 @@ use App\Service\Log\EventCodes;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Service\Lpa\SiriusLpa;
 use App\Value\LpaUid;
+use Aws\EventBridge\EventBridgeClient;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
@@ -47,11 +48,13 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
         StreamFactoryInterface $streamFactory,
         RequestSignerFactory $requestSignerFactory,
         string $apiBaseUri,
+        private readonly string $eventBusName,
         string $traceId,
         private readonly DataSanitiserStrategy $sanitiser,
         private readonly LoggerInterface $logger,
         private FeatureEnabled $featureEnabled,
         private LpaDataFormatter $lpaDataFormatter,
+        private EventBridgeClient $eventBridgeClient,
     ) {
         parent::__construct(
             $httpClient,
@@ -135,7 +138,37 @@ class SiriusLpas extends AbstractApiClient implements LpasInterface, RequestLett
     public function requestLetter(LpaUid $caseId, ?string $actorId, ?string $additionalInfo): void
     {
         if ($caseId->getLpaSource() === LpaSource::LPASTORE) {
-            $this->logger->info('TODO request a letter from Sirius');
+            $entry = [
+                'Source'       => 'opg.poas.use',
+                'DetailType'   => $actorId === null ? 'request-cleanse' : 'request-letter',
+                'Detail'       => json_encode(
+                    $actorId === null
+                        ? ['uid' => $caseId->getLpaUid(), 'notes' => $additionalInfo]
+                        : ['uid' => $caseId->getLpaUid(), 'actor' => $actorId]
+                ),
+                'EventBusName' => $this->eventBusName,
+            ];
+
+            if (!empty($this->traceId)) {
+                $entry['TraceHeader'] = $this->traceId;
+            }
+
+            $result = $this->eventBridgeClient->putEvents([
+                'Entries' => [$entry],
+            ]);
+
+            if ($result->get('FailedEntryCount') > 0) {
+                $this->logger->warning(
+                    'Failed to put event for LPA {lpaUid}',
+                    [
+                        'lpaUid' => $caseId->getLpaUid(),
+                        'result' => var_export($result, true),
+                    ],
+                );
+
+                throw ApiException::create('Failed to put event for LPA');
+            }
+
             return;
         }
 
