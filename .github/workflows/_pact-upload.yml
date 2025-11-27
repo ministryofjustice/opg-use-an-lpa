@@ -28,7 +28,7 @@ on:
         description: 'Password for central OPG pact broker'
         required: true
 jobs:
-  code_coverage:
+  pact_upload:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -50,3 +50,5 @@ jobs:
             --broker-base-url https://pact-broker.api.opg.service.justice.gov.uk \
             --broker-username admin \
             --broker-password ${{ secrets.pact_broker_password }}
+        if: |
+          ( success() || failure() ) && inputs.specific_path == 'all'
