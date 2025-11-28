@@ -14,7 +14,6 @@ use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
 use App\Service\Lpa\FindActorInLpa;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
-use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use App\Value\LpaUid;
 use DateInterval;
@@ -23,7 +22,9 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Entity\Sirius\SiriusLpa;
+use App\Entity\LpaStore\LpaStore;
+use App\Service\Lpa\SiriusLpa as ServiceSiriusLpa;
 
 class AddAccessForAllLpa
 {
@@ -49,16 +50,11 @@ class AddAccessForAllLpa
     }
 
     /**
-     * @param string                 $userId
-     * @param int                    $referenceNumber
-     * @param AccessForAllValidation $validationData
-     * @param array                  $lpaAddedData
-     * @return void
      * @throws LpaActivationKeyAlreadyRequestedException
      */
     private function existentCodeNotActivated(
         string $userId,
-        int $referenceNumber,
+        LpaUid $referenceNumber,
         AccessForAllValidation $validationData,
         array $lpaAddedData,
     ): void {
@@ -101,19 +97,13 @@ class AddAccessForAllLpa
     }
 
     /**
-     * @param string                 $userId
-     * @param int                    $referenceNumber
-     * @param AccessForAllValidation $validationData
-     * @param array{
-     *     notActivated: bool
-     * }|null                        $lpaAddedData
-     * @return void
+     * @param array{notActivated: bool}|null $lpaAddedData
      * @throws LpaAlreadyHasActivationKeyException
      * @throws LpaActivationKeyAlreadyRequestedException
      */
     private function processActivationCode(
         string $userId,
-        int $referenceNumber,
+        LpaUid $referenceNumber,
         AccessForAllValidation $validationData,
         ?array $lpaAddedData,
     ): void {
@@ -147,13 +137,11 @@ class AddAccessForAllLpa
     }
 
     /**
-     * @param int $referenceNumber
-     * @return CombinedSiriusLpa|SiriusLpa
      * @throws NotFoundException
      */
-    private function fetchLPAData(int $referenceNumber): SiriusLpa|CombinedSiriusLpa
+    private function fetchLPAData(LpaUid $referenceNumber): ServiceSiriusLpa|SiriusLpa|LpaStore
     {
-        $lpa = $this->lpaManager->getByUid(new LpaUid((string) $referenceNumber));
+        $lpa = $this->lpaManager->getByUid($referenceNumber);
         if ($lpa === null) {
             $this->logger->info(
                 'The LPA {uId} entered by user is not found in Sirius',
@@ -164,7 +152,7 @@ class AddAccessForAllLpa
             throw new NotFoundException('LPA not found');
         }
 
-        /** @var SiriusLpa|CombinedSiriusLpa */
+        /** @var SiriusLpa|LpaStore */
         return $lpa->getData();
     }
 
@@ -175,7 +163,7 @@ class AddAccessForAllLpa
      *
      * @param string $userId    The users database ID
      * @param array{
-     *     reference_number: int,
+     *     reference_number: string,
      *     dob: string,
      *     first_names: string,
      *     last_name: string,
@@ -206,7 +194,7 @@ class AddAccessForAllLpa
             throw new LpaAlreadyAddedException($lpaAddedData);
         }
 
-        $lpa = $this->fetchLPAData($matchData['reference_number']);
+        $lpa = $this->fetchLPAData(new LpaUid($matchData['reference_number']));
 
         // Ensure LPA meets our registration requirements
         ($this->validateAccessForAllLpaRequirements)($lpa->getUid(), $lpa->getStatus());
@@ -241,7 +229,7 @@ class AddAccessForAllLpa
 
         // Checks if the actor already has an active activation key or has requested one. If forced ignore
         if (!$matchData['force_activation_key']) {
-            $this->processActivationCode($userId, $matchData['reference_number'], $response, $lpaAddedData);
+            $this->processActivationCode($userId, new LpaUid($matchData['reference_number']), $response, $lpaAddedData);
         }
 
         return $response;

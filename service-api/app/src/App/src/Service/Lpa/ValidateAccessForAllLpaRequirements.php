@@ -13,7 +13,8 @@ use Psr\Log\LoggerInterface;
  */
 class ValidateAccessForAllLpaRequirements
 {
-    public const NECESSARY_STATUS = 'Registered';
+    public const NECESSARY_STATUS            = 'Registered';
+    public const MODERNISED_NECESSARY_STATUS = 'registered';
 
     /**
      * @param LoggerInterface $logger
@@ -40,7 +41,7 @@ class ValidateAccessForAllLpaRequirements
      */
     public function lpaHasNecessaryStatus(string $lpaUid, string $status): void
     {
-        if ($status !== self::NECESSARY_STATUS) {
+        if ($status !== self::NECESSARY_STATUS && $status !== self::MODERNISED_NECESSARY_STATUS) {
             $this->logger->notice(
                 'User entered LPA {uId} does not have the required status',
                 [

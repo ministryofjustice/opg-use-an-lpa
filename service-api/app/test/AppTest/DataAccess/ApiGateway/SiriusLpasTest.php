@@ -13,6 +13,7 @@ use App\Entity\Lpa;
 use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
+use App\Value\LpaUid;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as GuzzleClient;
@@ -353,7 +354,7 @@ class SiriusLpasTest extends TestCase
 
         $service = $this->getLpas();
 
-        $service->requestLetter($caseUid, $actorUid, $additionalInfo);
+        $service->requestLetter(new LpaUid((string) $caseUid), $actorUid === null ? null : (string) $actorUid, $additionalInfo);
     }
 
     public static function letterRequestDataProvider(): array
@@ -378,6 +379,17 @@ class SiriusLpasTest extends TestCase
                 'additionalInfo' => 'Some random string',
             ],
         ];
+    }
+
+    #[Test]
+    public function requests_a_letter_successfully_for_modernised_lpa(): void
+    {
+        $this->generateCleanPSR17Prophecies();
+        $this->loggerInterface->info('TODO request a letter from Sirius')->shouldBeCalled();
+
+        $service = $this->getLpas();
+
+        $service->requestLetter(new LpaUid('M-7890-0400-4000'), '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d', null);
     }
 
     #[Test]
@@ -413,7 +425,7 @@ class SiriusLpasTest extends TestCase
         $service = $this->getLpas();
 
         $this->expectException(ApiException::class);
-        $service->requestLetter($caseUid, $actorUid, null);
+        $service->requestLetter(new LpaUid((string) $caseUid), (string) $actorUid, null);
     }
 
     #[Test]
@@ -444,6 +456,6 @@ class SiriusLpasTest extends TestCase
         $service = $this->getLpas();
 
         $this->expectException(ApiException::class);
-        $service->requestLetter($caseUid, $actorUid, null);
+        $service->requestLetter(new LpaUid((string) $caseUid), (string) $actorUid, null);
     }
 }

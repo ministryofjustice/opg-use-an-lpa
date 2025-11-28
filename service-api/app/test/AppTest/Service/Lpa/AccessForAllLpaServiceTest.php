@@ -14,6 +14,7 @@ use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
 use App\Service\Lpa\AccessForAll\AccessForAllLpaService;
 use App\Service\Lpa\ResolveActor;
+use App\Value\LpaUid;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -90,7 +91,7 @@ class AccessForAllLpaServiceTest extends TestCase
     public function request_access_code_letter(): void
     {
         $this->requestLetterInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->requestLetter(new LpaUid($this->lpaUid), $this->actorUid, null)
             ->shouldBeCalled();
 
         $this->userLpaActorMapProphecy->create(
@@ -102,7 +103,7 @@ class AccessForAllLpaServiceTest extends TestCase
         )->willReturn($this->lpaActorToken);
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+        $service->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorUid, $this->userId);
     }
 
     #[Test]
@@ -117,7 +118,7 @@ class AccessForAllLpaServiceTest extends TestCase
         )->willReturn($this->lpaActorToken);
 
         $this->requestLetterInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, null, $this->additionalInfo)
+            ->requestLetter(new LpaUid($this->lpaUid), null, $this->additionalInfo)
             ->shouldBeCalled();
 
         $this->userLpaActorMapProphecy->updateRecord(
@@ -128,14 +129,14 @@ class AccessForAllLpaServiceTest extends TestCase
         )->shouldNotBeCalled();
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+        $service->requestAccessAndCleanseByLetter(new LpaUid($this->lpaUid), $this->userId, $this->additionalInfo);
     }
 
     #[Test]
     public function request_access_code_letter_record_exists(): void
     {
         $this->requestLetterInterfaceProphecy
-            ->requestLetter((int) $this->lpaUid, (int) $this->actorUid, null)
+            ->requestLetter($this->lpaUid, $this->actorUid, null)
             ->shouldBeCalled();
 
         $this->userLpaActorMapProphecy->create(Argument::cetera())->shouldNotBeCalled();
@@ -148,7 +149,7 @@ class AccessForAllLpaServiceTest extends TestCase
         )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+        $service->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorUid, $this->userId, 'token-12345');
     }
 
     #[Test]
@@ -169,7 +170,7 @@ class AccessForAllLpaServiceTest extends TestCase
 
         $service = $this->getOlderLpaService();
         $service->requestAccessAndCleanseByLetter(
-            $this->lpaUid,
+            new LpaUid($this->lpaUid),
             $this->userId,
             $this->additionalInfo,
             null,
@@ -193,7 +194,7 @@ class AccessForAllLpaServiceTest extends TestCase
         )->shouldBeCalled();
 
         $service = $this->getOlderLpaService();
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId, 'token-12345');
+        $service->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorUid, $this->userId, 'token-12345');
     }
 
     #[Test]
@@ -220,7 +221,7 @@ class AccessForAllLpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $service->requestAccessByLetter($this->lpaUid, $this->actorUid, $this->userId);
+        $service->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorUid, $this->userId);
     }
 
     #[Test]
@@ -247,7 +248,7 @@ class AccessForAllLpaServiceTest extends TestCase
 
         $this->expectException(ApiException::class);
 
-        $service->requestAccessAndCleanseByLetter($this->lpaUid, $this->userId, $this->additionalInfo);
+        $service->requestAccessAndCleanseByLetter(new LpaUid($this->lpaUid), $this->userId, $this->additionalInfo);
     }
 
     #[Test]

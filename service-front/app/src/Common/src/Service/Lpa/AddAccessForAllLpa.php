@@ -51,7 +51,7 @@ class AddAccessForAllLpa
 
     public function validate(
         string $userToken,
-        int $lpaUid,
+        string $lpaUid,
         string $firstnames,
         string $lastname,
         DateTimeInterface $dob,
@@ -102,7 +102,7 @@ class AddAccessForAllLpa
 
     public function confirm(
         string $userToken,
-        int $lpaUid,
+        string $lpaUid,
         string $firstnames,
         string $lastname,
         DateTimeInterface $dob,
@@ -156,13 +156,8 @@ class AddAccessForAllLpa
     /**
      * Translates an exception message returned from the API into a const string that we can use, as well
      * as logging the result
-     *
-     * @param int    $lpaUid
-     * @param string $message
-     * @param array  $additionalData
-     * @return AccessForAllApiResult
      */
-    private function badRequestReturned(int $lpaUid, string $message, array $additionalData): AccessForAllApiResult
+    private function badRequestReturned(string $lpaUid, string $message, array $additionalData): AccessForAllApiResult
     {
         switch ($message) {
             case self::LPA_ALREADY_ADDED:
@@ -231,12 +226,9 @@ class AddAccessForAllLpa
     /**
      * Translates a 'Not Found' response from our API into an appropriate const value and also logs the result
      *
-     * @param int   $lpaUid
-     * @param array $additionalData
-     * @return AccessForAllApiResult
      * @throws RuntimeException
      */
-    private function notFoundReturned(int $lpaUid, array $additionalData): AccessForAllApiResult
+    private function notFoundReturned(string $lpaUid, array $additionalData): AccessForAllApiResult
     {
         $this->logger->notice(
             'LPA with reference number {uId} not found',
