@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-11-28T11:18:25+00:00\n"
+"POT-Creation-Date: 2025-11-28T14:21:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4748,4 +4748,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 msgid "You cannot use a download or printout of this page instead of giving someone an access code"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
+msgid "You cannot use a download or printout of this page instead of giving someone an access code."
 msgstr ""
