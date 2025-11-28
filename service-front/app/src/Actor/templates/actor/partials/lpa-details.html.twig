@@ -1,10 +1,18 @@
 <div class="moj-ticket-panel__row">
     <div class="lpa-text">
         {% if actorActive %}
-            <h3 class="govuk-heading-m govuk-!-margin-bottom-1">{{ caseSubtype }}</h3>
+            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">{{ caseSubtype }}</h3>
         {% else %}
             <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
         {% endif %}
+
+        <p class="govuk-heading-s govuk-!-margin-bottom-6">
+            {% trans %}LPA number: {% endtrans %} {{ lpaReference }}
+        </p>
+        <p class="govuk-heading-s govuk-!-margin-bottom-1">
+            {% trans %}Added by: {% endtrans %} {{ donorName }}
+        </p>
+
 
         {%  if not actorActive %}
             <p class="govuk-body govuk-!-margin-bottom-0 lpa-secondary-text-colour">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
