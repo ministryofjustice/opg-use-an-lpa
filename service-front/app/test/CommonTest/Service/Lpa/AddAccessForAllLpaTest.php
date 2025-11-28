@@ -50,7 +50,7 @@ class AddAccessForAllLpaTest extends TestCase
         $this->parseOlderLpaMatchProphecy = $this->prophesize(ParseLpaMatch::class);
 
         $this->olderLpa = [
-            'reference_number' => 700000000000,
+            'reference_number' => '700000000000',
             'first_names'      => 'Test',
             'last_name'        => 'Example',
             'dob'              => new DateTime('1980-11-07'),

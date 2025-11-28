@@ -38,18 +38,22 @@ class DammCheck extends AbstractValidator
     public function isValid($value): bool
     {
         // Only apply to M-UIDs, as this will be used in places where 7-UIDs can also be provided.
-        if (strlen($value) !== 13) {
+        if (strlen($value) !== 16) {
             return true;
         }
 
-        if ($value[0] !== 'M' && $value[0] !== 'm') {
+        if ($value[0] !== 'M') {
             $this->error(self::INVALID_REFERENCE);
             return false;
         }
 
         $zero    = ord('0');
         $interim = 0;
-        foreach (str_split(substr($value, 1, 12)) as $char) {
+        foreach (str_split(substr($value, 2)) as $char) {
+            if ($char === '-') {
+                continue; // skip dashes, anything else is invalid
+            }
+
             $offset = ord($char) - $zero;
             if ($offset < 0 || $offset > 9) {
                 $this->error(self::INVALID_REFERENCE);

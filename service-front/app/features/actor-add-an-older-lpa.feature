@@ -10,8 +10,19 @@ Feature: Add an older LPA
     And I am currently signed in
 
   @ui @integration
-  Scenario: The user can add an older LPA to their account
+  Scenario: The user can request an activation key for an LPA
     Given I am on the add an older LPA page
+    And I provide the details from a valid paper document
+    And I confirm the details I provided are correct
+    And I am shown the details of an LPA
+    When I confirm details shown to me of the found LPA are correct
+    Then a letter is requested containing a one time use code
+    And I receive an email confirming activation key request
+
+  @ui @integration @ff:paper_verification:true
+  Scenario: The user can request an activation key for a modernised LPA
+    Given I am on the add an older LPA page
+    And I have a modernised LPA
     And I provide the details from a valid paper document
     And I confirm the details I provided are correct
     And I am shown the details of an LPA

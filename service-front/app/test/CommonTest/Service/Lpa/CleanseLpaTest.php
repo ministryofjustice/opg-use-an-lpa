@@ -19,11 +19,11 @@ class CleanseLpaTest extends TestCase
 {
     use ProphecyTrait;
 
-    private int $actorId;
+    private string $actorId;
     private string $additionalInfo;
     private ObjectProphecy|ApiClient $apiClientProphecy;
     private ObjectProphecy|LoggerInterface $loggerProphecy;
-    private int $lpaUid;
+    private string $lpaUid;
     private CleanseLpa $sut;
     private string $userToken;
 
@@ -33,9 +33,9 @@ class CleanseLpaTest extends TestCase
         $this->loggerProphecy    = $this->prophesize(LoggerInterface::class);
 
         $this->userToken      = '00000000-0000-4000-A000-000000000000';
-        $this->lpaUid         = 70000000013;
+        $this->lpaUid         = '70000000013';
         $this->additionalInfo = "This is a notes field with \n information about the user \n over multiple lines";
-        $this->actorId        = 1;
+        $this->actorId        = '1';
 
         $this->apiClientProphecy->setUserTokenHeader($this->userToken)->shouldBeCalled();
     }
@@ -92,6 +92,6 @@ class CleanseLpaTest extends TestCase
         $this->expectException(ApiException::class);
 
         $this->sut = new CleanseLpa($this->apiClientProphecy->reveal(), $this->loggerProphecy->reveal());
-        $response  = $this->sut->cleanse($this->userToken, $this->lpaUid, $this->additionalInfo, null);
+        $response  = $this->sut->cleanse($this->userToken, (string) $this->lpaUid, $this->additionalInfo, null);
     }
 }

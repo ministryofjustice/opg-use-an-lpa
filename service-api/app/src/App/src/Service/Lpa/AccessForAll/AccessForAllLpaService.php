@@ -8,6 +8,7 @@ use App\DataAccess\ApiGateway\ActorCodes;
 use App\DataAccess\Repository\RequestLetterInterface;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Exception\ApiException;
+use App\Value\LpaUid;
 use DateInterval;
 use DateTimeInterface;
 use Psr\Log\LoggerInterface;
@@ -70,13 +71,13 @@ class AccessForAllLpaService
      * carried out in a reverse order, with the one item we cannot revert carried out
      * last.
      *
-     * @param string      $uid              Sirius uId for an LPA
+     * @param LpaUid      $uid              Sirius uId for an LPA
      * @param string      $actorUid         uId of an actor on that LPA
      * @param string      $userId           The user ID of an actor in the ualpa database
      * @param string|null $existingRecordId If an existing LPA record has been stored this is the ID
      */
     public function requestAccessByLetter(
-        string $uid,
+        LpaUid $uid,
         string $actorUid,
         string $userId,
         ?string $existingRecordId = null,
@@ -85,34 +86,31 @@ class AccessForAllLpaService
         if ($existingRecordId === null) {
             $recordId = $this->userLpaActorMap->create(
                 $userId,
-                $uid,
+                $uid->getLpaUid(),
                 $actorUid,
                 new DateInterval(self::EXPIRY_INTERVAL),
                 new DateInterval(self::SEND_LETTER_INTERVAL)
             );
         }
 
-        $uidInt      = (int)$uid;
-        $actorUidInt = (int)$actorUid;
-
         $this->logger->info(
             'Requesting an access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
             [
                 'user_id'  => $userId,
-                'attorney' => $actorUidInt,
-                'lpa'      => $uidInt,
+                'attorney' => $actorUid,
+                'lpa'      => $uid,
             ]
         );
 
         try {
-            $this->requestLetterInterface->requestLetter($uidInt, $actorUidInt, null);
+            $this->requestLetterInterface->requestLetter($uid, $actorUid, null);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter for attorney {attorney} on LPA {lpa} in account {user_id}',
                 [
                     'user_id'  => $userId,
-                    'attorney' => $actorUidInt,
-                    'lpa'      => $uidInt,
+                    'attorney' => $actorUid,
+                    'lpa'      => $uid,
                 ]
             );
             if ($recordId !== null) {
@@ -141,48 +139,41 @@ class AccessForAllLpaService
      * Provides the capability to request a letter be sent to the registered
      * address of the specified actor with a new one-time-use registration code.
      * This will allow them to add the LPA to their UaLPA account.
-     *
-     * @param string  $uid Sirius uId for an LPA
-     * @param string  $userId
-     * @param string  $additionalInfo
-     * @param ?int    $actorId
-     * @param ?string $existingRecordId
      */
     public function requestAccessAndCleanseByLetter(
-        string $uid,
+        LpaUid $uid,
         string $userId,
         string $additionalInfo,
-        ?int $actorId = null,
+        ?string $actorId = null,
         ?string $existingRecordId = null,
     ): void {
         $recordId = null;
         if ($existingRecordId === null) {
             $recordId = $this->userLpaActorMap->create(
                 $userId,
-                $uid,
-                $actorId ? (string)$actorId : null,
+                $uid->getLpaUid(),
+                $actorId,
                 new DateInterval(self::EXPIRY_INTERVAL),
                 new DateInterval(self::CLEANSE_INTERVAL)
             );
         }
 
-        $uidInt = (int)$uid;
         $this->logger->info(
             'Requesting cleanse and an access code letter on LPA {lpa} in account {user_id}',
             [
                 'user_id' => $userId,
-                'lpa'     => $uidInt,
+                'lpa'     => $uid,
             ]
         );
 
         try {
-            $this->requestLetterInterface->requestLetter($uidInt, null, $additionalInfo);
+            $this->requestLetterInterface->requestLetter($uid, null, $additionalInfo);
         } catch (ApiException $apiException) {
             $this->logger->notice(
                 'Failed to request access code letter and cleanse for LPA {lpa} in account {user_id}',
                 [
                     'user_id' => $userId,
-                    'lpa'     => $uidInt,
+                    'lpa'     => $uid,
                 ]
             );
 
@@ -204,7 +195,7 @@ class AccessForAllLpaService
                 $existingRecordId,
                 new DateInterval(self::EXPIRY_INTERVAL),
                 new DateInterval(self::CLEANSE_INTERVAL),
-                $actorId ? (string)$actorId : null
+                $actorId
             );
         }
     }

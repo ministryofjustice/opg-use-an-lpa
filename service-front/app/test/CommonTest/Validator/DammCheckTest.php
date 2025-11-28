@@ -28,10 +28,9 @@ class DammCheckTest extends TestCase
     public static function validFormatProvider(): array
     {
         return [
-            ['M123456789018'],
-            ['m123456789018'],
-            ['M109876543214'],
-            ['M564987348960'],
+            ['M-1234-5678-9018'],
+            ['M-1098-7654-3214'],
+            ['M-5649-8734-8960'],
         ];
     }
 
@@ -50,12 +49,12 @@ class DammCheckTest extends TestCase
     public static function notValidFormatProvider(): array
     {
         return [
-            ['X123456789018'],
-            ['M12345678901X'],
-            ['M123456789017'],
-            ['M123456789019'],
-            ['M109876543213'],
-            ['M564987348961'],
+            ['X-1234-5678-9018'],
+            ['M-1234-5678-901X'],
+            ['M-1234-5678-9017'],
+            ['M-1234-5678-9019'],
+            ['M-1098-7654-3213'],
+            ['M-5649-8734-8961'],
         ];
     }
 }

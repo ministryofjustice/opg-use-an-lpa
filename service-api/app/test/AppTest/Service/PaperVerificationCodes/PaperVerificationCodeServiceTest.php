@@ -310,7 +310,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             sentToDonor: false,
             attorneyName: 'Herman Seakrest',
             dateOfBirth: new DateTimeImmutable('1982-07-24'),
-            noOfAttorneys: 1,
+            noOfAttorneys: 2,
         );
 
         $paperCodes = $this->createMock(PaperVerificationCodesInterface::class);
@@ -521,7 +521,7 @@ class PaperVerificationCodeServiceTest extends TestCase
             sentToDonor: true,
             attorneyName: 'Herman Seakrest',
             dateOfBirth: new DateTimeImmutable('1970-01-24'),
-            noOfAttorneys: 1,
+            noOfAttorneys: 2,
             organisation: 'Company A'
         );
         $auditLog = false;
