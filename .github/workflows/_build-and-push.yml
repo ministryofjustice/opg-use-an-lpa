@@ -96,7 +96,7 @@ jobs:
             path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
             path_to_trivyignore_file: "lambda-functions/event-receiver/.trivyignore.yaml"
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
 
       - uses: hadolint/hadolint-action@3fc49fb50d59c6ab7917a2e4195dba633e515b29 # v3.2.0
         id: hadolint
