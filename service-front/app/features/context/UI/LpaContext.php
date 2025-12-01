@@ -772,7 +772,6 @@ class LpaContext implements Context
      * <Important: This LPA has instructions or preferences>
      */
     #[Then('/^I can see the message (.*)$/')]
-    #[Then('/^I can see the LPA reference number and added by details on the dashboard$/')]
     public function iCanSeeTheMessage($message): void
     {
         //API call for getting all the users added LPAs
