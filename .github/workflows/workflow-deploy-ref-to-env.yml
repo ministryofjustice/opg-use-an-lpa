@@ -24,6 +24,7 @@ defaults:
 permissions:
   contents: write
   security-events: write
+  id-token: write
   pull-requests: read
   actions: none
   checks: none
