@@ -5,12 +5,13 @@
         {% else %}
             <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
         {% endif %}
-
-        <p class="govuk-heading-s govuk-!-margin-bottom-6">
-            {% trans %}LPA number: {% endtrans %} {{ lpaReference }}
+        
+        <p class="govuk-body-s govuk-!-margin-bottom-1">
+            <strong>{% trans %}LPA number:{% endtrans %}</strong> {{ lpaReference }}
         </p>
-        <p class="govuk-heading-s govuk-!-margin-bottom-1">
-            {% trans %}Added by: {% endtrans %} {{ donorName }}
+
+        <p class="govuk-body-s govuk-!-margin-bottom-5">
+            <strong>{% trans %}Added by:{% endtrans %}</strong> {{ lpaActor.firstnames }} {{ lpaActor.surname }}
         </p>
 
 
@@ -30,20 +31,22 @@
 
         {% if lpa.status|lower == 'cancelled' and activeCodeCount >= 1 %}
             <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
-                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+                {% trans count activeCodeCount %}%count% active access code|%count% active access codes{% endtrans %}
             </span>
         {% elseif activeCodeCount >= 1 %}
             <span class="moj-badge moj-badge--large moj-badge--blue govuk-!-margin-bottom-2">
-                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+                {% trans count activeCodeCount %}%count% active access code|%count% active access codes{% endtrans %}
             </span>
         {# shareCodes array contains activecodecount as an item so we need to factor in this when checking if empty #}
         {% elseif actorActive and activeCodeCount < 1 %}
             <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
-                {% trans %}No active codes{% endtrans %}
+                {% trans %}No active access codes{% endtrans %}
             </span>
         {% endif %}
     </div>
 </div>
+
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
 {% if actorActive %}
     <ul class="govuk-list govuk-list--inline">

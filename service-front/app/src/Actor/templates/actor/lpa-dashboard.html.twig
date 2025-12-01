@@ -80,6 +80,7 @@
                                 {% set applicationHasGuidance = lpa.applicationHasGuidance %}
                                 {% set lpaDonorSignatureDate = lpa.lpaDonorSignatureDate %}
                                 {% set lpaReference = lpa.uId %}
+                                {% set lpaActor = lpaData['actor']['details'] %}
 
                                 <article class="moj-ticket-panel" aria-label="Added lpa list">
                                     {% if actorActive %}
