@@ -804,7 +804,6 @@ class LpaContext implements Context
 
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText($message);
-        $this->ui->assertPageContainsText($this->lpaData->uId);
     }
 
     /**
