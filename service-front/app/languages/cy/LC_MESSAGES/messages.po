@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-11-28T14:21:57+00:00\n"
+"POT-Creation-Date: 2025-12-02T11:30:34+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3906,6 +3906,7 @@ msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
 msgid "Date summary viewed"
 msgstr "Dyddiad gweld y crynodeb"
 
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
 msgid ""
 "You cannot use a download or printout of this <abbr title=\"lasting power of "
@@ -6603,13 +6604,19 @@ msgstr ""
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
 msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
 
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
+msgid ""
+"If a professional, such as a solicitor, helped to make the LPA, they should be "
+"able to give you the reference number."
+msgstr ""
+"Os oedd gweithiwr proffesiynol, fel cyfreithiwr wedi helpu i wneud yr LPA, "
+"dylent allu rhoi’r cyfeirnod ichi."
+
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 msgid ""
 "You cannot use a download or printout of this page instead of giving someone "
 "an access code"
 msgstr ""
-"Ni allwch ddefnyddio fersiwn wedi’i lawrlwytho nac allbrint o’r dudalen hon yn "
-"lle rhoi cod mynediad i rywun"
 
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
 msgid ""
