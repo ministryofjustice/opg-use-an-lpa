@@ -33,7 +33,7 @@ Feature: Ask for an activation key
 
     Examples:
       | data       | reason |
-      | firstnames | Enter your first names   |
+      | firstnames | Enter your first name    |
       | last name  | Enter your last name     |
 
   @ui
@@ -64,7 +64,7 @@ Feature: Ask for an activation key
     | live_in_uk | postcode | reason                       |
     | Yes        |          | Enter your postcode          |
     |            |          | Select if you live in the UK or do not live in the UK |
-    
+
   @ui
   Scenario: The user is taken to check their answers when they request an activation key with valid details
     Given I am on the request an activation key page

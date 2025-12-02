@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-11-28T11:21:44+00:00\n"
+"POT-Creation-Date: 2025-12-02T11:50:27+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6612,6 +6612,20 @@ msgid ""
 msgstr ""
 "Os oedd gweithiwr proffesiynol, fel cyfreithiwr wedi helpu i wneud yr LPA, "
 "dylent allu rhoi’r cyfeirnod ichi."
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:24
+msgid "Include any middle names."
+msgstr "Dylech gynnwys unrhyw enwau cano."
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
+msgid "First name"
+msgstr "Enw cyntaf"
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:55
+msgctxt "error"
+msgid "Enter your first name"
+msgstr "Nodwch eich enw cyntaf"
 
 #~ msgid ""
 #~ "If there are instructions or preferences on this LPA, you may also be asked "

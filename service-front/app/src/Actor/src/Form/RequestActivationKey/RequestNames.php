@@ -15,7 +15,7 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
 {
     public const string FORM_NAME = 'request_activation_key_names';
 
-    public function __construct(CsrfGuardInterface $csrfGuard)
+    public function __construct(CsrfGuardInterface $csrfGuard, private bool $isModernised)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
 
@@ -46,7 +46,7 @@ class RequestNames extends AbstractForm implements InputFilterProviderInterface
                     [
                         'name'    => NotEmpty::class,
                         'options' => [
-                            'message' => 'Enter your first names',
+                            'message' => $this->isModernised ? 'Enter your first names' : 'Enter your first name',
                         ],
                     ],
                 ],

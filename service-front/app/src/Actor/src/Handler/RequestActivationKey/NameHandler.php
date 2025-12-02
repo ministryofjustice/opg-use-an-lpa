@@ -19,10 +19,13 @@ use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
 class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGuardAware, WorkflowStep
 {
     private RequestNames $form;
+    private bool $isModernised;
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new RequestNames($this->getCsrfGuard($request));
+        $referenceNumber    = $this->state($request)->referenceNumber;
+        $this->isModernised = $referenceNumber !== null && $referenceNumber[0] === 'M';
+        $this->form         = new RequestNames($this->getCsrfGuard($request), $this->isModernised);
         return parent::handle($request);
     }
 
@@ -36,9 +39,10 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         );
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request)),
+            'user'         => $this->user,
+            'form'         => $this->form->prepare(),
+            'back'         => $this->lastPage($this->state($request)),
+            'isModernised' => $this->isModernised,
         ]));
     }
 
@@ -57,9 +61,10 @@ class NameHandler extends AbstractRequestKeyHandler implements UserAware, CsrfGu
         }
 
         return new HtmlResponse($this->renderer->render('actor::request-activation-key/your-name', [
-            'user' => $this->user,
-            'form' => $this->form->prepare(),
-            'back' => $this->lastPage($this->state($request)),
+            'user'         => $this->user,
+            'form'         => $this->form->prepare(),
+            'back'         => $this->lastPage($this->state($request)),
+            'isModernised' => $this->isModernised,
         ]));
     }
 

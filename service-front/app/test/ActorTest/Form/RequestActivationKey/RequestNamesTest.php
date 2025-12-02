@@ -42,6 +42,6 @@ class RequestNamesTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new RequestNames($guardProphecy->reveal());
+        $this->form    = new RequestNames($guardProphecy->reveal(), true);
     }
 }
