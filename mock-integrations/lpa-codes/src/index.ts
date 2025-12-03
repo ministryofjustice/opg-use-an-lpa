@@ -1,6 +1,7 @@
 import { context, logger, respond } from '@imposter-js/types';
 import { codeExists, expireCode, getCode, isNotExpired, revokeCode } from './codes/codes';
 import { ExpiryReason } from './enum';
+import { ExpireRequest } from './types';
 
 // @ts-ignore
 const opId = context.operation.operationId
@@ -112,10 +113,17 @@ if (opId === 'api.resources.handle_healthcheck') {
   }
 } else if (opId === 'api.resources.pvc_expire_route') {
   if (context.request.body !== null) {
-    let params = JSON.parse(context.request.body)
+    const params = JSON.parse(context.request.body) as ExpireRequest
+
+    let key: string
+    if (params.lpa !== undefined) {
+      key = codeExists(params.lpa, params.actor)?.code
+    } else {
+      key = params.code
+    }
 
     let activationCode = expireCode(
-      params.code,
+      key,
       ExpiryReason[params.expiry_reason as keyof typeof ExpiryReason],
     )
     logger.debug('Loaded code ' + JSON.stringify(activationCode))

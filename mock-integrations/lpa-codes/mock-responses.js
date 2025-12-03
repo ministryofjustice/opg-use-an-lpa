@@ -42,6 +42,7 @@
   var ExpiryReason = /* @__PURE__ */ ((ExpiryReason2) => {
     ExpiryReason2[ExpiryReason2["cancelled"] = 0] = "cancelled";
     ExpiryReason2[ExpiryReason2["paper_to_digital"] = 30] = "paper_to_digital";
+    ExpiryReason2[ExpiryReason2["superseded"] = 30] = "superseded";
     ExpiryReason2[ExpiryReason2["first_time_use"] = 730] = "first_time_use";
     return ExpiryReason2;
   })(ExpiryReason || {});
@@ -291,7 +292,8 @@
       expiry_date: "valid",
       generated_date: "2020-06-22",
       status_details: "Imported",
-      Comment: "Seeded Data:"
+      has_paper_verification_code: true,
+      Comment: "Seeded Data: Herman Seakrest activation key"
     }
   ];
 
@@ -452,9 +454,15 @@
     }
   } else if (opId === "api.resources.pvc_expire_route") {
     if (import_types2.context.request.body !== null) {
-      let params = JSON.parse(import_types2.context.request.body);
+      const params = JSON.parse(import_types2.context.request.body);
+      let key;
+      if (params.lpa !== void 0) {
+        key = codeExists(params.lpa, params.actor)?.code;
+      } else {
+        key = params.code;
+      }
       let activationCode = expireCode(
-        params.code,
+        key,
         ExpiryReason[params.expiry_reason]
       );
       import_types2.logger.debug("Loaded code " + JSON.stringify(activationCode));
