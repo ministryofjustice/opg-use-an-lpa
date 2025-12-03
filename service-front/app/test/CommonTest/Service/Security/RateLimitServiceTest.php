@@ -29,15 +29,21 @@ class RateLimitServiceTest extends TestCase
 
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
-        $rateLimitService = $this->getMockForAbstractClass(
-            RateLimitService::class,
-            [
-                $storageProphecy->reveal(),
-                60,
-                4,
-                $loggerProphecy->reveal(),
-            ]
-        );
+        $rateLimitService = new class (
+            $storageProphecy->reveal(),
+            60,
+            4,
+            $loggerProphecy->reveal(),
+        ) extends RateLimitService {
+            public function isLimited(string $identity): bool
+            {
+                return false;
+            }
+
+            public function limit(string $identity): void
+            {
+            }
+        };
 
         $name = $rateLimitService->getName();
 

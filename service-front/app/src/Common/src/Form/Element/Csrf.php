@@ -8,12 +8,16 @@ use Common\Validator\CsrfGuardValidator;
 use Laminas\Form\Element\Csrf as LaminasCsrf;
 use Laminas\Validator\Csrf as LaminasCsrfValidator;
 
+/**
+ * @psalm-suppress InvalidExtendClass
+ */
 class Csrf extends LaminasCsrf
 {
     /**
      * Overridden function required to implement our custom CsrfValidator
      *
      * @return LaminasCsrfValidator
+     * @psalm-suppress MethodSignatureMismatch
      */
     public function getCsrfValidator(): LaminasCsrfValidator
     {

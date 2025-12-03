@@ -23,7 +23,9 @@ class CsrfGuardTest extends TestCase
         $requestProphecy->getAttribute(CsrfMiddleware::GUARD_ATTRIBUTE)
             ->willReturn($this->prophesize(CsrfGuardInterface::class)->reveal());
 
-        $guardTrait = $this->getMockForTrait(CsrfGuard::class);
+        $guardTrait = new class {
+            use CsrfGuard;
+        };
 
         $guard = $guardTrait->getCsrfGuard($requestProphecy->reveal());
 

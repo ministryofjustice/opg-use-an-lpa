@@ -23,7 +23,9 @@ class UserTest extends TestCase
         $requestProphecy = $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getAttribute(UserInterface::class)->willReturn($userInterfaceProphecy->reveal());
 
-        $userTrait = $this->getMockForTrait(User::class);
+        $userTrait = new class {
+            use User;
+        };
 
         $user = $userTrait->getUser($requestProphecy->reveal());
 
@@ -35,7 +37,9 @@ class UserTest extends TestCase
     {
         $requestProphecy = $this->requestProphecy = $this->prophesize(ServerRequestInterface::class);
 
-        $userTrait = $this->getMockForTrait(User::class);
+        $userTrait = new class {
+            use User;
+        };
 
         $user = $userTrait->getUser($requestProphecy->reveal());
 
