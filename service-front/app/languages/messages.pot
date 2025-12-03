@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-11-28T11:21:44+00:00\n"
+"POT-Creation-Date: 2025-12-02T11:50:27+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4750,4 +4750,18 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
 msgid "If a professional, such as a solicitor, helped to make the LPA, they should be able to give you the reference number."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:24
+msgid "Include any middle names."
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/your-name.html.twig:29
+msgid "First name"
+msgstr ""
+
+#. Add Older LPA
+#: src/Actor/templates/actor/form-error-messages.html.twig:55
+msgctxt "error"
+msgid "Enter your first name"
 msgstr ""
