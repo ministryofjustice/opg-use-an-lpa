@@ -12,6 +12,7 @@ use App\DataAccess\ApiGateway\SiriusLpasFactory;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Log\RequestTracing;
 use App\Service\Lpa\LpaDataFormatter;
+use Aws\EventBridge\EventBridgeClient;
 use Exception;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use PHPUnit\Framework\Attributes\Test;
@@ -56,9 +57,10 @@ class SiriusLpasFactoryTest extends TestCase
 
         $containerProphecy->get('config')->willReturn(
             [
-                'sirius_api' => [
+                'sirius_api'           => [
                     'endpoint' => 'http://test',
                 ],
+                'eventbridge_bus_name' => 'my test bus',
             ]
         );
 
@@ -78,6 +80,10 @@ class SiriusLpasFactoryTest extends TestCase
 
         $containerProphecy->get(LpaDataFormatter::class)->willReturn(
             $this->prophesize(LpaDataFormatter::class)->reveal()
+        );
+
+        $containerProphecy->get(EventBridgeClient::class)->willReturn(
+            $this->prophesize(EventBridgeClient::class)->reveal()
         );
 
         $factory = new SiriusLpasFactory();

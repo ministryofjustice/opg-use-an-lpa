@@ -39,6 +39,7 @@ services:
       LPA_DATA_STORE_API_ENDPOINT: http://mock-lpa-data-store:4014
       ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
       AWS_ENDPOINT_DYNAMODB: http://localstack:4566
+      AWS_ENDPOINT_EVENTBRIDGE: http://localstack:4566
       AWS_ENDPOINT_SECRETSMANAGER: http://localstack:4566
       AWS_ENDPOINT_SSM: http://localstack:4566
 
