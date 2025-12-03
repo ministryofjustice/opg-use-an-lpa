@@ -1,5 +1,10 @@
 {% extends '@actor/layout.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <meta name="robots" content="noindex, nofollow">
+{% endblock %}
+
 {% block html_title %}
     {% trans %}One Login{% endtrans %} - {{ parent() }}
 {% endblock %}
