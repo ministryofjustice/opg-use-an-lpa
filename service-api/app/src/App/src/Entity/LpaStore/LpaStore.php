@@ -15,6 +15,7 @@ use App\Enum\WhenTheLpaCanBeUsed;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
@@ -87,25 +88,9 @@ class LpaStore extends Lpa implements FindActorInLpaInterface
         );
     }
 
-    public function getDonor(): ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface
+    public function getDonor(): LpaStoreDonor
     {
-        if (
-            !(
-                $this->donor instanceof ResolveActorInterface &&
-                $this->donor instanceof GetAttorneyStatusInterface &&
-                $this->donor instanceof ActorMatchingInterface
-            )
-        ) {
-            throw new Exception(
-                'Donor is not a valid ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface instance'
-            );
-        }
-
+        /** @var LpaStoreDonor */
         return $this->donor;
-    }
-
-    public function getCaseSubType(): string
-    {
-        return $this->caseSubtype->value;
     }
 }

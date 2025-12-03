@@ -7,6 +7,7 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
+use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Sirius\Casters\CastToUnhyphenatedUId;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
@@ -100,31 +101,9 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
         );
     }
 
-    public function getDonor(): ActorMatchingInterface&
-                                GetAttorneyStatusInterface&
-                                ResolveActorInterface&
-                                DonorInformationInterface&
-                                LpaRemovedDonorInformationInterface
+    public function getDonor(): SiriusLpaDonor
     {
-        if (
-            !(
-                $this->donor instanceof ActorMatchingInterface &&
-                $this->donor instanceof GetAttorneyStatusInterface &&
-                $this->donor instanceof ResolveActorInterface &&
-                $this->donor instanceof DonorInformationInterface &&
-                $this->donor instanceof LpaRemovedDonorInformationInterface
-            )
-        ) {
-            throw new Exception(
-                'Donor does not implement all necessary interfaces'
-            );
-        }
-
+        /** @var SiriusLpaDonor */
         return $this->donor;
-    }
-
-    public function getCaseSubType(): string
-    {
-        return $this->caseSubtype->value;
     }
 }

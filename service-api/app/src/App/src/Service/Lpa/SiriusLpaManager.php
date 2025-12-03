@@ -8,8 +8,10 @@ use App\Enum\LpaSource;
 use App\Exception\ApiException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\Combined\FilterActiveActors;
+use App\Service\Lpa\Combined\UserLpaActorToken as UserLpaActorTokenResponse;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
+use DateTimeImmutable;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     LpasInterface,
     Response\Lpa,
@@ -52,34 +54,37 @@ class SiriusLpaManager implements LpaManagerInterface
         );
     }
 
-    public function getByUserLpaActorToken(string $token, string $userId): ?array
+    public function getByUserLpaActorToken(string $token, string $userId): ?UserLpaActorTokenResponse
     {
-        $map = $this->userLpaActorMapRepository->get($token);
+        $lpaActorMap = $this->userLpaActorMapRepository->get($token);
 
         // Ensure the passed userId matches the passed token
-        if ($userId !== $map['UserId']) {
-            return null;
+        if ($userId !== $lpaActorMap['UserId']) {
+            throw new NotFoundException();
         }
 
-        $lpa = $this->getByUid(new LpaUid($map['SiriusUid']));
+        $lpa = $this->getByUid(new LpaUid($lpaActorMap['SiriusUid']));
 
         if ($lpa === null) {
-            return null;
+            throw new NotFoundException();
         }
 
         $lpaData = $lpa->getData();
 
-        $result = [
-            'user-lpa-actor-token' => $map['Id'],
-            'date'                 => $lpa->getLookupTime()->format('c'),
-            'lpa'                  => $lpaData,
-            'activationKeyDueDate' => $map['DueBy'] ?? null,
-        ];
+        $result = new UserLpaActorTokenResponse(
+            $lpaActorMap['Id'],
+            $lpa->getLookupTime(),
+            $lpaData
+        );
+
+        if (isset($lpaActorMap['DueBy'])) {
+            $result = $result->withActivationKeyDueDate(new DateTimeImmutable($lpaActorMap['DueBy']));
+        }
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
-        if (isset($map['ActorId'])) {
+        if (isset($lpaActorMap['ActorId'])) {
             // If an active attorney is not found then this is null
-            $result['actor'] = ($this->resolveActor)($lpaData, (string) $map['ActorId']);
+            $result = $result->withActor(($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']));
         }
 
         // Extract and return only LPA's where status is Registered or Cancelled
@@ -88,7 +93,7 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         // LPA was found but is not valid for use.
-        return [];
+        return null;
     }
 
     public function getAllActiveForUser(string $userId): array

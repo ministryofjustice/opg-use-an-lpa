@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\ActorStatus;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
 use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -15,6 +16,7 @@ use JsonSerializable;
 class Person implements
     JsonSerializable,
     GetAttorneyStatusInterface,
+    DonorInformationInterface,
     GetTrustCorporationStatusInterface,
     ResolveActorInterface
 {
@@ -93,5 +95,10 @@ class Person implements
     public function getId(): string
     {
         return $this->uId ?? '';
+    }
+
+    public function getMiddleNames(): string
+    {
+        return '';
     }
 }

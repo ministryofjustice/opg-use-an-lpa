@@ -26,11 +26,6 @@
       <code><![CDATA[$uId]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/App/src/DataAccess/Repository/Response/PaperVerificationCodeExpiry.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$expiresAt]]></code>
-    </PossiblyUnusedProperty>
-  </file>
   <file src="src/App/src/DataAccess/Repository/UserLpaActorMapInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[array]]></code>
@@ -73,17 +68,6 @@
       <code><![CDATA[$withdrawnDate]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/App/src/Entity/LpaStore/LpaStore.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->caseSubtype->value]]></code>
-    </NullableReturnStatement>
-    <PossiblyUnusedMethod>
-      <code><![CDATA[getCaseSubType]]></code>
-    </PossiblyUnusedMethod>
-  </file>
   <file src="src/App/src/Entity/Person.php">
     <PossiblyUnusedMethod>
       <code><![CDATA[getDob]]></code>
@@ -107,14 +91,6 @@
     <InvalidReturnType>
       <code><![CDATA[string]]></code>
     </InvalidReturnType>
-  </file>
-  <file src="src/App/src/Entity/Sirius/SiriusLpa.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[string]]></code>
-    </InvalidNullableReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$this->caseSubtype->value]]></code>
-    </NullableReturnStatement>
   </file>
   <file src="src/App/src/Entity/Sirius/SiriusLpaTrustCorporation.php">
     <PossiblyUnusedProperty>
@@ -204,10 +180,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getId]]></code>
     </UndefinedInterfaceMethod>
-    <UndefinedMethod>
-      <code><![CDATA[getDonor]]></code>
-      <code><![CDATA[getDonor]]></code>
-    </UndefinedMethod>
   </file>
   <file src="src/App/src/Service/Lpa/RestrictSendingLpaForCleansing.php">
     <InvalidMethodCall>

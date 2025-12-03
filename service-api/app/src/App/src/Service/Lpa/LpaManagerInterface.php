@@ -10,7 +10,7 @@ use App\Entity\Lpa;
 use App\Exception\ApiException;
 use App\Exception\GoneException;
 use App\Exception\NotFoundException;
-use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Service\Lpa\Combined\UserLpaActorToken as UserLpaActorTokenResponse;
 use App\Value\LpaUid;
 
 interface LpaManagerInterface
@@ -30,16 +30,10 @@ interface LpaManagerInterface
      *
      * @param string $token  UserLpaActorToken that map an LPA to a user account
      * @param string $userId The user account ID that must correlate to the $token
-     * @return array{
-     *      user-lpa-actor-token: string,
-     *      date: string,
-     *      lpa: Lpa,
-     *      activationKeyDueDate: ?string,
-     *      actor: LpaActor
-     *  }|array|null A structure that contains processed LPA data and metadata
+     * @return UserLpaActorTokenResponse|null A structure that contains processed LPA data and metadata
      * @throws ApiException
      */
-    public function getByUserLpaActorToken(string $token, string $userId): ?array;
+    public function getByUserLpaActorToken(string $token, string $userId): ?UserLpaActorTokenResponse;
 
     /**
      * Return all activated LPAs for the given user_id

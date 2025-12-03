@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Lpa;
 
 use App\DataAccess\ApiGateway\{DataStoreLpas, SiriusLpas};
+use DateTimeImmutable;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     Response\Lpa,
     Response\LpaInterface,
@@ -13,7 +14,8 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodesInterface};
 use App\Enum\LpaSource;
 use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
-use App\Service\Lpa\Combined\{FilterActiveActors, RejectInvalidLpa, ResolveLpaTypes};
+use App\Service\Lpa\Combined\{FilterActiveActors, RejectInvalidLpa, ResolveLpaTypes,
+    UserLpaActorToken as UserLpaActorTokenResponse};
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Value\LpaUid;
@@ -55,6 +57,7 @@ class CombinedLpaManager implements LpaManagerInterface
             return null;
         }
 
+        /** @var \App\Entity\Lpa $lpaData */
         $lpaData = ($this->filterActiveActors)($lpa->getData());
 
         return new Lpa(
@@ -66,34 +69,38 @@ class CombinedLpaManager implements LpaManagerInterface
     /**
      * @inheritDoc
      */
-    public function getByUserLpaActorToken(string $token, string $userId): ?array
+    public function getByUserLpaActorToken(string $token, string $userId): ?UserLpaActorTokenResponse
     {
         $lpaActorMap = $this->userLpaActorMap->get($token);
 
         // Ensure the passed userId matches the passed token
         if ($lpaActorMap === null || $userId !== $lpaActorMap['UserId']) {
-            return null;
+            throw new NotFoundException();
         }
 
         $lpa = $this->lookupLpa($lpaActorMap, $userId);
 
         if ($lpa === null) {
-            return null;
+            throw new NotFoundException();
         }
 
+        /** @var \App\Entity\Lpa $lpaData */
         $lpaData = ($this->filterActiveActors)($lpa->getData());
 
-        $result = [
-            'user-lpa-actor-token' => $lpaActorMap['Id'],
-            'date'                 => $lpa->getLookupTime()->format(DateTimeInterface::ATOM),
-            'lpa'                  => $lpaData,
-            'activationKeyDueDate' => $lpaActorMap['DueBy'] ?? null,
-        ];
+        $result = new UserLpaActorTokenResponse(
+            $lpaActorMap['Id'],
+            $lpa->getLookupTime(),
+            $lpaData
+        );
+
+        if (isset($lpaActorMap['DueBy'])) {
+            $result = $result->withActivationKeyDueDate(new DateTimeImmutable($lpaActorMap['DueBy']));
+        }
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
         if (isset($lpaActorMap['ActorId'])) {
             // If an active attorney is not found then this is null
-            $result['actor'] = ($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']);
+            $result = $result->withActor(($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']));
         }
 
         // Extract and return only LPAs where status is Registered or Cancelled
@@ -102,8 +109,7 @@ class CombinedLpaManager implements LpaManagerInterface
         }
 
         // LPA was found but is not valid for use.
-        // TODO UML-3777 Investigate why an empty array is returned here and not a null. Return a null if we can.
-        return [];
+        return null;
     }
 
     /**

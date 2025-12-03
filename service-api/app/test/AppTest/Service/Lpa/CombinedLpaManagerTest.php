@@ -433,8 +433,11 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
 
-        $this->assertEquals($siriusLpaResponse->getData(), $result['lpa']);
-        $this->assertEquals($siriusLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM), $result['date']);
+        $this->assertEquals($siriusLpaResponse->getData(), $result->lpa);
+        $this->assertEquals(
+            $siriusLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM),
+            $result->lookupDateTime->format(DateTimeInterface::ATOM)
+        );
     }
 
     #[Test]
@@ -491,8 +494,11 @@ class CombinedLpaManagerTest extends TestCase
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
 
-        $this->assertEquals($dataStoreLpaResponse->getData(), $result['lpa']);
-        $this->assertEquals($dataStoreLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM), $result['date']);
+        $this->assertEquals($dataStoreLpaResponse->getData(), $result->lpa);
+        $this->assertEquals(
+            $dataStoreLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM),
+            $result->lookupDateTime->format(DateTimeInterface::ATOM)
+        );
     }
 
     #[Test]
@@ -512,9 +518,9 @@ class CombinedLpaManagerTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
 
         $service = $this->getLpaService();
-        $result  = $service->getByUserLpaActorToken($testLpaToken, 'userId-2');
 
-        $this->assertNull($result);
+        $this->expectException(NotFoundException::class);
+        $service->getByUserLpaActorToken($testLpaToken, 'userId-2');
     }
 
     #[Test]
@@ -549,9 +555,9 @@ class CombinedLpaManagerTest extends TestCase
             ->willReturn(null);
 
         $service = $this->getLpaService();
-        $result  = $service->getByUserLpaActorToken($testLpaToken, 'userId-1');
 
-        $this->assertNull($result);
+        $this->expectException(NotFoundException::class);
+        $service->getByUserLpaActorToken($testLpaToken, 'userId-1');
     }
 
     #[Test]

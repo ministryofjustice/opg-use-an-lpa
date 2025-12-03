@@ -436,7 +436,7 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'donor'                => [
+            'donor'         => [
                 'uId'        => $this->lpa->donor->uId,
                 'firstnames' => trim(
                     sprintf(
@@ -447,9 +447,8 @@ class LpaContext implements Context
                 ),
                 'surname'    => $this->lpa->donor->surname,
             ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'lpaActorToken'        => (int)$this->userLpaActorToken,
-            'activationKeyDueDate' => null,
+            'caseSubtype'   => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken,
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);

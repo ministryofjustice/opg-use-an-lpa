@@ -865,11 +865,9 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        Assert::assertArrayHasKey('date', $lpaData);
-        Assert::assertArrayHasKey('actor', $lpaData);
-        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
+        Assert::assertSame($this->userLpaActorToken, $lpaData->userLpaActorToken);
+        Assert::assertSame($this->lpa->uId, $lpaData->lpa->getUid());
+        Assert::assertSame($this->actorLpaId, $lpaData->actor->actor->getUid());
 
         // Get the share codes
 
@@ -988,11 +986,9 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        Assert::assertArrayHasKey('date', $lpaData);
-        Assert::assertArrayHasKey('actor', $lpaData);
-        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
+        Assert::assertSame($this->userLpaActorToken, $lpaData->userLpaActorToken);
+        Assert::assertSame($this->lpa->uId, $lpaData->lpa->getUid());
+        Assert::assertSame($this->actorLpaId, $lpaData->actor->actor->getUid());
 
         // Get the share codes
 
@@ -1113,14 +1109,11 @@ class LpaContext extends BaseIntegrationContext
             ),
         );
 
-        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
 
-        Assert::assertArrayHasKey('date', $lpaData);
-        Assert::assertArrayHasKey('actor', $lpaData);
-        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
-
+        Assert::assertSame($this->userLpaActorToken, $lpaData->userLpaActorToken);
+        Assert::assertSame($this->lpa->uId, $lpaData->lpa->getUid());
+        Assert::assertSame($this->actorLpaId, $lpaData->actor->actor->getUid());
         // Get the share codes
 
         // UserLpaActorMap::get
@@ -1241,11 +1234,9 @@ class LpaContext extends BaseIntegrationContext
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
 
-        Assert::assertArrayHasKey('date', $lpaData);
-        Assert::assertArrayHasKey('actor', $lpaData);
-        Assert::assertEquals($this->userLpaActorToken, $lpaData['user-lpa-actor-token']);
-        Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->getUid());
-        Assert::assertEquals($this->actorLpaId, $lpaData['actor']->actor->getUid());
+        Assert::assertSame($this->userLpaActorToken, $lpaData->userLpaActorToken);
+        Assert::assertSame($this->lpa->uId, $lpaData->lpa->getUid());
+        Assert::assertSame($this->actorLpaId, $lpaData->actor->actor->getUid());
 
         // Get the share codes
 
@@ -1329,7 +1320,7 @@ class LpaContext extends BaseIntegrationContext
         Assert::assertEquals($codesWithStatuses[0]['SiriusUid'], $this->lpaUid);
         Assert::assertEquals($codesWithStatuses[0]['UserLpaActor'], $this->userLpaActorToken);
         Assert::assertEquals($codesWithStatuses[0]['ViewerCode'], $this->accessCode);
-        Assert::assertEquals($codesWithStatuses[0]['ActorId'], $lpaData['actor']->actor->getUid());
+        Assert::assertEquals($codesWithStatuses[0]['ActorId'], $lpaData->actor->actor->getUid());
     }
 
     #[When('/^I confirm cancellation of the chosen viewer code/')]
@@ -1943,12 +1934,12 @@ class LpaContext extends BaseIntegrationContext
 
         if ($status === 'Revoked') {
             Assert::assertEmpty($lpaData);
-        } elseif ($lpaData['lpa'] instanceof SiriusLpa) {
-            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']['uId']);
-            Assert::assertEquals($this->lpa->status, $lpaData['lpa']['status']);
+        } elseif ($lpaData->lpa instanceof SiriusLpa) {
+            Assert::assertEquals($this->lpa->uId, $lpaData->lpa['uId']);
+            Assert::assertEquals($this->lpa->status, $lpaData->lpa['status']);
         } else {
-            Assert::assertEquals($this->lpa->uId, $lpaData['lpa']->uId);
-            Assert::assertEquals($this->lpa->status, $lpaData['lpa']->status);
+            Assert::assertEquals($this->lpa->uId, $lpaData->lpa->uId);
+            Assert::assertEquals($this->lpa->status, $lpaData->lpa->status);
         }
     }
 
@@ -2441,7 +2432,7 @@ class LpaContext extends BaseIntegrationContext
             ),
         );
 
-        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
+        $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
 
         Assert::assertEmpty($lpaData);
     }
@@ -2589,7 +2580,7 @@ class LpaContext extends BaseIntegrationContext
         );
 
         $expectedResponse = [
-            'donor'                => [
+            'donor'         => [
                 'uId'        => $this->lpa->donor->uId,
                 'firstnames' => sprintf(
                     '%s %s',
@@ -2598,9 +2589,8 @@ class LpaContext extends BaseIntegrationContext
                 ),
                 'surname'    => $this->lpa->donor->surname,
             ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'lpaActorToken'        => $this->userLpaActorToken,
-            'activationKeyDueDate' => null,
+            'caseSubtype'   => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken,
         ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -2701,14 +2691,17 @@ class LpaContext extends BaseIntegrationContext
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest($this->userId, [
-            'reference_number'     => $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
-            ]);
+            $addOlderLpa->validateRequest(
+                $this->userId,
+                [
+                    'reference_number'     => $this->lpaUid,
+                    'dob'                  => $this->userDob,
+                    'postcode'             => $this->userPostCode,
+                    'first_names'          => $this->userFirstname,
+                    'last_name'            => $this->userSurname,
+                    'force_activation_key' => false,
+                ]
+            );
         } catch (LpaActivationKeyAlreadyRequestedException $lpaActivationKeyAlreadyRequestedException) {
             Assert::assertEquals(
                 StatusCodeInterface::STATUS_BAD_REQUEST,

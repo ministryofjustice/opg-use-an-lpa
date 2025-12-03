@@ -8,10 +8,13 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
+use App\Exception\ApiException;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\HasRestrictionsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
+use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
+use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansingInterface;
@@ -26,6 +29,7 @@ class Lpa implements
     HasActorInterface,
     IsValidInterface,
     AddLpaInterface,
+    LpaAlreadyAddedInterface,
     HasRestrictionsInterface,
     FilterActiveActorsInterface,
     RestrictSendingLpaForCleansingInterface
@@ -129,5 +133,21 @@ class Lpa implements
     public function hasRestrictions(): bool
     {
         return $this->applicationHasRestrictions ?? false;
+    }
+
+    public function getDonor(): Person
+    {
+        if (!isset($this->donor)) {
+            throw ApiException::create('Donor does not exist and is required');
+        }
+        return $this->donor;
+    }
+
+    public function getCaseSubType(): string
+    {
+        if (!isset($this->caseSubtype)) {
+            return '';
+        }
+        return $this->caseSubtype->value;
     }
 }

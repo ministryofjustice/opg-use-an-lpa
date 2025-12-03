@@ -6,6 +6,7 @@ namespace App\Service\ViewerCodes;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
 use App\DataAccess\Repository\{KeyCollisionException,
+    PaperVerificationCodesInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
@@ -27,6 +28,7 @@ class ViewerCodeService
         private ViewerCodesInterface $viewerCodesRepository,
         private ViewerCodeActivityInterface $viewerCodeActivityRepository,
         private UserLpaActorMapInterface $userLpaActorMapRepository,
+        private PaperVerificationCodesInterface $paperVerificationCodesRepository,
         private LoggerInterface $logger,
     ) {
     }
@@ -39,6 +41,7 @@ class ViewerCodeService
      *     code: string,
      *     expires: string,
      *     organisation: string,
+     *     pvc_expiry?: string
      * }
      */
     public function addCode(string $token, string $userId, string $organisation): ?array
@@ -50,6 +53,7 @@ class ViewerCodeService
             return null;
         }
 
+        $lpaUid  = new LpaUid($map['SiriusUid'] ?? $map['LpaUid']);
         $expires = new DateTime(
             '23:59:59 +30 days',              // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London') // Ensures we compensate for GMT vs BST.
@@ -64,7 +68,7 @@ class ViewerCodeService
                 $this->viewerCodesRepository->add(
                     $code,
                     $map['Id'],
-                    new LpaUid($map['SiriusUid'] ?? $map['LpaUid']),
+                    $lpaUid,
                     $expires,
                     $organisation,
                     (string)$map['ActorId']
@@ -76,11 +80,22 @@ class ViewerCodeService
             }
         } while (!$added);
 
-        return [
+        $response = [
             'code'         => $code,
             'expires'      => $expires->format(DateTimeInterface::ATOM),
             'organisation' => $organisation,
         ];
+
+        if (isset($map['HasPaperVerificationCode']) && $map['HasPaperVerificationCode']) {
+            $pvcExpiry = $this->paperVerificationCodesRepository->transitionToDigital(
+                $lpaUid,
+                (string)$map['ActorId']
+            );
+
+            $response['pvc_expiry'] = $pvcExpiry->getData()->expiresAt->format(DateTimeInterface::ATOM);
+        }
+
+        return $response;
     }
 
     /**

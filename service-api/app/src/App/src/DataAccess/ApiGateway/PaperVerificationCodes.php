@@ -79,6 +79,27 @@ class PaperVerificationCodes extends AbstractApiClient implements PaperVerificat
         );
     }
 
+    public function transitionToDigital(LpaUid $lpaUid, string $actorUid): ResponseInterface
+    {
+        $response = $this->makePostRequest(
+            'v1/paper-verification-code/expire',
+            [
+                'lpa'           => (string) $lpaUid,
+                'actor'         => $actorUid,
+                'expiry_reason' => VerificationCodeExpiryReason::PAPER_TO_DIGITAL,
+            ]
+        );
+
+        $codeData = json_decode((string) $response->getBody(), true);
+
+        $expiresAt = $this->processExpiryDate($codeData['expiry_date']);
+
+        return new UpstreamResponse(
+            new PaperVerificationCodeExpiry($expiresAt),
+            new DateTimeImmutable($response->getHeaderLine('Date')),
+        );
+    }
+
     private function processExpiryDate(string $date): ?DateTimeInterface
     {
         $dateInterface = DateTimeImmutable::createFromFormat('!Y-m-d', $date);
