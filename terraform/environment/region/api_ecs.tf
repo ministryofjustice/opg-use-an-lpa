@@ -191,9 +191,6 @@ resource "aws_iam_role_policy" "api_permissions_role" {
   provider = aws.region
 }
 
-/*
-  Defines permissions that the application running within the task has.
-*/
 data "aws_iam_policy_document" "api_permissions_role" {
   statement {
     sid    = "${local.policy_region_prefix}XrayAccess"
@@ -359,6 +356,23 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "cloudwatch:PutMetricData",
     ]
     resources = ["*"]
+  }
+
+  dynamic "statement" {
+    for_each = module.event_bus.receive_events_bus_arn != "" ? [1] : []
+
+    content {
+      sid    = "${local.policy_region_prefix}EventBridgeAccess"
+      effect = "Allow"
+
+      actions = [
+        "events:PutEvents",
+      ]
+
+      resources = [
+        module.event_bus.receive_events_bus_arn,
+      ]
+    }
   }
 
   provider = aws.region
@@ -536,6 +550,10 @@ locals {
         {
           name  = "DYNAMODB_TABLE_STATS",
           value = var.dynamodb_tables.stats_table.name
+        },
+        {
+          name  = "EVENTBRIDGE_BUS_NAME",
+          value = module.event_bus.receive_events_bus_arn,
         },
         {
           name  = "CONTAINER_VERSION",

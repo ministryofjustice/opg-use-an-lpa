@@ -10,5 +10,5 @@ output "receive_events_sqs_queue_arn" {
 
 output "receive_events_bus_arn" {
   description = "The ARN of the event bus created by the event_bus module."
-  value       = aws_cloudwatch_event_bus.main[*].arn
+  value       = length(aws_cloudwatch_event_bus.main) == 1 ? aws_cloudwatch_event_bus.main[0].arn : ""
 }

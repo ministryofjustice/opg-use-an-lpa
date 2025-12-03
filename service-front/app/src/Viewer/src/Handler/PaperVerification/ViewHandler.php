@@ -7,13 +7,13 @@ namespace Viewer\Handler\PaperVerification;
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
 use Common\Workflow\WorkflowState;
+use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use RectorPrefix202509\Nette\NotImplementedException;
 use Viewer\Handler\AbstractPVSCodeHandler;
 
 /**
@@ -74,7 +74,7 @@ class ViewHandler extends AbstractPVSCodeHandler
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        throw new NotImplementedException();
+        throw new Exception('not implemented');
     }
 
     /**
