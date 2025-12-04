@@ -52,8 +52,6 @@ module "cloudwatch_mrk" {
 }
 
 module "dynamodb_mrk" {
-  # Restrict DynamoDB MRK to development workspace only
-  count  = local.environment == "development" ? 1 : 0
   source = "./modules/multi_region_kms"
 
   key_description         = "Backup encryption ${local.environment}"
