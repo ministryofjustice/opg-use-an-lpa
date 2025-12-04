@@ -8,7 +8,7 @@ Feature: Add an older LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user can add an older LPA to their account and we store the record in our DB
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
@@ -18,28 +18,28 @@ Feature: Add an older LPA
     And a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user can re-request an older LPA be added to their account and we update the record in our DB
     Given I have previously requested the addition of a paper LPA to my account
     When I repeat my request for an activation key
     Then a repeat request for a letter containing a one time use code is made
     And a record of my activation key request is updated
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user cannot add an older LPA to their account that does not exist
     Given I am on the add an older LPA page
     When I provide details of an LPA that does not exist
     And I confirm the details I provided are correct
     Then I am informed that an LPA could not be found with these details
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user is informed if they have an activation key
     Given I am on the add an older LPA page
     When I provide the details from a valid paper document that already has an activation key
     And I confirm the details I provided are correct
     Then I am told that I have an activation key for this LPA and where to find it
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user is able to generate a new key even if an activation key already exists and the record is saved
     Given I am on the add an older LPA page
     And I lost the letter containing my activation key
@@ -47,7 +47,7 @@ Feature: Add an older LPA
     Then a letter is requested containing a one time use code
     And A record of my activation key request is saved
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user is unable to request a key for an LPA that they have already added (save requests enabled)
     Given I am on the add an older LPA page
     And I have added an LPA to my account
@@ -55,7 +55,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
-  @acceptance @integration @pact
+  @acceptance @integration @only
   Scenario: The user is able to request a new key for an LPA that they have already requested a key for
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA which I have already requested an activation key for
@@ -69,14 +69,14 @@ Feature: Add an older LPA
     And A malformed request is sent which is missing a data attribute
     Then I am told that something went wrong
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user is not shown the attorney details being a donor on the lpa
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA document
     And I confirm the details I provided are correct
     Then I being the donor on the LPA I am not shown the attorney details
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user is not shown the donor details being an attorney on the lpa
     Given I am on the add an older LPA page
     When I provide the attorney details from a valid paper LPA document
@@ -111,7 +111,7 @@ Feature: Add an older LPA
     When I confirm details of the found LPA are correct
     Then I am told an activation key is being sent
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: User receives a confirmation that key will be sent in 4 weeks, when lpa trying to be added is not cleansed but is a full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'not marked' as clean
     And I provide the details from a valid paper LPA document
@@ -131,7 +131,7 @@ Feature: Add an older LPA
     And I should expect it within 4 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: User receives a confirmation that key will be sent in 2 weeks, when lpa trying to be added is cleansed and full match
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     And I provide the details from a valid paper LPA document
@@ -140,13 +140,13 @@ Feature: Add an older LPA
     And I should expect it within 2 weeks time
     And I will receive an email confirming this information
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user cannot add an newer LPA to their account when request for cleansing streamlining flag tuned on
     Given My LPA was registered 'after' 1st September 2019 and LPA is 'not marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "ON"
     Then I am informed that an LPA could not be found with these details
 
-  @acceptance @integration @pact
+  @acceptance @integration
   Scenario: The user cannot add an older LPA to their account when request for cleansing streamlining flag tuned on
     Given My LPA was registered 'before' 1st September 2019 and LPA is 'marked' as clean
     When I confirm the incorrect details of the found LPA and flag is turned "ON"

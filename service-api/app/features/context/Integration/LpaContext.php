@@ -34,11 +34,11 @@ use App\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
+use Behat\Hook\BeforeSuite;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\SetupEnv;
-use BehatTest\Context\UsesPactContextTrait;
 use BehatTest\LpaTestUtilities;
 use DateInterval;
 use DateTime;
@@ -62,12 +62,8 @@ use function PHPUnit\Framework\assertEquals;
 class LpaContext extends BaseIntegrationContext
 {
     use SetupEnv;
-    use UsesPactContextTrait;
 
     private AwsMockHandler $awsFixtures;
-    private string $apiGatewayPactProvider;
-    private string $codesApiPactProvider;
-    private string $iapImagesApiPactProvider;
     private RemoveLpa $deleteLpa;
     private LpaManagerInterface $lpaService;
     public MockHandler $apiFixtures;
@@ -95,14 +91,8 @@ class LpaContext extends BaseIntegrationContext
     public function aLetterIsRequestedContainingAOneTimeUseCode(): void
     {
         // SiriusLpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid'  => (int)$this->lpaUid,
-                'actor_uid' => (int)$this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_NO_CONTENT
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_NO_CONTENT),
         );
 
         // Save activation key request in the DB
@@ -121,14 +111,8 @@ class LpaContext extends BaseIntegrationContext
     public function aRepeatRequestForALetterContainingAOneTimeUseCodeIsMade(): void
     {
         // SiriusLpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid'  => (int)$this->lpaUid,
-                'actor_uid' => (int)$this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_NO_CONTENT
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_NO_CONTENT),
         );
 
         // Update activation key request in the DB
@@ -263,62 +247,6 @@ class LpaContext extends BaseIntegrationContext
         // Not needed for this context
     }
 
-    #[When('/^I attempt to add the same LPA again$/')]
-    public function iAttemptToAddTheSameLPAAgain(): void
-    {
-        // UserLpaActorMap::getUsersLpas
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        $addLpaService    = $this->container->get(AddLpa::class);
-        $expectedResponse = [
-            'donor'         => new SiriusPerson(json_decode(json_encode($this->lpa->donor), true)),
-            'caseSubtype'   => $this->lpa->caseSubtype,
-            'lpaActorToken' => $this->userLpaActorToken,
-        ];
-
-        try {
-            $addLpaService->validateAddLpaData(
-                [
-                    'actor-code' => $this->oneTimeCode,
-                    'uid'        => $this->lpaUid,
-                    'dob'        => $this->userDob,
-                ],
-                $this->userId
-            );
-        } catch (BadRequestException $badRequestException) {
-            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $badRequestException->getCode());
-            Assert::assertEquals('LPA already added', $badRequestException->getMessage());
-            Assert::assertEquals($expectedResponse, $badRequestException->getAdditionalData());
-            return;
-        }
-
-        throw new ExpectationFailedException('LPA already added exception should have been thrown');
-    }
-
     #[When('/^I provide the attorney details from a valid paper LPA document$/')]
     public function iProvideTheAttorneyDetailsFromAValidPaperLPADocument(): void
     {
@@ -328,26 +256,23 @@ class LpaContext extends BaseIntegrationContext
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $sanitizedSiriusLpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $codeExists          = new stdClass();
         $codeExists->Created = null;
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $sanitizedSiriusLpa->uId,
-                'actor' => $sanitizedSiriusLpa->attorneys[0]->uId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($codeExists),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -421,27 +346,10 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        // The underlying SmartGamma library has a very naive match processor for
-        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => $this->actorLpaId,
-            ],
-        );
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -471,26 +379,9 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        // The underlying SmartGamma library has a very naive match processor for
-        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => $this->actorLpaId,
-            ],
-        );
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_NOT_FOUND,
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_NOT_FOUND),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -553,27 +444,11 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // lpaService: getByUserLpaActorToken
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        // codes api service call
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob,
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => $this->actorLpaId,
-            ],
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -603,11 +478,12 @@ class LpaContext extends BaseIntegrationContext
         ];
 
         // InstructionsAndPreferencesImages::getInstructionsAndPreferencesImages
-        $this->pactGetInteraction(
-            $this->iapImagesApiPactProvider,
-            '/v1/image-request/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $imageResponse,
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($imageResponse),
+            ),
         );
     }
 
@@ -670,14 +546,11 @@ class LpaContext extends BaseIntegrationContext
             }
         );
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/revoke',
-            [
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [],
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK),
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
@@ -758,11 +631,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpa = $this->lpaService->getAllActiveForUser($this->userId);
@@ -903,11 +777,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpa = $this->lpaService->getAllActiveForUser($this->userId);
@@ -980,11 +855,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
@@ -1102,11 +978,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
@@ -1228,11 +1105,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
@@ -1353,11 +1231,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
@@ -1536,7 +1415,6 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        // pact interaction failed so had to use apiFixtures
         $this->apiFixtures
             ->append(
                 new Response(
@@ -1692,11 +1570,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -1726,11 +1605,8 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $invalidLpaId,
-            StatusCodeInterface::STATUS_NOT_FOUND,
-            []
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_NOT_FOUND),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -1761,11 +1637,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -1799,26 +1676,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $sanitizedSiriusLpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
         $codeExists          = new stdClass();
         $codeExists->Created = null;
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $sanitizedSiriusLpa->uId,
-                'actor' => $sanitizedSiriusLpa->donor->uId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeExists)),
         );
 
         $addOlderLpa      = $this->container->get(AddAccessForAllLpa::class);
@@ -1882,13 +1745,6 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
         $codeExists  = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -1899,15 +1755,9 @@ class LpaContext extends BaseIntegrationContext
 
         $codeExists->Created = $createdDate->format('Y-m-d');
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $this->lpaUid,
-                'actor' => $this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeExists)),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -1975,27 +1825,10 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        // The underlying SmartGamma library has a very naive match processor for
-        // passed in response values and will assume lpaUid's and actorLpaId's are integers.
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/validate',
-            [
-                'lpa'  => $this->lpaUid,
-                'dob'  => $this->userDob, //'1980-10-10', // donors DOB as details are now of 'Trust Corporation'
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [
-                'actor' => $this->actorLpaId,
-            ],
-        );
-
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         /** @var AddLpa $addLpaService */
@@ -2101,21 +1934,9 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
-        // LpaService::getLpaById
         $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(['lpa' => $this->lpa])
-            )
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['lpa' => $this->lpa])),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
@@ -2349,11 +2170,12 @@ class LpaContext extends BaseIntegrationContext
         // viewerCodesRepository::removeActorAssociation
         $this->awsFixtures->append(new Result()); // 3rd code has already been cancelled
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         // UserLpaActorMap::delete
@@ -2405,14 +2227,11 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/revoke',
-            [
-                'code' => $this->oneTimeCode,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            [],
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK),
         );
 
         $actorCodeService = $this->container->get(ActorCodeService::class);
@@ -2448,10 +2267,7 @@ class LpaContext extends BaseIntegrationContext
         $this->lpaService  = $this->container->get(LpaManagerInterface::class);
         $this->deleteLpa   = $this->container->get(RemoveLpa::class);
 
-        $config                         = $this->container->get('config');
-        $this->codesApiPactProvider     = parse_url((string) $config['codes_api']['endpoint'], PHP_URL_HOST);
-        $this->apiGatewayPactProvider   = parse_url((string) $config['sirius_api']['endpoint'], PHP_URL_HOST);
-        $this->iapImagesApiPactProvider = parse_url((string) $config['iap_images_api']['endpoint'], PHP_URL_HOST);
+        $config = $this->container->get('config');
     }
 
     #[Given('/^The status of the LPA changed from Registered to Suspended$/')]
@@ -2486,11 +2302,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpa = $this->lpaService->getAllActiveForUser($this->userId);
@@ -2566,18 +2383,17 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_NOT_FOUND
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_NOT_FOUND),
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/700000000138',
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpa = $this->lpaService->getAllActiveForUser($this->userId);
@@ -2617,11 +2433,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, (string)$this->userId);
@@ -2652,11 +2469,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -2762,11 +2580,12 @@ class LpaContext extends BaseIntegrationContext
         );
 
         // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $expectedResponse = [
@@ -2848,14 +2667,6 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        // LpaRepository::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
-        );
-
         $codeExists  = new stdClass();
         $createdDate = (new DateTime())->modify('-14 days');
 
@@ -2866,15 +2677,11 @@ class LpaContext extends BaseIntegrationContext
 
         $codeExists->Created = $createdDate->format('Y-m-d');
 
-        $this->pactPostInteraction(
-            $this->codesApiPactProvider,
-            '/v1/exists',
-            [
-                'lpa'   => $this->lpaUid,
-                'actor' => $this->actorLpaId,
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $codeExists
+        // LpaRepository::get
+        $this->apiFixtures->append(
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
+            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeExists)),
         );
 
         $expectedResponse = [
@@ -2930,11 +2737,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
@@ -2970,15 +2778,12 @@ class LpaContext extends BaseIntegrationContext
         ];
 
         // SiriusLpas::requestLetter
-        $this->pactPostInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/requestCode',
-            [
-                'case_uid' => (int)$this->lpaUid,
-                'notes'    => 'notes',
-            ],
-            StatusCodeInterface::STATUS_OK,
-            $data
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($data),
+            ),
         );
 
         // Save activation key request in the DB
@@ -3011,11 +2816,12 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpaUid,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);

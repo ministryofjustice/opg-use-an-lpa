@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfd93b0bbc861357c79b39301704e8eb",
+    "content-hash": "cf9679a579015ce8b9c7b687316f3564",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -6470,16 +6470,16 @@
         },
         {
             "name": "amphp/cache",
-            "version": "v1.4.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/amphp/cache.git",
-                "reference": "e7bccc526fc2a555d59e6ee8380eeb39a95c0835"
+                "reference": "fe78cfae2fb8c92735629b8cd1893029c73c9b63"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/amphp/cache/zipball/e7bccc526fc2a555d59e6ee8380eeb39a95c0835",
-                "reference": "e7bccc526fc2a555d59e6ee8380eeb39a95c0835",
+                "url": "https://api.github.com/repos/amphp/cache/zipball/fe78cfae2fb8c92735629b8cd1893029c73c9b63",
+                "reference": "fe78cfae2fb8c92735629b8cd1893029c73c9b63",
                 "shasum": ""
             },
             "require": {
@@ -6489,14 +6489,14 @@
                 "php": ">=7.1"
             },
             "conflict": {
-                "amphp/file": "<0.2 || >=2"
+                "amphp/file": "<0.2 || >=3"
             },
             "require-dev": {
-                "amphp/file": "^1",
+                "amphp/file": "^1 || ^2",
                 "amphp/php-cs-fixer-config": "dev-master",
                 "amphp/phpunit-util": "^1.1",
                 "phpunit/phpunit": "^6 | ^7 | ^8 | ^9",
-                "vimeo/psalm": "^3.11@dev"
+                "vimeo/psalm": "^4"
             },
             "type": "library",
             "autoload": {
@@ -6523,9 +6523,15 @@
             "support": {
                 "irc": "irc://irc.freenode.org/amphp",
                 "issues": "https://github.com/amphp/cache/issues",
-                "source": "https://github.com/amphp/cache/tree/v1.4.0"
+                "source": "https://github.com/amphp/cache/tree/v1.5.1"
             },
-            "time": "2020-04-19T16:10:08+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/amphp",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-21T19:35:02+00:00"
         },
         {
             "name": "amphp/dns",
@@ -9457,22 +9463,22 @@
         },
         {
             "name": "pact-foundation/pact-php",
-            "version": "7.2.0",
+            "version": "8.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pact-foundation/pact-php.git",
-                "reference": "c3279fb619665c734a63fab66b99992d7aa6c10d"
+                "reference": "3494299fcfeb58a1680b06af69dad8184501917b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pact-foundation/pact-php/zipball/c3279fb619665c734a63fab66b99992d7aa6c10d",
-                "reference": "c3279fb619665c734a63fab66b99992d7aa6c10d",
+                "url": "https://api.github.com/repos/pact-foundation/pact-php/zipball/3494299fcfeb58a1680b06af69dad8184501917b",
+                "reference": "3494299fcfeb58a1680b06af69dad8184501917b",
                 "shasum": ""
             },
             "require": {
                 "amphp/amp": "^2.5.1",
                 "amphp/byte-stream": "^1.8",
-                "amphp/cache": "v1.4.0",
+                "amphp/cache": "^1.4.0",
                 "amphp/dns": "^1.2.3",
                 "amphp/hpack": "^3.1.0",
                 "amphp/http-server": "^2.1",
@@ -9486,8 +9492,8 @@
                 "ext-json": "*",
                 "ext-openssl": "*",
                 "guzzlehttp/guzzle": "^6.5.8|^7.4.5",
-                "php": "^7.3|^8.0",
-                "phpunit/phpunit": ">=8.2.3"
+                "php": "^7.4|^8.0|^8.1",
+                "phpunit/phpunit": ">=8.5.23"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.0",
@@ -9526,9 +9532,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pact-foundation/pact-php/issues",
-                "source": "https://github.com/pact-foundation/pact-php/tree/7.2.0"
+                "source": "https://github.com/pact-foundation/pact-php/tree/8.1.0"
             },
-            "time": "2022-06-26T19:46:52+00:00"
+            "time": "2022-10-03T17:32:14+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -12661,62 +12667,6 @@
                 }
             ],
             "time": "2025-09-13T08:53:30+00:00"
-        },
-        {
-            "name": "smart-gamma/pact-behat-extension",
-            "version": "v3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/cooperaj/pact-behat-extension.git",
-                "reference": "0836c2099e99b6e44ac5d6757658c64989fd7d48"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/cooperaj/pact-behat-extension/zipball/0836c2099e99b6e44ac5d6757658c64989fd7d48",
-                "reference": "0836c2099e99b6e44ac5d6757658c64989fd7d48",
-                "shasum": ""
-            },
-            "require": {
-                "behat/behat": "^3.8",
-                "pact-foundation/pact-php": "^7.0",
-                "php": ">=7.4"
-            },
-            "require-dev": {
-                "friends-of-phpspec/phpspec-code-coverage": "^6.0.0",
-                "phpspec/phpspec": "^7.2",
-                "phpstan/phpstan": "^0.12.59"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SmartGamma\\Behat\\PactExtension\\": "src/SmartGamma/Behat/PactExtension"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "spec\\SmartGamma\\Behat\\PactExtension\\": "spec/SmartGamma/Behat/PactExtension"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Evgeniy Kuzmin",
-                    "email": "evgeniy.k@smart-gamma.com"
-                }
-            ],
-            "description": "Smart Gamma Behat extension for pact.io",
-            "keywords": [
-                "bdd",
-                "behat",
-                "contract",
-                "pact"
-            ],
-            "support": {
-                "source": "https://github.com/cooperaj/pact-behat-extension/tree/v3.0.0"
-            },
-            "time": "2022-07-27T15:52:32+00:00"
         },
         {
             "name": "spatie/array-to-xml",
