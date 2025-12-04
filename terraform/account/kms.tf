@@ -51,6 +51,23 @@ module "cloudwatch_mrk" {
   }
 }
 
+module "dynamodb_mrk" {
+  # Restrict DynamoDB MRK to development workspace only
+  count  = local.environment == "development" ? 1 : 0
+  source = "./modules/multi_region_kms"
+
+  key_description         = "Backup encryption ${local.environment}"
+  key_alias               = "dynamo-backup-encryption-mrk"
+  deletion_window_in_days = 10
+  key_policy              = data.aws_iam_policy_document.dynamodb_kms.json
+
+  providers = {
+    aws.primary   = aws.eu_west_1
+    aws.secondary = aws.eu_west_2
+  }
+}
+
+
 # No longer used but kept to keep regional KMS keys
 resource "aws_kms_key" "sessions_viewer" {
   description             = "Managers keys for sessions in Viewer"
@@ -195,6 +212,57 @@ data "aws_iam_policy_document" "event_receiver_kms" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "dynamodb_kms" {
+  statement {
+    sid       = "Enable Root account permissions on Key"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+  statement {
+    sid       = "Allow Encryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Encrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "dynamodb.amazonaws.com"
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Allow Decryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "dynamodb.amazonaws.com"
       ]
     }
   }
