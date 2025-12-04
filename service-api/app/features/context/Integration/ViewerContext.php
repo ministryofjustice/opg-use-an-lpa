@@ -14,20 +14,17 @@ use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\SetupEnv;
-use BehatTest\Context\UsesPactContextTrait;
 use DateTime;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
 use stdClass;
 
 class ViewerContext extends BaseIntegrationContext
 {
     use SetupEnv;
-    use UsesPactContextTrait;
 
-    private string $apiGatewayPactProvider;
-    private string $iapImagesPactProvider;
     private AwsMockHandler $awsFixtures;
     private SiriusLpaManager $lpaService;
     public string $organisation;
@@ -112,11 +109,12 @@ class ViewerContext extends BaseIntegrationContext
         );
 
         // SiriusLpas::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         // organisation parameter is null when doing a summary check
@@ -154,11 +152,12 @@ class ViewerContext extends BaseIntegrationContext
         );
 
         // SiriusLpas::get
-        $this->pactGetInteraction(
-            $this->apiGatewayPactProvider,
-            '/v1/use-an-lpa/lpas/' . $this->lpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $this->lpa
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa),
+            ),
         );
 
         $imageResponse             = new stdClass();
@@ -169,11 +168,12 @@ class ViewerContext extends BaseIntegrationContext
             'iap-' . $this->lpa->uId . '-preferences'  => 'https://image_url',
         ];
 
-        $this->pactGetInteraction(
-            $this->iapImagesPactProvider,
-            '/v1/image-request/' . $this->lpa->uId,
-            StatusCodeInterface::STATUS_OK,
-            $imageResponse
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($imageResponse),
+            ),
         );
 
         // organisation parameter is null when doing a summary check
@@ -251,8 +251,6 @@ class ViewerContext extends BaseIntegrationContext
 
         $this->lpaService = $this->container->get(SiriusLpaManager::class);
 
-        $config                       = $this->container->get('config');
-        $this->apiGatewayPactProvider = parse_url((string) $config['sirius_api']['endpoint'], PHP_URL_HOST);
-        $this->iapImagesPactProvider  = parse_url((string) $config['iap_images_api']['endpoint'], PHP_URL_HOST);
+        $config = $this->container->get('config');
     }
 }
