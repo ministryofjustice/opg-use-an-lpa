@@ -54,8 +54,8 @@ module "cloudwatch_mrk" {
 module "dynamodb_mrk" {
   source = "./modules/multi_region_kms"
 
-  key_description         = "Backup encryption ${local.environment}"
-  key_alias               = "dynamo-backup-encryption-mrk"
+  key_description         = "DynamoDB encryption ${local.environment}"
+  key_alias               = "dynamodb-encryption-mrk"
   deletion_window_in_days = 10
   key_policy              = data.aws_iam_policy_document.dynamodb_kms.json
 
