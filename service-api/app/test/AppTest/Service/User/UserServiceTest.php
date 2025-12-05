@@ -8,6 +8,8 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
+use Aws\CommandInterface;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -30,7 +32,6 @@ class UserServiceTest extends TestCase
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
-        $repoProphecy->exists($email)->willReturn(false);
         $repoProphecy->add(
             Argument::that(function (string $data) {
                 $this->id = $data;
@@ -63,8 +64,18 @@ class UserServiceTest extends TestCase
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
+        $command = $this->prophesize(CommandInterface::class);
+
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
-        $repoProphecy->exists($email)->willReturn(true);
+        $repoProphecy->add(Argument::any(), $email, $identity)
+            ->willThrow(new DynamoDbException('', $command->reveal(), [
+                'body' => [
+                    'CancellationReasons' => [
+                        ['Code' => 'None'],
+                        ['Code' => 'ConditionalCheckFailed'],
+                    ],
+                ],
+            ]));
 
         $us = new UserService(
             $repoProphecy->reveal(),
@@ -72,6 +83,27 @@ class UserServiceTest extends TestCase
         );
 
         $this->expectException(ConflictException::class);
+        $us->add($email, $identity);
+    }
+
+    #[Test]
+    public function add_throws_other_dynamo_errors(): void
+    {
+        $email    = 'a@b.com';
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+
+        $command = $this->prophesize(CommandInterface::class);
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->add(Argument::any(), $email, $identity)
+            ->willThrow(new DynamoDbException('', $command->reveal(), []));
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $this->expectException(DynamoDbException::class);
         $us->add($email, $identity);
     }
 

@@ -26,16 +26,38 @@ class ActorUsers implements ActorUsersInterface
         string $email,
         string $identity,
     ): void {
-        $result = $this->client->putItem(
-            [
-                'TableName' => $this->actorUsersTable,
-                'Item'      => [
-                    'Id'       => ['S' => $id],
-                    'Email'    => ['S' => $email],
-                    'Identity' => ['S' => $identity],
+        $result = $this->client->transactWriteItems([
+            'TransactItems' => [
+                [
+                    'Put' => [
+                        'TableName' => $this->actorUsersTable,
+                        'Item'      => [
+                            'Id'       => ['S' => $id],
+                            'Email'    => ['S' => $email],
+                            'Identity' => ['S' => $identity],
+                        ],
+                    ],
                 ],
-            ]
-        );
+                [
+                    'Put' => [
+                        'TableName'           => $this->actorUsersTable,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'IDENTITY#' . $identity],
+                        ],
+                    ],
+                ],
+                [
+                    'Put' => [
+                        'TableName'           => $this->actorUsersTable,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'EMAIL#' . $email],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
 
         $code = $result->get('@metadata')['statusCode'] ?? null;
         if ($code !== StatusCodeInterface::STATUS_OK) {
@@ -45,16 +67,10 @@ class ActorUsers implements ActorUsersInterface
 
     public function get(string $id): array
     {
-        $result = $this->client->getItem(
-            [
-                'TableName' => $this->actorUsersTable,
-                'Key'       => [
-                    'Id' => [
-                        'S' => $id,
-                    ],
-                ],
-            ]
-        );
+        $result = $this->client->getItem([
+            'TableName' => $this->actorUsersTable,
+            'Key'       => ['Id' => ['S' => $id]],
+        ]);
 
         $userData = $this->getData($result);
 
@@ -127,51 +143,48 @@ class ActorUsers implements ActorUsersInterface
             ?? throw new NotFoundException('User not found for identity', ['identity' => $identity]);
     }
 
-    public function migrateToOAuth(string $id, string $identity): array
+    public function migrateToOAuth(array $user, string $identity): array
     {
+        // Update the data manually, so we don't have to get it again
+        $user['Identity'] = $identity;
+        unset($user['ActivationToken']);
+        unset($user['ExpiresTTL']);
+        unset($user['PasswordResetToken']);
+        unset($user['PasswordResetExpiry']);
+        unset($user['NeedsReset']);
+
         $marshaler = new Marshaler();
 
-        $result = $this->client->updateItem(
-            [
-                'TableName' => $this->actorUsersTable,
-                'Key'       => [
-                    'Id' => [
-                        'S' => $id,
+        $this->client->transactWriteItems([
+            'TransactItems' => [
+                [
+                    'Update' => [
+                        'TableName'                 => $this->actorUsersTable,
+                        'Key'                       => ['Id' => ['S' => $user['Id']]],
+                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
+                            . 'PasswordResetExpiry, NeedsReset',
+                        'ExpressionAttributeValues' => $marshaler->marshalItem([':sub' => $identity]),
+                        'ExpressionAttributeNames'  => [
+                            '#sub' => 'Identity',
+                        ],
                     ],
                 ],
-                'UpdateExpression'
-                    => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
-                        . 'PasswordResetExpiry, NeedsReset',
-                'ExpressionAttributeValues' => $marshaler->marshalItem(
-                    [
-                        ':sub' => $identity,
-                    ]
-                ),
-                'ExpressionAttributeNames'  => [
-                    '#sub' => 'Identity',
+                [
+                    'Put' => [
+                        'TableName'           => $this->actorUsersTable,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'IDENTITY#' . $identity],
+                        ],
+                    ],
                 ],
-                'ReturnValues'              => 'ALL_NEW',
-            ]
-        );
-
-        $user = $this->getData($result);
-
-        if (empty($user)) {
-            throw new NotFoundException('User not found when updating', ['id' => $id]);
-        }
+                // But not EMAIL# as we will be inserting this for all existing
+                // accounts manually. That way we can be sure that no email will
+                // be used twice.
+            ],
+        ]);
 
         return $user;
-    }
-
-    public function exists(string $email): bool
-    {
-        try {
-            $this->getByEmail($email);
-        } catch (NotFoundException) {
-            return false;
-        }
-
-        return true;
     }
 
     public function recordSuccessfulLogin(string $id, string $loginTime): void
@@ -194,46 +207,73 @@ class ActorUsers implements ActorUsersInterface
         );
     }
 
-    public function changeEmail(string $id, string $newEmail): void
+    public function changeEmail(string $id, string $oldEmail, string $newEmail): void
     {
-        $this->client->updateItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $id,
+        $this->client->transactWriteItems([
+            'TransactItems' => [
+                [
+                    'Update' => [
+                        'TableName'                 => $this->actorUsersTable,
+                        'Key'                       => ['Id' => ['S' => $id]],
+                        'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                        'ExpressionAttributeValues' => [
+                            ':p' => [
+                                'S' => $newEmail,
+                            ],
+                        ],
                     ],
                 ],
-                'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-                'ExpressionAttributeValues' => [
-                    ':p' => [
-                        'S' => $newEmail,
+                [
+                    'Delete' => [
+                        'TableName' => $this->actorUsersTable,
+                        'Key'       => [
+                            'Id' => ['S' => 'EMAIL#' . $oldEmail],
+                        ],
                     ],
                 ],
-            ]
-        );
+                [
+                    'Put' => [
+                        'TableName'           => $this->actorUsersTable,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'EMAIL#' . $newEmail],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 
     public function delete(string $accountId): array
     {
-        $user = $this->client->deleteItem(
-            [
-                'TableName'                 => $this->actorUsersTable,
-                'Key'                       => [
-                    'Id' => [
-                        'S' => $accountId,
-                    ],
-                ],
-                'ConditionExpression'       => 'Id = :id',
-                'ExpressionAttributeValues' => [
-                    ':id' => [
-                        'S' => $accountId,
-                    ],
-                ],
-                'ReturnValues'              => 'ALL_OLD',
-            ]
-        );
+        $user = $this->get($accountId);
 
-        return $this->getData($user);
+        $items = [
+            [
+                'Delete' => [
+                    'TableName' => $this->actorUsersTable,
+                    'Key'       => ['Id' => ['S' => $accountId]],
+                ],
+            ],
+            [
+                'Delete' => [
+                    'TableName' => $this->actorUsersTable,
+                    'Key'       => ['Id' => ['S' => 'EMAIL#' . $user['Email']]],
+                ],
+            ],
+        ];
+
+        if (isset($user['Identity'])) {
+            array_push($items, [
+                'Delete' => [
+                    'TableName' => $this->actorUsersTable,
+                    'Key'       => ['Id' => ['S' => 'IDENTITY#' . $user['Identity']]],
+                ],
+            ]);
+        }
+
+        $this->client->transactWriteItems(['TransactItems' => $items]);
+
+        return $user;
     }
 }

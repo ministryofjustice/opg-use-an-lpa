@@ -8,6 +8,8 @@ import simplejson as json
 from passlib.hash import sha256_crypt
 from dateutil.relativedelta import relativedelta
 import pytz
+import base64
+import hashlib
 
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
@@ -140,6 +142,11 @@ actorUsers = [
 
 for i in actorUsers:
     try:
+        actorUsersTable.delete_item(
+            Key={
+                'Id': 'IDENTITY#urn:fdc:mock-one-login:2023:' + base64.b64encode(hashlib.sha256(i['Email'].encode('utf-8')).digest()).decode("utf-8"),
+            },
+        )
         actorUsersTable.put_item(
             Item=i,
         )
