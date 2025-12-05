@@ -34,7 +34,6 @@ use App\Value\LpaUid;
 use Aws\CommandInterface;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
-use Behat\Hook\BeforeSuite;
 use Behat\Step\Given;
 use Behat\Step\Then;
 use Behat\Step\When;
@@ -79,6 +78,11 @@ class LpaContext extends BaseIntegrationContext
     public string $userPostCode;
     public string $userFirstname;
     public string $userSurname;
+
+    #[Given('Any active paper verification codes are set to expire')]
+    public function anyActivePaperVerificationCodesAreSetToExpire(): void
+    {
+    }
 
     #[Given('I have previously requested the addition of a paper LPA to my account')]
     public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
@@ -1866,12 +1870,12 @@ class LpaContext extends BaseIntegrationContext
         $this->awsFixtures->append(new Result());
     }
 
-    #[When('/^I request to give an organisation access to one of my new LPA$/')]
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
+    #[When('I give an organisation access to one of my modern LPAs')]
+    public function iGiveAnOrganisationAccessToOneOfMyModernLPAs(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode   = 'XYZ321ABC987';
-        $actorLpaId         = 700000000054;
+        $actorId            = '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d';
         $lpaUid             = 'M-XXXX-1111-YYYY';
 
         // UserLpaActorMap::get
@@ -1880,15 +1884,32 @@ class LpaContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'LpaUid'  => $lpaUid,
-                            'Added'   => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'      => $this->userLpaActorToken,
-                            'ActorId' => (string)$actorLpaId,
-                            'UserId'  => $this->userId,
+                            'LpaUid'                   => $lpaUid,
+                            'Added'                    => (new DateTime('2020-01-01'))
+                                ->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'                       => $this->userLpaActorToken,
+                            'ActorId'                  => $actorId,
+                            'UserId'                   => $this->userId,
+                            'HasPaperVerificationCode' => true,
                         ]
                     ),
                 ]
             )
+        );
+
+        // PaperVerificationCodes::transitionToDigital
+        $this->apiFixtures->append(
+            function (RequestInterface $request): Response {
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'expiry_date' => (new DateTime('now'))->format('Y-m-d'),
+                        ],
+                    ),
+                );
+            }
         );
 
         // ViewerCodes::add
