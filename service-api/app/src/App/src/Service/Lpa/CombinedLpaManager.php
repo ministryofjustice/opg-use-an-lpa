@@ -43,9 +43,6 @@ class CombinedLpaManager implements LpaManagerInterface
     ) {
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByUid(LpaUid $uid, ?string $originatorId = null): ?LpaInterface
     {
         $lpa = match ($uid->getLpaSource()) {
@@ -66,9 +63,6 @@ class CombinedLpaManager implements LpaManagerInterface
         );
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByUserLpaActorToken(string $token, string $userId): ?UserLpaActorTokenResponse
     {
         $lpaActorMap = $this->userLpaActorMap->get($token);
@@ -97,6 +91,10 @@ class CombinedLpaManager implements LpaManagerInterface
             $result = $result->withActivationKeyDueDate(new DateTimeImmutable($lpaActorMap['DueBy']));
         }
 
+        if (isset($lpaActorMap['HasPaperVerificationCode'])) {
+            $result = $result->withHasPaperVerificationCode($lpaActorMap['HasPaperVerificationCode']);
+        }
+
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
         if (isset($lpaActorMap['ActorId'])) {
             // If an active attorney is not found then this is null
@@ -112,9 +110,6 @@ class CombinedLpaManager implements LpaManagerInterface
         return null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAllActiveForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
@@ -127,9 +122,6 @@ class CombinedLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps, $userId);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getAllForUser(string $userId): array
     {
         // Returns an array of all the LPAs Ids (plus other metadata) in the user's account.
@@ -138,9 +130,6 @@ class CombinedLpaManager implements LpaManagerInterface
         return $this->lookupAndFormatLpas($lpaActorMaps, $userId);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getByViewerCode(string $viewerCode, string $donorSurname, ?string $organisation = null): array
     {
         $viewerCodeData = $this->viewerCodes->get($viewerCode);

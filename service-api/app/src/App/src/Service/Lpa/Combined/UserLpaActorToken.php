@@ -17,14 +17,16 @@ readonly class UserLpaActorToken implements JsonSerializable
 
     public ?DateTimeInterface $activationKeyDueDate;
     public ?LpaActor $actor;
+    public ?bool $hasPaperVerificationCode;
 
     public function __construct(
         public string $userLpaActorToken,
         public DateTimeInterface $lookupDateTime,
         public Lpa|SiriusLpa $lpa,
     ) {
-        $this->activationKeyDueDate = null;
-        $this->actor                = null;
+        $this->activationKeyDueDate     = null;
+        $this->actor                    = null;
+        $this->hasPaperVerificationCode = null;
     }
 
     public function withActivationKeyDueDate(DateTimeInterface $activationKeyDueDate): self
@@ -35,6 +37,11 @@ readonly class UserLpaActorToken implements JsonSerializable
     public function withActor(LpaActor $actor): self
     {
         return $this->with(actor: $actor);
+    }
+
+    public function withHasPaperVerificationCode(bool $hasPaperVerificationCode): self
+    {
+        return $this->with(hasPaperVerificationCode: $hasPaperVerificationCode);
     }
 
     public function jsonSerialize(): array
@@ -51,6 +58,10 @@ readonly class UserLpaActorToken implements JsonSerializable
 
         if (isset($this->actor)) {
             $data['actor'] = $this->actor;
+        }
+
+        if (isset($this->hasPaperVerificationCode)) {
+            $data['hasPaperVerificationCode'] = $this->hasPaperVerificationCode;
         }
 
         return $data;
