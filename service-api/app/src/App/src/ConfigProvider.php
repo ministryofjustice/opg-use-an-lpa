@@ -87,6 +87,7 @@ class ConfigProvider
                 // Services
                 Aws\Sdk::class                                 => Service\Aws\SdkFactory::class,
                 Aws\DynamoDb\DynamoDbClient::class             => Service\Aws\DynamoDbClientFactory::class,
+                Aws\EventBridge\EventBridgeClient::class       => Service\Aws\EventBridgeClientFactory::class,
                 Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
                 Aws\Ssm\SsmClient::class                       => Service\Aws\SSMClientFactory::class,
                 Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,

@@ -53,14 +53,12 @@ class OrdinalNumberExtensionTest extends TestCase
     public static function exceptionOrdinalDataProvider()
     {
         return [
-            [
-                'abc',
-                null,
-                true,
-                false,
-                new stdClass(),
-                1.2345,
-            ],
+            ['abc'],
+            [null],
+            [true],
+            [false],
+            [new stdClass()],
+            [1.2345],
         ];
     }
 

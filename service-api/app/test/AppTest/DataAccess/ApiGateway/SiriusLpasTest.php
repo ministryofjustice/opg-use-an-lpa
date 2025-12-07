@@ -14,6 +14,8 @@ use App\Exception\ApiException;
 use App\Service\Features\FeatureEnabled;
 use App\Service\Lpa\LpaDataFormatter;
 use App\Value\LpaUid;
+use Aws\EventBridge\EventBridgeClient;
+use Aws\Result;
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Client as GuzzleClient;
@@ -44,6 +46,7 @@ class SiriusLpasTest extends TestCase
     private RequestSignerFactory|ObjectProphecy $requestSignerFactoryProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabled;
     private LpaDataFormatter|ObjectProphecy $lpaDataFormatter;
+    private EventBridgeClient|ObjectProphecy $eventBridgeClient;
 
     public function setUp(): void
     {
@@ -52,6 +55,7 @@ class SiriusLpasTest extends TestCase
         $this->loggerInterface       = $this->prophesize(LoggerInterface::class);
         $this->featureEnabled        = $this->prophesize(FeatureEnabled::class);
         $this->lpaDataFormatter      = $this->prophesize(LpaDataFormatter::class);
+        $this->eventBridgeClient     = $this->prophesize(EventBridgeClient::class);
 
         $requestSignerProphecy = $this->prophesize(RequestSigner::class);
         $requestSignerProphecy
@@ -72,11 +76,13 @@ class SiriusLpasTest extends TestCase
             $this->streamFactoryProphecy->reveal(),
             $this->requestSignerFactoryProphecy->reveal(),
             'localhost',
+            'my test bus',
             'test-trace-id',
             $this->dataSanitiserStrategy->reveal(),
             $this->loggerInterface->reveal(),
             $this->featureEnabled->reveal(),
             $this->lpaDataFormatter->reveal(),
+            $this->eventBridgeClient->reveal(),
         );
     }
 
@@ -382,14 +388,52 @@ class SiriusLpasTest extends TestCase
     }
 
     #[Test]
-    public function requests_a_letter_successfully_for_modernised_lpa(): void
+    public function requests_an_activation_key_successfully_for_modernised_lpa(): void
     {
         $this->generateCleanPSR17Prophecies();
-        $this->loggerInterface->info('TODO request a letter from Sirius')->shouldBeCalled();
+
+        $entry = [
+            'Source'       => 'opg.poas.use',
+            'DetailType'   => 'activation-key-requested',
+            'Detail'       => json_encode([
+                'uid'   => 'M-7890-0400-4000',
+                'actor' => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            ]),
+            'EventBusName' => 'my test bus',
+            'TraceHeader'  => 'test-trace-id',
+        ];
+
+        $this->eventBridgeClient
+            ->putEvents(['Entries' => [$entry]])
+            ->willReturn(new Result([]))
+            ->shouldBeCalled();
+
+        $this->loggerInterface
+            ->info('Sent activation-key-requested event for {lpaUid}', Argument::any())
+            ->shouldBeCalled();
 
         $service = $this->getLpas();
 
         $service->requestLetter(new LpaUid('M-7890-0400-4000'), '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d', null);
+    }
+
+    #[Test]
+    public function requests_an_activation_key_for_modernised_errors(): void
+    {
+        $this->generateCleanPSR17Prophecies();
+
+        $this->eventBridgeClient
+            ->putEvents(Argument::any())
+            ->willReturn(new Result(['FailedEntryCount' => 1]));
+
+        $this->loggerInterface
+            ->warning('Failed to put activation-key-requested event for LPA {lpaUid}', Argument::any())
+            ->shouldBeCalled();
+
+        $service = $this->getLpas();
+
+        $this->expectException(ApiException::class);
+        $service->requestLetter(new LpaUid('M-7890-0400-4000'), null, 'whatever');
     }
 
     #[Test]

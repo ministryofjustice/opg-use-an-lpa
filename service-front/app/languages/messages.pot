@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-03T09:35:07+00:00\n"
+"POT-Creation-Date: 2025-12-07T20:39:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -29,15 +29,15 @@ msgstr ""
 msgid "This LPA has preferences and/or instructions.<br>"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:18
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:19
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:28
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
 msgid "cancelled"
 msgstr ""
 
@@ -51,25 +51,25 @@ msgid "No active codes"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:36
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:53
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:37
 msgid "Give an organisation access"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:20
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:57
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:21
 msgid "Check access codes"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:61
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:68
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:65
 msgid "Remove LPA"
 msgstr ""
 
@@ -1101,7 +1101,7 @@ msgid "there are replacement attorneys"
 msgstr ""
 
 #: src/Actor/templates/actor/death-notification.html.twig:54
-#: src/Actor/templates/actor/change-lpa-details.html.twig:41
+#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:50
 msgid "How to let us know"
 msgstr ""
@@ -2210,7 +2210,6 @@ msgstr ""
 msgid "We’ll update the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary and our records."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:37
 #: src/Actor/templates/actor/change-details.html.twig:43
 msgid "Do not make any changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> yourself. If you do, you’ll no longer be able to use the <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr ""
@@ -2223,17 +2222,17 @@ msgstr ""
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:42
+#: src/Actor/templates/actor/change-lpa-details.html.twig:38
 #: src/Actor/templates/actor/change-details.html.twig:51
 msgid "Contact us through any of the ways below."
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:43
+#: src/Actor/templates/actor/change-lpa-details.html.twig:39
 #: src/Actor/templates/actor/change-details.html.twig:52
 msgid "When you get in touch, you’ll need to tell us:"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:45
+#: src/Actor/templates/actor/change-lpa-details.html.twig:41
 #: src/Actor/templates/actor/change-details.html.twig:54
 msgid "the LPA reference number"
 msgstr ""
@@ -2242,22 +2241,22 @@ msgstr ""
 msgid "your name and address"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:47
+#: src/Actor/templates/actor/change-lpa-details.html.twig:43
 #: src/Actor/templates/actor/change-details.html.twig:56
 msgid "your role (ie, whether you are the donor or an attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:48
+#: src/Actor/templates/actor/change-lpa-details.html.twig:44
 #: src/Actor/templates/actor/change-details.html.twig:57
 msgid "the donor’s name (if you are not the donor)"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:49
+#: src/Actor/templates/actor/change-lpa-details.html.twig:45
 #: src/Actor/templates/actor/change-details.html.twig:58
 msgid "the donor’s date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:50
+#: src/Actor/templates/actor/change-lpa-details.html.twig:46
 #: src/Actor/templates/actor/change-details.html.twig:59
 msgid "the donor’s address and postcode"
 msgstr ""
@@ -2832,7 +2831,7 @@ msgstr ""
 msgid "the registration date or the date the donor signed the LPA are incorrect"
 msgstr ""
 
-#: src/Actor/templates/actor/change-lpa-details.html.twig:46
+#: src/Actor/templates/actor/change-lpa-details.html.twig:42
 msgid "your name"
 msgstr ""
 
@@ -4766,19 +4765,24 @@ msgctxt "error"
 msgid "Enter your first name"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:14
-msgid "Added by:"
-msgstr ""
-
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:37
-msgid "%count% active access code"
-msgid_plural "%count% active access codes"
-msgstr[0] ""
-
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:42
-msgid "No active access codes"
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:161
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
+msgid "You cannot use a download or printout of this page instead of giving someone an access code."
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10
 msgid "LPA reference number:"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+msgid "Added by:"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:34
+msgid "%count% active access code"
+msgid_plural "%count% active access codes"
+msgstr[0] ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+msgid "No active access codes"
 msgstr ""
