@@ -11,7 +11,7 @@ use DateTimeInterface;
 use JsonSerializable;
 use Spatie\Cloneable\Cloneable;
 
-readonly class UserLpaActorToken implements JsonSerializable
+readonly final class UserLpaActorToken implements JsonSerializable
 {
     use Cloneable;
 
