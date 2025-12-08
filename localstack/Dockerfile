@@ -1,4 +1,4 @@
-FROM golang:1.25.3-alpine@sha256:aee43c3ccbf24fdffb7295693b6e33b21e01baec1b2a55acc351fde345e9ec34 AS build
+FROM golang:1.25.5-alpine@sha256:26111811bc967321e7b6f852e914d14bede324cd1accb7f81811929a6a57fea9 AS build
 
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstr
   && chmod 755 bootstrap \
   && zip event-receiver.zip bootstrap
 
-FROM localstack/localstack:4.1.0@sha256:cd576d5d92a8506702a920e7fbc97bf3c8452143f2487ae421ad16e37d2d3fab AS localstack
+FROM localstack/localstack:4.11.1@sha256:3071c9c72a1e9dbc23ad33540617ad7825ffeba80a8f421eff798b97850f9de5 AS localstack
 
 COPY --from=build /app/event-receiver.zip /event-receiver.zip
 
