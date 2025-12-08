@@ -24,7 +24,7 @@ use DateTimeZone;
 use JsonSerializable;
 use Spatie\Cloneable\Cloneable;
 
-class Lpa implements
+abstract class Lpa implements
     JsonSerializable,
     HasActorInterface,
     IsValidInterface,
@@ -41,7 +41,7 @@ class Lpa implements
         public readonly ?bool $applicationHasGuidance,
         public readonly ?bool $applicationHasRestrictions,
         public readonly ?string $applicationType,
-        /** @var Person[] $attorneys */
+        /** @var ?Person[] $attorneys */
         public readonly ?array $attorneys,
         public readonly ?LpaType $caseSubtype,
         public readonly ?string $channel,
@@ -57,13 +57,13 @@ class Lpa implements
         public readonly ?DateTimeImmutable $receiptDate,
         public readonly ?DateTimeImmutable $registrationDate,
         public readonly ?DateTimeImmutable $rejectedDate,
-        /** @var Person[] $replacementAttorneys */
+        /** @var ?Person[] $replacementAttorneys */
         public readonly ?array $replacementAttorneys,
         public readonly ?string $restrictionsAndConditions,
         public readonly ?array $restrictionsAndConditionsImages,
         public readonly ?string $status,
         public readonly ?DateTimeImmutable $statusDate,
-        /** @var Person[] $trustCorporations */
+        /** @var ?Person[] $trustCorporations */
         public readonly ?array $trustCorporations,
         public readonly ?string $uId,
         public readonly ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
@@ -135,14 +135,6 @@ class Lpa implements
         return $this->applicationHasRestrictions ?? false;
     }
 
-    public function getDonor(): Person
-    {
-        if (!isset($this->donor)) {
-            throw ApiException::create('Donor does not exist and is required');
-        }
-        return $this->donor;
-    }
-
     public function getCaseSubType(): string
     {
         if (!isset($this->caseSubtype)) {
@@ -150,4 +142,6 @@ class Lpa implements
         }
         return $this->caseSubtype->value;
     }
+
+    abstract public function getDonor(): Person;
 }
