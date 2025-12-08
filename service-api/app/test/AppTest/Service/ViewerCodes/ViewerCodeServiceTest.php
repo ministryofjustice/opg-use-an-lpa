@@ -6,6 +6,8 @@ namespace AppTest\Service\ViewerCodes;
 
 use App\DataAccess\Repository\KeyCollisionException;
 use App\DataAccess\Repository\PaperVerificationCodesInterface;
+use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
@@ -288,7 +290,13 @@ class ViewerCodeServiceTest extends TestCase
                 Argument::that(fn (LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
                 '1234',
             )
-            ->shouldBeCalled();
+            ->shouldBeCalled()
+            ->willReturn(
+                new UpstreamResponse(
+                    new PaperVerificationCodeExpiry(new DateTimeImmutable('23:59:59 +30 days')),
+                    new DateTimeImmutable('now'),
+                )
+            );
 
         $loggerProphecy = $this->prophesize(LoggerInterface::class);
 
