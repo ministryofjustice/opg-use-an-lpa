@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\ViewerCodes;
 
 use App\DataAccess\DynamoDb\UserLpaActorMap;
+use App\Service\Log\EventCodes;
 use App\DataAccess\Repository\{KeyCollisionException,
     PaperVerificationCodesInterface,
     UserLpaActorMapInterface,
@@ -93,6 +94,15 @@ class ViewerCodeService
             );
 
             $response['pvc_expiry'] = $pvcExpiry->getData()->expiresAt->format(DateTimeInterface::ATOM);
+
+            $this->logger->notice(
+                'Actor with ID {actor} migrated their LPA with ID {lpaUid} to online',
+                [
+                    'actorUid'   => $userId,
+                    'lpaUid'     => (string)$map['ActorId'],
+                    'event_code' => EventCodes::PAPER_VERIFICATION_CODE_PAPER_TO_DIGITAL_TRANSITION,
+                ]
+            );
         }
 
         return $response;

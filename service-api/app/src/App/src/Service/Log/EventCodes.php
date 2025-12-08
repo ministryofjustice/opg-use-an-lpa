@@ -79,4 +79,10 @@ class EventCodes
      * A paper verification code has been used for the first time and the expiry period started
      */
     public const string PAPER_VERIFICATION_CODE_FIRST_TIME_USE = 'PAPER_VERIFICATION_CODE_FIRST_TIME_USE';
+
+    /**
+     * A paper channel actor with has used the LPA online for the first time and has started the 30
+     * day migration to being online only.
+     */
+    public const string PAPER_VERIFICATION_CODE_PAPER_TO_DIGITAL_TRANSITION = 'PAPER_TO_DIGITAL_TRANSITION';
 }
