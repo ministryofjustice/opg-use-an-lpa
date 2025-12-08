@@ -498,9 +498,6 @@
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool]]></code>
     </PossiblyUnusedReturnValue>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->catalogues]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/Common/src/Service/Log/LogStderrListener.php">
     <PossiblyUnusedParam>
