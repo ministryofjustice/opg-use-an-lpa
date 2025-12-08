@@ -332,7 +332,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
 
         $pvc = $sut->transitionToDigital(
             new LpaUid('M-7890-0400-4000'),
-            '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d'
+            'ce118b6e-d8e1-11e7-9296-cec278b6b50a'
         );
 
         self::assertTrue($this->builder->verify());
