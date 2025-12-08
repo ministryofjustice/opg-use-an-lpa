@@ -71,6 +71,7 @@ class LpaService
 
         $lpaData = ($this->parseLpaData)($lpaData);
 
+        /** @psalm-suppress UndefinedPropertyFetch */
         if ($lpaData->lpa !== null) {
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
@@ -166,11 +167,13 @@ class LpaService
             throw $apiEx;
         }
 
+
         $lpaData = ($this->parseLpaData)($lpaData);
 
         if ($trackRoute === 'summary') {
             // this getLpaByCode function is called to fetch the LPA for both the summary page and the
             // full lpa page, so we will just log the message once to avoid duplicate logs & incorrect stats
+            /** @psalm-suppress UndefinedPropertyFetch */
             $this->logger->notice(
                 'LPA found with Id {uId} retrieved by share code',
                 [

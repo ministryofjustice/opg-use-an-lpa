@@ -13,12 +13,6 @@ use Laminas\Validator\Csrf as LaminasCsrfValidator;
  */
 class Csrf extends LaminasCsrf
 {
-    /**
-     * Overridden function required to implement our custom CsrfValidator
-     *
-     * @return LaminasCsrfValidator
-     * @psalm-suppress MethodSignatureMismatch
-     */
     public function getCsrfValidator(): LaminasCsrfValidator
     {
         if (null === $this->csrfValidator) {

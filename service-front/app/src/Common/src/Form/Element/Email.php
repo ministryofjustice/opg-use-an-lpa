@@ -7,9 +7,6 @@ namespace Common\Form\Element;
 use Laminas\Filter\StringTrim;
 use Laminas\Form\Element\Email as LaminasEmail;
 
-/**
- * @psalm-suppress InvalidExtendClass
- */
 class Email extends LaminasEmail
 {
     public function __construct($name = null, $options = [])
@@ -17,9 +14,6 @@ class Email extends LaminasEmail
         parent::__construct($name, $options);
     }
 
-    /**
-     * @psalm-suppress MethodSignatureMismatch
-     */
     public function getInputSpecification(): array
     {
         return [

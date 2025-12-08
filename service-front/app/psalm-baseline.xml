@@ -524,15 +524,6 @@
       <code><![CDATA[$logger]]></code>
     </UnusedDocblockParam>
   </file>
-  <file src="src/Common/src/Service/Lpa/LpaService.php">
-    <RedundantCondition>
-      <code><![CDATA[is_array($lpaData)]]></code>
-      <code><![CDATA[is_array($lpaData)]]></code>
-    </RedundantCondition>
-    <UndefinedPropertyFetch>
-      <code><![CDATA[$lpaData->lpa]]></code>
-    </UndefinedPropertyFetch>
-  </file>
   <file src="src/Common/src/Service/Lpa/PopulateLpaMetadata.php">
     <UndefinedPropertyFetch>
       <code><![CDATA[$shareCodes->activeCodeCount]]></code>
