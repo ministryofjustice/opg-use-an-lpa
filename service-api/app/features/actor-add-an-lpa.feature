@@ -9,14 +9,14 @@ Feature: Add an LPA
     And I am a user of the lpa application
     And I am currently signed in
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user can add an LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details
     Then The correct LPA is found and I can confirm to add it
     And The LPA is successfully added
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user cannot add an LPA to their account as it does not exist
     Given I am on the add an LPA page
     When I request to add an LPA that does not exist
@@ -29,7 +29,7 @@ Feature: Add an LPA
     Then I am taken back to the dashboard page
     And The LPA has not been added
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user is told the LPA couldn't be found if its status is not registered
     Given I am on the add an LPA page
     When I request to add an LPA which has a status other than registered
@@ -74,7 +74,7 @@ Feature: Add an LPA
     When I confirmed to add an LPA to my account
     And A malformed confirm request is sent which is missing user id
 
-  @integration @acceptance @pact
+  @integration @acceptance
   Scenario: The user can complete adding an LPA to their account that they have requested an activation key for
     Given I am on the add an LPA page
     When I request to add an LPA that I have requested an activation key for
