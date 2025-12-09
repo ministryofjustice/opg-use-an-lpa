@@ -14,7 +14,8 @@
   ],
   "ignoreDeps": [
     "github.com/ministryofjustice/opg-terraform-aws-moj-ip-allow-list",
-    "311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service"
+    "311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service",
+    "github.com/ministryofjustice/opg-terraform-aws-firewalled-network"
   ],
   "packageRules": [
     {
