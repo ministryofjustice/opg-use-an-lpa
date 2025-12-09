@@ -756,7 +756,7 @@ class LpaContext implements Context
         $this->ui->visit('/lpa/dashboard');
 
         $this->ui->assertPageAddress('/lpa/dashboard');
-        $this->ui->assertPageContainsText('No active codes');
+        $this->ui->assertPageContainsText('No active access codes');
     }
 
     #[Then('/^I can see the code has not been used to view the LPA$/')]

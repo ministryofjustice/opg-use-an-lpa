@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-02T16:37:19+00:00\n"
+"POT-Creation-Date: 2025-12-07T20:39:57+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -38,7 +38,7 @@ msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau.<br>"
 msgid "This LPA has preferences and/or instructions.<br>"
 msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau.<br>"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:10
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 msgid ""
 "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</"
 "abbr> anymore."
@@ -46,11 +46,11 @@ msgstr ""
 "Nid ydych yn atwrnai ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon "
 "mwyach."
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Why is this?"
 msgstr "Beth yw’r rheswm dros hyn?"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:20
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
 msgid "cancelled"
 msgstr "dilëwyd"
 
@@ -69,25 +69,25 @@ msgid "No active codes"
 msgstr "Dim codau yn weithredol"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:36
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:37
 msgid "Give an organisation access"
 msgstr "Rhoi mynediad i sefydliad"
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:20
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:21
 msgid "Check access codes"
 msgstr "Gwirio codau mynediad"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr "Gweld crynodeb LPA"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:65
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
@@ -6634,3 +6634,25 @@ msgid ""
 msgstr ""
 "Ni allwch ddefnyddio fersiwn wedi’i lawrlwytho nac allbrint o’r dudalen hon yn "
 "lle rhoi cod mynediad i rywun."
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:10
+msgid "LPA reference number:"
+msgstr "Cyfeirnod LPA:"
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+msgid "Added by:"
+msgstr "ychwanegwyd gan:"
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:34
+msgid "%count% active access code"
+msgid_plural "%count% active access codes"
+msgstr[0] "%count% codau mynediad gweithredol"
+msgstr[1] "%count% cod i’w ddefnyddio"
+msgstr[2] "%count% codau i’w defnyddio"
+msgstr[3] "%count% codau i’w defnyddio"
+msgstr[4] "%count% codau i’w defnyddio"
+msgstr[5] "%count% codau i’w defnyddio"
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+msgid "No active access codes"
+msgstr "Dim codau mynediad gweithredol"

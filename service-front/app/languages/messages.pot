@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-02T16:37:19+00:00\n"
+"POT-Creation-Date: 2025-12-07T20:39:57+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -29,15 +29,15 @@ msgstr ""
 msgid "This LPA has preferences and/or instructions.<br>"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:10
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:20
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
 msgid "cancelled"
 msgstr ""
 
@@ -51,25 +51,25 @@ msgid "No active codes"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:36
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:43
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:37
 msgid "Give an organisation access"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes.html.twig:20
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:47
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:21
 msgid "Check access codes"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:51
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:65
 msgid "Remove LPA"
 msgstr ""
 
@@ -4768,4 +4768,21 @@ msgstr ""
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
 msgid "You cannot use a download or printout of this page instead of giving someone an access code."
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:10
+msgid "LPA reference number:"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+msgid "Added by:"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:34
+msgid "%count% active access code"
+msgid_plural "%count% active access codes"
+msgstr[0] ""
+
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+msgid "No active access codes"
 msgstr ""
