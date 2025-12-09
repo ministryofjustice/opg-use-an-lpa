@@ -5,6 +5,11 @@
         {% else %}
             <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
         {% endif %}
+        
+        <p class="govuk-body govuk-!-margin-bottom-1">
+            <strong>{% trans %}LPA reference number:{% endtrans %}</strong> {{ lpaReference }} <br>
+            <strong>{% trans %}Added by:{% endtrans %}</strong> {{ actor_name(lpaActor) }}
+        </p>
 
         {%  if not actorActive %}
             <p class="govuk-body govuk-!-margin-bottom-0 lpa-secondary-text-colour">{% trans %}You are not an attorney on this <abbr title="lasting power of attorney">LPA</abbr> anymore.{% endtrans %}
@@ -22,20 +27,22 @@
 
         {% if lpa.status|lower == 'cancelled' and activeCodeCount >= 1 %}
             <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
-                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+                {% trans count activeCodeCount %}%count% active access code|%count% active access codes{% endtrans %}
             </span>
         {% elseif activeCodeCount >= 1 %}
             <span class="moj-badge moj-badge--large moj-badge--blue govuk-!-margin-bottom-2">
-                {% trans count activeCodeCount %}%count% active code|%count% active codes{% endtrans %}
+                {% trans count activeCodeCount %}%count% active access code|%count% active access codes{% endtrans %}
             </span>
         {# shareCodes array contains activecodecount as an item so we need to factor in this when checking if empty #}
         {% elseif actorActive and activeCodeCount < 1 %}
             <span class="moj-badge moj-badge--large moj-badge--grey govuk-!-margin-bottom-2">
-                {% trans %}No active codes{% endtrans %}
+                {% trans %}No active access codes{% endtrans %}
             </span>
         {% endif %}
     </div>
 </div>
+
+<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
 {% if actorActive %}
     <ul class="govuk-list govuk-list--inline">
