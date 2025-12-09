@@ -1,4 +1,4 @@
-FROM python:3.13@sha256:52ed248783130e635b76b2eb8430626b2cdb6c5a5ab037193ece2d019632be0f AS build-image
+FROM python:3.13@sha256:4f0a2cdf177857c417201c6f6b0e0f26c8703e6c5b9c61e10158f8ed7198d58f AS build-image
 
 # Copy function code
 RUN mkdir -p /app
