@@ -60,13 +60,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         $lpas = $this->lpaService->getLpas($identity, true);
 
-//        foreach($lpas as $lpaData) {
-//            foreach($lpaData as $lpa) {
-//                var_dump($lpa->lpa);
-//                die;
-//            }
-//        }
-
         foreach ($lpas as $lpaArray) {
             foreach ($lpaArray as $lpa) {
                 if (isset($seenUids[$lpa['lpa']->uId])) {
@@ -76,20 +69,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
                 }
             }
         }
-
-        $duplicates = ['M-7890-0400-4000'];
-//        if (!empty($duplicates)) {
-//            // For example, add a flash message or log
-//            $message = $this->translator->translate(
-//                'Duplicate LPA',
-//                [
-//                ],
-//                null,
-//                'flashMessage'
-//            );
-//            $flash->flash(self::DUPLICATE_LPA_FLASH_MSG, $message);
-//        }
-
+        
         $hasActiveCodes = array_reduce($lpas->getArrayCopy(), function ($hasCodes, $lpa) {
             return $hasCodes || array_shift($lpa)->activeCodeCount > 0;
         }, false);
