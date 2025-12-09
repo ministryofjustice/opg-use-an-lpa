@@ -10,6 +10,8 @@ use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use App\Service\Log\Output\Email;
 use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTimeInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -20,6 +22,7 @@ class UserService
 {
     public function __construct(
         private ActorUsersInterface $usersRepository,
+        private ClockInterface $clock,
         private LoggerInterface $logger,
     ) {
     }
@@ -35,7 +38,7 @@ class UserService
         $id = $this->generateUniqueId();
 
         try {
-            $this->usersRepository->add($id, $email, $identity);
+            $this->usersRepository->add($id, $email, $identity, $this->clock->now()->format(DateTimeInterface::ATOM));
         } catch (DynamoDbException $ex) {
             $reasons = $ex->toArray()['CancellationReasons'] ?? [];
 

@@ -25,6 +25,7 @@ class ActorUsers implements ActorUsersInterface
         string $id,
         string $email,
         string $identity,
+        string $now,
     ): void {
         $result = $this->client->transactWriteItems([
             'TransactItems' => [
@@ -32,9 +33,10 @@ class ActorUsers implements ActorUsersInterface
                     'Put' => [
                         'TableName' => $this->actorUsersTable,
                         'Item'      => [
-                            'Id'       => ['S' => $id],
-                            'Email'    => ['S' => $email],
-                            'Identity' => ['S' => $identity],
+                            'Id'        => ['S' => $id],
+                            'Email'     => ['S' => $email],
+                            'Identity'  => ['S' => $identity],
+                            'CreatedAt' => ['S' => $now],
                         ],
                     ],
                 ],

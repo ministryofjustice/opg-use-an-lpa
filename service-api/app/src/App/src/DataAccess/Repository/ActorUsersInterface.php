@@ -37,6 +37,7 @@ interface ActorUsersInterface
         string $id,
         string $email,
         string $identity,
+        string $now,
     ): void;
 
     /**

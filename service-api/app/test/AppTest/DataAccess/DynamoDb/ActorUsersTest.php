@@ -36,20 +36,21 @@ class ActorUsersTest extends TestCase
         $id       = '12345-1234-1234-1234-12345';
         $email    = 'a@b.com';
         $identity = '67890-6789-6789-6789-67890';
+        $now      = '2020-12-12T12:12:12';
 
-        $this->dynamoDbClientProphecy->transactWriteItems([
-            'TransactItems' => [
-                [
-        'Put' => [
+        $items = [
+            [
+                'Put' => [
                     'TableName' => self::TABLE_NAME,
                     'Item'      => [
-                        'Id'       => ['S' => $id],
-                        'Email'    => ['S' => $email],
-                        'Identity' => ['S' => $identity],
+                        'Id'        => ['S' => $id],
+                        'Email'     => ['S' => $email],
+                        'Identity'  => ['S' => $identity],
+                        'CreatedAt' => ['S' => $now],
                     ],
                 ],
-                ],
-                [
+            ],
+            [
                 'Put' => [
                     'TableName'           => self::TABLE_NAME,
                     'ConditionExpression' => 'attribute_not_exists(Id)',
@@ -57,8 +58,8 @@ class ActorUsersTest extends TestCase
                         'Id' => ['S' => 'IDENTITY#' . $identity],
                     ],
                 ],
-                ],
-                [
+            ],
+            [
                 'Put' => [
                     'TableName'           => self::TABLE_NAME,
                     'ConditionExpression' => 'attribute_not_exists(Id)',
@@ -66,15 +67,17 @@ class ActorUsersTest extends TestCase
                         'Id' => ['S' => 'EMAIL#' . $email],
                     ],
                 ],
-                ],
             ],
-        ])
-        ->shouldBeCalled()
-        ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 200]]));
+        ];
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems(['TransactItems' => $items])
+            ->shouldBeCalled()
+            ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 200]]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $actorRepo->add($id, $email, $identity);
+        $actorRepo->add($id, $email, $identity, $now);
     }
 
     #[Test]
@@ -92,7 +95,7 @@ class ActorUsersTest extends TestCase
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage('Failed to create account with code');
 
-        $actorRepo->add($id, $email, $identity);
+        $actorRepo->add($id, $email, $identity, 'now');
     }
 
     #[Test]
