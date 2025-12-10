@@ -9,6 +9,9 @@ use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use App\Service\Log\Output\Email;
+use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTimeInterface;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -19,6 +22,7 @@ class UserService
 {
     public function __construct(
         private ActorUsersInterface $usersRepository,
+        private ClockInterface $clock,
         private LoggerInterface $logger,
     ) {
     }
@@ -30,17 +34,22 @@ class UserService
      */
     public function add(string $email, string $identity): array
     {
-        if ($this->usersRepository->exists($email)) {
-            throw new ConflictException(
-                'User already exists with email address ' . $email,
-                ['email' => $email]
-            );
-        }
-
         // Generate unique id for user
         $id = $this->generateUniqueId();
 
-        $this->usersRepository->add($id, $email, $identity);
+        try {
+            $this->usersRepository->add($id, $email, $identity, $this->clock->now()->format(DateTimeInterface::ATOM));
+        } catch (DynamoDbException $ex) {
+            $reasons = $ex->toArray()['CancellationReasons'] ?? [];
+
+            foreach ($reasons as $reason) {
+                if ($reason['Code'] === 'ConditionalCheckFailed') {
+                    throw new ConflictException('User already exists with identity ' . $identity);
+                }
+            }
+
+            throw $ex;
+        }
 
         $this->logger->info(
             'Account with Id {id} created for identity {identity} using email {email}',

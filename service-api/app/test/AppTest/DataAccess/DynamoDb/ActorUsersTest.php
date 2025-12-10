@@ -36,37 +36,48 @@ class ActorUsersTest extends TestCase
         $id       = '12345-1234-1234-1234-12345';
         $email    = 'a@b.com';
         $identity = '67890-6789-6789-6789-67890';
+        $now      = '2020-12-12T12:12:12';
 
-        $this->dynamoDbClientProphecy->putItem(
-            Argument::that(function ($data) use ($id, $email, $identity) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
-
-                $this->assertArrayHasKey('Item', $data);
-                $this->assertArrayHasKey('Id', $data['Item']);
-                $this->assertArrayHasKey('Email', $data['Item']);
-                $this->assertArrayHasKey('Identity', $data['Item']);
-
-                $this->assertEquals(['S' => $id], $data['Item']['Id']);
-                $this->assertEquals(['S' => $email], $data['Item']['Email']);
-                $this->assertEquals(['S' => $identity], $data['Item']['Identity']);
-
-                return true;
-            })
-        )->shouldBeCalled()
-        ->willReturn(
-            $this->createAWSResult(
-                [
-                    '@metadata' => [
-                        'statusCode' => 200,
+        $items = [
+            [
+                'Put' => [
+                    'TableName' => self::TABLE_NAME,
+                    'Item'      => [
+                        'Id'        => ['S' => $id],
+                        'Email'     => ['S' => $email],
+                        'Identity'  => ['S' => $identity],
+                        'CreatedAt' => ['S' => $now],
                     ],
-                ]
-            )
-        );
+                ],
+            ],
+            [
+                'Put' => [
+                    'TableName'           => self::TABLE_NAME,
+                    'ConditionExpression' => 'attribute_not_exists(Id)',
+                    'Item'                => [
+                        'Id' => ['S' => 'IDENTITY#' . $identity],
+                    ],
+                ],
+            ],
+            [
+                'Put' => [
+                    'TableName'           => self::TABLE_NAME,
+                    'ConditionExpression' => 'attribute_not_exists(Id)',
+                    'Item'                => [
+                        'Id' => ['S' => 'EMAIL#' . $email],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems(['TransactItems' => $items])
+            ->shouldBeCalled()
+            ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 200]]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $actorRepo->add($id, $email, $identity);
+        $actorRepo->add($id, $email, $identity, $now);
     }
 
     #[Test]
@@ -76,39 +87,15 @@ class ActorUsersTest extends TestCase
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
-        $this->dynamoDbClientProphecy->putItem(
-            Argument::that(function ($data) use ($id, $email, $identity) {
-                $this->assertArrayHasKey('TableName', $data);
-                $this->assertEquals(self::TABLE_NAME, $data['TableName']);
-
-                $this->assertArrayHasKey('Item', $data);
-                $this->assertArrayHasKey('Id', $data['Item']);
-                $this->assertArrayHasKey('Email', $data['Item']);
-                $this->assertArrayHasKey('Identity', $data['Item']);
-
-                $this->assertEquals(['S' => $id], $data['Item']['Id']);
-                $this->assertEquals(['S' => $email], $data['Item']['Email']);
-                $this->assertEquals(['S' => $identity], $data['Item']['Identity']);
-
-                return true;
-            })
-        )->shouldBeCalled()
-        ->willReturn(
-            $this->createAWSResult(
-                [
-                    '@metadata' => [
-                        'statusCode' => 500,
-                    ],
-                ]
-            )
-        );
+        $this->dynamoDbClientProphecy->transactWriteItems(Argument::any())
+            ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 500]]));
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage('Failed to create account with code');
 
-        $actorRepo->add($id, $email, $identity);
+        $actorRepo->add($id, $email, $identity, 'now');
     }
 
     #[Test]
@@ -325,67 +312,6 @@ class ActorUsersTest extends TestCase
     }
 
     #[Test]
-    public function will_find_a_user_exists(): void
-    {
-        $id    = '12345-1234-1234-1234-12345';
-        $email = 'a@b.com';
-
-        $this->dynamoDbClientProphecy->query(
-            Argument::that(function (array $data) use ($email) {
-                $this->assertIsArray($data);
-
-                // we don't care what the array looks like as it's specific to the AWS api and may change
-                // we do care that the data *at least* contains the items we want to affect
-                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
-                $this->assertStringContainsString($email, serialize($data));
-
-                return true;
-            })
-        )->willReturn(
-            $this->createAWSResult([
-                'Items' => [
-                    [
-                        'Id' => [
-                            'S' => $id,
-                        ],
-                    ],
-                ],
-            ])
-        );
-
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
-
-        $this->assertTrue($actorRepo->exists($email));
-    }
-
-    #[Test]
-    public function will_not_find_a_user(): void
-    {
-        $email = 'c@d.com';
-
-        $this->dynamoDbClientProphecy->query(
-            Argument::that(function (array $data) use ($email) {
-                $this->assertIsArray($data);
-
-                // we don't care what the array looks like as it's specific to the AWS api and may change
-                // we do care that the data *at least* contains the items we want to affect
-                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
-                $this->assertStringContainsString($email, serialize($data));
-
-                return true;
-            })
-        )->willReturn(
-            $this->createAWSResult([
-                'Items' => [],
-            ])
-        );
-
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
-
-        $this->assertFalse($actorRepo->exists($email));
-    }
-
-    #[Test]
     public function will_record_a_successful_login(): void
     {
         $date = (new DateTime('now'))->format(DateTimeInterface::ATOM);
@@ -416,35 +342,84 @@ class ActorUsersTest extends TestCase
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
-        $this->dynamoDbClientProphecy->deleteItem(
-            Argument::that(function (array $data) use ($id) {
-                $this->assertIsArray($data);
-
-                $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString($id, serialize($data));
-
-                return true;
-            })
-        )->willReturn(
-            $this->createAWSResult([
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::any())
+            ->willReturn($this->createAWSResult([
                 'Item' => [
-                    'Id'        => [
-                        'S' => $id,
+                    'Id'       => ['S' => $id],
+                    'Email'    => ['S' => $email],
+                    'Identity' => ['S' => $identity],
+                ],
+            ]));
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+        'Delete' => [
+                        'TableName' => self::TABLE_NAME,
+                        'Key'       => ['Id' => ['S' => $id]],
                     ],
-                    'Email'     => [
-                        'S' => $email,
                     ],
-                    'Identity'  => [
-                        'S' => $identity,
+                    [
+                    'Delete' => [
+                        'TableName' => self::TABLE_NAME,
+                        'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
                     ],
-                    'LastLogin' => [
-                        'S' => null,
+                    ],
+                    [
+                    'Delete' => [
+                        'TableName' => self::TABLE_NAME,
+                        'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                    ],
                     ],
                 ],
             ])
-        );
+            ->shouldBeCalled();
 
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $deletedUser = $actorRepo->delete($id);
+
+        $this->assertEquals($id, $deletedUser['Id']);
+        $this->assertEquals($email, $deletedUser['Email']);
+    }
+
+    #[Test]
+    public function will_delete_a_pre_onelogin_users_account(): void
+    {
+        $id    = '12345-1234-1234-1234-12345';
+        $email = 'a@b.com';
+
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::any())
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Id'    => ['S' => $id],
+                    'Email' => ['S' => $email],
+                ],
+            ]));
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => ['Id' => ['S' => $id]],
+                        ],
+                    ],
+                    [
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
+                        ],
+                    ],
+                ],
+            ])
+            ->shouldBeCalled();
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
         $deletedUser = $actorRepo->delete($id);
 
@@ -455,18 +430,43 @@ class ActorUsersTest extends TestCase
     #[Test]
     public function will_throw_error_if_account_id_to_delete_doesnt_exist(): void
     {
-        $id = 'd0E2nT-ex12t';
+        $id       = 'd0E2nT-ex12t';
+        $email    = 'email@example.com';
+        $identity = 'urn:whatever';
 
-        $this->dynamoDbClientProphecy->deleteItem(
-            Argument::that(function (array $data) use ($id) {
-                $this->assertIsArray($data);
-
-                $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString($id, serialize($data));
-
-                return true;
-            })
-        )->willThrow(new NotFoundException());
+        $this->dynamoDbClientProphecy
+            ->getItem(Argument::any())
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Id'       => ['S' => $id],
+                    'Email'    => ['S' => $email],
+                    'Identity' => ['S' => $identity],
+                ],
+            ]));
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+        'Delete' => [
+                        'TableName' => 'users-table',
+                        'Key'       => ['Id' => ['S' => $id]],
+                    ],
+                    ],
+                    [
+                    'Delete' => [
+                        'TableName' => 'users-table',
+                        'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
+                    ],
+                    ],
+                    [
+                    'Delete' => [
+                        'TableName' => 'users-table',
+                        'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                    ],
+                    ],
+                ],
+            ])
+            ->willThrow(new NotFoundException());
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
 
@@ -477,21 +477,44 @@ class ActorUsersTest extends TestCase
     #[Test]
     public function will_change_a_users_email(): void
     {
-        $this->dynamoDbClientProphecy->updateItem(
-            Argument::that(function (array $data) {
-                // we don't care what the array looks like as it's specific to the AWS api and may change
-                // we do care that the data *at least* contains the items we want to affect
-                $this->assertStringContainsString(self::TABLE_NAME, serialize($data));
-                $this->assertStringContainsString('fakeId', serialize($data));
-                $this->assertStringContainsString('newemail@example.com', serialize($data));
-
-                return true;
-            })
-        )->shouldBeCalled();
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+        'Update' => [
+                        'TableName'                 => self::TABLE_NAME,
+                        'Key'                       => ['Id' => ['S' => 'fakeId']],
+                        'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                        'ExpressionAttributeValues' => [
+                            ':p' => [
+                                'S' => 'newemail@example.com',
+                            ],
+                        ],
+                    ],
+                    ],
+                    [
+                    'Delete' => [
+                        'TableName' => self::TABLE_NAME,
+                        'Key'       => [
+                            'Id' => ['S' => 'EMAIL#oldemail@example.com'],
+                        ],
+                    ],
+                    ],
+                    [
+                    'Put' => [
+                        'TableName'           => self::TABLE_NAME,
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'EMAIL#newemail@example.com'],
+                        ],
+                    ],
+                    ],
+                ],
+            ])->shouldBeCalled();
 
         $sut = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $sut->changeEmail('fakeId', 'newemail@example.com');
+        $sut->changeEmail('fakeId', 'oldemail@example.com', 'newemail@example.com');
     }
 
     #[Test]
@@ -500,60 +523,50 @@ class ActorUsersTest extends TestCase
         $id       = '12345-1234-1234-1234-12345';
         $identity = 'sub:gov.uk:identity';
 
-        $this->dynamoDbClientProphecy->updateItem(
-            Argument::that(function (array $data) use ($id, $identity) {
-                $this->assertIsArray($data);
-
-                $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString($id, serialize($data));
-                $this->assertStringContainsString($identity, serialize($data));
-
-                return true;
-            })
-        )->willReturn(
-            $this->createAWSResult(
-                [
-                    'Item' => [
-                        'Id'       => [
-                            'S' => $id,
-                        ],
-                        'Identity' => [
-                            'S' => $identity,
-                        ],
+        $this->dynamoDbClientProphecy->getItem(Argument::any())
+            ->willReturn($this->createAWSResult([
+                'Item' => [
+                    'Id' => [
+                        'S' => $id,
                     ],
                 ],
-            ),
-        );
+            ]));
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+        'Update' => [
+                        'TableName'                 => 'users-table',
+                        'Key'                       => ['Id' => ['S' => $id]],
+                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
+                            . 'PasswordResetExpiry, NeedsReset',
+                        'ExpressionAttributeValues' => [
+                            ':sub' => ['S' => $identity],
+                        ],
+                        'ExpressionAttributeNames'  => [
+                            '#sub' => 'Identity',
+                        ],
+                    ],
+                    ],
+                    [
+                    'Put' => [
+                        'TableName'           => 'users-table',
+                        'ConditionExpression' => 'attribute_not_exists(Id)',
+                        'Item'                => [
+                            'Id' => ['S' => 'IDENTITY#' . $identity],
+                        ],
+                    ],
+                    ],
+                ],
+            ])
+            ->shouldBeCalled();
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $user = $actorRepo->migrateToOAuth($id, $identity);
+        $user = $actorRepo->migrateToOAuth(['Id' =>  $id], $identity);
 
         $this->assertEquals($id, $user['Id']);
         $this->assertEquals($identity, $user['Identity']);
-    }
-
-    #[Test]
-    public function migration_fails_when_user_not_found(): void
-    {
-        $id       = '12345-1234-1234-1234-12345';
-        $identity = 'sub:gov.uk:identity';
-
-        $this->dynamoDbClientProphecy->updateItem(
-            Argument::that(function (array $data) use ($id, $identity) {
-                $this->assertStringContainsString('users-table', serialize($data));
-                $this->assertStringContainsString($id, serialize($data));
-                $this->assertStringContainsString($identity, serialize($data));
-
-                return true;
-            })
-        )->willReturn(
-            $this->createAWSResult(),
-        );
-
-        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
-
-        $this->expectException(NotFoundException::class);
-        $actorRepo->migrateToOAuth($id, $identity);
     }
 }

@@ -46,6 +46,15 @@ class AccountContext implements Context
             ]),
         ]));
 
+        // ActorUsers::get
+        $this->awsFixtures->append(new Result([
+            'Item' => $this->marshalAwsResultData([
+                'Id'       => $this->base->userAccountId,
+                'Email'    => $this->base->userAccountEmail,
+                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+            ]),
+        ]));
+
         // ActorUsers::delete
         $this->awsFixtures->append(new Result([]));
 

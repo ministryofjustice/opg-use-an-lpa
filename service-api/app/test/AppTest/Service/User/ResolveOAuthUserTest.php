@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\RecoverAccount;
 use App\Service\User\ResolveOAuthUser;
@@ -77,7 +78,7 @@ class ResolveOAuthUserTest extends TestCase
             ->recordSuccessfulLogin('fakeId', Argument::cetera())
             ->shouldBeCalled();
         $actorUsersInterfaceProphecy
-            ->changeEmail('fakeId', 'newFakeEmail')
+            ->changeEmail('fakeId', 'fakeEmail', 'newFakeEmail')
             ->shouldBeCalled();
 
         $userServiceProphecy = $this->prophesize(UserService::class);
@@ -179,7 +180,7 @@ class ResolveOAuthUserTest extends TestCase
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
         $actorUsersInterfaceProphecy
-            ->migrateToOAuth('fakeId', 'fakeSub')
+            ->migrateToOAuth(['Id' => 'fakeId'], 'fakeSub')
             ->willReturn(
                 [
                     'Id'        => 'fakeId',
@@ -274,5 +275,38 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
+    }
+
+    #[Test]
+    public function existing_user_when_conflict_on_adding(): void
+    {
+        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
+
+        $userServiceProphecy = $this->prophesize(UserService::class);
+        $userServiceProphecy
+            ->getByIdentity('fakeSub')
+            ->willThrow(NotFoundException::class);
+        $userServiceProphecy
+            ->getByEmail('fakeEmail')
+            ->willThrow(NotFoundException::class);
+        $userServiceProphecy
+            ->add('fakeEmail', 'fakeSub')
+            ->willThrow(ConflictException::class);
+
+        $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
+
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $sut = new ResolveOAuthUser(
+            $actorUsersInterfaceProphecy->reveal(),
+            $userServiceProphecy->reveal(),
+            $recoverAccountProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $this->expectException(ConflictException::class);
+        $user = ($sut)('fakeSub', 'fakeEmail');
     }
 }

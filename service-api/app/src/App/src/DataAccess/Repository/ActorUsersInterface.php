@@ -37,6 +37,7 @@ interface ActorUsersInterface
         string $id,
         string $email,
         string $identity,
+        string $now,
     ): void;
 
     /**
@@ -64,15 +65,11 @@ interface ActorUsersInterface
     /**
      * Migrates a user account to being authenticated by OAuth
      *
+     * @psalm-param ActorUser $user
      * @psalm-return ActorUser
      * @throws NotFoundException
      */
-    public function migrateToOAuth(string $id, string $identity): array;
-
-    /**
-     * Check for the existence of an actor user
-     */
-    public function exists(string $email): bool;
+    public function migrateToOAuth(array $user, string $identity): array;
 
     /**
      * Records a successful login against the actor user
@@ -82,7 +79,7 @@ interface ActorUsersInterface
     /**
      * Changes the email address for an account to the supplied new email
      */
-    public function changeEmail(string $id, string $newEmail): void;
+    public function changeEmail(string $id, string $oldEmail, string $newEmail): void;
 
     /**
      * Deletes a user's account by account id

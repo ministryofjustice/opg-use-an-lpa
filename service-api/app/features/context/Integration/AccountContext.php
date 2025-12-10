@@ -117,15 +117,17 @@ class AccountContext extends BaseIntegrationContext
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'Id'        => $this->userAccountId,
-                            'Email'     => $this->userAccountEmail,
-                            'Identity'  => 'identity',
-                            'LastLogin' => null,
+                            'Id'       => $this->userAccountId,
+                            'Email'    => $this->userAccountEmail,
+                            'Identity' => 'identity',
                         ]
                     ),
                 ]
             )
         );
+
+        // ActorUsers::delete
+        $this->awsFixtures->append(new Result([]));
 
         $userService = $this->container->get(UserService::class);
 

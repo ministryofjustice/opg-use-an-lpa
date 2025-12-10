@@ -39,7 +39,6 @@ class ResolveOAuthUser
      */
     public function __invoke(string $identity, string $email): array
     {
-        // attempt to fetch user by given id.
         $user = $this->attemptToFetchUserByIdentity($identity, $email);
 
         if ($user === null) {
@@ -67,7 +66,7 @@ class ResolveOAuthUser
     /**
      * @psalm-return ?ActorUser A user if found
      */
-    public function attemptToFetchUserByIdentity(string $identity, string $email): ?array
+    private function attemptToFetchUserByIdentity(string $identity, string $email): ?array
     {
         try {
             $user = $this->userService->getByIdentity($identity);
@@ -93,10 +92,10 @@ class ResolveOAuthUser
     /**
      * @psalm-return ?ActorUser A user if found
      */
-    public function attemptToFetchUserByEmail(string $identity, string $email): ?array
+    private function attemptToFetchUserByEmail(string $identity, string $email): ?array
     {
         try {
-            $user = $this->usersRepository->migrateToOAuth($this->userService->getByEmail($email)['Id'], $identity);
+            $user = $this->usersRepository->migrateToOAuth($this->userService->getByEmail($email), $identity);
 
             $this->logger->info(
                 'Migrated existing account with email {email} to OIDC login',
@@ -118,7 +117,7 @@ class ResolveOAuthUser
      * @throws ConflictException
      * @throws CreationException
      */
-    public function addNewUser(string $identity, string $email): array
+    private function addNewUser(string $identity, string $email): array
     {
         try {
             $user = $this->userService->add($email, $identity);
@@ -135,8 +134,8 @@ class ResolveOAuthUser
             return $user;
         } catch (ConflictException $e) {
             $this->logger->notice(
-                'Creation of new OAuth account failed due to existing account with matching NewEmail field',
-                ['email' => new Email($email)]
+                'Creation of new OAuth account failed due to existing account with matching Identity field',
+                ['identity' => $identity]
             );
 
             throw $e;
@@ -165,7 +164,7 @@ class ResolveOAuthUser
     private function updateEmail(array $user, string $email): array
     {
         // update the held email
-        $this->usersRepository->changeEmail($user['Id'], $email);
+        $this->usersRepository->changeEmail($user['Id'], $user['Email'], $email);
 
         $logEmail      = $email;
         $user['Email'] = $email;
