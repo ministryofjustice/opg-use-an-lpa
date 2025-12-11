@@ -20,7 +20,7 @@ use Viewer\Form\ShareCode;
 /**
  * @codeCoverageIgnore
  */
-class EnterPVSCodeHandler extends AbstractPVSCodeHandler
+class EnterCodeHandler extends AbstractPaperVerificationCodeHandler
 {
     private ShareCode|PVShareCode $form;
 
@@ -51,7 +51,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $this->state($request)->reset();
 
         $template       = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::enter-code-pv'
+            ? 'viewer::paper-verification/enter-code'
             : 'viewer::enter-code';
         $systemMessages = $this->systemMessageService->getMessages();
 
@@ -78,7 +78,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         }
 
         $template       = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::enter-code-pv'
+            ? 'viewer::paper-verification/enter-code'
             : 'viewer::enter-code';
         $systemMessages = $this->systemMessageService->getMessages();
 
@@ -103,7 +103,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         if (($this->featureEnabled)('paper_verification') && $state->code->isPaperVerificationCode()) {
-            return 'pv.check-code';
+            return 'pv.found-lpa';
         }
 
         return 'check-code';

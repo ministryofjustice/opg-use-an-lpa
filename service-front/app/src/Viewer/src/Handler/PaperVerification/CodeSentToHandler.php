@@ -13,13 +13,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\VerificationCodeReceiver;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
+class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
 {
     private VerificationCodeReceiver $form;
 
@@ -29,7 +29,6 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
         LoggerInterface $logger,
-        private FeatureEnabled $featureEnabled,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -120,7 +119,7 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
             return 'pv.check-answers';
         }
 
-        return $state->sentToDonor === false ? 'pv.attorney-dob' : 'pv.donor-dob';
+        return $state->sentToDonor ? 'pv.donor-date-of-birth' : 'pv.attorney-date-of-birth';
     }
 
     /**

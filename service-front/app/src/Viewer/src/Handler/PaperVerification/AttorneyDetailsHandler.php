@@ -5,25 +5,24 @@ declare(strict_types=1);
 namespace Viewer\Handler\PaperVerification;
 
 use Common\Workflow\WorkflowState;
-use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\PVDateOfBirth;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Form\AttorneyDetailsForPV;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
+class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
 {
-    private PVDateOfBirth $form;
+    private AttorneyDetailsForPV $form;
 
-    public const TEMPLATE = 'viewer::paper-verification/date-of-birth';
+    private const TEMPLATE = 'viewer::paper-verification/attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -35,28 +34,26 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
+        $this->form = new AttorneyDetailsForPV($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        $dob = $this->state($request)->dateOfBirth;
+        $attorneyName  = $this->state($request)->attorneyName;
+        $noOfAttorneys = $this->state($request)->noOfAttorneys;
 
-        if ($dob) {
-            $this->form->setData([
-                 'dob' => [
-                     'day'   => $dob->format('d'),
-                     'month' => $dob->format('m'),
-                     'year'  => $dob->format('Y'),
-                 ],
-             ]);
+        if ($noOfAttorneys) {
+            $this->form->setData(['no_of_attorneys' => $noOfAttorneys]);
+        }
+
+        if ($noOfAttorneys) {
+            $this->form->setData(['attorneys_name' => $attorneyName]);
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form' => $this->form->prepare(),
-            'name' => $this->state($request)->donorName,
             'back' => $this->lastPage($this->state($request)),
         ]));
     }
@@ -66,19 +63,14 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $postData = $this->form->getData();
+            $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
+            $this->state($request)->attorneyName  = $this->form->getData()['attorneys_name'];
 
-            $this->state($request)->dateOfBirth = (new DateTimeImmutable())->setDate(
-                (int) $postData['dob']['year'],
-                (int) $postData['dob']['month'],
-                (int) $postData['dob']['day']
-            );
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form' => $this->form->prepare(),
-            'name' => $this->state($request)->donorName,
             'back' => $this->lastPage($this->state($request)),
         ]));
     }
@@ -88,10 +80,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === false;
+        return false;
     }
 
     /**
@@ -100,12 +89,10 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     public function hasFutureAnswersInState(PaperVerificationCode $state): bool
     {
         return
-            $state->noOfAttorneys !== null &&
             $state->sentToDonor !== null &&
             $state->lastName !== null &&
             $state->lpaUid !== null &&
-            $state->code !== null &&
-            $state->attorneyName !== null;
+            $state->code !== null;
     }
 
     /**
@@ -113,11 +100,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        if ($this->hasFutureAnswersInState($state)) {
-            return 'pv.check-answers';
-        }
-
-        return 'pv.provide-attorney-details';
+        return 'pv.check-answers';
     }
 
     /**
@@ -127,6 +110,6 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
     {
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
-            : 'pv.verification-code-sent-to';
+            : 'pv.donor-date-of-birth';
     }
 }

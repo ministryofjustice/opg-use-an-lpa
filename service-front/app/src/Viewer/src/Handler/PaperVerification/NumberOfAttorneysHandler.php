@@ -12,13 +12,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\NumberOfAttorneys;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
+class NumberOfAttorneysHandler extends AbstractPaperVerificationCodeHandler
 {
     private NumberOfAttorneys $form;
 
@@ -113,6 +113,6 @@ class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
     {
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
-            : 'pv.attorney-dob';
+            : 'pv.attorney-date-of-birth';
     }
 }

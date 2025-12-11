@@ -12,12 +12,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\Organisation;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class LpaReadyToViewHandler extends AbstractPVSCodeHandler
+class LpaReadyToViewHandler extends AbstractPaperVerificationCodeHandler
 {
     private Organisation $form;
 

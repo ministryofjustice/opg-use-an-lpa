@@ -36,8 +36,8 @@ use Psr\Container\ContainerInterface;
 
 $viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->route('/home', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home');
-    $app->route('/', Viewer\Handler\EnterPVSCodeHandler::class, ['GET', 'POST'], 'home-trial');
+    $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
+    $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
     $app->route('/check-code', Viewer\Handler\CheckCodeHandler::class, ['GET', 'POST'], 'check-code');
     $app->get('/view-lpa', Viewer\Handler\ViewLpaHandler::class, 'view-lpa');
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
@@ -56,30 +56,30 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
     $app->get('/contact-us', Common\Handler\ContactUsPageHandler::class, 'contact-us');
 
     //Paper Verification Code journey
-    $app->route('/paper-verification/check-code',
-                Viewer\Handler\PaperVerification\CheckLpaCodeHandler::class,
+    $app->route('/paper-verification/found-lpa',
+                Viewer\Handler\PaperVerification\FoundLpaHandler::class,
                 ['GET', 'POST'],
-                'pv.check-code');
+                'pv.found-lpa');
 
-    $app->route('/paper-verification/verification-code-sent-to',
-                Viewer\Handler\PaperVerification\PaperVerificationCodeSentToHandler::class,
+    $app->route('/paper-verification/code-sent-to',
+                Viewer\Handler\PaperVerification\CodeSentToHandler::class,
                 ['GET', 'POST'],
-                'pv.verification-code-sent-to');
+                'pv.code-sent-to');
 
-    $app->route('/paper-verification/provide-attorney-details',
-                Viewer\Handler\PaperVerification\ProvideAttorneyDetailsForPVHandler::class,
+    $app->route('/paper-verification/attorney-details',
+                Viewer\Handler\PaperVerification\AttorneyDetailsHandler::class,
                 ['GET', 'POST'],
-                'pv.provide-attorney-details');
+                'pv.attorney-details');
 
-    $app->route('/paper-verification/donor-dob',
-                Viewer\Handler\PaperVerification\PVDonorDateOfBirthHandler::class,
+    $app->route('/paper-verification/donor-date-of-birth',
+                Viewer\Handler\PaperVerification\DonorDateOfBirthHandler::class,
                 ['GET', 'POST'],
-                'pv.donor-dob');
+                'pv.donor-date-of-birth');
 
-    $app->route('/paper-verification/attorney-dob',
+    $app->route('/paper-verification/attorney-date-of-birth',
                 Viewer\Handler\PaperVerification\AttorneyDateOfBirthHandler::class,
                 ['GET', 'POST'],
-                'pv.attorney-dob');
+                'pv.attorney-date-of-birth');
 
     $app->route('/paper-verification/number-of-attorneys',
                 Viewer\Handler\PaperVerification\NumberOfAttorneysHandler::class,
@@ -91,20 +91,15 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 ['GET', 'POST'],
                 'pv.check-answers');
 
-    $app->route('/paper-verification/enter-organisation-name',
+    $app->route('/paper-verification/lpa-ready-to-view',
                 Viewer\Handler\PaperVerification\LpaReadyToViewHandler::class,
                 ['GET', 'POST'],
-                'pv.enter-organisation-name');
+                'pv.lpa-ready-to-view');
 
     $app->route('/paper-verification/view',
                 Viewer\Handler\PaperVerification\ViewHandler::class,
                 ['GET'],
                 'pv.view');
-
-    $app->route('/paper-verification/lpa-not-found',
-                Viewer\Handler\PaperVerification\LpaNotFoundHandler::class,
-                ['GET', 'POST'],
-                'lpa-not-found');
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {

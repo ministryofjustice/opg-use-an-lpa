@@ -14,12 +14,12 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class ViewHandler extends AbstractPVSCodeHandler
+class ViewHandler extends AbstractPaperVerificationCodeHandler
 {
     public const TEMPLATE = 'viewer::view-lpa-combined-lpa';
 
@@ -107,6 +107,6 @@ class ViewHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.enter-organisation-name';
+        return 'pv.lpa-ready-to-view';
     }
 }

@@ -14,13 +14,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\CheckAnswers;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class CheckAnswersHandler extends AbstractPVSCodeHandler
+class CheckAnswersHandler extends AbstractPaperVerificationCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
 
@@ -122,7 +122,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'pv.enter-organisation-name';
+        return 'pv.lpa-ready-to-view';
     }
 
     /**
@@ -133,6 +133,6 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
         /** @var PaperVerificationCode $state */
         return $state->sentToDonor === false
             ? 'pv.number-of-attorneys'
-            : 'pv.provide-attorney-details';
+            : 'pv.attorney-details';
     }
 }

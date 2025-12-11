@@ -20,12 +20,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
- * A base for our workflow for both Share Code and Paper Verification codes
+ * A base for our workflow for paper verification codes
  *
  * @codeCoverageIgnore
  * @template-implements WorkflowStep<PaperVerificationCode>
  */
-abstract class AbstractPVSCodeHandler extends AbstractHandler implements
+abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
     LoggerAware,
     SessionAware,
@@ -65,10 +65,5 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
     public function state(ServerRequestInterface $request): WorkflowState
     {
         return $this->loadState($request, PaperVerificationCode::class);
-    }
-
-    protected function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return false;
     }
 }

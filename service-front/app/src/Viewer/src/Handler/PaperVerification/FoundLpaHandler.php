@@ -14,13 +14,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\LpaCheck;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class CheckLpaCodeHandler extends AbstractPVSCodeHandler
+class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
 {
     private LpaCheck $form;
 
@@ -127,7 +127,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
     {
         return $this->hasFutureAnswersInState($state)
             ? 'pv.check-answers'
-            : 'pv.verification-code-sent-to';
+            : 'pv.code-sent-to';
     }
 
     /**
