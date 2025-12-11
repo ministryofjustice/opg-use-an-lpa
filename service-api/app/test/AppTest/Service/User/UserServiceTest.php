@@ -8,10 +8,15 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
+use Aws\CommandInterface;
+use Aws\DynamoDb\Exception\DynamoDbException;
+use DateTimeImmutable;
+use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
@@ -28,9 +33,9 @@ class UserServiceTest extends TestCase
     {
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
+        $now      = new DateTimeImmutable();
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
-        $repoProphecy->exists($email)->willReturn(false);
         $repoProphecy->add(
             Argument::that(function (string $data) {
                 $this->id = $data;
@@ -38,10 +43,15 @@ class UserServiceTest extends TestCase
             }),
             $email,
             $identity,
+            $now->format(DateTimeInterface::ATOM),
         );
+
+        $clock = $this->prophesize(ClockInterface::class);
+        $clock->now()->willReturn($now);
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $clock->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 
@@ -60,19 +70,52 @@ class UserServiceTest extends TestCase
     #[Test]
     public function wont_add_a_user_that_already_exists(): void
     {
-        $email    = 'a@b.com';
-        $identity = 'urn:fdc:one-login:2023:HASH=';
+        $command = $this->prophesize(CommandInterface::class);
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
-        $repoProphecy->exists($email)->willReturn(true);
+        $repoProphecy->add(Argument::cetera())
+            ->willThrow(new DynamoDbException('', $command->reveal(), [
+                'body' => [
+                    'CancellationReasons' => [
+                        ['Code' => 'None'],
+                        ['Code' => 'ConditionalCheckFailed'],
+                    ],
+                ],
+            ]));
+
+        $clock = $this->prophesize(ClockInterface::class);
+        $clock->now()->willReturn(new DateTimeImmutable());
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $clock->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal()
         );
 
         $this->expectException(ConflictException::class);
-        $us->add($email, $identity);
+        $us->add('', '');
+    }
+
+    #[Test]
+    public function add_throws_other_dynamo_errors(): void
+    {
+        $command = $this->prophesize(CommandInterface::class);
+
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->add(Argument::cetera())
+            ->willThrow(new DynamoDbException('', $command->reveal(), []));
+
+        $clock = $this->prophesize(ClockInterface::class);
+        $clock->now()->willReturn(new DateTimeImmutable());
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clock->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $this->expectException(DynamoDbException::class);
+        $us->add('', '');
     }
 
     #[Test]
@@ -84,6 +127,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -107,6 +151,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -131,6 +176,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -147,6 +193,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
@@ -178,6 +225,7 @@ class UserServiceTest extends TestCase
 
         $us = new UserService(
             $repoProphecy->reveal(),
+            $this->prophesize(ClockInterface::class)->reveal(),
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 

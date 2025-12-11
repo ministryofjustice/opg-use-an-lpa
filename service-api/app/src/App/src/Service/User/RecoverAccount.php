@@ -50,7 +50,7 @@ class RecoverAccount
             if (! (array_key_exists('Identity', $existingAccount) || $hasLpas)) {
                 $this->usersRepository->delete($user['Id']);
 
-                $user = $this->usersRepository->migrateToOAuth($existingAccount['Id'], $user['Identity']);
+                $user = $this->usersRepository->migrateToOAuth($existingAccount, $user['Identity']);
 
                 $this->logger->info(
                     'Recovered existing account with email {email} to OIDC login',

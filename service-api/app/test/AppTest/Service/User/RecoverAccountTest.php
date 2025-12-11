@@ -48,7 +48,7 @@ class RecoverAccountTest extends TestCase
         if ($expects !== null) {
             $actorUsersProphecy->delete($user['Id'])->willReturn($user);
             $actorUsersProphecy
-                ->migrateToOAuth($existingUser['Id'], $user['Identity'])
+                ->migrateToOAuth($existingUser, $user['Identity'])
                 ->will(function () use ($existingUser, $user) {
                     $existingUser['Identity'] = $user['Identity'];
                     return $existingUser;
