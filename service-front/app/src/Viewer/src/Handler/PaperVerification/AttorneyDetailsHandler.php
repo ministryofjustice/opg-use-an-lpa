@@ -6,12 +6,9 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use Viewer\Form\AttorneyDetailsForPV;
+use Viewer\Form\AttorneyDetails;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
@@ -20,13 +17,13 @@ use Viewer\Workflow\PaperVerificationCode;
  */
 class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
 {
-    private AttorneyDetailsForPV $form;
+    private AttorneyDetails $form;
 
     private const TEMPLATE = 'viewer::paper-verification/attorney-details';
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new AttorneyDetailsForPV($this->getCsrfGuard($request));
+        $this->form = new AttorneyDetails($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -41,7 +38,7 @@ class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
         }
 
         if ($noOfAttorneys) {
-            $this->form->setData(['attorneys_name' => $attorneyName]);
+            $this->form->setData(['attorney_name' => $attorneyName]);
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
@@ -56,7 +53,7 @@ class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
 
         if ($this->form->isValid()) {
             $this->state($request)->noOfAttorneys = $this->form->getData()['no_of_attorneys'];
-            $this->state($request)->attorneyName  = $this->form->getData()['attorneys_name'];
+            $this->state($request)->attorneyName  = $this->form->getData()['attorney_name'];
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }

@@ -7,12 +7,9 @@ namespace Viewer\Handler\PaperVerification;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use Viewer\Form\PVDateOfBirth;
+use Viewer\Form\DateOfBirth;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
@@ -21,13 +18,13 @@ use Viewer\Workflow\PaperVerificationCode;
  */
 class DonorDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
 {
-    private PVDateOfBirth $form;
+    private DateOfBirth $form;
 
     public const TEMPLATE = 'viewer::paper-verification/date-of-birth';
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
+        $this->form = new DateOfBirth($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }

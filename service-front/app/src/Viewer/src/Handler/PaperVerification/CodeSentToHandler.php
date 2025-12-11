@@ -12,7 +12,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\VerificationCodeReceiver;
+use Viewer\Form\CodeSentTo;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
@@ -21,13 +21,13 @@ use Viewer\Workflow\PaperVerificationCode;
  */
 class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
 {
-    private VerificationCodeReceiver $form;
+    private CodeSentTo $form;
 
     private const TEMPLATE = 'viewer::paper-verification/code-sent-to';
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new VerificationCodeReceiver($this->getCsrfGuard($request));
+        $this->form = new CodeSentTo($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -38,7 +38,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
         $attorneyName = $this->state($request)->attorneyName;
 
         if ($sentToDonor !== null) {
-            $this->form->setData(['verification_code_receiver' => $sentToDonor === false ? 'Attorney' : 'Donor']);
+            $this->form->setData(['code_sent_to' => $sentToDonor === false ? 'Attorney' : 'Donor']);
         }
 
         if ($attorneyName) {
@@ -57,7 +57,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {
-            $sentToDonor = $this->form->getData()['verification_code_receiver'] === 'Donor';
+            $sentToDonor = $this->form->getData()['code_sent_to'] === 'Donor';
 
             if ($storedSentToDonor !== null && $storedSentToDonor !== $sentToDonor) {
                 $this->state($request)->noOfAttorneys = null;

@@ -32,11 +32,6 @@ class ViewHandler extends AbstractPaperVerificationCodeHandler
         parent::__construct($renderer, $urlHelper, $logger);
     }
 
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        return parent::handle($request);
-    }
-
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         $stateData = $this->state($request);

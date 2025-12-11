@@ -1174,7 +1174,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/code-sent-to');
 
-        $this->ui->fillField('verification_code_receiver', $codeSentTo);
+        $this->ui->fillField('code_sent_to', $codeSentTo);
 
         if ($codeSentTo === 'Attorney') {
             $this->ui->fillField('attorney_name', 'Barabara');
@@ -1230,7 +1230,7 @@ class ViewerContext implements Context
         $this->ui->assertPageAddress('/paper-verification/attorney-details');
 
         $this->ui->fillField('no_of_attorneys', '2');
-        $this->ui->fillField('attorneys_name', 'Barabara');
+        $this->ui->fillField('attorney_name', 'Barabara');
 
         $this->ui->pressButton('Continue');
     }

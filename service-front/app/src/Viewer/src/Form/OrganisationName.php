@@ -10,7 +10,7 @@ use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class Organisation extends AbstractForm implements InputFilterProviderInterface
+class OrganisationName extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'organisation_name';
 

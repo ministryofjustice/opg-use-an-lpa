@@ -9,7 +9,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class CheckAnswers extends AbstractForm
 {
-    public const string FORM_NAME = 'check_answers_pv';
+    public const string FORM_NAME = 'check_answers';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

@@ -6,12 +6,9 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use Viewer\Form\Organisation;
+use Viewer\Form\OrganisationName;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
@@ -19,13 +16,13 @@ use Viewer\Handler\AbstractPaperVerificationCodeHandler;
  */
 class LpaReadyToViewHandler extends AbstractPaperVerificationCodeHandler
 {
-    private Organisation $form;
+    private OrganisationName $form;
 
     public const TEMPLATE = 'viewer::paper-verification/lpa-ready-to-view';
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new Organisation($this->getCsrfGuard($request));
+        $this->form = new OrganisationName($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }

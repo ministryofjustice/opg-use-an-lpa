@@ -27,7 +27,7 @@ class CheckAnswersTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'check_answers_pv';
+        return 'check_answers';
     }
 
     public function getFormElements(): array

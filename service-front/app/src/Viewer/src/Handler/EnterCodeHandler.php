@@ -16,7 +16,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\PVShareCode;
+use Viewer\Form\AccessOrPaperVerificationCode;
 use Viewer\Form\ShareCode;
 
 /**
@@ -26,7 +26,7 @@ class EnterCodeHandler extends AbstractPaperVerificationCodeHandler implements S
 {
     use Session;
 
-    private ShareCode|PVShareCode $form;
+    private ShareCode|AccessOrPaperVerificationCode $form;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -41,7 +41,7 @@ class EnterCodeHandler extends AbstractPaperVerificationCodeHandler implements S
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (($this->featureEnabled)('paper_verification')) {
-            $this->form = new PVShareCode($this->getCsrfGuard($request));
+            $this->form = new AccessOrPaperVerificationCode($this->getCsrfGuard($request));
         } else {
             $this->form = new ShareCode($this->getCsrfGuard($request));
         }

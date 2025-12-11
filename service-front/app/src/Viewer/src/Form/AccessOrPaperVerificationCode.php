@@ -14,9 +14,9 @@ use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class PVShareCode extends AbstractForm implements InputFilterProviderInterface
+class AccessOrPaperVerificationCode extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'share_code';
+    public const FORM_NAME = 'access_or_paper_verification_code';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

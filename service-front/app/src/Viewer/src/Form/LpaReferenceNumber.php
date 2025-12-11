@@ -13,9 +13,9 @@ use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class LpaCheck extends AbstractForm implements InputFilterProviderInterface
+class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_check';
+    public const FORM_NAME = 'lpa_reference_number';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

@@ -27,7 +27,7 @@ class NumberOfAttorneysTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'pv_number_of_attorneys';
+        return 'number_of_attorneys';
     }
 
     public function getFormElements(): array

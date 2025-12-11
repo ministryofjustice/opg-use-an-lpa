@@ -23,7 +23,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\Organisation;
+use Viewer\Form\OrganisationName;
 
 /**
  * @codeCoverageIgnore
@@ -53,7 +53,7 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
     {
         $code    = $this->getSession($request, 'session')->get('code');
         $surname = $this->getSession($request, 'session')->get('surname');
-        $form    = new Organisation($this->getCsrfGuard($request));
+        $form    = new OrganisationName($this->getCsrfGuard($request));
 
         if ($request->getMethod() === 'POST') {
             $form->setData($request->getParsedBody());

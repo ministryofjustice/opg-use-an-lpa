@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace ViewerTest\Form;
 
-use Viewer\Form\VerificationCodeReceiver;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
-use Laminas\Form\Element\Radio;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
 use Laminas\Form\Element\Text;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Viewer\Form\DateOfBirth;
 
-class VerificationCodeSentToTest extends TestCase implements TestsLaminasForm
+class DateOfBirthTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
     use ProphecyTrait;
 
-    protected VerificationCodeReceiver $form;
+    protected DateOfBirth $form;
 
     public function getForm(): AbstractForm
     {
@@ -28,21 +27,20 @@ class VerificationCodeSentToTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'verification_code';
+        return 'date_of_birth';
     }
 
     public function getFormElements(): array
     {
         return [
-            '__csrf'                     => Csrf::class,
-            'attorney_name'              => Text::class,
-            'verification_code_receiver' => Radio::class,
+            '__csrf' => Csrf::class,
+            'dob'    => Text::class,
         ];
     }
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new VerificationCodeReceiver($guardProphecy->reveal());
+        $this->form    = new DateOfBirth($guardProphecy->reveal());
     }
 }

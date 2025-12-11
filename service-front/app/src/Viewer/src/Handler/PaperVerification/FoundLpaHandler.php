@@ -13,7 +13,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\LpaCheck;
+use Viewer\Form\LpaReferenceNumber;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
@@ -22,7 +22,7 @@ use Viewer\Workflow\PaperVerificationCode;
  */
 class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
 {
-    private LpaCheck $form;
+    private LpaReferenceNumber $form;
 
     private const TEMPLATE = 'viewer::paper-verification/found-lpa';
 
@@ -37,7 +37,7 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new LpaCheck($this->getCsrfGuard($request));
+        $this->form = new LpaReferenceNumber($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }

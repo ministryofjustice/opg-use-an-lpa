@@ -6,15 +6,14 @@ namespace Viewer\Form;
 
 use Common\Form\AbstractForm;
 use Common\Validator\NotEmptyConditional;
-use Laminas\Filter\StringToUpper;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class VerificationCodeReceiver extends AbstractForm implements InputFilterProviderInterface
+class CodeSentTo extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'verification_code';
+    public const FORM_NAME = 'code_sent_to';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
@@ -29,7 +28,7 @@ class VerificationCodeReceiver extends AbstractForm implements InputFilterProvid
 
         $this->add(
             [
-                 'name'    => 'verification_code_receiver',
+                 'name'    => 'code_sent_to',
                  'type'    => 'Radio',
                  'options' => [
                      'value_options' => [
@@ -47,7 +46,7 @@ class VerificationCodeReceiver extends AbstractForm implements InputFilterProvid
     public function getInputFilterSpecification(): array
     {
         return [
-            'verification_code_receiver' => [
+            'code_sent_to'  => [
                 'required'   => true,
                 'validators' => [
                     [
@@ -61,7 +60,7 @@ class VerificationCodeReceiver extends AbstractForm implements InputFilterProvid
                     ],
                 ],
             ],
-            'attorney_name'              => [
+            'attorney_name' => [
                 'filters'    => [
                     ['name' => StringTrim::class],
                 ],
@@ -70,7 +69,7 @@ class VerificationCodeReceiver extends AbstractForm implements InputFilterProvid
                         'name'    => NotEmptyConditional::class,
                         'options' => [
                             'message'         => 'Enter attorney name',
-                            'dependant'       => 'verification_code_receiver',
+                            'dependant'       => 'code_sent_to',
                             'dependant_value' => 'Donor',
                         ],
                     ],
