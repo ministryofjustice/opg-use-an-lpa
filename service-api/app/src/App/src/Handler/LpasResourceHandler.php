@@ -59,7 +59,7 @@ class LpasResourceHandler implements RequestHandlerInterface
         );
 
         if (is_null($result)) {
-            throw new NotFoundException();
+            return new JsonResponse([]);
         }
 
         return new JsonResponse($result);

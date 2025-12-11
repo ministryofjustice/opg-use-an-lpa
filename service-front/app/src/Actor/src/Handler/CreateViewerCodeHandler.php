@@ -17,6 +17,7 @@ use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\ViewerCodeService;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -31,6 +32,10 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
     use CsrfGuard;
     use Session;
     use User;
+
+    private CreateShareCode $form;
+    private ?string $identity;
+    private ?UserInterface $user;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -52,54 +57,30 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $form = new CreateShareCode($this->getCsrfGuard($request));
+        $this->form = new CreateShareCode($this->getCsrfGuard($request));
 
-        $user     = $this->getUser($request);
-        $identity = !is_null($user) ? $user->getIdentity() : null;
+        $this->user     = $this->getUser($request);
+        $this->identity = !is_null($this->user) ? $this->user->getIdentity() : null;
 
-        if ($request->getMethod() === 'POST') {
-            $form->setData($request->getParsedBody());
+        return match ($request->getMethod()) {
+            'POST' => $this->handlePost($request),
+            default => $this->handleGet($request),
+        };
+    }
 
-            if ($form->isValid()) {
-                $validated = $form->getData();
-
-                $codeData = $this->viewerCodeService->createShareCode(
-                    $identity,
-                    $validated['lpa_token'],
-                    $validated['org_name']
-                );
-
-                $lpaData   = $this->lpaService->getLpaById($identity, $validated['lpa_token']);
-                $actorRole = $lpaData['actor']['type'] === 'donor' ? 'Donor' : 'Attorney';
-
-                $templateName = 'actor::lpa-show-viewercode';
-                if (($this->featureEnabled)('support_datastore_lpas')) {
-                    $templateName = 'actor::lpa-show-viewercode-combined-lpa';
-                }
-
-                return new HtmlResponse($this->renderer->render($templateName, [
-                    'user'         => $user,
-                    'actorToken'   => $validated['lpa_token'],
-                    'code'         => $codeData['code'],
-                    'expires'      => new DateTimeImmutable($codeData['expires']),
-                    'organisation' => ucwords($codeData['organisation']),
-                    'lpa'          => $lpaData->lpa,
-                    'actorRole'    => $actorRole,
-                ]));
-            }
-        }
-
+    protected function handleGet(ServerRequestInterface $request): ResponseInterface
+    {
         // the lpa actor token is either a query parameter or a form value.
         // get it from the form if it doesn't exist as a parameter
         if (isset($request->getQueryParams()['lpa'])) {
-            $form->setData(['lpa_token' => $request->getQueryParams()['lpa']]);
+            $this->form->setData(['lpa_token' => $request->getQueryParams()['lpa']]);
         }
 
-        if (is_null($form->get('lpa_token')->getValue())) {
+        if (is_null($this->form->get('lpa_token')->getValue())) {
             throw new InvalidRequestException('No actor-lpa token specified');
         }
 
-        $lpaData = $this->lpaService->getLpaById($identity, $form->get('lpa_token')->getValue());
+        $lpaData = $this->lpaService->getLpaById($this->identity, $this->form->get('lpa_token')->getValue());
 
         //UML-1394 TO BE REMOVED IN FUTURE TO SHOW PAGE NOT FOUND WITH APPROPRIATE CONTENT
         if (is_null($lpaData)) {
@@ -112,10 +93,47 @@ class CreateViewerCodeHandler extends AbstractHandler implements UserAware, Csrf
         }
 
         return new HtmlResponse($this->renderer->render($templateName, [
-            'user'       => $user,
-            'lpa'        => $lpaData->lpa,
-            'actorToken' => $form->get('lpa_token')->getValue(),
-            'form'       => $form,
+            'user'                     => $this->user,
+            'lpa'                      => $lpaData->lpa,
+            'hasPaperVerificationCode' => $lpaData->hasPaperVerificationCode ?? false,
+            'actorToken'               => $this->form->get('lpa_token')->getValue(),
+            'form'                     => $this->form,
         ]));
+    }
+
+    protected function handlePost(ServerRequestInterface $request): ResponseInterface
+    {
+        $this->form->setData($request->getParsedBody());
+
+        if ($this->form->isValid()) {
+            $validated = $this->form->getData();
+
+            $codeData = $this->viewerCodeService->createShareCode(
+                $this->identity,
+                $validated['lpa_token'],
+                $validated['org_name']
+            );
+
+            $lpaData   = $this->lpaService->getLpaById($this->identity, $validated['lpa_token']);
+            $actorRole = $lpaData['actor']['type'] === 'donor' ? 'Donor' : 'Attorney';
+
+            $templateName = 'actor::lpa-show-viewercode';
+            if (($this->featureEnabled)('support_datastore_lpas')) {
+                $templateName = 'actor::lpa-show-viewercode-combined-lpa';
+            }
+
+            return new HtmlResponse($this->renderer->render($templateName, [
+                'user'         => $this->user,
+                'actorToken'   => $validated['lpa_token'],
+                'code'         => $codeData['code'],
+                'expires'      => new DateTimeImmutable($codeData['expires']),
+                'organisation' => ucwords($codeData['organisation']),
+                'lpa'          => $lpaData->lpa,
+                'actorRole'    => $actorRole,
+            ]));
+        }
+
+        // form is invalid, show the page with errors
+        return $this->handleGet($request);
     }
 }

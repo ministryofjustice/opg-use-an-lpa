@@ -38,9 +38,7 @@ class LpaService
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
-        if (is_array($lpaData)) {
-            $lpaData = ($this->parseLpaData)($lpaData);
-        }
+        $lpaData = ($this->parseLpaData)($lpaData);
 
         $this->logger->info(
             'Account with Id {id} retrieved {count} LPA(s)',
@@ -69,16 +67,17 @@ class LpaService
     {
         $this->apiClient->setUserTokenHeader($userToken);
 
-        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken . '?presign-images=1');
+        $lpaData = $this->apiClient->httpGet('/v1/lpas/' . $actorLpaToken);
 
         $lpaData = ($this->parseLpaData)($lpaData);
 
-        if ($lpaData['lpa'] !== null) {
+        /** @psalm-suppress UndefinedPropertyFetch */
+        if ($lpaData->lpa !== null) {
             $this->logger->info(
                 'Account with Id {id} fetched LPA with Id {uId}',
                 [
                     'id'  => $userToken,
-                    'uId' => $lpaData['lpa']->getUId(),
+                    'uId' => $lpaData->lpa->getUId(),
                 ]
             );
         }
@@ -168,20 +167,20 @@ class LpaService
             throw $apiEx;
         }
 
-        if (is_array($lpaData)) {
-            $lpaData = ($this->parseLpaData)($lpaData);
 
-            if ($trackRoute === 'summary') {
-                // this getLpaByCode function is called to fetch the LPA for both the summary page and the
-                // full lpa page, so we will just log the message once to avoid duplicate logs & incorrect stats
-                $this->logger->notice(
-                    'LPA found with Id {uId} retrieved by share code',
-                    [
-                        'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_SUCCESS,
-                        'uId'        => $lpaData->lpa->getUId(),
-                    ]
-                );
-            }
+        $lpaData = ($this->parseLpaData)($lpaData);
+
+        if ($trackRoute === 'summary') {
+            // this getLpaByCode function is called to fetch the LPA for both the summary page and the
+            // full lpa page, so we will just log the message once to avoid duplicate logs & incorrect stats
+            /** @psalm-suppress UndefinedPropertyFetch */
+            $this->logger->notice(
+                'LPA found with Id {uId} retrieved by share code',
+                [
+                    'event_code' => EventCodes::VIEW_LPA_SHARE_CODE_SUCCESS,
+                    'uId'        => $lpaData->lpa->getUId(),
+                ]
+            );
         }
 
         return $lpaData;

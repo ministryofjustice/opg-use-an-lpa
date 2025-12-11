@@ -15,8 +15,6 @@ class PotGenerator
         private string $localePath = 'languages/',
         private string $defaultLocale = 'en_GB',
     ) {
-
-        $this->catalogues = [];
     }
 
     public function generate(array $catalogues): int

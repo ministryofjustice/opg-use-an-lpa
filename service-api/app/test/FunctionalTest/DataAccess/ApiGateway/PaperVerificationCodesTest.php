@@ -10,6 +10,7 @@ use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
 use App\Enum\VerificationCodeExpiryReason;
 use App\Exception\NotFoundException;
 use App\Service\Log\RequestTracing;
+use App\Value\LpaUid;
 use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
@@ -275,6 +276,63 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         $pvc = $sut->expire(
             new PaperVerificationCode('P-1234-1234-1234-12'),
             VerificationCodeExpiryReason::FIRST_TIME_USE
+        );
+
+        self::assertTrue($this->builder->verify());
+        self::assertInstanceOf(PaperVerificationCodeExpiry::class, $pvc->getData());
+        self::assertEquals($expiryDate, (string) $pvc->getData()->expiresAt->format('Y-m-d'));
+    }
+
+    #[Test]
+    public function it_transitions_a_code_to_online_usage(): void
+    {
+        $expiryDate = (new DateTimeImmutable('now'))
+            ->add(new DateInterval('P30D'))
+            ->format('Y-m-d');
+
+        $matcher = new Matcher();
+
+        $request = new ConsumerRequest();
+        $request
+            ->setMethod('POST')
+            ->setPath('/v1/paper-verification-code/expire')
+            ->setHeaders(
+                [
+                    'Accept'                          => 'application/vnd.opg-data.v1+json,application/json',
+                    'Authorization'                   => $matcher->like('AWS4-HMAC-SHA256'),
+                    'Content-Type'                    => 'application/json',
+                    RequestTracing::TRACE_HEADER_NAME => $matcher->like('trace-id'),
+                ]
+            )
+            ->setBody(
+                [
+                    'lpa'           => $matcher->regex('M-7890-0400-4000', 'M(-[0-9]{4}){3}'),
+                    'actor'         => $matcher->uuid(),
+                    'expiry_reason' => VerificationCodeExpiryReason::PAPER_TO_DIGITAL,
+                ]
+            );
+
+        $response = new ProviderResponse();
+        $response
+            ->setStatus(200)
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody(
+                [
+                    'expiry_date' => $matcher->dateISO8601($expiryDate),
+                ]
+            );
+
+        $this->builder
+            ->given('the paper verification code P-1234-1234-1234-12 has not got an expiry date')
+            ->uponReceiving('a request to expire the code P-1234-1234-1234-12 as a paper_to_digital')
+            ->with($request)
+            ->willRespondWith($response);
+
+        $sut = $this->container->get(PaperVerificationCodes::class);
+
+        $pvc = $sut->transitionToDigital(
+            new LpaUid('M-7890-0400-4000'),
+            'ce118b6e-d8e1-11e7-9296-cec278b6b50a'
         );
 
         self::assertTrue($this->builder->verify());

@@ -31,7 +31,8 @@ Feature: The user is able to create access codes for organisations
     Then I am taken back to the dashboard page
 
   @acceptance @integration
-  Scenario: As a user I can generate an access code for an organisation to one of my new LPA
+  Scenario: As a user I can generate an access code for an organisation to one of my modern LPAs
     Given I am on the dashboard page
-    When I request to give an organisation access to one of my new LPA
+    When I give an organisation access to one of my modern LPAs
     Then I am given a unique access code
+    And Any active paper verification codes are set to expire

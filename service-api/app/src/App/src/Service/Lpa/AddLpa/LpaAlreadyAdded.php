@@ -6,6 +6,7 @@ namespace App\Service\Lpa\AddLpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\Service\Lpa\LpaManagerInterface;
+use App\Value\LpaUid;
 
 class LpaAlreadyAdded
 {
@@ -20,17 +21,12 @@ class LpaAlreadyAdded
     ) {
     }
 
-    /**
-     * @param string $userId
-     * @param string $lpaUid
-     * @return array|null
-     */
-    public function __invoke(string $userId, string $lpaUid): ?array
+    public function __invoke(string $userId, LpaUid $lpaUid): ?array
     {
         $savedLpaRecords = $this->userLpaActorMapRepository->getByUserId($userId);
 
         foreach ($savedLpaRecords as $record) {
-            if (($record['SiriusUid'] ?? 'ERROR') === $lpaUid) {
+            if (($record['SiriusUid'] ?? $record['LpaUid'] ?? 'ERROR') === $lpaUid->getLpaUid()) {
                 return $this->populateLpaRecord($record, $userId);
             }
         }
@@ -51,18 +47,21 @@ class LpaAlreadyAdded
             return null;
         }
 
-        $donorDetails = $lpa['lpa']->getDonor();
+        $donorDetails = $lpa->lpa->getDonor();
 
         $response = [
-            'donor'                => [
+            'donor'         => [
                 'uId'        => $donorDetails->getUid(),
                 'firstnames' => $donorDetails->getFirstnames(),
                 'surname'    => $donorDetails->getSurname(),
             ],
-            'caseSubtype'          => $lpa['lpa']->getCaseSubtype(),
-            'lpaActorToken'        => $record['Id'],
-            'activationKeyDueDate' => $lpa['activationKeyDueDate'] ?? null,
+            'caseSubtype'   => $lpa->lpa->getCaseSubtype(),
+            'lpaActorToken' => $record['Id'],
         ];
+
+        if (isset($lpa->activationKeyDueDate)) {
+            $response['activationKeyDueDate'] = $lpa->activationKeyDueDate;
+        }
 
         if (array_key_exists('ActivateBy', $record)) {
             $response['notActivated'] = true;

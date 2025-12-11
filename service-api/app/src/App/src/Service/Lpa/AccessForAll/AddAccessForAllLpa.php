@@ -181,7 +181,7 @@ class AddAccessForAllLpa
     public function validateRequest(string $userId, array $matchData): AccessForAllValidation
     {
         // Check if it's been added to the users account already
-        $lpaAddedData = ($this->lpaAlreadyAdded)($userId, (string) $matchData['reference_number']);
+        $lpaAddedData = ($this->lpaAlreadyAdded)($userId, new LpaUid($matchData['reference_number']));
 
         if ($lpaAddedData !== null && !array_key_exists('notActivated', $lpaAddedData)) {
             $this->logger->notice(

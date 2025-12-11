@@ -45,13 +45,24 @@
                         }) }}
                     </div>
 
-                    {% if not lpa.applicationHasRestrictions and not lpa.applicationHasGuidance %}
+                    {% if is_sirius_lpa(lpa.Uid) %}
                     <div class="govuk-warning-text">
                         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
                         <strong class="govuk-warning-text__text">
                             <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
                             {% trans %}
                                 Check that the organisation will accept an online summary of the <abbr title="lasting power of attorney">LPA</abbr> and how they want to receive the access code you make for them.
+                            {% endtrans %}
+                        </strong>
+                    </div>
+                    {% elseif hasPaperVerificationCode %}
+                    <div class="govuk-warning-text">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-visually-hidden">{% trans %}Warning{% endtrans %}</span>
+                            {% trans with {'%date%': 'now + 30 days'|date('d/m/Y')} %}
+                                Creating an access code means the paper verification code for this <abbr title="lasting power of attorney">LPA</abbr> will expire on %date%.
+                                After this date, organisations will only be able to view the <abbr title="lasting power of attorney">LPA</abbr> details using an access code.
                             {% endtrans %}
                         </strong>
                     </div>

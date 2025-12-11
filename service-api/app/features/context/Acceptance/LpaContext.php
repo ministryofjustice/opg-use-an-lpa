@@ -20,22 +20,9 @@ use DateTimeZone;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
+use Psr\Http\Message\RequestInterface;
 use stdClass;
 
-/**
- * @property mixed lpa
- * @property string oneTimeCode
- * @property string lpaUid
- * @property string userDob
- * @property string actorId
- * @property string userId
- * @property string userLpaActorToken
- * @property string organisation
- * @property string accessCode
- * @property string userPostCode
- * @property string userSurname
- * @property string userFirstnames
- */
 class LpaContext implements Context
 {
     use BaseAcceptanceContextTrait;
@@ -53,6 +40,13 @@ class LpaContext implements Context
     public string $userId;
     public stdClass $lpa;
     public string $accessCode;
+
+    #[Given('Any active paper verification codes are set to expire')]
+    public function anyActivePaperVerificationCodesAreSetToExpire(): void
+    {
+        Assert::assertSame('/v1/paper-verification-code/expire', $this->getLastRequest()->getUri()->getPath());
+        Assert::assertArrayHasKey('actor', json_decode($this->getLastRequest()->getBody()->getContents(), true));
+    }
 
     #[Given('I have previously requested the addition of a paper LPA to my account')]
     public function iHavePreviouslyRequestedTheAdditionOfAPaperLPAToMyAccount(): void
@@ -436,7 +430,7 @@ class LpaContext implements Context
         );
 
         $expectedResponse = [
-            'donor'                => [
+            'donor'         => [
                 'uId'        => $this->lpa->donor->uId,
                 'firstnames' => trim(
                     sprintf(
@@ -447,9 +441,8 @@ class LpaContext implements Context
                 ),
                 'surname'    => $this->lpa->donor->surname,
             ],
-            'caseSubtype'          => $this->lpa->caseSubtype,
-            'lpaActorToken'        => (int)$this->userLpaActorToken,
-            'activationKeyDueDate' => null,
+            'caseSubtype'   => $this->lpa->caseSubtype,
+            'lpaActorToken' => $this->userLpaActorToken,
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -1689,12 +1682,12 @@ class LpaContext implements Context
         );
     }
 
-    #[When('/^I request to give an organisation access to one of my new LPA$/')]
-    public function iRequestToGiveAnOrganisationAccessToOneOfMyNewLPA(): void
+    #[When('I give an organisation access to one of my modern LPAs')]
+    public function iGiveAnOrganisationAccessToOneOfMyModernLPAs(): void
     {
         $this->organisation = 'TestOrg';
         $this->accessCode   = 'XYZ321ABC987';
-        $actorId            = 700000000054;
+        $actorId            = '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d';
         $lpaUid             = 'M-XXXX-1111-YYYY';
 
         // UserLpaActorMap::get
@@ -1703,15 +1696,34 @@ class LpaContext implements Context
                 [
                     'Item' => $this->marshalAwsResultData(
                         [
-                            'LpaUid'  => $lpaUid,
-                            'Added'   => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                            'Id'      => $this->userLpaActorToken,
-                            'ActorId' => (string)$actorId,
-                            'UserId'  => $this->userId,
+                            'LpaUid'                   => $lpaUid,
+                            'Added'                    => (new DateTime('2020-01-01'))
+                                                              ->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'                       => $this->userLpaActorToken,
+                            'ActorId'                  => $actorId,
+                            'UserId'                   => $this->userId,
+                            'HasPaperVerificationCode' => true,
                         ]
                     ),
                 ]
             )
+        );
+
+        // PaperVerificationCodes::transitionToDigital
+        $this->apiFixtures->append(
+            function (RequestInterface $request): Response {
+                $this->setLastRequest($request);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'expiry_date' => (new DateTime('now'))->format('Y-m-d'),
+                        ],
+                    ),
+                );
+            }
         );
 
         // ViewerCodes::add

@@ -479,7 +479,7 @@ paths:
       tags:
         - Paper Verification Codes
       summary: Validate a paper verification code
-      description: Given a paper verifcation code and it's associated surname return it's validity information
+      description: Given a paper verifcation code return it's validity information
       operationId: api.resources.pvc_validate_route
       security:
         - sigv4: []
@@ -516,14 +516,14 @@ paths:
                     lpa: "M-1234-1234-1234"
                     actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
                     expiry_date: "2035-03-16"
-                    expiry_reason: first_time_use
+                    expiry_reason: "first_time_use"
                 replaced:
                   summary: A code for an LPA that migrated to digital
                   value:
                     lpa: "M-1234-1234-1234"
                     actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
                     expiry_date: "2024-12-14"
-                    expiry_reason: paper_to_digital
+                    expiry_reason: "paper_to_digital"
         400:
           $ref: '#/components/responses/Error400'
         404:
@@ -552,19 +552,21 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                code:
-                  $ref: '#/components/schemas/PaperVerificationCode'
-                expiry_reason:
-                  $ref: "#/components/schemas/ExpiryReason"
-              additionalProperties: false
-              required:
-                - code
-                - expiry_reason
-              example:
-                code: "P-DY38-H2XP-49GY-2Q"
-                expiry_reason: first_time_use
+              oneOf:
+                - $ref: "#/components/schemas/ExpireCodeByCode"
+                - $ref: "#/components/schemas/ExpireCodeByActorLpaKey"
+            examples:
+              by-code:
+                summary: Expire a known code
+                value:
+                  code: "P-DY38-H2XP-49GY-2Q"
+                  expiry_reason: "first_time_use"
+              by-key:
+                summary: Expire codes attached to an actor on an lpa
+                value:
+                  lpa: "M-1234-1234-1234"
+                  actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
+                  expiry_reason: "paper_to_digital"
       responses:
         200:
           description: The code has been marked for expiry and an appropriate date set for it
@@ -598,9 +600,10 @@ components:
     ExpiryReason:
       type: string
       enum:
-        - paper_to_digital
-        - first_time_use
-        - cancelled
+        - "paper_to_digital"
+        - "first_time_use"
+        - "cancelled"
+        - "superseded"
     PaperVerificationCode:
       type: string
       pattern: '^P(-[A-Z0-9]{4}){3}-[A-Z0-9]{2}$'
@@ -679,7 +682,7 @@ components:
         lpa: "M-1234-1234-1234"
         actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
         expiry_date: "2035-03-16"
-        expiry_reason: first_time_use
+        expiry_reason: "first_time_use"
     ActorCodeExists:
       properties:
         Created:
@@ -751,6 +754,38 @@ components:
         - expiry_date
       example:
         expiry_date: "2035-03-16"
+    ExpireCodeByCode:
+      properties:
+        code:
+          $ref: '#/components/schemas/PaperVerificationCode'
+        expiry_reason:
+          $ref: "#/components/schemas/ExpiryReason"
+      additionalProperties: false
+      required:
+        - code
+        - expiry_reason
+      example:
+        code: "P-DY38-H2XP-49GY-2Q"
+        expiry_reason: "first_time_use"
+    ExpireCodeByActorLpaKey:
+      properties:
+        lpa:
+          type: string
+          pattern: '^M(-[0-9]{4}){3}$'
+        actor:
+          type: string
+          pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
+        expiry_reason:
+          $ref: "#/components/schemas/ExpiryReason"
+      additionalProperties: false
+      required:
+        - lpa
+        - actor
+        - expiry_reason
+      example:
+        lpa: "M-1234-1234-1234"
+        actor: "9a619d46-8712-4bfb-a49f-c14914ff319d"
+        expiry_reason: "paper_to_digital"
   responses:
     Error400:
       description: Generic bad request (generally invalid syntax)

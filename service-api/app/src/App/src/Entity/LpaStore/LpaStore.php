@@ -12,14 +12,11 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
 use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use Exception;
 
 class LpaStore extends Lpa implements FindActorInLpaInterface
 {
@@ -57,55 +54,39 @@ class LpaStore extends Lpa implements FindActorInLpaInterface
         );
 
         parent::__construct(
-            applicationHasGuidance:     null,
-            applicationHasRestrictions: null,
-            applicationType:            null,
-            attorneys:                  $attorneys,
-            caseSubtype:                $caseSubtype,
-            channel:                    $channel,
-            dispatchDate:               null,
-            donor:                      $donor,
-            hasSeveranceWarning:        null,
-            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
-            invalidDate:                null,
-            lifeSustainingTreatment:    $lifeSustainingTreatment,
-            lpaDonorSignatureDate:      $signedAt,
-            lpaIsCleansed:              null,
-            onlineLpaId:                null,
-            receiptDate:                null,
-            registrationDate:           $registrationDate,
-            rejectedDate:               null,
-            replacementAttorneys:       $replacementAttorneys,
-            restrictionsAndConditions:  $restrictionsAndConditions,
+            applicationHasGuidance:          null,
+            applicationHasRestrictions:      null,
+            applicationType:                 null,
+            attorneys:                       $attorneys,
+            caseSubtype:                     $caseSubtype,
+            channel:                         $channel,
+            dispatchDate:                    null,
+            donor:                           $donor,
+            hasSeveranceWarning:             null,
+            howAttorneysMakeDecisions:       $howAttorneysMakeDecisions,
+            invalidDate:                     null,
+            lifeSustainingTreatment:         $lifeSustainingTreatment,
+            lpaDonorSignatureDate:           $signedAt,
+            lpaIsCleansed:                   null,
+            onlineLpaId:                     null,
+            receiptDate:                     null,
+            registrationDate:                $registrationDate,
+            rejectedDate:                    null,
+            replacementAttorneys:            $replacementAttorneys,
+            restrictionsAndConditions:       $restrictionsAndConditions,
             restrictionsAndConditionsImages: $restrictionsAndConditionsImages,
-            status:                     $status,
-            statusDate:                 $updatedAt,
-            trustCorporations:          $trustCorporations,
-            uId:                        $uId,
-            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
-            withdrawnDate:              null,
+            status:                          $status,
+            statusDate:                      $updatedAt,
+            trustCorporations:               $trustCorporations,
+            uId:                             $uId,
+            whenTheLpaCanBeUsed:             $whenTheLpaCanBeUsed,
+            withdrawnDate:                   null,
         );
     }
 
-    public function getDonor(): ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface
+    public function getDonor(): LpaStoreDonor
     {
-        if (
-            !(
-                $this->donor instanceof ResolveActorInterface &&
-                $this->donor instanceof GetAttorneyStatusInterface &&
-                $this->donor instanceof ActorMatchingInterface
-            )
-        ) {
-            throw new Exception(
-                'Donor is not a valid ResolveActorInterface&GetAttorneyStatusInterface&ActorMatchingInterface instance'
-            );
-        }
-
+        /** @var LpaStoreDonor */
         return $this->donor;
-    }
-
-    public function getCaseSubType(): string
-    {
-        return $this->caseSubtype->value;
     }
 }

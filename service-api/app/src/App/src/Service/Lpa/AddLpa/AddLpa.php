@@ -33,7 +33,7 @@ class AddLpa
      */
     public function validateAddLpaData(array $data, string $userId): ValidatedActorCode
     {
-        if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, $data['uid'])) {
+        if (null !== $lpaAddedData = ($this->lpaAlreadyAdded)($userId, new LpaUid($data['uid']))) {
             if (!array_key_exists('notActivated', $lpaAddedData)) {
                 $this->logger->notice(
                     'User {id} attempted to add an LPA {uId} which already exists in their account',
@@ -46,7 +46,11 @@ class AddLpa
             }
         }
 
-        $validatedDetails = $this->actorCodeService->validateDetails($data['actor-code'], new LpaUid($data['uid']), $data['dob']);
+        $validatedDetails = $this->actorCodeService->validateDetails(
+            $data['actor-code'],
+            new LpaUid($data['uid']),
+            $data['dob']
+        );
 
         if (! $validatedDetails instanceof ValidatedActorCode) {
             $this->logger->notice(

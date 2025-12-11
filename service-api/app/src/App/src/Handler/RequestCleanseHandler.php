@@ -50,7 +50,7 @@ class RequestCleanseHandler implements RequestHandlerInterface
         $lpa     = $this->lpaManager->getByUid(new LpaUid($requestData['reference_number']));
         $lpaData = $lpa->getData();
 
-        $addedData = ($this->lpaAlreadyAdded)($userId, (string) $requestData['reference_number']);
+        $addedData = ($this->lpaAlreadyAdded)($userId, new LpaUid($requestData['reference_number']));
 
         $this->accessForAllLpaService->requestAccessAndCleanseByLetter(
             new LpaUid($requestData['reference_number']),
