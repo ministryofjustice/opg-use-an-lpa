@@ -24,14 +24,6 @@ class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
 
     private const TEMPLATE = 'viewer::paper-verification/attorney-details';
 
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-    }
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new AttorneyDetailsForPV($this->getCsrfGuard($request));

@@ -23,14 +23,6 @@ class LpaReadyToViewHandler extends AbstractPaperVerificationCodeHandler
 
     public const TEMPLATE = 'viewer::paper-verification/lpa-ready-to-view';
 
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-    }
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new Organisation($this->getCsrfGuard($request));

@@ -25,14 +25,6 @@ class DonorDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
 
     public const TEMPLATE = 'viewer::paper-verification/date-of-birth';
 
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-    }
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
