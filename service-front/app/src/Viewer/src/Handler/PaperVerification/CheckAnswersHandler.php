@@ -78,7 +78,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
 
             if ($result->status === PaperVerificationCodeStatus::NOT_FOUND) {
                 return new HtmlResponse(
-                    $this->renderer->render('viewer::paper-verification/lpa-not-found', [
+                    $this->renderer->render('viewer::paper-verification/cannot-show-lpa', [
                         'donorName'     => $stateData->donorName,
                         'lpaUid'        => $stateData->lpaUid,
                         'sentToDonor'   => $stateData->sentToDonor,

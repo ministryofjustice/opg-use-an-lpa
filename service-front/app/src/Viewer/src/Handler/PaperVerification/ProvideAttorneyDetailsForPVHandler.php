@@ -22,7 +22,7 @@ class ProvideAttorneyDetailsForPVHandler extends AbstractPVSCodeHandler
 {
     private AttorneyDetailsForPV $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/provide-attorney-details';
+    private const TEMPLATE = 'viewer::paper-verification/attorney-details';
 
     public function __construct(
         TemplateRendererInterface $renderer,

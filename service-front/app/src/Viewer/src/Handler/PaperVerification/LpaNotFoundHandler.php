@@ -21,7 +21,7 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/lpa-not-found';
+    private const TEMPLATE = 'viewer::paper-verification/cannot-show-lpa';
 
     public function __construct(
         TemplateRendererInterface $renderer,

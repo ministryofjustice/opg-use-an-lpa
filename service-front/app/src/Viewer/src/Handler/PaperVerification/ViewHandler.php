@@ -53,22 +53,22 @@ class ViewHandler extends AbstractPVSCodeHandler
         );
 
         switch ($response->status) {
-            case PaperVerificationCodeStatus::OK:
-                return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-                    'lpa'  => $response->data,
-                    'back' => $this->lastPage($this->state($request)),
-                ]));
-
             case PaperVerificationCodeStatus::CANCELLED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-cancelled'));
 
             case PaperVerificationCodeStatus::EXPIRED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-expired'));
+
+            case PaperVerificationCodeStatus::NOT_FOUND:
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/could-not-find-lpa', [
+                    'donor_last_name' => $stateData->lastName,
+                    'lpa_access_code' => $stateData->code,
+                ]));
         }
 
-        return new HtmlResponse($this->renderer->render('viewer::lpa-not-found-with-pvc', [
-            'donor_last_name' => $stateData->lastName,
-            'lpa_access_code' => $stateData->code,
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'lpa'  => $response->data,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

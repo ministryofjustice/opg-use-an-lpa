@@ -103,23 +103,14 @@ class CheckCodeHandler extends AbstractHandler implements CsrfGuardAware
 
             $this->failureRateLimiter->limit($request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE));
 
-            /* TODO UML-3943 Remove hard coded code below when actual ticket done to allow entry of P-code and check validity
-             Render lpa-not-found-with-pvc template when P-code and surname are not valid
-             Render check-code-not-found template when V-code and surname are not valid
-            */
-
             $template = ($this->featureEnabled)('paper_verification') && strlen($code) === 14
-                ? 'viewer::lpa-not-found-with-pvc'
+                ? 'viewer::paper-verification/could-not-find-lpa'
                 : 'viewer::check-code-not-found';
-            return new HtmlResponse(
-                $this->renderer->render(
-                    $template,
-                    [
-                    'donor_last_name' => $surname,
-                    'lpa_access_code' => $code,
-                    ]
-                )
-            );
+
+            return new HtmlResponse($this->renderer->render($template, [
+                'donor_last_name' => $surname,
+                'lpa_access_code' => $code,
+            ]));
         }
 
         //  We don't have a code so the session has timed out

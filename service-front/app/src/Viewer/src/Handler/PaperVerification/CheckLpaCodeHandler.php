@@ -24,7 +24,7 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 {
     private LpaCheck $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/check-code';
+    private const TEMPLATE = 'viewer::paper-verification/found-lpa';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -58,18 +58,16 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
             switch ($result->status) {
                 case PaperVerificationCodeStatus::CANCELLED:
-                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
+                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-cancelled'));
 
                 case PaperVerificationCodeStatus::EXPIRED:
-                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
+                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-expired'));
 
                 case PaperVerificationCodeStatus::NOT_FOUND:
-                    return new HtmlResponse(
-                        $this->renderer->render('viewer::lpa-not-found-with-pvc', [
-                            'donor_last_name' => $lastName,
-                            'lpa_access_code' => $code,
-                        ])
-                    );
+                    return new HtmlResponse($this->renderer->render('viewer::paper-verification/could-not-find-lpa', [
+                        'donor_last_name' => $lastName,
+                        'lpa_access_code' => $code,
+                    ]));
             }
         }
 
