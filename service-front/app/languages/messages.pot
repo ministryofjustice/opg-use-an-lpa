@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-08T15:10:02+00:00\n"
+"POT-Creation-Date: 2025-12-11T09:42:40+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4523,6 +4523,8 @@ msgstr ""
 msgid "Change<span class=\"govuk-visually-hidden\"> %name%’s date of birth</span>"
 msgstr ""
 
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:19
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:61
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:19
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:57
@@ -4645,10 +4647,6 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:21
 msgid "number of attorneys on the notice of registration"
-msgstr ""
-
-#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:24
-msgid "Number of Attorneys"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:29

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-08T15:10:02+00:00\n"
+"POT-Creation-Date: 2025-12-11T09:42:40+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6295,6 +6295,8 @@ msgid ""
 "Change<span class=\"govuk-visually-hidden\"> %name%’s date of birth</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> dyddiad geni %name%</span>"
 
+#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:19
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:61
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:19
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:57
@@ -6455,10 +6457,6 @@ msgstr "dyddiad geni'r sawl yr anfonwyd y cod dilysu papur ato"
 #: src/Viewer/templates/viewer/paper-verification/lpa-not-found.html.twig:21
 msgid "number of attorneys on the notice of registration"
 msgstr "nifer yr atwrneiod sydd ar yr hysbysiad cofrestru"
-
-#: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:24
-msgid "Number of Attorneys"
-msgstr "Nifer yr atwrneiod"
 
 #: src/Viewer/templates/viewer/paper-verification/provide-attorney-details.html.twig:29
 msgid "Enter the number of attorneys listed on the notice of registration."
