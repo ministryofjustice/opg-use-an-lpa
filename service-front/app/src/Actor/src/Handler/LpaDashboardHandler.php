@@ -63,13 +63,13 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         foreach ($lpas as $lpaArray) {
             foreach ($lpaArray as $lpa) {
                 if (isset($seenUids[$lpa['lpa']->uId])) {
-                    $duplicates[] = $lpa->uId;
+                    $duplicates[] = $lpa['lpa']->uId;
                 } else {
                     $seenUids[$lpa['lpa']->uId] = true;
                 }
             }
         }
-        
+
         $hasActiveCodes = array_reduce($lpas->getArrayCopy(), function ($hasCodes, $lpa) {
             return $hasCodes || array_shift($lpa)->activeCodeCount > 0;
         }, false);
