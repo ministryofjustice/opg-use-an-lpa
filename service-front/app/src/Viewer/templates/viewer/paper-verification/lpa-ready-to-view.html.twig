@@ -24,7 +24,7 @@
                                 {% trans %}Donor name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ donor_name }}
+                                {{ donorName }}
                             </dd>
                         </div>
 
@@ -33,7 +33,7 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ lpa_type == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}
+                                {{ lpaType == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}
                             </dd>
                         </div>
                     </dl>

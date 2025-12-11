@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Viewer\Handler\PaperVerification;
 
 use Common\Workflow\WorkflowState;
+use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -40,7 +41,6 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-
         $stateData = $this->state($request);
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
@@ -56,9 +56,7 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
 
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form' => $this->form->prepare(),
-        ]));
+        throw new Exception('not implemented');
     }
 
     /**
@@ -78,7 +76,6 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'home';
     }
 
@@ -87,7 +84,6 @@ class LpaNotFoundHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        //needs changing when next page ready
         return 'home';
     }
 }

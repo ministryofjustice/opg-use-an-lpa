@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Exception\ApiException;
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
 use Common\Workflow\WorkflowState;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;

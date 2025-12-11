@@ -41,10 +41,10 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'       => $this->form->prepare(),
-            'donor_name' => $this->state($request)->donorName,
-            'lpa_type'   => $this->state($request)->lpaType,
-            'back'       => $this->lastPage($this->state($request)),
+            'form'      => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'lpaType'   => $this->state($request)->lpaType,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -58,11 +58,10 @@ class LpaReadyToViewHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'organisation' => $this->state($request)->organisation,
-            'form'         => $this->form->prepare(),
-            'donor_name'   => $this->state($request)->donorName,
-            'lpa_type'     => $this->state($request)->lpaType,
-            'back'         => $this->lastPage($this->state($request)),
+            'form'      => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'lpaType'   => $this->state($request)->lpaType,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 

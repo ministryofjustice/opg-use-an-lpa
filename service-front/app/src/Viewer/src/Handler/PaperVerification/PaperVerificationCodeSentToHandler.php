@@ -55,10 +55,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'donor_name'    => $this->state($request)->donorName,
-            'sent_to_donor' => $this->state($request)->sentToDonor ?? null,
-            'attorneyName'  => $this->state($request)->attorneyName ?? null,
-            'form'          => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'form'      => $this->form->prepare(),
         ]));
     }
 
@@ -84,10 +82,8 @@ class PaperVerificationCodeSentToHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'donor_name'    => $this->state($request)->donorName,
-            'sent_to_donor' => $this->state($request)->sentToDonor ?? null,
-            'attorneyName'  => $this->state($request)->attorneyName ?? null,
-            'form'          => $this->form->prepare(),
+            'donorName' => $this->state($request)->donorName,
+            'form'      => $this->form->prepare(),
         ]));
     }
 

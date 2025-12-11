@@ -65,8 +65,8 @@ class CheckLpaCodeHandler extends AbstractPVSCodeHandler
 
                 case PaperVerificationCodeStatus::NOT_FOUND:
                     return new HtmlResponse($this->renderer->render('viewer::paper-verification/could-not-find-lpa', [
-                        'donor_last_name' => $lastName,
-                        'lpa_access_code' => $code,
+                        'donorLastName'         => $lastName,
+                        'paperVerificationCode' => $code,
                     ]));
             }
         }
