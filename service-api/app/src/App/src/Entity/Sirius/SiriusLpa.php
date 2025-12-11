@@ -7,24 +7,17 @@ namespace App\Entity\Sirius;
 use App\Entity\Casters\CastToLifeSustainingTreatment;
 use App\Entity\Casters\CastToWhenTheLpaCanBeUsed;
 use App\Entity\Lpa;
-use App\Entity\LpaStore\LpaStoreDonor;
 use App\Entity\Sirius\Casters\CastToUnhyphenatedUId;
 use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
-use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
 use App\Service\Lpa\LpaRemoved\LpaRemovedInterface;
-use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use Exception;
 
 class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedInterface, LpaRemovedInterface
 {
@@ -71,33 +64,33 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
         );
 
         parent::__construct(
-            applicationHasGuidance:     $applicationHasGuidance,
-            applicationHasRestrictions: $applicationHasRestrictions,
-            applicationType:            $applicationType,
-            attorneys:                  $attorneys,
-            caseSubtype:                $caseSubtype,
-            channel:                    $channel,
-            dispatchDate:               $dispatchDate,
-            donor:                      $donor,
-            hasSeveranceWarning:        $hasSeveranceWarning,
-            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
-            invalidDate:                $invalidDate,
-            lifeSustainingTreatment:    $lifeSustainingTreatment,
-            lpaDonorSignatureDate:      $lpaDonorSignatureDate,
-            lpaIsCleansed:              $lpaIsCleansed,
-            onlineLpaId:                $onlineLpaId,
-            receiptDate:                $receiptDate,
-            registrationDate:           $registrationDate,
-            rejectedDate:               $rejectedDate,
-            replacementAttorneys:       $replacementAttorneys,
-            restrictionsAndConditions:  null,
-            restrictionsAndConditionsImages:null,
-            status:                     $status,
-            statusDate:                 $statusDate,
-            trustCorporations:          $trustCorporations,
-            uId:                        $uId,
-            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
-            withdrawnDate:              $withdrawnDate,
+            applicationHasGuidance:          $applicationHasGuidance,
+            applicationHasRestrictions:      $applicationHasRestrictions,
+            applicationType:                 $applicationType,
+            attorneys:                       $attorneys,
+            caseSubtype:                     $caseSubtype,
+            channel:                         $channel,
+            dispatchDate:                    $dispatchDate,
+            donor:                           $donor,
+            hasSeveranceWarning:             $hasSeveranceWarning,
+            howAttorneysMakeDecisions:       $howAttorneysMakeDecisions,
+            invalidDate:                     $invalidDate,
+            lifeSustainingTreatment:         $lifeSustainingTreatment,
+            lpaDonorSignatureDate:           $lpaDonorSignatureDate,
+            lpaIsCleansed:                   $lpaIsCleansed,
+            onlineLpaId:                     $onlineLpaId,
+            receiptDate:                     $receiptDate,
+            registrationDate:                $registrationDate,
+            rejectedDate:                    $rejectedDate,
+            replacementAttorneys:            $replacementAttorneys,
+            restrictionsAndConditions:       null,
+            restrictionsAndConditionsImages: null,
+            status:                          $status,
+            statusDate:                      $statusDate,
+            trustCorporations:               $trustCorporations,
+            uId:                             $uId,
+            whenTheLpaCanBeUsed:             $whenTheLpaCanBeUsed,
+            withdrawnDate:                   $withdrawnDate,
         );
     }
 
