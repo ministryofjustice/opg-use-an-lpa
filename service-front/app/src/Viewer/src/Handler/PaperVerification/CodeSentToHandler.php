@@ -38,7 +38,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
         $attorneyName = $this->state($request)->attorneyName;
 
         if ($sentToDonor !== null) {
-            $this->form->setData(['code_sent_to' => $sentToDonor === false ? 'Attorney' : 'Donor']);
+            $this->form->setData(['code_sent_to' => $sentToDonor ? 'Donor' : 'Attorney']);
         }
 
         if ($attorneyName) {

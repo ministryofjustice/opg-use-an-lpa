@@ -131,8 +131,6 @@ class CheckAnswersHandler extends AbstractPaperVerificationCodeHandler
     public function lastPage(WorkflowState $state): string
     {
         /** @var PaperVerificationCode $state */
-        return $state->sentToDonor === false
-            ? 'pv.number-of-attorneys'
-            : 'pv.attorney-details';
+        return $state->sentToDonor ? 'pv.attorney-details' : 'pv.number-of-attorneys';
     }
 }
