@@ -6,17 +6,24 @@ services:
     environment:
       API_SERVICE_URL: http://api-web
       PDF_SERVICE_URL: http://service-pdf
-      AWS_ENDPOINT_KMS: http://kms:8080
+      AWS_ENDPOINT_KMS: http://localstack:4566
     depends_on:
-      - redis
-      - service-pdf
+      redis:
+        condition: service_started
+      service-pdf:
+        condition: service_started
+      localstack:
+        condition: service_healthy
 
   actor-app:
     environment:
       API_SERVICE_URL: http://api-web
-      AWS_ENDPOINT_KMS: http://kms:8080
+      AWS_ENDPOINT_KMS: http://localstack:4566
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+      localstack:
+        condition: service_healthy
 
   api-app:
     depends_on:
@@ -27,8 +34,6 @@ services:
       mock-lpa-data-store:
         condition: service_started
       mock-one-login:
-        condition: service_started
-      kms:
         condition: service_started
       localstack:
         condition: service_healthy
@@ -59,16 +64,6 @@ services:
   # Cache service
   redis:
     image: docker.io/redis:8@sha256:43355efd22490e31ca14b9d569367d05121e2be61fd8e47937563ae2a80952ae
-
-  # ---------------------------
-  # AWS KMS mock service
-  kms:
-    image: docker.io/nsmithuk/local-kms:3@sha256:360d7377b6f3687c89a622236791e4fa3f7316366267b437829edbdfa8a5fc60
-    volumes:
-      - ./local-config/kms:/init
-    environment:
-      KMS_REGION: eu-west-1
-      KMS_SEED_PATH: /init/kms-seed.yaml
 
   # ---------------------------
   # PDF Generator
