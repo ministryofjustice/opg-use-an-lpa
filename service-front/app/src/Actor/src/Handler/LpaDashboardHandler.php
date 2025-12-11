@@ -60,12 +60,13 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         $lpas = $this->lpaService->getLpas($identity, true);
 
+        //checking for duplicate lpas to show information on home page
         foreach ($lpas as $lpaArray) {
             foreach ($lpaArray as $lpa) {
-                if (isset($seenUids[$lpa['lpa']->uId])) {
-                    $duplicates[] = $lpa['lpa']->uId;
+                if (isset($seenUids[$lpa['lpa']->getUId()])) {
+                    $duplicates[] = $lpa['lpa']->getUId();
                 } else {
-                    $seenUids[$lpa['lpa']->uId] = true;
+                    $seenUids[$lpa['lpa']->getUId()] = true;
                 }
             }
         }
@@ -84,7 +85,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             'has_active_codes' => $hasActiveCodes,
             'flash'            => $flash,
             'total_lpas'       => $totalLpas,
-            'duplicate_lpas'    => $duplicates,
+            'duplicate_lpas'   => $duplicates,
             'en_message'       => $systemMessages['use/en'] ?? null,
             'cy_message'       => $systemMessages['use/cy'] ?? null,
         ]));
