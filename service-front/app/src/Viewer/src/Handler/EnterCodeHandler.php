@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Viewer\Handler;
 
 use Common\Entity\Code;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Session;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -20,8 +22,10 @@ use Viewer\Form\ShareCode;
 /**
  * @codeCoverageIgnore
  */
-class EnterCodeHandler extends AbstractPaperVerificationCodeHandler
+class EnterCodeHandler extends AbstractPaperVerificationCodeHandler implements SessionAware
 {
+    use Session;
+
     private ShareCode|PVShareCode $form;
 
     public function __construct(
@@ -71,8 +75,9 @@ class EnterCodeHandler extends AbstractPaperVerificationCodeHandler
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
             // to allow the non-paper verification code CheckCodeHandler to work
-            $this->session->set('code', $this->state($request)->code->value);
-            $this->session->set('surname', $this->state($request)->lastName);
+            $session = $this->getSession($request, 'session');
+            $session->set('code', $this->state($request)->code->value);
+            $session->set('surname', $this->state($request)->lastName);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }

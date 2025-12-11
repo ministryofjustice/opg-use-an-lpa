@@ -7,14 +7,11 @@ namespace Viewer\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
-use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
-use Common\Handler\Traits\Session;
 use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
-use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Workflow\PaperVerificationCode;
@@ -28,21 +25,15 @@ use Viewer\Workflow\PaperVerificationCode;
 abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
     LoggerAware,
-    SessionAware,
     WorkflowStep
 {
     use CsrfGuard;
     use Logger;
-    use Session;
     /** @use State<PaperVerificationCode> */
     use State;
 
-    protected ?SessionInterface $session;
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->session = $this->getSession($request, 'session');
-
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('home');
         }
