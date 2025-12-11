@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-11T09:42:40+00:00\n"
+"POT-Creation-Date: 2025-12-11T09:46:14+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6403,10 +6403,6 @@ msgstr "Er enghraifft, 2"
 msgid "An attorney"
 msgstr "Atwrnai"
 
-#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:26
-msgid "Enter the attorneys name as it appears on the notice of registration"
-msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
-
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:28
 msgid "The donor, %donor_name%"
 msgstr "Y rhoddwr, %donor_name%"
@@ -6666,3 +6662,7 @@ msgstr[5] "%count% codau i’w defnyddio"
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "No active access codes"
 msgstr "Dim codau mynediad gweithredol"
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:26
+msgid "Enter the attorney’s name as it appears on the notice of registration"
+msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"

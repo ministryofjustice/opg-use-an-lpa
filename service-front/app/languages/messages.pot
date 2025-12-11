@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-11T09:42:40+00:00\n"
+"POT-Creation-Date: 2025-12-11T09:46:14+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4609,10 +4609,6 @@ msgstr ""
 msgid "An attorney"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:26
-msgid "Enter the attorneys name as it appears on the notice of registration"
-msgstr ""
-
 #: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:28
 msgid "The donor, %donor_name%"
 msgstr ""
@@ -4787,4 +4783,8 @@ msgstr[0] ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "No active access codes"
+msgstr ""
+
+#: src/Viewer/templates/viewer/paper-verification/verification-code-sent-to.html.twig:26
+msgid "Enter the attorney’s name as it appears on the notice of registration"
 msgstr ""
