@@ -16,13 +16,6 @@ class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'pv_date_of_birth';
 
-    /** @var array<array-key, mixed> */
-    protected array $messageTemplates = [
-        self::NOT_SAME => 'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered',
-    ];
-
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
         parent::__construct(self::FORM_NAME, $csrfGuard);
