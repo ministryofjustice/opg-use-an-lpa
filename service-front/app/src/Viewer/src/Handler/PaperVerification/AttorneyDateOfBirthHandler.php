@@ -23,7 +23,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/attorney-dob';
+    private const TEMPLATE = 'viewer::paper-verification/date-of-birth';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -57,9 +57,9 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'         => $this->form->prepare(),
-            'attorneyName' => $this->state($request)->attorneyName,
-            'back'         => $this->lastPage($this->state($request)),
+            'form' => $this->form->prepare(),
+            'name' => $this->state($request)->attorneyName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -80,6 +80,8 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form' => $this->form->prepare(),
+            'name' => $this->state($request)->attorneyName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 

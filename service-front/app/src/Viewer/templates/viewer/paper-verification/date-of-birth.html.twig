@@ -17,7 +17,7 @@
                     {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_fieldset(form.get('dob'), {
-                           'heading': 'Enter %attorneyName%’s date of birth'| trans({ '%attorneyName%': attorneyName }),
+                           'heading': 'Enter %name%’s date of birth'| trans({ '%name%': name }),
                            'hint': 'For example, 31 03 1980'| trans,
                     }) }}
 

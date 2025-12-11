@@ -23,7 +23,7 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
 {
     private PVDateOfBirth $form;
 
-    public const TEMPLATE = 'viewer::paper-verification/donor-dob';
+    public const TEMPLATE = 'viewer::paper-verification/date-of-birth';
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -55,9 +55,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'      => $this->form->prepare(),
-            'donorName' => $this->state($request)->donorName,
-            'back'      => $this->lastPage($this->state($request)),
+            'form' => $this->form->prepare(),
+            'name' => $this->state($request)->donorName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -77,9 +77,9 @@ class PVDonorDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'      => $this->form->prepare(),
-            'donorName' => $this->state($request)->donorName,
-            'back'      => $this->lastPage($this->state($request)),
+            'form' => $this->form->prepare(),
+            'name' => $this->state($request)->donorName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
