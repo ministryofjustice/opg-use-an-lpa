@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}LPA summary{% endtrans %} - {{ parent() }} {% endblock %}
+{% block page_title %}{% trans %}LPA summary{% endtrans %}{% endblock %}
 
 {% block content %}
     {% include '@partials/full-lpa-display-combined-lpa.html.twig' with {'forDownload': false} %}

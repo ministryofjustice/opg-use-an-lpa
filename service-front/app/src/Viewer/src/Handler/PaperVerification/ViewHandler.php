@@ -14,12 +14,12 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class ViewHandler extends AbstractPVSCodeHandler
+class ViewHandler extends AbstractPaperVerificationCodeHandler
 {
     public const TEMPLATE = 'viewer::view-lpa-combined-lpa';
 
@@ -30,11 +30,6 @@ class ViewHandler extends AbstractPVSCodeHandler
         private PaperVerificationCodeService $paperVerificationCodeService,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
-    }
-
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        return parent::handle($request);
     }
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
@@ -53,22 +48,22 @@ class ViewHandler extends AbstractPVSCodeHandler
         );
 
         switch ($response->status) {
-            case PaperVerificationCodeStatus::OK:
-                return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-                    'lpa'  => $response->data,
-                    'back' => $this->lastPage($this->state($request)),
-                ]));
-
             case PaperVerificationCodeStatus::CANCELLED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-cancelled'));
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-cancelled'));
 
             case PaperVerificationCodeStatus::EXPIRED:
-                return new HtmlResponse($this->renderer->render('viewer::paper-verification/check-code-expired'));
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/code-expired'));
+
+            case PaperVerificationCodeStatus::NOT_FOUND:
+                return new HtmlResponse($this->renderer->render('viewer::paper-verification/could-not-find-lpa', [
+                    'donor_last_name' => $stateData->lastName,
+                    'lpa_access_code' => $stateData->code,
+                ]));
         }
 
-        return new HtmlResponse($this->renderer->render('viewer::lpa-not-found-with-pvc', [
-            'donor_last_name' => $stateData->lastName,
-            'lpa_access_code' => $stateData->code,
+        return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
+            'lpa'  => $response->data,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -107,6 +102,6 @@ class ViewHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'pv.enter-organisation-name';
+        return 'pv.lpa-ready-to-view';
     }
 }

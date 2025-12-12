@@ -10,19 +10,11 @@ use Laminas\Filter\ToInt;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NumberComparison;
 use Mezzio\Csrf\CsrfGuardInterface;
-use Laminas\Filter\Digits;
 use Laminas\Validator\NotEmpty;
 
-class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderInterface
+class AttorneyDetails extends AbstractForm implements InputFilterProviderInterface
 {
     public const FORM_NAME = 'attorney_details';
-
-    /** @var array<array-key, mixed> */
-    protected array $messageTemplates = [
-        self::NOT_SAME => 'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered',
-    ];
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {
@@ -34,7 +26,7 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
         ]);
 
         $this->add([
-            'name' => 'attorneys_name',
+            'name' => 'attorney_name',
             'type' => 'Text',
         ]);
     }
@@ -61,7 +53,7 @@ class AttorneyDetailsForPV extends AbstractForm implements InputFilterProviderIn
                     ],
                 ],
             ],
-            'attorneys_name'  => [
+            'attorney_name'   => [
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],

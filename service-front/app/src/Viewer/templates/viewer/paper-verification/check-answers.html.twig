@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Check your answers{% endtrans %} - {{ parent() }}{% endblock %}
+{% block page_title %}{% trans %}Check your answers{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -22,7 +22,7 @@
                                 {{ lpaUid }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('pv.check-code') }}">
+                                <a class="govuk-link" href="{{ path('pv.found-lpa') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> name</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -36,7 +36,7 @@
                                 {{ sentToDonor ? donorName : attorneyName }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path('pv.verification-code-sent-to') }}">
+                                <a class="govuk-link" href="{{ path('pv.code-sent-to') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> who the paper verification code was sent to</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -50,7 +50,7 @@
                                 {{ lpa_date(dateOfBirth) }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path(sentToDonor ? 'pv.donor-dob' : 'pv.attorney-dob') }}">
+                                <a class="govuk-link" href="{{ path(sentToDonor ? 'pv.donor-date-of-birth' : 'pv.attorney-date-of-birth') }}">
                                     {% trans with { '%name%': sentToDonor ? donorName : attorneyName } %}Change<span class="govuk-visually-hidden"> %name%’s date of birth</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -64,7 +64,7 @@
                                 {{ noOfAttorneys }}
                             </dd>
                             <dd class="govuk-summary-list__actions">
-                                <a class="govuk-link" href="{{ path(sentToDonor ? 'pv.provide-attorney-details' : 'pv.number-of-attorneys') }}">
+                                <a class="govuk-link" href="{{ path(sentToDonor ? 'pv.attorney-details' : 'pv.number-of-attorneys') }}">
                                     {% trans %}Change<span class="govuk-visually-hidden"> number of attorneys</span>{% endtrans %}
                                 </a>
                             </dd>
@@ -79,7 +79,7 @@
                                     {{ attorneyName }}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" href="{{ path('pv.provide-attorney-details') }}">
+                                    <a class="govuk-link" href="{{ path('pv.attorney-details') }}">
                                         {% trans %}Change<span class="govuk-visually-hidden"> attorney name</span>{% endtrans %}
                                     </a>
                                 </dd>

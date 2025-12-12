@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ViewerTest\Form;
 
 use Laminas\InputFilter\InputFilter;
-use Viewer\Form\LpaCheck;
+use Viewer\Form\LpaReferenceNumber;
 use Common\Form\AbstractForm;
 use Common\Form\Element\Csrf;
 use CommonTest\Form\{LaminasFormTests, TestsLaminasForm};
@@ -15,12 +15,12 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Viewer\Form\PVShareCode;
 
-class LpaCheckTest extends TestCase implements TestsLaminasForm
+class LpaReferenceNumberTest extends TestCase implements TestsLaminasForm
 {
     use LaminasFormTests;
     use ProphecyTrait;
 
-    protected LpaCheck $form;
+    protected LpaReferenceNumber $form;
 
     public function getForm(): AbstractForm
     {
@@ -29,7 +29,7 @@ class LpaCheckTest extends TestCase implements TestsLaminasForm
 
     public function getFormName(): string
     {
-        return 'lpa_check';
+        return 'lpa_reference_number';
     }
 
     public function getFormElements(): array
@@ -43,15 +43,15 @@ class LpaCheckTest extends TestCase implements TestsLaminasForm
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
-        $this->form    = new LpaCheck($guardProphecy->reveal());
+        $this->form    = new LpaReferenceNumber($guardProphecy->reveal());
     }
 
     public function testIsAForm(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
-        $this->assertInstanceOf(LpaCheck::class, $this->form);
+        $this->assertInstanceOf(LpaReferenceNumber::class, $this->form);
 
-        $this->assertEquals('lpa_check', $this->form->getName());
+        $this->assertEquals('lpa_reference_number', $this->form->getName());
     }
 
     public function testInputFilter(): void

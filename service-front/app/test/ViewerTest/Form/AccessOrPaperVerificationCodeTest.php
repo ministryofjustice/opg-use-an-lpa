@@ -11,35 +11,37 @@ use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Viewer\Form\Organisation;
+use Viewer\Form\AccessOrPaperVerificationCode;
+use Viewer\Form\ShareCode;
 
-class OrganisationTest extends TestCase
+class AccessOrPaperVerificationCodeTest extends TestCase
 {
     use ProphecyTrait;
 
-    private Organisation $form;
+    private AccessOrPaperVerificationCode $form;
 
     /**
      * @var string[]
      */
     private array $elements = [
-        '__csrf'       => Csrf::class,
-        'organisation' => Text::class,
+        '__csrf'        => Csrf::class,
+        'lpa_code'      => Text::class,
+        'donor_surname' => Text::class,
     ];
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new Organisation($guardProphecy->reveal());
+        $this->form = new AccessOrPaperVerificationCode($guardProphecy->reveal());
     }
 
     public function testIsAForm(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
-        $this->assertInstanceOf(Organisation::class, $this->form);
+        $this->assertInstanceOf(AccessOrPaperVerificationCode::class, $this->form);
 
-        $this->assertEquals('organisation_name', $this->form->getName());
+        $this->assertEquals('access_or_paper_verification_code', $this->form->getName());
     }
 
     public function testInputs(): void

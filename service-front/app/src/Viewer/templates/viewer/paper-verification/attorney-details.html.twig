@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Attorney details{% endtrans %} - {{ parent() }}{% endblock %}
+{% block page_title %}{% trans %}Attorney details{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -21,7 +21,7 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h2 class="govuk-fieldset__heading" id="number_of_attorneys_heading">
-                                {% trans %}Number of Attorneys{% endtrans %}
+                                {% trans %}Number of attorneys{% endtrans %}
                             </h2>
                         </legend>
 
@@ -39,11 +39,11 @@
                     <fieldset class="govuk-fieldset">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
                             <h2 class="govuk-fieldset__heading" id="attorney_name_heading">
-                                {% trans %}Enter an attorney's name{% endtrans %}
+                                {% trans %}Enter an attorney’s name{% endtrans %}
                             </h2>
                         </legend>
 
-                        {{ govuk_form_element(form.get('attorneys_name'), {
+                        {{ govuk_form_element(form.get('attorney_name'), {
                                'label': 'Enter the name of an attorney listed on the notice of registration. It does not matter which attorney you enter.' | trans,
                                'hint': 'Spell the name as it appears on the notice of registration.'| trans,
                                'attr' : {

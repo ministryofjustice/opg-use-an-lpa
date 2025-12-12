@@ -1,9 +1,13 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Who the paper verification code was sent to{% endtrans %} - {{ parent() }}{% endblock %}
+{% block page_title %}{% trans %}Who the paper verification code was sent to{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
+        <div role="navigation" aria-labelledby="back-link-navigation">
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+        </div>
+
         <main class="govuk-main-wrapper" id="main-content" role="main">
             {{ govuk_error_summary(form) }}
 
@@ -19,13 +23,13 @@
                             </h1>
                         </legend>
 
-                        {{ govuk_form_element(form.get('verification_code_receiver'), {
+                        {{ govuk_form_element(form.get('code_sent_to'), {
                                'value_options': [{
                                     'label': 'An attorney'| trans,
                                     'value': 'Attorney',
-                                    'conditionalContent': {"attorney_name": govuk_form_element(form.get('attorney_name'),{'label': 'Enter the attorneys name as it appears on the notice of registration'| trans})}
+                                    'conditionalContent': {"attorney_name": govuk_form_element(form.get('attorney_name'),{'label': 'Enter the attorney’s name as it appears on the notice of registration'| trans})}
                                 }, {
-                                    'label': 'The donor, %donor_name%' | trans({'%donor_name%': donor_name}),
+                                    'label': 'The donor, %donorName%' | trans({'%donorName%': donorName}),
                                     'value': 'Donor'
                                 }]
                         }) }}

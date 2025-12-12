@@ -7,35 +7,23 @@ namespace Viewer\Handler\PaperVerification;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
-use Viewer\Form\PVDateOfBirth;
-use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationCode;
+use Viewer\Form\DateOfBirth;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
+class AttorneyDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
 {
-    private PVDateOfBirth $form;
+    private DateOfBirth $form;
 
-    private const TEMPLATE = 'viewer::paper-verification/attorney-dob';
-
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-    }
+    private const TEMPLATE = 'viewer::paper-verification/date-of-birth';
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->form = new PVDateOfBirth($this->getCsrfGuard($request));
+        $this->form = new DateOfBirth($this->getCsrfGuard($request));
 
         return parent::handle($request);
     }
@@ -57,9 +45,9 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
         }
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
-            'form'         => $this->form->prepare(),
-            'attorneyName' => $this->state($request)->attorneyName,
-            'back'         => $this->lastPage($this->state($request)),
+            'form' => $this->form->prepare(),
+            'name' => $this->state($request)->attorneyName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -80,6 +68,8 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
 
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'form' => $this->form->prepare(),
+            'name' => $this->state($request)->attorneyName,
+            'back' => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -88,24 +78,8 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->noOfAttorneys !== null &&
-            $state->sentToDonor !== null &&
-            $state->lastName !== null &&
-            $state->lpaUid !== null &&
-            $state->code !== null &&
-            $state->attorneyName !== null;
+        return $this->state($request)->sentToDonor !== false
+            || $this->state($request)->attorneyName === null;
     }
 
     /**
@@ -113,9 +87,7 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.number-of-attorneys';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.number-of-attorneys';
     }
 
     /**
@@ -123,8 +95,6 @@ class AttorneyDateOfBirthHandler extends AbstractPVSCodeHandler
     */
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.verification-code-sent-to';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.code-sent-to';
     }
 }

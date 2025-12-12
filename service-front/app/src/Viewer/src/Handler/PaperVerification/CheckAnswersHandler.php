@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Viewer\Handler\PaperVerification;
 
-use Common\Exception\ApiException;
 use Common\Service\Lpa\PaperVerificationCodeService;
 use Common\Service\Lpa\PaperVerificationCodeStatus;
 use Common\Workflow\WorkflowState;
-use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -16,13 +14,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\CheckAnswers;
-use Viewer\Handler\AbstractPVSCodeHandler;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
  */
-class CheckAnswersHandler extends AbstractPVSCodeHandler
+class CheckAnswersHandler extends AbstractPaperVerificationCodeHandler
 {
     public const TEMPLATE = 'viewer::paper-verification/check-answers';
 
@@ -78,7 +76,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
 
             if ($result->status === PaperVerificationCodeStatus::NOT_FOUND) {
                 return new HtmlResponse(
-                    $this->renderer->render('viewer::paper-verification/lpa-not-found', [
+                    $this->renderer->render('viewer::paper-verification/cannot-show-lpa', [
                         'donorName'     => $stateData->donorName,
                         'lpaUid'        => $stateData->lpaUid,
                         'sentToDonor'   => $stateData->sentToDonor,
@@ -111,12 +109,7 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-        || $this->state($request)->code === null
-        || $this->state($request)->lpaUid === null
-        || $this->state($request)->sentToDonor === null
-        || $this->state($request)->attorneyName === null
-        || $this->state($request)->dateOfBirth === null;
+        return !$this->shouldCheckAnswers($this->state($request));
     }
 
     /**
@@ -124,17 +117,15 @@ class CheckAnswersHandler extends AbstractPVSCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return 'pv.enter-organisation-name';
+        return 'pv.lpa-ready-to-view';
     }
 
     /**
-     * @return string The route name of the previous page in the workflow
+     * @inheritDoc
      */
     public function lastPage(WorkflowState $state): string
     {
         /** @var PaperVerificationCode $state */
-        return $state->sentToDonor === false
-            ? 'pv.number-of-attorneys'
-            : 'pv.provide-attorney-details';
+        return $state->sentToDonor ? 'pv.attorney-details' : 'pv.number-of-attorneys';
     }
 }

@@ -15,14 +15,7 @@ use Mezzio\Csrf\CsrfGuardInterface;
 
 class NumberOfAttorneys extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'pv_number_of_attorneys';
-
-    /** @var array<array-key, mixed> */
-    protected array $messageTemplates = [
-        self::NOT_SAME => 'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered',
-    ];
+    public const FORM_NAME = 'number_of_attorneys';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

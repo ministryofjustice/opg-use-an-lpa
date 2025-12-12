@@ -7,42 +7,33 @@ namespace Viewer\Handler;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
 use Common\Handler\LoggerAware;
-use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
-use Common\Handler\Traits\Session;
 use Common\Workflow\State;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
-use Mezzio\Session\SessionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Workflow\PaperVerificationCode;
 
 /**
- * A base for our workflow for both Share Code and Paper Verification codes
+ * A base for our workflow for paper verification codes
  *
  * @codeCoverageIgnore
  * @template-implements WorkflowStep<PaperVerificationCode>
  */
-abstract class AbstractPVSCodeHandler extends AbstractHandler implements
+abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler implements
     CsrfGuardAware,
     LoggerAware,
-    SessionAware,
     WorkflowStep
 {
     use CsrfGuard;
     use Logger;
-    use Session;
     /** @use State<PaperVerificationCode> */
     use State;
 
-    protected ?SessionInterface $session;
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $this->session = $this->getSession($request, 'session');
-
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('home');
         }
@@ -67,8 +58,16 @@ abstract class AbstractPVSCodeHandler extends AbstractHandler implements
         return $this->loadState($request, PaperVerificationCode::class);
     }
 
-    protected function hasFutureAnswersInState(PaperVerificationCode $state): bool
+    public function shouldCheckAnswers(PaperVerificationCode $state): bool
     {
-        return false;
+        return $state->lastName      !== null
+            && $state->code          !== null
+            && $state->lpaUid        !== null
+            && $state->sentToDonor   !== null
+            && $state->attorneyName  !== null
+            && $state->dateOfBirth   !== null
+            && $state->noOfAttorneys !== null
+            && $state->donorName     !== null
+            && $state->lpaType       !== null;
     }
 }

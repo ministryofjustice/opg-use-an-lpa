@@ -11,37 +11,35 @@ use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Viewer\Form\PVShareCode;
-use Viewer\Form\ShareCode;
+use Viewer\Form\OrganisationName;
 
-class PVShareCodeTest extends TestCase
+class OrganisationNameTest extends TestCase
 {
     use ProphecyTrait;
 
-    private PVShareCode $form;
+    private OrganisationName $form;
 
     /**
      * @var string[]
      */
     private array $elements = [
-        '__csrf'        => Csrf::class,
-        'lpa_code'      => Text::class,
-        'donor_surname' => Text::class,
+        '__csrf'       => Csrf::class,
+        'organisation' => Text::class,
     ];
 
     public function setUp(): void
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new PVShareCode($guardProphecy->reveal());
+        $this->form = new OrganisationName($guardProphecy->reveal());
     }
 
     public function testIsAForm(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
-        $this->assertInstanceOf(PVShareCode::class, $this->form);
+        $this->assertInstanceOf(OrganisationName::class, $this->form);
 
-        $this->assertEquals('share_code', $this->form->getName());
+        $this->assertEquals('organisation_name', $this->form->getName());
     }
 
     public function testInputs(): void
