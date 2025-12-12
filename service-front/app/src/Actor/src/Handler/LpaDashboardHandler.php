@@ -49,9 +49,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $seenUids = [];
-        $duplicates = [];
-
         /** @var FlashMessagesInterface $flash */
         $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
