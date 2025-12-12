@@ -36,7 +36,7 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: get changed docs files in any folder
         id: changed-files-docs
@@ -229,7 +229,7 @@ jobs:
     needs:
       - terraform_apply_production
     steps:
-      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: '0'
       - name: download cluster_config
