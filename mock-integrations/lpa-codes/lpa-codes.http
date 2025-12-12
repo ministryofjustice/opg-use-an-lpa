@@ -111,6 +111,7 @@ Accept: application/vnd.opg-data.v1+json,application/json
 Content-Type: application/json
 
 {
-  "code": "P-1234-1234-1234-12",
+  "lpa": "M-7890-0400-4003",
+  "actor": "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d",
   "expiry_reason": "paper_to_digital"
 }

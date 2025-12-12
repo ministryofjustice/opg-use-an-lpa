@@ -10,9 +10,11 @@ use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Service\Lpa\AddLpa\LpaAlreadyAdded;
+use App\Service\Lpa\Combined\UserLpaActorToken;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
+use App\Value\LpaUid;
 use DateTimeImmutable;
 use Monolog\Logger;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -61,7 +63,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->getByUserId($this->userId)
             ->willReturn([]);
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '700000000321');
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid('700000000321'));
         $this->assertNull($lpaAddedData);
     }
 
@@ -83,24 +85,24 @@ class LpaAlreadyAddedTest extends TestCase
         $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
-                [
-                    'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixtureNew(),
-                ]
+                new UserLpaActorToken(
+                    $this->userLpaActorToken,
+                    new DateTimeImmutable('now'),
+                    $this->getLpaDataFixtureNew(),
+                )
             );
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid($this->lpaUid));
         $this->assertEquals(
             [
-                'donor'                => [
+                'donor'         => [
                     'uId'        => '700000000444',
                     'firstnames' => 'Another',
                     'surname'    => 'Person',
                 ],
-                'caseSubtype'          => 'hw',
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'notActivated'         => true,
-                'activationKeyDueDate' => null,
+                'caseSubtype'   => 'hw',
+                'lpaActorToken' => $this->userLpaActorToken,
+                'notActivated'  => true,
             ],
             $lpaAddedData
         );
@@ -122,9 +124,9 @@ class LpaAlreadyAddedTest extends TestCase
 
         $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
-            ->willReturn([]);
+            ->willReturn(null);
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid($this->lpaUid));
         $this->assertNull($lpaAddedData);
     }
 
@@ -145,23 +147,23 @@ class LpaAlreadyAddedTest extends TestCase
         $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
-                [
-                    'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixtureNew(),
-                ]
+                new UserLpaActorToken(
+                    $this->userLpaActorToken,
+                    new DateTimeImmutable('now'),
+                    $this->getLpaDataFixtureNew(),
+                )
             );
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid($this->lpaUid));
         $this->assertEquals(
             [
-                'donor'                => [
+                'donor'         => [
                     'uId'        => '700000000444',
                     'firstnames' => 'Another',
                     'surname'    => 'Person',
                 ],
-                'caseSubtype'          => 'hw',
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'activationKeyDueDate' => null,
+                'caseSubtype'   => 'hw',
+                'lpaActorToken' => $this->userLpaActorToken,
             ],
             $lpaAddedData
         );
@@ -184,23 +186,23 @@ class LpaAlreadyAddedTest extends TestCase
         $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
-                [
-                    'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixtureOld(),
-                ]
+                new UserLpaActorToken(
+                    $this->userLpaActorToken,
+                    new DateTimeImmutable('now'),
+                    $this->getLpaDataFixtureOld(),
+                )
             );
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid($this->lpaUid));
         $this->assertEquals(
             [
-                'donor'                => [
+                'donor'         => [
                     'uId'        => '700000001111',
                     'firstnames' => 'Donor',
                     'surname'    => 'Person',
                 ],
-                'caseSubtype'          => 'hw',
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'activationKeyDueDate' => null,
+                'caseSubtype'   => 'hw',
+                'lpaActorToken' => $this->userLpaActorToken,
             ],
             $lpaAddedData
         );
@@ -227,23 +229,23 @@ class LpaAlreadyAddedTest extends TestCase
         $this->lpaManagerProphecy
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->willReturn(
-                [
-                    'user-lpa-actor-token' => $this->userLpaActorToken,
-                    'lpa'                  => $this->getLpaDataFixtureNew(),
-                ]
+                new UserLpaActorToken(
+                    $this->userLpaActorToken,
+                    new DateTimeImmutable('now'),
+                    $this->getLpaDataFixtureNew(),
+                )
             );
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, $this->lpaUid);
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid($this->lpaUid));
         $this->assertEquals(
             [
-                'donor'                => [
+                'donor'         => [
                     'uId'        => '700000000444',
                     'firstnames' => 'Another',
                     'surname'    => 'Person',
                 ],
-                'caseSubtype'          => 'hw',
-                'lpaActorToken'        => $this->userLpaActorToken,
-                'activationKeyDueDate' => null,
+                'caseSubtype'   => 'hw',
+                'lpaActorToken' => $this->userLpaActorToken,
             ],
             $lpaAddedData
         );
@@ -267,7 +269,7 @@ class LpaAlreadyAddedTest extends TestCase
             ->getByUserLpaActorToken($this->userLpaActorToken, $this->userId)
             ->shouldNotBeCalled();
 
-        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, '712312341234');
+        $lpaAddedData = ($this->getLpaAlreadyAddedService())($this->userId, new LpaUid('712312341234'));
         $this->assertNull($lpaAddedData);
     }
 

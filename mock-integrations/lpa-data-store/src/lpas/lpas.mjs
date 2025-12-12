@@ -1,7 +1,7 @@
-import fourUXthree from './4UX3.json';
+import fourThousand from './4000.json';
 
 const lpaData = [
-  fourUXthree
+  fourThousand
 ]
 
 const getLpa = uid => {

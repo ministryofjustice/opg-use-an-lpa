@@ -12,18 +12,12 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
-use App\Service\Lpa\LpaRemoved\LpaRemovedDonorInformationInterface;
 use App\Service\Lpa\LpaRemoved\LpaRemovedInterface;
-use App\Service\Lpa\ResolveActor\ResolveActorInterface;
 use DateTimeImmutable;
 use EventSauce\ObjectHydrator\MapFrom;
 use EventSauce\ObjectHydrator\PropertyCasters\CastListToType;
-use Exception;
 
 class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedInterface, LpaRemovedInterface
 {
@@ -70,61 +64,39 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
         );
 
         parent::__construct(
-            applicationHasGuidance:     $applicationHasGuidance,
-            applicationHasRestrictions: $applicationHasRestrictions,
-            applicationType:            $applicationType,
-            attorneys:                  $attorneys,
-            caseSubtype:                $caseSubtype,
-            channel:                    $channel,
-            dispatchDate:               $dispatchDate,
-            donor:                      $donor,
-            hasSeveranceWarning:        $hasSeveranceWarning,
-            howAttorneysMakeDecisions:  $howAttorneysMakeDecisions,
-            invalidDate:                $invalidDate,
-            lifeSustainingTreatment:    $lifeSustainingTreatment,
-            lpaDonorSignatureDate:      $lpaDonorSignatureDate,
-            lpaIsCleansed:              $lpaIsCleansed,
-            onlineLpaId:                $onlineLpaId,
-            receiptDate:                $receiptDate,
-            registrationDate:           $registrationDate,
-            rejectedDate:               $rejectedDate,
-            replacementAttorneys:       $replacementAttorneys,
-            restrictionsAndConditions:  null,
-            restrictionsAndConditionsImages:null,
-            status:                     $status,
-            statusDate:                 $statusDate,
-            trustCorporations:          $trustCorporations,
-            uId:                        $uId,
-            whenTheLpaCanBeUsed:        $whenTheLpaCanBeUsed,
-            withdrawnDate:              $withdrawnDate,
+            applicationHasGuidance:          $applicationHasGuidance,
+            applicationHasRestrictions:      $applicationHasRestrictions,
+            applicationType:                 $applicationType,
+            attorneys:                       $attorneys,
+            caseSubtype:                     $caseSubtype,
+            channel:                         $channel,
+            dispatchDate:                    $dispatchDate,
+            donor:                           $donor,
+            hasSeveranceWarning:             $hasSeveranceWarning,
+            howAttorneysMakeDecisions:       $howAttorneysMakeDecisions,
+            invalidDate:                     $invalidDate,
+            lifeSustainingTreatment:         $lifeSustainingTreatment,
+            lpaDonorSignatureDate:           $lpaDonorSignatureDate,
+            lpaIsCleansed:                   $lpaIsCleansed,
+            onlineLpaId:                     $onlineLpaId,
+            receiptDate:                     $receiptDate,
+            registrationDate:                $registrationDate,
+            rejectedDate:                    $rejectedDate,
+            replacementAttorneys:            $replacementAttorneys,
+            restrictionsAndConditions:       null,
+            restrictionsAndConditionsImages: null,
+            status:                          $status,
+            statusDate:                      $statusDate,
+            trustCorporations:               $trustCorporations,
+            uId:                             $uId,
+            whenTheLpaCanBeUsed:             $whenTheLpaCanBeUsed,
+            withdrawnDate:                   $withdrawnDate,
         );
     }
 
-    public function getDonor(): ActorMatchingInterface&
-                                GetAttorneyStatusInterface&
-                                ResolveActorInterface&
-                                DonorInformationInterface&
-                                LpaRemovedDonorInformationInterface
+    public function getDonor(): SiriusLpaDonor
     {
-        if (
-            !(
-                $this->donor instanceof ActorMatchingInterface &&
-                $this->donor instanceof GetAttorneyStatusInterface &&
-                $this->donor instanceof ResolveActorInterface &&
-                $this->donor instanceof DonorInformationInterface &&
-                $this->donor instanceof LpaRemovedDonorInformationInterface
-            )
-        ) {
-            throw new Exception(
-                'Donor does not implement all necessary interfaces'
-            );
-        }
-
+        /** @var SiriusLpaDonor */
         return $this->donor;
-    }
-
-    public function getCaseSubType(): string
-    {
-        return $this->caseSubtype->value;
     }
 }

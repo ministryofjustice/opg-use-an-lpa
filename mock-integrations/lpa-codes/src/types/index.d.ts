@@ -15,4 +15,11 @@ interface LpaCode {
   has_paper_verification_code?: boolean,
 }
 
-export { LpaCode };
+interface ExpireRequest {
+  code?: string,
+  lpa?: string,
+  actor?: string,
+  expiry_reason: ExpiryReason | string,
+}
+
+export { LpaCode, ExpireRequest };

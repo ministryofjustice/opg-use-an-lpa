@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-09T20:11:38+00:00\n"
+"POT-Creation-Date: 2025-12-12T09:43:50+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -237,7 +237,7 @@ msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-l
 msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
-#: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:61
+#: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:72
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
@@ -413,7 +413,7 @@ msgstr ""
 msgid "Donor"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:52
+#: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:62
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:28
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:160
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:159
@@ -4768,6 +4768,10 @@ msgstr ""
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:160
 msgid "You cannot use a download or printout of this page instead of giving someone an access code."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:63
+msgid "Creating an access code means the paper verification code for this <abbr title=\"lasting power of attorney\">LPA</abbr> will expire on %date%. After this date, organisations will only be able to view the <abbr title=\"lasting power of attorney\">LPA</abbr> details using an access code."
 msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10

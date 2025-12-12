@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace AppTest\Service\ViewerCodes;
 
 use App\DataAccess\Repository\KeyCollisionException;
+use App\DataAccess\Repository\PaperVerificationCodesInterface;
+use App\DataAccess\Repository\Response\PaperVerificationCodeExpiry;
+use App\DataAccess\Repository\Response\UpstreamResponse;
 use App\DataAccess\Repository\UserLpaActorMapInterface;
 use App\DataAccess\Repository\ViewerCodeActivityInterface;
 use App\DataAccess\Repository\ViewerCodesInterface;
@@ -29,12 +32,14 @@ class ViewerCodeServiceTest extends TestCase
         $viewerCodeRepoProphecy         = $this->prophesize(ViewerCodesInterface::class);
         $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
         $userActorLpaRepoProphecy       = $this->prophesize(UserLpaActorMapInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
         $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -77,12 +82,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -131,12 +138,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -167,12 +176,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -220,18 +231,90 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
         $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
 
         $this->assertTrue($callCount > 0);
+    }
+
+    #[Test]
+    public function it_will_cancel_any_pvcs_when_creating_a_data_store_lpa_code(): void
+    {
+        // code will expire 30 days from midnight of the day the test runs
+        $codeExpiry = new DateTime(
+            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
+            new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
+        );
+
+        $viewerCodeRepoProphecy = $this->prophesize(ViewerCodesInterface::class);
+        $viewerCodeRepoProphecy
+            ->add(
+                Argument::type('string'),
+                'id',
+                Argument::that(fn (LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
+                $codeExpiry,
+                'token name',
+                '1234'
+            )
+            ->shouldBeCalled();
+
+        $viewerCodeActivityRepoProphecy = $this->prophesize(ViewerCodeActivityInterface::class);
+
+        $userActorLpaRepoProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $userActorLpaRepoProphecy
+            ->get('user_actor_lpa_token')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'Id'                       => 'id',
+                    'UserId'                   => 'user_id',
+                    'LpaUid'                   => 'M-XXXX-1212-ZZZZ',
+                    'ActorId'                  => '1234',
+                    'HasPaperVerificationCode' => true,
+                ]
+            );
+
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $paperVerificationCodesProphecy
+            ->transitionToDigital(
+                Argument::that(fn (LpaUid $value) => $value->getLpaUid() === 'M-XXXX-1212-ZZZZ'),
+                '1234',
+            )
+            ->shouldBeCalled()
+            ->willReturn(
+                new UpstreamResponse(
+                    new PaperVerificationCodeExpiry(new DateTimeImmutable('23:59:59 +30 days')),
+                    new DateTimeImmutable('now'),
+                )
+            );
+
+        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+
+        $service = new ViewerCodeService(
+            $viewerCodeRepoProphecy->reveal(),
+            $viewerCodeActivityRepoProphecy->reveal(),
+            $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
+            $loggerProphecy->reveal(),
+        );
+
+        $result = $service->addCode('user_actor_lpa_token', 'user_id', 'token name');
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('code', $result);
+        $this->assertArrayHasKey('expires', $result);
+        $this->assertArrayHasKey('organisation', $result);
+        $this->assertEquals('token name', $result['organisation']);
     }
 
     #[Test]
@@ -345,12 +428,14 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(null);
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -396,12 +481,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -436,12 +523,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -470,12 +559,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 
@@ -508,12 +599,14 @@ class ViewerCodeServiceTest extends TestCase
                 ]
             );
 
-        $loggerProphecy = $this->prophesize(LoggerInterface::class);
+        $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
+        $loggerProphecy                 = $this->prophesize(LoggerInterface::class);
 
         $service = new ViewerCodeService(
             $viewerCodeRepoProphecy->reveal(),
             $viewerCodeActivityRepoProphecy->reveal(),
             $userActorLpaRepoProphecy->reveal(),
+            $paperVerificationCodesProphecy->reveal(),
             $loggerProphecy->reveal(),
         );
 

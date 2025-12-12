@@ -136,7 +136,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $this->lpasInterfaceProphecy->get($testUid)->willReturn($lpaResponse);
+        $this->lpasInterfaceProphecy->get((string)$testUid)->willReturn($lpaResponse);
 
         $this->filterActiveActorsProphecy
             ->__invoke($lpaResponse->getData())
@@ -313,14 +313,9 @@ class SiriusLpaManagerTest extends TestCase
 
         $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
-        $this->assertIsArray($result);
-        $this->assertArrayHasKey('user-lpa-actor-token', $result);
-        $this->assertArrayHasKey('date', $result);
-        $this->assertArrayHasKey('actor', $result);
-        $this->assertArrayHasKey('lpa', $result);
-
-        $this->assertEquals($t->Token, $result['user-lpa-actor-token']);
-        $this->assertEquals($t->Lpa->getLookupTime()->getTimestamp(), strtotime($result['date']));
+        $this->assertNotNull($result);
+        $this->assertEquals($t->Token, $result->userLpaActorToken);
+        $this->assertEquals($t->Lpa->getLookupTime(), $result->lookupDateTime);
         $this->assertEquals(
             new LpaActor(
                 [
@@ -331,7 +326,7 @@ class SiriusLpaManagerTest extends TestCase
                 ],
                 ActorType::ATTORNEY
             ),
-            $result['actor'],
+            $result->actor,
         );
         $this->assertEquals(
             new SiriusLpa(
@@ -350,7 +345,7 @@ class SiriusLpaManagerTest extends TestCase
                 ],
                 $this->loggerProphecy->reveal(),
             ),
-            $result['lpa']
+            $result->lpa
         );
     }
 
@@ -364,7 +359,7 @@ class SiriusLpaManagerTest extends TestCase
         $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNotNull($result);
-        $this->assertNotNull($result['actor']);
+        $this->assertNotNull($result->actor);
     }
 
     #[Test]
@@ -377,7 +372,7 @@ class SiriusLpaManagerTest extends TestCase
         $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNotNull($result);
-        $this->assertNotNull($result['actor']);
+        $this->assertNotNull($result->actor);
     }
 
     #[Test]
@@ -387,9 +382,8 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, (string) 123);
-
-        $this->assertNull($result);
+        $this->expectException(NotFoundException::class);
+        $service->getByUserLpaActorToken($t->Token, (string) 123);
     }
 
     #[Test]
@@ -402,9 +396,8 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
-
-        $this->assertNull($result);
+        $this->expectException(NotFoundException::class);
+        $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
     }
 
     #[Test]
@@ -854,8 +847,7 @@ class SiriusLpaManagerTest extends TestCase
 
         $service = $this->getLpaService();
 
-        $result = $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
-
-        $this->assertEmpty($result);
+        $this->expectException(NotFoundException::class);
+        $service->getByUserLpaActorToken($t->Token, $t->SiriusUid);
     }
 }

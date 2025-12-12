@@ -10,7 +10,6 @@ use Common\Exception\LpaRecordInErrorException;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\Factory\{LpaDataFormatter, PersonDataFormatter};
 use EventSauce\ObjectHydrator\UnableToHydrateObject;
-use Exception;
 use RuntimeException;
 
 /**
@@ -34,10 +33,6 @@ class ParseLpaData
      *
      * Currently, fairly naive in its assumption that the data types are stored under explicit keys, which
      * may change.
-     *
-     * @param  array $data
-     * @return ArrayObject
-     * @throws Exception
      */
     public function __invoke(array $data): ArrayObject
     {
