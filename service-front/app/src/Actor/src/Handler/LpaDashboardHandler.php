@@ -60,16 +60,11 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 
         $lpas = $this->lpaService->getLpas($identity, true);
 
-        //checking for duplicate lpas to show information on home page
-        foreach ($lpas as $lpaArray) {
-            foreach ($lpaArray as $lpa) {
-                if (isset($seenUids[$lpa['lpa']->getUId()])) {
-                    $duplicates[] = $lpa['lpa']->getUId();
-                } else {
-                    $seenUids[$lpa['lpa']->getUId()] = true;
-                }
-            }
-        }
+        $hasDuplicates = array_reduce($lpas->getArrayCopy(), function ($duplicate, $lpaArray) {
+            $uids = array_map(fn ($lpa) => $lpa->lpa->getUId(), $lpaArray);
+
+            return $duplicate || count($uids) !== count(array_flip($uids));
+        }, false);
 
         $hasActiveCodes = array_reduce($lpas->getArrayCopy(), function ($hasCodes, $lpa) {
             return $hasCodes || array_shift($lpa)->activeCodeCount > 0;
@@ -80,14 +75,14 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
         $systemMessages = $this->systemMessageService->getMessages();
 
         return new HtmlResponse($this->renderer->render('actor::lpa-dashboard', [
-            'user'             => $user,
-            'lpas'             => $lpas,
-            'has_active_codes' => $hasActiveCodes,
-            'flash'            => $flash,
-            'total_lpas'       => $totalLpas,
-            'duplicate_lpas'   => $duplicates,
-            'en_message'       => $systemMessages['use/en'] ?? null,
-            'cy_message'       => $systemMessages['use/cy'] ?? null,
+            'user'               => $user,
+            'lpas'               => $lpas,
+            'has_active_codes'   => $hasActiveCodes,
+            'flash'              => $flash,
+            'total_lpas'         => $totalLpas,
+            'has_duplicate_lpas' => $hasDuplicates,
+            'en_message'         => $systemMessages['use/en'] ?? null,
+            'cy_message'         => $systemMessages['use/cy'] ?? null,
         ]));
     }
 }
