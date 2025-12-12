@@ -131,7 +131,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals(null, $donor->getOtherNames());
         $this->assertEquals(null, $donor->getMiddlenames());
         $this->assertEquals('Deputy', $donor->getSurname());
-        $this->assertEquals('ABC Ltd', $donor->getCompanyName());
+        $this->assertEquals(null, $donor->getCompanyName());
     }
 
     #[Test]
@@ -150,7 +150,7 @@ class SiriusLpaFactoryTest extends TestCase
         $this->assertEquals('George', $attorney->getOtherNames());
         $this->assertEquals('Deputy', $attorney->getMiddlenames());
         $this->assertEquals('Deputy', $attorney->getSurname());
-        $this->assertEquals('ABC Ltd', $attorney->getCompanyName());
+        $this->assertEquals(null, $attorney->getCompanyName());
     }
 
     #[Test]
