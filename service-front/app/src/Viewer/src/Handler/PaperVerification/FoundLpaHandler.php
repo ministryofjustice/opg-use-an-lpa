@@ -15,7 +15,6 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Form\LpaReferenceNumber;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
-use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -78,6 +77,7 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
             'form'      => $this->form->prepare(),
             'donorName' => $this->state($request)->donorName,
             'lpaType'   => $this->state($request)->lpaType,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -95,6 +95,7 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
             'form'      => $this->form->prepare(),
             'donorName' => $this->state($request)->donorName,
             'lpaType'   => $this->state($request)->lpaType,
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -103,21 +104,8 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->noOfAttorneys !== null &&
-            $state->dateOfBirth !== null &&
-            $state->lastName !== null &&
-            $state->lpaUid !== null &&
-            $state->sentToDonor !== null &&
-            $state->attorneyName !== null;
+        return $this->state($request)->code === null
+            && $this->state($request)->lastName === null;
     }
 
     /**
@@ -125,9 +113,7 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.code-sent-to';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.code-sent-to';
     }
 
     /**
@@ -135,6 +121,6 @@ class FoundLpaHandler extends AbstractPaperVerificationCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'enter-code-pv';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'home';
     }
 }

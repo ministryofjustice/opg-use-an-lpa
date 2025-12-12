@@ -109,12 +109,7 @@ class CheckAnswersHandler extends AbstractPaperVerificationCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-        || $this->state($request)->code === null
-        || $this->state($request)->lpaUid === null
-        || $this->state($request)->sentToDonor === null
-        || $this->state($request)->attorneyName === null
-        || $this->state($request)->dateOfBirth === null;
+        return !$this->shouldCheckAnswers($this->state($request));
     }
 
     /**
@@ -126,7 +121,7 @@ class CheckAnswersHandler extends AbstractPaperVerificationCodeHandler
     }
 
     /**
-     * @return string The route name of the previous page in the workflow
+     * @inheritDoc
      */
     public function lastPage(WorkflowState $state): string
     {

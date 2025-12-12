@@ -69,19 +69,8 @@ class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->sentToDonor !== null &&
-            $state->lastName !== null &&
-            $state->lpaUid !== null &&
-            $state->code !== null;
+        return $this->state($request)->sentToDonor !== true
+            || $this->state($request)->dateOfBirth === null;
     }
 
     /**
@@ -97,8 +86,6 @@ class AttorneyDetailsHandler extends AbstractPaperVerificationCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.donor-date-of-birth';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.donor-date-of-birth';
     }
 }

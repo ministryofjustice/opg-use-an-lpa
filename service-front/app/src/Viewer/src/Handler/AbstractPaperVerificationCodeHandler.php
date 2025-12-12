@@ -57,4 +57,17 @@ abstract class AbstractPaperVerificationCodeHandler extends AbstractHandler impl
     {
         return $this->loadState($request, PaperVerificationCode::class);
     }
+
+    public function shouldCheckAnswers(PaperVerificationCode $state): bool
+    {
+        return $state->lastName      !== null
+            && $state->code          !== null
+            && $state->lpaUid        !== null
+            && $state->sentToDonor   !== null
+            && $state->attorneyName  !== null
+            && $state->dateOfBirth   !== null
+            && $state->noOfAttorneys !== null
+            && $state->donorName     !== null
+            && $state->lpaType       !== null;
+    }
 }

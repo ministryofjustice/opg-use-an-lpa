@@ -7,11 +7,8 @@ namespace Viewer\Handler\PaperVerification;
 use Common\Service\Features\FeatureEnabled;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 use Viewer\Form\CodeSentTo;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 use Viewer\Workflow\PaperVerificationCode;
@@ -48,6 +45,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'donorName' => $this->state($request)->donorName,
             'form'      => $this->form->prepare(),
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -75,6 +73,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
         return new HtmlResponse($this->renderer->render(self::TEMPLATE, [
             'donorName' => $this->state($request)->donorName,
             'form'      => $this->form->prepare(),
+            'back'      => $this->lastPage($this->state($request)),
         ]));
     }
 
@@ -83,23 +82,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->noOfAttorneys !== null &&
-            $state->dateOfBirth !== null &&
-            $state->lastName !== null &&
-            $state->lpaUid !== null &&
-            $state->code !== null &&
-            $state->attorneyName !== null;
+        return $this->state($request)->lpaUid === null;
     }
 
     /**
@@ -107,7 +90,7 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
     */
     public function nextPage(WorkflowState $state): string
     {
-        if ($this->hasFutureAnswersInState($state)) {
+        if ($this->shouldCheckAnswers($state)) {
             return 'pv.check-answers';
         }
 
@@ -119,6 +102,6 @@ class CodeSentToHandler extends AbstractPaperVerificationCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return 'home';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.found-lpa';
     }
 }

@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Viewer\Form\DateOfBirth;
 use Viewer\Handler\AbstractPaperVerificationCodeHandler;
-use Viewer\Workflow\PaperVerificationCode;
 
 /**
  * @codeCoverageIgnore
@@ -79,24 +78,8 @@ class AttorneyDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->noOfAttorneys !== null &&
-            $state->sentToDonor !== null &&
-            $state->lastName !== null &&
-            $state->lpaUid !== null &&
-            $state->code !== null &&
-            $state->attorneyName !== null;
+        return $this->state($request)->sentToDonor !== false
+            || $this->state($request)->attorneyName === null;
     }
 
     /**
@@ -104,9 +87,7 @@ class AttorneyDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
      */
     public function nextPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.number-of-attorneys';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.number-of-attorneys';
     }
 
     /**
@@ -114,8 +95,6 @@ class AttorneyDateOfBirthHandler extends AbstractPaperVerificationCodeHandler
     */
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.code-sent-to';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.code-sent-to';
     }
 }
