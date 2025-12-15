@@ -29,7 +29,7 @@
     "otherNames": "George",
     "middlenames": "Deputy",
     "surname": "Deputy",
-    "companyName": "ABC Ltd",
+    "companyName": null,
     "addresses": [
       {
         "id": 0,
@@ -55,7 +55,7 @@
       "otherNames": "George",
       "middlenames": "Deputy",
       "surname": "Deputy",
-      "companyName": "ABC Ltd",
+      "companyName": null,
       "addresses": [
         {
           "id": 0,
@@ -135,7 +135,7 @@
       "otherNames": "George",
       "middlenames": "Deputy",
       "surname": "Deputy",
-      "companyName": "ABC Ltd",
+      "companyName": null,
       "addresses": [
         {
           "id": 0,
@@ -189,7 +189,7 @@
       "otherNames": "George",
       "middlenames": "Deputy",
       "surname": "Deputy",
-      "companyName": "ABC Ltd",
+      "companyName": null,
       "addresses": [
         {
           "id": 0,

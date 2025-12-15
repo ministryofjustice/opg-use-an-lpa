@@ -26,7 +26,7 @@
       "firstname": "Ian",
       "middlenames": "Deputy",
       "surname": "Deputy",
-      "companyName": "ABC Ltd",
+      "companyName": null,
       "addresses": [
         {
           "id": 0,
@@ -51,7 +51,7 @@
         "firstname": "Ian",
         "middlenames": "Deputy",
         "surname": "Deputy",
-        "companyName": "ABC Ltd",
+        "companyName": null,
         "addresses": [
           {
             "id": 0,
@@ -128,7 +128,7 @@
         "firstname": "Ian",
         "middlenames": "Deputy",
         "surname": "Deputy",
-        "companyName": "ABC Ltd",
+        "companyName": null,
         "addresses": [
           {
             "id": 0,
@@ -181,7 +181,7 @@
         "firstname": "Ian",
         "middlenames": "Deputy",
         "surname": "Deputy",
-        "companyName": "ABC Ltd",
+        "companyName": null,
         "addresses": [
           {
             "id": 0,

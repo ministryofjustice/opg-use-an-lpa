@@ -220,6 +220,9 @@ class LpaExtensionTest extends TestCase
         if (isset($nameLines['surname'])) {
             $actor->setSurname($nameLines['surname']);
         }
+        if (isset($nameLines['companyName'])) {
+            $actor->setCompanyName($nameLines['companyName']);
+        }
 
         $name = $extension->actorName($actor);
 
@@ -253,6 +256,12 @@ class LpaExtensionTest extends TestCase
                     'surname'    => 'Taylor',
                 ],
                 'Mrs Someone Taylor',
+            ],
+            [
+                [
+                    'companyName' => 'The COMPANY',
+                ],
+                'The COMPANY',
             ],
             [
                 [],
