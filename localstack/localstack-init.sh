@@ -15,7 +15,16 @@ awslocal secretsmanager create-secret --name lpa-data-store-secret \
     --description "Local development lpa store secret" \
     --secret-string "A shared secret string that needs to be at least 128 bits long"
 
-echo "Configuring events"
+# KMS setup
+awslocal kms create-key \
+    --region "eu-west-1" \
+    --tags '[{"TagKey":"_custom_id_","TagValue":"bc436485-5092-42b8-92a3-0aa8b93536dc"},{"TagKey":"_custom_key_material_","TagValue":"sM2c0Q2o7JacIpDoCd72i3kA2NdTsFvHUr4Y4YLjJuM="}]'
+awslocal kms create-alias \
+    --region "eu-west-1" \
+    --alias-name "alias/viewer-sessions-cmk-alias" \
+    --target-key-id "bc436485-5092-42b8-92a3-0aa8b93536dc"
+
+# Event bus
 awslocal sqs create-queue --region "eu-west-1" --queue-name event-bus-queue
 awslocal events create-event-bus --region "eu-west-1" --name default
 
@@ -31,7 +40,6 @@ awslocal events put-targets \
   --rule send-events-to-bus-queue-rule \
   --targets "Id"="event-bus-queue","Arn"="arn:aws:sqs:eu-west-1:000000000000:event-bus-queue"
 
-echo "Creating lambda"
 awslocal lambda create-function \
     --function-name event-receiver-lambda \
     --runtime provided.al2023 \
@@ -42,7 +50,6 @@ awslocal lambda create-function \
 
 awslocal lambda wait function-active-v2 --region eu-west-1 --function-name event-receiver-lambda
 
-echo "Creating event source mapping"
 awslocal lambda create-event-source-mapping \
     --function-name event-receiver-lambda \
     --batch-size 1 \

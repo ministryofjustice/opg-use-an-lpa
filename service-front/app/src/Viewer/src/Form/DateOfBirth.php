@@ -12,16 +12,9 @@ use Common\Validator\DobValidator;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class PVDateOfBirth extends AbstractForm implements InputFilterProviderInterface
+class DateOfBirth extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'pv_date_of_birth';
-
-    /** @var array<array-key, mixed> */
-    protected array $messageTemplates = [
-        self::NOT_SAME => 'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered',
-    ];
+    public const FORM_NAME = 'date_of_birth';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

@@ -1,6 +1,6 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}We’ve found this LPA{% endtrans %} - {{ parent() }}{% endblock %}
+{% block page_title %}{% trans %}The LPA is ready to view{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
@@ -13,9 +13,6 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    {{ govuk_form_open(form) }}
-                    {{ govuk_form_element(form.get('__csrf')) }}
-
                     <h1 class="govuk-heading-xl">{% trans %}The LPA is ready to view{% endtrans %}</h1>
 
                     <dl class="govuk-summary-list">
@@ -24,7 +21,7 @@
                                 {% trans %}Donor name{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ donor_name }}
+                                {{ donorName }}
                             </dd>
                         </div>
 
@@ -33,10 +30,13 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ lpa_type == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}
+                                {{ lpaType == 'pfa' ? 'Property and affairs' | trans : 'Health and welfare' | trans  }}
                             </dd>
                         </div>
                     </dl>
+
+                    {{ govuk_form_open(form) }}
+                    {{ govuk_form_element(form.get('__csrf')) }}
 
                     {{ govuk_form_element(form.get('organisation'), {
                            'label': 'Your organisation name' | trans,

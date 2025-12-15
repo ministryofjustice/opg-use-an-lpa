@@ -1041,12 +1041,12 @@ class ViewerContext implements Context
     #[Given('/^I have been given access to an LPA via Paper Verification Code$/')]
     public function iHaveBeenGivenAccessToAnLPAViaPaperVerificationCOde(): void
     {
-        $this->lpaSurname    = 'Bundlaaaa';
+        $this->lpaSurname            = 'Bundlaaaa';
         $this->lpaReferenceNumber    = 'M-1234-1234-1234';
-        $this->paperVerificationCode  = 'P-1234-1234-1234-12';
-        $this->lpaStoredCode = '111111111111';
-        $this->lpaViewedBy   = 'Santander';
-        $this->lpaData       = [
+        $this->paperVerificationCode = 'P-1234-1234-1234-12';
+        $this->lpaStoredCode         = '111111111111';
+        $this->lpaViewedBy           = 'Santander';
+        $this->lpaData               = [
             'id'                    => 1,
             'uId'                   => 'M-1234-1234-1234',
             'receiptDate'           => '2014-09-26',
@@ -1104,9 +1104,9 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'donorName' => 'Feeg Bundlaaa',
-                        'type' => 'hw',
-                        'status' => 'registered',
-                        'source' => 'lpastore',
+                        'type'      => 'hw',
+                        'status'    => 'registered',
+                        'source'    => 'lpastore',
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -1122,7 +1122,7 @@ class ViewerContext implements Context
     #[Then('/^I am on the page to enter Lpa reference number$/')]
     public function iWillBeAskedToEnterMoreInformation(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/check-code');
+        $this->ui->assertPageAddress('/paper-verification/found-lpa');
         $this->ui->assertPageContainsText('We need some more details');
     }
 
@@ -1151,7 +1151,7 @@ class ViewerContext implements Context
     #[Given('/^I type in a valid LPA reference number$/')]
     public function iTypeAValidLpaReferenceNumber(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/check-code');
+        $this->ui->assertPageAddress('/paper-verification/found-lpa');
         $this->ui->assertPageContainsText('We need some more details');
 
         $this->ui->fillField('lpa_reference', 'M-1234-1234-1234');
@@ -1166,15 +1166,15 @@ class ViewerContext implements Context
     #[Then('/^I will be asked who the paper verification code was sent to$/')]
     public function iWillBeAskedWhoThePaperVerificationCodeWasSentTo(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+        $this->ui->assertPageAddress('/paper-verification/code-sent-to');
     }
 
     #[Given('/^(.*) was chosen as the person who the paper verification code was sent to$/')]
     public function attorneyWasChosenAsThePersonWhoThePaperVerificationCodeWasSentTo($codeSentTo): void
     {
-        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+        $this->ui->assertPageAddress('/paper-verification/code-sent-to');
 
-        $this->ui->fillField('verification_code_receiver', $codeSentTo);
+        $this->ui->fillField('code_sent_to', $codeSentTo);
 
         if ($codeSentTo === 'Attorney') {
             $this->ui->fillField('attorney_name', 'Barabara');
@@ -1184,31 +1184,29 @@ class ViewerContext implements Context
     #[Then('/^they will see a page asking for attorney dob$/')]
     public function theyWillSeeAPageAskingForAttorneyDob(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/attorney-dob');
+        $this->ui->assertPageAddress('/paper-verification/attorney-date-of-birth');
     }
 
     #[Then('/^they will see a page asking for donor dob$/')]
     public function theyWillSeeAPageAskingForDonorDob(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/donor-dob');
+        $this->ui->assertPageAddress('/paper-verification/donor-date-of-birth');
     }
 
     #[Given('/^paper verification code is for the attorney$/')]
     public function paperVerificationCodeIsForTheAttorney(): void
     {
-
     }
 
     #[Given('/^paper verification code is for the donor/')]
     public function paperVerificationCodeIsForTheDonor(): void
     {
-
     }
 
     #[When('/^they have entered date of birth for (.*)$/')]
     public function theyHaveEnteredDateOfBirth($codeSentTo): void
     {
-        $this->ui->assertPageAddress('/paper-verification/' . $codeSentTo . '-dob');
+        $this->ui->assertPageAddress('/paper-verification/' . $codeSentTo . '-date-of-birth');
 
         $this->ui->fillField('dob[day]', '05');
         $this->ui->fillField('dob[month]', '10');
@@ -1229,10 +1227,10 @@ class ViewerContext implements Context
     #[When('/^they have entered attorney details$/')]
     public function theyHaveEnteredAttorneyDetails(): void
     {
-        $this->ui->assertPageAddress('/paper-verification/provide-attorney-details');
+        $this->ui->assertPageAddress('/paper-verification/attorney-details');
 
         $this->ui->fillField('no_of_attorneys', '2');
-        $this->ui->fillField('attorneys_name', 'Barabara');
+        $this->ui->fillField('attorney_name', 'Barabara');
 
         $this->ui->pressButton('Continue');
     }
@@ -1248,7 +1246,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/check-code")]');
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/found-lpa")]');
         if ($link === null) {
             throw new Exception('Change link not found');
         }
@@ -1259,9 +1257,9 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'donorName' => 'Feeg Bundlaaa',
-                        'type' => 'hw',
-                        'status' => 'registered',
-                        'source' => 'lpastore',
+                        'type'      => 'hw',
+                        'status'    => 'registered',
+                        'source'    => 'lpastore',
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -1269,8 +1267,8 @@ class ViewerContext implements Context
         );
 
         $link->click();
-        $this->ui->assertPageAddress('/paper-verification/check-code');
-     }
+        $this->ui->assertPageAddress('/paper-verification/found-lpa');
+    }
 
     #[When('/^they click continue they return to check answers page$/')]
     public function theyClickContinueTheyReturnToCheckAnswersPage(): void
@@ -1284,7 +1282,7 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/verification-code-sent-to")]');
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/code-sent-to")]');
         if ($link === null) {
             throw new Exception('Change link not found');
         }
@@ -1295,9 +1293,9 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'donorName' => 'Feeg Bundlaaa',
-                        'type' => 'hw',
-                        'status' => 'registered',
-                        'source' => 'lpastore',
+                        'type'      => 'hw',
+                        'status'    => 'registered',
+                        'source'    => 'lpastore',
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -1305,7 +1303,7 @@ class ViewerContext implements Context
         );
 
         $link->click();
-        $this->ui->assertPageAddress('/paper-verification/verification-code-sent-to');
+        $this->ui->assertPageAddress('/paper-verification/code-sent-to');
     }
 
     #[When('/^they click back they return to check answers page$/')]
@@ -1320,13 +1318,13 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/attorney-dob")]');
+        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/attorney-date-of-birth")]');
         if ($link === null) {
             throw new Exception('Change link not found');
         }
 
         $link->click();
-        $this->ui->assertPageAddress('/paper-verification/attorney-dob');
+        $this->ui->assertPageAddress('/paper-verification/attorney-date-of-birth');
     }
 
     #[Given('/^they change number of attorney on check answers page$/')]

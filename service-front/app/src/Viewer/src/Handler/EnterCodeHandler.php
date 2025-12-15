@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Viewer\Handler;
 
 use Common\Entity\Code;
+use Common\Handler\SessionAware;
+use Common\Handler\Traits\Session;
 use Common\Service\Features\FeatureEnabled;
 use Common\Service\SystemMessage\SystemMessageService;
 use Common\Workflow\WorkflowState;
@@ -14,15 +16,17 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Viewer\Form\PVShareCode;
+use Viewer\Form\AccessOrPaperVerificationCode;
 use Viewer\Form\ShareCode;
 
 /**
  * @codeCoverageIgnore
  */
-class EnterPVSCodeHandler extends AbstractPVSCodeHandler
+class EnterCodeHandler extends AbstractPaperVerificationCodeHandler implements SessionAware
 {
-    private ShareCode|PVShareCode $form;
+    use Session;
+
+    private ShareCode|AccessOrPaperVerificationCode $form;
 
     public function __construct(
         TemplateRendererInterface $renderer,
@@ -37,7 +41,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         if (($this->featureEnabled)('paper_verification')) {
-            $this->form = new PVShareCode($this->getCsrfGuard($request));
+            $this->form = new AccessOrPaperVerificationCode($this->getCsrfGuard($request));
         } else {
             $this->form = new ShareCode($this->getCsrfGuard($request));
         }
@@ -51,7 +55,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
         $this->state($request)->reset();
 
         $template       = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::enter-code-pv'
+            ? 'viewer::paper-verification/enter-code'
             : 'viewer::enter-code';
         $systemMessages = $this->systemMessageService->getMessages();
 
@@ -71,14 +75,15 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
             $this->state($request)->lastName = $this->form->getData()['donor_surname'];
 
             // to allow the non-paper verification code CheckCodeHandler to work
-            $this->session->set('code', $this->state($request)->code->value);
-            $this->session->set('surname', $this->state($request)->lastName);
+            $session = $this->getSession($request, 'session');
+            $session->set('code', $this->state($request)->code->value);
+            $session->set('surname', $this->state($request)->lastName);
 
             return $this->redirectToRoute($this->nextPage($this->state($request)));
         }
 
         $template       = ($this->featureEnabled)('paper_verification')
-            ? 'viewer::enter-code-pv'
+            ? 'viewer::paper-verification/enter-code'
             : 'viewer::enter-code';
         $systemMessages = $this->systemMessageService->getMessages();
 
@@ -103,7 +108,7 @@ class EnterPVSCodeHandler extends AbstractPVSCodeHandler
     public function nextPage(WorkflowState $state): string
     {
         if (($this->featureEnabled)('paper_verification') && $state->code->isPaperVerificationCode()) {
-            return 'pv.check-code';
+            return 'pv.found-lpa';
         }
 
         return 'check-code';

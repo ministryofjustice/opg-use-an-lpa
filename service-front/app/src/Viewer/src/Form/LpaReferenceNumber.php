@@ -13,16 +13,9 @@ use Laminas\Validator\Regex;
 use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
-class LpaCheck extends AbstractForm implements InputFilterProviderInterface
+class LpaReferenceNumber extends AbstractForm implements InputFilterProviderInterface
 {
-    public const FORM_NAME = 'lpa_check';
-
-    /** @var array<array-key, mixed> */
-    protected array $messageTemplates = [
-        self::NOT_SAME => 'Do you want to continue?' .
-            ' You have not used this service for 30 minutes.' .
-            ' Click continue to use any details you entered',
-    ];
+    public const FORM_NAME = 'lpa_reference_number';
 
     public function __construct(CsrfGuardInterface $csrfGuard)
     {

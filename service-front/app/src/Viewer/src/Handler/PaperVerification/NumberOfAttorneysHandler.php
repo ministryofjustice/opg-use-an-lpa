@@ -6,31 +6,19 @@ namespace Viewer\Handler\PaperVerification;
 
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
-use Mezzio\Helper\UrlHelper;
-use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LoggerInterface;
 use Viewer\Form\NumberOfAttorneys;
-use Viewer\Handler\AbstractPVSCodeHandler;
-use Viewer\Workflow\PaperVerificationCode;
+use Viewer\Handler\AbstractPaperVerificationCodeHandler;
 
 /**
  * @codeCoverageIgnore
  */
-class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
+class NumberOfAttorneysHandler extends AbstractPaperVerificationCodeHandler
 {
     private NumberOfAttorneys $form;
 
     public const TEMPLATE = 'viewer::paper-verification/number-of-attorneys';
-
-    public function __construct(
-        TemplateRendererInterface $renderer,
-        UrlHelper $urlHelper,
-        LoggerInterface $logger,
-    ) {
-        parent::__construct($renderer, $urlHelper, $logger);
-    }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -76,26 +64,8 @@ class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
      */
     public function isMissingPrerequisite(ServerRequestInterface $request): bool
     {
-        return $this->state($request)->lastName === null
-            || $this->state($request)->code === null
-            || $this->state($request)->lpaUid === null
-            || $this->state($request)->sentToDonor === null
-            || $this->state($request)->attorneyName === null
+        return $this->state($request)->sentToDonor !== false
             || $this->state($request)->dateOfBirth === null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasFutureAnswersInState(PaperVerificationCode $state): bool
-    {
-        return
-            $state->sentToDonor !== null &&
-            $state->lastName !== null &&
-            $state->dateOfBirth !== null &&
-            $state->lpaUid !== null &&
-            $state->code !== null &&
-            $state->attorneyName !== null;
     }
 
     /**
@@ -111,8 +81,6 @@ class NumberOfAttorneysHandler extends AbstractPVSCodeHandler
      */
     public function lastPage(WorkflowState $state): string
     {
-        return $this->hasFutureAnswersInState($state)
-            ? 'pv.check-answers'
-            : 'pv.attorney-dob';
+        return $this->shouldCheckAnswers($state) ? 'pv.check-answers' : 'pv.attorney-date-of-birth';
     }
 }

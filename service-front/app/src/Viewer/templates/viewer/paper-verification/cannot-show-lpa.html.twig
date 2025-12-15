@@ -1,17 +1,17 @@
 {% extends '@viewer/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Check your answers{% endtrans %} - {{ parent() }} {% endblock %}
+{% block page_title %}{% trans %}We cannot show the lasting power of attorney{% endtrans %}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
-            <a href="{{ path('home') }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+            <a href="{{ path(back) }}" class="govuk-back-link" id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper " id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h1 class="govuk-heading-xl">{% trans with { '%donorName%': donorName } %}We cannot show %donorName%'s lasting power of attorney{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans with { '%donorName%': donorName } %}We cannot show %donorName%’s lasting power of attorney{% endtrans %}</h1>
 
                     <p class="govuk-body">{% trans %}This is because some of the information you entered is incorrect. To view the LPA, try again making sure you enter the correct:{% endtrans %}</p>
 
