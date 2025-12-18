@@ -630,6 +630,7 @@ class LpaContext implements Context
                                 'ActorId'    => $this->actorId,
                                 'UserId'     => $this->userId,
                                 'ActivateBy' => 123456789,
+                                'DueBy'      => $activationKeyDueDate,
                             ]
                         ),
                     ],
@@ -649,6 +650,7 @@ class LpaContext implements Context
                             'ActorId'    => $this->actorId,
                             'UserId'     => $this->userId,
                             'ActivateBy' => 123456789,
+                            'DueBy'      => $activationKeyDueDate,
                         ]
                     ),
                 ]
