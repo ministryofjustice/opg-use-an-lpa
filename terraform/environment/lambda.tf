@@ -171,3 +171,66 @@ resource "aws_lambda_permission" "receive_events_permission" {
   principal     = "sqs.amazonaws.com"
   source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
 }
+
+module "lambda_backfill" {
+  source      = "./modules/lambda"
+  lambda_name = "backfill"
+  environment_variables = {
+    REGION      = data.aws_region.current.region
+    TABLE_NAME  = aws_dynamodb_table.use_users_table.arn
+    BUCKET_NAME = aws_s3_bucket.lambda_backfill.id
+  }
+  image_uri   = "${data.aws_ecr_repository.backfill.repository_url}:${var.container_version}"
+  ecr_arn     = data.aws_ecr_repository.backfill.arn
+  environment = local.environment_name
+  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  timeout     = 900
+  memory      = 1024
+}
+
+resource "aws_iam_role_policy" "lambda_backfill" {
+  name   = "lambda-backfill-${local.environment_name}"
+  role   = module.lambda_backfill.lambda_role.id
+  policy = data.aws_iam_policy_document.lambda_backfill.json
+}
+
+data "aws_iam_policy_document" "lambda_backfill" {
+  statement {
+    sid    = "S3Bucket"
+    effect = "Allow"
+    resources = [
+      aws_s3_bucket.lambda_backfill.arn,
+      "${aws_s3_bucket.lambda_backfill.arn}/*",
+    ]
+    actions = [
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:ListBucket",
+    ]
+  }
+
+  statement {
+    sid    = "DynamoTable"
+    effect = "Allow"
+    resources = [
+      aws_dynamodb_table.use_users_table.arn,
+    ]
+    actions = [
+      "dynamodb:BatchWriteItem",
+      "dynamodb:DescribeTable",
+    ]
+  }
+}
+
+resource "aws_s3_bucket" "lambda_backfill" {
+  bucket = "opg-use-an-lpa-lambda-backfill-${local.environment_name}"
+}
+
+resource "aws_s3_bucket_public_access_block" "lambda_backfill" {
+  bucket = aws_s3_bucket.lambda_backfill.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
