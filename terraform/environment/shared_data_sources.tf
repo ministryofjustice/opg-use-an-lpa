@@ -19,6 +19,11 @@ data "aws_ecr_repository" "use_an_lpa_event_receiver" {
   name     = "use_an_lpa/event_receiver"
 }
 
+data "aws_ecr_repository" "backfill" {
+  provider = aws.management
+  name     = "use_an_lpa/backfill_lambda"
+}
+
 data "aws_ecr_repository" "mock_onelogin" {
   provider = aws.management
   name     = "mock-onelogin"
