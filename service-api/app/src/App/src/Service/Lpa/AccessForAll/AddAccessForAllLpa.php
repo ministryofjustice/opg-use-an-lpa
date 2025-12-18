@@ -55,7 +55,6 @@ class AddAccessForAllLpa
     private function existentCodeNotActivated(
         string $userId,
         LpaUid $referenceNumber,
-        AccessForAllValidation $validationData,
         array $lpaAddedData,
     ): void {
         $this->logger->notice(
@@ -66,23 +65,6 @@ class AddAccessForAllLpa
             ],
         );
 
-        $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
-
-        // if activation key due date is null, check activation code exist in sirius
-        if ($activationKeyDueDate === null) {
-            $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-                $validationData->lpa->getUid(),
-                $validationData->actorMatch->actor->getUid(),
-            );
-
-            if ($hasActivationCode instanceof DateTimeInterface) {
-                $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
-                $activationKeyDueDate = $activationKeyDueDate
-                    ->add(new DateInterval('P10D'))
-                    ->format('Y-m-d');
-            }
-        }
-
         throw new LpaActivationKeyAlreadyRequestedException(
             [
                 'donor'                => [
@@ -91,7 +73,7 @@ class AddAccessForAllLpa
                     'surname'    => $lpaAddedData['donor']['surname'],
                 ],
                 'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                'activationKeyDueDate' => $activationKeyDueDate,
+                'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']->format('Y-m-d'),
             ],
         );
     }
@@ -108,7 +90,7 @@ class AddAccessForAllLpa
         ?array $lpaAddedData,
     ): void {
         if (isset($lpaAddedData['notActivated'])) {
-            $this->existentCodeNotActivated($userId, $referenceNumber, $validationData, $lpaAddedData);
+            $this->existentCodeNotActivated($userId, $referenceNumber, $lpaAddedData);
         }
 
         $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
@@ -117,10 +99,8 @@ class AddAccessForAllLpa
         );
 
         if ($hasActivationCode instanceof DateTimeInterface) {
-            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
-            $activationKeyDueDate = $activationKeyDueDate
-                ->add(new DateInterval('P10D'))
-                ->format('Y-m-d');
+            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode)
+                ->add(new DateInterval('P10D'));
 
             throw new LpaAlreadyHasActivationKeyException(
                 [
@@ -130,7 +110,7 @@ class AddAccessForAllLpa
                         'surname'    => $validationData->lpa->getDonor()->getSurname(),
                     ],
                     'caseSubtype'          => $validationData->getCaseSubtype(),
-                    'activationKeyDueDate' => $activationKeyDueDate,
+                    'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
                 ]
             );
         }
