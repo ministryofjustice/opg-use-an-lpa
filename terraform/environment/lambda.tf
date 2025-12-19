@@ -183,7 +183,7 @@ module "lambda_backfill" {
     TABLE_NAME  = aws_dynamodb_table.use_users_table.arn
     BUCKET_NAME = aws_s3_bucket.lambda_backfill.id
   }
-  image_uri   = "${data.aws_ecr_repository.backfill.repository_url}:${var.container_version}"
+  image_uri   = "${data.aws_ecr_repository.backfill.repository_url}@${data.aws_ecr_image.backfill.image_digest}"
   ecr_arn     = data.aws_ecr_repository.backfill.arn
   environment = local.environment_name
   kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
