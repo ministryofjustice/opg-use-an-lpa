@@ -177,7 +177,7 @@ resource "aws_lambda_permission" "receive_events_permission" {
 module "lambda_backfill" {
   count       = local.environment.deploy_backfill_lambda ? 1 : 0
   source      = "./modules/lambda"
-  lambda_name = "backfill"
+  lambda_name = "backfill-lambda"
   environment_variables = {
     REGION      = data.aws_region.current.region
     TABLE_NAME  = aws_dynamodb_table.use_users_table.arn
