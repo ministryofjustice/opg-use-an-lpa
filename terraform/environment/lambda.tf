@@ -175,6 +175,7 @@ resource "aws_lambda_permission" "receive_events_permission" {
 }
 
 module "lambda_backfill" {
+  count       = local.environment.deploy_backfill_lambda ? 1 : 0
   source      = "./modules/lambda"
   lambda_name = "backfill"
   environment_variables = {
@@ -191,8 +192,9 @@ module "lambda_backfill" {
 }
 
 resource "aws_iam_role_policy" "lambda_backfill" {
+  count  = local.environment.deploy_backfill_lambda ? 1 : 0
   name   = "lambda-backfill-${local.environment_name}"
-  role   = module.lambda_backfill.lambda_role.id
+  role   = module.lambda_backfill[0].lambda_role.id
   policy = data.aws_iam_policy_document.lambda_backfill.json
 }
 
@@ -247,7 +249,7 @@ data "aws_iam_policy_document" "lambda_backfill_bucket_policy" {
   statement {
     principals {
       type        = "AWS"
-      identifiers = [module.lambda_backfill.lambda.arn]
+      identifiers = [module.lambda_backfill[0].lambda.arn]
     }
     actions = [
       "s3:GetObject",
