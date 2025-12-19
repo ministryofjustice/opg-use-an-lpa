@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa\AccessForAll;
 
+use App\Exception\ApiException;
 use App\Exception\LpaActivationKeyAlreadyRequestedException;
 use App\Exception\BadRequestException;
 use App\Exception\LpaAlreadyAddedException;
@@ -17,10 +18,8 @@ use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use App\Value\LpaUid;
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use DateTimeInterface;
-use Exception;
 use Psr\Log\LoggerInterface;
 use App\Entity\Sirius\SiriusLpa;
 use App\Entity\LpaStore\LpaStore;
@@ -50,56 +49,19 @@ class AddAccessForAllLpa
     }
 
     /**
-     * @throws LpaActivationKeyAlreadyRequestedException
-     */
-    private function existentCodeNotActivated(
-        string $userId,
-        LpaUid $referenceNumber,
-        AccessForAllValidation $validationData,
-        array $lpaAddedData,
-    ): void {
-        $this->logger->notice(
-            'User {id} attempted to request a key for the LPA {uId} which they have already requested',
-            [
-                'id'  => $userId,
-                'uId' => $referenceNumber,
-            ],
-        );
-
-        $activationKeyDueDate = $lpaAddedData['activationKeyDueDate'] ?? null;
-
-        // if activation key due date is null, check activation code exist in sirius
-        if ($activationKeyDueDate === null) {
-            $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-                $validationData->lpa->getUid(),
-                $validationData->actorMatch->actor->getUid(),
-            );
-
-            if ($hasActivationCode instanceof DateTimeInterface) {
-                $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
-                $activationKeyDueDate = $activationKeyDueDate
-                    ->add(new DateInterval('P10D'))
-                    ->format('Y-m-d');
-            }
-        }
-
-        throw new LpaActivationKeyAlreadyRequestedException(
-            [
-                'donor'                => [
-                    'uId'        => $lpaAddedData['donor']['uId'],
-                    'firstnames' => $lpaAddedData['donor']['firstnames'],
-                    'surname'    => $lpaAddedData['donor']['surname'],
-                ],
-                'caseSubtype'          => $lpaAddedData['caseSubtype'],
-                'activationKeyDueDate' => $activationKeyDueDate,
-            ],
-        );
-    }
-
-    /**
-     * @param array{notActivated: bool}|null $lpaAddedData
+     * @param array{
+     *     notActivated: bool,
+     *     donor: array{
+     *         uId: string,
+     *         firstnames: string,
+     *         surname: string,
+     *     },
+     *     caseSubtype: string,
+     *     activationKeyDueDate: DateTimeInterface
+     * }|null $lpaAddedData
      * @throws LpaAlreadyHasActivationKeyException
      * @throws LpaActivationKeyAlreadyRequestedException
+     * @throws ApiException
      */
     private function processActivationCode(
         string $userId,
@@ -108,7 +70,25 @@ class AddAccessForAllLpa
         ?array $lpaAddedData,
     ): void {
         if (isset($lpaAddedData['notActivated'])) {
-            $this->existentCodeNotActivated($userId, $referenceNumber, $validationData, $lpaAddedData);
+            $this->logger->notice(
+                'User {id} attempted to request a key for the LPA {uId} which they have already requested',
+                [
+                    'id'  => $userId,
+                    'uId' => $referenceNumber,
+                ],
+            );
+
+            throw new LpaActivationKeyAlreadyRequestedException(
+                [
+                    'donor'                => [
+                        'uId'        => $lpaAddedData['donor']['uId'],
+                        'firstnames' => $lpaAddedData['donor']['firstnames'],
+                        'surname'    => $lpaAddedData['donor']['surname'],
+                    ],
+                    'caseSubtype'          => $lpaAddedData['caseSubtype'],
+                    'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']->format('Y-m-d'),
+                ],
+            );
         }
 
         $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
@@ -117,10 +97,8 @@ class AddAccessForAllLpa
         );
 
         if ($hasActivationCode instanceof DateTimeInterface) {
-            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode);
-            $activationKeyDueDate = $activationKeyDueDate
-                ->add(new DateInterval('P10D'))
-                ->format('Y-m-d');
+            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode)
+                ->add(new DateInterval('P10D'));
 
             throw new LpaAlreadyHasActivationKeyException(
                 [
@@ -130,7 +108,7 @@ class AddAccessForAllLpa
                         'surname'    => $validationData->lpa->getDonor()->getSurname(),
                     ],
                     'caseSubtype'          => $validationData->getCaseSubtype(),
-                    'activationKeyDueDate' => $activationKeyDueDate,
+                    'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
                 ]
             );
         }
@@ -138,6 +116,7 @@ class AddAccessForAllLpa
 
     /**
      * @throws NotFoundException
+     * @throws ApiException
      */
     private function fetchLPAData(LpaUid $referenceNumber): ServiceSiriusLpa|SiriusLpa|LpaStore
     {
@@ -177,6 +156,7 @@ class AddAccessForAllLpa
      * @throws LpaDetailsDoNotMatchException
      * @throws LpaActivationKeyAlreadyRequestedException
      * @throws NotFoundException
+     * @throws ApiException
      */
     public function validateRequest(string $userId, array $matchData): AccessForAllValidation
     {
@@ -188,7 +168,7 @@ class AddAccessForAllLpa
                 'User {id} attempted to request a key for the LPA {uId} which already exists in their account',
                 [
                     'id'  => $userId,
-                    'uId' => (string) $matchData['reference_number'],
+                    'uId' => $matchData['reference_number'],
                 ]
             );
             throw new LpaAlreadyAddedException($lpaAddedData);

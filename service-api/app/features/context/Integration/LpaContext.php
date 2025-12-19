@@ -2640,6 +2640,11 @@ class LpaContext extends BaseIntegrationContext
     {
         $createdDate = (new DateTime())->modify('-14 days');
 
+        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
+        $activationKeyDueDate = $activationKeyDueDate
+            ->add(new DateInterval('P10D'))
+            ->format('Y-m-d');
+
         // UserLpaActorMap::getAllForUser / getUsersLpas
         $this->awsFixtures->append(
             new Result(
@@ -2653,6 +2658,7 @@ class LpaContext extends BaseIntegrationContext
                                 'ActorId'    => $this->actorLpaId,
                                 'UserId'     => $this->userId,
                                 'ActivateBy' => 123456789,
+                                'DueBy'      => $activationKeyDueDate,
                             ]
                         ),
                     ],
@@ -2672,19 +2678,14 @@ class LpaContext extends BaseIntegrationContext
                             'ActorId'    => $this->actorLpaId,
                             'UserId'     => $this->userId,
                             'ActivateBy' => 123456789,
+                            'DueBy'      => $activationKeyDueDate,
                         ]
                     ),
                 ]
             )
         );
 
-        $codeExists  = new stdClass();
-        $createdDate = (new DateTime())->modify('-14 days');
-
-        $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
-        $activationKeyDueDate = $activationKeyDueDate
-            ->add(new DateInterval('P10D'))
-            ->format('Y-m-d');
+        $codeExists = new stdClass();
 
         $codeExists->Created = $createdDate->format('Y-m-d');
 
