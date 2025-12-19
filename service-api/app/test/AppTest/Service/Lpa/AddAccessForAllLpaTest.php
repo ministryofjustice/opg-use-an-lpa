@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\Repository\Response\Lpa;
+use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
+use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Entity\Sirius\SiriusLpaDonor;
 use App\Enum\ActorStatus;
 use App\Enum\LifeSustainingTreatment;
@@ -26,7 +28,6 @@ use App\Service\Lpa\LpaManagerInterface;
 use App\Service\Lpa\RestrictSendingLpaForCleansing;
 use App\Service\Lpa\SiriusLpa;
 use App\Service\Lpa\SiriusPerson;
-use App\Entity\Sirius\SiriusLpaAttorney;
 use App\Service\Lpa\ValidateAccessForAllLpaRequirements;
 use DateInterval;
 use DateTime;
@@ -37,7 +38,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use App\Entity\Sirius\SiriusLpa as CombinedSiriusLpa;
 
 class AddAccessForAllLpaTest extends TestCase
 {
@@ -208,8 +208,7 @@ class AddAccessForAllLpaTest extends TestCase
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
         $activationKeyDueDate = $activationKeyDueDate
-            ->add(new DateInterval('P10D'))
-            ->format('Y-m-d');
+            ->add(new DateInterval('P10D'));
 
         $alreadyAddedData = [
             'donor'                => [
@@ -220,16 +219,16 @@ class AddAccessForAllLpaTest extends TestCase
             ],
             'caseSubtype'          => 'hw',
             'lpaActorToken'        => 'qwerty-54321',
-            'activationKeyDueDate' => null,
+            'activationKeyDueDate' => $activationKeyDueDate,
             'notActivated'         => true,
         ];
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, (string) $this->lpaUid)
+            ->__invoke($this->userId, $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
         $this->lpaManagerProphecy
-            ->getByUid((string) $this->lpaUid)
+            ->getByUid($this->lpaUid)
             ->willReturn($this->lpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -239,15 +238,11 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode((string) $this->lpaUid, $this->lpaData->getAttorneys()[1]->getUid())
-            ->willReturn($createdDate);
-
         $expectedException = new LpaActivationKeyAlreadyRequestedException(
             [
                 'donor'                => $this->lpaData->getDonor(),
                 'caseSubtype'          => $this->lpaData->getCaseSubtype(),
-                'activationKeyDueDate' => $activationKeyDueDate,
+                'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
             ]
         );
 
@@ -262,8 +257,7 @@ class AddAccessForAllLpaTest extends TestCase
 
         $activationKeyDueDate = DateTimeImmutable::createFromMutable($createdDate);
         $activationKeyDueDate = $activationKeyDueDate
-            ->add(new DateInterval('P10D'))
-            ->format('Y-m-d');
+            ->add(new DateInterval('P10D'));
 
         $alreadyAddedData = [
             'donor'                => [
@@ -274,16 +268,16 @@ class AddAccessForAllLpaTest extends TestCase
             ],
             'caseSubtype'          => 'hw',
             'lpaActorToken'        => 'qwerty-54321',
-            'activationKeyDueDate' => null,
+            'activationKeyDueDate' => $activationKeyDueDate,
             'notActivated'         => true,
         ];
 
         $this->lpaAlreadyAddedProphecy
-            ->__invoke($this->userId, (string) $this->lpaUid)
+            ->__invoke($this->userId, $this->lpaUid)
             ->willReturn($alreadyAddedData);
 
         $this->lpaManagerProphecy
-            ->getByUid((string) $this->lpaUid)
+            ->getByUid($this->lpaUid)
             ->willReturn($this->siriusLpa);
 
         $this->validateAccessForAllLpaRequirementsProphecy
@@ -293,15 +287,11 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->siriusLpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $this->accessForAllLpaServiceProphecy
-            ->hasActivationCode((string) $this->lpaUid, $this->siriusLpaData->getAttorneys()[1]->getUid())
-            ->willReturn($createdDate);
-
         $expectedException = new LpaActivationKeyAlreadyRequestedException(
             [
                 'donor'                => $this->siriusLpaData->getDonor(),
                 'caseSubtype'          => $this->siriusLpaData->getCaseSubtype(),
-                'activationKeyDueDate' => $activationKeyDueDate,
+                'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
             ]
         );
 
