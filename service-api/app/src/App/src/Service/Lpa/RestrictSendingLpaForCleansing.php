@@ -6,7 +6,6 @@ namespace App\Service\Lpa;
 
 use App\Service\Log\EventCodes;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
-use Exception;
 use Psr\Log\LoggerInterface;
 use DateTimeImmutable;
 use App\Exception\NotFoundException;
@@ -14,7 +13,7 @@ use App\Service\Lpa\RestrictSendingLpaForCleansing\RestrictSendingLpaForCleansin
 
 class RestrictSendingLpaForCleansing
 {
-    public const EARLIEST_REG_DATE = '2019-09-01';
+    public const string EARLIEST_REG_DATE = '2019-09-01';
 
     private DateTimeImmutable $earliestDate;
 
@@ -25,7 +24,7 @@ class RestrictSendingLpaForCleansing
 
     /**
      * @param ?ActorMatch $actorDetailsMatch
-     * @param array       $lpaData An LPA data structure
+     * @param RestrictSendingLpaForCleansingInterface $lpaData An LPA data structure
      * @throws NotFoundException Thrown when LPA needs to restricted from cleansing
      */
     public function __invoke(RestrictSendingLpaForCleansingInterface $lpaData, ?ActorMatch $actorDetailsMatch): void
