@@ -90,6 +90,7 @@
   },
   "lifeSustainingTreatmentOption": "option-a",
   "signedAt": "2024-01-10T23:00:00Z",
-  "howAttorneysMakeDecisions": "jointly",
+  "howAttorneysMakeDecisions": "jointly-for-some-severally-for-others",
+  "howAttorneysMakeDecisionsDetails": "This is mock data on how decisions are made",
   "whenTheLpaCanBeUsed": "when-capacity-lost"
 }
