@@ -80,6 +80,7 @@ variable "environments" {
       associate_alb_with_waf_web_acl_enabled           = bool
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
+      deploy_backfill_lambda                           = bool
       application_flags = object({
         use_older_lpa_journey  = bool
         delete_lpa_feature     = bool
