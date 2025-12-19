@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eeff8823ad66d05b8946f955f6d79eac",
+    "content-hash": "ec4633d1be418319240ed913ae3bc561",
     "packages": [
         {
             "name": "behat/behat",
@@ -6034,61 +6034,6 @@
                 "source": "https://github.com/vimeo/psalm"
             },
             "time": "2024-09-08T18:53:08+00:00"
-        },
-        {
-            "name": "webimpress/coding-standard",
-            "version": "1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webimpress/coding-standard.git",
-                "reference": "6f6a1a90bd9e18fc8bee0660dd1d1ce68cf9fc53"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webimpress/coding-standard/zipball/6f6a1a90bd9e18fc8bee0660dd1d1ce68cf9fc53",
-                "reference": "6f6a1a90bd9e18fc8bee0660dd1d1ce68cf9fc53",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3 || ^8.0",
-                "squizlabs/php_codesniffer": "^3.10.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.6.15"
-            },
-            "type": "phpcodesniffer-standard",
-            "extra": {
-                "dev-master": "1.2.x-dev",
-                "dev-develop": "1.3.x-dev"
-            },
-            "autoload": {
-                "psr-4": {
-                    "WebimpressCodingStandard\\": "src/WebimpressCodingStandard/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "description": "Webimpress Coding Standard",
-            "keywords": [
-                "Coding Standard",
-                "PSR-2",
-                "phpcs",
-                "psr-12",
-                "webimpress"
-            ],
-            "support": {
-                "issues": "https://github.com/webimpress/coding-standard/issues",
-                "source": "https://github.com/webimpress/coding-standard/tree/1.4.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/michalbundyra",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-10-16T06:55:17+00:00"
         },
         {
             "name": "webmozart/assert",
