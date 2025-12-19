@@ -31,6 +31,7 @@ class Lpa
     protected ?string $restrictionsAndConditions               = null;
     protected ?array $restrictionsAndConditionsImages          = null;
     protected ?CaseActor $donor                                = null;
+    protected ?string $howAttorneysMakeDecisionsDetails        = null;
 
     /** @var CaseActor[] */
     protected array $attorneys = [];
