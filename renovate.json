@@ -251,7 +251,7 @@
       "Renovate"
     ],
     "dependencyDashboardApproval": false,
-    "minimumReleaseAge": "0 days",
+    "minimumReleaseAge": null,
     "rangeStrategy": "pin",
     "commitMessagePrefix": "[SECURITY]",
     "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
