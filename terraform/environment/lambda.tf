@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 # Function to update use a lpa event statistics to stats table
 module "lambda_update_statistics" {
   source      = "./modules/lambda"
@@ -233,4 +235,42 @@ resource "aws_s3_bucket_public_access_block" "lambda_backfill" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "lambda_backfill" {
+  depends_on = [aws_s3_bucket_public_access_block.lambda_backfill]
+  bucket     = aws_s3_bucket.lambda_backfill.id
+  policy     = data.aws_iam_policy_document.lambda_backfill_bucket_policy.json
+}
+
+data "aws_iam_policy_document" "lambda_backfill_bucket_policy" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = [module.lambda_backfill.lambda.arn]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:DeleteObject",
+      "s3:ListBucket",
+    ]
+    resources = [
+      aws_s3_bucket.lambda_backfill.arn,
+      "${aws_s3_bucket.lambda_backfill.arn}/*",
+    ]
+  }
+
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
+    }
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      aws_s3_bucket.lambda_backfill.arn,
+      "${aws_s3_bucket.lambda_backfill.arn}/*",
+    ]
+  }
 }
