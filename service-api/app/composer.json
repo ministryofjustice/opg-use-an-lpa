@@ -39,7 +39,7 @@
         "ext-gmp": "*",
         "ext-openssl": "*",
         "alphagov/notifications-php-client": "^6.2.0",
-        "aws/aws-sdk-php": "^3.337.3",
+        "aws/aws-sdk-php": "3.364.0",
         "blazon/psr11-monolog": "^5.0.1",
         "elie29/zend-phpdi-config": "^9.0.2",
         "eventsauce/object-hydrator": "^1.6.1",
