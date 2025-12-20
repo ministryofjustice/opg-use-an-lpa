@@ -247,6 +247,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                 uId:          '7123456789',
             ),
             howAttorneysMakeDecisions: null,
+            howAttorneysMakeDecisionsDetails: null,
             lifeSustainingTreatment:   LifeSustainingTreatment::OPTION_A,
             signedAt:                  new DateTimeImmutable('2019-10-10'),
             registrationDate:          new DateTimeImmutable('2019-10-10'),
