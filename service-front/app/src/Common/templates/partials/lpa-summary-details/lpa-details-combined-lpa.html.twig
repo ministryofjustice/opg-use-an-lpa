@@ -58,19 +58,20 @@
         </dd>
     </div>
 </dl>
-{% if not is_sirius_lpa(lpa.Uid) and lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-    <div class="govuk-grid-column-full govuk-inset-text">
-            <h3 class="govuk-heading-s">
-                {% trans %}Decisions to be made jointly{% endtrans %}
-            </h3>
 
-            <div class="govuk-grid-row restrictions-and-conditions-banner">
-                <div class="govuk-grid-column-full column-full-alt-1">
-                    <p class="govuk-body body-alt-1">
-                        {{ lpa.restrictionsAndConditions }}
-                    </p>
-                </div>
+{% if not is_sirius_lpa(lpa.Uid) and lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+    <div class="">
+        <h3 class="govuk-heading-s">
+            {% trans %}Decisions to be made jointly{% endtrans %}
+        </h3>
+
+        <div class="govuk-grid-row restrictions-and-conditions-banner">
+            <div class="govuk-grid-column-full column-full-alt-1">
+                <p class="govuk-body body-alt-1">
+                    {{ lpa.howAttorneysMakeDecisionsDetails }}
+                </p>
             </div>
+        </div>
     </div>
 {% endif %}
 
