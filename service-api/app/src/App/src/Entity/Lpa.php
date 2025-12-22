@@ -49,7 +49,6 @@ abstract class Lpa implements
         public readonly ?Person $donor,
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
-        public readonly ?string $howAttorneysMakeDecisionsDetails,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,
