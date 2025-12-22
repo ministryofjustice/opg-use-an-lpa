@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-12T08:13:55+00:00\n"
+"POT-Creation-Date: 2025-12-15T10:35:02+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -260,10 +260,10 @@ msgstr ""
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:38
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:77
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:36
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:26
 msgid "Continue"
 msgstr ""
@@ -315,7 +315,9 @@ msgstr ""
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:8
@@ -340,7 +342,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:26
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -359,7 +361,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -460,9 +462,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:33
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:63
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:44
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:30
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:53
 msgid "Cancel"
@@ -1759,7 +1761,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:31
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
 msgstr ""
 
@@ -4031,17 +4033,17 @@ msgstr ""
 msgid "LPA reference number this will be on any letters we’ve sent to the donor or attorneys"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:26
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:44
 msgid "date of birth of the person who the paper verification code was sent to"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:23
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:27
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:45
 msgid "number of attorneys named on the notice of registration"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:28
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:22
 msgid "name of 1 attorney named on the notice of registration"
@@ -4500,7 +4502,7 @@ msgid "Property and affairs"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:33
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:22
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:39
 msgid "Who the paper verification code was sent to"
 msgstr ""
@@ -4542,19 +4544,19 @@ msgstr ""
 msgid "We need some more details"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "health and welfare LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "property and finance LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
 msgid "Because the code you entered is a paper verification code, we need some further details:"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:32
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:36
 msgid "LPA reference numbers start with an M followed by 12 numbers.<br>For example, M-1234-1234-1234."
 msgstr ""
 
@@ -4582,7 +4584,7 @@ msgstr ""
 msgid "For example, 2"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
 msgid "An attorney"
 msgstr ""
 
@@ -4746,7 +4748,7 @@ msgstr[0] ""
 msgid "No active access codes"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:26
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:30
 msgid "Enter the attorney’s name as it appears on the notice of registration"
 msgstr ""
 
@@ -4758,11 +4760,11 @@ msgstr ""
 msgid "We cannot show the lasting power of attorney"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:15
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:19
 msgid "We’ve found %donorName%’s %lpaType%"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:21
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:25
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number - this will be on any letters we’ve sent to the donor or attorneys"
 msgstr ""
 
@@ -4774,10 +4776,26 @@ msgstr ""
 msgid "Enter an attorney’s name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:32
 msgid "The donor, %donorName%"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:14
 msgid "We cannot show %donorName%’s lasting power of attorney"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
+msgid "Your account contains duplicate LPAs"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:80
+msgid "You might find it easier to manage your account by removing duplicate LPAs."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:81
+msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:82
+msgid "Removing duplicate LPAs is optional."
 msgstr ""

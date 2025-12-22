@@ -52,7 +52,7 @@ Feature: Add an LPA
       | cyup—HWQR—echv         | CYUPHWQRECHV |
 
   @integration @ui @ff:paper_verification:true
-  Scenario Outline: The user can add a modernised LPA to their account
+  Scenario: The user can add a modernised LPA to their account
     Given I am on the add an LPA page
     When I request to add an LPA with valid details for a modernised LPA using E9YRUTPM6RLK
     Then The correct LPA is found and I can confirm to add it
