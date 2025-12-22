@@ -32,6 +32,15 @@
         </properties>
     </rule>
 
+    <rule ref="Squiz.Arrays.ArrayDeclaration">
+        <exclude name="Squiz.Arrays.ArrayDeclaration.KeyNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.CloseBraceNotAligned" />
+        <exclude name="Squiz.Arrays.ArrayDeclaration.CloseBraceNewLine" />
+    </rule>
+    <rule ref="Generic.Arrays.ArrayIndent"/>
+
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
@@ -41,30 +50,15 @@
     </rule>
 
     <!--
-        Sniffs provided by https://github.com/webimpress/coding-standard are good
-    -->
-
-    <rule ref="WebimpressCodingStandard.Arrays.TrailingArrayComma"/>
-    <rule ref="WebimpressCodingStandard.Arrays.Format"/>
-    <rule ref="WebimpressCodingStandard.Arrays.DoubleArrow">
-        <properties>
-            <property name="maxPadding" value="50"/>
-        </properties>
-    </rule>
-    <rule ref="WebimpressCodingStandard.Classes.TraitUsage"/>
-    <rule ref="WebimpressCodingStandard.Classes.AlphabeticallySortedTraits"/>
-    <rule ref="WebimpressCodingStandard.Formatting.StringClassReference"/>
-    <rule ref="WebimpressCodingStandard.PHP.DeclareStrictTypes"/>
-
-    <!--
         Sniffs provided by https://github.com/slevomat/coding-standard seem pretty good and cover most all our bases
     -->
 
     <!-- Slevomat FUNCTIONAL sniffs -->
     <rule ref="SlevomatCodingStandard.TypeHints.UselessConstantTypeHint" />
-    <rule ref="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat">
+    <rule ref="SlevomatCodingStandard.TypeHints.DNFTypeHintFormat">
         <properties>
-            <property name="withSpaces" value="no" />
+            <property name="withSpacesAroundOperators" value="no" />
+            <property name="withSpacesInsideParentheses" value="no" />
             <property name="shortNullable" value="yes" />
             <property name="nullPosition" value="last" />
         </properties>
@@ -75,6 +69,13 @@
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
     <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceEqualOperator" />
     <rule ref="SlevomatCodingStandard.Operators.DisallowEqualOperators" />
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+        <properties>
+            <property name="linesCountBeforeDeclare" value="1" />
+            <property name="spacesCountAroundEqualsSign" value="0" />
+        </properties>
+    </rule>
 
     <!-- Slevomat CLEANING sniffs -->
     <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure" />
@@ -94,6 +95,11 @@
     <rule ref="SlevomatCodingStandard.Classes.PropertyDeclaration" />
     <rule ref="SlevomatCodingStandard.Classes.PropertySpacing" />
     <rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration" />
+    <rule ref="SlevomatCodingStandard.Classes.TraitUseSpacing">
+        <properties>
+            <property name="linesCountBeforeFirstUseWhenFirstInClass" value="0" />
+        </properties>
+    </rule>
     <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
     <rule ref="SlevomatCodingStandard.Complexity.Cognitive">
         <properties>

@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -102,20 +103,21 @@ const (
 
 func main() {
 	var (
-		lpaStoreBaseURL   = os.Getenv("LPA_STORE_BASE_URL")
-		lpaStoreSecretARN = os.Getenv("LPA_STORE_SECRET_ARN")
-		codesTableARN     = os.Getenv("CODES_TABLE_ARN")
+		lpaStoreBaseURL                = os.Getenv("LPA_STORE_BASE_URL")
+		lpaStoreSecretARN              = os.Getenv("LPA_STORE_SECRET_ARN")
+		activationCodesTableARN        = os.Getenv("ACTIVATION_CODES_TABLE_ARN")
+		paperVerificationCodesTableARN = os.Getenv("PAPER_VERIFICATION_CODES_TABLE_ARN")
 	)
-	if (lpaStoreBaseURL == "" && lpaStoreSecretARN == "") == (codesTableARN == "") {
-		log.Fatal("set LPA_STORE_BASE_URL and LPA_STORE_SECRET_ARN for lpa-store seeding, or CODES_TABLE_ARN for codes seeding")
+	if (lpaStoreBaseURL == "" && lpaStoreSecretARN == "") == (paperVerificationCodesTableARN == "") {
+		log.Fatal("set LPA_STORE_BASE_URL and LPA_STORE_SECRET_ARN for lpa-store seeding, or ACTIVATION_CODES_TABLE_ARN and PAPER_VERIFICATION_CODES_TABLE_ARN for codes seeding")
 	}
 
-	if codesTableARN == "" {
+	if paperVerificationCodesTableARN == "" {
 		if err := runLpaStore(context.Background(), lpaStoreBaseURL, lpaStoreSecretARN); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		if err := runCodes(context.Background(), codesTableARN); err != nil {
+		if err := runCodes(context.Background(), activationCodesTableARN, paperVerificationCodesTableARN); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -183,7 +185,7 @@ func runLpaStore(ctx context.Context, lpaStoreBaseURL, lpaStoreSecretARN string)
 	return nil
 }
 
-func runCodes(ctx context.Context, codesTableARN string) error {
+func runCodes(ctx context.Context, activationCodesTableARN, paperVerificationCodesTableARN string) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
@@ -193,7 +195,22 @@ func runCodes(ctx context.Context, codesTableARN string) error {
 
 	_, err = dynamo.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
 		RequestItems: map[string][]types.WriteRequest{
-			codesTableARN: {
+			activationCodesTableARN: {
+				{PutRequest: &types.PutRequest{
+					Item: map[string]types.AttributeValue{
+						"code":              &types.AttributeValueMemberS{Value: "PAPERATORNEY"},
+						"active":            &types.AttributeValueMemberBOOL{Value: true},
+						"actor":             &types.AttributeValueMemberS{Value: attorneyUID},
+						"dob":               &types.AttributeValueMemberS{Value: "1982-07-24"},
+						"expiry_date":       &types.AttributeValueMemberN{Value: strconv.FormatInt(time.Now().AddDate(1, 0, 0).Unix(), 10)},
+						"generated_date":    &types.AttributeValueMemberS{Value: time.Now().Format(time.DateOnly)},
+						"last_updated_date": &types.AttributeValueMemberS{Value: time.Now().Format(time.DateOnly)},
+						"lpa":               &types.AttributeValueMemberS{Value: lpaUID},
+						"status_details":    &types.AttributeValueMemberS{Value: "Generated"},
+					},
+				}},
+			},
+			paperVerificationCodesTableARN: {
 				{PutRequest: &types.PutRequest{
 					Item: map[string]types.AttributeValue{
 						"PK":        &types.AttributeValueMemberS{Value: "PAPER#P-1234-1234-1234-12"},

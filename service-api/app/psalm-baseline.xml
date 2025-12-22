@@ -154,11 +154,6 @@
       <code><![CDATA[getFirstnames]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="src/App/src/Service/Lpa/AccessForAll/AddAccessForAllLpa.php">
-    <InvalidArgument>
-      <code><![CDATA[$lpa]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/App/src/Service/Lpa/FindActorInLpa.php">
     <UnusedVariable>
       <code><![CDATA[$actor]]></code>
@@ -180,16 +175,6 @@
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getId]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="src/App/src/Service/Lpa/RestrictSendingLpaForCleansing.php">
-    <InvalidMethodCall>
-      <code><![CDATA[getLpaIsCleansed]]></code>
-      <code><![CDATA[getRegistrationDate]]></code>
-      <code><![CDATA[getUid]]></code>
-    </InvalidMethodCall>
-    <MismatchingDocblockParamType>
-      <code><![CDATA[array]]></code>
-    </MismatchingDocblockParamType>
   </file>
   <file src="src/App/src/Service/Lpa/SiriusLpa.php">
     <InvalidReturnStatement>
