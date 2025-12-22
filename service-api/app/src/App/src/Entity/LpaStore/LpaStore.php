@@ -29,7 +29,6 @@ class LpaStore extends Lpa implements FindActorInLpaInterface
         string $channel,
         LpaStoreDonor $donor,
         ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
-        ?string $howAttorneysMakeDecisionsDetails,
         #[MapFrom('lifeSustainingTreatmentOption')]
         #[CastToLifeSustainingTreatment]
         ?LifeSustainingTreatment $lifeSustainingTreatment,
