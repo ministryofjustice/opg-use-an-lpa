@@ -181,7 +181,7 @@ module "lambda_backfill" {
   environment_variables = {
     REGION      = data.aws_region.current.region
     TABLE_NAME  = aws_dynamodb_table.use_users_table.arn
-    BUCKET_NAME = aws_s3_bucket.lambda_backfill.id
+    BUCKET_NAME = aws_s3_bucket.lambda_backfill[0].id
   }
   image_uri   = "${data.aws_ecr_repository.backfill.repository_url}@${data.aws_ecr_image.backfill.image_digest}"
   ecr_arn     = data.aws_ecr_repository.backfill.arn
@@ -195,16 +195,17 @@ resource "aws_iam_role_policy" "lambda_backfill" {
   count  = local.environment.deploy_backfill_lambda ? 1 : 0
   name   = "lambda-backfill-${local.environment_name}"
   role   = module.lambda_backfill[0].lambda_role.id
-  policy = data.aws_iam_policy_document.lambda_backfill.json
+  policy = data.aws_iam_policy_document.lambda_backfill[0].json
 }
 
 data "aws_iam_policy_document" "lambda_backfill" {
+  count = local.environment.deploy_backfill_lambda ? 1 : 0
   statement {
     sid    = "S3Bucket"
     effect = "Allow"
     resources = [
-      aws_s3_bucket.lambda_backfill.arn,
-      "${aws_s3_bucket.lambda_backfill.arn}/*",
+      aws_s3_bucket.lambda_backfill[0].arn,
+      "${aws_s3_bucket.lambda_backfill[0].arn}/*",
     ]
     actions = [
       "s3:GetObject",
@@ -227,11 +228,13 @@ data "aws_iam_policy_document" "lambda_backfill" {
 }
 
 resource "aws_s3_bucket" "lambda_backfill" {
+  count  = local.environment.deploy_backfill_lambda ? 1 : 0
   bucket = "opg-use-an-lpa-lambda-backfill-${local.environment_name}"
 }
 
 resource "aws_s3_bucket_public_access_block" "lambda_backfill" {
-  bucket = aws_s3_bucket.lambda_backfill.id
+  count  = local.environment.deploy_backfill_lambda ? 1 : 0
+  bucket = aws_s3_bucket.lambda_backfill[0].id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -240,27 +243,31 @@ resource "aws_s3_bucket_public_access_block" "lambda_backfill" {
 }
 
 resource "aws_s3_bucket_policy" "lambda_backfill" {
-  depends_on = [aws_s3_bucket_public_access_block.lambda_backfill]
-  bucket     = aws_s3_bucket.lambda_backfill.id
-  policy     = data.aws_iam_policy_document.lambda_backfill_bucket_policy.json
+  count      = local.environment.deploy_backfill_lambda ? 1 : 0
+  depends_on = [aws_s3_bucket_public_access_block.lambda_backfill[0]]
+  bucket     = aws_s3_bucket.lambda_backfill[0].id
+  policy     = data.aws_iam_policy_document.lambda_backfill_bucket_policy[0].json
 }
 
 data "aws_iam_policy_document" "lambda_backfill_bucket_policy" {
-  statement {
-    principals {
-      type        = "AWS"
-      identifiers = [module.lambda_backfill[0].lambda.arn]
-    }
-    actions = [
-      "s3:GetObject",
-      "s3:DeleteObject",
-      "s3:ListBucket",
-    ]
-    resources = [
-      aws_s3_bucket.lambda_backfill.arn,
-      "${aws_s3_bucket.lambda_backfill.arn}/*",
-    ]
-  }
+  count = local.environment.deploy_backfill_lambda ? 1 : 0
+
+  # statement {
+  #   principals {
+  #     type        = "AWS"
+  #     identifiers = [module.lambda_backfill[0].lambda.arn]
+  #   }
+  #   actions = [
+  #     "s3:GetObject",
+  #     "s3:DeleteObject",
+  #     "s3:ListBucket",
+  #   ]
+  #   resources = [
+  #     aws_s3_bucket.lambda_backfill[0].arn,
+  #     "${aws_s3_bucket.lambda_backfill[0].arn}/*",
+  #   ]
+  # }
+
 
   statement {
     principals {
@@ -271,8 +278,8 @@ data "aws_iam_policy_document" "lambda_backfill_bucket_policy" {
       "s3:ListBucket",
     ]
     resources = [
-      aws_s3_bucket.lambda_backfill.arn,
-      "${aws_s3_bucket.lambda_backfill.arn}/*",
+      aws_s3_bucket.lambda_backfill[0].arn,
+      "${aws_s3_bucket.lambda_backfill[0].arn}/*",
     ]
   }
 }
