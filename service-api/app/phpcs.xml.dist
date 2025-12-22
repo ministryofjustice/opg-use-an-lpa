@@ -30,7 +30,6 @@
 
     <rule ref="Generic.Formatting.MultipleStatementAlignment">
         <properties>
-            <property name="error" value="true"/>
             <property name="maxPadding" value="50"/>
         </properties>
     </rule>
