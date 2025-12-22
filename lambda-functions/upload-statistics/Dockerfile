@@ -1,4 +1,4 @@
-FROM python:3.13@sha256:4f0a2cdf177857c417201c6f6b0e0f26c8703e6c5b9c61e10158f8ed7198d58f AS build-image
+FROM python:3.14@sha256:492b292a9449d096aefe5b1399cc64de53359845754da3e4d2539402013c826b AS build-image
 
 # Copy function code
 RUN mkdir -p /app
@@ -11,7 +11,7 @@ RUN pip install \
     -r /app/requirements.txt
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.13-slim@sha256:326df678c20c78d465db501563f3492d17c42a4afe33a1f2bf5406a1d56b0e86
+FROM python:3.14-slim@sha256:2751cbe93751f0147bc1584be957c6dd4c5f977c3d4e0396b56456a9fd4ed137
 
 # Set working directory to function root directory
 WORKDIR /app
