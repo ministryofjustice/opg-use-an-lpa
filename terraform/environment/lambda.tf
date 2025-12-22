@@ -268,7 +268,6 @@ data "aws_iam_policy_document" "lambda_backfill_bucket_policy" {
   #   ]
   # }
 
-
   statement {
     principals {
       type        = "AWS"
