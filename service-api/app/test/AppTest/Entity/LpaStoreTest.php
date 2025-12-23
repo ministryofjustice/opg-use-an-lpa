@@ -54,7 +54,6 @@ class LpaStoreTest extends TestCase
                 uId:               '700000000012',
             ),
             howAttorneysMakeDecisions: null,
-            howAttorneysMakeDecisionsDetails: null,
             lifeSustainingTreatment: null,
             signedAt: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),
             registrationDate: new DateTimeImmutable('2024-4-18', new DateTimeZone('UTC')),

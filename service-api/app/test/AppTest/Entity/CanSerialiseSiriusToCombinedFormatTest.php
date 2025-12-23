@@ -84,7 +84,6 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
             ],
             'hasSeveranceWarning'               => null,
             'howAttorneysMakeDecisions'         => 'jointly-and-severally',
-            'howAttorneysMakeDecisionsDetails'  => null,
             'invalidDate'                       => null,
             'lifeSustainingTreatment'           => 'option-a',
             'lpaDonorSignatureDate'             => '2012-12-12T00:00:00Z',
