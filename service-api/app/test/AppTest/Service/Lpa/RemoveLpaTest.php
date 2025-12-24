@@ -456,6 +456,7 @@ class RemoveLpaTest extends TestCase
             caseAttorneyJointly:                       true,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           false,
+            howAttorneysMakeDecisionsDetails:          null,
             caseSubtype:                               LpaType::PERSONAL_WELFARE,
             channel:                                   null,
             dispatchDate:                              null,
