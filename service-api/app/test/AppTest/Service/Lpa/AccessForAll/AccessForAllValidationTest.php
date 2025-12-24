@@ -56,6 +56,7 @@ class AccessForAllValidationTest extends TestCase
             caseAttorneyJointly: true,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally: false,
+            howAttorneysMakeDecisionsDetails: null,
             caseSubtype:                LpaType::PERSONAL_WELFARE,
             channel:                    'online',
             dispatchDate:               null,

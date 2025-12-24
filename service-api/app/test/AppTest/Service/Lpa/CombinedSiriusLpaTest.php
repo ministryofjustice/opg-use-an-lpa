@@ -65,6 +65,7 @@ class CombinedSiriusLpaTest extends TestCase
             caseAttorneyJointly:                       false,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           true,
+            howAttorneysMakeDecisionsDetails:          null,
             caseSubtype:                               LpaType::PERSONAL_WELFARE,
             channel:                                   null,
             dispatchDate:                              null,
