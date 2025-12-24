@@ -51,7 +51,9 @@
                 {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
             {% elseif lpa.caseAttorneyJointlyAndSeverally %}
                 {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
-            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally and not is_sirius_lpa(lpa.Uid) %}
+                {% trans %}Jointly for some decisions, jointly and severally for others{% endtrans %}
+            {% else %}
                 {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
                     <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
             {% endif %}
