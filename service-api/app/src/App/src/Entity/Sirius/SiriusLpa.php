@@ -75,7 +75,7 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
             donor:                           $donor,
             hasSeveranceWarning:             $hasSeveranceWarning,
             howAttorneysMakeDecisions:       $howAttorneysMakeDecisions,
-            howAttorneysMakeDecisionsDetails: $howAttorneysMakeDecisionsDetails,
+            howAttorneysMakeDecisionsDetails: null,
             invalidDate:                     $invalidDate,
             lifeSustainingTreatment:         $lifeSustainingTreatment,
             lpaDonorSignatureDate:           $lpaDonorSignatureDate,
