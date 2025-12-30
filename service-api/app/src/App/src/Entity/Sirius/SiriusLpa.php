@@ -56,7 +56,6 @@ class SiriusLpa extends Lpa implements FindActorInLpaInterface, LpaAlreadyAddedI
         #[CastToWhenTheLpaCanBeUsed]
         ?WhenTheLpaCanBeUsed $whenTheLpaCanBeUsed,
         ?DateTimeImmutable $withdrawnDate,
-        ?string $howAttorneysMakeDecisionsDetails,
     ) {
         $howAttorneysMakeDecisions = HowAttorneysMakeDecisions::fromDiscreteBooleans(
             jointly:                    $caseAttorneyJointly ?? false,
