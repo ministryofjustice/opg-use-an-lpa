@@ -38,16 +38,14 @@
                     ) }}
 
                     <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
+                        <button data-prevent-double-click="true" type="submit"
+                                class="govuk-button moj-button-menu__item">{% trans %}Continue{% endtrans %}</button>
 
-                            <button data-prevent-double-click="true" type="submit" class="govuk-button moj-button-menu__item">{% trans %}Continue{% endtrans %}</button>
-
-                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
-                               class="govuk-button moj-button-menu__item govuk-button--secondary "
-                               data-module="govuk-button">
-                                {% trans %}Cancel{% endtrans %}
-                            </a>
-                        </div>
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item govuk-button--secondary "
+                           data-module="govuk-button">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
                     </div>
 
                     {{ govuk_form_close() }}

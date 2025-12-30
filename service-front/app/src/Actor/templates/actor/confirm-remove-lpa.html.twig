@@ -38,20 +38,16 @@
                     {{ govuk_form_element(form.get('actor_lpa_token')) }}
 
                     <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item  " data-module="govuk-button">
+                            {% trans %}Cancel{% endtrans %}
+                        </a>
 
-                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
-                               class="govuk-button moj-button-menu__item  " data-module="govuk-button">
-                                {% trans %}Cancel{% endtrans %}
-                            </a>
-
-                            <button data-prevent-double-click="true" type="submit" draggable="false"
-                                    class="govuk-button govuk-button--warning moj-button-menu__item govuk-button--secondary "
-                                    data-module="govuk-button">
-                                {% trans %}Yes, remove LPA{% endtrans %}
-                            </button>
-
-                        </div>
+                        <button data-prevent-double-click="true" type="submit" draggable="false"
+                                class="govuk-button govuk-button--warning moj-button-menu__item govuk-button--secondary "
+                                data-module="govuk-button">
+                            {% trans %}Yes, remove LPA{% endtrans %}
+                        </button>
                     </div>
 
                     {{ govuk_form_close() }}
