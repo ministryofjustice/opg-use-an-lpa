@@ -118,8 +118,7 @@ class AccountContext implements Context
     #[Then('I am signed in')]
     public function iAmSignedIn(): void
     {
-       // $this->ui->assertElementOnPage('nav.one-login-header');
-        $this->ui->assertElementOnPage('.one-login-header');
+        $this->ui->assertElementOnPage('nav.one-login-header__nav');
     }
 
     #[Then('the javascript is working')]
