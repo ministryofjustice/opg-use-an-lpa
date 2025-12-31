@@ -73,18 +73,16 @@
                     {{ include('@partials/contact-details/telephone.html.twig') }}
 
                     <div class="moj-button-menu">
-                        <div class="moj-button-menu__wrapper">
-                            <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
-                               draggable="false" class="govuk-button moj-button-menu__item  "
-                               data-module="govuk-button">
-                                {% trans %}Try again{% endtrans %}
-                            </a>
-                            <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
-                               class="govuk-button moj-button-menu__item govuk-button--secondary "
-                               data-module="govuk-button">
-                                {% trans %}Back to your LPAs{% endtrans %}
-                            </a>
-                        </div>
+                        <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
+                           draggable="false" class="govuk-button moj-button-menu__item  "
+                           data-module="govuk-button">
+                            {% trans %}Try again{% endtrans %}
+                        </a>
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
+                           class="govuk-button moj-button-menu__item govuk-button--secondary "
+                           data-module="govuk-button">
+                            {% trans %}Back to your LPAs{% endtrans %}
+                        </a>
                     </div>
                 </div>
             </div>

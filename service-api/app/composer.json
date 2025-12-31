@@ -80,9 +80,8 @@
         "rector/rector": "^2.1.2",
         "roave/security-advisories": "dev-master",
         "slevomat/coding-standard": "^8.19.1",
-        "squizlabs/php_codesniffer": "^3.13.2",
-        "vimeo/psalm": "^5.26.1",
-        "webimpress/coding-standard": "^1.4"
+        "squizlabs/php_codesniffer": "^4.0.0",
+        "vimeo/psalm": "^5.26.1"
     },
     "replace": {
         "laminas/laminas-cache-storage-adapter-apc": "*",

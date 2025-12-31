@@ -93,4 +93,5 @@ jobs:
           cd scripts/seed_lpas_and_codes
           go run -v main.go
         env:
-          CODES_TABLE_ARN: "arn:aws:dynamodb:eu-west-1:288342028542:table/data-lpa-codes-${{ (inputs.workspace == 'preproduction' || inputs.workspace == 'demo') && 'demo' || 'integration' }}"
+          ACTIVATION_CODES_TABLE_ARN: "arn:aws:dynamodb:eu-west-1:288342028542:table/lpa-codes-${{ (inputs.workspace == 'preproduction' || inputs.workspace == 'demo') && 'demo' || 'integration' }}"
+          PAPER_VERIFICATION_CODES_TABLE_ARN: "arn:aws:dynamodb:eu-west-1:288342028542:table/data-lpa-codes-${{ (inputs.workspace == 'preproduction' || inputs.workspace == 'demo') && 'demo' || 'integration' }}"
