@@ -65,7 +65,6 @@ class RestrictSendingLpaForCleansingTest extends TestCase
             caseAttorneyJointly:                       false,
             caseAttorneyJointlyAndJointlyAndSeverally: null,
             caseAttorneyJointlyAndSeverally:           true,
-            howAttorneysMakeDecisionsDetails:          null,
             caseSubtype:                               null,
             channel:                                   null,
             dispatchDate:                              null,
