@@ -88,18 +88,39 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'         => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true],
+                        [
+                            'id'           => 1,
+                            'firstname'    => 'A',
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 2,
+                            'firstname'    => 'A',
+                            'surname'      => 'B',
+                            'systemStatus' => false,
+                        ],
+                        [
+                            'id'           => 3,
+                            'firstname'    => 'A',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 4,
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 5,
+                            'systemStatus' => true,
+                        ],
                     ],
                     'trustCorporations' => [
                         new SiriusPerson(
                             [
-                             'id'           => 6,
-                             'companyName'  => 'XYZ Ltd',
-                             'systemStatus' => true,
+                                'id'           => 6,
+                                'companyName'  => 'XYZ Ltd',
+                                'systemStatus' => true,
                             ],
                             $this->loggerProphecy->reveal(),
                         ),
@@ -114,9 +135,22 @@ class SiriusLpaManagerTest extends TestCase
             new SiriusLpa(
                 [
                     'attorneys'         => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                        [
+                            'id'           => 1,
+                            'firstname'    => 'A',
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 3,
+                            'firstname'    => 'A',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 4,
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
                     ],
                     'trustCorporations' => [
                         new SiriusPerson(
@@ -490,8 +524,8 @@ class SiriusLpaManagerTest extends TestCase
             $t->lpaResults['uid-3'] = new Lpa(
                 new SiriusLpa(
                     [
-                       'status' => 'Registered',
-                        'uId'   => 'uid-3',
+                        'status' => 'Registered',
+                        'uId'    => 'uid-3',
                     ],
                     $this->loggerProphecy->reveal(),
                 ),
@@ -757,8 +791,8 @@ class SiriusLpaManagerTest extends TestCase
         //---
 
         $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
-            'ViewerCode' => $t->ViewerCode,
-            'SiriusUid'  => $t->SiriusUid,
+            'ViewerCode'   => $t->ViewerCode,
+            'SiriusUid'    => $t->SiriusUid,
             //'Expires' => $t->Expires,             <-- Expires is removed
             'Organisation' => $t->Organisation,
         ]);

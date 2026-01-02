@@ -32,7 +32,12 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_0_if_attorney_is_active(): void
     {
         $attorney = new SiriusPerson(
-            ['id' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
+            [
+                'id'           => 7,
+                'firstname'    => 'A',
+                'surname'      => 'B',
+                'systemStatus' => true,
+            ],
             $this->loggerProphecy->reveal(),
         );
 
@@ -102,7 +107,12 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_1_if_attorney_is_a_ghost(): void
     {
         $attorney = new SiriusPerson(
-            ['uId' => 7, 'firstname' => '', 'surname' => '', 'systemStatus' => true],
+            [
+                'uId'          => 7,
+                'firstname'    => '',
+                'surname'      => '',
+                'systemStatus' => true,
+            ],
             $this->loggerProphecy->reveal(),
         );
 
@@ -172,7 +182,12 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_2_if_attorney_is_inactive(): void
     {
         $attorney = new SiriusPerson(
-            ['uId' => 7, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false],
+            [
+                'uId'          => 7,
+                'firstname'    => 'A',
+                'surname'      => 'B',
+                'systemStatus' => false,
+            ],
             $this->loggerProphecy->reveal(),
         );
 

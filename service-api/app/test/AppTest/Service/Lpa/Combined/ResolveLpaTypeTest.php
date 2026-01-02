@@ -24,13 +24,28 @@ class ResolveLpaTypeTest extends TestCase
     public function it_correctly_splits_sirius_and_datastore_uids(): void
     {
         $lpaActorMaps = [
-            ['SiriusUid' => '700000000001', 'LpaUid' => 'M-A123-4567-8901'],
-            ['SiriusUid' => 'M-8000-0000-0002', 'LpaUid' => 'M-B123-4567-8901'],
-            ['SiriusUid' => '700000000003', 'LpaUid' => 'M-C123-4567-8901'],
-            ['SiriusUid' => 'M-6000-0000-0004', 'LpaUid' => 'M-D123-4567-8901'],
+            [
+                'SiriusUid' => '700000000001',
+                'LpaUid'    => 'M-A123-4567-8901',
+            ],
+            [
+                'SiriusUid' => 'M-8000-0000-0002',
+                'LpaUid'    => 'M-B123-4567-8901',
+            ],
+            [
+                'SiriusUid' => '700000000003',
+                'LpaUid'    => 'M-C123-4567-8901',
+            ],
+            [
+                'SiriusUid' => 'M-6000-0000-0004',
+                'LpaUid'    => 'M-D123-4567-8901',
+            ],
         ];
 
-        [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
+        [
+            $siriusUids,
+            $datastoreUids,
+        ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
         $this->assertEquals(['700000000001', '700000000003'], $siriusUids);
         $this->assertEquals(
@@ -54,7 +69,10 @@ class ResolveLpaTypeTest extends TestCase
             ['SiriusUid' => '700000000002'],
         ];
 
-        [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
+        [
+            $siriusUids,
+            $datastoreUids,
+        ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
         $this->assertEquals(['700000000001', '700000000002'], $siriusUids);
         $this->assertEmpty($datastoreUids);
@@ -64,11 +82,20 @@ class ResolveLpaTypeTest extends TestCase
     public function it_handles_only_datastore_uids(): void
     {
         $lpaActorMaps = [
-            ['SiriusUid' => 'M-8000-0000-0001', 'LpaUid' => 'M-A123-4567-8901'],
-            ['SiriusUid' => 'M-9000-0000-0002', 'LpaUid' => 'M-B123-4567-8901'],
+            [
+                'SiriusUid' => 'M-8000-0000-0001',
+                'LpaUid'    => 'M-A123-4567-8901',
+            ],
+            [
+                'SiriusUid' => 'M-9000-0000-0002',
+                'LpaUid'    => 'M-B123-4567-8901',
+            ],
         ];
 
-        [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
+        [
+            $siriusUids,
+            $datastoreUids,
+        ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
         $this->assertEmpty($siriusUids);
         $this->assertEquals(
@@ -85,7 +112,10 @@ class ResolveLpaTypeTest extends TestCase
     #[Test]
     public function it_handles_empty_input(): void
     {
-        [$siriusUids, $datastoreUids] = ($this->resolveLpaTypes)([]);
+        [
+            $siriusUids,
+            $datastoreUids,
+        ] = ($this->resolveLpaTypes)([]);
 
         $this->assertEmpty($siriusUids);
         $this->assertEmpty($datastoreUids);

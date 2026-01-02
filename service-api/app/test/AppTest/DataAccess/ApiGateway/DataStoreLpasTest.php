@@ -270,7 +270,11 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function can_lookup_multiple_lpas(): void
     {
-        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP', 'M-WILL-FAIL-HYDR'];
+        $uids         = [
+            'M-7890-0400-4000',
+            'M-789Q-X7DT-5PDP',
+            'M-WILL-FAIL-HYDR',
+        ];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -282,9 +286,18 @@ class DataStoreLpasTest extends TestCase
                 json_encode(
                     [
                         'lpas' => [
-                            ['uid' => 'M-7890-0400-4000', 'registrationDate' => '2022-02-16'],
-                            ['uid' => 'M-789Q-X7DT-5PDP', 'registrationDate' => null],
-                            ['uid' => 'M-WILL-FAIL-HYDR', 'registrationDate' => null],
+                            [
+                                'uid'              => 'M-7890-0400-4000',
+                                'registrationDate' => '2022-02-16',
+                            ],
+                            [
+                                'uid'              => 'M-789Q-X7DT-5PDP',
+                                'registrationDate' => null,
+                            ],
+                            [
+                                'uid'              => 'M-WILL-FAIL-HYDR',
+                                'registrationDate' => null,
+                            ],
                         ],
                     ]
                 )
@@ -354,7 +367,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_response_error_during_multiple_lpa_lookup(): void
     {
-        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP'];
+        $uids         = [
+            'M-7890-0400-4000',
+            'M-789Q-X7DT-5PDP',
+        ];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -457,7 +473,10 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function it_deals_with_a_client_error_for_multiple_lpa_fetches(): void
     {
-        $uids         = ['M-7890-0400-4000', 'M-789Q-X7DT-5PDP'];
+        $uids         = [
+            'M-7890-0400-4000',
+            'M-789Q-X7DT-5PDP',
+        ];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';

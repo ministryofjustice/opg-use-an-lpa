@@ -38,7 +38,10 @@ class CodeValidateTest extends TestCase
             'expiresAt' => $expiry->format(DateTimeInterface::ATOM),
         ];
 
-        return [$sut, $expected];
+        return [
+            $sut,
+            $expected,
+        ];
     }
 
     #[Test]
@@ -55,7 +58,10 @@ class CodeValidateTest extends TestCase
     #[Test]
     public function it_serialises_as_expected(): void
     {
-        [$sut, $expected] = $this->makeSut();
+        [
+            $sut,
+            $expected,
+        ] = $this->makeSut();
 
         self::assertSame($expected, $sut->jsonSerialize());
     }
