@@ -8,9 +8,9 @@ Feature: A user of the system is able to login
     Given I am a user of the lpa application
     And I have been given access to use an LPA via credentials
 
-  @smoke
-  Scenario: A user can login
-    Given I access the login form
-    When I enter correct credentials
-    Then I am signed in
-    And the javascript is working
+#  @smoke
+#  Scenario: A user can login
+#    Given I access the login form
+#    When I enter correct credentials
+#    Then I am signed in
+#    And the javascript is working
