@@ -146,8 +146,8 @@ abstract class Lpa implements
 
     abstract public function getDonor(): Person;
 
-    public function getHowAttorneysMakeDecisionsDetails(): string
-    {
-        return $this->howAttorneysMakeDecisionsDetails ?? '';
-    }
+//    public function getHowAttorneysMakeDecisionsDetails(): string
+//    {
+//        return $this->howAttorneysMakeDecisionsDetails ?? '';
+//    }
 }
