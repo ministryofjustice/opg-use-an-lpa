@@ -31,11 +31,17 @@ class FindActorInLpa
         $actor = null;
         $role  = null;
 
-        [$actor, $role] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa->getUid());
+        [
+            $actor,
+            $role,
+        ] = $this->findAttorneyDetails($lpa->getAttorneys(), $matchData, $lpa->getUid());
 
         // If not an attorney, check if they're the donor.
         if ($actor === null) {
-            [$actor, $role] = $this->checkDonorDetails($lpa->getDonor(), $matchData);
+            [
+                $actor,
+                $role,
+            ] = $this->checkDonorDetails($lpa->getDonor(), $matchData);
         }
 
         if ($actor === null) {
@@ -46,7 +52,7 @@ class FindActorInLpa
     }
 
     private function checkForAttorneyMatch(
-        GetAttorneyStatusInterface & ActorMatchingInterface $attorney,
+        GetAttorneyStatusInterface&ActorMatchingInterface $attorney,
         array $matchData,
         string $lpaId,
     ): array {
@@ -59,42 +65,66 @@ class FindActorInLpa
                 ]
             );
 
-            return [null, null];
+            return [
+                null,
+                null,
+            ];
         }
 
         $actorMatchResponse = $this->checkForActorMatch($attorney, $matchData);
 
         if ($actorMatchResponse === self::MATCH) {
-            return [$attorney, 'attorney'];
+            return [
+                $attorney,
+                'attorney',
+            ];
         }
 
-        return [null, null];
+        return [
+            null,
+            null,
+        ];
     }
 
     private function checkDonorDetails(
-        GetAttorneyStatusInterface & ActorMatchingInterface $donor,
+        GetAttorneyStatusInterface&ActorMatchingInterface $donor,
         array $matchData,
     ): array {
         $donorMatchResponse = $this->checkForActorMatch($donor, $matchData);
 
         if ($donorMatchResponse === self::MATCH) {
-            return [$donor, 'donor'];
+            return [
+                $donor,
+                'donor',
+            ];
         }
 
-        return [null, null];
+        return [
+            null,
+            null,
+        ];
     }
 
     private function findAttorneyDetails(array $attorneys, array $matchData, string $lpaId): array
     {
         foreach ($attorneys as $attorney) {
-            [$actor, $role] = $this->checkForAttorneyMatch($attorney, $matchData, $lpaId);
+            [
+                $actor,
+                $role,
+            ] = $this->checkForAttorneyMatch($attorney, $matchData, $lpaId);
 
             if ($actor !== null) {
-                return [$actor, $role];
+                return [
+                    $actor,
+                    $role,
+                ];
             }
         }
 
-        return [null, null];
+        return [
+            null,
+            null,
+        ];
     }
 
     /**

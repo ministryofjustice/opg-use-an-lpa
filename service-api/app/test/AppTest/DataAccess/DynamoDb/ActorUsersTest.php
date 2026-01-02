@@ -356,22 +356,22 @@ class ActorUsersTest extends TestCase
             ->transactWriteItems([
                 'TransactItems' => [
                     [
-        'Delete' => [
-                        'TableName' => self::TABLE_NAME,
-                        'Key'       => ['Id' => ['S' => $id]],
-                    ],
-                    ],
-                    [
-                    'Delete' => [
-                        'TableName' => self::TABLE_NAME,
-                        'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
-                    ],
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => ['Id' => ['S' => $id]],
+                        ],
                     ],
                     [
-                    'Delete' => [
-                        'TableName' => self::TABLE_NAME,
-                        'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
+                        ],
                     ],
+                    [
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                        ],
                     ],
                 ],
             ])
@@ -447,22 +447,22 @@ class ActorUsersTest extends TestCase
             ->transactWriteItems([
                 'TransactItems' => [
                     [
-        'Delete' => [
-                        'TableName' => 'users-table',
-                        'Key'       => ['Id' => ['S' => $id]],
-                    ],
-                    ],
-                    [
-                    'Delete' => [
-                        'TableName' => 'users-table',
-                        'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
-                    ],
+                        'Delete' => [
+                            'TableName' => 'users-table',
+                            'Key'       => ['Id' => ['S' => $id]],
+                        ],
                     ],
                     [
-                    'Delete' => [
-                        'TableName' => 'users-table',
-                        'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                        'Delete' => [
+                            'TableName' => 'users-table',
+                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
+                        ],
                     ],
+                    [
+                        'Delete' => [
+                            'TableName' => 'users-table',
+                            'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
+                        ],
                     ],
                 ],
             ])
@@ -481,33 +481,33 @@ class ActorUsersTest extends TestCase
             ->transactWriteItems([
                 'TransactItems' => [
                     [
-        'Update' => [
-                        'TableName'                 => self::TABLE_NAME,
-                        'Key'                       => ['Id' => ['S' => 'fakeId']],
-                        'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-                        'ExpressionAttributeValues' => [
-                            ':p' => [
-                                'S' => 'newemail@example.com',
+                        'Update' => [
+                            'TableName'                 => self::TABLE_NAME,
+                            'Key'                       => ['Id' => ['S' => 'fakeId']],
+                            'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                            'ExpressionAttributeValues' => [
+                                ':p' => [
+                                    'S' => 'newemail@example.com',
+                                ],
                             ],
                         ],
                     ],
-                    ],
                     [
-                    'Delete' => [
-                        'TableName' => self::TABLE_NAME,
-                        'Key'       => [
-                            'Id' => ['S' => 'EMAIL#oldemail@example.com'],
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => [
+                                'Id' => ['S' => 'EMAIL#oldemail@example.com'],
+                            ],
                         ],
                     ],
-                    ],
                     [
-                    'Put' => [
-                        'TableName'           => self::TABLE_NAME,
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'EMAIL#newemail@example.com'],
+                        'Put' => [
+                            'TableName'           => self::TABLE_NAME,
+                            'ConditionExpression' => 'attribute_not_exists(Id)',
+                            'Item'                => [
+                                'Id' => ['S' => 'EMAIL#newemail@example.com'],
+                            ],
                         ],
-                    ],
                     ],
                 ],
             ])->shouldBeCalled();
@@ -536,27 +536,27 @@ class ActorUsersTest extends TestCase
             ->transactWriteItems([
                 'TransactItems' => [
                     [
-        'Update' => [
-                        'TableName'                 => 'users-table',
-                        'Key'                       => ['Id' => ['S' => $id]],
-                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
+                        'Update' => [
+                            'TableName'                 => 'users-table',
+                            'Key'                       => ['Id' => ['S' => $id]],
+                            'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
                             . 'PasswordResetExpiry, NeedsReset',
-                        'ExpressionAttributeValues' => [
-                            ':sub' => ['S' => $identity],
+                            'ExpressionAttributeValues' => [
+                                ':sub' => ['S' => $identity],
+                            ],
+                            'ExpressionAttributeNames'  => [
+                                '#sub' => 'Identity',
+                            ],
                         ],
-                        'ExpressionAttributeNames'  => [
-                            '#sub' => 'Identity',
-                        ],
-                    ],
                     ],
                     [
-                    'Put' => [
-                        'TableName'           => 'users-table',
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'IDENTITY#' . $identity],
+                        'Put' => [
+                            'TableName'           => 'users-table',
+                            'ConditionExpression' => 'attribute_not_exists(Id)',
+                            'Item'                => [
+                                'Id' => ['S' => 'IDENTITY#' . $identity],
+                            ],
                         ],
-                    ],
                     ],
                 ],
             ])
@@ -564,7 +564,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), 'users-table');
 
-        $user = $actorRepo->migrateToOAuth(['Id' =>  $id], $identity);
+        $user = $actorRepo->migrateToOAuth(['Id' => $id], $identity);
 
         $this->assertEquals($id, $user['Id']);
         $this->assertEquals($identity, $user['Identity']);

@@ -15,15 +15,16 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodesTest extends TestCase
 {
     use GenerateAwsResultTrait;
     use ProphecyTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    private const TABLE_NAME = 'test-table-name';
 
-    private $dynamoDbClientProphecy;
+    private ObjectProphecy|DynamoDbClient $dynamoDbClientProphecy;
 
     protected function setUp(): void
     {
@@ -52,18 +53,18 @@ class ViewerCodesTest extends TestCase
         )
             ->willReturn(
                 $this->createAWSResult([
-                                           'Item' => [
-                                               'ViewerCode' => [
-                                                   'S' => $testCode,
-                                               ],
-                                               'SiriusUid'  => [
-                                                   'S' => '123456789012',
-                                               ],
-                                               'Expires'    => [
-                                                   'S' => '2019-01-01 12:34:56',
-                                               ],
-                                           ],
-                                       ])
+                    'Item' => [
+                        'ViewerCode' => [
+                            'S' => $testCode,
+                        ],
+                        'SiriusUid'  => [
+                            'S' => '123456789012',
+                        ],
+                        'Expires'    => [
+                            'S' => '2019-01-01 12:34:56',
+                        ],
+                    ],
+                ])
             );
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -134,15 +135,15 @@ class ViewerCodesTest extends TestCase
         )
             ->willReturn(
                 $this->createAWSResult([
-                                           'Items' => [
-                                               [
-                                                   'SiriusUid' => [
-                                                       'S' => $testSiriusUid,
-                                                   ],
-                                               ],
-                                           ],
-                                           'Count' => 1,
-                                       ])
+                    'Items' => [
+                        [
+                            'SiriusUid' => [
+                                'S' => $testSiriusUid,
+                            ],
+                        ],
+                    ],
+                    'Count' => 1,
+                ])
             );
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
@@ -175,9 +176,9 @@ class ViewerCodesTest extends TestCase
         )
             ->willReturn(
                 $this->createAWSResult([
-                                           'Items' => [],
-                                           'Count' => 0,
-                                       ])
+                    'Items' => [],
+                    'Count' => 0,
+                ])
             );
 
         $repo = new ViewerCodes($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);

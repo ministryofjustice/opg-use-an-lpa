@@ -41,38 +41,33 @@ class ConfigProvider
         return [
             'aliases'    => [
                 // PSR20
-                Psr\Clock\ClockInterface::class => Service\InternalClock::class,
+                Psr\Clock\ClockInterface::class                                        => Service\InternalClock::class,
 
                 // PSR17
-                Psr\Http\Message\RequestFactoryInterface::class => GuzzleHttp\Psr7\HttpFactory::class,
-                Psr\Http\Message\StreamFactoryInterface::class  => GuzzleHttp\Psr7\HttpFactory::class,
+                Psr\Http\Message\RequestFactoryInterface::class                        => GuzzleHttp\Psr7\HttpFactory::class,
+                Psr\Http\Message\StreamFactoryInterface::class                         => GuzzleHttp\Psr7\HttpFactory::class,
 
                 // allows scalar value setting on the container at runtime.
-                Service\Container\ModifiableContainerInterface::class
-                    => Service\Container\PhpDiModifiableContainer::class,
+                Service\Container\ModifiableContainerInterface::class                  => Service\Container\PhpDiModifiableContainer::class,
 
                 // Data Access
-                DataAccess\Repository\ActorUsersInterface::class => DataAccess\DynamoDb\ActorUsers::class,
-                DataAccess\Repository\ViewerCodeActivityInterface::class
-                    => DataAccess\DynamoDb\ViewerCodeActivity::class,
-                DataAccess\Repository\ViewerCodesInterface::class     => DataAccess\DynamoDb\ViewerCodes::class,
-                DataAccess\Repository\UserLpaActorMapInterface::class => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class            => DataAccess\ApiGateway\SiriusLpas::class,
-                DataAccess\Repository\RequestLetterInterface::class   => DataAccess\ApiGateway\SiriusLpas::class,
-                DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class
-                    => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
-                DataAccess\Repository\PaperVerificationCodesInterface::class
-                    => DataAccess\ApiGateway\PaperVerificationCodes::class,
+                DataAccess\Repository\ActorUsersInterface::class                       => DataAccess\DynamoDb\ActorUsers::class,
+                DataAccess\Repository\ViewerCodeActivityInterface::class               => DataAccess\DynamoDb\ViewerCodeActivity::class,
+                DataAccess\Repository\ViewerCodesInterface::class                      => DataAccess\DynamoDb\ViewerCodes::class,
+                DataAccess\Repository\UserLpaActorMapInterface::class                  => DataAccess\DynamoDb\UserLpaActorMap::class,
+                DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\RequestLetterInterface::class                    => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
+                DataAccess\Repository\PaperVerificationCodesInterface::class           => DataAccess\ApiGateway\PaperVerificationCodes::class,
 
                 // One Login
-                Facile\OpenIDClient\Issuer\IssuerBuilderInterface::class
-                    => Facile\OpenIDClient\Issuer\IssuerBuilder::class,
+                Facile\OpenIDClient\Issuer\IssuerBuilderInterface::class               => Facile\OpenIDClient\Issuer\IssuerBuilder::class,
 
                 // System messages
-                Service\SystemMessage\SystemMessageService::class => Service\SystemMessage\SystemMessage::class,
+                Service\SystemMessage\SystemMessageService::class                      => Service\SystemMessage\SystemMessage::class,
 
                 // Secrets
-                Service\Secrets\SecretManagerInterface::class => Service\Secrets\LpaDataStoreSecretManager::class,
+                Service\Secrets\SecretManagerInterface::class                          => Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'autowires'  => [
                 // these two Managers need explicitly autowiring so that they're recognised
@@ -82,48 +77,44 @@ class ConfigProvider
             ],
             'factories'  => [
                 // PSR18
-                Psr\Http\Client\ClientInterface::class => Service\ApiClient\ClientFactory::class,
+                Psr\Http\Client\ClientInterface::class                        => Service\ApiClient\ClientFactory::class,
 
                 // Services
-                Aws\Sdk::class                                 => Service\Aws\SdkFactory::class,
-                Aws\DynamoDb\DynamoDbClient::class             => Service\Aws\DynamoDbClientFactory::class,
-                Aws\EventBridge\EventBridgeClient::class       => Service\Aws\EventBridgeClientFactory::class,
-                Aws\SecretsManager\SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
-                Aws\Ssm\SsmClient::class                       => Service\Aws\SSMClientFactory::class,
-                Service\Email\EmailClient::class               => Service\Email\EmailClientFactory::class,
-                Service\SystemMessage\SystemMessage::class     => Service\SystemMessage\SystemMessageFactory::class,
-                Service\Features\FeatureEnabled::class         => Service\Features\FeatureEnabledFactory::class,
-                Service\Lpa\LpaManagerInterface::class         => Service\Lpa\LpaManagerFactory::class,
+                Aws\Sdk::class                                                => Service\Aws\SdkFactory::class,
+                Aws\DynamoDb\DynamoDbClient::class                            => Service\Aws\DynamoDbClientFactory::class,
+                Aws\EventBridge\EventBridgeClient::class                      => Service\Aws\EventBridgeClientFactory::class,
+                Aws\SecretsManager\SecretsManagerClient::class                => Service\Aws\SecretsManagerFactory::class,
+                Aws\Ssm\SsmClient::class                                      => Service\Aws\SSMClientFactory::class,
+                Service\Email\EmailClient::class                              => Service\Email\EmailClientFactory::class,
+                Service\SystemMessage\SystemMessage::class                    => Service\SystemMessage\SystemMessageFactory::class,
+                Service\Features\FeatureEnabled::class                        => Service\Features\FeatureEnabledFactory::class,
+                Service\Lpa\LpaManagerInterface::class                        => Service\Lpa\LpaManagerFactory::class,
 
                 // Data Access
-                DataAccess\DynamoDb\ActorUsers::class         => DataAccess\DynamoDb\ActorUsersFactory::class,
-                DataAccess\DynamoDb\ViewerCodeActivity::class => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
-                DataAccess\DynamoDb\ViewerCodes::class        => DataAccess\DynamoDb\ViewerCodesFactory::class,
-                DataAccess\DynamoDb\UserLpaActorMap::class    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
-                DataAccess\ApiGateway\SiriusLpas::class       => DataAccess\ApiGateway\SiriusLpasFactory::class,
-                DataAccess\ApiGateway\DataStoreLpas::class    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
-                DataAccess\ApiGateway\InstructionsAndPreferencesImages::class
-                    => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
-                DataAccess\ApiGateway\PaperVerificationCodes::class
-                    => DataAccess\ApiGateway\PaperVerificationCodesFactory::class,
+                DataAccess\DynamoDb\ActorUsers::class                         => DataAccess\DynamoDb\ActorUsersFactory::class,
+                DataAccess\DynamoDb\ViewerCodeActivity::class                 => DataAccess\DynamoDb\ViewerCodeActivityFactory::class,
+                DataAccess\DynamoDb\ViewerCodes::class                        => DataAccess\DynamoDb\ViewerCodesFactory::class,
+                DataAccess\DynamoDb\UserLpaActorMap::class                    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
+                DataAccess\ApiGateway\SiriusLpas::class                       => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\ApiGateway\DataStoreLpas::class                    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
+                DataAccess\ApiGateway\InstructionsAndPreferencesImages::class => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
+                DataAccess\ApiGateway\PaperVerificationCodes::class           => DataAccess\ApiGateway\PaperVerificationCodesFactory::class,
 
                 // Code Validation
-                Service\ActorCodes\CodeValidationStrategyInterface::class
-                    => Service\ActorCodes\CodeValidationStrategyFactory::class,
-                DataAccess\ApiGateway\ActorCodes::class => DataAccess\ApiGateway\ActorCodesFactory::class,
+                Service\ActorCodes\CodeValidationStrategyInterface::class     => Service\ActorCodes\CodeValidationStrategyFactory::class,
+                DataAccess\ApiGateway\ActorCodes::class                       => DataAccess\ApiGateway\ActorCodesFactory::class,
 
                 // Reflection Based Object Hydrations
-                'definition_provider_without_key_conversion'
-                    => Service\Hydration\WithoutConversionDefinitionProviderFactory::class,
-                'request_object_mapper' => Middleware\RequestObject\RequestObjectMapperFactory::class,
+                'definition_provider_without_key_conversion'                  => Service\Hydration\WithoutConversionDefinitionProviderFactory::class,
+                'request_object_mapper'                                       => Middleware\RequestObject\RequestObjectMapperFactory::class,
 
                 // Handlers
-                Middleware\RequestObject\RequestParser::class => Middleware\RequestObject\RequestParserFactory::class,
-                Handler\HealthcheckHandler::class             => Handler\Factory\HealthcheckHandlerFactory::class,
+                Middleware\RequestObject\RequestParser::class                 => Middleware\RequestObject\RequestParserFactory::class,
+                Handler\HealthcheckHandler::class                             => Handler\Factory\HealthcheckHandlerFactory::class,
 
                 // One Login
                 Service\Authentication\AuthorisationClientManager::class
-                    => Service\Authentication\AuthorisationClientManagerFactory::class,
+                                                                              => Service\Authentication\AuthorisationClientManagerFactory::class,
             ],
             'delegators' => [
                 Laminas\Stratigility\Middleware\ErrorHandler::class   => [

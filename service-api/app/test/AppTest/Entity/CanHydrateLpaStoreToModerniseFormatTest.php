@@ -66,7 +66,7 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     town:        'Mahhhhhhhhhh',
                     uId:         '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d'
                 ),
-                                       ],
+            ],
             caseSubtype:               LpaType::PERSONAL_WELFARE,
             channel:                   'online',
             donor:                     new LpaStoreDonor(
@@ -108,7 +108,7 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                     town:        'Town',
                     uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ),
-                                       ],
+            ],
             uId:                       'M-7890-0400-4000',
             updatedAt:                 new DateTimeImmutable('2024-01-12T23:00:00Z'),
             whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
