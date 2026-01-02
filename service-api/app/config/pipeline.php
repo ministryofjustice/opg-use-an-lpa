@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @psalm-suppress UnusedClosureParam
- */
-
 declare(strict_types=1);
 
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -23,6 +19,9 @@ use App\Middleware\Logging\RequestTracingMiddleware;
 use App\Middleware\ProblemDetailsMiddleware;
 use App\Middleware\UserIdentificationMiddleware;
 
+/**
+ * @psalm-suppress UnusedClosureParam
+ */
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
