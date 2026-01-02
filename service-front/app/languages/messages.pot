@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-12T08:13:55+00:00\n"
+"POT-Creation-Date: 2025-12-23T08:19:31+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -182,7 +182,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
 #: src/Common/templates/partials/header/default.html.twig:41
 msgid "Sign out"
 msgstr ""
@@ -260,10 +260,10 @@ msgstr ""
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:38
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:77
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:36
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:26
 msgid "Continue"
 msgstr ""
@@ -315,7 +315,9 @@ msgstr ""
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:8
@@ -460,9 +462,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:33
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:63
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:44
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:30
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:53
 msgid "Cancel"
@@ -750,7 +752,7 @@ msgid "Add your first LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/partials/footer.html.twig:36
+#: src/Common/templates/partials/footer.html.twig:56
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
@@ -1148,7 +1150,7 @@ msgid "Yes, cancel code"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:26
+#: src/Common/templates/partials/footer.html.twig:46
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:10
 msgid "Privacy notice"
 msgstr ""
@@ -1759,7 +1761,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:31
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
 msgstr ""
 
@@ -2306,7 +2308,7 @@ msgid "Activation keys are 13 letters and numbers long and start with a C<br/>Fo
 msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
 #: src/Common/templates/partials/header/default.html.twig:39
 msgid "Settings"
 msgstr ""
@@ -3046,7 +3048,7 @@ msgid "Sign in"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:21
+#: src/Common/templates/partials/footer.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
 msgid "Terms of use"
 msgstr ""
@@ -3297,7 +3299,7 @@ msgid "You should hear from us or get the activation key letter by %dueDate%. If
 msgstr ""
 
 #: src/Common/templates/common/cookies.html.twig:17
-#: src/Common/templates/partials/footer.html.twig:31
+#: src/Common/templates/partials/footer.html.twig:51
 msgid "Cookies"
 msgstr ""
 
@@ -3426,7 +3428,7 @@ msgid "Save changes"
 msgstr ""
 
 #: src/Common/templates/common/contact-us.html.twig:13
-#: src/Common/templates/partials/footer.html.twig:41
+#: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
 msgstr ""
 
@@ -3481,7 +3483,7 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:43
+#: src/Common/templates/layout/default.html.twig:44
 msgid "Skip to main content"
 msgstr ""
 
@@ -3834,31 +3836,31 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
-#: src/Common/templates/partials/header/one-login.html.twig:30
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
 #: src/Common/templates/partials/header/default.html.twig:31
 msgid "Last signed in:"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
 #: src/Common/templates/partials/header/default.html.twig:33
 msgid "Never"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
 #: src/Common/templates/partials/header/default.html.twig:40
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:37
 msgid "Show GOV.UK One Login menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:38
 msgid "Hide GOV.UK One Login menu"
 msgstr ""
 
@@ -3878,23 +3880,19 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:120
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
 msgid "%service_name% menu"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:17
+#: src/Common/templates/partials/footer.html.twig:37
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:46
+#: src/Common/templates/partials/footer.html.twig:66
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:56
-msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:65
+#: src/Common/templates/partials/footer.html.twig:80
 msgid "© Crown copyright"
 msgstr ""
 
@@ -4031,17 +4029,17 @@ msgstr ""
 msgid "LPA reference number this will be on any letters we’ve sent to the donor or attorneys"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:26
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:44
 msgid "date of birth of the person who the paper verification code was sent to"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:23
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:27
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:45
 msgid "number of attorneys named on the notice of registration"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:28
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:22
 msgid "name of 1 attorney named on the notice of registration"
@@ -4500,7 +4498,7 @@ msgid "Property and affairs"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:33
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:22
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:39
 msgid "Who the paper verification code was sent to"
 msgstr ""
@@ -4542,19 +4540,19 @@ msgstr ""
 msgid "We need some more details"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "health and welfare LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "property and finance LPA"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
 msgid "Because the code you entered is a paper verification code, we need some further details:"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:32
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:36
 msgid "LPA reference numbers start with an M followed by 12 numbers.<br>For example, M-1234-1234-1234."
 msgstr ""
 
@@ -4582,7 +4580,7 @@ msgstr ""
 msgid "For example, 2"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
 msgid "An attorney"
 msgstr ""
 
@@ -4746,7 +4744,7 @@ msgstr[0] ""
 msgid "No active access codes"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:26
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:30
 msgid "Enter the attorney’s name as it appears on the notice of registration"
 msgstr ""
 
@@ -4758,11 +4756,11 @@ msgstr ""
 msgid "We cannot show the lasting power of attorney"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:15
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:19
 msgid "We’ve found %donorName%’s %lpaType%"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:21
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:25
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number - this will be on any letters we’ve sent to the donor or attorneys"
 msgstr ""
 
@@ -4774,10 +4772,14 @@ msgstr ""
 msgid "Enter an attorney’s name"
 msgstr ""
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:32
 msgid "The donor, %donorName%"
 msgstr ""
 
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:14
 msgid "We cannot show %donorName%’s lasting power of attorney"
+msgstr ""
+
+#: src/Common/templates/partials/footer.html.twig:76
+msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated"
 msgstr ""
