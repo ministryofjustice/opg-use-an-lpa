@@ -47,8 +47,14 @@ class SystemMessageTest extends TestCase
     {
         $mockResponse = [
             'Parameters' => [
-                ['Name' => '/system-message/use/en', 'Value' => 'English usage message'],
-                ['Name' => '/system-message/use/cy', 'Value' => 'Welsh usage message'],
+                [
+                    'Name'  => '/system-message/use/en',
+                    'Value' => 'English usage message',
+                ],
+                [
+                    'Name'  => '/system-message/use/cy',
+                    'Value' => 'Welsh usage message',
+                ],
             ],
         ];
 
@@ -74,8 +80,14 @@ class SystemMessageTest extends TestCase
     {
         $mockResponse = [
             'Parameters' => [
-                ['Name' => '/system-message/use/en', 'Value' => ' '],
-                ['Name' => '/system-message/use/cy', 'Value' => ' '],
+                [
+                    'Name'  => '/system-message/use/en',
+                    'Value' => ' ',
+                ],
+                [
+                    'Name'  => '/system-message/use/cy',
+                    'Value' => ' ',
+                ],
             ],
         ];
 

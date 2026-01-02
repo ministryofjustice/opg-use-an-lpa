@@ -355,7 +355,10 @@ class ActorCodesTest extends TestCase
         $this->generatePSR17Prophecies(
             $this->prophesize(ResponseInterface::class)->reveal(),
             'test-trace-id',
-            ['lpa' => 'test-lpa-id', 'actor' => 'test-actor-id'],
+            [
+                'lpa'   => 'test-lpa-id',
+                'actor' => 'test-actor-id',
+            ],
         );
 
         $this->requestFactoryProphecy
@@ -392,7 +395,10 @@ class ActorCodesTest extends TestCase
         $this->generatePSR17Prophecies(
             $responseProphecy->reveal(),
             'test-trace-id',
-            ['lpa' => 'test-lpa-id', 'actor' => 'test-actor-id'],
+            [
+                'lpa'   => 'test-lpa-id',
+                'actor' => 'test-actor-id',
+            ],
         );
 
         $this->requestFactoryProphecy

@@ -11,15 +11,16 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class ViewerCodeActivityTest extends TestCase
 {
     use GenerateAwsResultTrait;
     use ProphecyTrait;
 
-    const TABLE_NAME = 'test-table-name';
+    private const TABLE_NAME = 'test-table-name';
 
-    private $dynamoDbClient;
+    private ObjectProphecy|DynamoDbClient $dynamoDbClient;
 
     protected function setUp(): void
     {
@@ -71,7 +72,7 @@ class ViewerCodeActivityTest extends TestCase
         $testCodes = [
             0 => [
                 'ViewerCode' => 'RT6Y98VEF7A2',
-                ],
+            ],
         ];
 
         $this->dynamoDbClient->query(Argument::that(function (array $data) use ($testCodes) {

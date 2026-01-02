@@ -55,8 +55,14 @@ class SystemMessageFactoryTest extends TestCase
         $systemMessageFactory = new SystemMessageFactory();
 
         $valueMap = [
-          ['config', ['environment_name' => '']],
-          [SsmClient::class, $this->ssmClient],
+            [
+                'config',
+                ['environment_name' => ''],
+            ],
+            [
+                SsmClient::class,
+                $this->ssmClient,
+            ],
         ];
 
         $this->container->method('get')->willReturnMap($valueMap);
@@ -80,8 +86,14 @@ class SystemMessageFactoryTest extends TestCase
         $systemMessageFactory = new SystemMessageFactory();
 
         $valueMap = [
-            ['config', ['environment_name' => 'production']],
-            [SsmClient::class, $this->ssmClient],
+            [
+                'config',
+                ['environment_name' => 'production'],
+            ],
+            [
+                SsmClient::class,
+                $this->ssmClient,
+            ],
         ];
 
         $this->container->method('get')->willReturnMap($valueMap);

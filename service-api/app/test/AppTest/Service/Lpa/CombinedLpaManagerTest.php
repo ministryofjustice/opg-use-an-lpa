@@ -276,11 +276,32 @@ class CombinedLpaManagerTest extends TestCase
             $this->loadTestSiriusLpaFixture(
                 overwrite: [
                     'attorneys'         => [
-                        ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 2, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => false], // not active
-                        ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                        ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
-                        ['id' => 5, 'systemStatus' => true], // ghost
+                        [
+                            'id'           => 1,
+                            'firstname'    => 'A',
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 2,
+                            'firstname'    => 'A',
+                            'surname'      => 'B',
+                            'systemStatus' => false,
+                        ], // not active
+                        [
+                            'id'           => 3,
+                            'firstname'    => 'A',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 4,
+                            'surname'      => 'B',
+                            'systemStatus' => true,
+                        ],
+                        [
+                            'id'           => 5,
+                            'systemStatus' => true,
+                        ], // ghost
                     ],
                     'trustCorporations' => [
                         [
@@ -297,9 +318,22 @@ class CombinedLpaManagerTest extends TestCase
         $filteredLpa = $this->loadTestSiriusLpaFixture(
             overwrite: [
                 'attorneys'         => [
-                    ['id' => 1, 'firstname' => 'A', 'surname' => 'B', 'systemStatus' => true],
-                    ['id' => 3, 'firstname' => 'A', 'systemStatus' => true],
-                    ['id' => 4, 'surname' => 'B', 'systemStatus' => true],
+                    [
+                        'id'           => 1,
+                        'firstname'    => 'A',
+                        'surname'      => 'B',
+                        'systemStatus' => true,
+                    ],
+                    [
+                        'id'           => 3,
+                        'firstname'    => 'A',
+                        'systemStatus' => true,
+                    ],
+                    [
+                        'id'           => 4,
+                        'surname'      => 'B',
+                        'systemStatus' => true,
+                    ],
                 ],
                 'trustCorporations' => [
                     [
@@ -694,8 +728,8 @@ class CombinedLpaManagerTest extends TestCase
             ->get('code')
             ->willReturn(
                 [
-                    'ViewerCode' => 'code',
-                    'SiriusUid'  => $siriusLpaResponse->getData()->uId,
+                    'ViewerCode'   => 'code',
+                    'SiriusUid'    => $siriusLpaResponse->getData()->uId,
                     //'Expires'    => new DateTimeImmutable('+1 hour'), <- Expires is removed
                     'Organisation' => 'bank',
                 ]

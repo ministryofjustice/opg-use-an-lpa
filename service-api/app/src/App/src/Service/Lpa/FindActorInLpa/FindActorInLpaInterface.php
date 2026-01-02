@@ -14,7 +14,7 @@ interface FindActorInLpaInterface
     /** @return array<GetAttorneyStatusInterface & ActorMatchingInterface> */
     public function getAttorneys(): array;
 
-    public function getDonor(): GetAttorneyStatusInterface & ActorMatchingInterface;
+    public function getDonor(): GetAttorneyStatusInterface&ActorMatchingInterface;
 
     public function getUid(): string;
 }
