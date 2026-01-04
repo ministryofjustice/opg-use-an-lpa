@@ -67,7 +67,6 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
             ],
             'hasSeveranceWarning'              => null,
             'howAttorneysMakeDecisions'        => 'jointly',
-            'howAttorneysMakeDecisionsDetails' => null,
             'invalidDate'                      => null,
             'lifeSustainingTreatment'          => 'option-a',
             'lpaDonorSignatureDate'            => '2024-01-10T23:00:00Z',

@@ -65,7 +65,7 @@ class LpaStore extends Lpa implements FindActorInLpaInterface
             donor:                            $donor,
             hasSeveranceWarning:              null,
             howAttorneysMakeDecisions:        $howAttorneysMakeDecisions,
-            //howAttorneysMakeDecisionsDetails: $howAttorneysMakeDecisionsDetails,
+            howAttorneysMakeDecisionsDetails: $howAttorneysMakeDecisionsDetails,
             invalidDate:                      null,
             lifeSustainingTreatment:          $lifeSustainingTreatment,
             lpaDonorSignatureDate:            $signedAt,
