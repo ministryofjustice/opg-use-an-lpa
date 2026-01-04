@@ -176,6 +176,7 @@ class IsValidLpaTest extends TestCase
             caseAttorneyJointly:                       true,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           false,
+           // howAttorneysMakeDecisionsDetails:          null,
             caseSubtype:                               null,
             channel:                                   null,
             dispatchDate:                              null,
