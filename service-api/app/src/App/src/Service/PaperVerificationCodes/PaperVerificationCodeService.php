@@ -311,7 +311,10 @@ class PaperVerificationCodeService
         $nameParts = explode(' ', $name);
         $lastName  = array_pop($nameParts);
 
-        return ['first_names' => implode(' ', $nameParts), 'last_name' => $lastName];
+        return [
+            'first_names' => implode(' ', $nameParts),
+            'last_name'   => $lastName,
+        ];
     }
 
     /**

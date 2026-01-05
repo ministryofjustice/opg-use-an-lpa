@@ -55,14 +55,14 @@ class CacheFactoryTest extends TestCase
 
         // Mocking the scenario where all required types are supported with allowed values
         $capabilitiesPropecy->getSupportedDatatypes()->willReturn([
-                                                                      'string'  => true,
-                                                                      'integer' => true,
-                                                                      'double'  => true,
-                                                                      'boolean' => true,
-                                                                      'NULL'    => true,
-                                                                      'array'   => true,
-                                                                      'object'  => true,
-                                                                  ]);
+            'string'  => true,
+            'integer' => true,
+            'double'  => true,
+            'boolean' => true,
+            'NULL'    => true,
+            'array'   => true,
+            'object'  => true,
+        ]);
 
         $capabilitiesPropecy->getMaxKeyLength()->willReturn(128);
         $capabilitiesPropecy->getStaticTtl()->willReturn(true);

@@ -239,7 +239,10 @@ class CombinedLpaManager implements LpaManagerInterface
      */
     private function lookupLpa(array $lpaActorMap, string $originatorId): ?LpaInterface
     {
-        [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)([$lpaActorMap]);
+        [
+            $siriusUids,
+            $dataStoreUids,
+        ] = ($this->resolveLpaTypes)([$lpaActorMap]);
 
         return count($siriusUids) > 0
             ? $this->siriusLpas->get($siriusUids[0])
@@ -255,7 +258,10 @@ class CombinedLpaManager implements LpaManagerInterface
      */
     private function lookupLpas(array $lpaActorMaps, string $originatorId): array
     {
-        [$siriusUids, $dataStoreUids] = ($this->resolveLpaTypes)($lpaActorMaps);
+        [
+            $siriusUids,
+            $dataStoreUids,
+        ] = ($this->resolveLpaTypes)($lpaActorMaps);
 
         $siriusLpas = count($siriusUids) > 0
             ? $this->siriusLpas->lookup($siriusUids)

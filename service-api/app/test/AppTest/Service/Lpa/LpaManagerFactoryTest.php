@@ -24,8 +24,14 @@ class LpaManagerFactoryTest extends TestCase
         $mockContainer->method('get')
             ->willReturnMap(
                 [
-                    [FeatureEnabled::class, $mockFeatureEnabled],
-                    [SiriusLpaManager::class, $this->createMock(SiriusLpaManager::class)],
+                    [
+                        FeatureEnabled::class,
+                        $mockFeatureEnabled,
+                    ],
+                    [
+                        SiriusLpaManager::class,
+                        $this->createMock(SiriusLpaManager::class),
+                    ],
                 ]
             );
 
@@ -46,8 +52,14 @@ class LpaManagerFactoryTest extends TestCase
         $mockContainer->method('get')
             ->willReturnMap(
                 [
-                    [FeatureEnabled::class, $mockFeatureEnabled],
-                    [CombinedLpaManager::class, $this->createMock(CombinedLpaManager::class)],
+                    [
+                        FeatureEnabled::class,
+                        $mockFeatureEnabled,
+                    ],
+                    [
+                        CombinedLpaManager::class,
+                        $this->createMock(CombinedLpaManager::class),
+                    ],
                 ]
             );
 

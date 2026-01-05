@@ -43,9 +43,15 @@ class RemoveLpaTest extends TestCase
     private string $actorLpaToken;
     private Lpa $lpa;
     private string $lpaUid;
+
+    /** @var array<mixed> $deletedData */
     private array $deletedData;
+
+    /** @var array<mixed> $deletedData */
     private array $userActorLpa;
     private string $userId;
+
+    /** @var array<mixed> $deletedData */
     private array $viewerCodes;
 
     public function setUp(): void

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
+use App\Entity\Sirius\SiriusLpa as SiriusLpaEntity;
 use App\Service\Lpa\IsValidLpa;
 use App\Service\Lpa\SiriusLpa;
 use PHPUnit\Framework\Attributes\Test;
@@ -91,7 +92,7 @@ class IsValidLpaTest extends TestCase
     #[Test]
     public function check_if_lpa_valid_when_status_registered_combined_format(): void
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
+        $lpa = new SiriusLpaEntity(
             applicationHasGuidance:                    null,
             applicationHasRestrictions:                null,
             applicationType:                           null,
@@ -129,7 +130,7 @@ class IsValidLpaTest extends TestCase
     #[Test]
     public function check_if_lpa_valid_when_status_cancelled_combined_format(): void
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
+        $lpa = new SiriusLpaEntity(
             applicationHasGuidance:                    null,
             applicationHasRestrictions:                null,
             applicationType:                           null,
@@ -167,7 +168,7 @@ class IsValidLpaTest extends TestCase
     #[Test]
     public function check_if_lpa_valid_when_status_other_than_registered_or_cancelled_combined_format(): void
     {
-        $lpa = new \App\Entity\Sirius\SiriusLpa(
+        $lpa = new SiriusLpaEntity(
             applicationHasGuidance:                    null,
             applicationHasRestrictions:                null,
             applicationType:                           null,

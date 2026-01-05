@@ -60,7 +60,11 @@ class UserService
             ]
         );
 
-        return ['Id' => $id, 'Email' => $email, 'Identity' => $identity];
+        return [
+            'Id'       => $id,
+            'Email'    => $email,
+            'Identity' => $identity,
+        ];
     }
 
     /**
