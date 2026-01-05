@@ -122,16 +122,12 @@ class AccountContext implements Context
 //        $this->ui->assertPageContainsText('GOV.UK One Login');
 //        $this->ui->assertPageContainsText('Sign out');
 
-        $element = $this->ui
-            ->getMink()
-            ->getSession()
-            ->getPage()
-            ->find('css', 'nav.one-login-header__nav');
+        $url = $this->ui->getSession()->getDriver()->getCurrentUrl();
 
-        if ($element === null) {
+        if ($url !== null) {
             throw new ExpectationException(
-                'Html tag not found: nav.one-login-header__nav',
-                $this->ui->getMink()->getSession()->getDriver()
+                sprintf('Current page is "%s" ', $url),
+                $this->ui->getSession()->getDriver()
             );
         }
     }
