@@ -120,7 +120,7 @@ class AccountContext implements Context
     {
         //$this->ui->assertElementOnPage('nav.one-login-header__nav');
         $url = $this->ui->getSession()->getCurrentUrl();
-        var_dump($url);
+        throw new ExpectationException('Current URL: ', $url);
 
         //$this->ui->assertPageContainsText('GOV.UK One Login');
         //$this->ui->assertPageContainsText('Sign out');
