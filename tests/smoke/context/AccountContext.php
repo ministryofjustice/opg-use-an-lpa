@@ -119,11 +119,21 @@ class AccountContext implements Context
     public function iAmSignedIn(): void
     {
         //$this->ui->assertElementOnPage('nav.one-login-header__nav');
-        $url = $this->ui->getSession()->getCurrentUrl();
-        throw new ExpectationException('Current URL: ', $url);
+//        $this->ui->assertPageContainsText('GOV.UK One Login');
+//        $this->ui->assertPageContainsText('Sign out');
 
-        //$this->ui->assertPageContainsText('GOV.UK One Login');
-        //$this->ui->assertPageContainsText('Sign out');
+        $element = $this->ui
+            ->getMink()
+            ->getSession()
+            ->getPage()
+            ->find('css', 'nav.one-login-header__nav');
+
+        if ($element === null) {
+            throw new ExpectationException(
+                'Html tag not found: nav.one-login-header__nav',
+                $this->ui->getMink()->getSession()->getDriver()
+            );
+        }
     }
 
     #[Then('the javascript is working')]
