@@ -118,18 +118,7 @@ class AccountContext implements Context
     #[Then('I am signed in')]
     public function iAmSignedIn(): void
     {
-        //$this->ui->assertElementOnPage('nav.one-login-header__nav');
-//        $this->ui->assertPageContainsText('GOV.UK One Login');
-//        $this->ui->assertPageContainsText('Sign out');
-
-        $url = $this->ui->getSession()->getDriver()->getCurrentUrl();
-
-        if ($url !== null) {
-            throw new ExpectationException(
-                sprintf('Current page is "%s" ', $url),
-                $this->ui->getSession()->getDriver()
-            );
-        }
+        $this->ui->assertElementOnPage('nav.one-login-header__nav');
     }
 
     #[Then('the javascript is working')]
