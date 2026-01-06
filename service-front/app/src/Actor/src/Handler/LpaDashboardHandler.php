@@ -59,11 +59,11 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             return $hasCodes || array_shift($lpa)->activeCodeCount > 0;
         }, false);
 
-        $hasDuplicates = array_reduce($lpas->getArrayCopy(), function ($duplicate, $lpaArray) {
-            $uids = array_map(fn ($lpa) => $lpa->lpa->getUId(), $lpaArray);
-
-            return $duplicate || count($uids) !== count(array_flip($uids));
-        }, false);
+//        $hasDuplicates = array_reduce($lpas->getArrayCopy(), function ($duplicate, $lpaArray) {
+//            $uids = array_map(fn ($lpa) => $lpa->lpa->getUId(), $lpaArray);
+//
+//            return $duplicate || count($uids) !== count(array_flip($uids));
+//        }, false);
 
         $totalLpas = array_sum(array_map('count', $lpas->getArrayCopy())) ?? 0;
 
@@ -73,7 +73,7 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
             'user'               => $user,
             'lpas'               => $lpas,
             'has_active_codes'   => $hasActiveCodes,
-            'has_duplicate_lpas' => $hasDuplicates,
+            'has_duplicate_lpas' => true,
             'flash'              => $flash,
             'total_lpas'         => $totalLpas,
             'en_message'         => $systemMessages['use/en'] ?? null,
