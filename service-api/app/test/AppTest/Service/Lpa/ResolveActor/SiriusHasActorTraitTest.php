@@ -39,7 +39,16 @@ class SiriusHasActorTraitTest extends TestCase
                     [
                         'id'     => 1,
                         'uId'    => '123456789',
-                        'linked' => [['id' => 1, 'uId' => '123456789'], ['id' => 2, 'uId' => '234567890']],
+                        'linked' => [
+                            [
+                                'id'  => 1,
+                                'uId' => '123456789',
+                            ],
+                            [
+                                'id'  => 2,
+                                'uId' => '234567890',
+                            ],
+                        ],
                     ],
                     $this->logger,
                 );
@@ -49,15 +58,30 @@ class SiriusHasActorTraitTest extends TestCase
             {
                 return [
                     new SiriusPerson(
-                        ['id' => 3, 'uId' => '345678901', 'firstname' => 'A', 'surname' => 'B'],
+                        [
+                            'id'        => 3,
+                            'uId'       => '345678901',
+                            'firstname' => 'A',
+                            'surname'   => 'B',
+                        ],
                         $this->logger,
                     ),
                     new SiriusPerson(
-                        ['id' => 4, 'uId' => '456789012', 'firstname' => 'B', 'surname' => 'C'],
+                        [
+                            'id'        => 4,
+                            'uId'       => '456789012',
+                            'firstname' => 'B',
+                            'surname'   => 'C',
+                        ],
                         $this->logger,
                     ),
                     new SiriusPerson(
-                        ['id' => 5, 'uId' => '567890123', 'firstname' => 'C', 'surname' => 'D'],
+                        [
+                            'id'        => 5,
+                            'uId'       => '567890123',
+                            'firstname' => 'C',
+                            'surname'   => 'D',
+                        ],
                         $this->logger,
                     ),
                 ];
@@ -67,11 +91,19 @@ class SiriusHasActorTraitTest extends TestCase
             {
                 return [
                     new SiriusPerson(
-                        ['id' => 6, 'uId' => '678901234', 'companyName' => 'A'],
+                        [
+                            'id'          => 6,
+                            'uId'         => '678901234',
+                            'companyName' => 'A',
+                        ],
                         $this->logger,
                     ),
                     new SiriusPerson(
-                        ['id' => 7, 'uId' => '789012345', 'companyName' => 'B'],
+                        [
+                            'id'          => 7,
+                            'uId'         => '789012345',
+                            'companyName' => 'B',
+                        ],
                         $this->logger,
                     ),
                 ];

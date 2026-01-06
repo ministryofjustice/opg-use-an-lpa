@@ -385,11 +385,11 @@ class AddAccessForAllLpaTest extends TestCase
                 firstname:    'Donor',
                 id:           '7',
                 linked:       [
-                                  [
-                                      'id'  => 7,
-                                      'uId' => '700000000799',
-                                  ],
-                              ],
+                    [
+                        'id'  => 7,
+                        'uId' => '700000000799',
+                    ],
+                ],
                 middlenames:  'Example',
                 otherNames:   null,
                 postcode:     'DN37 5SH',

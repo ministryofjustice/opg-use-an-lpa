@@ -47,7 +47,10 @@ class OidcUtilities
             ],
         );
 
-        [$private, $public] = self::generateKeyPair(
+        [
+            $private,
+            $public,
+        ] = self::generateKeyPair(
             [
                 'curve_name'       => 'prime256v1',
                 'private_key_type' => OPENSSL_KEYTYPE_EC,
@@ -85,7 +88,10 @@ class OidcUtilities
             ],
         );
 
-        [$private, $public] = self::generateKeyPair(
+        [
+            $private,
+            $public,
+        ] = self::generateKeyPair(
             [
                 'curve_name'       => 'prime256v1',
                 'private_key_type' => OPENSSL_KEYTYPE_EC,
@@ -126,7 +132,10 @@ class OidcUtilities
         }
 
         /** @var array{string, string} */
-        return [$privateKey, $details['key']];
+        return [
+            $privateKey,
+            $details['key'],
+        ];
     }
 
     /**

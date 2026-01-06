@@ -48,6 +48,9 @@ class ResolveLpaTypes
             })
         );
 
-        return [$siriusUids, $dataStoreUids];
+        return [
+            $siriusUids,
+            $dataStoreUids,
+        ];
     }
 }

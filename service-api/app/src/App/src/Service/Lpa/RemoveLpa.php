@@ -47,7 +47,10 @@ class RemoveLpa
         if ($userId !== $userActorLpa['UserId']) {
             $this->logger->notice(
                 'User Id {userId} passed does not match the user in userActorLpaMap for actor token {actorToken}',
-                ['userId' => $userId, 'actorToken' => $token]
+                [
+                    'userId'     => $userId,
+                    'actorToken' => $token,
+                ]
             );
             throw new NotFoundException(
                 'User Id passed does not match the user in userActorLpaMap for token - ' . $token

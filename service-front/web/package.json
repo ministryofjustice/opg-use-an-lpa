@@ -28,7 +28,7 @@
     "babel-jest": "^29.2.2",
     "core-js": "^3.26.0",
     "es6-promise": "^4.2.8",
-    "esbuild": "0.27.1",
+    "esbuild": "0.27.2",
     "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
@@ -43,7 +43,7 @@
   "dependencies": {
     "@babel/runtime": "7.28.4",
     "@jest/globals": "^29.6.4",
-    "@ministryofjustice/frontend": "2.2.5",
+    "@ministryofjustice/frontend": "7.1.1",
     "govuk-frontend": "^5.3.1",
     "perfume.js": "^6.4.0"
   },

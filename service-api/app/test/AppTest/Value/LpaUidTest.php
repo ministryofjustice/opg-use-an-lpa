@@ -25,9 +25,21 @@ class LpaUidTest extends TestCase
     public static function lpaData(): array
     {
         return [
-            'sirius type'                => ['700000000047', '700000000047', LpaSource::SIRIUS],
-            'lpa store type'             => ['M-7890-0400-4000', 'M-7890-0400-4000', LpaSource::LPASTORE],
-            'lpa store type unformatted' => ['M789004004000', 'M-7890-0400-4000', LpaSource::LPASTORE],
+            'sirius type'                => [
+                '700000000047',
+                '700000000047',
+                LpaSource::SIRIUS,
+            ],
+            'lpa store type'             => [
+                'M-7890-0400-4000',
+                'M-7890-0400-4000',
+                LpaSource::LPASTORE,
+            ],
+            'lpa store type unformatted' => [
+                'M789004004000',
+                'M-7890-0400-4000',
+                LpaSource::LPASTORE,
+            ],
         ];
     }
 }

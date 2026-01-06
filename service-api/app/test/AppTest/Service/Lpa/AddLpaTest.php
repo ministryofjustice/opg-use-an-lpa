@@ -66,9 +66,9 @@ class AddLpaTest extends TestCase
         try {
             $this->addLpa()->validateAddLpaData(
                 [
-                'actor-code' => $this->actorCode,
-                'uid'        => $this->lpaUid,
-                'dob'        => $this->dob,
+                    'actor-code' => $this->actorCode,
+                    'uid'        => $this->lpaUid,
+                    'dob'        => $this->dob,
                 ],
                 $this->userId
             );
@@ -259,9 +259,9 @@ class AddLpaTest extends TestCase
 
         $lpaData = $this->addLpa()->validateAddLpaData(
             [
-                    'actor-code' => $this->actorCode,
-                    'uid'        => $this->lpaUid,
-                    'dob'        => $this->dob,
+                'actor-code' => $this->actorCode,
+                'uid'        => $this->lpaUid,
+                'dob'        => $this->dob,
             ],
             $this->userId
         );

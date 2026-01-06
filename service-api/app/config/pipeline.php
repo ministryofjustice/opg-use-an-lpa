@@ -22,7 +22,6 @@ use App\Middleware\UserIdentificationMiddleware;
 /**
  * @psalm-suppress UnusedClosureParam
  */
-
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.

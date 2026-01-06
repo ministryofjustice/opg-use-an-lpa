@@ -26,13 +26,19 @@ class ViewCodeTest extends TestCase
             'source' => LpaSource::LPASTORE,
             'lpa'    => $lpa,
         ];
-        return [$sut, $expected];
+        return [
+            $sut,
+            $expected,
+        ];
     }
 
     #[Test]
     public function test_properties_are_assigned(): void
     {
-        [$sut, $expected] = $this->makeSut();
+        [
+            $sut,
+            $expected,
+        ] = $this->makeSut();
         self::assertSame(LpaSource::LPASTORE, $sut->lpaSource);
         self::assertSame($expected['lpa'], $sut->lpa);
     }
@@ -40,7 +46,10 @@ class ViewCodeTest extends TestCase
     #[Test]
     public function it_serialises_as_expected(): void
     {
-        [$sut, $expected] = $this->makeSut();
+        [
+            $sut,
+            $expected,
+        ] = $this->makeSut();
         self::assertSame($expected, $sut->jsonSerialize());
     }
 }

@@ -92,8 +92,8 @@ class FilterActiveActorsTest extends TestCase
             applicationHasRestrictions:                false,
             applicationType:                           'Classic',
             attorneys:                                 [
-                                                           $this->attorney,
-                                                       ],
+                $this->attorney,
+            ],
             caseAttorneyJointly:                       true,
             caseAttorneyJointlyAndJointlyAndSeverally: false,
             caseAttorneyJointlyAndSeverally:           false,
@@ -111,15 +111,15 @@ class FilterActiveActorsTest extends TestCase
                 firstname:    'Rachel',
                 id:           '123456789',
                 linked:       [
-                                 [
-                                     'id'  => '123456789',
-                                     'uId' => '7123456789',
-                                 ],
-                                 [
-                                     'id'  => '234567890',
-                                     'uId' => '7234567890',
-                                 ],
-                             ],
+                    [
+                        'id'  => '123456789',
+                        'uId' => '7123456789',
+                    ],
+                    [
+                        'id'  => '234567890',
+                        'uId' => '7234567890',
+                    ],
+                ],
                 middlenames:  null,
                 otherNames:   null,
                 postcode:     'DN37 5SH',
@@ -141,8 +141,8 @@ class FilterActiveActorsTest extends TestCase
             status:                                    'Registered',
             statusDate:                                null,
             trustCorporations:                         [
-                                                           $this->trustCorporation,
-                                                       ],
+                $this->trustCorporation,
+            ],
             uId:                                       '700000000047',
             whenTheLpaCanBeUsed:                       null,
             withdrawnDate:                             null

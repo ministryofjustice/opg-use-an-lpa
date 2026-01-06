@@ -18,8 +18,8 @@ class LinkedDonorCaster implements PropertyCaster
 
         foreach ($value as $linked) {
             $linkedDonors[] = [
-               'id'  => $linked['id'],
-               'uId' => str_replace('-', '', $linked['uId']),
+                'id'  => $linked['id'],
+                'uId' => str_replace('-', '', $linked['uId']),
             ];
         }
 

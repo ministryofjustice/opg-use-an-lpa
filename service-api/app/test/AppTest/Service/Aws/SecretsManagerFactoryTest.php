@@ -23,8 +23,8 @@ class SecretsManagerFactoryTest extends TestCase
 
         $containerProphecy->get(Sdk::class)
             ->willReturn(new Sdk([
-                 'region'  => 'eu-west-1',
-                 'version' => 'latest',
+                'region'  => 'eu-west-1',
+                'version' => 'latest',
             ]));
 
         $factory = new SecretsManagerFactory();
