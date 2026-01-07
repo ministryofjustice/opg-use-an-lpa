@@ -65,3 +65,9 @@ Feature: The user is able to see correct information on their dashboard
     Given A system message is not set
     When I am on the dashboard page
     Then I cannot see the message System Message Use English
+
+  @ui
+  Scenario: As a user I am informed if duplicate LPAs are in my account
+    Given I have added a duplicate LPA to my account
+    When I am on the dashboard page
+    Then I am told that I have duplicate LPAs in my account

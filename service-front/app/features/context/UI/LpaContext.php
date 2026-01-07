@@ -470,7 +470,15 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('You have 2 LPAs in your account');
     }
 
+    #[Then('/^I am told that I have duplicate LPAs in my account$/')]
+    public function iAmToldThatIHaveDuplicateLPAsInMyAccount(): void
+    {
+        $this->ui->assertElementOnPage('div.moj-alert--information');
+        $this->ui->assertPageContainsText('Your account contains duplicate LPAs');
+    }
+
     #[Given('/^I have added an additional LPA to my account$/')]
+    #[Given('/^I have added a duplicate LPA to my account$/')]
     public function iHaveAdded2LPAsToMyAccount(): void
     {
         for ($x = 0; $x < 2; $x++) {
