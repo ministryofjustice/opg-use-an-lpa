@@ -1,7 +1,11 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2025-12-24T12:33:36+00:00\n"
+=======
+"POT-Creation-Date: 2025-12-23T08:19:31+00:00\n"
+>>>>>>> 2888a033e (UML-3993 Update to "new" GOV•UK styles (#3520))
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -182,7 +186,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
 #: src/Common/templates/partials/header/default.html.twig:41
 msgid "Sign out"
 msgstr ""
@@ -752,7 +756,7 @@ msgid "Add your first LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/partials/footer.html.twig:36
+#: src/Common/templates/partials/footer.html.twig:56
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
@@ -1150,7 +1154,7 @@ msgid "Yes, cancel code"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:26
+#: src/Common/templates/partials/footer.html.twig:46
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:10
 msgid "Privacy notice"
 msgstr ""
@@ -2308,7 +2312,7 @@ msgid "Activation keys are 13 letters and numbers long and start with a C<br/>Fo
 msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
 #: src/Common/templates/partials/header/default.html.twig:39
 msgid "Settings"
 msgstr ""
@@ -3048,7 +3052,7 @@ msgid "Sign in"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:21
+#: src/Common/templates/partials/footer.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
 msgid "Terms of use"
 msgstr ""
@@ -3299,7 +3303,7 @@ msgid "You should hear from us or get the activation key letter by %dueDate%. If
 msgstr ""
 
 #: src/Common/templates/common/cookies.html.twig:17
-#: src/Common/templates/partials/footer.html.twig:31
+#: src/Common/templates/partials/footer.html.twig:51
 msgid "Cookies"
 msgstr ""
 
@@ -3428,7 +3432,7 @@ msgid "Save changes"
 msgstr ""
 
 #: src/Common/templates/common/contact-us.html.twig:13
-#: src/Common/templates/partials/footer.html.twig:41
+#: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
 msgstr ""
 
@@ -3483,7 +3487,7 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:43
+#: src/Common/templates/layout/default.html.twig:44
 msgid "Skip to main content"
 msgstr ""
 
@@ -3836,31 +3840,31 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
-#: src/Common/templates/partials/header/one-login.html.twig:30
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
 #: src/Common/templates/partials/header/default.html.twig:31
 msgid "Last signed in:"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
 #: src/Common/templates/partials/header/default.html.twig:33
 msgid "Never"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
 #: src/Common/templates/partials/header/default.html.twig:40
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:37
 msgid "Show GOV.UK One Login menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:38
 msgid "Hide GOV.UK One Login menu"
 msgstr ""
 
@@ -3880,23 +3884,19 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:120
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
 msgid "%service_name% menu"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:17
+#: src/Common/templates/partials/footer.html.twig:37
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:46
+#: src/Common/templates/partials/footer.html.twig:66
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:56
-msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:65
+#: src/Common/templates/partials/footer.html.twig:80
 msgid "© Crown copyright"
 msgstr ""
 
@@ -4784,10 +4784,15 @@ msgstr ""
 msgid "We cannot show %donorName%’s lasting power of attorney"
 msgstr ""
 
+<<<<<<< HEAD
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
 msgid "Jointly for some decisions, jointly and severally for others"
+=======
+#: src/Common/templates/partials/footer.html.twig:76
+msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated"
+>>>>>>> 2888a033e (UML-3993 Update to "new" GOV•UK styles (#3520))
 msgstr ""
