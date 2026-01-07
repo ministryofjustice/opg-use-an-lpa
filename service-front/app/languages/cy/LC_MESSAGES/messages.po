@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-12T08:13:55+00:00\n"
+"POT-Creation-Date: 2025-12-23T08:19:31+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -225,7 +225,7 @@ msgstr "Parhau i ddefnyddio’r gwasanaeth"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
 #: src/Common/templates/partials/header/default.html.twig:41
 msgid "Sign out"
 msgstr "Allgofnodi"
@@ -340,10 +340,10 @@ msgstr ""
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:29
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:38
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:77
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:36
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:26
 msgid "Continue"
 msgstr "Parhau"
@@ -401,7 +401,9 @@ msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:8
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:8
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:8
@@ -548,9 +550,9 @@ msgstr "Cadarnhau"
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:105
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:33
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:42
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:63
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:44
 #: src/Viewer/templates/viewer/paper-verification/date-of-birth.html.twig:30
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:53
 msgid "Cancel"
@@ -965,7 +967,7 @@ msgid "Add your first LPA"
 msgstr "Ychwanegu eich LPA cyntaf"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/partials/footer.html.twig:36
+#: src/Common/templates/partials/footer.html.twig:56
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr "Datganiad hygyrchedd"
@@ -1480,7 +1482,7 @@ msgid "Yes, cancel code"
 msgstr "Ydw, hoffwn ganslo’r cod"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:26
+#: src/Common/templates/partials/footer.html.twig:46
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:10
 msgid "Privacy notice"
 msgstr "Hysbysiad preifatrwydd"
@@ -2354,7 +2356,7 @@ msgstr "Er enghraifft, 31 03 1980"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:17
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:31
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
 msgstr "Beth yw cyfeirnod atwrneiaeth arhosol?"
 
@@ -3102,7 +3104,7 @@ msgstr ""
 "ichi nodi’r C-"
 
 #: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
 #: src/Common/templates/partials/header/default.html.twig:39
 msgid "Settings"
 msgstr "Gosodiadau"
@@ -4009,7 +4011,7 @@ msgid "Sign in"
 msgstr "Mewngofnodi"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:21
+#: src/Common/templates/partials/footer.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
 msgid "Terms of use"
 msgstr "Telerau defnyddio"
@@ -4470,7 +4472,7 @@ msgstr ""
 "cysylltwch â ni."
 
 #: src/Common/templates/common/cookies.html.twig:17
-#: src/Common/templates/partials/footer.html.twig:31
+#: src/Common/templates/partials/footer.html.twig:51
 msgid "Cookies"
 msgstr "Cwcis"
 
@@ -4644,7 +4646,7 @@ msgid "Save changes"
 msgstr "Arbed newidiadau"
 
 #: src/Common/templates/common/contact-us.html.twig:13
-#: src/Common/templates/partials/footer.html.twig:41
+#: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
 msgstr "Cysylltwch â ni"
 
@@ -4717,7 +4719,7 @@ msgstr ""
 "Gallwch <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> os oes "
 "gennych unrhyw gwestiynau."
 
-#: src/Common/templates/layout/default.html.twig:43
+#: src/Common/templates/layout/default.html.twig:44
 msgid "Skip to main content"
 msgstr "Neidio i’r prif gynnwys"
 
@@ -5223,32 +5225,32 @@ msgstr "Mae gan yr atwrneiaeth arhosol hon ddewisiadau"
 msgid "This LPA has instructions"
 msgstr "Mae gan yr atwrneiaeth arhosol hon gyfarwyddiadau"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
-#: src/Common/templates/partials/header/one-login.html.twig:30
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
 #: src/Common/templates/partials/header/default.html.twig:31
 msgid "Last signed in:"
 msgstr "Mewngofnodwyd diwethaf:"
 
 # More like \"never logged in\"
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
 #: src/Common/templates/partials/header/default.html.twig:33
 msgid "Never"
 msgstr "Erioed wedi mewngofnodi"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
 #: src/Common/templates/partials/header/default.html.twig:40
 msgid "Your LPAs"
 msgstr "Eich LPAs"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:37
 msgid "Show GOV.UK One Login menu"
 msgstr "Dangos dewislen One Login GOV.UK"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:38
 msgid "Hide GOV.UK One Login menu"
 msgstr "Cuddio dewislen One Login GOV.UK"
 
@@ -5268,30 +5270,19 @@ msgstr "Dewislen"
 msgid "Close"
 msgstr "Cau"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:120
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
 msgid "%service_name% menu"
 msgstr "Dewislen %service_name%"
 
-#: src/Common/templates/partials/footer.html.twig:17
+#: src/Common/templates/partials/footer.html.twig:37
 msgid "Support links"
 msgstr "Dolenni cymorth"
 
-#: src/Common/templates/partials/footer.html.twig:46
+#: src/Common/templates/partials/footer.html.twig:66
 msgid "Built by OPG Digital"
 msgstr "Adeiladwyd gan OPG Digidol"
 
-#: src/Common/templates/partials/footer.html.twig:56
-msgid ""
-"All content is available under the <a class=\"govuk-footer__link\" "
-"href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/"
-"3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where "
-"otherwise stated"
-msgstr ""
-"Mae’r holl gynnwys ar gael o dan <a class=\"govuk-footer__link\" "
-"href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/"
-"3/\" rel=\"license\">Trwydded Llywodraeth Agored v3.0</a>, oni nodir yn wahanol"
-
-#: src/Common/templates/partials/footer.html.twig:65
+#: src/Common/templates/partials/footer.html.twig:80
 msgid "© Crown copyright"
 msgstr "© Hawlfraint y goron"
 
@@ -5472,17 +5463,17 @@ msgstr ""
 "Cyfeirnod yr Atwrneiaeth Arhosol – bydd hwn ar unrhyw lythyrau rydym wedi’u "
 "hanfon at y rhoddwr neu’r atwrneiod"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:26
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:44
 msgid "date of birth of the person who the paper verification code was sent to"
 msgstr "dyddiad geni’r person yr anfonwyd y cod gwirio papur ato"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:23
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:27
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:45
 msgid "number of attorneys named on the notice of registration"
 msgstr "nifer yr atwrneiod a enwir ar yr hysbysiad cofrestru"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:28
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:46
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:22
 msgid "name of 1 attorney named on the notice of registration"
@@ -6267,7 +6258,7 @@ msgid "Property and affairs"
 msgstr "Eiddo ac arian"
 
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:33
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:22
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:39
 msgid "Who the paper verification code was sent to"
 msgstr "Y sawl yr anfonwyd y cod gwirio papur ato"
@@ -6314,15 +6305,15 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
 msgid "We need some more details"
 msgstr "Mae angen rhagor o fanylion arnom"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "health and welfare LPA"
 msgstr "LPA Iechyd a Lles"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:12
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:16
 msgid "property and finance LPA"
 msgstr "LPA Eiddo a Materion Ariannol"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:18
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:22
 msgid ""
 "Because the code you entered is a paper verification code, we need some "
 "further details:"
@@ -6330,7 +6321,7 @@ msgstr ""
 "Oherwydd mai cod gwirio papur yw’r cod rydych chi wedi’i roi, mae angen rhagor "
 "o fanylion arnom:"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:32
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:36
 msgid ""
 "LPA reference numbers start with an M followed by 12 numbers.<br>For example, "
 "M-1234-1234-1234."
@@ -6372,7 +6363,7 @@ msgstr ""
 msgid "For example, 2"
 msgstr "Er enghraifft, 2"
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:24
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
 msgid "An attorney"
 msgstr "Atwrnai"
 
@@ -6614,7 +6605,7 @@ msgstr[5] "%count% codau i’w defnyddio"
 msgid "No active access codes"
 msgstr "Dim codau mynediad gweithredol"
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:26
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:30
 msgid "Enter the attorney’s name as it appears on the notice of registration"
 msgstr "Nodwch enw'r atwrnai fel y mae'n ymddangos ar yr hysbysiad cofrestru"
 
@@ -6626,11 +6617,11 @@ msgstr "Rhowch ddyddiad geni %name%"
 msgid "We cannot show the lasting power of attorney"
 msgstr "Ni allwn ddangos yr atwrneiaeth arhosol"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:15
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:19
 msgid "We’ve found %donorName%’s %lpaType%"
 msgstr "Rydym wedi dod o hyd i %lpaType% %donorName%"
 
-#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:21
+#: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:25
 msgid ""
 "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number - this "
 "will be on any letters we’ve sent to the donor or attorneys"
@@ -6652,10 +6643,21 @@ msgstr ""
 msgid "Enter an attorney’s name"
 msgstr "Rhowch enw atwrnai"
 
-#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:28
+#: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:32
 msgid "The donor, %donorName%"
 msgstr "Y rhoddwr, %donorName%"
 
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:14
 msgid "We cannot show %donorName%’s lasting power of attorney"
 msgstr "Ni allwn ddangos atwrneiaeth arhosol %donorName%"
+
+#: src/Common/templates/partials/footer.html.twig:76
+msgid ""
+"All content is available under the <a class=\"govuk-footer__link\" "
+"href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/"
+"3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise "
+"stated"
+msgstr ""
+"Mae’r holl gynnwys ar gael o dan <a class=\"govuk-footer__link\" "
+"href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/"
+"3/\" rel=\"license\">Trwydded Llywodraeth Agored v3.0</a>, oni nodir yn wahanol"

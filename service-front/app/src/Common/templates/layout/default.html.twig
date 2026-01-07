@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ currentLocale }}" class="govuk-template">
+<html lang="{{ currentLocale }}" class="govuk-template govuk-template--rebranded">
 <head>
     <meta charset="utf-8" />
     <title>{% block html_title %}{% trans %}GOV.UK{% endtrans %}{% endblock %}</title>
@@ -8,15 +8,16 @@
     <link rel="preconnect" href="//www.google-analytics.com" />
     <link rel="preconnect" href="//www.googletagmanager.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0b0c0c" />
 
     <meta name="format-detection" content="Telephone=no"/>
 
-    <link rel="icon" sizes="48x48" href="{{ asset('assets/images/favicon.ico') }}" />
-    <link rel="icon" sizes="any" href="{{ asset('assets/images/favicon.svg') }}" type="image/svg+xml" />
-    <link rel="mask-icon" href="{{ asset('assets/images/govuk-icon-mask.svg') }}" color="#0b0c0c">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/images/govuk-icon-180.png') }}">
-    <link rel="manifest" href="{{ asset('assets/manifest.json') }}">
+    <meta name="theme-color" content="#1d70b8">
+    <link rel="icon" sizes="48x48" href="{{ asset('assets/rebrand/images/favicon.ico') }}" />
+    <link rel="icon" sizes="any" href="{{ asset('assets/rebrand/images/favicon.svg') }}" type="image/svg+xml" />
+    <link rel="mask-icon" href="{{ asset('assets/rebrand/images/govuk-icon-mask.svg') }}" color="#1d70b8">
+    <link rel="apple-touch-icon" href="{{ asset('assets/rebrand/images/govuk-icon-180.png') }}">
+    <link rel="manifest" href="{{ asset('assets/rebrand/manifest.json') }}">
+
     <link rel="stylesheet" href="{{ asset('stylesheets/main.css') }}">
     <script type="application/javascript" nonce="{{ cspNonce }}">
         window.gaConfig = {};
