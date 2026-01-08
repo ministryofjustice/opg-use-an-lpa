@@ -69,7 +69,7 @@ services:
   # PDF Generator
   service-pdf:
     container_name: service-pdf
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:v1.397.0
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/pdf-service:latest
     ports:
       - 9004:80
 

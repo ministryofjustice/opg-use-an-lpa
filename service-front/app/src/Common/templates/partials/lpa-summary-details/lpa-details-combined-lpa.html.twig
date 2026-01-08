@@ -43,24 +43,39 @@
     {% endif %}
 
     <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}Date donor signed <abbr
-                    title="lasting power of attorney">LPA</abbr>{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
+        <dt class="govuk-summary-list__key">{% trans %}How decisions are made{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">
+            {% if lpa.caseAttorneySingular %}
+                {% trans %}Decisions are made by one attorney{% endtrans %}
+            {% elseif lpa.caseAttorneyJointly %}
+                {% trans %}Attorneys must make decisions jointly (together){% endtrans %}
+            {% elseif lpa.caseAttorneyJointlyAndSeverally %}
+                {% trans %}Attorneys can make decisions jointly (together) and severally (separately){% endtrans %}
+            {% elseif lpa.caseAttorneyJointlyAndJointlyAndSeverally and not is_sirius_lpa(lpa.Uid) %}
+                {% trans %}Jointly for some decisions, jointly and severally for others{% endtrans %}
+            {% else %}
+                {% trans %}Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper
+                    <abbr title="lasting power of attorney">LPA</abbr> to find out what decisions must be made jointly.{% endtrans %}
+            {% endif %}
+        </dd>
     </div>
+</dl>
 
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}Registration date{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate) }}</dd>
+{% if not is_sirius_lpa(lpa.Uid) and lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+    <div class="govuk-inset-text govuk-!-margin-top-0">
+        <h3 class="govuk-heading-s">
+            {% trans %}Decisions to be made jointly{% endtrans %}
+        </h3>
+
+        <div class="govuk-body restrictions-and-conditions-banner">
+            {{ lpa.howAttorneysMakeDecisionsDetails }}
+        </div>
     </div>
+{% endif %}
 
-    <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">{% trans %}<abbr
-                    title="lasting power of attorney">LPA</abbr> reference number{% endtrans %}</dt>
-        <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
-    </div>
-
+<dl class="govuk-summary-list govuk-summary-list--no-border">
     {% if not is_sirius_lpa(lpa.Uid) %}
-        {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty%}
+        {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key"
                     id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
@@ -73,30 +88,32 @@
             </div>
         {% endif %}
     {% endif %}
-    </dl>
+</dl>
 
-    {% if not is_sirius_lpa(lpa.Uid) %}
-        {% if lpa.restrictionsAndConditions is not empty %}
-            <div class="govuk-grid-row restrictions-and-conditions-banner" aria-labelledby="restrictions-and-conditions-label">
-                <div class="govuk-grid-column-full column-full-alt-1">
-                    <p class="govuk-body body-alt-1">
-                        {{ lpa.restrictionsAndConditions}}
-                    </p>
-                </div>
+{% if not is_sirius_lpa(lpa.Uid) %}
+    {% if lpa.restrictionsAndConditions is not empty %}
+        <div class="govuk-grid-row restrictions-and-conditions-banner"
+             aria-labelledby="restrictions-and-conditions-label">
+            <div class="govuk-grid-column-full column-full-alt-1">
+                <p class="govuk-body body-alt-1">
+                    {{ lpa.restrictionsAndConditions }}
+                </p>
             </div>
-        {% elseif lpa.restrictionsAndConditionsImages is not empty %}
-            <div class="govuk-grid-row restrictions-and-conditions-banner" aria-labelledby="restrictions-and-conditions-label">
-                <div class="govuk-grid-column-full column-full-alt-1">
-                    {% for image in lpa.restrictionsAndConditionsImages %}
-                        {% if image.path is not empty %}
-                            <img class="opg-ip__image" src="{{ image.path }}"
-                                 alt="{% trans %}A scanned copy of the donor’s restrictions and/or instructions - the text cannot be digitised at present{% endtrans %}">
-                        {% endif %}
-                    {% endfor %}
-                </div>
+        </div>
+    {% elseif lpa.restrictionsAndConditionsImages is not empty %}
+        <div class="govuk-grid-row restrictions-and-conditions-banner"
+             aria-labelledby="restrictions-and-conditions-label">
+            <div class="govuk-grid-column-full column-full-alt-1">
+                {% for image in lpa.restrictionsAndConditionsImages %}
+                    {% if image.path is not empty %}
+                        <img class="opg-ip__image" src="{{ image.path }}"
+                             alt="{% trans %}A scanned copy of the donor’s restrictions and/or instructions - the text cannot be digitised at present{% endtrans %}">
+                    {% endif %}
+                {% endfor %}
             </div>
-        {% endif %}
+        </div>
     {% endif %}
+{% endif %}
 
         {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
             {% if lpa.hasSeveranceWarning %}
@@ -115,83 +132,102 @@
         {% endif %}
 
         {% if is_sirius_lpa(lpa.Uid) %}
-        <iap-preferences>
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">
-                        {% if lpa.applicationHasGuidance %}
-                            {% if iap_images is defined %}
-                                {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+            <iap-preferences>
+                <dl class="govuk-summary-list govuk-summary-list--no-border">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if lpa.applicationHasGuidance %}
+                                {% if iap_images is defined %}
+                                    {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                                {% else %}
+                                    {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
+                                    <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                                {% endif %}
                             {% else %}
-                                {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                                {% trans %}No{% endtrans %}
                             {% endif %}
-                        {% else %}
-                            {% trans %}No{% endtrans %}
-                        {% endif %}
-                    </dd>
-                </div>
-            </dl>
+                        </dd>
+                    </div>
+                </dl>
 
-            {% if lpa.applicationHasGuidance and iap_images is defined %}
-                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
-                    {{ iap.preferences_error() }}
-                {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                {% if lpa.applicationHasGuidance and iap_images is defined %}
+                    {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                        {{ iap.preferences_error() }}
+                    {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
                         or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.preferences_static_wait() }}
-                {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
-                    {% set prefs_images = iap_images.getPreferencesImageUrls %}
-                    {% if (prefs_images | length) > 0 %}
-                        {{ iap.images("preferences", prefs_images) }}
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-        </iap-preferences>
-
-        <iap-instructions>
-            <dl class="govuk-summary-list govuk-summary-list--no-border">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">
-                        {% if lpa.applicationHasRestrictions %}
-                            {% if iap_images is defined %}
-                                {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                            {% else %}
-                                {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                                <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
-                            {% endif %}
-                        {% else %}
-                            {% trans %}No{% endtrans %}
+                        {{ iap.preferences_static_wait() }}
+                    {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                        {% set prefs_images = iap_images.getPreferencesImageUrls %}
+                        {% if (prefs_images | length) > 0 %}
+                            {{ iap.images("preferences", prefs_images) }}
                         {% endif %}
-                    </dd>
-                </div>
-            </dl>
-
-            {% if lpa.applicationHasRestrictions and iap_images is defined %}
-                {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
-                    {{ iap.instructions_error() }}
-                {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
-                    or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
-                    {{ iap.instructions_static_wait() }}
-                {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
-                    {% set insts_images = iap_images.getInstructionsImageUrls %}
-                    {% if (insts_images | length) > 0 %}
-                        {{ iap.images("instructions", insts_images) }}
                     {% endif %}
                 {% endif %}
-            {% endif %}
-        </iap-instructions>
+            </iap-preferences>
 
-        <iap-unknown>
-            {% if iap_images is defined and
-                    iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
-                {% set unknown_images = iap_images.getUnknownImageUrls %}
-                {% if (unknown_images | length) > 0 %}
-                    {{ iap.unknown_section() }}
+            <iap-instructions>
+                <dl class="govuk-summary-list govuk-summary-list--no-border">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">
+                            {% if lpa.applicationHasRestrictions %}
+                                {% if iap_images is defined %}
+                                    {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                                {% else %}
+                                    {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
+                                    <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                                {% endif %}
+                            {% else %}
+                                {% trans %}No{% endtrans %}
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
 
-                    {{ iap.images("unknown", unknown_images) }}
+                {% if lpa.applicationHasRestrictions and iap_images is defined %}
+                    {% if iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_ERROR') %}
+                        {{ iap.instructions_error() }}
+                    {% elseif ((iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_IN_PROGRESS'))
+                        or (iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_NOT_STARTED'))) %}
+                        {{ iap.instructions_static_wait() }}
+                    {% elseif iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                        {% set insts_images = iap_images.getInstructionsImageUrls %}
+                        {% if (insts_images | length) > 0 %}
+                            {{ iap.images("instructions", insts_images) }}
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-        </iap-unknown>
+            </iap-instructions>
+
+            <iap-unknown>
+                {% if iap_images is defined and
+                    iap_images.status is constant('\\Common\\Entity\\InstructionsAndPreferences\\ImagesStatus::COLLECTION_COMPLETE') %}
+                    {% set unknown_images = iap_images.getUnknownImageUrls %}
+                    {% if (unknown_images | length) > 0 %}
+                        {{ iap.unknown_section() }}
+
+                        {{ iap.images("unknown", unknown_images) }}
+                    {% endif %}
+                {% endif %}
+            </iap-unknown>
         {% endif %}
+
+<dl class="govuk-summary-list govuk-summary-list--no-border">
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Date donor signed <abbr
+                    title="lasting power of attorney">LPA</abbr>{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.lpaDonorSignatureDate) }}</dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}Registration date{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">{{ lpa_date(lpa.registrationDate) }}</dd>
+    </div>
+
+    <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">{% trans %}<abbr
+                    title="lasting power of attorney">LPA</abbr> reference number{% endtrans %}</dt>
+        <dd class="govuk-summary-list__value">{{ lpa.uId }}</dd>
+    </div>
+</dl>
