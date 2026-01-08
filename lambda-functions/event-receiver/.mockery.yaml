@@ -1,0 +1,8 @@
+all: true
+template: testify
+template-data:
+  unroll-variadic: true
+structname: mock{{.InterfaceName|firstUpper}}
+packages:
+  github.com/ministryofjustice/opg-use-an-lpa/lambda-functions/event-receiver/app:
+  github.com/ministryofjustice/opg-use-an-lpa/lambda-functions/event-receiver/internal/dynamo:

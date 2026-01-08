@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -26,11 +28,13 @@ type DynamoDB interface {
 	Query(context.Context, *dynamodb.QueryInput, ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 	GetItem(context.Context, *dynamodb.GetItemInput, ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 	PutItem(context.Context, *dynamodb.PutItemInput, ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error)
+	TransactWriteItems(ctx context.Context, params *dynamodb.TransactWriteItemsInput, optFns ...func(*dynamodb.Options)) (*dynamodb.TransactWriteItemsOutput, error)
 }
 
 type Client struct {
 	svc    DynamoDB
-	Prefix string
+	prefix string
+	now    func() time.Time
 }
 
 type NotFoundError struct{}
@@ -57,11 +61,11 @@ func NewClient(cfg aws.Config, endpoint string, tablePrefix string) (*Client, er
 		}
 	})
 
-	return &Client{Prefix: prefix, svc: svc}, nil
+	return &Client{prefix: prefix, svc: svc, now: time.Now}, nil
 }
 
 func (c *Client) prefixedTableName(name string) string {
-	return c.Prefix + name
+	return c.prefix + name
 }
 
 func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interface{}) error {
@@ -107,7 +111,7 @@ func (c *Client) Put(ctx context.Context, tableName string, item map[string]type
 	return nil
 }
 
-func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error) {
+func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaUID string, userID string) (bool, error) {
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
 		TableName: aws.String(c.prefixedTableName(actorMapTable)),
 		IndexName: aws.String(actorMapUserIndex),
@@ -115,7 +119,7 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId
 			"#UserId": "UserId",
 		},
 		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":userid": &types.AttributeValueMemberS{Value: userId},
+			":userid": &types.AttributeValueMemberS{Value: userID},
 		},
 		KeyConditionExpression: aws.String("#UserId = :userid"),
 	})
@@ -133,7 +137,7 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId
 		}
 
 		for _, item := range results {
-			if item.LpaUid == LpaUid {
+			if item.LpaUid == lpaUID {
 				return true, nil
 			}
 		}
