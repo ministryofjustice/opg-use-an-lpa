@@ -84,14 +84,14 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
                 town:              'Mahhhhhhhhhh',
                 uId:               'eda719db-8880-4dda-8c5d-bb9ea12c236f'
             ),
-            howAttorneysMakeDecisions: HowAttorneysMakeDecisions::JOINTLY,
-            howAttorneysMakeDecisionsDetails: null,
-            lifeSustainingTreatment:   LifeSustainingTreatment::OPTION_A,
-            signedAt:                  new DateTimeImmutable('2024-01-10T23:00:00Z'),
-            registrationDate:          new DateTimeImmutable('2024-01-12'),
-            restrictionsAndConditions: 'my restrictions and conditions',
-            restrictionsAndConditionsImages: null,
-            status:                    'registered',
+            howAttorneysMakeDecisions:          HowAttorneysMakeDecisions::JOINTLY,
+            howAttorneysMakeDecisionsDetails:   null,
+            lifeSustainingTreatment:            LifeSustainingTreatment::OPTION_A,
+            signedAt:                           new DateTimeImmutable('2024-01-10T23:00:00Z'),
+            registrationDate:                   new DateTimeImmutable('2024-01-12'),
+            restrictionsAndConditions:          'my restrictions and conditions',
+            restrictionsAndConditionsImages:    null,
+            status:                             'registered',
             trustCorporations:         [
                 new LpaStoreTrustCorporation(
                     line1:       '103 Line 1',
