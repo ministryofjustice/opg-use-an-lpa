@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-12-24T12:33:36+00:00\n"
+"POT-Creation-Date: 2026-01-08T09:56:14+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -316,14 +316,14 @@ msgstr ""
 "Trwy barhau, rydych yn cytuno i <a href=\"%link%\" class=\"govuk-link\"> "
 "delerau’r gwasanaeth Defnyddio atwrneiaeth arhosol.</a>"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:77
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:72
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:62
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:85
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
@@ -333,7 +333,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:118
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:116
 #: src/Actor/templates/actor/one-login.html.twig:78
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
@@ -509,7 +509,7 @@ msgstr "Rhoddwr"
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:53
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:85
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:28
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:127
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:123
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:37
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:42
@@ -533,21 +533,21 @@ msgstr ""
 "Os yw’r wybodaeth yn anghywir, neu os yw enw wedi cael ei gamsillafu, ffoniwch "
 "ni ar:"
 
-#: src/Actor/templates/actor/check-lpa.html.twig:99
-#: src/Actor/templates/actor/check-combined-lpa.html.twig:99
+#: src/Actor/templates/actor/check-lpa.html.twig:97
+#: src/Actor/templates/actor/check-combined-lpa.html.twig:97
 msgid "Confirm"
 msgstr "Cadarnhau"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:43
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:67
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:123
-#: src/Actor/templates/actor/check-lpa.html.twig:105
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:121
+#: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
-#: src/Actor/templates/actor/check-combined-lpa.html.twig:105
+#: src/Actor/templates/actor/check-combined-lpa.html.twig:103
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:33
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:46
@@ -694,19 +694,19 @@ msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
 msgid "Your new access code"
 msgstr "Ailosod eich cyfrinair"
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:40
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes.html.twig:9
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:9
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:9
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:85
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:84
 #: src/Actor/templates/actor/instructions-preferences.html.twig:8
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:66
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
-#: src/Actor/templates/actor/lpa-not-found.html.twig:85
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:40
+#: src/Actor/templates/actor/lpa-not-found.html.twig:84
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:9
 msgid "Back to your LPAs"
@@ -2129,7 +2129,7 @@ msgstr "Ydych chi’n byw yn y DU?"
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:186
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:182
 msgid "No"
 msgstr "Nac oes"
 
@@ -2140,8 +2140,8 @@ msgstr ""
 "Os ydych chi’n siŵr bod yr wybodaeth rydych chi wedi’i rhoi yn gywir, "
 "cysylltwch â ni."
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
-#: src/Actor/templates/actor/lpa-not-found.html.twig:79
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:79
+#: src/Actor/templates/actor/lpa-not-found.html.twig:78
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:77
@@ -2239,8 +2239,8 @@ msgstr ""
 "Bydd angen allwedd cadarnhau cyfrif arnoch ar gyfer pob atwrneiaeth arhosol yr "
 "hoffech ei hychwanegu at eich cyfrif."
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:34
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
 msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
@@ -2290,7 +2290,7 @@ msgstr ""
 "bydd rhaid ichi gysylltu â ni i gael allweddair newydd os byddwch am roi’r LPA "
 "ar y cyfrif eto"
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:51
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:49
 msgid "Yes, remove LPA"
 msgstr "Le, dileu LPA"
 
@@ -3765,7 +3765,7 @@ msgstr ""
 "chi ofyn am allwedd newydd."
 
 # Welsh is currently: Ask for an activation key
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:28
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:30
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:24
 msgid "Continue and ask for a new key"
 msgstr "Gofyn am allwedd cadarnhau cyfrif"
@@ -4434,7 +4434,7 @@ msgstr "Eich swyddogaeth yn yr LPA hon"
 msgid "The donor's name"
 msgstr "Enw’r rhoddwr"
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:85
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:83
 msgid "This is not the correct LPA"
 msgstr "Nid dyma’r atwrneiaeth arhosol gywir"
 
@@ -4806,19 +4806,19 @@ msgstr ""
 "arhosol\">LPA</abbr> papur"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:222
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:218
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 "Y Dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:228
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:224
 msgid "Registration date"
 msgstr "Dyddiad cofrestru"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:233
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:229
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:19
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
@@ -4834,31 +4834,31 @@ msgstr ""
 "Atwrneiaeth Arhosol neu’r Gorchymyn Lly."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:142
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:138
 msgid "Preferences"
 msgstr "Dymuniadau"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:148
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:144
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:183
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:179
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 "Weld y rhain, gofynnwch am gael gweld y <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> papur."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:176
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:172
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:182
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:178
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi nodi dymuniadau yn ei <abbr title=\"atwrneiaeth "
@@ -5035,19 +5035,19 @@ msgstr "A elwir hefyd yn"
 msgid "The donor"
 msgstr "Y rhoddwr"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:90
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:86
 msgid "Restrictions and Conditions"
 msgstr "Cyfyngiadau ac amodau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:86
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:82
 msgid "Yes, the donor added restrictions and conditions to their LPA"
 msgstr "Ydy, mae’r rhoddwr wedi ychwanegu cyfyngiadau ac amodau at ei LPA"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:91
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:87
 msgid "No, the donor did not add restrictions and conditions to their LPA"
 msgstr "Na, nid yw’r rhoddwr wedi ychwanegu cyfyngiadau ac amodau at ei LPA"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:114
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:110
 msgid ""
 "A scanned copy of the donor’s restrictions and/or instructions - the text "
 "cannot be digitised at present"
@@ -5055,7 +5055,7 @@ msgstr ""
 "Copi wedi ei sganio o’r hyn fyddai orau gan y rhoddwr a/neu ei gyfarwyddiadau- "
 "ni ellir digideiddio’r testun ar hyn o bryd"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:128
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:124
 msgid ""
 "Some words in these preferneces or instructions have been removed by the court "
 "of protection. To check which words have been removed, please ask to see the "
@@ -6651,14 +6651,6 @@ msgstr "Y rhoddwr, %donorName%"
 msgid "We cannot show %donorName%’s lasting power of attorney"
 msgstr "Ni allwn ddangos atwrneiaeth arhosol %donorName%"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
-msgid "Decisions to be made jointly"
-msgstr "Penderfyniadau i'w gwneud ar y cyd"
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
-msgid "Jointly for some decisions, jointly and severally for others"
-msgstr ""
-
 #: src/Common/templates/partials/footer.html.twig:76
 msgid ""
 "All content is available under the <a class=\"govuk-footer__link\" "
@@ -6669,3 +6661,11 @@ msgstr ""
 "Mae’r holl gynnwys ar gael o dan <a class=\"govuk-footer__link\" "
 "href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/"
 "3/\" rel=\"license\">Trwydded Llywodraeth Agored v3.0</a>, oni nodir yn wahanol"
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
+msgid "Jointly for some decisions, jointly and severally for others"
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
+msgid "Decisions to be made jointly"
+msgstr "Penderfyniadau i'w gwneud ar y cyd"
