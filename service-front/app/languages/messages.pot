@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2025-12-15T10:35:02+00:00\n"
+"POT-Creation-Date: 2026-01-08T15:43:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -182,7 +182,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:93
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
 #: src/Common/templates/partials/header/default.html.twig:41
 msgid "Sign out"
 msgstr ""
@@ -204,46 +204,46 @@ msgstr ""
 msgid "One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:29
+#: src/Actor/templates/actor/one-login.html.twig:32
 msgid "To make an LPA online, or to continue to make an LPA you’ve started, go to the <a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:39
+#: src/Actor/templates/actor/one-login.html.twig:41
 msgid "Sign in to use your lasting power of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:42
+#: src/Actor/templates/actor/one-login.html.twig:44
 msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:47
+#: src/Actor/templates/actor/one-login.html.twig:49
 msgid "If you’ve not used GOV.UK One Login before, you can set up your access on the next page."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:52
+#: src/Actor/templates/actor/one-login.html.twig:54
 msgid "GOV.UK One Login is the new way to sign in to government services in one place, using the same email address and password."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:56
+#: src/Actor/templates/actor/one-login.html.twig:58
 msgid "What if I’ve used this service before?"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:58
+#: src/Actor/templates/actor/one-login.html.twig:60
 msgid "If you have a Use a lasting power of attorney account from before 13 August 2024, and you use the same email address for GOV.UK One Login, any LPAs you’ve previously added will automatically appear."
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:64
+#: src/Actor/templates/actor/one-login.html.twig:66
 msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:79
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:77
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:72
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:63
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:43
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:62
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:85
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
@@ -253,8 +253,8 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:118
-#: src/Actor/templates/actor/one-login.html.twig:78
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:116
+#: src/Actor/templates/actor/one-login.html.twig:80
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -268,11 +268,11 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:84
+#: src/Actor/templates/actor/one-login.html.twig:86
 msgid "with GOV.UK One Login"
 msgstr ""
 
-#: src/Actor/templates/actor/one-login.html.twig:87
+#: src/Actor/templates/actor/one-login.html.twig:89
 msgid "If you have any problems signing in to this service, you can <a href=\"https://home.account.gov.uk/contact-gov-uk-one-login?lng=en\" class=\"govuk-link\">contact the GOV.UK One Login team</a> to get help."
 msgstr ""
 
@@ -342,7 +342,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:26
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -361,7 +361,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -389,8 +389,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-lpa.html.twig:46
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:46
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:50
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:50
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:33
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:33
 msgid "(Trust corporation)"
 msgstr ""
 
@@ -421,9 +421,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:69
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:69
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:53
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:69
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:85
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:28
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:106
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:123
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:37
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:42
@@ -445,21 +445,21 @@ msgstr ""
 msgid "If the information is wrong, or if a name is misspelt, please call us:"
 msgstr ""
 
-#: src/Actor/templates/actor/check-lpa.html.twig:99
-#: src/Actor/templates/actor/check-combined-lpa.html.twig:99
+#: src/Actor/templates/actor/check-lpa.html.twig:97
+#: src/Actor/templates/actor/check-combined-lpa.html.twig:97
 msgid "Confirm"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:45
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:43
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:68
-#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:67
+#: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:123
-#: src/Actor/templates/actor/check-lpa.html.twig:105
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:121
+#: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
-#: src/Actor/templates/actor/check-combined-lpa.html.twig:105
+#: src/Actor/templates/actor/check-combined-lpa.html.twig:103
 #: src/Viewer/templates/viewer/paper-verification/number-of-attorneys.html.twig:33
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:99
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:46
@@ -569,19 +569,19 @@ msgstr ""
 msgid "Your new access code"
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:40
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes.html.twig:9
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:9
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:9
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:85
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:84
 #: src/Actor/templates/actor/instructions-preferences.html.twig:8
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:66
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
-#: src/Actor/templates/actor/lpa-not-found.html.twig:85
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:40
+#: src/Actor/templates/actor/lpa-not-found.html.twig:84
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:9
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:9
 msgid "Back to your LPAs"
@@ -752,7 +752,7 @@ msgid "Add your first LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:3
-#: src/Common/templates/partials/footer.html.twig:36
+#: src/Common/templates/partials/footer.html.twig:56
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:3
 msgid "Accessibility statement"
 msgstr ""
@@ -1150,7 +1150,7 @@ msgid "Yes, cancel code"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:26
+#: src/Common/templates/partials/footer.html.twig:46
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:10
 msgid "Privacy notice"
 msgstr ""
@@ -1549,9 +1549,9 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:35
 #: src/Common/templates/common/cookies.html.twig:103
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details-combined-lpa.html.twig:4
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:49
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:32
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:4
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:49
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:32
 msgid "Name"
 msgstr ""
 
@@ -1559,9 +1559,9 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-not-found.html.twig:48
 #: src/Actor/templates/actor/check-your-answers.html.twig:48
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details-combined-lpa.html.twig:14
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:34
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:17
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:14
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:34
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:17
 msgid "Date of birth"
 msgstr ""
 
@@ -1578,8 +1578,8 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:127
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:165
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:182
 msgid "No"
 msgstr ""
 
@@ -1588,8 +1588,8 @@ msgstr ""
 msgid "If you’re sure you entered the correct information, contact us."
 msgstr ""
 
-#: src/Actor/templates/actor/cannot-find-lpa.html.twig:80
-#: src/Actor/templates/actor/lpa-not-found.html.twig:79
+#: src/Actor/templates/actor/cannot-find-lpa.html.twig:79
+#: src/Actor/templates/actor/lpa-not-found.html.twig:78
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:81
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:77
@@ -1660,8 +1660,8 @@ msgstr ""
 msgid "You'll need an activation key for each LPA that you'd like to add to your account."
 msgstr ""
 
-#: src/Actor/templates/actor/activation-key-request-received.html.twig:35
-#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:35
+#: src/Actor/templates/actor/activation-key-request-received.html.twig:34
+#: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
 msgid "Request another activation key"
 msgstr ""
 
@@ -1699,7 +1699,7 @@ msgstr ""
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:51
+#: src/Actor/templates/actor/confirm-remove-lpa.html.twig:49
 msgid "Yes, remove LPA"
 msgstr ""
 
@@ -1861,9 +1861,9 @@ msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details-combined-lpa.html.twig:18
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:53
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:36
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:18
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:53
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:36
 #: src/Common/templates/partials/contact-details/address.html.twig:1
 msgid "Address"
 msgstr ""
@@ -2308,7 +2308,7 @@ msgid "Activation keys are 13 letters and numbers long and start with a C<br/>Fo
 msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:136
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
 #: src/Common/templates/partials/header/default.html.twig:39
 msgid "Settings"
 msgstr ""
@@ -2860,7 +2860,7 @@ msgstr ""
 msgid "If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
 msgstr ""
 
-#: src/Actor/templates/actor/already-requested-activation-key.html.twig:28
+#: src/Actor/templates/actor/already-requested-activation-key.html.twig:30
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:24
 msgid "Continue and ask for a new key"
 msgstr ""
@@ -3048,7 +3048,7 @@ msgid "Sign in"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:10
-#: src/Common/templates/partials/footer.html.twig:21
+#: src/Common/templates/partials/footer.html.twig:41
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:12
 msgid "Terms of use"
 msgstr ""
@@ -3278,7 +3278,7 @@ msgstr ""
 msgid "The donor's name"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:85
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:83
 msgid "This is not the correct LPA"
 msgstr ""
 
@@ -3299,7 +3299,7 @@ msgid "You should hear from us or get the activation key letter by %dueDate%. If
 msgstr ""
 
 #: src/Common/templates/common/cookies.html.twig:17
-#: src/Common/templates/partials/footer.html.twig:31
+#: src/Common/templates/partials/footer.html.twig:51
 msgid "Cookies"
 msgstr ""
 
@@ -3428,7 +3428,7 @@ msgid "Save changes"
 msgstr ""
 
 #: src/Common/templates/common/contact-us.html.twig:13
-#: src/Common/templates/partials/footer.html.twig:41
+#: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
 msgstr ""
 
@@ -3483,7 +3483,7 @@ msgstr ""
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
 msgstr ""
 
-#: src/Common/templates/layout/default.html.twig:43
+#: src/Common/templates/layout/default.html.twig:44
 msgid "Skip to main content"
 msgstr ""
 
@@ -3540,48 +3540,48 @@ msgstr ""
 msgid "To view this, ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:46
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:46
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:218
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:52
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:52
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:224
 msgid "Registration date"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:57
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:57
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:229
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:19
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:70
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
 msgid "Some words in these instructions or preferences have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:83
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:121
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:138
 msgid "Preferences"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:89
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:127
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:144
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:124
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:162
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:179
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:117
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:155
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:172
 msgid "Instructions"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:123
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:161
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:178
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 
@@ -3654,41 +3654,41 @@ msgstr ""
 msgid "The attorneys"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:4
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:4
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:46
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:46
 msgid "How decisions are made"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:7
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:7
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:49
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:49
 msgid "Decisions are made by one attorney"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:9
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:9
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:51
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:51
 msgid "Attorneys must make decisions jointly (together)"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:11
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:11
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:53
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:53
 msgid "Attorneys can make decisions jointly (together) and severally (separately)"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:13
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:13
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:55
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:57
 msgid "Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to find out what decisions must be made jointly."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:46
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:46
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:29
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
 msgstr[0] ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details-combined-lpa.html.twig:9
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:12
 #: src/Common/templates/partials/lpa-summary-details/lpa-donor-details.html.twig:9
-#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:29
+#: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:12
 msgid "Also known as"
 msgstr ""
 
@@ -3697,23 +3697,23 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:71
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:86
 msgid "Restrictions and Conditions"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:82
 msgid "Yes, the donor added restrictions and conditions to their LPA"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:72
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:87
 msgid "No, the donor did not add restrictions and conditions to their LPA"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:93
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:110
 msgid "A scanned copy of the donor’s restrictions and/or instructions - the text cannot be digitised at present"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:107
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:124
 msgid "Some words in these preferneces or instructions have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
@@ -3836,31 +3836,31 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:149
-#: src/Common/templates/partials/header/one-login.html.twig:30
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:154
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
 #: src/Common/templates/partials/header/default.html.twig:31
 msgid "Last signed in:"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:156
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
 #: src/Common/templates/partials/header/default.html.twig:33
 msgid "Never"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
 #: src/Common/templates/partials/header/default.html.twig:40
 msgid "Your LPAs"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:25
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:37
 msgid "Show GOV.UK One Login menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:26
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:38
 msgid "Hide GOV.UK One Login menu"
 msgstr ""
 
@@ -3880,23 +3880,19 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:120
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
 msgid "%service_name% menu"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:17
+#: src/Common/templates/partials/footer.html.twig:37
 msgid "Support links"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:46
+#: src/Common/templates/partials/footer.html.twig:66
 msgid "Built by OPG Digital"
 msgstr ""
 
-#: src/Common/templates/partials/footer.html.twig:56
-msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\"> Open Government Licence v3.0 </a>, except where otherwise stated"
-msgstr ""
-
-#: src/Common/templates/partials/footer.html.twig:65
+#: src/Common/templates/partials/footer.html.twig:80
 msgid "© Crown copyright"
 msgstr ""
 
@@ -4784,18 +4780,30 @@ msgstr ""
 msgid "We cannot show %donorName%’s lasting power of attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
-msgid "Your account contains duplicate LPAs"
+#: src/Common/templates/partials/footer.html.twig:76
+msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated"
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
+msgid "Jointly for some decisions, jointly and severally for others"
+msgstr ""
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
+msgid "Decisions to be made jointly"
 msgstr ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:80
+msgid "Your account contains duplicate LPAs"
+msgstr ""
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:83
 msgid "You might find it easier to manage your account by removing duplicate LPAs."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:81
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
 msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:82
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:85
 msgid "Removing duplicate LPAs is optional."
 msgstr ""

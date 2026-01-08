@@ -288,6 +288,7 @@
       <code><![CDATA[$applicationType]]></code>
       <code><![CDATA[$dispatchDate]]></code>
       <code><![CDATA[$hasSeveranceWarning]]></code>
+      <code><![CDATA[$howAttorneysMakeDecisionsDetails]]></code>
       <code><![CDATA[$invalidDate]]></code>
       <code><![CDATA[$lpaIsCleansed]]></code>
       <code><![CDATA[$onlineLpaId]]></code>
@@ -521,10 +522,21 @@
       <code><![CDATA[$logger]]></code>
     </UnusedDocblockParam>
   </file>
+  <file src="src/Common/src/Service/Lpa/PaperVerificationCodeResult.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$data]]></code>
+    </PossiblyUnusedProperty>
+  </file>
   <file src="src/Common/src/Service/Lpa/PopulateLpaMetadata.php">
     <UndefinedPropertyFetch>
       <code><![CDATA[$shareCodes->activeCodeCount]]></code>
     </UndefinedPropertyFetch>
+  </file>
+  <file src="src/Common/src/Service/Lpa/Response/PaperVerificationCode.php">
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$donorName]]></code>
+      <code><![CDATA[$lpaType]]></code>
+    </PossiblyUnusedProperty>
   </file>
   <file src="src/Common/src/Service/Lpa/Response/Parse/ParseLpaAlreadyAdded.php">
     <InvalidArgument>
@@ -702,16 +714,5 @@
       <code><![CDATA[$lpaData->iap]]></code>
       <code><![CDATA[$lpaData->lpa]]></code>
     </UndefinedPropertyFetch>
-  </file>
-  <file src="src/Common/src/Service/Lpa/PaperVerificationCodeResult.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$data]]></code>
-    </PossiblyUnusedProperty>
-  </file>
-  <file src="src/Common/src/Service/Lpa/Response/PaperVerificationCode.php">
-    <PossiblyUnusedProperty>
-      <code><![CDATA[$donorName]]></code>
-      <code><![CDATA[$lpaType]]></code>
-    </PossiblyUnusedProperty>
   </file>
 </files>
