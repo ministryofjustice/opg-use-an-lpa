@@ -119,7 +119,7 @@ enable_development_mode:
 .PHONY: enable_development_mode
 
 generate_event_receiver_mocks:
-	mockery --all --recursive --output=./mocks --outpkg=mocks
+	(cd lambda-functions/event-receiver; go tool mockery)
 
 development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
