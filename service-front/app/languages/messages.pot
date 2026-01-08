@@ -1,11 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-<<<<<<< HEAD
 "POT-Creation-Date: 2025-12-24T12:33:36+00:00\n"
-=======
-"POT-Creation-Date: 2025-12-23T08:19:31+00:00\n"
->>>>>>> 2888a033e (UML-3993 Update to "new" GOV•UK styles (#3520))
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4784,15 +4780,14 @@ msgstr ""
 msgid "We cannot show %donorName%’s lasting power of attorney"
 msgstr ""
 
-<<<<<<< HEAD
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
 msgid "Jointly for some decisions, jointly and severally for others"
-=======
+msgstr ""
+
 #: src/Common/templates/partials/footer.html.twig:76
 msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated"
->>>>>>> 2888a033e (UML-3993 Update to "new" GOV•UK styles (#3520))
 msgstr ""
