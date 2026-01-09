@@ -1,21 +1,20 @@
-//go:generate mockery --all --recursive --output=./mocks --outpkg=mocks
 package main
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/ministryofjustice/opg-go-common/telemetry"
-	"github.com/ministryofjustice/opg-use-an-lpa/app/mocks"
-	"github.com/stretchr/testify/mock"
+	"log/slog"
 	"testing"
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 var (
-	payload = map[string]interface{}{
+	ctx     = context.Background()
+	payload = map[string]any{
 		"uid":     "M-1234-5678-9012",
 		"lpaType": "personal-welfare",
 		"actors": []map[string]string{
@@ -32,9 +31,8 @@ var (
 )
 
 func TestValidCloudWatchEvent(t *testing.T) {
-	ctx := context.Background()
-	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
-	LpaUid := "M-1234-5678-9012"
+	logger = slog.New(slog.DiscardHandler)
+	lpaUID := "M-1234-5678-9012"
 
 	cloudWatchPayload, err := json.Marshal(payload)
 	assert.NoError(t, err)
@@ -62,15 +60,26 @@ func TestValidCloudWatchEvent(t *testing.T) {
 		},
 	}
 
-	mockDynamo := new(mocks.DynamodbClient)
-	mockFactory := new(MockFactory)
-	mockFactory.On("DynamoClient").Return(mockDynamo)
+	mockDynamo := newMockDynamodbClient(t)
+	mockDynamo.EXPECT().
+		OneByIdentity(ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).
+		Return(nil)
+	mockDynamo.EXPECT().
+		PutUser(ctx, mock.Anything, "urn:fdc:gov.uk:2022:XXXX-XXXXXX").
+		Return(nil)
+	mockDynamo.EXPECT().
+		Put(ctx, mock.Anything, mock.Anything).
+		Return(nil)
+	mockDynamo.EXPECT().
+		ExistsLpaIDAndUserID(ctx, lpaUID, mock.MatchedBy(func(id string) bool {
+			return len(id) > 0
+		})).
+		Return(false, nil)
 
-	mockDynamo.On("OneByIdentity", ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).Return(nil)
-	mockDynamo.On("Put", ctx, mock.Anything, mock.Anything).Return(nil)
-	mockDynamo.On("ExistsLpaIDAndUserID", ctx, LpaUid, mock.MatchedBy(func(id string) bool {
-		return len(id) > 0
-	})).Return(false, nil)
+	mockFactory := newMockFactory(t)
+	mockFactory.EXPECT().
+		DynamoClient().
+		Return(mockDynamo)
 
 	result, err := handler(ctx, mockFactory, sqsEvent)
 	assert.Nil(t, err)
@@ -78,8 +87,7 @@ func TestValidCloudWatchEvent(t *testing.T) {
 }
 
 func TestInvalidJsonInSQSBody(t *testing.T) {
-	ctx := context.Background()
-	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	logger = slog.New(slog.DiscardHandler)
 	factory := &DefaultFactory{}
 
 	sqsEvent := &events.SQSEvent{
@@ -99,8 +107,7 @@ func TestInvalidJsonInSQSBody(t *testing.T) {
 }
 
 func TestUnsupportedCloudWatchEventType(t *testing.T) {
-	ctx := context.Background()
-	logger = telemetry.NewLogger("opg-use-an-lpa/event-receiver")
+	logger = slog.New(slog.DiscardHandler)
 	factory := &DefaultFactory{}
 
 	cloudWatchPayload, err := json.Marshal(payload)

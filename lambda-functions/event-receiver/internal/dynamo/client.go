@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
@@ -26,11 +28,13 @@ type DynamoDB interface {
 	Query(context.Context, *dynamodb.QueryInput, ...func(*dynamodb.Options)) (*dynamodb.QueryOutput, error)
 	GetItem(context.Context, *dynamodb.GetItemInput, ...func(*dynamodb.Options)) (*dynamodb.GetItemOutput, error)
 	PutItem(context.Context, *dynamodb.PutItemInput, ...func(*dynamodb.Options)) (*dynamodb.PutItemOutput, error)
+	TransactWriteItems(ctx context.Context, params *dynamodb.TransactWriteItemsInput, optFns ...func(*dynamodb.Options)) (*dynamodb.TransactWriteItemsOutput, error)
 }
 
 type Client struct {
 	svc    DynamoDB
-	Prefix string
+	prefix string
+	now    func() time.Time
 }
 
 type NotFoundError struct{}
@@ -57,16 +61,16 @@ func NewClient(cfg aws.Config, endpoint string, tablePrefix string) (*Client, er
 		}
 	})
 
-	return &Client{Prefix: prefix, svc: svc}, nil
+	return &Client{prefix: prefix, svc: svc, now: time.Now}, nil
 }
 
-func (c *Client) prefixedTableName(name string) string {
-	return c.Prefix + name
+func (c *Client) prefixedTableName(name string) *string {
+	return aws.String(c.prefix + name)
 }
 
 func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interface{}) error {
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
-		TableName: aws.String(c.prefixedTableName(actorUserTable)),
+		TableName: c.prefixedTableName(actorUserTable),
 		IndexName: aws.String(actorUserIndex),
 		ExpressionAttributeNames: map[string]string{
 			"#Identity": "Identity",
@@ -89,7 +93,7 @@ func (c *Client) OneByIdentity(ctx context.Context, subjectId string, v interfac
 
 func (c *Client) Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error {
 	input := &dynamodb.PutItemInput{
-		TableName: aws.String(c.prefixedTableName(tableName)),
+		TableName: c.prefixedTableName(tableName),
 		Item:      item,
 	}
 
@@ -107,15 +111,15 @@ func (c *Client) Put(ctx context.Context, tableName string, item map[string]type
 	return nil
 }
 
-func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error) {
+func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, lpaUID string, userID string) (bool, error) {
 	response, err := c.svc.Query(ctx, &dynamodb.QueryInput{
-		TableName: aws.String(c.prefixedTableName(actorMapTable)),
+		TableName: c.prefixedTableName(actorMapTable),
 		IndexName: aws.String(actorMapUserIndex),
 		ExpressionAttributeNames: map[string]string{
 			"#UserId": "UserId",
 		},
 		ExpressionAttributeValues: map[string]types.AttributeValue{
-			":userid": &types.AttributeValueMemberS{Value: userId},
+			":userid": &types.AttributeValueMemberS{Value: userID},
 		},
 		KeyConditionExpression: aws.String("#UserId = :userid"),
 	})
@@ -133,11 +137,48 @@ func (c *Client) ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId
 		}
 
 		for _, item := range results {
-			if item.LpaUid == LpaUid {
+			if item.LpaUid == lpaUID {
 				return true, nil
 			}
 		}
 	}
 
 	return false, nil
+}
+
+func (c *Client) PutUser(ctx context.Context, id, identity string) error {
+	_, err := c.svc.TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
+		TransactItems: []types.TransactWriteItem{
+			{
+				Put: &types.Put{
+					TableName: c.prefixedTableName(actorUserTable),
+					Item: map[string]types.AttributeValue{
+						"Id":        &types.AttributeValueMemberS{Value: id},
+						"Identity":  &types.AttributeValueMemberS{Value: identity},
+						"CreatedAt": &types.AttributeValueMemberS{Value: c.now().Format(time.RFC3339)},
+					},
+				},
+			},
+			{
+				Put: &types.Put{
+					TableName: c.prefixedTableName(actorUserTable),
+					Item: map[string]types.AttributeValue{
+						"Id": &types.AttributeValueMemberS{Value: "IDENTITY#" + identity},
+					},
+					ConditionExpression: aws.String("attribute_not_exists(Id)"),
+				},
+			},
+		},
+	})
+
+	var tce *types.TransactionCanceledException
+	if errors.As(err, &tce) {
+		for _, reason := range tce.CancellationReasons {
+			if reason.Code != nil && *reason.Code == "ConditionalCheckFailed" {
+				return ConditionalCheckFailedError{}
+			}
+		}
+	}
+
+	return err
 }
