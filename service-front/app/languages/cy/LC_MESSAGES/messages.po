@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-08T09:56:14+00:00\n"
+"POT-Creation-Date: 2026-01-08T15:43:28+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -255,7 +255,7 @@ msgstr "Pwysig"
 msgid "One Login"
 msgstr "One Login"
 
-#: src/Actor/templates/actor/one-login.html.twig:29
+#: src/Actor/templates/actor/one-login.html.twig:32
 msgid ""
 "To make an LPA online, or to continue to make an LPA you’ve started, go to the "
 "<a href=\"%link%\" class=\"govuk-link\">Make a lasting power of attorney "
@@ -265,11 +265,11 @@ msgstr ""
 "arhosol rydych chi wedi’i dechrau yn barod, ewch i’r <a href=\"%link%\" "
 "class=\"govuk-link\">gwasanaeth Gwneud atwrneiaeth arhosol.</a>"
 
-#: src/Actor/templates/actor/one-login.html.twig:39
+#: src/Actor/templates/actor/one-login.html.twig:41
 msgid "Sign in to use your lasting power of attorney"
 msgstr "Mewngofnodwch i ddefnyddio eich atwrneiaeth arhosol"
 
-#: src/Actor/templates/actor/one-login.html.twig:42
+#: src/Actor/templates/actor/one-login.html.twig:44
 msgid ""
 "You’ll need to sign in to the Use a lasting power of attorney service using "
 "GOV.UK One Login."
@@ -277,7 +277,7 @@ msgstr ""
 "Bydd angen i chi fewngofnodi i’r gwasanaeth Defnyddio atwrneiaeth arhosol drwy "
 "GOV.UK One Login."
 
-#: src/Actor/templates/actor/one-login.html.twig:47
+#: src/Actor/templates/actor/one-login.html.twig:49
 msgid ""
 "If you’ve not used GOV.UK One Login before, you can set up your access on the "
 "next page."
@@ -285,7 +285,7 @@ msgstr ""
 "Os nad ydych chi wedi defnyddio GOV.UK One Login o’r blaen, gallwch greu "
 "cyfrif ar y dudalen nesaf."
 
-#: src/Actor/templates/actor/one-login.html.twig:52
+#: src/Actor/templates/actor/one-login.html.twig:54
 msgid ""
 "GOV.UK One Login is the new way to sign in to government services in one "
 "place, using the same email address and password."
@@ -293,11 +293,11 @@ msgstr ""
 "Gov.uk One Login yw’r ffordd newydd o fewngofnodi i wasanaethau’r llywodraeth "
 "mewn un lle, gan ddefnyddio’r un cyfeiriad e-bost a chyfrinair."
 
-#: src/Actor/templates/actor/one-login.html.twig:56
+#: src/Actor/templates/actor/one-login.html.twig:58
 msgid "What if I’ve used this service before?"
 msgstr "Beth os ydw i wedi defnyddio’r gwasanaeth hwn o’r blaen?"
 
-#: src/Actor/templates/actor/one-login.html.twig:58
+#: src/Actor/templates/actor/one-login.html.twig:60
 msgid ""
 "If you have a Use a lasting power of attorney account from before 13 August "
 "2024, and you use the same email address for GOV.UK One Login, any LPAs you’ve "
@@ -308,7 +308,7 @@ msgstr ""
 "unrhyw atwrneiaeth arhosol rydych chi wedi’i hychwanegu’n flaenorol yn "
 "ymddangos yn awtomatig."
 
-#: src/Actor/templates/actor/one-login.html.twig:64
+#: src/Actor/templates/actor/one-login.html.twig:66
 msgid ""
 "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-"
 "link\">terms of the Use a lasting power of attorney service.</a>"
@@ -334,7 +334,7 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:116
-#: src/Actor/templates/actor/one-login.html.twig:78
+#: src/Actor/templates/actor/one-login.html.twig:80
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Viewer/templates/viewer/enter-code.html.twig:64
@@ -348,11 +348,11 @@ msgstr ""
 msgid "Continue"
 msgstr "Parhau"
 
-#: src/Actor/templates/actor/one-login.html.twig:84
+#: src/Actor/templates/actor/one-login.html.twig:86
 msgid "with GOV.UK One Login"
 msgstr "gyda GOV.UK One Login"
 
-#: src/Actor/templates/actor/one-login.html.twig:87
+#: src/Actor/templates/actor/one-login.html.twig:89
 msgid ""
 "If you have any problems signing in to this service, you can <a href=\"https://"
 "home.account.gov.uk/contact-gov-uk-one-login?lng=en\" class=\"govuk-"
@@ -428,7 +428,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:26
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -447,7 +447,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:77
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -6669,3 +6669,28 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
 msgstr "Penderfyniadau i'w gwneud ar y cyd"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:80
+msgid "Your account contains duplicate LPAs"
+msgstr "Mae eich cyfrif yn cynnwys LPAs dyblyg"
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:83
+msgid ""
+"You might find it easier to manage your account by removing duplicate LPAs."
+msgstr ""
+"Efallai y byddwch chi'n ei chael hi'n haws rheoli eich cyfrif trwy gael gwared "
+"ar LPAs dyblyg."
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
+msgid ""
+"It doesn’t matter which LPA you remove but it would be more accurate to keep "
+"those that show as added by you, especially when creating access codes for "
+"organisations."
+msgstr ""
+"Does dim ots pa LPA rydych chi’n ei ddileu ond gallai fod yn fwy cywir cadw’r "
+"rhai sy’n dangos fel y’u hychwanegwyd gennych chi, yn enwedig wrth greu codau "
+"mynediad ar gyfer sefydliadau."
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:85
+msgid "Removing duplicate LPAs is optional."
+msgstr "Mae dileu LPAs dyblyg yn ddewisol."

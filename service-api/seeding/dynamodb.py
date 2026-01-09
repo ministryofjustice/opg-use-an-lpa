@@ -167,6 +167,15 @@ userLpaActorMapTable = dynamodb.Table(
 
 userLpaActorMap = [
     {
+        'Id': '906f3720-5b43-49ce-ac66-c670860bf4ee',
+        'SiriusUid': '700000000138',
+        'ActorId': 23,
+        'Added': '2020-08-19T15:22:32.838097Z ',
+        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
+        'ActivationCode': 'XW34H3HYFDDM',
+        'Comment': 'Seeded data'
+    },
+    {
         'Id': '806f3720-5b43-49ce-ac66-c670860bf4ee',
         'SiriusUid': '700000000138',
         'ActorId': 23,
