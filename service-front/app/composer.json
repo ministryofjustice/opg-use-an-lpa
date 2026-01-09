@@ -46,7 +46,7 @@
         "dflydev/fig-cookies": "^3.0",
         "elie29/zend-phpdi-config": "^9.0",
         "eventsauce/object-hydrator": "^1.4",
-        "facile-it/php-openid-client": "^0.3.5",
+        "facile-it/php-openid-client": "^0.4.0",
         "friendsofphp/proxy-manager-lts": "^1.0",
         "guzzlehttp/guzzle": "^7.8.1",
         "laminas/laminas-cache": "^3.6",
