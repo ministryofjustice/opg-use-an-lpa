@@ -6687,8 +6687,8 @@ msgid ""
 "those that show as added by you, especially when creating access codes for "
 "organisations."
 msgstr ""
-"Does dim ots pa LPA rydych chi'n ei ddileu ond gallai fod yn fwy cywir cadw'r "
-"rhai sy'n dangos fel y'u hychwanegwyd gennych chi, yn enwedig wrth greu codau "
+"Does dim ots pa LPA rydych chi’n ei ddileu ond gallai fod yn fwy cywir cadw’r "
+"rhai sy’n dangos fel y’u hychwanegwyd gennych chi, yn enwedig wrth greu codau "
 "mynediad ar gyfer sefydliadau."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:85
