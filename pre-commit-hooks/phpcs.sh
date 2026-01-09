@@ -11,14 +11,14 @@ if [ $MODE = 'front' ]; then
         FILES+="${path#service-front/app/} "
     done
 
-    docker compose run --rm -i --no-deps actor-app php /app/vendor/bin/phpcs -n $FILES
+    docker compose run --rm --no-deps actor-app php /app/vendor/bin/phpcs -n $FILES
 elif [ $MODE = 'api' ]; then
     FILES=""
     for path in "$@"; do
         FILES+="${path#service-api/app/} "
     done
 
-    docker compose run --rm -i --no-deps api-app php /app/vendor/bin/phpcs -n $FILES
+    docker compose run --rm --no-deps api-app php /app/vendor/bin/phpcs -n $FILES
 else
     exit 1
 fi
