@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -223,4 +224,71 @@ func TestExistsLpaIDAndUserIDWhenNoItems(t *testing.T) {
 	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaUID, userID)
 	assert.ErrorIs(t, err, nil)
 	assert.Equal(t, false, lpaExists)
+}
+
+func TestPutUser(t *testing.T) {
+	now := time.Now()
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
+			TransactItems: []types.TransactWriteItem{
+				{
+					Put: &types.Put{
+						TableName: aws.String(actorUserTable),
+						Item: map[string]types.AttributeValue{
+							"Id":        &types.AttributeValueMemberS{Value: "an-id"},
+							"Identity":  &types.AttributeValueMemberS{Value: "an-identity"},
+							"CreatedAt": &types.AttributeValueMemberS{Value: now.Format(time.RFC3339)},
+						},
+					},
+				},
+				{
+					Put: &types.Put{
+						TableName: aws.String(actorUserTable),
+						Item: map[string]types.AttributeValue{
+							"Id": &types.AttributeValueMemberS{Value: "IDENTITY#an-identity"},
+						},
+						ConditionExpression: aws.String("attribute_not_exists(Id)"),
+					},
+				},
+			},
+		}).
+		Return(nil, nil)
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.NoError(t, err)
+}
+
+func TestPutUser_ConditionalCheckFails(t *testing.T) {
+	now := time.Now()
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(mock.Anything, mock.Anything).
+		Return(nil, &types.TransactionCanceledException{
+			CancellationReasons: []types.CancellationReason{
+				{},
+				{Code: aws.String("ConditionalCheckFailed")},
+			},
+		})
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.ErrorIs(t, err, ConditionalCheckFailedError{})
+}
+
+func TestPutUser_Errors(t *testing.T) {
+	now := time.Now()
+	expectedError := errors.New("hey")
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(mock.Anything, mock.Anything).
+		Return(nil, expectedError)
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.Equal(t, expectedError, err)
 }

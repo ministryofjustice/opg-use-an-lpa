@@ -78,16 +78,12 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 		return nil
 	}
 
-	userId := uuid.New().String()
-	newUser := map[string]types.AttributeValue{
-		"Id":       &types.AttributeValueMemberS{Value: userId},
-		"Identity": &types.AttributeValueMemberS{Value: actor.SubjectID},
-	}
-	if err := dynamoClient.Put(ctx, actorUserTable, newUser); err != nil {
+	userID := uuid.New().String()
+	if err := dynamoClient.PutUser(ctx, userID, actor.SubjectID); err != nil {
 		return fmt.Errorf("Failed to put user %s: %w", actor.ActorUID, err)
 	}
 
-	actor.Id = userId
+	actor.Id = userID
 
 	return nil
 }

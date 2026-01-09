@@ -40,6 +40,7 @@ type DynamodbClient interface {
 	OneByIdentity(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
 	ExistsLpaIDAndUserID(ctx context.Context, lpaUID string, userID string) (bool, error)
+	PutUser(ctx context.Context, id, identity string) error
 }
 
 type Handler interface {

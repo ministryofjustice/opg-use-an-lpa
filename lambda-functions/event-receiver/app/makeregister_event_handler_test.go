@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -49,16 +48,10 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 		}).
 		Return(nil)
 	mockDynamo.EXPECT().
-		Put(ctx, "ActorUsers", mock.MatchedBy(func(input map[string]types.AttributeValue) bool {
-			idAttr, ok := input["Id"].(*types.AttributeValueMemberS)
-
-			_, err := uuid.Parse(idAttr.Value)
-			if err != nil {
-				return false
-			}
-			identityAttr, ok := input["Identity"].(*types.AttributeValueMemberS)
-			return ok && identityAttr.Value == "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
-		})).
+		PutUser(ctx, mock.MatchedBy(func(id string) bool {
+			_, err := uuid.Parse(id)
+			return err == nil
+		}), "urn:fdc:gov.uk:2022:XXXX-XXXXXX").
 		Return(nil)
 	mockDynamo.EXPECT().
 		Put(ctx, "UserLpaActorMap", mock.Anything).
@@ -138,7 +131,7 @@ func TestHandleCloudWatchEvent_FailedToPutActor(t *testing.T) {
 		OneByIdentity(ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).
 		Return(nil)
 	mockDynamo.EXPECT().
-		Put(ctx, mock.Anything, mock.Anything).
+		PutUser(ctx, mock.Anything, mock.Anything).
 		Return(errors.New("simulated error: Failed to put actor"))
 
 	actor := &Actor{
