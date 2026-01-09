@@ -27,8 +27,6 @@ class LpaDashboardHandler extends AbstractHandler implements UserAware
 {
     use User;
 
-    public const DUPLICATE_LPA_FLASH_MSG = 'duplicate_lpa_flash_msg';
-
     public function __construct(
         TemplateRendererInterface $renderer,
         UrlHelper $urlHelper,
