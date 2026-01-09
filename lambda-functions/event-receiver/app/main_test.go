@@ -65,6 +65,9 @@ func TestValidCloudWatchEvent(t *testing.T) {
 		OneByIdentity(ctx, "urn:fdc:gov.uk:2022:XXXX-XXXXXX", mock.Anything).
 		Return(nil)
 	mockDynamo.EXPECT().
+		PutUser(ctx, mock.Anything, "urn:fdc:gov.uk:2022:XXXX-XXXXXX").
+		Return(nil)
+	mockDynamo.EXPECT().
 		Put(ctx, mock.Anything, mock.Anything).
 		Return(nil)
 	mockDynamo.EXPECT().
