@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
-	"github.com/google/uuid"
-	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo/mocks"
-	"testing"
-
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -25,26 +25,28 @@ type testSK string
 func (k testSK) SK() string { return string(k) }
 
 var (
-	ctx             = context.Background()
-	expectedError   = errors.New("err")
-	subjectID       = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
-	actorUid        = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
-	LpaUid          = "M-1234-5678-9012"
-	userId          = uuid.New().String()
-	UserLpaActorMap = uuid.New().String()
+	ctx               = context.Background()
+	expectedError     = errors.New("err")
+	subjectID         = "urn:fdc:gov.uk:2022:XXXX-XXXXXX"
+	actorUID          = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
+	lpaUID            = "M-1234-5678-9012"
+	userID            = uuid.New().String()
+	userLpaActorMapID = uuid.New().String()
 )
 
 func TestOneByIdentity(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
 	expectedItem := map[string]types.AttributeValue{
 		"subjectId": &types.AttributeValueMemberS{Value: subjectID},
-		"Id":        &types.AttributeValueMemberS{Value: actorUid},
+		"Id":        &types.AttributeValueMemberS{Value: actorUID},
 	}
-	mockDynamoDB.On("Query", ctx, mock.Anything).
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{
 			Items: []map[string]types.AttributeValue{expectedItem},
-		}, nil).Once()
+		}, nil).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
@@ -52,15 +54,15 @@ func TestOneByIdentity(t *testing.T) {
 	err := c.OneByIdentity(ctx, subjectID, &v)
 
 	assert.Nil(t, err)
-	assert.Equal(t, map[string]any{"Id": actorUid, "subjectId": subjectID}, v)
-	mockDynamoDB.AssertExpectations(t)
+	assert.Equal(t, map[string]any{"Id": actorUID, "subjectId": subjectID}, v)
 }
 
 func TestOneByIdentityWhenQueryError(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("Query", ctx, mock.Anything).
-		Return(&dynamodb.QueryOutput{}, expectedError).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, expectedError).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
@@ -70,10 +72,11 @@ func TestOneByIdentityWhenQueryError(t *testing.T) {
 }
 
 func TestOneByIdentityWhenNoItems(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("Query", ctx, mock.Anything).
-		Return(&dynamodb.QueryOutput{}, nil).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, nil).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
@@ -82,13 +85,13 @@ func TestOneByIdentityWhenNoItems(t *testing.T) {
 }
 
 func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("Query", ctx, mock.Anything).
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{
 			Items: []map[string]types.AttributeValue{
 				{
-					"Id":        &types.AttributeValueMemberS{Value: actorUid},
+					"Id":        &types.AttributeValueMemberS{Value: actorUID},
 					"subjectId": &types.AttributeValueMemberS{Value: subjectID},
 				},
 			},
@@ -99,7 +102,6 @@ func TestOneByIdentityWhenUnmarshalError(t *testing.T) {
 	err := c.OneByIdentity(ctx, subjectID, "not an lpa")
 
 	assert.IsType(t, &attributevalue.InvalidUnmarshalError{}, err)
-	mockDynamoDB.AssertExpectations(t)
 }
 
 func TestPut(t *testing.T) {
@@ -107,49 +109,36 @@ func TestPut(t *testing.T) {
 		name      string
 		tableName string
 		item      map[string]types.AttributeValue
-		mockErr   error
-		wantErr   bool
 	}{
 		{
 			name:      "Valid Input",
 			tableName: "ActorUsers",
 			item: map[string]types.AttributeValue{
-				"UserId": &types.AttributeValueMemberS{Value: userId},
-				"LpaUid": &types.AttributeValueMemberS{Value: LpaUid},
+				"UserId": &types.AttributeValueMemberS{Value: userID},
+				"LpaUid": &types.AttributeValueMemberS{Value: lpaUID},
 			},
-			mockErr: nil,
-			wantErr: false,
 		},
 		{
 			name:      "Empty Input",
 			tableName: "ActorUsers",
 			item:      map[string]types.AttributeValue{},
-			mockErr:   nil,
-			wantErr:   false,
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			mockDynamoDB := new(mocks.DynamoDB)
-
-			mockDynamoDB.On("PutItem", ctx, &dynamodb.PutItemInput{
-				TableName: aws.String("ActorUsers"),
-				Item:      tc.item,
-			}).Return(&dynamodb.PutItemOutput{}, tc.mockErr).Once()
+			mockDynamoDB := newMockDynamoDB(t)
+			mockDynamoDB.EXPECT().
+				PutItem(ctx, &dynamodb.PutItemInput{
+					TableName: aws.String("ActorUsers"),
+					Item:      tc.item,
+				}).Return(&dynamodb.PutItemOutput{}, nil).
+				Once()
 
 			c := &Client{svc: mockDynamoDB}
 
 			err := c.Put(ctx, "ActorUsers", tc.item)
-
-			if tc.wantErr && err == nil {
-				t.Fatalf("%s: expected an error, but got none", tc.name)
-			}
-			if !tc.wantErr && err != nil {
-				t.Fatalf("%s: did not expect an error, but got %v", tc.name, err)
-			}
-
-			mockDynamoDB.AssertExpectations(t)
+			assert.NoError(t, err)
 		})
 	}
 }
@@ -157,23 +146,24 @@ func TestPut(t *testing.T) {
 func TestPutWhenError(t *testing.T) {
 	expectedError := errors.New("put error")
 
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("PutItem", ctx, mock.Anything, mock.Anything).
-		Return(nil, expectedError).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		PutItem(ctx, mock.Anything, mock.Anything).
+		Return(nil, expectedError).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
 	err := c.Put(ctx, "hello", map[string]types.AttributeValue{})
 	assert.Equal(t, expectedError, err)
-	mockDynamoDB.AssertExpectations(t)
 }
 
 func TestPutWhenUnmarshalError(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("PutItem", ctx, mock.Anything, mock.Anything).
-		Return(nil, errors.New("unmarshal error")).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		PutItem(ctx, mock.Anything, mock.Anything).
+		Return(nil, errors.New("unmarshal error")).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
@@ -183,56 +173,122 @@ func TestPutWhenUnmarshalError(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "unmarshal error")
-
-	mockDynamoDB.AssertExpectations(t)
 }
 
 func TestExistsLpaIDAndUserID(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
 	expectedItem := map[string]types.AttributeValue{
-		"Id":      &types.AttributeValueMemberS{Value: UserLpaActorMap},
-		"LpaUid":  &types.AttributeValueMemberS{Value: LpaUid},
-		"ActorId": &types.AttributeValueMemberS{Value: actorUid},
-		"UserId":  &types.AttributeValueMemberS{Value: userId},
+		"Id":      &types.AttributeValueMemberS{Value: userLpaActorMapID},
+		"LpaUid":  &types.AttributeValueMemberS{Value: lpaUID},
+		"ActorId": &types.AttributeValueMemberS{Value: actorUID},
+		"UserId":  &types.AttributeValueMemberS{Value: userID},
 	}
 
-	mockDynamoDB.On("Query", ctx, mock.Anything).
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
 		Return(&dynamodb.QueryOutput{
 			Count: 1,
 			Items: []map[string]types.AttributeValue{expectedItem},
-		}, nil).Once()
+		}, nil).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
-	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaUID, userID)
 	assert.Equal(t, true, lpaExists)
 	assert.Nil(t, err)
-	mockDynamoDB.AssertExpectations(t)
 }
 
 func TestExistsLpaIDAndUserIDWhenQueryError(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("Query", ctx, mock.Anything).
-		Return(&dynamodb.QueryOutput{}, expectedError).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, expectedError).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
-	_, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
-
+	_, err := c.ExistsLpaIDAndUserID(ctx, lpaUID, userID)
 	assert.Equal(t, fmt.Errorf("failed to query LPA mappings: %w", expectedError), err)
 }
 
 func TestExistsLpaIDAndUserIDWhenNoItems(t *testing.T) {
-	mockDynamoDB := new(mocks.DynamoDB)
-
-	mockDynamoDB.On("Query", ctx, mock.Anything).
-		Return(&dynamodb.QueryOutput{}, nil).Once()
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		Query(ctx, mock.Anything).
+		Return(&dynamodb.QueryOutput{}, nil).
+		Once()
 
 	c := &Client{svc: mockDynamoDB}
 
-	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, LpaUid, userId)
+	lpaExists, err := c.ExistsLpaIDAndUserID(ctx, lpaUID, userID)
 	assert.ErrorIs(t, err, nil)
 	assert.Equal(t, false, lpaExists)
+}
+
+func TestPutUser(t *testing.T) {
+	now := time.Now()
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(ctx, &dynamodb.TransactWriteItemsInput{
+			TransactItems: []types.TransactWriteItem{
+				{
+					Put: &types.Put{
+						TableName: aws.String(actorUserTable),
+						Item: map[string]types.AttributeValue{
+							"Id":        &types.AttributeValueMemberS{Value: "an-id"},
+							"Identity":  &types.AttributeValueMemberS{Value: "an-identity"},
+							"CreatedAt": &types.AttributeValueMemberS{Value: now.Format(time.RFC3339)},
+						},
+					},
+				},
+				{
+					Put: &types.Put{
+						TableName: aws.String(actorUserTable),
+						Item: map[string]types.AttributeValue{
+							"Id": &types.AttributeValueMemberS{Value: "IDENTITY#an-identity"},
+						},
+						ConditionExpression: aws.String("attribute_not_exists(Id)"),
+					},
+				},
+			},
+		}).
+		Return(nil, nil)
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.NoError(t, err)
+}
+
+func TestPutUser_ConditionalCheckFails(t *testing.T) {
+	now := time.Now()
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(mock.Anything, mock.Anything).
+		Return(nil, &types.TransactionCanceledException{
+			CancellationReasons: []types.CancellationReason{
+				{},
+				{Code: aws.String("ConditionalCheckFailed")},
+			},
+		})
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.ErrorIs(t, err, ConditionalCheckFailedError{})
+}
+
+func TestPutUser_Errors(t *testing.T) {
+	now := time.Now()
+	expectedError := errors.New("hey")
+
+	mockDynamoDB := newMockDynamoDB(t)
+	mockDynamoDB.EXPECT().
+		TransactWriteItems(mock.Anything, mock.Anything).
+		Return(nil, expectedError)
+
+	c := &Client{svc: mockDynamoDB, now: func() time.Time { return now }}
+	err := c.PutUser(ctx, "an-id", "an-identity")
+	assert.Equal(t, expectedError, err)
 }
