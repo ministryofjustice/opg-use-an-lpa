@@ -20,7 +20,8 @@ class ActorUsersFactory
 
         return new ActorUsers(
             $container->get(DynamoDbClient::class),
-            $config['repositories']['dynamodb']['actor-users-table']
+            $config['repositories']['dynamodb']['actor-users-table'],
+            $config['track-old-emails'] ?? false,
         );
     }
 }

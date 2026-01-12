@@ -518,6 +518,63 @@ class ActorUsersTest extends TestCase
     }
 
     #[Test]
+    public function will_change_a_users_email_with_tracking(): void
+    {
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems([
+                'TransactItems' => [
+                    [
+                        'Update' => [
+                            'TableName'                 => self::TABLE_NAME,
+                            'Key'                       => ['Id' => ['S' => 'fakeId']],
+                            'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                            'ExpressionAttributeValues' => [
+                                ':p' => [
+                                    'S' => 'newemail@example.com',
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'Delete' => [
+                            'TableName' => self::TABLE_NAME,
+                            'Key'       => [
+                                'Id' => ['S' => 'EMAIL#oldemail@example.com'],
+                            ],
+                        ],
+                    ],
+                    [
+                        'Put' => [
+                            'TableName'           => self::TABLE_NAME,
+                            'ConditionExpression' => 'attribute_not_exists(Id)',
+                            'Item'                => [
+                                'Id' => ['S' => 'EMAIL#newemail@example.com'],
+                            ],
+                        ],
+                    ],
+                    [
+                        'Update' => [
+                            'TableName'                 => self::TABLE_NAME,
+                            'Key'                       => [
+                                'Id' => ['S' => '#OLDEMAILS'],
+                            ],
+                            'UpdateExpression'          => 'ADD Emails :Email',
+                            'ExpressionAttributeValues' => [
+                                ':Email' => [
+                                    'SS' => ['oldemail@example.com=' . hash('sha256', 'oldemail@example.com')],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ])->shouldBeCalled();
+
+        $sut = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME, true);
+
+        $sut->changeEmail('fakeId', 'oldemail@example.com', 'newemail@example.com');
+    }
+
+    #[Test]
     public function will_migrate_a_local_account_to_oidc(): void
     {
         $id       = '12345-1234-1234-1234-12345';

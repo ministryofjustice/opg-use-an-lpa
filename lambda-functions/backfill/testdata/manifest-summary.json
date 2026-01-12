@@ -1,0 +1,17 @@
+{
+  "version": "2020-06-30",
+  "exportArn": "arn:aws:dynamodb:eu-west-1:367815980639:table/3507renovateallm-ActorUsers/export/01765968403795-d1d972cf",
+  "startTime": "2025-12-17T10:46:43.795Z",
+  "endTime": "2025-12-17T10:52:45.409Z",
+  "tableArn": "arn:aws:dynamodb:eu-west-1:367815980639:table/3507renovateallm-ActorUsers",
+  "tableId": "230e6f95-cd27-4a94-9afb-4e297c814682",
+  "exportTime": "2025-12-17T10:46:43.795Z",
+  "s3Bucket": "ualpa-dynamo-export-test",
+  "s3Prefix": null,
+  "s3SseAlgorithm": "AES256",
+  "s3SseKmsKeyId": null,
+  "manifestFilesS3Key": "AWSDynamoDB/01765968403795-d1d972cf/manifest-files.json",
+  "billedSizeBytes": 0,
+  "itemCount": 3,
+  "outputFormat": "DYNAMODB_JSON"
+}
