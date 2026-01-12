@@ -4,18 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
-	"github.com/ministryofjustice/opg-use-an-lpa/internal/dynamo"
 	"log/slog"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
+	"github.com/ministryofjustice/opg-use-an-lpa/lambda-functions/event-receiver/internal/dynamo"
 )
 
 var (
@@ -39,7 +39,8 @@ type Factory interface {
 type DynamodbClient interface {
 	OneByIdentity(ctx context.Context, uid string, v any) error
 	Put(ctx context.Context, tableName string, item map[string]types.AttributeValue) error
-	ExistsLpaIDAndUserID(ctx context.Context, LpaUid string, userId string) (bool, error)
+	ExistsLpaIDAndUserID(ctx context.Context, lpaUID string, userID string) (bool, error)
+	PutUser(ctx context.Context, id, identity string) error
 }
 
 type Handler interface {
