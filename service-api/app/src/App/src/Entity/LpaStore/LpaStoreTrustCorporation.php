@@ -45,23 +45,26 @@ class LpaStoreTrustCorporation extends Person
         ?string $town,
         #[MapFrom('uid')]
         ?string $uId,
+        #[MapFrom('cannotMakeJointDecisions')]
+        ?bool $cannotMakeJointDecisions,
     ) {
         parent::__construct(
-            addressLine1: $line1,
-            addressLine2: $line2,
-            addressLine3: $line3,
-            country:      $country,
-            county:       $county,
-            dob:          $dateOfBirth,
-            email:        $email,
-            firstnames:   $firstNames,
-            name:         $name,
-            otherNames:   null,
-            postcode:     $postcode,
-            surname:      $lastName,
-            systemStatus: $status,
-            town:         $town,
-            uId:          $uId,
+            addressLine1:               $line1,
+            addressLine2:               $line2,
+            addressLine3:               $line3,
+            country:                    $country,
+            county:                     $county,
+            dob:                        $dateOfBirth,
+            email:                      $email,
+            firstnames:                 $firstNames,
+            name:                       $name,
+            otherNames:                 null,
+            postcode:                   $postcode,
+            surname:                    $lastName,
+            systemStatus:               $status,
+            town:                       $town,
+            uId:                        $uId,
+            cannotMakeJointDecisions:   $cannotMakeJointDecisions
         );
     }
 }

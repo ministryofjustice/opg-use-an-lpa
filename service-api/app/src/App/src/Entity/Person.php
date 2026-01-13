@@ -36,6 +36,7 @@ class Person implements
         public readonly ?ActorStatus $systemStatus,
         public readonly ?string $town,
         public readonly ?string $uId,
+        public readonly ?bool $cannotMakeJointDecisions,
     ) {
     }
 
@@ -100,5 +101,10 @@ class Person implements
     public function getMiddleNames(): string
     {
         return '';
+    }
+
+    public function getCannotMakeJointDecisions(): ?bool
+    {
+        return $this->cannotMakeJointDecisions ?? null;
     }
 }

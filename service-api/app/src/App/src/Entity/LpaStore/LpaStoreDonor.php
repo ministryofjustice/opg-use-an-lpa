@@ -41,23 +41,26 @@ class LpaStoreDonor extends Person implements ActorMatchingInterface
         ?string $town,
         #[MapFrom('uid')]
         ?string $uId,
+        #[MapFrom('cannotMakeJointDecisions')]
+        ?bool $cannotMakeJointDecisions,
     ) {
         parent::__construct(
-            addressLine1: $line1,
-            addressLine2: $line2,
-            addressLine3: $line3,
-            country:      $country,
-            county:       $county,
-            dob:          $dateOfBirth,
-            email:        $email,
-            firstnames:   $firstNames,
-            name:         null,
-            otherNames:   $otherNamesKnownBy,
-            postcode:     $postcode,
-            surname:      $lastName,
-            systemStatus: null,
-            town:         $town,
-            uId:          $uId,
+            addressLine1:               $line1,
+            addressLine2:               $line2,
+            addressLine3:               $line3,
+            country:                    $country,
+            county:                     $county,
+            dob:                        $dateOfBirth,
+            email:                      $email,
+            firstnames:                 $firstNames,
+            name:                       null,
+            otherNames:                 $otherNamesKnownBy,
+            postcode:                   $postcode,
+            surname:                    $lastName,
+            systemStatus:               null,
+            town:                       $town,
+            uId:                        $uId,
+            cannotMakeJointDecisions:   $cannotMakeJointDecisions
         );
     }
 
