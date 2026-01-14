@@ -155,7 +155,7 @@ run_api_composer_update:
 .PHONY: run_api_composer_update
 
 run_smoke_composer_update:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer update
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer update
 .PHONY: run_smoke_composer_update
 
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
