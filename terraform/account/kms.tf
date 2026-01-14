@@ -264,4 +264,52 @@ data "aws_iam_policy_document" "dynamodb_kms" {
       ]
     }
   }
+
+  statement {
+    sid       = "Key Administrator"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion",
+      "kms:ReplicateKey",
+    ]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "Key Administrator Decryption"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+      ]
+    }
+  }
 }
