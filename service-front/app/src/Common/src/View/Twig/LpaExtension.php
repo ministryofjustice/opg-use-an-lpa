@@ -38,6 +38,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_donor_signature_date_too_old', [$this, 'isDonorSignatureDateOld']),
             new TwigFunction('is_sirius_lpa', [$this, 'isSiriusLpa']),
             new TwigFunction('is_online_channel', [$this, 'isOnlineChannel']),
+            new TwigFunction('is_english', [$this, 'isEnglish']),
         ];
     }
 
@@ -246,5 +247,10 @@ class LpaExtension extends AbstractExtension
     public function isOnlineChannel(Lpa|CombinedLpa $lpa): bool
     {
         return $lpa->getChannel() === Channel::ONLINE;
+    }
+
+    public function isEnglish(string $path): bool
+    {
+        return !str_starts_with($path, '/cy/');
     }
 }

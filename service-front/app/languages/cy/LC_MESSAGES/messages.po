@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-08T15:43:28+00:00\n"
+"POT-Creation-Date: 2026-01-14T10:34:49+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -428,7 +428,7 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:33
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:26
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -447,7 +447,7 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:35
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:17
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:100
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:98
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
@@ -889,7 +889,6 @@ msgid "Delete my account"
 msgstr "Dileu fy nghyfrif"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:15
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:13
 msgid "Your lasting powers of attorney"
 msgstr "Eich atwrneiaethau arhosol"
 
@@ -901,30 +900,15 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-# Some translated content missing
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:22
-msgid ""
-"Find out about <a href=\"%link1_en%\" class=\"govuk-link\">the role of "
-"attorney</a> and how they support donors <a href=\"%link2_en%\" class=\"govuk-"
-"link\">to make decisions.</a>"
-msgstr ""
-"Darganfyddwch am <a href=\"%link1_cy%\" class=\"govuk-link\">rôl atwrnai</a> a "
-"sut maent yn cefnogi rhoddwyr <a href=%link2_cy% class=\"govuk-link\">wneud "
-"penderfyniadau</a>."
-
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:36
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:34
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "What can I do with this service?"
 msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:38
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 msgid "Use this service to:"
 msgstr "Defnyddiwch y gwasanaeth hwn i:"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:40
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid ""
 "give organisations access to an online summary of an <abbr title=\"lasting "
 "power of attorney\">LPA</abbr> by making a secure access code"
@@ -932,8 +916,7 @@ msgstr ""
 "roi mynediad i sefydliadau at grynodeb ar-lein o <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> drwy greu cod diogel"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:41
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:41
 msgid ""
 "keep track of the organisations that have online access to an <abbr "
 "title=\"lasting power of attorney\">LPA</abbr>"
@@ -941,8 +924,7 @@ msgstr ""
 "cadw golwg ar y sefydliadau sydd â mynediad ar-lein at <abbr "
 "title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:44
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:42
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:42
 msgid ""
 "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, "
 "including a scanned image of any restrictions and conditions (can also be "
@@ -953,16 +935,14 @@ msgstr ""
 "chyfarwyddiadau’ yn dibynnu pryd cafodd yr <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> ei gwneud)"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:45
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:43
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:43
 msgid ""
 "ask for an activation key if you have not been given one - or it has expired"
 msgstr ""
 "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi "
 "dod i ben"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:54
-#: src/Actor/templates/actor/lpa-blank-dashboard.html.twig:49
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:52
 msgid "Add your first LPA"
 msgstr "Ychwanegu eich LPA cyntaf"
 
@@ -1227,11 +1207,11 @@ msgstr ""
 "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich "
 "cyfrif yn ymddangos ar y dudalen hon."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:52
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:50
 msgid "Add another LPA"
 msgstr "Ychwanegu LPA arall"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:64
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:62
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
@@ -6670,18 +6650,18 @@ msgstr ""
 msgid "Decisions to be made jointly"
 msgstr "Penderfyniadau i'w gwneud ar y cyd"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:80
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:78
 msgid "Your account contains duplicate LPAs"
 msgstr "Mae eich cyfrif yn cynnwys LPAs dyblyg"
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:83
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:81
 msgid ""
 "You might find it easier to manage your account by removing duplicate LPAs."
 msgstr ""
 "Efallai y byddwch chi'n ei chael hi'n haws rheoli eich cyfrif trwy gael gwared "
 "ar LPAs dyblyg."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:84
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:82
 msgid ""
 "It doesn’t matter which LPA you remove but it would be more accurate to keep "
 "those that show as added by you, especially when creating access codes for "
@@ -6691,6 +6671,16 @@ msgstr ""
 "rhai sy’n dangos fel y’u hychwanegwyd gennych chi, yn enwedig wrth greu codau "
 "mynediad ar gyfer sefydliadau."
 
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:85
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:83
 msgid "Removing duplicate LPAs is optional."
 msgstr "Mae dileu LPAs dyblyg yn ddewisol."
+
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:24
+msgid ""
+"Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and "
+"how attorneys should support donors <a href=\"%link2%\" class=\"govuk-"
+"link\">to make decisions</a>."
+msgstr ""
+"Gwybodaeth am <a href=\"%link1%\" class=\"govuk-link\">sut i reoli LPAs</a> a "
+"sut y dylai atwrneiod gefnogi rhoddwyr i <a href=\"%link2%\" class=\"govuk-"
+"link\">wneud penderfyniadau</a>."

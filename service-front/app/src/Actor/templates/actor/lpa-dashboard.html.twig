@@ -22,12 +22,10 @@
 
                     <p class="govuk-body-m">
                         {% trans with {
-                            '%link1_en%': 'https://www.gov.uk/lasting-power-attorney-duties',
-                            '%link1_cy%': 'https://www.gov.uk/atwrneiaeth-arhosol',
-                            '%link2_en%': 'https://www.gov.uk/make-decisions-for-someone/making-decisions',
-                            '%link2_cy%': 'https://www.gov.uk/gwneud-penderfyniadau-dros-rywun/gwneud-penderfyniadau'
+                            '%link1%': is_english(path()) ? 'https://www.gov.uk/lasting-power-attorney-duties' : 'https://www.gov.uk/atwrneiaeth-arhosol',
+                            '%link2%': is_english(path()) ? 'https://www.gov.uk/make-decisions-for-someone/making-decisions' : 'https://www.gov.uk/gwneud-penderfyniadau-dros-rywun/gwneud-penderfyniadau',
                         } %}
-                            Find out about <a href="%link1_en%" class="govuk-link">the role of attorney</a> and how they support donors <a href="%link2_en%" class="govuk-link">to make decisions.</a>
+                            Find out about <a href="%link1%" class="govuk-link">managing LPAs</a> and how attorneys should support donors <a href="%link2%" class="govuk-link">to make decisions</a>.
                         {% endtrans %}
                     </p>
                     <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick" data-gaAction="Details" data-gaCategory="Service Information" data-gaLabel="What can I do with this service?">
