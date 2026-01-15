@@ -61,16 +61,90 @@
     </div>
 </dl>
 
-{% if not is_sirius_lpa(lpa.Uid) and lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+{% set attorneys = lpa.attorneys|default([]) %}
+{% set trustCorps = lpa.trustCorporations|default([]) %}
+{% set everyone = attorneys|merge(trustCorps) %}
+
+{# Joint decision makers are those who can make joint decisions #}
+{% set jointDecisionMakers = everyone|filter(p => p.cannotMakeJointDecisions is same as(false)) %}
+
+{# Are all attorneys able to make joint decisions? #}
+{% set all_can_make_joint_decisions = (jointDecisionMakers|length == everyone|length) %}
+
+{% if lpa.caseAttorneyJointlyAndJointlyAndSeverally and not is_sirius_lpa(lpa.Uid)%}
+<dl class="govuk-summary-list govuk-summary-list--no-border">
     <div class="govuk-inset-text govuk-!-margin-top-0">
-        <h3 class="govuk-heading-s">
-            {% trans %}Decisions to be made jointly{% endtrans %}
-        </h3>
+        <dt class="govuk-summary-list__key">
+            <h3 class="govuk-heading-s">
+                {% trans %}Decisions to be made jointly{% endtrans %}
+            </h3>
+        </dt>
+
+        {# Scenario1: This if covers scenario1 to check if all attorneys can make join decisions#}
+        {% if not all_can_make_joint_decisions %}
+            <dd class="govuk-summary-list__value">
+                {# Scenario 2: Cannot make joint decision true for all attorneys/tc, where multiple attorneys #}
+                {% if jointDecisionMakers|length == 0 %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}There are no longer attorneys who can make the joint decisions on this LPA.{% endtrans %}</p>
+
+                    {% if everyone|length == 1 %}
+                        <p>{% trans %}All other decisions can still be made by:{% endtrans %}</p>
+                    {% else %}
+                        <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
+                    {% endif %}
+
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>
+                        {% trans %}
+                            The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG.
+                        {% endtrans %}
+                    </p>
+                {# SCENARIO 4: Cannot make joint decision false for one attorney, where multiple attorneys #}
+                {% elseif jointDecisionMakers|length == 1 %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}The joint decisions for this LPA can now only be made by:{% endtrans %}</p>
+                    <ul>
+                        {% set p = jointDecisionMakers|first %}
+                        <li>{{ actor_name(p) }}</li>
+                    </ul>
+
+                    <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian.{% endtrans %}</p>
+                {# Scenario 3: Cannot make joint decision false for multiple attorneys but not all attorneys can make joint decisions #}
+                {% else %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}The joint decisions for this LPA can now only be made, and must be agreed, by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in jointDecisionMakers %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian.{% endtrans %}</p>
+                {% endif %}
+            </dd>
+        {% endif %}
 
         <div class="govuk-body restrictions-and-conditions-banner">
             {{ lpa.howAttorneysMakeDecisionsDetails }}
         </div>
     </div>
+</dl>
 {% endif %}
 
 <dl class="govuk-summary-list govuk-summary-list--no-border">

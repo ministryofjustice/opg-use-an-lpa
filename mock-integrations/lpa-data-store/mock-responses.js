@@ -40,7 +40,7 @@
         status: "active",
         channel: "paper",
         signedAt: "2024-01-10T23:00:00Z",
-        cannotMakeJointDecisions: false
+        cannotMakeJointDecisions: true
       },
       {
         uid: "9201a0b8-70a2-47db-93f2-c7510b4210ae",
@@ -55,7 +55,7 @@
         status: "replacement",
         channel: "online",
         signedAt: "2024-01-10T23:00:00Z",
-        cannotMakeJointDecisions: false
+        cannotMakeJointDecisions: null
       }
     ],
     trustCorporations: [

@@ -54,7 +54,7 @@
       "status": "replacement",
       "channel": "online",
       "signedAt": "2024-01-10T23:00:00Z",
-      "cannotMakeJointDecisions": false
+      "cannotMakeJointDecisions": true
     }
   ],
   "trustCorporations": [

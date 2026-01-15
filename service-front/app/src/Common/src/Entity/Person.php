@@ -28,6 +28,7 @@ class Person implements ProcessPersonsInterface
         public readonly ?string $systemStatus,
         public readonly ?string $town,
         public readonly ?string $uId,
+        public readonly ?bool $cannotMakeJointDecisions,
     ) {
     }
 
@@ -111,6 +112,11 @@ class Person implements ProcessPersonsInterface
 
     public function getSystemStatus(): bool
     {
-        return (bool) $this->systemStatus;
+        return (bool)$this->systemStatus;
+    }
+
+    public function getCannotMakeJointDecisions(): ?bool
+    {
+        return $this->cannotMakeJointDecisions ?? null;
     }
 }
