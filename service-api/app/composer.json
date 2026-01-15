@@ -70,7 +70,6 @@
         "filp/whoops": "^2.18.3",
         "laminas/laminas-component-installer": "^3.5",
         "laminas/laminas-development-mode": "^3.14",
-        "mezzio/mezzio-tooling": "^2.10.1",
         "nicwortel/behat-unused-step-definitions-extension": "^1.2",
         "pact-foundation/pact-php": "^8.1",
         "phpspec/prophecy": "^1.22",
