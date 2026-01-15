@@ -202,37 +202,14 @@ jobs:
             go mod tidy
             go test
           elif [ ${SVC_PREFIX} == 'api' ]; then
-            docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-codes
-            docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa
-            docker run -d --rm --name lpa-data-store-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-store
-            docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-instructions-preferences
-
-            export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
-            export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
-            export DOCKER_REMOTE_LPA_DATA_STORE_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-data-store-pact-mock)"
-            export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
-
-            docker run -d --name tests \
-              --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP \
-              --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP \
-              --add-host lpa-data-store-pact-mock:$DOCKER_REMOTE_LPA_DATA_STORE_PACT_IP \
-              --add-host iap-images-mock:$DOCKER_REMOTE_IAP_PACT_IP api-app:latest
+            docker run -d --name tests api-app:latest
 
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec tests docker-php-ext-enable xdebug
             docker exec tests /usr/local/bin/php -dapc.enable_cli=1 -dxdebug.mode=coverage /app/vendor/bin/phpunit
 
             mkdir -p build/service-${SVC_PREFIX}
-            docker cp lpa-codes-pact-mock:/tmp/pacts build/service-${SVC_PREFIX}/pacts
-
-            docker stop lpa-codes-pact-mock
-            docker stop api-gateway-pact-mock
-            docker stop lpa-data-store-pact-mock
-            docker stop iap-images-mock
+            docker cp tests:/app/build/pacts build/service-${SVC_PREFIX}/pacts
           else
             docker run -d --name tests ${SVC_PREFIX}-app:latest
             docker exec tests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
@@ -248,34 +225,11 @@ jobs:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
         run: |
           if [[ "${SVC_PREFIX}" = "api" ]]; then
-            docker run -d --rm --name lpa-codes-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-codes
-            docker run -d --rm --name api-gateway-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa
-            docker run -d --rm --name lpa-data-store-pact-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-store
-            docker run -d --rm --name iap-images-mock pactfoundation/pact-cli:latest mock-service -p "80" --host "0.0.0.0" \
-              --pact-dir /tmp/pacts --consumer use-an-lpa --provider data-lpa-instructions-preferences
-
-            export DOCKER_REMOTE_LPA_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-codes-pact-mock)"
-            export DOCKER_REMOTE_API_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' api-gateway-pact-mock)"
-            export DOCKER_REMOTE_LPA_DATA_STORE_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' lpa-data-store-pact-mock)"
-            export DOCKER_REMOTE_IAP_PACT_IP="$(docker inspect --format='{{.NetworkSettings.IPAddress}}' iap-images-mock)"
-
-            docker run -d --name behattests \
-              --add-host lpa-codes-pact-mock:$DOCKER_REMOTE_LPA_PACT_IP \
-              --add-host api-gateway-pact-mock:$DOCKER_REMOTE_API_PACT_IP \
-              --add-host lpa-data-store-pact-mock:$DOCKER_REMOTE_LPA_DATA_STORE_PACT_IP \
-              --add-host iap-images-mock:$DOCKER_REMOTE_IAP_PACT_IP api-app:latest
+           docker run -d --name behattests api-app:latest
 
             docker exec behattests /usr/bin/composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
             docker exec behattests /app/vendor/bin/behat -p integration -f progress -o std -f junit -o /app/build/reports/int
             docker exec behattests /usr/local/bin/php -dapc.enable_cli=1 /app/vendor/bin/behat -p acceptance -f progress -o std -f junit -o /app/build/reports/acc
-
-            docker stop lpa-codes-pact-mock
-            docker stop api-gateway-pact-mock
-            docker stop lpa-data-store-pact-mock
-            docker stop iap-images-mock
           elif [[ "${SVC_PREFIX}" = "front" ]]; then
             docker run -d --name behattests front-app:latest
 
