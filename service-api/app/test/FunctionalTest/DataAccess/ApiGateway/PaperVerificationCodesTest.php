@@ -31,26 +31,20 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
         parent::setUp();
 
         $config                          = $this->container->get('config');
-        $config['codes_api']['endpoint'] = 'http://lpa-codes-pact-mock';
+        $config['codes_api']['endpoint'] = 'http://localhost:9090';
 
         $this->containerModifier->setValue(RequestTracing::TRACE_PARAMETER_NAME, 'trace-id');
         $this->containerModifier->setValue('config', $config);
 
         $mockServer = new MockServerConfig();
-        $mockServer->setHost('lpa-codes-pact-mock');
-        $mockServer->setPort(80);
+        $mockServer->setHost('localhost');
+        $mockServer->setPort(9090);
         $mockServer->setConsumer('use-an-lpa');
         $mockServer->setProvider('data-lpa-codes');
         $mockServer->setPactDir('./build/pacts');
         $mockServer->setPactFileWriteMode('merge');
 
         $this->builder = new InteractionBuilder($mockServer);
-    }
-
-    public function tearDown(): void
-    {
-        // ensure the pact contracts are checked and the contracts file is written out
-        $this->builder->finalize();
     }
 
     #[Test]
