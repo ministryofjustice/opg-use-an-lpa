@@ -6,8 +6,6 @@
         <option name="interpreterName" value="test-api-app" />
       </PhpTestInterpreterSettings>
     </CommandLine>
-    <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Cleanup Pact Containers" run_configuration_type="MAKEFILE_TARGET_RUN_CONFIGURATION" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>
