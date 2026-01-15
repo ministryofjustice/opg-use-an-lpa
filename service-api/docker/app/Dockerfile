@@ -50,9 +50,11 @@ COPY --from=composer /usr/bin/composer /usr/bin/
 
 COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/app-php.ini
 
+# All this neccessary for PACT FFI to work (apart from xdebug extension)
 RUN set -xe \
-  && apk add --no-cache gcc \
-  && install-php-extensions xdebug-stable ffi
+  && apk add --no-cache libgcc \
+  && install-php-extensions xdebug-stable ffi \
+  && echo "ffi.enable=true" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini
 
 # Development images are only ever run using compose so will have this mounted in as a volume
 RUN rm -rf /app/vendor
