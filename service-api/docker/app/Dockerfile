@@ -52,7 +52,7 @@ COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/ap
 
 # All this neccessary for PACT FFI to work (apart from xdebug extension)
 RUN set -xe \
-  && apk add --no-cache libgcc \
+  && apk add --no-cache libgcc=14.2.0-r6 \
   && install-php-extensions xdebug-stable ffi \
   && echo "ffi.enable=true" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini
 
