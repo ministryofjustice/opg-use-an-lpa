@@ -51,6 +51,21 @@ module "cloudwatch_mrk" {
   }
 }
 
+module "dynamodb_mrk" {
+  source = "./modules/multi_region_kms"
+
+  key_description         = "DynamoDB encryption ${local.environment}"
+  key_alias               = "dynamodb-encryption-mrk"
+  deletion_window_in_days = 10
+  key_policy              = data.aws_iam_policy_document.dynamodb_kms.json
+
+  providers = {
+    aws.primary   = aws.eu_west_1
+    aws.secondary = aws.eu_west_2
+  }
+}
+
+
 # No longer used but kept to keep regional KMS keys
 resource "aws_kms_key" "sessions_viewer" {
   description             = "Managers keys for sessions in Viewer"
@@ -195,6 +210,105 @@ data "aws_iam_policy_document" "event_receiver_kms" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "dynamodb_kms" {
+  statement {
+    sid       = "Enable Root account permissions on Key"
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+  statement {
+    sid       = "Allow Encryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Encrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "dynamodb.amazonaws.com"
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Allow Decryption by Service"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
+    ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "dynamodb.amazonaws.com"
+      ]
+    }
+  }
+
+  statement {
+    sid       = "Key Administrator"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Create*",
+      "kms:Describe*",
+      "kms:Enable*",
+      "kms:List*",
+      "kms:Put*",
+      "kms:Update*",
+      "kms:Revoke*",
+      "kms:Disable*",
+      "kms:Get*",
+      "kms:Delete*",
+      "kms:TagResource",
+      "kms:UntagResource",
+      "kms:ScheduleKeyDeletion",
+      "kms:CancelKeyDeletion",
+      "kms:ReplicateKey",
+    ]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "Key Administrator Decryption"
+    effect = "Allow"
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
+    actions = [
+      "kms:Decrypt",
+    ]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       ]
     }
   }

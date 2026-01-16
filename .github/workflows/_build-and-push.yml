@@ -95,6 +95,14 @@ jobs:
             artifact_to_dl: ""
             path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
             path_to_trivyignore_file: "lambda-functions/event-receiver/.trivyignore.yaml"
+          - svc_prefix: "backfill"
+            svc_suffix: "lambda"
+            build_development_docker: "false"
+            run_unit_tests: "false"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "lambda-functions/backfill/Dockerfile"
+            path_to_trivyignore_file: "lambda-functions/backfill/.trivyignore.yaml"
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
@@ -305,6 +313,7 @@ jobs:
         env:
           SVC_PREFIX: ${{ matrix.svc_prefix }}
           SVC_SUFFIX: ${{ matrix.svc_suffix }}
+          PATH_TO_DOCKER_FILE: ${{ matrix.path_to_docker_file }}
         run: |
           if [[ "${SVC_SUFFIX}" = "app" ]]; then
             if [[ "${SVC_PREFIX}" = "front" ]]; then
@@ -330,6 +339,10 @@ jobs:
           elif [[ "${SVC_PREFIX}" = "event" ]]; then
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
               docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
+            fi
+          elif [[ "${SVC_PREFIX}" = "backfill" ]]; then
+            if [[ "${SVC_SUFFIX}" = "lambda" ]]; then
+              docker build --file ${PATH_TO_DOCKER_FILE} --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/backfill
             fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)

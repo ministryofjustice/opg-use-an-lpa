@@ -48,6 +48,7 @@ class LpaExtensionTest extends TestCase
             'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
             'is_sirius_lpa'                   => 'isSiriusLpa',
             'is_online_channel'               => 'isOnlineChannel',
+            'is_english'                      => 'isEnglish',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -579,5 +580,17 @@ class LpaExtensionTest extends TestCase
         $isOnlineChannel = $extension->isOnlineChannel($combinedLpa);
 
         $this->assertEquals(true, $isOnlineChannel);
+    }
+
+    #[Test]
+    public function it_checks_if_path_is_english(): void
+    {
+        $extension = new LpaExtension();
+
+        $this->assertTrue($extension->isEnglish(''));
+        $this->assertTrue($extension->isEnglish('/'));
+        $this->assertTrue($extension->isEnglish('/cyan'));
+
+        $this->assertFalse($extension->isEnglish('/cy/an'));
     }
 }

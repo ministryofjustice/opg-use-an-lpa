@@ -18,6 +18,7 @@ class ActorUsers implements ActorUsersInterface
     public function __construct(
         private readonly DynamoDbClient $client,
         private readonly string $actorUsersTable,
+        private readonly bool $trackOldEmails = false,
     ) {
     }
 
@@ -211,39 +212,56 @@ class ActorUsers implements ActorUsersInterface
 
     public function changeEmail(string $id, string $oldEmail, string $newEmail): void
     {
-        $this->client->transactWriteItems([
-            'TransactItems' => [
-                [
-                    'Update' => [
-                        'TableName'                 => $this->actorUsersTable,
-                        'Key'                       => ['Id' => ['S' => $id]],
-                        'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-                        'ExpressionAttributeValues' => [
-                            ':p' => [
-                                'S' => $newEmail,
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'Delete' => [
-                        'TableName' => $this->actorUsersTable,
-                        'Key'       => [
-                            'Id' => ['S' => 'EMAIL#' . $oldEmail],
-                        ],
-                    ],
-                ],
-                [
-                    'Put' => [
-                        'TableName'           => $this->actorUsersTable,
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'EMAIL#' . $newEmail],
+        $items = [
+            [
+                'Update' => [
+                    'TableName'                 => $this->actorUsersTable,
+                    'Key'                       => ['Id' => ['S' => $id]],
+                    'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                    'ExpressionAttributeValues' => [
+                        ':p' => [
+                            'S' => $newEmail,
                         ],
                     ],
                 ],
             ],
-        ]);
+            [
+                'Delete' => [
+                    'TableName' => $this->actorUsersTable,
+                    'Key'       => [
+                        'Id' => ['S' => 'EMAIL#' . $oldEmail],
+                    ],
+                ],
+            ],
+            [
+                'Put' => [
+                    'TableName'           => $this->actorUsersTable,
+                    'ConditionExpression' => 'attribute_not_exists(Id)',
+                    'Item'                => [
+                        'Id' => ['S' => 'EMAIL#' . $newEmail],
+                    ],
+                ],
+            ],
+        ];
+
+        if ($this->trackOldEmails) {
+            array_push($items, [
+                'Update' => [
+                    'TableName'                 => $this->actorUsersTable,
+                    'Key'                       => [
+                        'Id' => ['S' => '#OLDEMAILS'],
+                    ],
+                    'UpdateExpression'          => 'ADD Emails :Email',
+                    'ExpressionAttributeValues' => [
+                        ':Email' => [
+                            'SS' => [$oldEmail . '=' . hash('sha256', $oldEmail)],
+                        ],
+                    ],
+                ],
+            ]);
+        }
+
+        $this->client->transactWriteItems(['TransactItems' => $items]);
     }
 
     public function delete(string $accountId): array
