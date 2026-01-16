@@ -13,9 +13,6 @@ $aggregator = new ConfigAggregator(
 
         // Load development config if it exists
         new PhpFileProvider(realpath(__DIR__) . '/config.php'),
-
-        // Add in Pact specific configuration
-        new PhpFileProvider(realpath(__DIR__) . '/config.pact.php'),
     ]
 );
 
