@@ -1,1 +1,4 @@
 vulnerabilities:
+  - id: CVE-2026-0861
+    expired_at: 2026-02-16
+    statement: As yet unrated, or fixed in debian-trixie
