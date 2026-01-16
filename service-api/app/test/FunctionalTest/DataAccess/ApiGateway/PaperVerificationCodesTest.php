@@ -301,7 +301,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
             ->setBody(
                 [
                     'lpa'           => $matcher->regex('M-7890-0400-4000', 'M(-[0-9]{4}){3}'),
-                    'actor'         => $matcher->uuid(),
+                    'actor'         => $matcher->uuid('ce118b6e-d8e1-11e7-9296-cec278b6b50a'),
                     'expiry_reason' => VerificationCodeExpiryReason::PAPER_TO_DIGITAL,
                 ]
             );
