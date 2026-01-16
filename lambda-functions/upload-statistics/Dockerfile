@@ -11,7 +11,7 @@ RUN pip install \
     -r /app/requirements.txt
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.13-slim@sha256:326df678c20c78d465db501563f3492d17c42a4afe33a1f2bf5406a1d56b0e86
+FROM python:3.13-slim@sha256:6ef0353fbbf46d0755063135b1a093d319929bca496c387afac53f512bd9350d
 
 # Set working directory to function root directory
 WORKDIR /app

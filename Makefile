@@ -168,10 +168,6 @@ emit_lpa_access_granted_event: # fire an lpa-access-granted event into the event
 	$(COMPOSE) exec localstack awslocal events put-events --region "eu-west-1" --entries '${lpaJson}'
 .PHONY: emit_lpa_access_granted_event
 
-cleanup_pact_containers:
-	docker rm -f opg-use-an-lpa-api-gateway-pact-mock-1 opg-use-an-lpa-lpa-codes-pact-mock-1 opg-use-an-lpa-iap-images-mock-1
-.PHONY: cleanup_pact_containers
-
 clear_config_cache:
 	$(COMPOSE) exec viewer-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
