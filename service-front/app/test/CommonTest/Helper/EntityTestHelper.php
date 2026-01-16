@@ -55,18 +55,19 @@ class EntityTestHelper
             addressLine1: $addressLine1,
             addressLine2: $addressLine2,
             addressLine3: $addressLine3,
-            country:      $country,
-            county:       $county,
-            dob:          $dob,
-            email:        $email,
-            firstnames:   $firstnames,
-            name:         $name,
-            otherNames:   $otherNames,
-            postcode:     $postcode,
-            surname:      $surname,
-            systemStatus: $systemStatus,
-            town:         $town,
-            uId:          $uId
+            country:                    $country,
+            county:                     $county,
+            dob:                        $dob,
+            email:                      $email,
+            firstnames:                 $firstnames,
+            name:                       $name,
+            otherNames:                 $otherNames,
+            postcode:                   $postcode,
+            surname:                    $surname,
+            systemStatus:               $systemStatus,
+            town:                       $town,
+            uId:                        $uId,
+            cannotMakeJointDecisions:   true
         );
     }
 

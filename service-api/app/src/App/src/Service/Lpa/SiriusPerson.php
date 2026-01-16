@@ -145,4 +145,9 @@ class SiriusPerson implements
     {
         return $this->toArray();
     }
+
+    public function getCannotMakeJointDecisions(): ?bool
+    {
+        return $this->cannotMakeJointDecisions ?? null;
+    }
 }

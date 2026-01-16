@@ -52,19 +52,20 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_0_if_attorney_is_active_combined_format_lpastore(): void
     {
         $attorney = new LpaStoreAttorney(
-            line1: '81 NighOnTimeWeBuiltIt Street',
-            line2: null,
-            line3: null,
-            country:      'GB',
-            county:       null,
-            dateOfBirth:  new DateTimeImmutable('1982-07-24'),
-            email:        null,
-            firstNames:   'Herman',
-            postcode:     null,
-            lastName:      'Seakrest',
-            status: ActorStatus::ACTIVE,
-            town:         'Mahhhhhhhhhh',
-            uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            line1:                      '81 NighOnTimeWeBuiltIt Street',
+            line2:                      null,
+            line3:                      null,
+            country:                    'GB',
+            county:                     null,
+            dateOfBirth:                new DateTimeImmutable('1982-07-24'),
+            email:                      null,
+            firstNames:                 'Herman',
+            postcode:                    null,
+            lastName:                   'Seakrest',
+            status:                     ActorStatus::ACTIVE,
+            town:                       'Mahhhhhhhhhh',
+            uId:                        '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            cannotMakeJointDecisions:   true
         );
 
         $status = new GetAttorneyStatus(
@@ -78,22 +79,23 @@ class GetAttorneyStatusTest extends TestCase
     public function returns_0_if_attorney_is_active_combined_format_sirius(): void
     {
         $attorney = new SiriusLpaAttorney(
-            addressLine1: '81 NighOnTimeWeBuiltIt Street',
-            addressLine2: null,
-            addressLine3: null,
-            country:      'GB',
-            county:       null,
-            dob:          new DateTimeImmutable('1982-07-24'),
-            email:        null,
-            firstname:    'Herman',
-            id:           '12345678',
-            middlenames:  null,
-            otherNames:   null,
-            postcode:     null,
-            surname:      'Seakrest',
-            systemStatus: ActorStatus::ACTIVE,
-            town:         'Mahhhhhhhhhh',
-            uId:          '712345678',
+            addressLine1:               '81 NighOnTimeWeBuiltIt Street',
+            addressLine2:               null,
+            addressLine3:               null,
+            country:                    'GB',
+            county:                     null,
+            dob:                        new DateTimeImmutable('1982-07-24'),
+            email:                      null,
+            firstname:                  'Herman',
+            id:                         '12345678',
+            middlenames:                null,
+            otherNames:                 null,
+            postcode:                   null,
+            surname:                    'Seakrest',
+            systemStatus:               ActorStatus::ACTIVE,
+            town:                       'Mahhhhhhhhhh',
+            uId:                        '712345678',
+            cannotMakeJointDecisions:   true
         );
 
         $status = new GetAttorneyStatus(
@@ -140,6 +142,7 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -169,6 +172,7 @@ class GetAttorneyStatusTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '7',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -215,6 +219,7 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -244,6 +249,7 @@ class GetAttorneyStatusTest extends TestCase
             systemStatus: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '7',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -270,6 +276,7 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::REPLACEMENT,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(

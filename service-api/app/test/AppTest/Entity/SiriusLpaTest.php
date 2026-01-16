@@ -50,6 +50,7 @@ class SiriusLpaTest extends TestCase
                     systemStatus: null,
                     town:         null,
                     uId:          '700000000012',
+                    cannotMakeJointDecisions: true,
                 ),
             ],
             caseAttorneyJointly: true,

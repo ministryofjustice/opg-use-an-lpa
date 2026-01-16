@@ -304,7 +304,8 @@ class FindActorInLpaTest extends TestCase
             surname:      'Person',
             systemStatus: ActorStatus::INACTIVE,
             town:         null,
-            uId:          '7000000002222'
+            uId:          '7000000002222',
+            cannotMakeJointDecisions: null,
         );
     }
 
@@ -345,7 +346,8 @@ class FindActorInLpaTest extends TestCase
             surname:      '',
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
-            uId:          '700000003333'
+            uId:          '700000003333',
+            cannotMakeJointDecisions: null,
         );
     }
 
@@ -408,7 +410,8 @@ class FindActorInLpaTest extends TestCase
             surname:      'T’esting',
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
-            uId:          '7000000055555'
+            uId:          '7000000055555',
+            cannotMakeJointDecisions: null,
         );
     }
 
@@ -430,7 +433,8 @@ class FindActorInLpaTest extends TestCase
             surname:      'T’esting',
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
-            uId:          '700000001234'
+            uId:          '700000001234',
+            cannotMakeJointDecisions: null,
         );
     }
 

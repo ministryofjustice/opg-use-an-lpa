@@ -21,7 +21,8 @@
       "systemStatus": "active",
       "town": "",
       "type": "Primary",
-      "uId": "700000000815"
+      "uId": "700000000815",
+      "cannotMakeJointDecisions": null
     },
     {
       "addressLine1": "",
@@ -64,6 +65,7 @@
     "town": "",
     "type": "Primary",
     "uId": "700000000799",
+    "cannotMakeJointDecisions": null,
     "linked": [
       {
         "id": 7,
@@ -96,7 +98,8 @@
       "surname": "Surname",
       "systemStatus": "replacement",
       "town": "Town",
-      "uId": "7000-0000-0849"
+      "uId": "7000-0000-0849",
+      "cannotMakeJointDecisions": null
     }
   ],
   "status": "Registered",
@@ -119,7 +122,8 @@
       "systemStatus": "active",
       "town": "Town",
       "type": "Primary",
-      "uId": "7000-0015-1998"
+      "uId": "7000-0015-1998",
+      "cannotMakeJointDecisions": null
     }
   ],
   "uId": "700000000047",

@@ -51,7 +51,8 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                     surname:      'sanderson',
                     systemStatus: ActorStatus::ACTIVE,
                     town:         '',
-                    uId:          '700000000815'
+                    uId:          '700000000815',
+                    cannotMakeJointDecisions: true,
                 ),
                 new SiriusLpaAttorney(
                     addressLine1: '',
@@ -63,13 +64,14 @@ class CanHydrateSiriusToModerniseFormatTest extends TestCase
                     email:        'XXXXX',
                     firstname:    'Ann',
                     id:           '12',
-                    middlenames:  null,
+                    middlenames:  '',
                     otherNames:   null,
                     postcode:     '',
                     surname:      'Summers',
                     systemStatus: ActorStatus::ACTIVE,
                     town:         '',
-                    uId:          '700000000849'
+                    uId:          '700000000849',
+                    cannotMakeJointDecisions: true,
                 ),
             ],
             caseAttorneyJointly:                       false,
