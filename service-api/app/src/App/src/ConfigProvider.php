@@ -46,6 +46,7 @@ class ConfigProvider
                 // PSR17
                 Psr\Http\Message\RequestFactoryInterface::class                        => GuzzleHttp\Psr7\HttpFactory::class,
                 Psr\Http\Message\StreamFactoryInterface::class                         => GuzzleHttp\Psr7\HttpFactory::class,
+                Psr\Http\Message\ResponseFactoryInterface::class                       => GuzzleHttp\Psr7\HttpFactory::class,
 
                 // allows scalar value setting on the container at runtime.
                 Service\Container\ModifiableContainerInterface::class                  => Service\Container\PhpDiModifiableContainer::class,

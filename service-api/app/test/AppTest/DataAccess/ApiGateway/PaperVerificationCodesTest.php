@@ -14,6 +14,7 @@ use App\Value\PaperVerificationCode;
 use DateInterval;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -64,7 +65,7 @@ class PaperVerificationCodesTest extends TestCase
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode($response));
+        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode($response)));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies(
@@ -143,7 +144,7 @@ class PaperVerificationCodesTest extends TestCase
     {
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode(['expiry_date' => '2025-10-24']));
+        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode(['expiry_date' => '2025-10-24'])));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies(
