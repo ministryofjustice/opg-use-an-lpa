@@ -346,7 +346,6 @@ data "aws_iam_policy_document" "dynamodb_kms" {
 }
 
 data "aws_iam_policy_document" "dynamodb_kms_development_account_operator_admin" {
-  provider = aws.global
   statement {
     sid    = "Dev Account Key Administrator"
     effect = "Allow"
