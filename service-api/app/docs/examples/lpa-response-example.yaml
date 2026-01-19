@@ -20,6 +20,7 @@ value:
         town: Mahhhhhhhhhh
         type: null
         uId: 9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d
+        cannotMakeJointDecisions: false
       type: donor
     lpa:
       applicationHasGuidance: null
@@ -42,6 +43,7 @@ value:
           town: Mahhhhhhhhhh
           type: null
           uId: 9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d
+          cannotMakeJointDecisions: false
       caseSubtype: hw
       channel: online
       dispatchDate: null

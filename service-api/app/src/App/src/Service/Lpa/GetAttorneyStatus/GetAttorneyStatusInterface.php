@@ -15,4 +15,6 @@ interface GetAttorneyStatusInterface
     public function getStatus(): bool|ActorStatus;
 
     public function getUid(): string;
+
+    public function getCannotMakeJointDecisions(): ?bool;
 }

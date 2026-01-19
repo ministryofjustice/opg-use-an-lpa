@@ -64,6 +64,7 @@ class GetTrustCorporationStatusTest extends TestCase
             status:      ActorStatus::ACTIVE,
             town:        'Town',
             uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetTrustCorporationStatus(
@@ -111,6 +112,7 @@ class GetTrustCorporationStatusTest extends TestCase
             status:      ActorStatus::ACTIVE,
             town:        'Town',
             uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetTrustCorporationStatus(
@@ -157,6 +159,7 @@ class GetTrustCorporationStatusTest extends TestCase
             status:      ActorStatus::INACTIVE,
             town:        'Town',
             uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+            cannotMakeJointDecisions: true,
         );
 
         $status = new GetTrustCorporationStatus(

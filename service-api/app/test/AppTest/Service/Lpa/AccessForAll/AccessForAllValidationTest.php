@@ -41,6 +41,7 @@ class AccessForAllValidationTest extends TestCase
                 systemStatus: null,
                 town: null,
                 uId: '700000000011',
+                cannotMakeJointDecisions: true,
             ),
             'attorney',
             '700000000011',
@@ -92,7 +93,7 @@ class AccessForAllValidationTest extends TestCase
             statusDate:                 null,
             trustCorporations:          [],
             uId:                        '700000000001',
-            whenTheLpaCanBeUsed: null,
+            whenTheLpaCanBeUsed:        null,
             withdrawnDate:              null,
         );
     }
@@ -128,7 +129,8 @@ class AccessForAllValidationTest extends TestCase
                 "surname" : "Testerson",
                 "systemStatus" : null,
                 "town" : null,
-                "uId" : "700000000011"
+                "uId" : "700000000011",
+                "cannotMakeJointDecisions":true
               },
               "role" : "attorney",
               "lpa-uid" : "700000000011"

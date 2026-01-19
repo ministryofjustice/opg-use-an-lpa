@@ -947,7 +947,8 @@ class AddAccessForAllLpaTest extends TestCase
             surname:      'Person',
             systemStatus: ActorStatus::INACTIVE,
             town:         null,
-            uId:          '700000002222'
+            uId:          '700000002222',
+            cannotMakeJointDecisions: true,
         );
 
         $attorney2 = new SiriusLpaAttorney(
@@ -966,7 +967,8 @@ class AddAccessForAllLpaTest extends TestCase
             surname:      'Testing',
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
-            uId:          '700000055554'
+            uId:          '700000055554',
+            cannotMakeJointDecisions: true,
         );
 
         $attorneys =  [
