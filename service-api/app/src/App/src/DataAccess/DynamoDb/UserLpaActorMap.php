@@ -95,7 +95,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         }
 
         // Add ActivateBy field to array if expiry interval is present
-        if ($expiryInterval !== null) {
+        if ($expiryInterval !== null && $intervalTillDue !== null) {
             $expiry              = $added->add($expiryInterval);
             $array['ActivateBy'] = ['N' => (string) $expiry->getTimestamp()];
 
@@ -205,7 +205,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
      * @throws Exception
      * @throws DynamoDbException
      */
-    public function getByUserId(string $userId): ?array
+    public function getByUserId(string $userId): array
     {
         $result = $this->client->query(
             [

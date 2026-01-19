@@ -10,6 +10,7 @@ use App\DataAccess\ApiGateway\RequestSignerFactory;
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
 use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -53,7 +54,7 @@ class InstructionsAndPreferencesImagesTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode($testData));
+        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode($testData)));
 
         $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
 
