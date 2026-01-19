@@ -1,9 +1,11 @@
 {% if not title is defined or title != false %}<h{{ heading_level|default(3) }} class="govuk-heading-s">{% trans %}Telephone{% endtrans %}</h{{ heading_level|default(3) }}>{% endif %}
 <p class="govuk-body">
-    {% trans %}Telephone: <a class="govuk-link" href="tel:03004560300">0300 456 0300</a><br>
+    {% trans %}
+        Telephone: <a class="govuk-link" href="tel:03004560300">0300 456 0300</a><br>
         <strong>Calling from outside the UK: </strong>+44 (0)203 518 9639<br>
         <strong>Relay UK (if you cannot hear or speak on the phone): </strong>18001 0300 123 1300<br>
-        Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm{% endtrans %}
+        Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm
+    {% endtrans %}
 </p>
 <p class="govuk-body">
     <a class="govuk-link" href="https://www.gov.uk/call-charges">{% trans %}Find out about call charges{% endtrans %}</a>
