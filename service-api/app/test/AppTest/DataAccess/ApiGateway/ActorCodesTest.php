@@ -14,6 +14,7 @@ use App\Exception\ApiException;
 use App\Value\LpaUid;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
+use Laminas\Diactoros\StreamFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +57,7 @@ class ActorCodesTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode(['actor' => 'test-actor']));
+        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode(['actor' => 'test-actor'])));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
@@ -91,10 +92,10 @@ class ActorCodesTest extends TestCase
 
         $responseProphecy = $this->prophesize(ResponseInterface::class);
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
-        $responseProphecy->getBody()->willReturn(json_encode([
+        $responseProphecy->getBody()->willReturn((new StreamFactory())->createStream(json_encode([
             'actor'                       => 'test-actor',
             'has_paper_verification_code' => true,
-        ]));
+        ])));
         $responseProphecy->getHeaderLine('Date')->willReturn('2020-04-04T13:30:00+00:00');
 
         $this->generatePSR17Prophecies($responseProphecy->reveal(), 'test-trace-id', $testData);
@@ -304,7 +305,7 @@ class ActorCodesTest extends TestCase
         $responseProphecy->getStatusCode()->willReturn(StatusCodeInterface::STATUS_OK);
         $responseProphecy->getBody()
             ->willReturn(
-                json_encode($expectedResponse)
+                (new StreamFactory())->createStream(json_encode($expectedResponse))
             );
         $responseProphecy->getHeaderLine('Date')->willReturn('2021-01-26T11:59:00+00:00');
 
