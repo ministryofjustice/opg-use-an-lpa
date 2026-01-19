@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Service\Lpa\AddLpa;
 
 use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\Exception\ApiException;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Value\LpaUid;
+use DateTimeInterface;
 
 class LpaAlreadyAdded
 {
@@ -21,6 +23,9 @@ class LpaAlreadyAdded
     ) {
     }
 
+    /**
+     * @throws ApiException
+     */
     public function __invoke(string $userId, LpaUid $lpaUid): ?array
     {
         $savedLpaRecords = $this->userLpaActorMapRepository->getByUserId($userId);
@@ -37,7 +42,18 @@ class LpaAlreadyAdded
     /**
      * @param array  $record
      * @param string $userId
-     * @return array|null
+     * @return array{
+     *      donor: array{
+     *          uId: string,
+     *          firstnames: string,
+     *          surname: string,
+     *      },
+     *      caseSubtype: string,
+     *      lpaActorToken: string,
+     *      activationKeyDueDate?: DateTimeInterface,
+     *      notActivated?: bool,
+     *  }|null
+     * @throws ApiException
      */
     private function populateLpaRecord(array $record, string $userId): ?array
     {

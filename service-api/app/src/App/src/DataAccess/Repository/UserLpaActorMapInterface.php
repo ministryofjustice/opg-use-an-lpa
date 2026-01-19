@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
-use Common\Form\Fieldset\Date;
 use DateInterval;
 
 /**
@@ -53,25 +52,20 @@ interface UserLpaActorMapInterface
     /**
      * Returns the LPA relation record for the given token.
      *
-     * @param string $lpaActorToken
      * @psalm-return UserLpaActorMap|null
-     * @return ?array
      */
     public function get(string $lpaActorToken): ?array;
 
     /**
      * Returns LPA relation records for the given user_id.
      *
-     * @param string $userId
-     * @psalm-return UserLpaActorMap[]|null
-     * @return ?array
+     * @psalm-return UserLpaActorMap[]
      */
-    public function getByUserId(string $userId): ?array;
+    public function getByUserId(string $userId): array;
 
     /**
      * Deletes a LPA relation. Should only be called if a rollback is needed.
      *
-     * @param string $lpaActorToken
      * @return array The record that was deleted
      */
     public function delete(string $lpaActorToken): array;

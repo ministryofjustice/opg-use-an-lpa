@@ -7,10 +7,7 @@ namespace App\Service\Lpa;
 use App\Service\Lpa\AccessForAll\AddAccessForAllLpaInterface;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
-use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
-use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
-use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\LpaRemoved\LpaRemovedInterface;
@@ -79,7 +76,7 @@ class SiriusLpa implements
     private function transformArrayToSiriusPersons(string $keyName): void
     {
         if (array_key_exists($keyName, $this->lpa)) {
-            $this->lpa[$keyName] = array_map(function ($entity) {
+            $this->lpa[$keyName] = array_map(function (SiriusPerson|array $entity) {
                 return $this->convertToSiriusPerson($entity);
             }, $this->lpa[$keyName]);
         }

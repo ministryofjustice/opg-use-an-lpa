@@ -134,7 +134,7 @@ class ViewerCodes implements ViewerCodesInterface
                     'S' => '',
                 ],
                 ':d' => [
-                    'S' => (string)$codeOwner,
+                    'S' => $codeOwner,
                 ],
             ],
         ]);

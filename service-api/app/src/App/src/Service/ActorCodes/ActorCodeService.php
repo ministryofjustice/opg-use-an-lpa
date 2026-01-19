@@ -65,7 +65,9 @@ class ActorCodeService
 
         $lpaId = $details->lpa->getUid();
 
-        $lpas       = $this->userLpaActorMapRepository->getByUserId($userId);
+        $lpas = $this->userLpaActorMapRepository->getByUserId($userId);
+
+        /** @psalm-var array<array-key, string> $idToLpaMap */
         $idToLpaMap = array_column($lpas, 'Id', 'SiriusUid');
 
         if (array_key_exists($lpaId, $idToLpaMap)) {

@@ -84,11 +84,6 @@ class ActorUsers implements ActorUsersInterface
         return $userData;
     }
 
-    /**
-     * @see https://github.com/vimeo/psalm/issues/10292
-     *
-     * @psalm-suppress PossiblyUnusedReturnValue
-     */
     public function getByEmail(string $email): array
     {
         $marshaler = new Marshaler();

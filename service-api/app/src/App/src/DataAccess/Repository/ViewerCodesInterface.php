@@ -73,11 +73,7 @@ interface ViewerCodesInterface
     public function cancel(string $code, DateTime $cancelledDate): bool;
 
     /**
-     * update a viewer code from the database
-     *
-     * @param string $code
-     * @param int    $codeOwner
-     * @return bool
+     * Update a viewer code from the database
      */
     public function removeActorAssociation(string $code, string $codeOwner): bool;
 }
