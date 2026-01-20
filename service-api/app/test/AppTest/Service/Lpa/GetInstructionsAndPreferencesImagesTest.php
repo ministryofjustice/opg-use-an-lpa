@@ -49,4 +49,27 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
 
         $this->assertEquals($images, $result);
     }
+
+    #[Test]
+    public function it_logs_an_event_when_extraction_is_not_a_success(): void
+    {
+        $images = new InstructionsAndPreferencesImages(
+            700000000001,
+            InstructionsAndPreferencesImagesResult::COLLECTION_IN_PROGRESS,
+            [],
+        );
+
+        $repositoryMock = $this->createMock(InstructionsAndPreferencesImagesInterface::class);
+        $repositoryMock
+            ->expects($this->once())
+            ->method('getInstructionsAndPreferencesImages')
+            ->with($this->equalTo(700000000001))
+            ->willReturn($images);
+
+        $sut = new GetInstructionsAndPreferencesImages($repositoryMock);
+
+        $result = ($sut)(700000000001);
+
+        $this->assertEquals($images, $result);
+    }
 }
