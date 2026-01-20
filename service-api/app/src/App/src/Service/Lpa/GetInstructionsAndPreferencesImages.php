@@ -22,7 +22,10 @@ class GetInstructionsAndPreferencesImages
     {
         $images = $this->apiGateway->getInstructionsAndPreferencesImages($lpaId);
 
-        if ($images->status !== InstructionsAndPreferencesImagesResult::COLLECTION_COMPLETE) {
+        if (
+            $images->status === InstructionsAndPreferencesImagesResult::COLLECTION_ERROR
+                || $images->status === InstructionsAndPreferencesImagesResult::COLLECTION_NOT_STARTED
+        ) {
             $this->logger->notice(
                 'I&P images for Lpa with id {lpa_id} have status {status}',
                 [

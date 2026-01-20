@@ -87,7 +87,6 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
 
     public static function imagesCollectionStatus(): iterable
     {
-        yield [InstructionsAndPreferencesImagesResult::COLLECTION_IN_PROGRESS];
         yield [InstructionsAndPreferencesImagesResult::COLLECTION_NOT_STARTED];
         yield [InstructionsAndPreferencesImagesResult::COLLECTION_ERROR];
     }
