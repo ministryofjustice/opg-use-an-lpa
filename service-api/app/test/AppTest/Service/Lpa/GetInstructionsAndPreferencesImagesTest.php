@@ -11,6 +11,7 @@ use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 #[CoversClass(GetInstructionsAndPreferencesImages::class)]
 class GetInstructionsAndPreferencesImagesTest extends TestCase
@@ -19,8 +20,9 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
     public function it_can_be_initialised(): void
     {
         $repositoryStub = $this->createStub(InstructionsAndPreferencesImagesInterface::class);
+        $loggerStub     = $this->createStub(LoggerInterface::class);
 
-        $sut = new GetInstructionsAndPreferencesImages($repositoryStub);
+        $sut = new GetInstructionsAndPreferencesImages($repositoryStub, $loggerStub);
 
         $this->assertInstanceOf(GetInstructionsAndPreferencesImages::class, $sut);
     }
@@ -42,8 +44,9 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
             ->method('getInstructionsAndPreferencesImages')
             ->with($this->equalTo(700000000001))
             ->willReturn($images);
+        $loggerStub = $this->createStub(LoggerInterface::class);
 
-        $sut = new GetInstructionsAndPreferencesImages($repositoryMock);
+        $sut = new GetInstructionsAndPreferencesImages($repositoryMock, $loggerStub);
 
         $result = ($sut)(700000000001);
 
@@ -65,8 +68,9 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
             ->method('getInstructionsAndPreferencesImages')
             ->with($this->equalTo(700000000001))
             ->willReturn($images);
+        $loggerStub = $this->createStub(LoggerInterface::class);
 
-        $sut = new GetInstructionsAndPreferencesImages($repositoryMock);
+        $sut = new GetInstructionsAndPreferencesImages($repositoryMock, $loggerStub);
 
         $result = ($sut)(700000000001);
 
