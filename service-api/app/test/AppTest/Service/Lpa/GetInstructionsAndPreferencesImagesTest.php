@@ -9,6 +9,7 @@ use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Service\Lpa\GetInstructionsAndPreferencesImages;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -54,11 +55,13 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
     }
 
     #[Test]
-    public function it_logs_an_event_when_extraction_is_not_a_success(): void
-    {
+    #[DataProvider('imagesCollectionStatus')]
+    public function it_logs_an_event_when_extraction_is_not_a_success(
+        InstructionsAndPreferencesImagesResult $status,
+    ): void {
         $images = new InstructionsAndPreferencesImages(
             700000000001,
-            InstructionsAndPreferencesImagesResult::COLLECTION_IN_PROGRESS,
+            $status,
             [],
         );
 
@@ -75,5 +78,12 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
         $result = ($sut)(700000000001);
 
         $this->assertEquals($images, $result);
+    }
+
+    public static function imagesCollectionStatus(): iterable
+    {
+        yield [InstructionsAndPreferencesImagesResult::COLLECTION_IN_PROGRESS];
+        yield [InstructionsAndPreferencesImagesResult::COLLECTION_NOT_STARTED];
+        yield [InstructionsAndPreferencesImagesResult::COLLECTION_ERROR];
     }
 }
