@@ -71,9 +71,14 @@ class GetInstructionsAndPreferencesImagesTest extends TestCase
             ->method('getInstructionsAndPreferencesImages')
             ->with($this->equalTo(700000000001))
             ->willReturn($images);
-        $loggerStub = $this->createStub(LoggerInterface::class);
 
-        $sut = new GetInstructionsAndPreferencesImages($repositoryMock, $loggerStub);
+        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock
+            ->expects($this->once())
+            ->method('notice')
+            ->with($this->anything());
+
+        $sut = new GetInstructionsAndPreferencesImages($repositoryMock, $loggerMock);
 
         $result = ($sut)(700000000001);
 
