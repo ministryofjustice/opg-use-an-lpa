@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-01-21T09:57:10+00:00\n"
+"POT-Creation-Date: 2026-01-21T10:59:08+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -2930,11 +2930,6 @@ msgstr ""
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
-msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the instructions or preferences are."
-msgstr ""
-
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:135
 msgid "Seen something incorrect in the LPA details?"
@@ -3070,10 +3065,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:55
 msgid "follow the principles of the <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/mental-capacity-act-code-of-practice\">Mental Capacity Act</a>"
-msgstr ""
-
-#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
-msgid "take into account any instructions or preferences the donor set out in their <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:62
@@ -4790,4 +4781,13 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:124
 msgid "Some words in these preferences or instructions have been removed by the Court of Protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
+msgstr ""
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgid "take into account any preferences or instructions the donor set out in their <abbr title=\"lasting power of attorney\">LPA</abbr>"
+msgstr ""
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
+msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the preferences or instructions are."
 msgstr ""

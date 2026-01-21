@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-21T09:57:10+00:00\n"
+"POT-Creation-Date: 2026-01-21T10:59:08+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3852,15 +3852,6 @@ msgstr "A oes angen newid manylion atwrnai?"
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
-msgid ""
-"If any scanned images are not readable, organisations may ask to see the paper "
-"LPA so that they can find out what the instructions or preferences are."
-msgstr ""
-"Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
-"roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
-
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:135
 msgid "Seen something incorrect in the LPA details?"
@@ -4074,14 +4065,6 @@ msgstr ""
 "ddilyn egwyddorion y <a class=\"govuk-link\" href=\"https://www.gov.uk/"
 "government/publications/mental-capacity-act-code-of-practice.cy\">Ddeddf "
 "Galluedd Meddyliol</a>"
-
-#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
-msgid ""
-"take into account any instructions or preferences the donor set out in their "
-"<abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr ""
-"cymryd i ystyriaeth unrhyw gyfarwyddiadau neu ddewisiadau y bu i’r rhoddwr eu "
-"nodi yn eu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:62
 msgid "act in the best interests of the donor"
@@ -6665,3 +6648,35 @@ msgstr ""
 "Mae rhai geiriau wedi eu tynnu o’r cyfarwyddiadau a’r dewisiadau gan y Llys "
 "Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch i gael gweld fersiwn papur o’r "
 "Atwrneiaeth Arhosol neu’r Gorchymyn Lly."
+
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgid ""
+"take into account any preferences or instructions the donor set out in their "
+"<abbr title=\"lasting power of attorney\">LPA</abbr>"
+msgstr ""
+"cymryd i ystyriaeth unrhyw gyfarwyddiadau neu ddewisiadau y bu i’r rhoddwr eu "
+"nodi yn eu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
+msgid ""
+"If any scanned images are not readable, organisations may ask to see the paper "
+"LPA so that they can find out what the preferences or instructions are."
+msgstr ""
+"Os na allwch ddarllen y ddelwedd a sganiwyd, dywedwch wrth yr unigolyn a "
+"roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
+
+#~ msgid ""
+#~ "If any scanned images are not readable, organisations may ask to see the "
+#~ "paper LPA so that they can find out what the instructions or preferences "
+#~ "are."
+#~ msgstr ""
+#~ "Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
+#~ "roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
+
+#~ msgid ""
+#~ "take into account any instructions or preferences the donor set out in "
+#~ "their <abbr title=\"lasting power of attorney\">LPA</abbr>"
+#~ msgstr ""
+#~ "cymryd i ystyriaeth unrhyw gyfarwyddiadau neu ddewisiadau y bu i’r rhoddwr "
+#~ "eu nodi yn eu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
