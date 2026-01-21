@@ -47,7 +47,8 @@ class EventCodes
     /**
      * Activation key request is successful for partial match LPA type pfa
      */
-    public const string PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA';
+    public const string PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA
+        = 'PARTIAL_MATCH_KEY_REQUEST_SUCCESS_LPA_TYPE_PFA';
 
     /**
      * A one login authentication transaction resulted in a username/password account being migrated.
@@ -85,4 +86,14 @@ class EventCodes
      * day migration to being online only.
      */
     public const string PAPER_VERIFICATION_CODE_PAPER_TO_DIGITAL_TRANSITION = 'PAPER_TO_DIGITAL_TRANSITION';
+
+    /**
+     * A request was made to the images service and it returned that a new extraction is being started.
+     */
+    public const string INSTRUCTIONS_PREFERENCES_IMAGES_NEW_EXTRACT = 'INSTRUCTIONS_PREFERENCES_IMAGES_NEW_EXTRACT';
+
+    /**
+     * A request was made to the images service and it has responded that an error in extraction has occurred.
+     */
+    public const string INSTRUCTIONS_PREFERENCES_IMAGES_ERROR = 'INSTRUCTIONS_PREFERENCES_IMAGES_ERROR';
 }
