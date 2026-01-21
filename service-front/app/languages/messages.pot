@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-01-19T09:37:35+00:00\n"
+"POT-Creation-Date: 2026-01-21T10:59:08+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -423,7 +423,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:53
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:85
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:28
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:197
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:123
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:37
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:42
@@ -1566,7 +1566,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:256
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:182
 msgid "No"
 msgstr ""
 
@@ -2930,11 +2930,6 @@ msgstr ""
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr ""
 
-#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
-msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the instructions or preferences are."
-msgstr ""
-
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:135
 msgid "Seen something incorrect in the LPA details?"
@@ -3070,10 +3065,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:55
 msgid "follow the principles of the <a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/mental-capacity-act-code-of-practice\">Mental Capacity Act</a>"
-msgstr ""
-
-#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
-msgid "take into account any instructions or preferences the donor set out in their <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:62
@@ -3524,47 +3515,43 @@ msgid "To view this, ask to see the paper <abbr title=\"lasting power of attorne
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:292
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:218
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:298
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:224
 msgid "Registration date"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:303
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:229
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:19
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
-msgid "Some words in these instructions or preferences have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
-msgstr ""
-
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:212
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:138
 msgid "Preferences"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:218
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:144
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:253
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:179
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:246
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:172
 msgid "Instructions"
 msgstr ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:252
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:178
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
 
@@ -3680,24 +3667,20 @@ msgstr ""
 msgid "The donor"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:160
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:86
 msgid "Restrictions and Conditions"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:156
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:82
 msgid "Yes, the donor added restrictions and conditions to their LPA"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:161
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:87
 msgid "No, the donor did not add restrictions and conditions to their LPA"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:184
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:110
 msgid "A scanned copy of the donor’s restrictions and/or instructions - the text cannot be digitised at present"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:198
-msgid "Some words in these preferneces or instructions have been removed by the court of protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:8
@@ -4771,7 +4754,7 @@ msgstr ""
 msgid "Jointly for some decisions, jointly and severally for others"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:79
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
 msgstr ""
 
@@ -4795,34 +4778,16 @@ msgstr ""
 msgid "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:125
-msgid "Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced."
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:124
+msgid "Some words in these preferences or instructions have been removed by the Court of Protection. To check which words have been removed, please ask to see the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or the court order."
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:89
-msgid "There are no longer attorneys who can make the joint decisions on this LPA."
+#: src/Actor/templates/actor/actor-terms-of-use.html.twig:60
+msgid "take into account any preferences or instructions the donor set out in their <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:92
-msgid "All other decisions can still be made by:"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:132
-msgid "All other decisions can still be made jointly and severally by:"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:103
-msgid "The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG."
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:110
-msgid "The joint decisions for this LPA can now only be made by:"
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:138
-msgid "The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian."
-msgstr ""
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:126
-msgid "The joint decisions for this LPA can now only be made, and must be agreed, by:"
+#: src/Actor/templates/actor/view-lpa-summary.html.twig:126
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:125
+msgid "If any scanned images are not readable, organisations may ask to see the paper LPA so that they can find out what the preferences or instructions are."
 msgstr ""
