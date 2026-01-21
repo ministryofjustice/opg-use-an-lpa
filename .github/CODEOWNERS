@@ -1,0 +1,3 @@
+*       @ministryofjustice/opg-use-a-lpa-team
+/.github/workflows/  @ministryofjustice/opg-webops
+/.github/CODEOWNERS  @ministryofjustice/opg-webops
