@@ -66,7 +66,7 @@
 {% set everyone = attorneys|merge(trustCorps) %}
 
 {# Joint decision makers are those who can make joint decisions #}
-{% set jointDecisionMakers = everyone|filter(p => p.cannotMakeJointDecisions is null or p.cannotMakeJointDecisions is same as(false)) %}
+{% set jointDecisionMakers = everyone|filter(p => p.cannotMakeJointDecisions is null or p.cannotMakeJointDecisions is not same as(true)) %}
 
 {# Are all attorneys able to make joint decisions? #}
 {% set all_can_make_joint_decisions = (jointDecisionMakers|length == everyone|length) %}
