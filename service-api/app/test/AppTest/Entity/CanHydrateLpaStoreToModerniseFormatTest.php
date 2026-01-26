@@ -36,13 +36,11 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
     #[Test]
     public function can_hydrate_lpa_store_to_modernise_format(): void
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4000.json'), true);
 
         $expectedLpaStore = $this->expectedLpaStore();
 
         $combinedLpaStore = ($this->lpaDataFormatter)($lpa);
-
-        $this->assertIsObject($combinedLpaStore);
 
         $this->assertEquals($expectedLpaStore, $combinedLpaStore);
     }
@@ -50,69 +48,88 @@ class CanHydrateLpaStoreToModerniseFormatTest extends TestCase
     public function expectedLpaStore(): LpaStore
     {
         return new LpaStore(
-            attorneys:                 [
+            attorneys: [
                 new LpaStoreAttorney(
-                    line1:       '81 NighOnTimeWeBuiltIt Street',
-                    line2:       null,
-                    line3:       null,
-                    country:     'GB',
-                    county:      null,
+                    line1: '81 NighOnTimeWeBuiltIt Street',
+                    line2: null,
+                    line3: null,
+                    country: 'GB',
+                    county: null,
                     dateOfBirth: new DateTimeImmutable('1982-07-24'),
-                    email:       null,
-                    firstNames:  'Herman',
-                    postcode:    null,
-                    lastName:    'Seakrest',
-                    status:      ActorStatus::ACTIVE,
-                    town:        'Mahhhhhhhhhh',
-                    uId:         '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d'
+                    email: null,
+                    firstNames: 'Herman',
+                    postcode: 'PC4 6UZ',
+                    lastName: 'Seakrest',
+                    status: ActorStatus::ACTIVE,
+                    town: 'Mahhhhhhhhhh',
+                    uId: '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d'
+                ),
+                new LpaStoreAttorney(
+                    line1: '81 NighOnTimeWeBuiltIt Street',
+                    line2: null,
+                    line3: null,
+                    country: 'GB',
+                    county: null,
+                    dateOfBirth: new DateTimeImmutable('1984-04-13'),
+                    email: null,
+                    firstNames: 'Jessica',
+                    postcode: null,
+                    lastName: 'Seakrest',
+                    status: ActorStatus::REPLACEMENT,
+                    town: 'Mahhhhhhhhhh',
+                    uId: '9201a0b8-70a2-47db-93f2-c7510b4210ae'
                 ),
             ],
-            caseSubtype:               LpaType::PERSONAL_WELFARE,
-            channel:                   'online',
-            donor:                     new LpaStoreDonor(
-                line1:             '74 Cloob Close',
-                line2:             null,
-                line3:             null,
-                country:           'GB',
-                county:            null,
-                dateOfBirth:       new DateTimeImmutable('1970-01-24'),
-                email:             'nobody@not.a.real.domain',
-                firstNames:        'Feeg',
+            caseSubtype: LpaType::PERSONAL_WELFARE,
+            channel: 'online',
+            donor: new LpaStoreDonor(
+                line1: '74 Cloob Close',
+                line2: null,
+                line3: null,
+                country: 'GB',
+                county: null,
+                dateOfBirth: new DateTimeImmutable('1970-01-24'),
+                email: 'nobody@not.a.real.domain',
+                firstNames: 'Feeg',
                 otherNamesKnownBy: null,
-                postcode:          null,
-                lastName:          'Bundlaaaa',
-                town:              'Mahhhhhhhhhh',
-                uId:               'eda719db-8880-4dda-8c5d-bb9ea12c236f'
+                postcode: 'TP6 8EX',
+                lastName: 'Bundlaaaa',
+                town: 'Mahhhhhhhhhh',
+                uId: 'eda719db-8880-4dda-8c5d-bb9ea12c236f'
             ),
-            howAttorneysMakeDecisions:          HowAttorneysMakeDecisions::JOINTLY,
-            howAttorneysMakeDecisionsDetails:   null,
-            lifeSustainingTreatment:            LifeSustainingTreatment::OPTION_A,
-            signedAt:                           new DateTimeImmutable('2024-01-10T23:00:00Z'),
-            registrationDate:                   new DateTimeImmutable('2024-01-12'),
-            restrictionsAndConditions:          'my restrictions and conditions',
-            restrictionsAndConditionsImages:    null,
-            status:                             'registered',
-            trustCorporations:         [
+            howAttorneysMakeDecisions: HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS,
+            howAttorneysMakeDecisionsDetails: 'My atttorneys must jointly agree on a decision to sell or let '
+                . 'out my house.',
+            howAttorneysMakeDecisionsDetailsImages: null,
+            lifeSustainingTreatment: LifeSustainingTreatment::OPTION_A,
+            signedAt: new DateTimeImmutable('2024-01-10T23:00:00Z'),
+            registrationDate: new DateTimeImmutable('2024-01-12'),
+            restrictionsAndConditions: 'My attorneys cannot sell my home unless, in my GPs opinion, I '
+                . 'can no longer live independently. If I do have to move into a care home, I would prefer to live '
+                . 'within a few miles of my sister Jean.',
+            restrictionsAndConditionsImages: null,
+            status: 'registered',
+            trustCorporations: [
                 new LpaStoreTrustCorporation(
-                    line1:       '103 Line 1',
-                    line2:       null,
-                    line3:       null,
-                    country:     'GB',
-                    county:      null,
+                    line1: '103 Line 1',
+                    line2: null,
+                    line3: null,
+                    country: 'GB',
+                    county: null,
                     dateOfBirth: null,
-                    email:       null,
-                    firstNames:  null,
-                    name:        'Trust us Corp.',
-                    postcode:    null,
-                    lastName:    null,
-                    status:      ActorStatus::ACTIVE,
-                    town:        'Town',
-                    uId:         '1d95993a-ffbb-484c-b2fe-f4cca51801da',
+                    email: null,
+                    firstNames: null,
+                    name: 'Trust us Corp.',
+                    postcode: null,
+                    lastName: null,
+                    status: ActorStatus::ACTIVE,
+                    town: 'Town',
+                    uId: '1d95993a-ffbb-484c-b2fe-f4cca51801da',
                 ),
             ],
-            uId:                       'M-7890-0400-4000',
-            updatedAt:                 new DateTimeImmutable('2024-01-12T23:00:00Z'),
-            whenTheLpaCanBeUsed:       WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
+            uId: 'M-7890-0400-4000',
+            updatedAt: new DateTimeImmutable('2024-01-12T23:00:00Z'),
+            whenTheLpaCanBeUsed: WhenTheLpaCanBeUsed::WHEN_CAPACITY_LOST,
         );
     }
 }
