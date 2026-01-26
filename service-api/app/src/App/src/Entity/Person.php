@@ -102,9 +102,4 @@ class Person implements
     {
         return '';
     }
-
-    public function getCannotMakeJointDecisions(): ?bool
-    {
-        return $this->cannotMakeJointDecisions ?? null;
-    }
 }

@@ -93,11 +93,6 @@ class SiriusPerson implements
         return new DateTimeImmutable($this->person['dob']);
     }
 
-    public function getCannotMakeJointDecisions(): ?bool
-    {
-        return $this->cannotMakeJointDecisions ?? null;
-    }
-
     public function offsetExists(mixed $offset): bool
     {
         $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);

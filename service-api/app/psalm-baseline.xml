@@ -68,6 +68,7 @@
       <code><![CDATA[$addressLine1]]></code>
       <code><![CDATA[$addressLine2]]></code>
       <code><![CDATA[$addressLine3]]></code>
+      <code><![CDATA[$cannotMakeJointDecisions]]></code>
       <code><![CDATA[$country]]></code>
       <code><![CDATA[$county]]></code>
       <code><![CDATA[$email]]></code>
