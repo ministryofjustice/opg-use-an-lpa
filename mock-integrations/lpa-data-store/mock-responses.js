@@ -7,7 +7,7 @@
     updatedAt: "2024-01-12T23:00:00Z",
     lpaType: "personal-welfare",
     channel: "online",
-    restrictionsAndConditions: "My attorneys cannot sell my home unless, in my GPs opinion, I can no longer live independently. If I do have to move into a care home, I would prefer to live withing a few miles of my sister Jean.",
+    restrictionsAndConditions: "My attorneys cannot sell my home unless, in my GPs opinion, I can no longer live independently. If I do have to move into a care home, I would prefer to live within a few miles of my sister Jean.",
     donor: {
       uid: "eda719db-8880-4dda-8c5d-bb9ea12c236f",
       firstNames: "Feeg",
