@@ -3,25 +3,36 @@
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     {% if lpa.caseSubtype.propertyAndAffairs %}
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{% trans %}When can the <abbr
-                        title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
+            <dt class="govuk-summary-list__key">
+                {% trans %}
+                    When can the <abbr title="lasting power of attorney">LPA</abbr> be used?
+                {% endtrans %}
+            </dt>
             <dd class="govuk-summary-list__value">
                 {% if lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasCapacity %}
                     {% if actor is defined and actor.type == 'donor' %}
-                        {% trans %}You have said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
+                        {% trans %}
+                            You have said that this <abbr title="lasting power of attorney">LPA</abbr> can be used now.
+                            While you have mental capacity, your attorneys can only use the
+                            <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.
+                        {% endtrans %}
                     {% else %}
-                        {% trans %}The donor has said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                        {% trans %}
+                            The donor has said that this <abbr title="lasting power of attorney">LPA</abbr> can be used
+                            now. While the donor has mental capacity, you can only use the
+                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.
+                        {% endtrans %}
                     {% endif %}
                 {% elseif lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasLostCapacity %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+                    {% trans %}
+                        This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost
+                        capacity
+                    {% endtrans %}
                 {% elseif lpa.whenTheLpaCanBeUsed == null or lpa.whenTheLpaCanBeUsed.unknown %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                    {% trans %}
+                        This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered
+                        unless instructions say otherwise.
+                    {% endtrans %}
                 {% endif %}
             </dd>
         </div>
@@ -61,33 +72,33 @@
     </div>
 </dl>
 
-{% if not is_sirius_lpa(lpa.Uid) and lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-    <div class="govuk-inset-text govuk-!-margin-top-0 govuk-!-padding-right-0">
-        <h3 class="govuk-heading-s">
-            {% trans %}Decisions to be made jointly{% endtrans %}
-        </h3>
+{% if not is_sirius_lpa(lpa.Uid) %}
+    {% if lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
+        <div class="govuk-inset-text govuk-!-margin-top-0 govuk-!-padding-right-0">
+            <h3 class="govuk-heading-s">
+                {% trans %}Decisions to be made jointly{% endtrans %}
+            </h3>
 
-        {% if lpa.howAttorneysMakeDecisionsDetailsImages is not empty %}
-            {% for image in lpa.howAttorneysMakeDecisionsDetailsImages %}
-                {% if image.path is not empty %}
-                    <div class="opg-lpa__document-extract">
-                        <img class="opg-ip__image" src="{{ image.path }}"
-                             alt="{% trans %}A scanned copy of the donor’s jointly and severally instructions - the text cannot be digitised at present{% endtrans %}">
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <div class="govuk-body opg-lpa__document-extract">
-                <p class="govuk-body govuk-!-margin-2">
-                    {{ lpa.howAttorneysMakeDecisionsDetails }}
-                </p>
-            </div>
-        {% endif %}
-    </div>
-{% endif %}
+            {% if lpa.howAttorneysMakeDecisionsDetailsImages is not empty %}
+                {% for image in lpa.howAttorneysMakeDecisionsDetailsImages %}
+                    {% if image.path is not empty %}
+                        <div class="opg-lpa__document-extract">
+                            <img class="opg-ip__image" src="{{ image.path }}"
+                                 alt="{% trans %}A scanned copy of the donor’s joint decisions - the text cannot be digitised at present{% endtrans %}">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="govuk-body opg-lpa__document-extract">
+                    <p class="govuk-body govuk-!-margin-2">
+                        {{ lpa.howAttorneysMakeDecisionsDetails }}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 
-<dl class="govuk-summary-list govuk-summary-list--no-border">
-    {% if not is_sirius_lpa(lpa.Uid) %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
         {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty %}
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key"
@@ -100,10 +111,8 @@
                 <dd class="govuk-summary-list__value">{% trans %}No, the donor did not add restrictions and conditions to their LPA{% endtrans %}</dd>
             </div>
         {% endif %}
-    {% endif %}
-</dl>
+    </dl>
 
-{% if not is_sirius_lpa(lpa.Uid) %}
     {% if lpa.restrictionsAndConditions is not empty %}
         <div class="govuk-grid-row opg-lpa__document-extract" aria-labelledby="restrictions-and-conditions-label">
             <p class="govuk-body govuk-!-margin-2">
