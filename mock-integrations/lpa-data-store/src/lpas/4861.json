@@ -76,13 +76,13 @@
   "signedAt": "2026-01-10T23:00:00Z",
   "restrictionsAndConditionsImages": [
     {
-      "path": "http://localhost:4010/rac-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
+      "path": "http://localhost:4010/M-0407-6149-4861/scans/rac-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
     }
   ],
   "howAttorneysMakeDecisions": "jointly-for-some-severally-for-others",
   "howAttorneysMakeDecisionsDetailsImages": [
     {
-      "path": "http://localhost:4010/jjs-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
+      "path": "http://localhost:4010/M-0407-6149-4861/scans/jjs-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
     }
   ],
   "whenTheLpaCanBeUsed": "when-capacity-lost"
