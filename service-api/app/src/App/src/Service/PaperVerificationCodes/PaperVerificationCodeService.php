@@ -20,6 +20,8 @@ use App\Request\PaperVerificationCodeUsable;
 use App\Request\PaperVerificationCodeValidate;
 use App\Request\PaperVerificationCodeView;
 use App\Service\Log\EventCodes;
+use App\Service\Lpa\GetAttorneyStatus\GetAttorneyStatusInterface;
+use App\Service\Lpa\GetTrustCorporationStatus\GetTrustCorporationStatusInterface;
 use App\Service\Lpa\LpaManagerInterface;
 use App\Value\LpaUid;
 use App\Value\PaperVerificationCode as Code;
@@ -266,7 +268,16 @@ class PaperVerificationCodeService
             throw new NotFoundException();
         }
 
-        if ($noOfAttorneys !== count($lpa->attorneys) + count($lpa->trustCorporations)) {
+        $attorneyCount = array_reduce(
+            array_merge($lpa->getAttorneys(), $lpa->getTrustCorporations()),
+            fn (
+                int $count,
+                GetAttorneyStatusInterface|GetTrustCorporationStatusInterface $attorney,
+            ): int => $count + ($attorney->getStatus() === ActorStatus::ACTIVE ? 1 : 0),
+            0
+        );
+
+        if ($noOfAttorneys !== $attorneyCount) {
             $this->logger->info(
                 'The the no. of attorneys entered by the user does not match the number found in the LPA',
                 ['code' => (string) $code]

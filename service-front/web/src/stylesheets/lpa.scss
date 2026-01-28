@@ -26,3 +26,9 @@
 .service-header__heading {
   padding: govuk-spacing(2) 0 govuk-spacing(4) 0;
 }
+
+.opg-lpa__document-extract {
+  box-sizing: border-box;
+  border:  govuk-spacing(1) solid govuk-colour('mid-grey');
+  margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
+}
