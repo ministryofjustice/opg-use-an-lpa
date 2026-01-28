@@ -121,6 +121,7 @@ class LpaExtensionTest extends TestCase
             systemStatus: 'true',
             town: 'Town',
             uId: '700000012345',
+            cannotMakeJointDecisions: true
         );
 
         $expected      = 'Street 1, Street 2, Street 3, Town, County, ABC 123, Country';

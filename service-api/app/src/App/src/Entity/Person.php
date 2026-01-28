@@ -36,6 +36,7 @@ class Person implements
         public readonly ?ActorStatus $systemStatus,
         public readonly ?string $town,
         public readonly ?string $uId,
+        public readonly ?bool $cannotMakeJointDecisions,
     ) {
     }
 
