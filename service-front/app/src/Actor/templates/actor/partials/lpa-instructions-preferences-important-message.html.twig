@@ -1,5 +1,5 @@
 {% if not is_sirius_lpa(lpa.Uid) %}
-    {% if lpa.restrictionsAndConditions is not empty %}
+    {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty %}
             <p class="govuk-body govuk-!-margin-bottom-1">
                 {% trans %}
                     This LPA has restrictions and conditions.<br>

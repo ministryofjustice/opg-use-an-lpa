@@ -47,4 +47,4 @@ Feature: View an LPA using a paper verification code
       | true  | "John Seakrest"   | "1982-07-24" | 2 | Not an attorneys name           |
       | false | "Herman Seakrest" | "1970-12-08" | 2 | Not the attorneys date of birth |
       | true  | "Herman Seakrest" | "1970-12-08" | 2 | Not the donors date of birth    |
-      | false | "Herman Seakrest" | "1982-07-24" | 1 | Incorrect attorney count        |
+      | false | "Herman Seakrest" | "1982-07-24" | 3 | Incorrect attorney count        |

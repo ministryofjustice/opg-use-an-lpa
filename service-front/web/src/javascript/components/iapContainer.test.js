@@ -1,5 +1,5 @@
-import {expect} from '@jest/globals';
-import IapContainer from "./iapContainer.js"
+import { expect } from '@jest/globals';
+import IapContainer from './iapContainer.js';
 
 const stubElement = class extends IapContainer {
     ERROR_TEMPLATE='iap-stub-error'
@@ -8,7 +8,9 @@ const stubElement = class extends IapContainer {
 
 const html = `
     <template id="iap-img">
-        <img class="opg-ip__image" src="" alt="A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present">
+        <div class="opg-lpa__document-extract">
+            <img class="opg-ip__image" src="" alt="A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present">
+        </div>
     </template>
     <template id="iap-images-container">
         <div class="opg-ip"></div>

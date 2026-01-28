@@ -16,11 +16,10 @@ iap-unknown
   margin-top: govuk-spacing(2);
 
   &__image {
-    border: 2px dashed govuk-colour('black');
     max-width: 990px;
     width: 100%;
     height: auto;
-    margin-bottom: govuk-spacing(2);
+    display: block;
   }
 }
 

@@ -1,0 +1,89 @@
+{
+  "uid": "M-0407-6149-4861",
+  "status": "registered",
+  "registrationDate": "2026-01-19",
+  "updatedAt": "2026-01-19T23:00:00Z",
+  "lpaType": "personal-welfare",
+  "channel": "paper",
+  "donor": {
+    "uid": "aa5fffc9-8b21-4975-bc1d-813b3693877e",
+    "firstNames": "Henry",
+    "lastName": "Gibbons",
+    "address": {
+      "line1": "24 Weststoke Avenue",
+      "town": "Somewhere Town",
+      "postcode": "PC32 AUY",
+      "country": "GB"
+    },
+    "dateOfBirth": "1970-01-24",
+    "contactLanguagePreference": "en",
+    "identityCheck": {
+      "checkedAt": "2026-01-18T23:00:00Z",
+      "type": "opg-paper-id"
+    }
+  },
+  "attorneys": [
+    {
+      "uid": "dde2e65b-7c8d-4f8f-a504-538c7f1bc6d6",
+      "firstNames": "Alexis",
+      "lastName": "Gibbons",
+      "address": {
+        "line1": "81 Abouthere Street",
+        "town": "Somewhere Town",
+        "postcode": "PC32 6UZ",
+        "country": "GB"
+      },
+      "dateOfBirth": "1982-07-24",
+      "status": "active",
+      "channel": "paper",
+      "signedAt": "2026-01-10T23:00:00Z"
+    },
+    {
+      "uid": "5a76a6f4-de54-4cc6-8a69-b5ee8ecf2cba",
+      "firstNames": "Barry",
+      "lastName": "Alan",
+      "address": {
+        "line1": "12 Abouthere Street",
+        "town": "Somewhere Town",
+        "postcode": "PC32 6UD",
+        "country": "GB"
+      },
+      "dateOfBirth": "1984-04-13",
+      "status": "replacement",
+      "channel": "paper",
+      "signedAt": "2026-01-10T23:00:00Z"
+    }
+  ],
+  "certificateProvider": {
+    "uid": "fe75c51f-7d22-409b-b413-20e9dad4a614",
+    "firstNames": "Vone",
+    "lastName": "Spust",
+    "address": {
+      "line1": "145b Isignthings Cresent",
+      "town": "Somewhere Town",
+      "country": "GB"
+    },
+    "channel": "paper",
+    "email": "a@example.com",
+    "phone": "070009000",
+    "signedAt": "2026-01-10T23:00:00Z",
+    "identityCheck": {
+      "checkedAt": "2026-01-18T23:00:00Z",
+      "type": "opg-paper-id"
+    }
+  },
+  "lifeSustainingTreatmentOption": "option-a",
+  "signedAt": "2026-01-10T23:00:00Z",
+  "restrictionsAndConditionsImages": [
+    {
+      "path": "http://localhost:4010/M-0407-6149-4861/scans/rac-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
+    }
+  ],
+  "howAttorneysMakeDecisions": "jointly-for-some-severally-for-others",
+  "howAttorneysMakeDecisionsDetailsImages": [
+    {
+      "path": "http://localhost:4010/M-0407-6149-4861/scans/jjs-M-0407-6149-4861.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AAAAAAAAAAAAA%2F20230110%2Feu-west-1%2Fs3%2Faws4_request&X-Amz-Date=20230110T170414Z&X-Amz-Expires=600&X-Amz-SignedHeaders=host&X-Amz-Security-Token=FwoGZXIvYXdzEEsaDA9nffwerfrfrffqiK0Ae6ydwSr1R7ho%2BkIqn%2FOYVShw77vHhp5XuM945Z5uuqFQTUP128xAiCqgERWsuT7BSLhPeazeR6QjAm0jjH8JTa9YQ1OqBlF6BSY3o6oOvnagVxDwx1SzfEQK%2FMdoPpwOgPQ1qIN714YJfGe0Qp%2FbdAv%2F5tLGG5rgBX98CCuWTszpsWQnaFtfEWhfTG%2BvqUsjavsusT7TmPbHMv7gFqvSoU8Aos7LDt8vgUuA8TrD%2FQs9ZjkxyiOtfadBjItlHw%2BOq8%2BVpd24d24d24d24d42dZufWkjxnisGe4K9cMD0hNr5PjCXa3c1QRo&X-Amz-Signature=fd5ec81d49482cc2b26aac02ffe94e9d82d3e29b00c368fb1bad707f83929392"
+    }
+  ],
+  "whenTheLpaCanBeUsed": "when-capacity-lost"
+}

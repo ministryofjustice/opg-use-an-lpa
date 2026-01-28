@@ -1,6 +1,8 @@
 {% macro img(url) %}
-    <img class="opg-ip__image" src="{{ url }}"
-         alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+    <div class="opg-lpa__document-extract">
+        <img class="opg-ip__image" src="{{ url }}"
+             alt="{% trans %}A scanned copy of the donor’s preferences and/or instructions - the text cannot be digitised at present{% endtrans %}">
+    </div>
 {% endmacro %}
 
 {% macro images(type, images) %}
@@ -44,7 +46,7 @@
     {% if application is same as('actor') %}
         {{ _self.images_error(
             'We are unable to show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
-            You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr> 
+            You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr>
             to anyone who needs to see them.' | trans
         ) }}
     {% elseif application is same as('viewer') %}
@@ -76,7 +78,7 @@
     {% if application is same as('actor') %}
         {{ _self.images_error(
             'We are unable to show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
-            You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr> 
+            You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr>
             to anyone who needs to see them.' | trans
         ) }}
     {% elseif application is same as('viewer') %}
