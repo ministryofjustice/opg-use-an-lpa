@@ -14,7 +14,9 @@ RUN pip install \
 FROM python:3.13-slim@sha256:6ef0353fbbf46d0755063135b1a093d319929bca496c387afac53f512bd9350d
 
 # Update openssl to non-vulnerable version
-RUN apt-get update && apt-get install openssl=3.5.4-1~deb13u2 -y
+RUN apt-get update && \
+    apt-get install openssl=3.5.4-1~deb13u2 -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # Set working directory to function root directory
 WORKDIR /app
