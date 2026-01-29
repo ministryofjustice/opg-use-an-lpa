@@ -77,7 +77,7 @@ jobs:
           cd scripts/seed_lpas_and_codes
           go run -v main.go
         env:
-          LPA_STORE_BASE_URL: "https://${{ (inputs.workspace == 'preproduction' || inputs.workspace == 'demo') && 'demo' || 'development' }}.lpa-store.api.opg.service.justice.gov.uk"
+          LPA_STORE_BASE_URL: "https://${{ (inputs.workspace == 'preproduction' || inputs.workspace == 'demo') && 'demo' || 'integration' }}.lpa-store.api.opg.service.justice.gov.uk"
           LPA_STORE_SECRET_ARN: arn:aws:secretsmanager:eu-west-1:311462405659:secret:opg-data-lpa-store/development/jwt-key-FLSHtM #pragma: allowlist secret
 
       - name: configure AWS credentials for codes seeding
