@@ -154,7 +154,7 @@ class RejectInvalidLpaTest extends TestCase
 
     private function loadTestLpaStoreLpaFixture(array $overwrite = []): LpaStore
     {
-        $lpaData = json_decode(file_get_contents(__DIR__ . '/../../../../fixtures/4UX3.json'), true);
+        $lpaData = json_decode(file_get_contents(__DIR__ . '/../../../../fixtures/4000.json'), true);
         $lpaData = array_merge($lpaData, $overwrite);
 
         /** @var LpaStore */
