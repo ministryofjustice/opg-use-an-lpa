@@ -1,6 +1,6 @@
-FROM mlocati/php-extension-installer:2.8.28@sha256:a7d3e11e022dbc563c85d3c71827cc3a0a338640bcb4dc629ce3e98bcd5875e4 AS php-extension-installer
+FROM mlocati/php-extension-installer:2.9.28@sha256:e8a3393d79113a61e536d5fed30df4f15c0e4f67d30d0fce08c02d4507cad397 AS php-extension-installer
 
-FROM php:8.3-cli-alpine@sha256:317c33021811b501f3e2db5ad08928c1591340eaa33e7b35245ee771f5ea0824
+FROM php:8.5-cli-alpine@sha256:166a9ddf511d6782b44a05a086a8de5271483441c9f8c8f5d526ae0d5466c32d
 
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer@sha256:f746ca10fd351429e13a6fc9599ccd41d4fc413e036ae8b0dad9e2041adcffcd /usr/bin/composer /usr/bin/
