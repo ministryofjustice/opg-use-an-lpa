@@ -6598,6 +6598,8 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
 msgid "Jointly for some decisions, jointly and severally for others"
 msgstr ""
+"Ar y cyd ar gyfer rhai penderfyniadau, ar y cyd ac yn unigol ar gyfer rhai "
+"eraill"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
