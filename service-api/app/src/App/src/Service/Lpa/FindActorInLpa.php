@@ -224,9 +224,9 @@ class FindActorInLpa
     private function normaliseComparisonData(array $data): ?array
     {
         $data['first_names'] = $this->turnUnicodeCharToAscii(
-            strtolower(explode(' ', $data['first_names'])[0])
+            strtolower(explode(' ', trim($data['first_names']))[0])
         );
-        $data['last_name']   = $this->turnUnicodeCharToAscii(strtolower($data['last_name']));
+        $data['last_name']   = $this->turnUnicodeCharToAscii(strtolower(trim($data['last_name'])));
         $data['postcode']    = strtolower(str_replace(' ', '', $data['postcode']));
 
         return $data;
