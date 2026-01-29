@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-01-21T10:59:08+00:00\n"
+"POT-Creation-Date: 2026-01-29T11:30:27+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3922,18 +3922,8 @@ msgstr "E-bost"
 msgid "Telephone"
 msgstr "Ffonio"
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:68
-msgid ""
-"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
-"a><br> Textphone: 0115 934 2778 <br> Monday to Friday, 9:00am to 5pm, except "
-"Wednesday, 10am to 5pm"
-msgstr ""
-"Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 "
-"0300</a><br> Ffôn testun: 0115 934 2778 <br> Dydd Llun i ddydd Gwener, 9.00am "
-"tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
-
 #: src/Actor/templates/actor/lpa-not-found.html.twig:72
-#: src/Common/templates/partials/contact-details/telephone.html.twig:8
+#: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
 msgstr "Gwybodaeth am brisiau galwadau"
 
@@ -5126,16 +5116,6 @@ msgstr "Gwrthod cwcis dadansoddeg"
 #: src/Common/templates/partials/cookie-banner.html.twig:24
 msgid "View cookies"
 msgstr "Gweld y cwcis"
-
-#: src/Common/templates/partials/contact-details/telephone.html.twig:3
-msgid ""
-"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
-"a><br> Textphone: 18001 0300 123 1300 <br> Monday to Friday, 9:00am to 5pm, "
-"except Wednesday, 10am to 5pm"
-msgstr ""
-"Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 "
-"0300</a><br> Ffôn testun: 0115 934 2778 <br> Dydd Llun i ddydd Gwener, 9.00am "
-"tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
 
 #: src/Common/templates/partials/contact-details/address.html.twig:3
 msgid "Office of the Public Guardian<br> PO Box 16185<br> Birmingham<br> B2 2WH"
@@ -6598,6 +6578,8 @@ msgstr ""
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:55
 msgid "Jointly for some decisions, jointly and severally for others"
 msgstr ""
+"Ar y cyd ar gyfer rhai penderfyniadau, ar y cyd ac yn unigol ar gyfer rhai "
+"eraill"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:67
 msgid "Decisions to be made jointly"
@@ -6666,17 +6648,14 @@ msgstr ""
 "Os na allwch ddarllen y ddelwedd a sganiwyd, dywedwch wrth yr unigolyn a "
 "roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
 
-#~ msgid ""
-#~ "If any scanned images are not readable, organisations may ask to see the "
-#~ "paper LPA so that they can find out what the instructions or preferences "
-#~ "are."
-#~ msgstr ""
-#~ "Os na allwch ddarllen y ddelweddau a sganiwyd, dywedwch wrth yr unigolyn a "
-#~ "roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
-
-#~ msgid ""
-#~ "take into account any instructions or preferences the donor set out in "
-#~ "their <abbr title=\"lasting power of attorney\">LPA</abbr>"
-#~ msgstr ""
-#~ "cymryd i ystyriaeth unrhyw gyfarwyddiadau neu ddewisiadau y bu i’r rhoddwr "
-#~ "eu nodi yn eu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+#: src/Common/templates/partials/contact-details/telephone.html.twig:3
+msgid ""
+"Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</"
+"a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you "
+"cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, "
+"9:00am to 5pm, except Wednesday, 10am to 5pm"
+msgstr ""
+"Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 "
+"0300</a><br> Ffonio o’r tu allan i’r DU: +44 (0)203 518 9639 <br> Relay UK (os "
+"na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i "
+"ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"

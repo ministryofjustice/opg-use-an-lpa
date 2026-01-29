@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-01-26T17:31:57+00:00\n"
+"POT-Creation-Date: 2026-01-29T11:30:27+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -3038,12 +3038,8 @@ msgstr ""
 msgid "Telephone"
 msgstr ""
 
-#: src/Actor/templates/actor/lpa-not-found.html.twig:68
-msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Textphone: 0115 934 2778 <br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
-msgstr ""
-
 #: src/Actor/templates/actor/lpa-not-found.html.twig:72
-#: src/Common/templates/partials/contact-details/telephone.html.twig:8
+#: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
 msgstr ""
 
@@ -3849,10 +3845,6 @@ msgstr ""
 
 #: src/Common/templates/partials/cookie-banner.html.twig:24
 msgid "View cookies"
-msgstr ""
-
-#: src/Common/templates/partials/contact-details/telephone.html.twig:3
-msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Textphone: 18001 0300 123 1300 <br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
 
 #: src/Common/templates/partials/contact-details/address.html.twig:3
@@ -4752,4 +4744,8 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:127
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Common/templates/partials/contact-details/telephone.html.twig:3
+msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
 msgstr ""
