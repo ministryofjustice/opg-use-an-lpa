@@ -1577,11 +1577,11 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $addOlderLpa->validateRequest($this->userId, [
-            'reference_number' => $this->lpaUid,
-            'dob'              => $this->userDob,
-            'postcode'         => $this->userPostCode,
-            'first_names'      => $this->userFirstname,
-            'last_name'        => $this->userSurname,
+                'reference_number' => $this->lpaUid,
+                'dob'              => $this->userDob,
+                'postcode'         => $this->userPostCode,
+                'first_names'      => $this->userFirstname,
+                'last_name'        => $this->userSurname,
             ]);
         } catch (BadRequestException $badRequestException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $badRequestException->getCode());
@@ -1608,12 +1608,12 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $addOlderLpa->validateRequest($this->userId, [
-            'reference_number'     => $invalidLpaId,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
+                'reference_number'     => $invalidLpaId,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
+                'first_names'          => $this->userFirstname,
+                'last_name'            => $this->userSurname,
+                'force_activation_key' => false,
             ]);
         } catch (NotFoundException $notFoundException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
@@ -1644,12 +1644,12 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $addOlderLpa->validateRequest($this->userId, [
-            'reference_number'     => $this->lpaUid,
-            'dob'                  => $dob,
-            'postcode'             => $postcode,
-            'first_names'          => $firstnames,
-            'last_name'            => $lastname,
-            'force_activation_key' => false,
+                'reference_number'     => $this->lpaUid,
+                'dob'                  => $dob,
+                'postcode'             => $postcode,
+                'first_names'          => $firstnames,
+                'last_name'            => $lastname,
+                'force_activation_key' => false,
             ]);
         } catch (NotFoundException $notFoundException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $notFoundException->getCode());
@@ -1891,6 +1891,24 @@ class LpaContext extends BaseIntegrationContext
                             'ActorId'                  => $actorId,
                             'UserId'                   => $this->userId,
                             'HasPaperVerificationCode' => true,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // UserLpaActorMap::removePaperVerificationCodeTag
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'LpaUid'  => $lpaUid,
+                            'Added'   => (new DateTime('2020-01-01'))
+                                ->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'      => $this->userLpaActorToken,
+                            'ActorId' => $actorId,
+                            'UserId'  => $this->userId,
                         ]
                     ),
                 ]
@@ -2618,12 +2636,12 @@ class LpaContext extends BaseIntegrationContext
 
         try {
             $addOlderLpa->validateRequest($this->userId, [
-            'reference_number'     => $this->lpaUid,
-            'dob'                  => $this->userDob,
-            'postcode'             => $this->userPostCode,
-            'first_names'          => $this->userFirstname,
-            'last_name'            => $this->userSurname,
-            'force_activation_key' => false,
+                'reference_number'     => $this->lpaUid,
+                'dob'                  => $this->userDob,
+                'postcode'             => $this->userPostCode,
+                'first_names'          => $this->userFirstname,
+                'last_name'            => $this->userSurname,
+                'force_activation_key' => false,
             ]);
         } catch (LpaAlreadyAddedException $lpaAlreadyAddedException) {
             Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyAddedException->getCode());
