@@ -52,7 +52,13 @@ class RejectInvalidLpa
         }
 
         if ($this->clock->now() > $validationData['Expires']) {
-            $this->logger->info('The code {code} entered by user to view LPA has expired.', ['code' => $viewerCode]);
+            $this->logger->info(
+                'The code {code} entered by user to view LPA has expired.',
+                [
+                    'code'      => $viewerCode,
+                    'expiredBy' => $validationData['Expires']->diff($this->clock->now())->format('%R%a days'),
+                ],
+            );
             throw new GoneException('Share code expired');
         }
 
