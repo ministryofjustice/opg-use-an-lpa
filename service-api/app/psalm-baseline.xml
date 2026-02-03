@@ -19,12 +19,6 @@
       <code><![CDATA[$signedUrls]]></code>
     </PossiblyUnusedProperty>
   </file>
-  <file src="src/App/src/DataAccess/Repository/UserLpaActorMapInterface.php">
-    <PossiblyUnusedReturnValue>
-      <code><![CDATA[array]]></code>
-      <code><![CDATA[array]]></code>
-    </PossiblyUnusedReturnValue>
-  </file>
   <file src="src/App/src/DataAccess/Repository/ViewerCodesInterface.php">
     <PossiblyUnusedReturnValue>
       <code><![CDATA[bool]]></code>

@@ -75,6 +75,7 @@ interface UserLpaActorMapInterface
      * Activates a LPA relation record, enabling it for use by the user
      *
      * @psalm-return UserLpaActorMap The record that was activated
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function activateRecord(
         string $lpaActorToken,
@@ -95,6 +96,7 @@ interface UserLpaActorMapInterface
      * @param string|null  $actorId         The actor related to the record if users details have matched
      *
      * @psalm-return UserLpaActorMap The record that was renewed
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function updateRecord(
         string $lpaActorToken,
@@ -107,7 +109,8 @@ interface UserLpaActorMapInterface
      * Removes the HasPaperVerificationCode field from a record if it exists. Does nothing otherwise.
      *
      * @param string $lpaActorToken The relation record ID to alter
-     * @psalm-return UserLpaActorMap
+     * @psalm-return UserLpaActorMap The record with removed field
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function removePaperVerificationCodeTag(
         string $lpaActorToken,
