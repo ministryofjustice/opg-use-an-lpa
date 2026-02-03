@@ -151,7 +151,13 @@ class SiriusLpaManager implements LpaManagerInterface
         }
 
         if (new DateTime() > $viewerCodeData['Expires']) {
-            $this->logger->info('The code {code} entered by user to view LPA has expired.', ['code' => $viewerCode]);
+            $this->logger->info(
+                'The code {code} entered by user to view LPA has expired.',
+                [
+                    'code'      => $viewerCode,
+                    'expiredBy' => $viewerCodeData['Expires']->diff(new DateTime())->format('%R%a days'),
+                ],
+            );
             throw new GoneException('Share code expired');
         }
 
