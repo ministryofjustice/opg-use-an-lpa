@@ -14,7 +14,7 @@
         "spomky-labs/otphp": "^11.3"
     },
     "require-dev": {
-        "vimeo/psalm": "^5.15",
+        "vimeo/psalm": "^6.0",
         "squizlabs/php_codesniffer": "^4.0.0",
         "slevomat/coding-standard": "^8.9",
         "psalm/plugin-phpunit": "^0.18",
