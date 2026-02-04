@@ -44,7 +44,7 @@
         "blazon/psr11-monolog": "^5.0",
         "cooperaj/better-twig-i18n": "^3.2",
         "dflydev/fig-cookies": "^3.0",
-        "elie29/zend-phpdi-config": "^9.0",
+        "elie29/zend-phpdi-config": "^10.0",
         "eventsauce/object-hydrator": "^1.4",
         "facile-it/php-openid-client": "^0.3.5",
         "friendsofphp/proxy-manager-lts": "^1.0",
