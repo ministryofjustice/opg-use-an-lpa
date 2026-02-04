@@ -262,7 +262,7 @@ services:
 
   proxy:
     container_name: proxy
-    image: traefik:3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e
+    image: traefik:v3.6@sha256:a9890c898f379c1905ee5b28342f6b408dc863f08db2dab20e46c267d1ff463a
     ports:
       - "9001:9001"
       - "9041:9041"
