@@ -95,6 +95,8 @@ class ViewerCodeService
 
             $response['pvc_expiry'] = $pvcExpiry->getData()->expiresAt->format(DateTimeInterface::ATOM);
 
+            $this->userLpaActorMapRepository->removePaperVerificationCodeTag($map['Id']);
+
             $this->logger->notice(
                 'Actor with ID {actor} migrated their LPA with ID {lpaUid} to online',
                 [
