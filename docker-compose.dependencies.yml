@@ -77,7 +77,7 @@ services:
   # Sirius gateway mock
   api-gateway:
     container_name: api-gateway
-    image: docker.io/nginx:stable-alpine@sha256:30f1c0d78e0ad60901648be663a710bdadf19e4c10ac6782c235200619158284
+    image: docker.io/nginx:stable-alpine@sha256:bb2ba4172e705075aca7f0f51a21fd7c758e543e09b220a4eba5a067666180a5
     depends_on:
       - mock-data-lpa
       - mock-image-request-handler
