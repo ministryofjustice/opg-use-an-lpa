@@ -25,46 +25,6 @@ data "aws_iam_policy_document" "lambda_backfill_kms" {
       ]
     }
   }
-  statement {
-    sid       = "Allow Encryption by Service"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "kms:Encrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey",
-    ]
-
-    principals {
-      type = "Service"
-      identifiers = [
-        "dynamodb.amazonaws.com",
-        "lambda.amazonaws.com",
-        "s3.amazonaws.com"
-      ]
-    }
-  }
-
-  statement {
-    sid       = "Allow Decryption by Service"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "kms:Decrypt",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey"
-    ]
-
-    principals {
-      type = "Service"
-      identifiers = [
-        "dynamodb.amazonaws.com",
-        "lambda.amazonaws.com",
-        "s3.amazonaws.com"
-      ]
-    }
-  }
 
   statement {
     sid       = "Key Administrator"
@@ -97,41 +57,64 @@ data "aws_iam_policy_document" "lambda_backfill_kms" {
   }
 
   statement {
-    sid    = "Key Administrator Decryption"
+    sid    = "AllowS3Encryption"
     effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
     actions = [
-      "kms:Decrypt",
+      "kms:Encrypt",
+      "kms:ReEncrypt*",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey"
     ]
 
+    resources = ["*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:CallerAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["s3.${data.aws_region.current.name}.amazonaws.com"]
+    }
+  }
+
+  statement {
+    sid       = "AllowS3Decryption"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey"
+    ]
+
+
+    # We need to add Lambda execution role once created
     principals {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       ]
     }
-  }
 
-  statement {
-    sid    = "Allow Key to be used for Encryption"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey",
-    ]
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-      ]
+    condition {
+      test     = "StringEquals"
+      variable = "kms:CallerAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["s3.${data.aws_region.current.name}.amazonaws.com"]
     }
   }
 }
