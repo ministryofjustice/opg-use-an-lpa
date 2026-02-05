@@ -19,10 +19,11 @@ data "aws_ecr_repository" "use_an_lpa_event_receiver" {
   name     = "use_an_lpa/event_receiver"
 }
 
-data "aws_ecr_repository" "backfill" {
-  name     = "use_an_lpa/backfill_lambda"
-  provider = aws.management
-}
+
+# data "aws_ecr_repository" "backfill" {
+#  name     = "use_an_lpa/backfill_lambda"
+#  provider = aws.management
+#}
 
 data "aws_ecr_image" "backfill" {
   repository_name = "use_an_lpa/backfill_lambda"
