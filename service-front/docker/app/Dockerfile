@@ -1,11 +1,11 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM composer:2.9-bin@sha256:5107a53c864a9fb2579406968b95c4746a906db9c018779e1b63a40ec96a145c AS composer
+FROM docker.io/composer/composer:2.9-bin@sha256:5107a53c864a9fb2579406968b95c4746a906db9c018779e1b63a40ec96a145c AS composer
 
-FROM mlocati/php-extension-installer:2.9@sha256:3ebe94427d3fbb0de3858a51bedf909d4ecc4764042151eb9eaf71e79cb2b97d AS php-extension-installer
+FROM docker.io/mlocati/php-extension-installer:2.9@sha256:3ebe94427d3fbb0de3858a51bedf909d4ecc4764042151eb9eaf71e79cb2b97d AS php-extension-installer
 
-FROM php:8.3-fpm-alpine3.22@sha256:3c3114fdb04a4d03dfccdf00ce5a3e9323677b853da0f1eb542d748a4f2f411b AS php-base
+FROM docker.io/php:8.3-fpm-alpine3.22@sha256:3c3114fdb04a4d03dfccdf00ce5a3e9323677b853da0f1eb542d748a4f2f411b AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
