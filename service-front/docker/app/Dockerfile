@@ -27,7 +27,7 @@ WORKDIR /app
 #
 FROM php-base AS dependency
 
-COPY --from=composer /usr/bin/composer /usr/bin/
+COPY --from=composer /composer /usr/bin/
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader && \
@@ -46,7 +46,7 @@ COPY --from=dependency /app/vendor /app/vendor
 #
 FROM app AS development
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-COPY --from=composer /usr/bin/composer /usr/bin/
+COPY --from=composer /composer /usr/bin/
 
 COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
 

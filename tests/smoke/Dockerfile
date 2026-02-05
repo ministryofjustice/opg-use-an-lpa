@@ -5,7 +5,7 @@ FROM docker.io/mlocati/php-extension-installer:2.9@sha256:3ebe94427d3fbb0de3858a
 FROM docker.io/php:8.3-cli-alpine@sha256:8281275c2b7fb10c149a049e832fae6e936890f839561dbe2ca0d69fc322853f
 
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
-COPY --from=composer /usr/bin/composer /usr/bin/
+COPY --from=composer /composer /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache chromium autoconf \
