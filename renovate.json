@@ -23,28 +23,15 @@
   ],
   "packageRules": [
     {
-      "description": [
-        "AWS SDK: Reduce AWS SDK update noise"
-      ],
-      "labels": [
-        "Dependencies",
-        "Renovate",
-        "AWS SDK"
-      ],
+      "description": "Catchall patch & minor updates not covered by explicit rules",
+      "groupName": "Patch & Minor Updates",
+      "groupSlug": "all-minor-patch-updates",
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "matchManagers": [
-        "composer",
-        "gomod"
-      ],
       "matchPackageNames": [
-        "aws/aws-sdk-php",
-        "github.com/aws/aws-sdk-go-v2{/,}**"
-      ],
-      "extends": [
-        "schedule:monthly"
+        "*"
       ]
     },
     {
@@ -234,16 +221,28 @@
       ]
     },
     {
-      "description": "Catchall patch & minor updates not covered by explicit rules",
-      "groupName": "Patch & Minor Updates",
-      "groupSlug": "all-minor-patch-updates",
+      "description": [
+        "AWS SDK: Reduce AWS SDK update noise"
+      ],
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "AWS SDK"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "prPriority": 0,
+      "matchManagers": [
+        "composer",
+        "gomod"
+      ],
       "matchPackageNames": [
-        "*"
+        "aws/aws-sdk-php",
+        "github.com/aws/aws-sdk-go-v2{/,}**"
+      ],
+      "extends": [
+        "schedule:monthly"
       ]
     }
   ],
