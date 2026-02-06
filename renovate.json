@@ -257,7 +257,7 @@
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 3,
   "prHourlyLimit": 1,
-  "minimumReleaseAge": "3 days",
+  "minimumReleaseAge": "7 days",
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
