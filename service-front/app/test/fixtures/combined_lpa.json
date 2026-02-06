@@ -22,7 +22,7 @@
       "town": "",
       "type": "Primary",
       "uId": "700000000815",
-      "cannotMakeJointDecisions": null
+      "cannotMakeJointDecisions": true
     },
     {
       "addressLine1": "",
@@ -41,7 +41,8 @@
       "systemStatus": "active",
       "town": "",
       "type": "Primary",
-      "uId": "7000-0000-0849"
+      "uId": "700000000816",
+      "cannotMakeJointDecisions": true
     }
   ],
   "caseSubtype": "hw",
@@ -73,9 +74,9 @@
       }
     ]
   },
-  "hasSeveranceWarning": null,
+  "hasSeveranceWarning": true,
   "invalidDate": null,
-  "lifeSustainingTreatment": "option-a",
+  "lifeSustainingTreatment": "option-b",
   "lpaDonorSignatureDate": "2012-12-12 00:00:00.000000+0000",
   "lpaIsCleansed": true,
   "onlineLpaId": "A33718377316",
@@ -123,11 +124,13 @@
       "town": "Town",
       "type": "Primary",
       "uId": "7000-0015-1998",
-      "cannotMakeJointDecisions": null
+      "cannotMakeJointDecisions": true
     }
   ],
   "uId": "700000000047",
   "withdrawnDate": null,
   "whenTheLpaCanBeUsed": "when-has-capacity",
-  "restrictionsAndConditions": "my restrictions and conditions"
+  "restrictionsAndConditions": "my restrictions and conditions",
+  "howAttorneysMakeDecisions": "jointly-for-some-severally-for-others",
+  "howAttorneysMakeDecisionsDetails": "This is mock data on how decisions are made"
 }

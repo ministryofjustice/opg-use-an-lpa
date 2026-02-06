@@ -37,10 +37,13 @@ class LpaContext implements Context
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES   = 'SystemMessageService::getMessages';
 
     private mixed $dashboardLPAs;
+    private mixed $dashboardDigitalLPAs;
     private mixed $lpa;
+    private mixed $digitalLpa;
     private string $userLpaActorToken;
     private int $actorId;
     private mixed $lpaData;
+    private mixed $digitalLpaData;
     private mixed $systemMessageData;
     private string $organisation;
     private string $accessCode;
@@ -53,31 +56,31 @@ class LpaContext implements Context
     public function zaTrustCorporationHasCreatedAndAccessCode(): void
     {
         $trustCorpActor = [
-        'type'    => 'primary-attorney',
-        'details' => [
-            'addresses'    => [
-                [
-                    'addressLine1' => '',
-                    'addressLine2' => '',
-                    'addressLine3' => '',
-                    'country'      => '',
-                    'county'       => '',
-                    'id'           => 0,
-                    'postcode'     => '',
-                    'town'         => '',
-                    'type'         => 'Primary',
+            'type'    => 'primary-attorney',
+            'details' => [
+                'addresses'    => [
+                    [
+                        'addressLine1' => '',
+                        'addressLine2' => '',
+                        'addressLine3' => '',
+                        'country'      => '',
+                        'county'       => '',
+                        'id'           => 0,
+                        'postcode'     => '',
+                        'town'         => '',
+                        'type'         => 'Primary',
+                    ],
                 ],
-            ],
-            'companyName'  => 'ABC Ltd',
-            'dob'          => '',
-            'email'        => 'string',
-            'firstname'    => '',
-            'id'           => 0,
-            'middlenames'  => null,
-            'salutation'   => '',
-            'surname'      => '',
-            'systemStatus' => true,
-            'uId'          => '700000151998',
+                'companyName'  => 'ABC Ltd',
+                'dob'          => '',
+                'email'        => 'string',
+                'firstname'    => '',
+                'id'           => 0,
+                'middlenames'  => null,
+                'salutation'   => '',
+                'surname'      => '',
+                'systemStatus' => true,
+                'uId'          => '700000151998',
             ],
         ];
         $organisation   = 'Natwest';
@@ -283,9 +286,13 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/code-make');
         if ($check === 'instructions and preferences') {
-            $this->ui->assertPageContainsText('Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+            $this->ui->assertPageContainsText(
+                'Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.'
+            );
         } elseif ($check === 'instructions') {
-            $this->ui->assertPageContainsText('Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+            $this->ui->assertPageContainsText(
+                'Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.'
+            );
         }
     }
 
@@ -355,7 +362,6 @@ class LpaContext implements Context
                     self::LPA_SERVICE_GET_LPAS
                 )
             );
-
 
             foreach ($this->dashboardLPAs as $lpa) {
                 $this->apiFixtures->append(
@@ -1242,18 +1248,17 @@ class LpaContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        0
-                            => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Organisation' => $this->organisation,
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'ViewerCode'   => $this->accessCode,
-                                'Cancelled'    => '2021-01-02T23:59:59+00:00',
-                                'Expires'      => '2021-01-02T23:59:59+00:00',
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId,
-                            ],
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode'   => $this->accessCode,
+                            'Cancelled'    => '2021-01-02T23:59:59+00:00',
+                            'Expires'      => '2021-01-02T23:59:59+00:00',
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ],
                     ]
                 ),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
@@ -1384,7 +1389,6 @@ class LpaContext implements Context
     public function iHaveAddedAnLpaToMyAccount(): void
     {
         $this->iHaveBeenGivenAccessToUseAnLPAViaCredentials();
-
         $this->dashboardLPAs = [$this->userLpaActorToken => $this->lpaData];
     }
 
@@ -1401,6 +1405,105 @@ class LpaContext implements Context
                 self::LPA_SERVICE_GET_LPAS
             )
         );
+    }
+
+    #[Given('I have a digital LPA to add to account')]
+    public function iHaveADigitalLpaToAddToAccount(): void
+    {
+        $this->digitalLpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'));
+
+        $this->userLpaActorToken = '987654321';
+        $this->actorId           = 9;
+
+        $this->digitalLpaData = [
+            'lpa'   => [
+                'applicationHasGuidance'           => false,
+                'applicationHasRestrictions'       => false,
+                'applicationType'                  => 'property-and-financial-affairs',
+                'attorneys'                        => [
+                    [
+                        'addressLine1'             => null,
+                        'addressLine2'             => null,
+                        'addressLine3'             => null,
+                        'country'                  => null,
+                        'county'                   => null,
+                        'dob'                      => '1982-07-24',
+                        'email'                    => null,
+                        'firstnames'               => 'Herman',
+                        'name'                     => null,
+                        'otherNames'               => null,
+                        'postcode'                 => null,
+                        'surname'                  => 'Seakrest',
+                        'systemStatus'             => true,
+                        'town'                     => null,
+                        'uId'                      => null,
+                        'cannotMakeJointDecisions' => null,
+                    ],
+                ],
+                'caseSubtype'                      => 'pfa',
+                'channel'                          => null,
+                'dispatchDate'                     => null,
+                'donor'                            => [
+                    'addressLine1'             => null,
+                    'addressLine2'             => null,
+                    'addressLine3'             => null,
+                    'country'                  => null,
+                    'county'                   => null,
+                    'dob'                      => '1982-07-24',
+                    'email'                    => null,
+                    'firstnames'               => 'John',
+                    'name'                     => null,
+                    'otherNames'               => null,
+                    'postcode'                 => null,
+                    'surname'                  => 'Smith',
+                    'systemStatus'             => true,
+                    'town'                     => null,
+                    'uId'                      => null,
+                    'cannotMakeJointDecisions' => null,
+                ],
+                'hasSeveranceWarning'              => null,
+                'howAttorneysMakeDecisions'        => 'jointly-for-some-severally-for-others',
+                'howAttorneysMakeDecisionsDetails' => 'This is test data on how decisions are made',
+                'invalidDate'                      => null,
+                'lifeSustainingTreatment'          => null,
+                'lpaDonorSignatureDate'            => null,
+                'lpaIsCleansed'                    => null,
+                'onlineLpaId'                      => null,
+                'receiptDate'                      => null,
+                'registrationDate'                 => null,
+                'rejectedDate'                     => null,
+                'replacementAttorneys'             => [],
+                'restrictionsAndConditions'        => '',
+                'restrictionsAndConditionsImages'  => null,
+                'status'                           => 'Registered',
+                'statusDate'                       => null,
+                'trustCorporations'                => null,
+                'uId'                              => 'M-7890-0400-4000',
+                'whenTheLpaCanBeUsed'              => null,
+                'withdrawnDate'                    => null,
+            ],
+            'actor' => [
+                'type'    => 'primary-attorney',
+                'details' => [
+                    'addressLine1'             => null,
+                    'addressLine2'             => null,
+                    'addressLine3'             => null,
+                    'country'                  => null,
+                    'county'                   => null,
+                    'dob'                      => '1982-07-24',
+                    'email'                    => null,
+                    'firstnames'               => 'Herman',
+                    'name'                     => null,
+                    'otherNames'               => null,
+                    'postcode'                 => null,
+                    'surname'                  => 'Seakrest',
+                    'systemStatus'             => true,
+                    'town'                     => null,
+                    'uId'                      => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
+                    'cannotMakeJointDecisions' => false,
+                ],
+            ],
+        ];
     }
 
     #[Given('I have been given access to use an LPA via credentials')]
@@ -2086,6 +2189,24 @@ class LpaContext implements Context
         Assert::assertEquals($storedCode, $params['actor-code']);
     }
 
+    #[When('/^I request to add the digital LPA with valid details using (.*)$/')]
+    public function iRequestToAddTheDigitalLPAWithValidDetailsUsing(string $code): void
+    {
+        $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
+
+        // API call for checking LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->digitalLpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
+
+        $this->fillAddLpaPages($code, '24', '07', '1982', 'M-7890-0400-4000');
+        $this->ui->assertPageAddress('/lpa/check');
+    }
+
     #[When('/^I request to add an LPA with valid details for a modernised LPA using (.*)$/')]
     public function iRequestToAddAnLPAWithValidDetailsForModernisedUsing(string $code): void
     {
@@ -2649,6 +2770,76 @@ class LpaContext implements Context
         $this->ui->pressButton('Confirm');
     }
 
+    #[Then('/^The correct digital LPA is found and I add it$/')]
+    public function theCorrectDigitalLPAIsFoundAndIAddIt(): void
+    {
+        // API call for adding an LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_CREATED,
+                json_encode(['user-lpa-actor-token' => $this->userLpaActorToken]),
+                self::ADD_LPA_CONFIRM
+            ),
+        );
+        //API call for getting all the users added LPAs
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                    'Feeg Bundlaaaa 1970-01-24' => [
+                        $this->userLpaActorToken => [
+                            'lpa'             => [
+                                'uId'     => 'M-7890-0400-4000',
+                                'donor'   => [
+                                    'firstname' => 'Feeg',
+                                    'surname'   => 'Bundlaaaa',
+                                    'dob'       => '1970-01-24',
+                                ],
+                                'type'    => 'property-and-financial-affairs',
+                                'status'  => 'Registered',
+                                'channel' => 'digital',
+                            ],
+                            'actor'           => [
+                                'type'    => 'donor',
+                                'details' => (object)[
+                                    'systemStatus' => true,
+                                ],
+                            ],
+                            'actorActive'     => true,
+                            'activeCodeCount' => 0,
+                            'shareCodes'      => [],
+                        ],
+                    ],
+                ]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+
+        //API call for getting each LPAs share codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                    'activeCodeCount' => 0,
+                    'codes'           => [],
+                ]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->ui->assertPageAddress('/lpa/check');
+        $this->ui->assertPageContainsText('Confirm this is the correct LPA');
+        $this->ui->pressButton('Confirm');
+    }
+
     #[Given('/^Has correct name "([^"]*)""([^"]*)" and role "([^"]*)"$/')]
     public function theNameMatchesExpected(string $firstName, string $lastName, string $role): void
     {
@@ -2799,6 +2990,111 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
         $this->ui->assertPageContainsText('Ian Deputy Deputy');
         $this->ui->assertPageContainsText('Health and welfare');
+        $this->ui->assertPageContainsText('Health and welfare');
+    }
+
+    #[Then('/^The digital LPA is successfully added$/')]
+    public function theDigitalLpaIsSuccessfullyAdded(): void
+    {
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    #[Given('/^I am on the dashboard page to see the LPA details/')]
+    public function iAmOnTheDashboardPageToSeeTheLPADetails(): void
+    {
+        //API call for getting all the users added LPAs
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([
+                        $this->userLpaActorToken => [
+                            'lpa'             => [
+                                'uId'     => 'M-7890-0400-4000',
+                                'donor'   => [
+                                    'firstname' => 'Feeg',
+                                    'surname'   => 'Bundlaaaa',
+                                    'dob'       => '1970-01-24',
+                                ],
+                                'type'    => 'property-and-financial-affairs',
+                                'status'  => 'Registered',
+                                'channel' => 'digital',
+                            ],
+                            'actor'           => [
+                                'type'    => 'donor',
+                                'details' => (object)[
+                                    'systemStatus' => true,
+                                ],
+                            ],
+                            'actorActive'     => true,
+                            'activeCodeCount' => 0,
+                            'shareCodes'      => [],
+                        ],
+                    ]),
+                    self::LPA_SERVICE_GET_LPAS
+                )
+            );
+
+
+            //API call for getting each LPAs share codes
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode([
+                        'activeCodeCount' => 0,
+                        'codes'           => [],
+                    ]),
+                    self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+                )
+            );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    #[Given('/^I am on the dashboard page to see the digital LPA details/')]
+    public function iAmOnTheDashboardPageToSeeTheDigitalLPADetails(): void
+    {
+        // System messages
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->systemMessageData ?? []),
+                self::SYSTEM_MESSAGE_SERVICE_GET_MESSAGES
+            )
+        );
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([$this->userLpaActorToken => $this->digitalLpaData]),
+                self::LPA_SERVICE_GET_LPAS
+            )
+        );
+
+        // Viewer codes (used by PopulateLpaMetadata)
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([
+                    'activeCodeCount' => 0,
+                    'codes'           => [],
+                ]),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->ui->visit('/lpa/dashboard');
+        $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
+
+        //$this->ui->assertPageContainsText('Add another LPA');
     }
 
     #[When('/^I check access codes of the status changed LPA$/')]
@@ -2982,10 +3278,10 @@ class LpaContext implements Context
     public function aSystemMessageIsSet(): void
     {
         $this->systemMessageData = [
-          'use/en'  => 'System Message Use English',
-          'use/cy'  => 'System Message Use Welsh',
-          'view/en' => 'System Message View English',
-          'view/cy' => 'System Message View Welsh',
+            'use/en'  => 'System Message Use English',
+            'use/cy'  => 'System Message Use Welsh',
+            'view/en' => 'System Message View English',
+            'view/cy' => 'System Message View Welsh',
         ];
     }
 
@@ -3057,5 +3353,112 @@ class LpaContext implements Context
             'lpa'                  => $this->lpa,
             'added'                => '2021-10-5 12:00:00',
         ];
+    }
+
+    #[Given('/^I have added a digital LPA to my account$/')]
+    public function iHaveAddedADigitalLPAToMyAccount(): void
+    {
+        $this->dashboardDigitalLPAs = [$this->userLpaActorToken => $this->digitalLpaData];
+    }
+
+    #[When('/^I request to view the LPA summary where how attorney decisions are made is added$/')]
+    public function iRequestToViewTheLPASummaryWhereHowAttorneyDecisionsAreMadeIsAdded(): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+
+        $this->lpa->uId = 'M-7890-0400-4000';
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::INPSERVICE_GET_BY_ID
+            )
+        );
+
+        $this->ui->clickLink('View LPA summary');
+    }
+
+    #[When('/^I request to view the LPA summary where (.*) attorneys can make joint decisions$/')]
+    public function iRequestToViewTheLPASummaryWhereNoAttorneysCanMakeJointDecisions($number): void
+    {
+        $this->ui->assertPageContainsText('View LPA summary');
+
+        $this->lpa->uId = 'M-7890-0400-4000';
+
+        if ($number === 'no') {
+            $this->lpa->attorneys[0]->cannotMakeJointDecisions         = true;
+            $this->lpa->attorneys[1]->cannotMakeJointDecisions         = true;
+            $this->lpa->trustCorporations[0]->cannotMakeJointDecisions = true;
+        } elseif ($number === 'one') {
+            $this->lpa->attorneys[0]->cannotMakeJointDecisions         = false;
+            $this->lpa->attorneys[1]->cannotMakeJointDecisions         = true;
+            $this->lpa->trustCorporations[0]->cannotMakeJointDecisions = true;
+        } elseif ($number === 'two') {
+            $this->lpa->attorneys[0]->cannotMakeJointDecisions         = false;
+            $this->lpa->attorneys[1]->cannotMakeJointDecisions         = false;
+            $this->lpa->trustCorporations[0]->cannotMakeJointDecisions = true;
+        } else {
+            $this->lpa->attorneys[0]->cannotMakeJointDecisions         = false;
+            $this->lpa->attorneys[1]->cannotMakeJointDecisions         = false;
+            $this->lpa->trustCorporations[0]->cannotMakeJointDecisions = false;
+        }
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                self::LPA_SERVICE_GET_LPA_BY_ID
+            )
+        );
+
+        // InstAndPrefImagesService::getImagesById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode([]),
+                self::INPSERVICE_GET_BY_ID
+            )
+        );
+
+        $this->ui->clickLink('View LPA summary');
+    }
+
+    #[When('/^I can see decisions are made (.*)/')]
+    public function iCanSeeDecisionsAreMade($jointDecision): void
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText('How decisions are made');
+        $this->ui->assertPageContainsText($jointDecision);
+    }
+
+    #[When('/^I see that (.*)/')]
+    public function iSeeThat($decisionInfo): void
+    {
+        $this->ui->assertPageAddress('/lpa/view-lpa');
+        $this->ui->assertPageContainsText($decisionInfo);
     }
 }
