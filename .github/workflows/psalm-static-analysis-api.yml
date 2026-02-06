@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Setup PHP with tools
-        uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
         with:
           php-version: 8.3
           tools: vimeo/psalm:5
@@ -61,6 +61,6 @@ jobs:
         run: vendor/bin/psalm --output-format=github --taint-analysis --report=results.sarif --long-progress --ignore-baseline
 
       - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
+        uses: github/codeql-action/upload-sarif@b20883b0cd1f46c72ae0ba6d1090936928f9fa30 # v4.32.0
         with:
           sarif_file: ./${{ env.SERVICE-PATH }}/app/results.sarif

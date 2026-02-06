@@ -44,7 +44,7 @@
         "blazon/psr11-monolog": "^5.0.1",
         "elie29/zend-phpdi-config": "^10.0.0",
         "eventsauce/object-hydrator": "^1.6.1",
-        "facile-it/php-openid-client": "^0.3.5",
+        "facile-it/php-openid-client": "^0.4.0",
         "guzzlehttp/guzzle": "^7.9.3",
         "guzzlehttp/psr7": "^2.7.1",
         "laminas/laminas-cache": "^3.13",
