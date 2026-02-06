@@ -23,7 +23,7 @@
   ],
   "packageRules": [
     {
-      "description": "Catchall patch & minor updates not covered by exlplicit rules",
+      "description": "Catchall patch & minor updates not covered by explicit rules",
       "groupName": "Patch & Minor Updates",
       "groupSlug": "all-minor-patch-updates",
       "matchUpdateTypes": [
