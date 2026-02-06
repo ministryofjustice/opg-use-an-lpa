@@ -23,9 +23,22 @@
   ],
   "packageRules": [
     {
+      "description": "Catchall patch & minor updates not covered by explicit rules",
+      "groupName": "Patch & Minor Updates",
+      "groupSlug": "all-minor-patch-updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "prPriority": 0,
+      "matchPackageNames": [
+        "*"
+      ]
+    },
+    {
       "description": "Terraform: bundle all updates together",
       "labels": [
-        "devDependencies",
+        "Dependencies",
         "Renovate",
         "Terraform"
       ],
@@ -39,42 +52,10 @@
       ]
     },
     {
-      "groupName": "Patch & Minor Updates",
-      "groupSlug": "all-minor-patch-updates",
-      "labels": [
-        "Dependencies",
-        "Renovate"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "prCreation": "immediate",
-      "prPriority": 0,
-      "minimumReleaseAge": "3 days",
-      "matchPackageNames": [
-        "*",
-        "!php"
-      ]
-    },
-    {
       "description": [
         "Github Actions: bundle all updates together"
       ],
       "groupName": "GitHub Actions",
-      "automerge": true,
-      "dependencyDashboardApproval": true,
-      "labels": [
-        "Dependencies",
-        "Renovate"
-      ],
-      "prTitle": "chore(deps): update GitHub Actions",
-      "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
-      "prCreation": "immediate",
-      "schedule": [
-        "after 6am and before 9am on Monday"
-      ],
-      "minimumReleaseAge": "3 days",
       "matchManagers": [
         "github-actions"
       ],
@@ -88,7 +69,7 @@
     },
     {
       "description": [
-        "Docker: group all updates together"
+        "Docker Images: group all updates together"
       ],
       "labels": [
         "Dependencies",
@@ -98,13 +79,31 @@
       "groupName": "Docker Updates",
       "matchUpdateTypes": [
         "minor",
-        "patch"
+        "patch",
+        "digest"
       ],
       "matchManagers": [
-        "dockerfile",
-        "docker-compose"
+        "dockerfile"
+      ]
+    },
+    {
+      "description": [
+        "Docker Compose: group all local dev updates together"
       ],
-      "automerge": false
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "Docker"
+      ],
+      "groupName": "Docker Compose Updates",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest"
+      ],
+      "matchManagers": [
+        "docker-compose"
+      ]
     },
     {
       "description": [
@@ -123,14 +122,12 @@
       "matchManagers": [
         "gomod"
       ],
-      "automerge": false
+      "prPriority": 4
     },
     {
       "description": [
-        "npm minor and patch updates (stable for 3 days)",
-        "These might be automerged once we're comfortable with Renovate"
+        "npm minor and patch updates"
       ],
-      "automerge": false,
       "groupName": "minor and patch updates (npm)",
       "groupSlug": "all-minor-patch-updates-npm",
       "labels": [
@@ -146,18 +143,16 @@
         "patch"
       ],
       "matchFileNames": [
-        "package.json",
-        "service-front/web/package.json"
+        "package.json"
       ],
-      "prCreation": "immediate",
-      "prPriority": 4,
-      "minimumReleaseAge": "3 days"
+      "prPriority": 4
     },
     {
       "description": [
-        "AWS SDK"
+        "AWS SDK: Reduce AWS SDK update noise"
       ],
       "labels": [
+        "Dependencies",
         "Renovate",
         "AWS SDK"
       ],
@@ -166,22 +161,21 @@
         "patch"
       ],
       "matchManagers": [
-        "composer"
+        "composer",
+        "gomod"
       ],
       "matchPackageNames": [
-        "aws/aws-sdk-php"
+        "aws/aws-sdk-php",
+        "github.com/aws/aws-sdk-go-v2{/,}**"
       ],
       "extends": [
         "schedule:monthly"
-      ],
-      "automerge": false
+      ]
     },
     {
       "description": [
-        "front composer minor and patch updates (PHP, stable for 3 days)",
-        "These might be automerged once we're comfortable with Renovate"
+        "front composer minor and patch updates (PHP)"
       ],
-      "automerge": false,
       "groupName": "front minor and patch updates (PHP)",
       "groupSlug": "front-minor-patch-updates-php",
       "labels": [
@@ -199,20 +193,15 @@
       "matchFileNames": [
         "service-front/app/composer.json"
       ],
-      "prCreation": "immediate",
       "prPriority": 4,
-      "minimumReleaseAge": "3 days",
       "matchPackageNames": [
-        "!php",
         "!facile-it/php-openid-client"
       ]
     },
     {
       "description": [
-        "api composer minor and patch updates (PHP, stable for 3 days)",
-        "These might be automerged once we're comfortable with Renovate"
+        "api composer minor and patch updates (PHP)"
       ],
-      "automerge": false,
       "groupName": "api minor and patch updates (PHP)",
       "groupSlug": "api-minor-patch-updates-php",
       "labels": [
@@ -230,12 +219,31 @@
       "matchFileNames": [
         "service-api/app/composer.json"
       ],
-      "prCreation": "immediate",
       "prPriority": 4,
-      "minimumReleaseAge": "3 days",
       "matchPackageNames": [
-        "!php",
         "!facile-it/php-openid-client"
+      ]
+    },
+    {
+      "description": [
+        "smoke composer minor and patch updates (PHP)"
+      ],
+      "groupName": "smoke minor and patch updates (PHP)",
+      "groupSlug": "smoke-minor-patch-updates-php",
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "PHP"
+      ],
+      "matchManagers": [
+        "composer"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchFileNames": [
+        "tests/smoke/composer.json"
       ]
     }
   ],
@@ -244,12 +252,12 @@
       "Dependencies",
       "Renovate"
     ],
-    "prCreation": "immediate",
     "rangeStrategy": "pin"
   },
   "branchConcurrentLimit": 5,
   "prConcurrentLimit": 3,
   "prHourlyLimit": 1,
+  "minimumReleaseAge": "7 days",
   "vulnerabilityAlerts": {
     "groupName": "Security Alerts",
     "labels": [
@@ -260,7 +268,6 @@
     "minimumReleaseAge": null,
     "rangeStrategy": "pin",
     "commitMessagePrefix": "[SECURITY]",
-    "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
-    "prCreation": "immediate"
+    "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability"
   }
 }
