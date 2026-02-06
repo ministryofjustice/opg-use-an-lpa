@@ -3,7 +3,7 @@ USER root
 
 COPY service-api/docker/web/default.conf.template /etc/nginx/templates/default.conf.template
 
-RUN apk --no-cache add libcap=2.71-r0 && \
+RUN apk --no-cache add libcap=2.77-r0 && \
     setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx && \
     apk del libcap
 
