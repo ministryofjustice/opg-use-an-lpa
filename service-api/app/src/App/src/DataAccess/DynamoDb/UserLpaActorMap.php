@@ -178,7 +178,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         if ($hasPaperVerificationCode) {
             $setter      = ', :HasPaperVerificationCode = :d';
             $attrs[':d'] = [
-                'BOOL' => $hasPaperVerificationCode,
+                'BOOL' => true,
             ];
         }
 
@@ -259,6 +259,26 @@ class UserLpaActorMap implements UserLpaActorMapInterface
                 ? ['N' => $actorId]
                 : ['S' => $actorId];
         }
+
+        $response = $this->client->updateItem($updateRequest);
+        return $this->getData($response);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removePaperVerificationCodeTag(string $lpaActorToken,): array
+    {
+        $updateRequest = [
+            'TableName'        => $this->userLpaActorTable,
+            'Key'              => [
+                'Id' => [
+                    'S' => $lpaActorToken,
+                ],
+            ],
+            'UpdateExpression' => 'remove HasPaperVerificationCode',
+            'ReturnValues'     => 'ALL_NEW',
+        ];
 
         $response = $this->client->updateItem($updateRequest);
         return $this->getData($response);

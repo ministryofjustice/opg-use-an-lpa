@@ -185,9 +185,9 @@ class FindActorInLpaTest extends TestCase
                 [
                     'reference_number' => '700000000001',
                     'dob'              => '1980-03-01',
-                    'first_names'      => 'Test Tester',
-                    'last_name'        => 'T’esting',
-                    'postcode'         => 'Ab1 2Cd',
+                    'first_names'      => ' Test Tester ',
+                    'last_name'        => ' T’esting ',
+                    'postcode'         => 'Ab12Cd',
                 ],
             ],
             [
@@ -199,9 +199,9 @@ class FindActorInLpaTest extends TestCase
                 [
                     'reference_number' => '700000000001',
                     'dob'              => '1975-10-05',
-                    'first_names'      => 'Donor',
-                    'last_name'        => 'Person',
-                    'postcode'         => 'PY1 3Kd',
+                    'first_names'      => ' Donor ',
+                    'last_name'        => ' Person ',
+                    'postcode'         => '  PY1    3Kd   ',
                 ],
             ],
             [

@@ -57,7 +57,10 @@ class ViewerContext implements Context
     public function iAskToVerifyMyInformation(): void
     {
         $codeData = match ($this->viewerCode) {
-            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4000', 'actor' => ''],
+            'P-1234-1234-1234-12' => [
+                'lpa'   => 'M-7890-0400-4000',
+                'actor' => '',
+            ],
             'P-5678-5678-5678-56' => [
                 'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
@@ -128,7 +131,7 @@ class ViewerContext implements Context
         $this->donorSurname = 'Bundlaaaa';
 
         $this->lpa = json_decode(
-            file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'),
+            file_get_contents(__DIR__ . '../../../../test/fixtures/4000.json'),
         );
     }
 
@@ -358,7 +361,10 @@ class ViewerContext implements Context
     public function iProvideDonorSurnameAndPaperVerificationCode(): void
     {
         $codeData = match ($this->viewerCode) {
-            'P-1234-1234-1234-12' => ['lpa' => 'M-7890-0400-4000', 'actor' => ''],
+            'P-1234-1234-1234-12' => [
+                'lpa'   => 'M-7890-0400-4000',
+                'actor' => '',
+            ],
             'P-5678-5678-5678-56' => [
                 'lpa'           => 'M-7890-0400-4000',
                 'actor'         => '',
@@ -400,10 +406,13 @@ class ViewerContext implements Context
     #[Given('I provide the correct code holders date of birth, number of attorneys and attorney name')]
     public function iProvideTheCorrectDateOfBirthNoOfAttorneysAndAttorneyName(): void
     {
-        $this->sentToDonor   = false;
-        $this->attorneyName  = $this->lpa->attorneys[0]->firstNames . ' ' . $this->lpa->attorneys[0]->lastName;
-        $this->dateOfBirth   = $this->lpa->attorneys[0]->dateOfBirth;
-        $this->noOfAttorneys = count($this->lpa->attorneys) + count($this->lpa->trustCorporations);
+        // fixture data includes an inactive attorney so we minus a 1.
+        $this->iProvideSentToDonorAttorneyNameDateOfBirthAndNoOfAttorneys(
+            'false',
+            $this->lpa->attorneys[0]->firstNames . ' ' . $this->lpa->attorneys[0]->lastName,
+            $this->lpa->attorneys[0]->dateOfBirth,
+            (string) (count($this->lpa->attorneys) + count($this->lpa->trustCorporations) - 1)
+        );
     }
 
     #[Then('/^I see a message that LPA has been cancelled$/')]

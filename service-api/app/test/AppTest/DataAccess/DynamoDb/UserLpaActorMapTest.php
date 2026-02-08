@@ -791,4 +791,65 @@ class UserLpaActorMapTest extends TestCase
         $renew = $userLpaActorMapRepo->updateRecord($testToken, new DateInterval('P1Y'), new DateInterval('P2W'), null);
         $this->assertEquals($testToken, $renew['Id']);
     }
+
+    #[Test]
+    public function can_remove_paper_verification_code_field(): void
+    {
+        $testToken     = 'test-token';
+        $testSiriusUid = 'test-uid';
+        $testUserId    = 'test-user-id';
+        $testActorId   = '1';
+        $testAdded     = gmdate('c');
+        $testActivated = gmdate('c');
+
+        $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken) {
+            $this->assertArrayHasKey('TableName', $data);
+            $this->assertEquals(self::TABLE_NAME, $data['TableName']);
+
+            $this->assertArrayHasKey('Key', $data);
+            $this->assertEquals(['Id' => ['S' => $testToken]], $data['Key']);
+
+            $this->assertArrayHasKey('UpdateExpression', $data);
+            $this->assertEquals(
+                'remove HasPaperVerificationCode',
+                $data['UpdateExpression']
+            );
+
+            return true;
+        }))->willReturn(
+            $this->createAWSResult(
+                [
+                    'Item' => [
+                        'Id'          => [
+                            'S' => $testToken,
+                        ],
+                        'SiriusUid'   => [
+                            'S' => $testSiriusUid,
+                        ],
+                        'Added'       => [
+                            'S' => $testAdded,
+                        ],
+                        'ActorId'     => [
+                            'S' => $testActorId,
+                        ],
+                        'UserId'      => [
+                            'S' => $testUserId,
+                        ],
+                        'ActivatedOn' => [
+                            'S' => $testActivated,
+                        ],
+                    ],
+                ]
+            )
+        );
+
+        $userLpaActorMapRepo = new UserLpaActorMap(
+            $this->dynamoDbClientProphecy->reveal(),
+            self::TABLE_NAME,
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $removeActorMap = $userLpaActorMapRepo->removePaperVerificationCodeTag($testToken);
+        $this->assertEquals($testToken, $removeActorMap['Id']);
+    }
 }

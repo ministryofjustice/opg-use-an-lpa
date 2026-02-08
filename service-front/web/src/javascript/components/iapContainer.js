@@ -44,10 +44,10 @@ export default class IapContainer extends HTMLElement {
         const linkTmpl = document.getElementById('iap-img').content
 
         this._images.forEach(url => {
-            let img = linkTmpl.firstElementChild.cloneNode(true)
-            img.setAttribute('src', url.url)
+            let container = linkTmpl.firstElementChild.cloneNode(true)
+            container.firstElementChild.setAttribute('src', url.url)
 
-            imgsDiv.appendChild(img)
+            imgsDiv.appendChild(container)
         })
 
         this.querySelector('.iap-wait')?.remove()

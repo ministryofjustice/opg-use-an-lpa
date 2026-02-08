@@ -37,6 +37,7 @@ class CombinedLpa implements SortLpasInterface, GroupLpasInterface, ProcessLpasI
         #[CastToHowAttorneysMakeDecisions]
         public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?string $howAttorneysMakeDecisionsDetails,
+        public readonly ?array $howAttorneysMakeDecisionsDetailsImages,
         public readonly ?DateTimeImmutable $invalidDate,
         #[CastToLifeSustainingTreatment]
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,

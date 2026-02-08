@@ -1711,6 +1711,24 @@ class LpaContext implements Context
             )
         );
 
+        // UserLpaActorMap::removePaperVerificationCodeTag
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'LpaUid'  => $lpaUid,
+                            'Added'   => (new DateTime('2020-01-01'))
+                                ->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'      => $this->userLpaActorToken,
+                            'ActorId' => $actorId,
+                            'UserId'  => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
         // PaperVerificationCodes::transitionToDigital
         $this->apiFixtures->append(
             function (RequestInterface $request): Response {

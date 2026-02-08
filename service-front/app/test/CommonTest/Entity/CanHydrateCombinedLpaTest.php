@@ -151,7 +151,12 @@ class CanHydrateCombinedLpaTest extends TestCase
     #[Test]
     public function can_hydrate_sirius_lpa_to_modernise_format(): void
     {
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'), true);
+        $lpa = json_decode(
+            file_get_contents(
+                __DIR__ . '../../../../test/fixtures/combined_lpa.json'
+            ),
+            true
+        );
 
         $expectedSiriusLpa = $this->expectedSiriusLpa();
 

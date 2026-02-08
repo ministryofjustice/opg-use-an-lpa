@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "199326d92d25a958b3096d2220cd79c5",
+    "content-hash": "0f9615ba311f2797f25c463eed1ce4eb",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -508,31 +508,27 @@
         },
         {
             "name": "elie29/zend-phpdi-config",
-            "version": "v9.0.3",
+            "version": "v10.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elie29/zend-di-config.git",
-                "reference": "569e953a6ef85f02b0016d9ec54083d5d0985ef9"
+                "reference": "f1d613cda3f5588972c4daad3aacfc48d063275d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elie29/zend-di-config/zipball/569e953a6ef85f02b0016d9ec54083d5d0985ef9",
-                "reference": "569e953a6ef85f02b0016d9ec54083d5d0985ef9",
+                "url": "https://api.github.com/repos/elie29/zend-di-config/zipball/f1d613cda3f5588972c4daad3aacfc48d063275d",
+                "reference": "f1d613cda3f5588972c4daad3aacfc48d063275d",
                 "shasum": ""
             },
             "require": {
-                "laminas/laminas-stdlib": "^3.2",
-                "php": "^8.1",
-                "php-di/php-di": "^6.3 || ^7.0"
+                "laminas/laminas-stdlib": "^3.12",
+                "php": "^8.2",
+                "php-di/php-di": "^7.0"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "^2.1.4",
-                "mikey179/vfsstream": "^1.6.11",
-                "mockery/mockery": "^1.0",
-                "phpspec/prophecy-phpunit": "^2.0",
-                "phpunit/phpunit": "^9.0",
-                "psalm/plugin-phpunit": "^0.19.0",
-                "vimeo/psalm": "^5.13"
+                "mikey179/vfsstream": "^1.6",
+                "phpro/grumphp": "^2.0",
+                "phpunit/phpunit": "^11.0"
             },
             "bin": [
                 "bin/add-autowires-entry"
@@ -569,7 +565,7 @@
                 "issues": "https://github.com/elie29/zend-di-config/issues",
                 "source": "https://github.com/elie29/zend-di-config"
             },
-            "time": "2025-12-05T15:25:39+00:00"
+            "time": "2026-01-03T14:44:42+00:00"
         },
         {
             "name": "eventsauce/object-hydrator",
@@ -11134,16 +11130,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.4",
+            "version": "12.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4ba0e923f9d3fc655de22f9547c01d15a41fc93a"
+                "reference": "37ddb96c14bfee10304825edbb7e66d341ec6889"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4ba0e923f9d3fc655de22f9547c01d15a41fc93a",
-                "reference": "4ba0e923f9d3fc655de22f9547c01d15a41fc93a",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/37ddb96c14bfee10304825edbb7e66d341ec6889",
+                "reference": "37ddb96c14bfee10304825edbb7e66d341ec6889",
                 "shasum": ""
             },
             "require": {
@@ -11157,13 +11153,13 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.5.1",
+                "phpunit/php-code-coverage": "^12.5.2",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
                 "phpunit/php-timer": "^8.0.0",
                 "sebastian/cli-parser": "^4.2.0",
-                "sebastian/comparator": "^7.1.3",
+                "sebastian/comparator": "^7.1.4",
                 "sebastian/diff": "^7.0.0",
                 "sebastian/environment": "^8.0.3",
                 "sebastian/exporter": "^7.0.2",
@@ -11211,7 +11207,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.8"
             },
             "funding": [
                 {
@@ -11235,7 +11231,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-15T06:05:34+00:00"
+            "time": "2026-01-27T06:12:29+00:00"
         },
         {
             "name": "psalm/plugin-phpunit",
@@ -12556,16 +12552,16 @@
         },
         {
             "name": "sebastian/comparator",
-            "version": "7.1.3",
+            "version": "7.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/comparator.git",
-                "reference": "dc904b4bb3ab070865fa4068cd84f3da8b945148"
+                "reference": "6a7de5df2e094f9a80b40a522391a7e6022df5f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/dc904b4bb3ab070865fa4068cd84f3da8b945148",
-                "reference": "dc904b4bb3ab070865fa4068cd84f3da8b945148",
+                "url": "https://api.github.com/repos/sebastianbergmann/comparator/zipball/6a7de5df2e094f9a80b40a522391a7e6022df5f6",
+                "reference": "6a7de5df2e094f9a80b40a522391a7e6022df5f6",
                 "shasum": ""
             },
             "require": {
@@ -12624,7 +12620,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/comparator/issues",
                 "security": "https://github.com/sebastianbergmann/comparator/security/policy",
-                "source": "https://github.com/sebastianbergmann/comparator/tree/7.1.3"
+                "source": "https://github.com/sebastianbergmann/comparator/tree/7.1.4"
             },
             "funding": [
                 {
@@ -12644,7 +12640,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-20T11:27:00+00:00"
+            "time": "2026-01-24T09:28:48+00:00"
         },
         {
             "name": "sebastian/complexity",
@@ -15056,5 +15052,5 @@
     "platform-overrides": {
         "php": "8.3.22"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

@@ -203,7 +203,8 @@
       "prPriority": 4,
       "minimumReleaseAge": "3 days",
       "matchPackageNames": [
-        "!php"
+        "!php",
+        "!facile-it/php-openid-client"
       ]
     },
     {
@@ -233,7 +234,8 @@
       "prPriority": 4,
       "minimumReleaseAge": "3 days",
       "matchPackageNames": [
-        "!php"
+        "!php",
+        "!facile-it/php-openid-client"
       ]
     }
   ],

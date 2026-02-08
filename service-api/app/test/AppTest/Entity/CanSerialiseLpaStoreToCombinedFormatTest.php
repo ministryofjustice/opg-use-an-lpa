@@ -23,10 +23,10 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
     private function getExpectedLpa(): array
     {
         return [
-            'applicationHasGuidance'           => null,
-            'applicationHasRestrictions'       => null,
-            'applicationType'                  => null,
-            'attorneys'                        => [
+            'applicationHasGuidance'                 => null,
+            'applicationHasRestrictions'             => null,
+            'applicationType'                        => null,
+            'attorneys'                              => [
                 [
                     'addressLine1'             => '81 NighOnTimeWeBuiltIt Street',
                     'addressLine2'             => null,
@@ -38,18 +38,36 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'firstnames'               => 'Herman',
                     'name'                     => null,
                     'otherNames'               => null,
-                    'postcode'                 => null,
+                    'postcode'                 => 'PC4 6UZ',
                     'surname'                  => 'Seakrest',
                     'systemStatus'             => 'active',
                     'town'                     => 'Mahhhhhhhhhh',
                     'uId'                      => '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
                     'cannotMakeJointDecisions' => true,
                 ],
+                [
+                    'addressLine1'             => '81 NighOnTimeWeBuiltIt Street',
+                    'addressLine2'             => null,
+                    'addressLine3'             => null,
+                    'country'                  => 'GB',
+                    'county'                   => null,
+                    'dob'                      => '1984-04-13',
+                    'email'                    => null,
+                    'firstnames'               => 'Jessica',
+                    'name'                     => null,
+                    'otherNames'               => null,
+                    'postcode'                 => null,
+                    'surname'                  => 'Seakrest',
+                    'systemStatus'             => 'replacement',
+                    'town'                     => 'Mahhhhhhhhhh',
+                    'uId'                      => '9201a0b8-70a2-47db-93f2-c7510b4210ae',
+                    'cannotMakeJointDecisions' => true,
+                ],
             ],
-            'caseSubtype'                      => 'hw',
-            'channel'                          => 'online',
-            'dispatchDate'                     => null,
-            'donor'                            => [
+            'caseSubtype'                            => 'hw',
+            'channel'                                => 'online',
+            'dispatchDate'                           => null,
+            'donor'                                  => [
                 'addressLine1'             => '74 Cloob Close',
                 'addressLine2'             => null,
                 'addressLine3'             => null,
@@ -60,30 +78,53 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                 'firstnames'               => 'Feeg',
                 'name'                     => null,
                 'otherNames'               => null,
-                'postcode'                 => null,
+                'postcode'                 => 'TP6 8EX',
                 'surname'                  => 'Bundlaaaa',
                 'systemStatus'             => null,
                 'town'                     => 'Mahhhhhhhhhh',
                 'uId'                      => 'eda719db-8880-4dda-8c5d-bb9ea12c236f',
                 'cannotMakeJointDecisions' => null,
             ],
-            'hasSeveranceWarning'              => null,
-            'howAttorneysMakeDecisions'        => 'jointly',
-            'howAttorneysMakeDecisionsDetails' => null,
-            'invalidDate'                      => null,
-            'lifeSustainingTreatment'          => 'option-a',
-            'lpaDonorSignatureDate'            => '2024-01-10T23:00:00Z',
-            'lpaIsCleansed'                    => null,
-            'onlineLpaId'                      => null,
-            'receiptDate'                      => null,
-            'registrationDate'                 => '2024-01-12T00:00:00Z',
-            'rejectedDate'                     => null,
-            'replacementAttorneys'             => [],
-            'restrictionsAndConditions'        => 'my restrictions and conditions',
-            'restrictionsAndConditionsImages'  => null,
-            'status'                           => 'registered',
-            'statusDate'                       => '2024-01-12T23:00:00Z',
-            'trustCorporations'                => [
+            'hasSeveranceWarning'                    => null,
+            'howAttorneysMakeDecisions'              => 'jointly-for-some-severally-for-others',
+            'howAttorneysMakeDecisionsDetails'       => 'My atttorneys must jointly agree on a decision to sell or let '
+                . 'out my house.',
+            'howAttorneysMakeDecisionsDetailsImages' => null,
+            'invalidDate'                            => null,
+            'lifeSustainingTreatment'                => 'option-a',
+            'lpaDonorSignatureDate'                  => '2024-01-10T23:00:00Z',
+            'lpaIsCleansed'                          => null,
+            'onlineLpaId'                            => null,
+            'receiptDate'                            => null,
+            'registrationDate'                       => '2024-01-12T00:00:00Z',
+            'rejectedDate'                           => null,
+            'replacementAttorneys'                   => [
+                '1' => [
+                    'addressLine1'             => '81 NighOnTimeWeBuiltIt Street',
+                    'addressLine2'             => null,
+                    'addressLine3'             => null,
+                    'country'                  => 'GB',
+                    'county'                   => null,
+                    'dob'                      => '1984-04-13',
+                    'email'                    => null,
+                    'firstnames'               => 'Jessica',
+                    'name'                     => null,
+                    'otherNames'               => null,
+                    'postcode'                 => null,
+                    'surname'                  => 'Seakrest',
+                    'systemStatus'             => 'replacement',
+                    'town'                     => 'Mahhhhhhhhhh',
+                    'uId'                      => '9201a0b8-70a2-47db-93f2-c7510b4210ae',
+                    'cannotMakeJointDecisions' => null,
+                ],
+            ],
+            'restrictionsAndConditions'              => 'My attorneys cannot sell my home unless, in my GPs opinion, I '
+                . 'can no longer live independently. If I do have to move into a care home, I would prefer to live '
+                . 'within a few miles of my sister Jean.',
+            'restrictionsAndConditionsImages'        => null,
+            'status'                                 => 'registered',
+            'statusDate'                             => '2024-01-12T23:00:00Z',
+            'trustCorporations'                      => [
                 [
                     'addressLine1'             => '103 Line 1',
                     'addressLine2'             => null,
@@ -100,19 +141,19 @@ class CanSerialiseLpaStoreToCombinedFormatTest extends TestCase
                     'systemStatus'             => 'active',
                     'town'                     => 'Town',
                     'uId'                      => '1d95993a-ffbb-484c-b2fe-f4cca51801da',
-                    'cannotMakeJointDecisions' => true,
+                    'cannotMakeJointDecisions' => null,
                 ],
             ],
-            'uId'                              => 'M-7890-0400-4000',
-            'whenTheLpaCanBeUsed'              => 'when-capacity-lost',
-            'withdrawnDate'                    => null,
+            'uId'                                    => 'M-7890-0400-4000',
+            'whenTheLpaCanBeUsed'                    => 'when-capacity-lost',
+            'withdrawnDate'                          => null,
         ];
     }
 
     #[Test]
     public function can_serialise_datastore_lpa_to_combined_format(): void
     {
-        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json'), true);
+        $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/4000.json'), true);
         $expectedLpa = $this->getExpectedLpa();
 
         $newLpa = ($this->lpaDataFormatter)($lpa);

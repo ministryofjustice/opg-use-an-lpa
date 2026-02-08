@@ -283,6 +283,17 @@ class ViewerCodeServiceTest extends TestCase
                     'HasPaperVerificationCode' => true,
                 ]
             );
+        $userActorLpaRepoProphecy
+            ->removePaperVerificationCodeTag('id')
+            ->shouldBeCalled()
+            ->willReturn(
+                [
+                    'Id'      => 'id',
+                    'UserId'  => 'user_id',
+                    'LpaUid'  => 'M-XXXX-1212-ZZZZ',
+                    'ActorId' => '1234',
+                ]
+            );
 
         $paperVerificationCodesProphecy = $this->prophesize(PaperVerificationCodesInterface::class);
         $paperVerificationCodesProphecy

@@ -22,6 +22,13 @@ paths:
     post:
       operationId: getList
       summary: Retrieve multiple LPAs
+      parameters:
+        - name: presign-images
+          in: query
+          required: false
+          allowEmptyValue: true
+          description: Replace image path property with a presign URL
+          schema: {}
       requestBody:
         content:
           application/json:
@@ -56,7 +63,13 @@ paths:
         schema:
           type: string
           pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-7890-0400-4000
+          example: M-789Q-P4DF-4UX3
+      - name: presign-images
+        in: query
+        required: false
+        allowEmptyValue: true
+        description: Replace image path property with a presign URL
+        schema: {}
     put:
       operationId: putLpa
       summary: Store an LPA
@@ -119,7 +132,7 @@ paths:
         schema:
           type: string
           pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-7890-0400-4000
+          example: M-789Q-P4DF-4UX3
     post:
       operationId: createUpdate
       summary: Update an LPA
@@ -145,6 +158,82 @@ paths:
         type: "AWS_IAM"
       x-amazon-apigateway-integration:
         uri: ${lambda_update_invoke_arn}
+        httpMethod: "POST"
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+    get:
+      operationId: getUpdates
+      summary: Get list of updates on an LPA
+      responses:
+        "200":
+          description: Updates found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Update"
+                  - type: object
+                    properties:
+                      applied:
+                        type: string
+                        format: date-time
+                      author:
+                        type: string
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "404":
+          description: Updates for LPA not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      x-amazon-apigateway-auth:
+        type: "AWS_IAM"
+      x-amazon-apigateway-integration:
+        uri: ${lambda_getupdates_invoke_arn}
+        httpMethod: "POST"
+        type: "aws_proxy"
+        contentHandling: "CONVERT_TO_TEXT"
+  /lpas/{uid}/static:
+    parameters:
+      - name: uid
+        in: path
+        required: true
+        description: The UID of the case
+        schema:
+          type: string
+          pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
+          example: M-789Q-P4DF-4UX3
+    get:
+      operationId: getStaticLpa
+      summary: Retrieve a static LPA
+      responses:
+        "200":
+          description: Static LPA found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lpa"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestError"
+        "404":
+          description: Static LPA not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundError"
+      x-amazon-apigateway-auth:
+        type: "AWS_IAM"
+      x-amazon-apigateway-integration:
+        uri: ${lambda_getstatic_invoke_arn}
         httpMethod: "POST"
         type: "aws_proxy"
         contentHandling: "CONVERT_TO_TEXT"
@@ -240,7 +329,7 @@ components:
           items:
             type: string
             pattern: M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})
-            example: M-7890-0400-4000
+            example: M-789Q-P4DF-4UX3
     GetListResponse:
       type: object
       required:
@@ -262,17 +351,25 @@ components:
       properties:
         type:
           enum:
-            - CERTIFICATE_PROVIDER_SIGN
-            - ATTORNEY_SIGN
-            - TRUST_CORPORATION_SIGN
-            - PERFECT
-            - STATUTORY_WAITING_PERIOD
-            - REGISTER
-            - CERTIFICATE_PROVIDER_OPT_OUT
-            - DONOR_CONFIRM_IDENTITY
-            - CERTIFICATE_PROVIDER_CONFIRM_IDENTITY
-            - DONOR_WITHDRAW_LPA
+            - ATTORNEY_DECISIONS
             - ATTORNEY_OPT_OUT
+            - ATTORNEY_SIGN
+            - CERTIFICATE_PROVIDER_CONFIRM_IDENTITY
+            - CERTIFICATE_PROVIDER_OPT_OUT
+            - CERTIFICATE_PROVIDER_SIGN
+            - CHANGE_ATTORNEYS
+            - CORRECTION
+            - DONOR_CONFIRM_IDENTITY
+            - DONOR_WITHDRAW_LPA
+            - OPG_STATUS_CHANGE
+            - PAPER_ATTORNEY_ACCESS_ONLINE
+            - PAPER_CERTIFICATE_PROVIDER_ACCESS_ONLINE
+            - PERFECT
+            - REGISTER
+            - SEVER_RESTRICTIONS_AND_CONDITIONS
+            - STATUTORY_WAITING_PERIOD
+            - TRUST_CORPORATION_OPT_OUT
+            - TRUST_CORPORATION_SIGN
         changes:
           type: array
           items:

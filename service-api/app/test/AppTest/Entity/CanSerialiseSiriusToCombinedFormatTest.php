@@ -23,10 +23,10 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
     private function getExpectedLpa(): array
     {
         return [
-            'applicationHasGuidance'           => false,
-            'applicationHasRestrictions'       => false,
-            'applicationType'                  => 'Classic',
-            'attorneys'                        => [
+            'applicationHasGuidance'                 => false,
+            'applicationHasRestrictions'             => false,
+            'applicationType'                        => 'Classic',
+            'attorneys'                              => [
                 [
                     'addressLine1'             => '9 high street',
                     'addressLine2'             => '',
@@ -64,10 +64,10 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'cannotMakeJointDecisions' => true,
                 ],
             ],
-            'caseSubtype'                      => 'hw',
-            'channel'                          => null,
-            'dispatchDate'                     => null,
-            'donor'                            => [
+            'caseSubtype'                            => 'hw',
+            'channel'                                => null,
+            'dispatchDate'                           => null,
+            'donor'                                  => [
                 'addressLine1'             => '81 Front Street',
                 'addressLine2'             => 'LACEBY',
                 'addressLine3'             => '',
@@ -85,23 +85,24 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                 'uId'                      => '700000000799',
                 'cannotMakeJointDecisions' => null,
             ],
-            'hasSeveranceWarning'              => null,
-            'howAttorneysMakeDecisions'        => 'jointly-and-severally',
-            'howAttorneysMakeDecisionsDetails' => null,
-            'invalidDate'                      => null,
-            'lifeSustainingTreatment'          => 'option-a',
-            'lpaDonorSignatureDate'            => '2012-12-12T00:00:00Z',
-            'lpaIsCleansed'                    => true,
-            'onlineLpaId'                      => 'A33718377316',
-            'receiptDate'                      => '2014-09-26T00:00:00Z',
-            'registrationDate'                 => '2019-10-10T00:00:00Z',
-            'rejectedDate'                     => null,
-            'replacementAttorneys'             => [],
-            'restrictionsAndConditions'        => null,
-            'restrictionsAndConditionsImages'  => null,
-            'status'                           => 'Registered',
-            'statusDate'                       => null,
-            'trustCorporations'                => [
+            'hasSeveranceWarning'                    => null,
+            'howAttorneysMakeDecisions'              => 'jointly-and-severally',
+            'howAttorneysMakeDecisionsDetails'       => null,
+            'howAttorneysMakeDecisionsDetailsImages' => null,
+            'invalidDate'                            => null,
+            'lifeSustainingTreatment'                => 'option-a',
+            'lpaDonorSignatureDate'                  => '2012-12-12T00:00:00Z',
+            'lpaIsCleansed'                          => true,
+            'onlineLpaId'                            => 'A33718377316',
+            'receiptDate'                            => '2014-09-26T00:00:00Z',
+            'registrationDate'                       => '2019-10-10T00:00:00Z',
+            'rejectedDate'                           => null,
+            'replacementAttorneys'                   => [],
+            'restrictionsAndConditions'              => null,
+            'restrictionsAndConditionsImages'        => null,
+            'status'                                 => 'Registered',
+            'statusDate'                             => null,
+            'trustCorporations'                      => [
                 [
                     'addressLine1'             => 'Street 1',
                     'addressLine2'             => 'Street 2',
@@ -121,9 +122,9 @@ class CanSerialiseSiriusToCombinedFormatTest extends TestCase
                     'cannotMakeJointDecisions' => null,
                 ],
             ],
-            'uId'                              => '700000000047',
-            'whenTheLpaCanBeUsed'              => null,
-            'withdrawnDate'                    => null,
+            'uId'                                    => '700000000047',
+            'whenTheLpaCanBeUsed'                    => null,
+            'withdrawnDate'                          => null,
         ];
     }
 

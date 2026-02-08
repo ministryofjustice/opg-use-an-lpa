@@ -8,12 +8,10 @@ use App\Enum\HowAttorneysMakeDecisions;
 use App\Enum\LifeSustainingTreatment;
 use App\Enum\LpaType;
 use App\Enum\WhenTheLpaCanBeUsed;
-use App\Exception\ApiException;
 use App\Service\Lpa\AddLpa\AddLpaInterface;
 use App\Service\Lpa\Combined\FilterActiveActorsInterface;
 use App\Service\Lpa\HasRestrictionsInterface;
 use App\Service\Lpa\IsValid\IsValidInterface;
-use App\Service\Lpa\LpaAlreadyAdded\DonorInformationInterface;
 use App\Service\Lpa\LpaAlreadyAdded\LpaAlreadyAddedInterface;
 use App\Service\Lpa\ResolveActor\CombinedHasActorTrait;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
@@ -50,6 +48,7 @@ abstract class Lpa implements
         public readonly ?bool $hasSeveranceWarning,
         public readonly ?HowAttorneysMakeDecisions $howAttorneysMakeDecisions,
         public readonly ?string $howAttorneysMakeDecisionsDetails,
+        public readonly ?array $howAttorneysMakeDecisionsDetailsImages,
         public readonly ?DateTimeImmutable $invalidDate,
         public readonly ?LifeSustainingTreatment $lifeSustainingTreatment,
         public readonly ?DateTimeImmutable $lpaDonorSignatureDate,

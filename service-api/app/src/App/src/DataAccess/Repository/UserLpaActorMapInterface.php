@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\DataAccess\DynamoDb\UserLpaActorMap;
 use DateInterval;
 
 /**
@@ -73,7 +74,8 @@ interface UserLpaActorMapInterface
     /**
      * Activates a LPA relation record, enabling it for use by the user
      *
-     * @return array The record that was activated
+     * @psalm-return UserLpaActorMap The record that was activated
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function activateRecord(
         string $lpaActorToken,
@@ -93,12 +95,24 @@ interface UserLpaActorMapInterface
      * @param DateInterval $intervalTillDue The interval of when an action will be due on the LPA
      * @param string|null  $actorId         The actor related to the record if users details have matched
      *
-     * @return array The record that was renewed
+     * @psalm-return UserLpaActorMap The record that was renewed
+     * @psalm-suppress PossiblyUnusedReturnValue
      */
     public function updateRecord(
         string $lpaActorToken,
         DateInterval $expiryInterval,
         DateInterval $intervalTillDue,
         ?string $actorId,
+    ): array;
+
+    /**
+     * Removes the HasPaperVerificationCode field from a record if it exists. Does nothing otherwise.
+     *
+     * @param string $lpaActorToken The relation record ID to alter
+     * @psalm-return UserLpaActorMap The record with removed field
+     * @psalm-suppress PossiblyUnusedReturnValue
+     */
+    public function removePaperVerificationCodeTag(
+        string $lpaActorToken,
     ): array;
 }
