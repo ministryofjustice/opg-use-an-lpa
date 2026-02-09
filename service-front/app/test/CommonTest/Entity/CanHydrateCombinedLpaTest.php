@@ -66,7 +66,7 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'active',
                 town                    : '',
                 uId                     : '700000000815',
-                cannotMakeJointDecisions: null
+                cannotMakeJointDecisions: true
             ),
             new Person(
                 addressLine1            : '',
@@ -105,7 +105,7 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'active',
                 town                    : 'Town',
                 uId                     : '7000-0015-1998',
-                cannotMakeJointDecisions: null
+                cannotMakeJointDecisions: true
             ),
         ];
 
@@ -134,7 +134,9 @@ class CanHydrateCombinedLpaTest extends TestCase
             attorneys:                 $attorneys,
             channel:                   null,
             donor:                     $donor,
-            howAttorneysMakeDecisions: null,
+            hasSeveranceWarning: true,
+            howAttorneysMakeDecisions: 'jointly-for-some-severally-for-others',
+            howAttorneysMakeDecisionsDetails: 'This is mock data on how decisions are made"',
             lpaDonorSignatureDate:     new DateTimeImmutable('2012-12-12'),
             lpaIsCleansed:             true,
             onlineLpaId:               'A33718377316',
