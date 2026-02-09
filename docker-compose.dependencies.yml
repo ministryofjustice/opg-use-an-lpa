@@ -63,7 +63,7 @@ services:
   # ---------------------------
   # Cache service
   redis:
-    image: docker.io/redis:8@sha256:43355efd22490e31ca14b9d569367d05121e2be61fd8e47937563ae2a80952ae
+    image: docker.io/redis:8@sha256:c22af04bb576503bf16b3e34a1fd2fd82de0f765afd866d2e380145e0af30d78
 
   # ---------------------------
   # PDF Generator
@@ -89,7 +89,7 @@ services:
 
   mock-data-lpa:
     container_name: mock-data-lpa
-    image: docker.io/stoplight/prism:5.12.1@sha256:1319faa9f80dcbae95f5b24ce497eb08fa4a191b7ed3ad65723da608d702bc4e
+    image: docker.io/stoplight/prism:5@sha256:fab47aee53c3007facd5d23e7957b1fc312b30dddad27bf570c2cb4a51c5f959
     command:
       - "mock"
       - "-h"
@@ -102,7 +102,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: docker.io/outofcoffee/imposter:4.6.2@sha256:84655fbe52a33e3523d63f9f1f3d1d4377188436fee5c6b1b231162051820c52
+    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -115,7 +115,7 @@ services:
 
   mock-lpa-data-store:
     container_name: mock-lpa-data-store
-    image: docker.io/outofcoffee/imposter:4.6.2@sha256:84655fbe52a33e3523d63f9f1f3d1d4377188436fee5c6b1b231162051820c52
+    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
     command:
       - "-c"
       - "/opt/imposter/config"
