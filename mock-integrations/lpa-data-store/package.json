@@ -12,6 +12,6 @@
   "license": "MIT",
   "dependencies": {
     "@imposter-js/types": "^1.0.0",
-    "esbuild": "^0.25.1"
+    "esbuild": "^0.27.0"
   }
 }
