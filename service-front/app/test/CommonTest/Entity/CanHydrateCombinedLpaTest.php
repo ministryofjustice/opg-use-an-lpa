@@ -83,8 +83,8 @@ class CanHydrateCombinedLpaTest extends TestCase
                 surname                 : 'Summers',
                 systemStatus            : 'active',
                 town                    : '',
-                uId                     : '7000-0000-0849',
-                cannotMakeJointDecisions: null
+                uId                     : '700000000816',
+                cannotMakeJointDecisions: true
             ),
         ];
 
