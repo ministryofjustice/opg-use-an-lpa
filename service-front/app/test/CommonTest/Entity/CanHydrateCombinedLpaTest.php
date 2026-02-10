@@ -136,7 +136,7 @@ class CanHydrateCombinedLpaTest extends TestCase
             donor:                     $donor,
             hasSeveranceWarning: true,
             howAttorneysMakeDecisions: HowAttorneysMakeDecisions::JOINTLY_FOR_SOME_SEVERALLY_FOR_OTHERS,
-            howAttorneysMakeDecisionsDetails: 'This is mock data on how decisions are made"',
+            howAttorneysMakeDecisionsDetails: 'This is mock data on how decisions are made',
             lpaDonorSignatureDate:     new DateTimeImmutable('2012-12-12'),
             lpaIsCleansed:             true,
             onlineLpaId:               'A33718377316',
