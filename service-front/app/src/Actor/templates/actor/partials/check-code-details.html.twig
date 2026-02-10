@@ -73,15 +73,17 @@
                 </dd>
             </div>
 
-            <div class="govuk-summary-list__row">
-                {% if not check_if_code_has_expired(code.Expires) %}
-                    <dt class="govuk-summary-list__key">{% trans %}Expires{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
-                {% else %}
-                    <dt class="govuk-summary-list__key">{% trans %}Expired{% endtrans %}</dt>
-                    <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
-                {% endif %}
-            </div>
+            {% if not check_if_code_is_cancelled(code) %}
+                <div class="govuk-summary-list__row">
+                    {% if not check_if_code_has_expired(code.Expires) %}
+                        <dt class="govuk-summary-list__key">{% trans %}Expires{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
+                    {% else %}
+                        <dt class="govuk-summary-list__key">{% trans %}Expired{% endtrans %}</dt>
+                        <dd class="govuk-summary-list__value">{{ code_date(code.Expires) }}</dd>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             {# Checking for cancelled status first.
             This would reduce logic to check and display cancelled status for codes that is cancelled and expired #}
