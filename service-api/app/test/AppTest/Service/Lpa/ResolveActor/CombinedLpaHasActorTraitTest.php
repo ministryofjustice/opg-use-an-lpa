@@ -52,6 +52,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     systemStatus: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7345678901',
+                    cannotMakeJointDecisions: true,
                 ),
                 new SiriusLpaAttorney(
                     addressLine1: '',
@@ -70,6 +71,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     systemStatus: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7456789012',
+                    cannotMakeJointDecisions: true,
                 ),
                 new SiriusLpaAttorney(
                     addressLine1: '',
@@ -88,6 +90,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     systemStatus: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7567890123',
+                    cannotMakeJointDecisions: true,
                 ),
             ],
             caseAttorneyJointly: true,
@@ -197,6 +200,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     status: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7345678901',
+                    cannotMakeJointDecisions: true,
                 ),
                 new LpaStoreAttorney(
                     line1: '',
@@ -212,6 +216,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     status: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7456789012',
+                    cannotMakeJointDecisions: true,
                 ),
                 new LpaStoreAttorney(
                     line1: '',
@@ -227,6 +232,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     status: ActorStatus::ACTIVE,
                     town: '',
                     uId: '7567890123',
+                    cannotMakeJointDecisions: true,
                 ),
             ],
             caseSubtype: LpaType::PERSONAL_WELFARE,
@@ -245,6 +251,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                 lastName: 'Sanderson',
                 town: '',
                 uId: '7123456789',
+                cannotMakeJointDecisions: true,
             ),
             howAttorneysMakeDecisions: null,
             howAttorneysMakeDecisionsDetails: null,
@@ -271,6 +278,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     status: ActorStatus::ACTIVE,
                     town: 'Town',
                     uId: '7678901234',
+                    cannotMakeJointDecisions: true,
                 ),
                 new LpaStoreTrustCorporation(
                     line1: 'Street 1',
@@ -287,6 +295,7 @@ class CombinedLpaHasActorTraitTest extends TestCase
                     status: ActorStatus::ACTIVE,
                     town: 'Town',
                     uId: '7789012345',
+                    cannotMakeJointDecisions: true,
                 ),
             ],
             uId: '700000000047',

@@ -27,6 +27,7 @@ class LpaStoreAttorneyTest extends TestCase
             status:       null,
             town:         null,
             uId:          '700000000012',
+            cannotMakeJointDecisions: null,
         );
 
         $this->assertInstanceOf(LpaStoreAttorney::class, $sut);

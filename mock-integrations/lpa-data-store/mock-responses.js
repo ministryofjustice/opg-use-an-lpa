@@ -39,8 +39,24 @@
         },
         dateOfBirth: "1982-07-24",
         status: "active",
-        channel: "paper",
-        signedAt: "2024-01-10T23:00:00Z"
+        channel: "online",
+        signedAt: "2024-01-10T23:00:00Z",
+        cannotMakeJointDecisions: true
+      },
+      {
+        uid: "9201a0b8-70a2-47db-93f2-c7510b4210be",
+        firstNames: "Serena",
+        lastName: "Seakrest",
+        address: {
+          line1: "81 NighOnTimeWeBuiltIt Street",
+          town: "Mahhhhhhhhhh",
+          country: "GB"
+        },
+        dateOfBirth: "1986-05-14",
+        status: "active",
+        channel: "online",
+        signedAt: "2024-01-10T23:00:00Z",
+        cannotMakeJointDecisions: false
       },
       {
         uid: "9201a0b8-70a2-47db-93f2-c7510b4210ae",
@@ -54,7 +70,7 @@
         dateOfBirth: "1984-04-13",
         status: "replacement",
         channel: "online",
-        signedAt: "2024-01-10T23:00:00Z"
+        signedAt: "2024-01-10T23:00:00Z",
       }
     ],
     trustCorporations: [
@@ -69,7 +85,8 @@
         },
         status: "active",
         channel: "paper",
-        signedAt: "2024-01-10T23:00:00Z"
+        signedAt: "2024-01-10T23:00:00Z",
+        cannotMakeJointDecisions: true
       }
     ],
     certificateProvider: {

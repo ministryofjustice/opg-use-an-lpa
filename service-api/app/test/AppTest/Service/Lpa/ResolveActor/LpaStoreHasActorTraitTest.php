@@ -58,6 +58,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                     lastName:      'Sanderson',
                     town:         '',
                     uId:          '123456789',
+                    cannotMakeJointDecisions: null
                 );
             }
 
@@ -78,6 +79,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                         status:      ActorStatus::ACTIVE,
                         town:        '',
                         uId:         '345678901',
+                        cannotMakeJointDecisions: true
                     ),
                     new LpaStoreAttorney(
                         line1:       '',
@@ -93,6 +95,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                         status:      ActorStatus::ACTIVE,
                         town:        '',
                         uId:         '456789012',
+                        cannotMakeJointDecisions: true
                     ),
                     new LpaStoreAttorney(
                         line1:       '',
@@ -108,6 +111,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                         status:      ActorStatus::ACTIVE,
                         town:        '',
                         uId:         '7567890123',
+                        cannotMakeJointDecisions: true
                     ),
                 ];
             }
@@ -130,6 +134,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                         status:      ActorStatus::ACTIVE,
                         town:        'Town',
                         uId:         '678901234',
+                        cannotMakeJointDecisions: true
                     ),
                     new LpaStoreTrustCorporation(
                         line1:       'Street 1',
@@ -146,6 +151,7 @@ class LpaStoreHasActorTraitTest extends TestCase
                         status:      ActorStatus::ACTIVE,
                         town:        'Town',
                         uId:         '789012345',
+                        cannotMakeJointDecisions: true
                     ),
                 ];
             }

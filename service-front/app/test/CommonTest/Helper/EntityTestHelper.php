@@ -66,7 +66,8 @@ class EntityTestHelper
             surname: $surname,
             systemStatus: $systemStatus,
             town: $town,
-            uId: $uId
+            uId: $uId,
+            cannotMakeJointDecisions:   true
         );
     }
 

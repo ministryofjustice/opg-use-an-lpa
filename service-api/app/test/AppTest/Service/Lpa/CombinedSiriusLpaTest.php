@@ -42,6 +42,7 @@ class CombinedSiriusLpaTest extends TestCase
                     systemStatus: ActorStatus::ACTIVE,
                     town:         '',
                     uId:          '700000000815',
+                    cannotMakeJointDecisions: true,
                 ),
                 new SiriusLpaAttorney(
                     addressLine1: '',
@@ -60,6 +61,7 @@ class CombinedSiriusLpaTest extends TestCase
                     systemStatus: ActorStatus::ACTIVE,
                     town:         '',
                     uId:          '700000000849',
+                    cannotMakeJointDecisions: true
                 ),
             ],
             caseAttorneyJointly:                       false,

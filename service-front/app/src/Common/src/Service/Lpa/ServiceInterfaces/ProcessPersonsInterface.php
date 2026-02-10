@@ -17,4 +17,6 @@ interface ProcessPersonsInterface
     public function getSurname(): string;
 
     public function getSystemStatus(): bool;
+
+    public function getCannotMakeJointDecisions(): ?bool;
 }
