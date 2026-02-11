@@ -58,7 +58,7 @@ class PotGenerator
     /**
      * @param References[] $references
      * @param Translation $translation
-     * @return array
+     * @return Translation
      */
     private function sortTranslationReferences(array $references, Translation $translation): Translation
     {
