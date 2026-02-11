@@ -53,31 +53,31 @@ class LpaContext implements Context
     public function zaTrustCorporationHasCreatedAndAccessCode(): void
     {
         $trustCorpActor = [
-        'type'    => 'primary-attorney',
-        'details' => [
-            'addresses'    => [
-                [
-                    'addressLine1' => '',
-                    'addressLine2' => '',
-                    'addressLine3' => '',
-                    'country'      => '',
-                    'county'       => '',
-                    'id'           => 0,
-                    'postcode'     => '',
-                    'town'         => '',
-                    'type'         => 'Primary',
+            'type'    => 'primary-attorney',
+            'details' => [
+                'addresses'    => [
+                    [
+                        'addressLine1' => '',
+                        'addressLine2' => '',
+                        'addressLine3' => '',
+                        'country'      => '',
+                        'county'       => '',
+                        'id'           => 0,
+                        'postcode'     => '',
+                        'town'         => '',
+                        'type'         => 'Primary',
+                    ],
                 ],
-            ],
-            'companyName'  => 'ABC Ltd',
-            'dob'          => '',
-            'email'        => 'string',
-            'firstname'    => '',
-            'id'           => 0,
-            'middlenames'  => null,
-            'salutation'   => '',
-            'surname'      => '',
-            'systemStatus' => true,
-            'uId'          => '700000151998',
+                'companyName'  => 'ABC Ltd',
+                'dob'          => '',
+                'email'        => 'string',
+                'firstname'    => '',
+                'id'           => 0,
+                'middlenames'  => null,
+                'salutation'   => '',
+                'surname'      => '',
+                'systemStatus' => true,
+                'uId'          => '700000151998',
             ],
         ];
         $organisation   = 'Natwest';
@@ -283,9 +283,13 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/code-make');
         if ($check === 'instructions and preferences') {
-            $this->ui->assertPageContainsText('Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+            $this->ui->assertPageContainsText(
+                'Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.'
+            );
         } elseif ($check === 'instructions') {
-            $this->ui->assertPageContainsText('Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.');
+            $this->ui->assertPageContainsText(
+                'Scanned copies of the donor’s instructions will be shown in the LPA summary. You should check the scanned image - if it’s not clear, organisations may ask to see the paper LPA.'
+            );
         }
     }
 
@@ -1242,18 +1246,17 @@ class LpaContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        0
-                            => [
-                                'SiriusUid'    => $this->lpa->uId,
-                                'Added'        => '2020-01-01T23:59:59+00:00',
-                                'Organisation' => $this->organisation,
-                                'UserLpaActor' => $this->userLpaActorToken,
-                                'ViewerCode'   => $this->accessCode,
-                                'Cancelled'    => '2021-01-02T23:59:59+00:00',
-                                'Expires'      => '2021-01-02T23:59:59+00:00',
-                                'Viewed'       => false,
-                                'ActorId'      => $this->actorId,
-                            ],
+                        0 => [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => '2020-01-01T23:59:59+00:00',
+                            'Organisation' => $this->organisation,
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'ViewerCode'   => $this->accessCode,
+                            'Cancelled'    => '2021-01-02T23:59:59+00:00',
+                            'Expires'      => '2021-01-02T23:59:59+00:00',
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ],
                     ]
                 ),
                 self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
@@ -2487,6 +2490,7 @@ class LpaContext implements Context
     }
 
     #[Then('/^I should be shown the details of the viewer code with status (.*)/')]
+    #[Then('/^I will not see an expiry date of the (.*) code/')]
     public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
@@ -2504,7 +2508,13 @@ class LpaContext implements Context
         Assert::assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
         Assert::assertEquals($codeDetails[1], 'Ian Deputy');
         Assert::assertEquals($codeDetails[2], 'Not viewed');
-        Assert::assertEquals($codeDetails[4], $status);
+        if ($status === 'CANCELLED') {
+            Assert::assertEquals($codeDetails[3], $status);
+            $this->ui->assertPageNotContainsText('Expires');
+            $this->ui->assertPageNotContainsText('Expired');
+        } else {
+            Assert::assertEquals($codeDetails[4], $status);
+        }
 
         if ($codeDetails === null) {
             throw new Exception('Code details not found');
@@ -2982,10 +2992,10 @@ class LpaContext implements Context
     public function aSystemMessageIsSet(): void
     {
         $this->systemMessageData = [
-          'use/en'  => 'System Message Use English',
-          'use/cy'  => 'System Message Use Welsh',
-          'view/en' => 'System Message View English',
-          'view/cy' => 'System Message View Welsh',
+            'use/en'  => 'System Message Use English',
+            'use/cy'  => 'System Message Use Welsh',
+            'view/en' => 'System Message View English',
+            'view/cy' => 'System Message View Welsh',
         ];
     }
 
