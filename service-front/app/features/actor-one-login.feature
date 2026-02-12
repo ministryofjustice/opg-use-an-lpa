@@ -24,11 +24,11 @@ Feature: Authenticate One Login
     Then I am redirected to the login page with a "<error_type>" error and "<error_message>"
 
   Examples:
-    | language | error_type              | error_message                           |
-    | English  | access_denied           | Tried to login however access is denied |
-    | English  | temporarily_unavailable | One Login is temporarily unavailable    |
-    | Welsh    | access_denied           | Mae problem                             |
-    | Welsh    | temporarily_unavailable | Mae problem                             |
+    | language | error_type              | error_message             |
+    | English  | access_denied           | You’ve been signed out    |
+    | English  | temporarily_unavailable | You’ve been signed out    |
+    | Welsh    | access_denied           | Rydych wedi’ch allgofnodi |
+    | Welsh    | temporarily_unavailable | Rydych wedi’ch allgofnodi |
 
   @ui
   Scenario Outline: One Login returns a system error
