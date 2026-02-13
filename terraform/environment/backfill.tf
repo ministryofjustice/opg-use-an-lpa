@@ -44,9 +44,10 @@ data "aws_iam_policy_document" "lambda_backfill" {
   statement {
     sid    = "AllowBreakglassExecute"
     effect = "Allow"
-    resources = [
-      module.lambda_backfill[0].lambda.arn,
-    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${local.environment.account_id}:role/breakglass"]
+    }
     actions = [
       "lambda:InvokeFunction"
     ]
