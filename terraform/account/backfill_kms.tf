@@ -96,12 +96,11 @@ data "aws_iam_policy_document" "lambda_backfill_kms" {
       "kms:DescribeKey"
     ]
 
-
-    # We need to add Lambda execution role once created
     principals {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/backfill-lambda-${local.account_name}"
       ]
     }
 
