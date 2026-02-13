@@ -56,7 +56,7 @@ resource "aws_lambda_permission" "allow_breakglass_invoke" {
   count         = local.environment.deploy_backfill_lambda ? 1 : 0
   statement_id  = "AllowBreakglassInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambda_backfill[0].lambda_function.function_name
+  function_name = module.lambda_backfill[0].lambda_name
   principal     = "arn:aws:iam::${local.environment.account_id}:role/breakglass"
 }
 
