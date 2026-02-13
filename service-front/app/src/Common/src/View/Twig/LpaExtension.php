@@ -88,11 +88,6 @@ class LpaExtension extends AbstractExtension
      */
     public function actorName(CaseActor|Person $actor, bool $withSalutation = true): string
     {
-        $companyName = $actor->getCompanyName() ?? '';
-        if ($companyName !== '') {
-            return $companyName;
-        }
-
         $nameData = [];
 
         if ($withSalutation) {

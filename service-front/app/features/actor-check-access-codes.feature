@@ -31,6 +31,7 @@ Feature: The user is able to check the access codes they have created
     Given I cancel the viewer code
     When I click to check the viewer code has been cancelled which is now expired
     Then I should be shown the details of the viewer code with status CANCELLED
+    And I will not see an expiry date of the CANCELLED code
 
   @ui @integration
   Scenario: As a user I can see the who has viewed the LPA's I have added using the access code

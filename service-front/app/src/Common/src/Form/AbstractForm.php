@@ -14,13 +14,6 @@ abstract class AbstractForm extends Form
     public const NOT_SAME = 'notSame';
 
     /**
-     * Error messages templates
-     *
-     * @var string[]
-     */
-    protected array $messageTemplates = [];
-
-    /**
      * @var string[] This, and its associated functions below allow form level error messages not attached to
      *            any individual form elements. Something that Zend form does not provide OOTB.
      */
@@ -40,37 +33,6 @@ abstract class AbstractForm extends Form
                 ]
             )
         );
-    }
-
-    /**
-     * Allows the addition of form level error messages to a form. These will typically be displayed at the
-     * summary level on the page.
-     *
-     * @param string $messageKey The key to a message stored in the messageTemplates array of the form
-     * @param string $elementName An optional field name to link the error message to
-     */
-    public function addErrorMessage(string $messageKey, string $elementName = ''): void
-    {
-        if (! isset($this->messageTemplates[$messageKey])) {
-            throw new InvalidArgumentException('No message template exists for key ' . $messageKey);
-        }
-
-        if ($elementName !== '' && ! $this->has($elementName)) {
-            throw new InvalidArgumentException('No form element named ' . $elementName . ' found');
-        }
-
-        if ($elementName === '') {
-            //add error to just the error summary section
-            $this->errorMessages[''] = [$this->messageTemplates[$messageKey]];
-        } else {
-            //add error to error messages for the element
-            $formElement = $this->getElements()[$elementName];
-
-            $messages = $formElement->getMessages();
-            array_push($messages, $this->messageTemplates[$messageKey]);
-
-            $formElement->setMessages($messages);
-        }
     }
 
     /**

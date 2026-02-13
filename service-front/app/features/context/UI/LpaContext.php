@@ -2608,6 +2608,7 @@ class LpaContext implements Context
     }
 
     #[Then('/^I should be shown the details of the viewer code with status (.*)/')]
+    #[Then('/^I will not see an expiry date of the (.*) code/')]
     public function iShouldBeShownTheDetailsOfTheViewerCodeWithStatus($status): void
     {
         $this->ui->assertPageAddress('/lpa/access-codes?lpa=' . $this->userLpaActorToken);
@@ -2625,7 +2626,13 @@ class LpaContext implements Context
         Assert::assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
         Assert::assertEquals($codeDetails[1], 'Ian Deputy');
         Assert::assertEquals($codeDetails[2], 'Not viewed');
-        Assert::assertEquals($codeDetails[4], $status);
+        if ($status === 'CANCELLED') {
+            Assert::assertEquals($codeDetails[3], $status);
+            $this->ui->assertPageNotContainsText('Expires');
+            $this->ui->assertPageNotContainsText('Expired');
+        } else {
+            Assert::assertEquals($codeDetails[4], $status);
+        }
 
         if ($codeDetails === null) {
             throw new Exception('Code details not found');

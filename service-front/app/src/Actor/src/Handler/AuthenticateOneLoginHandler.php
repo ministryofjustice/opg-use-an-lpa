@@ -75,14 +75,13 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
             return new RedirectResponse($result['url']);
         }
 
-        $params = $request->getQueryParams();
+        $toRender = ['form' => $form];
+        $params   = $request->getQueryParams();
         if (array_key_exists('error', $params)) {
-            $form->addErrorMessage($params['error']);
+            $toRender['one_login_error'] = $params['error'];
         }
 
-        return new HtmlResponse($this->renderer->render('actor::one-login', [
-            'form' => $form,
-        ]));
+        return new HtmlResponse($this->renderer->render('actor::one-login', $toRender));
     }
 
     public function isUserLoggedIn(ServerRequestInterface $request): bool

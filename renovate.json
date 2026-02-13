@@ -225,6 +225,8 @@
       "description": [
         "AWS SDK: Reduce AWS SDK update noise"
       ],
+      "groupName": "AWS SDK minor and patch updates (PHP, Go)",
+      "groupSlug": "aws-sdk-minor-patch-updates-php",
       "labels": [
         "Dependencies",
         "Renovate",

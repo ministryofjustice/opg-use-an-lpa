@@ -116,7 +116,7 @@ jobs:
 
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
         env:
           cache-name: cache-node-modules
         with:
@@ -289,14 +289,14 @@ jobs:
             docker build --file service-${SVC_PREFIX}/docker/web/Dockerfile --tag ${SVC_PREFIX}_web:latest .
 
           elif [[ "${SVC_PREFIX}" = "stats_upload" ]]; then
-            docker build --no-cache --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
+            docker build --platform linux/amd64 --provenance=false --file lambda-functions/upload-statistics/Dockerfile --tag stats_upload_lambda:latest lambda-functions/upload-statistics
           elif [[ "${SVC_PREFIX}" = "event" ]]; then
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
-              docker build --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
+              docker build --platform linux/amd64 --provenance=false --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
             fi
           elif [[ "${SVC_PREFIX}" = "backfill" ]]; then
             if [[ "${SVC_SUFFIX}" = "lambda" ]]; then
-              docker build --file ${PATH_TO_DOCKER_FILE} --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/backfill
+              docker build --platform linux/amd64 --provenance=false --file ${PATH_TO_DOCKER_FILE} --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/backfill
             fi
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)

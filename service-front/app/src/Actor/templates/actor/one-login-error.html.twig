@@ -1,0 +1,34 @@
+{% macro one_login_error(error) %}
+    {# whilst the errors are all the same content this is probably all overkill #}
+    {% set errors = {
+        access_denied: {
+            title: "You’ve been signed out" | trans,
+            message: "This happened because of a technical issue. Your information is safe. Sign in again to continue." | trans
+        },
+        session_missing: {
+            title: "You’ve been signed out" | trans,
+            message: "This happened because of a technical issue. Your information is safe. Sign in again to continue." | trans
+        },
+        temporarily_unavailable: {
+            title: "You’ve been signed out" | trans,
+            message: "This happened because of a technical issue. Your information is safe. Sign in again to continue." | trans
+        }
+    } %}
+
+    {{ _self.one_login_error_html(errors[error].title, errors[error].message) }}
+{% endmacro %}
+
+{% macro one_login_error_html(title, message) %}
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+        <h2 class="govuk-error-summary__title" id="error-summary-title">
+            {{ title }}
+        </h2>
+        <div class="govuk-error-summary__body">
+            <ul class="govuk-list govuk-error-summary__list">
+                <li>
+                    <a data-gaEventType="onLoad" data-gaCategory="Form errors" data-gaAction="Form" data-gaLabel="{{ message }}" href="#">{{ message }}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endmacro %}
