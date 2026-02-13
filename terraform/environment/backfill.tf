@@ -52,6 +52,14 @@ data "aws_iam_policy_document" "lambda_backfill" {
   }
 }
 
+resource "aws_lambda_permission" "allow_breakglass_invoke" {
+  count         = local.environment.deploy_backfill_lambda ? 1 : 0
+  statement_id  = "AllowBreakglassInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = module.lambda_backfill[0].lambda_function.function_name
+  principal     = "arn:aws:iam::${local.environment.account_id}:role/breakglass"
+}
+
 resource "aws_s3_bucket" "lambda_backfill" {
   count  = local.environment.deploy_backfill_lambda ? 1 : 0
   bucket = "opg-use-an-lpa-lambda-backfill-${local.environment_name}"
