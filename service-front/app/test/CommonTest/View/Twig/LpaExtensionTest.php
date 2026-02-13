@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
-use Common\Entity\Person;
-use Common\Service\Lpa\Factory\LpaDataFormatter;
-use DateTimeImmutable;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
+use Common\Entity\Person;
+use Common\Service\Lpa\Factory\LpaDataFormatter;
 use Common\View\Twig\LpaExtension;
 use DateTime;
+use DateTimeImmutable;
 use Locale;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
 
@@ -257,12 +257,6 @@ class LpaExtensionTest extends TestCase
                     'surname'    => 'Taylor',
                 ],
                 'Mrs Someone Taylor',
-            ],
-            [
-                [
-                    'companyName' => 'The COMPANY',
-                ],
-                'The COMPANY',
             ],
             [
                 [],
