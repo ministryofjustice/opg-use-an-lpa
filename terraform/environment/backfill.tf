@@ -11,7 +11,7 @@ module "lambda_backfill" {
   image_uri   = "${data.aws_ecr_repository.backfill.repository_url}@${data.aws_ecr_image.backfill.image_digest}"
   ecr_arn     = data.aws_ecr_repository.backfill.arn
   environment = local.environment_name
-  kms_key     = data.cloudwatch_log_group.lambda_backfill[0].kms_key_id
+  kms_key     = data.aws_kms_alias.lambda_backfill.target_key_arn
   timeout     = 900
   memory      = 1024
 }
