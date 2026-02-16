@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-02-11T16:31:28+00:00\n"
+"POT-Creation-Date: 2026-02-16T17:18:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -33,51 +33,51 @@ msgstr ""
 msgid "LPA reference number:"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:11
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Added by:"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:15
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:20
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:16
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:21
 msgid "Why is this?"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:25
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:30
 msgid "cancelled"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:34
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "%count% active access code"
 msgid_plural "%count% active access codes"
 msgstr[0] ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:39
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "No active access codes"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:37
 #: src/Actor/templates/actor/check-access-codes.html.twig:36
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:50
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:55
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:9
 msgid "Give an organisation access"
 msgstr ""
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:21
 #: src/Actor/templates/actor/check-access-codes.html.twig:20
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:54
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:59
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:14
 msgid "Check access codes"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:58
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:63
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:65
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:70
 msgid "Remove LPA"
 msgstr ""
 
@@ -151,24 +151,24 @@ msgstr ""
 msgid "Not viewed"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:78
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:105
 msgid "Expires"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:81
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:82
 msgid "Expired"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:97
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:99
 msgid "Status"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:92
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:94
 msgid "CANCELLED"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/check-code-details.html.twig:99
+#: src/Actor/templates/actor/partials/check-code-details.html.twig:101
 msgid "EXPIRED"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/header/default.html.twig:41
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:64
 msgid "Sign out"
 msgstr ""
 
@@ -396,6 +396,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:46
 #: src/Actor/templates/actor/check-lpa.html.twig:46
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:14
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:33
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:33
 msgid "(Trust corporation)"
@@ -2332,7 +2333,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
 #: src/Common/templates/partials/header/default.html.twig:39
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:111
 msgid "Settings"
 msgstr ""
 
@@ -3766,23 +3767,23 @@ msgstr ""
 msgid "This LPA has instructions"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:123
 #: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
 msgstr ""
 
 #: src/Common/templates/partials/header/default.html.twig:31
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
 msgid "Last signed in:"
 msgstr ""
 
 #: src/Common/templates/partials/header/default.html.twig:33
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:130
 msgid "Never"
 msgstr ""
 
 #: src/Common/templates/partials/header/default.html.twig:40
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:95
 msgid "Your LPAs"
 msgstr ""
 
@@ -3794,7 +3795,7 @@ msgstr ""
 msgid "Hide GOV.UK One Login menu"
 msgstr ""
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:79
 msgid "%service_name% menu"
 msgstr ""
 
@@ -4643,4 +4644,12 @@ msgstr ""
 #: src/Actor/src/Handler/RemoveLpaHandler.php:127
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:72
+msgid "Service information"
+msgstr ""
+
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:81
+msgid "Menu"
 msgstr ""
