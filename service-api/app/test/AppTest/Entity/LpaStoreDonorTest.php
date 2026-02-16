@@ -17,6 +17,7 @@ class LpaStoreDonorTest extends TestCase
             line1:             null,
             line2:             null,
             line3:             null,
+            cannotMakeJointDecisions: true,
             country:           null,
             county:            null,
             dateOfBirth:       null,
@@ -27,7 +28,6 @@ class LpaStoreDonorTest extends TestCase
             lastName:          null,
             town:              null,
             uId:               '700000000012',
-            cannotMakeJointDecisions: true,
         );
 
         $this->assertInstanceOf(LpaStoreDonor::class, $sut);

@@ -292,6 +292,7 @@ class FindActorInLpaTest extends TestCase
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dob:          new DateTimeImmutable('1977-11-21'),
@@ -305,7 +306,6 @@ class FindActorInLpaTest extends TestCase
             systemStatus: ActorStatus::INACTIVE,
             town:         null,
             uId:          '7000000002222',
-            cannotMakeJointDecisions: null,
         );
     }
 
@@ -334,6 +334,7 @@ class FindActorInLpaTest extends TestCase
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dob:          new DateTimeImmutable('1960-05-05'),
@@ -347,7 +348,6 @@ class FindActorInLpaTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
             uId:          '700000003333',
-            cannotMakeJointDecisions: null,
         );
     }
 
@@ -398,6 +398,7 @@ class FindActorInLpaTest extends TestCase
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dob:          new DateTimeImmutable('1980-03-01'),
@@ -411,7 +412,6 @@ class FindActorInLpaTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
             uId:          '7000000055555',
-            cannotMakeJointDecisions: null,
         );
     }
 
@@ -421,6 +421,7 @@ class FindActorInLpaTest extends TestCase
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dob:          null,
@@ -434,7 +435,6 @@ class FindActorInLpaTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
             uId:          '700000001234',
-            cannotMakeJointDecisions: null,
         );
     }
 

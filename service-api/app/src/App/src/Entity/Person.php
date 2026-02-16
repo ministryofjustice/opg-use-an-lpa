@@ -24,6 +24,7 @@ class Person implements
         public readonly ?string $addressLine1,
         public readonly ?string $addressLine2,
         public readonly ?string $addressLine3,
+        public readonly ?bool $cannotMakeJointDecisions,
         public readonly ?string $country,
         public readonly ?string $county,
         public readonly ?DateTimeImmutable $dob,
@@ -36,7 +37,6 @@ class Person implements
         public readonly ?ActorStatus $systemStatus,
         public readonly ?string $town,
         public readonly ?string $uId,
-        public readonly ?bool $cannotMakeJointDecisions,
     ) {
     }
 

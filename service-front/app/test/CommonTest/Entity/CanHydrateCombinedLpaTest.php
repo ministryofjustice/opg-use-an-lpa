@@ -34,6 +34,7 @@ class CanHydrateCombinedLpaTest extends TestCase
             addressLine1            : '81 Front Street',
             addressLine2            : 'LACEBY',
             addressLine3            : '',
+            cannotMakeJointDecisions: null,
             country                 : '',
             county                  : '',
             dob                     : new DateTimeImmutable('1948-11-01'),
@@ -46,7 +47,6 @@ class CanHydrateCombinedLpaTest extends TestCase
             systemStatus            : 'true',
             town                    : '',
             uId                     : '700000000799',
-            cannotMakeJointDecisions: null
         );
 
         $attorneys = [
@@ -54,6 +54,7 @@ class CanHydrateCombinedLpaTest extends TestCase
                 addressLine1            : '9 high street',
                 addressLine2            : '',
                 addressLine3            : '',
+                cannotMakeJointDecisions: true,
                 country                 : '',
                 county                  : '',
                 dob                     : new DateTimeImmutable('1990-05-04'),
@@ -66,12 +67,12 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'active',
                 town                    : '',
                 uId                     : '700000000815',
-                cannotMakeJointDecisions: true
             ),
             new Person(
                 addressLine1            : '',
                 addressLine2            : '',
                 addressLine3            : '',
+                cannotMakeJointDecisions: true,
                 country                 : '',
                 county                  : '',
                 dob                     : new DateTimeImmutable('1975-10-05'),
@@ -84,7 +85,6 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'active',
                 town                    : '',
                 uId                     : '700000000816',
-                cannotMakeJointDecisions: true
             ),
         ];
 
@@ -93,6 +93,7 @@ class CanHydrateCombinedLpaTest extends TestCase
                 addressLine1            : 'Street 1',
                 addressLine2            : 'Street 2',
                 addressLine3            : 'Street 3',
+                cannotMakeJointDecisions: true,
                 country                 : 'GB',
                 county                  : 'County',
                 dob                     : null,
@@ -105,7 +106,6 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'active',
                 town                    : 'Town',
                 uId                     : '7000-0015-1998',
-                cannotMakeJointDecisions: true
             ),
         ];
 
@@ -114,6 +114,7 @@ class CanHydrateCombinedLpaTest extends TestCase
                 addressLine1            : 'Address Line 1',
                 addressLine2            : 'Address Line 2',
                 addressLine3            : 'Address Line 3',
+                cannotMakeJointDecisions: null,
                 country                 : 'Country',
                 county                  : 'County',
                 dob                     : new DateTimeImmutable('2000-01-31'),
@@ -126,7 +127,6 @@ class CanHydrateCombinedLpaTest extends TestCase
                 systemStatus            : 'replacement',
                 town                    : 'Town',
                 uId                     : '7000-0000-0849',
-                cannotMakeJointDecisions: null
             ),
         ];
 

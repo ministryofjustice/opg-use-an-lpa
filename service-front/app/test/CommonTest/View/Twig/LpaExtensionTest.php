@@ -109,6 +109,7 @@ class LpaExtensionTest extends TestCase
             addressLine1: 'Street 1',
             addressLine2: 'Street 2',
             addressLine3: 'Street 3',
+            cannotMakeJointDecisions: true,
             country: 'Country',
             county: 'County',
             dob: new DateTimeImmutable('22-12-1997'),
@@ -121,7 +122,6 @@ class LpaExtensionTest extends TestCase
             systemStatus: 'true',
             town: 'Town',
             uId: '700000012345',
-            cannotMakeJointDecisions: true
         );
 
         $expected      = 'Street 1, Street 2, Street 3, Town, County, ABC 123, Country';

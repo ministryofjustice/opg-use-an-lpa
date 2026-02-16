@@ -67,6 +67,7 @@ class SiriusLpaDonor extends Person implements
             addressLine1:               $addressLine1,
             addressLine2:               $addressLine2,
             addressLine3:               $addressLine3,
+            cannotMakeJointDecisions:   null,
             country:                    $country,
             county:                     $county,
             dob:                        $dob,
@@ -78,8 +79,7 @@ class SiriusLpaDonor extends Person implements
             surname:                    $surname,
             systemStatus:               $systemStatus,
             town:                       $town,
-            uId:                        $uId,
-            cannotMakeJointDecisions:   null
+            uId:                        $uId
         );
     }
 

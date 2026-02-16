@@ -17,6 +17,7 @@ class LpaStoreAttorneyTest extends TestCase
             line1:        null,
             line2:        null,
             line3:        null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dateOfBirth:  null,
@@ -27,7 +28,6 @@ class LpaStoreAttorneyTest extends TestCase
             status:       null,
             town:         null,
             uId:          '700000000012',
-            cannotMakeJointDecisions: null,
         );
 
         $this->assertInstanceOf(LpaStoreAttorney::class, $sut);

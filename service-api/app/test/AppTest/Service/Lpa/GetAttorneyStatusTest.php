@@ -55,6 +55,7 @@ class GetAttorneyStatusTest extends TestCase
             line1:                      '81 NighOnTimeWeBuiltIt Street',
             line2:                      null,
             line3:                      null,
+            cannotMakeJointDecisions:   true,
             country:                    'GB',
             county:                     null,
             dateOfBirth:                new DateTimeImmutable('1982-07-24'),
@@ -65,7 +66,6 @@ class GetAttorneyStatusTest extends TestCase
             status:                     ActorStatus::ACTIVE,
             town:                       'Mahhhhhhhhhh',
             uId:                        '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
-            cannotMakeJointDecisions:   true
         );
 
         $status = new GetAttorneyStatus(
@@ -82,6 +82,7 @@ class GetAttorneyStatusTest extends TestCase
             addressLine1:               '81 NighOnTimeWeBuiltIt Street',
             addressLine2:               null,
             addressLine3:               null,
+            cannotMakeJointDecisions:   true,
             country:                    'GB',
             county:                     null,
             dob:                        new DateTimeImmutable('1982-07-24'),
@@ -95,7 +96,6 @@ class GetAttorneyStatusTest extends TestCase
             systemStatus:               ActorStatus::ACTIVE,
             town:                       'Mahhhhhhhhhh',
             uId:                        '712345678',
-            cannotMakeJointDecisions:   true
         );
 
         $status = new GetAttorneyStatus(
@@ -132,6 +132,7 @@ class GetAttorneyStatusTest extends TestCase
             line1: '81 NighOnTimeWeBuiltIt Street',
             line2: null,
             line3: null,
+            cannotMakeJointDecisions: true,
             country:      'GB',
             county:       null,
             dateOfBirth:          new DateTimeImmutable('1982-07-24'),
@@ -142,7 +143,6 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
-            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -159,6 +159,7 @@ class GetAttorneyStatusTest extends TestCase
             addressLine1: '81 NighOnTimeWeBuiltIt Street',
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: true,
             country:      'GB',
             county:       null,
             dob:          new DateTimeImmutable('1982-07-24'),
@@ -172,7 +173,6 @@ class GetAttorneyStatusTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '7',
-            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -209,6 +209,7 @@ class GetAttorneyStatusTest extends TestCase
             line1: '81 NighOnTimeWeBuiltIt Street',
             line2: null,
             line3: null,
+            cannotMakeJointDecisions: true,
             country:      'GB',
             county:       null,
             dateOfBirth:          new DateTimeImmutable('1982-07-24'),
@@ -219,7 +220,6 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
-            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -236,6 +236,7 @@ class GetAttorneyStatusTest extends TestCase
             addressLine1: '81 NighOnTimeWeBuiltIt Street',
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: true,
             country:      'GB',
             county:       null,
             dob:          new DateTimeImmutable('1982-07-24'),
@@ -249,7 +250,6 @@ class GetAttorneyStatusTest extends TestCase
             systemStatus: ActorStatus::INACTIVE,
             town:         'Mahhhhhhhhhh',
             uId:          '7',
-            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(
@@ -266,6 +266,7 @@ class GetAttorneyStatusTest extends TestCase
             line1: '81 NighOnTimeWeBuiltIt Street',
             line2: null,
             line3: null,
+            cannotMakeJointDecisions: true,
             country:      'GB',
             county:       null,
             dateOfBirth:          new DateTimeImmutable('1982-07-24'),
@@ -276,7 +277,6 @@ class GetAttorneyStatusTest extends TestCase
             status: ActorStatus::REPLACEMENT,
             town:         'Mahhhhhhhhhh',
             uId:          '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
-            cannotMakeJointDecisions: true,
         );
 
         $status = new GetAttorneyStatus(

@@ -55,6 +55,7 @@ class EntityTestHelper
             addressLine1: $addressLine1,
             addressLine2: $addressLine2,
             addressLine3: $addressLine3,
+            cannotMakeJointDecisions: true,
             country: $country,
             county: $county,
             dob: $dob,
@@ -67,7 +68,6 @@ class EntityTestHelper
             systemStatus: $systemStatus,
             town: $town,
             uId: $uId,
-            cannotMakeJointDecisions:   true
         );
     }
 

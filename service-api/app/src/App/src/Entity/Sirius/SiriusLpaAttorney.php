@@ -28,6 +28,8 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('addressLine3')]
         ?string $addressLine3,
+        #[MapFrom('cannotMakeJointDecisions')]
+        ?bool $cannotMakeJointDecisions,
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('country')]
         ?string $country,
@@ -53,13 +55,12 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         ?string $town,
         #[CastToUnhyphenatedUId]
         ?string $uId,
-        #[MapFrom('cannotMakeJointDecisions')]
-        ?bool $cannotMakeJointDecisions,
     ) {
         parent::__construct(
             addressLine1:               $addressLine1,
             addressLine2:               $addressLine2,
             addressLine3:               $addressLine3,
+            cannotMakeJointDecisions:   $cannotMakeJointDecisions,
             country:                    $country,
             county:                     $county,
             dob:                        $dob,
@@ -71,8 +72,7 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
             surname:                    $surname,
             systemStatus:               $systemStatus,
             town:                       $town,
-            uId:                        $uId,
-            cannotMakeJointDecisions:   $cannotMakeJointDecisions
+            uId:                        $uId
         );
     }
 
