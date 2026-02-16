@@ -202,6 +202,23 @@ class StatisticsCollector:
         data = {"monthly": monthly_sum}
         return data
 
+    def sum_unique_dynamodb_counts(self, table_name):
+        monthly_sum = {}
+        seen = set()
+
+        for page in self.dynamodb_scan_paginator.paginate(TableName=table_name):
+            for item in page['Items']:
+                code = item['ViewerCode']['S']
+                if code not in seen:
+                    month = item['Viewed']['S'].split('T', 1)[0]
+                    if month in monthly_sum:
+                        monthly_sum[month] += 1
+                    else:
+                        monthly_sum[month] = 1
+                    seen.add(code)
+
+        return {'monthly': monthly_sum}
+
     def get_statistics(self):
         try:
             self.logger.info("=== Starting statistics collection ===")
@@ -230,6 +247,12 @@ class StatisticsCollector:
                 table_name=f"{self.dynamodb_table_prefix}ViewerActivity",
                 filter_expression="Viewed BETWEEN :fromdate AND :todate",
             )
+
+            self.logger.info(f"{message_prefix} viewer_unique_codes_viewed")
+            statistics['statistics']['viewer_unique_codes_viewed'] = self.sum_unique_dynamodb_counts(
+                table_name=f"{self.dynamodb_table_prefix}ViewerActivity",
+            )
+
         except Exception as e:
             self.logger.error("Exception gathering data")
             self.logger.error(e)
