@@ -10,7 +10,7 @@ RUN go mod download
 COPY main.go ./
 RUN go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/main ./
 
-FROM gcr.io/distroless/static:nonroot@sha256:e8a4044e0b4ae4257efa45fc026c0bc30ad320d43bd4c1a7d5271bd241e386d0 AS production
+FROM gcr.io/distroless/static:nonroot@sha256:01e550fdb7ab79ee7be5ff440a563a58f1fd000ad9e0c532e65c3d23f917f1c5 AS production
 
 WORKDIR /var/task
 
