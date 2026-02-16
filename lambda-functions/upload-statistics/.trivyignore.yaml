@@ -1,4 +1,6 @@
 vulnerabilities:
   - id: CVE-2026-0861
-    expired_at: 2026-02-16
-    statement: As yet unrated, or fixed in debian-trixie
+    expired_at: 2026-04-16
+    statement: >
+      https://security-tracker.debian.org/tracker/CVE-2026-0861 rates this as a minor issue for debian Trixie and
+      is consequently wontfix until the next major release.
