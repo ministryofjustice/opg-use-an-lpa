@@ -15,6 +15,10 @@
 
                     <h1 class="govuk-heading-xl">{% trans %}You've already added this <abbr title="lasting power of attorney">LPA</abbr> to your account{% endtrans %}</h1>
 
+                    {% set lpaReference = lpaUid ?? null %}
+                    {% set isDigital = lpaReference and lpaReference starts with 'M' %}
+                    {% set subtype = lpaType|lower %}
+
                     <dl class="govuk-summary-list govuk-summary-list">
                         <div class="govuk-summary-list__row">
                             <dt class="govuk-summary-list__key">
@@ -29,10 +33,14 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpaType|lower == "pfa" %}
-                                    {% trans %}Property and finance{% endtrans %}
+                                {% if subtype == 'pfa' %}
+                                    {{ isDigital
+                                    ? 'Property and affairs'|trans
+                                    : 'Property and finance'|trans }}
                                 {% else %}
-                                    {% trans %}Health and welfare{% endtrans %}
+                                    {{ isDigital
+                                    ? 'Personal welfare'|trans
+                                    : 'Health and welfare'|trans }}
                                 {% endif %}
                             </dd>
                         </div>

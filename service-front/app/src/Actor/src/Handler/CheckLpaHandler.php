@@ -137,6 +137,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'actor::lpa-already-added',
                         [
                             'user'       => $this->user,
+                            'lpaUid'     => $referenceNumber,
                             'donor'      => $lpaAddedData->getDonor(),
                             'lpaType'    => $lpaAddedData->getCaseSubtype(),
                             'actorToken' => $lpaAddedData->getLpaActorToken(),
@@ -272,10 +273,10 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         }
 
         return new HtmlResponse($this->renderer->render('actor::lpa-not-found', [
-                'user'            => $this->user,
-                'dob'             => $dob,
-                'referenceNumber' => $referenceNumber,
-                'activation_key'  => $activation_key,
+            'user'            => $this->user,
+            'dob'             => $dob,
+            'referenceNumber' => $referenceNumber,
+            'activation_key'  => $activation_key,
         ]));
     }
 
