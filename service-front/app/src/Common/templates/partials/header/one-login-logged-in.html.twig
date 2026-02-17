@@ -1,4 +1,4 @@
-<header class="rebranded-cross-service-header" role="banner" data-module="one-login-header">
+<header class="rebranded-cross-service-header" data-module="one-login-header">
   <div class="rebranded-one-login-header" data-one-login-header-nav>
     <div class="rebranded-one-login-header__container govuk-width-container">
       <div class="rebranded-one-login-header__logo">
@@ -46,8 +46,7 @@
           <span class="rebranded-cross-service-header__toggle-content">One Login</span>
         </span>
       </button>
-      <nav aria-label="GOV.UK One Login menu" class="rebranded-one-login-header__nav"
-           data-open-class="rebranded-one-login-header__nav--open" id="one-login-header__nav">
+      <nav aria-label="GOV.UK One Login menu" class="rebranded-one-login-header__nav" data-open-class="rebranded-one-login-header__nav--open" id="one-login-header__nav">
         <ul class="rebranded-one-login-header__nav__list">
           <li class="rebranded-one-login-header__nav__list-item">
             <a class="rebranded-one-login-header__nav__link" href="https://home.account.gov.uk/">
@@ -70,7 +69,7 @@
     </div>
   </div>
 
-  <section aria-label="Service information" class="govuk-service-navigation"
+  <section aria-label="{% trans %}Service information{% endtrans %}" class="govuk-service-navigation"
            data-module="govuk-service-navigation">
     <div class="govuk-width-container">
       <div class="govuk-service-navigation__container">
@@ -79,9 +78,9 @@
         </span>
         <nav aria-label="{% trans with {'%service_name%': serviceName} %}%service_name% menu{% endtrans %}" class="govuk-service-navigation__wrapper">
           <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
+            {% trans %}Menu{% endtrans %}
           </button>
-          <ul class="govuk-service-navigation__list" id="service-header__nav">
+          <ul class="govuk-service-navigation__list" id="navigation">
             {% if get_route_name() == 'lpa.dashboard' %}
               <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
                 <a class="govuk-service-navigation__link" href="{{ path('lpa.dashboard') }}" aria-current="page">
