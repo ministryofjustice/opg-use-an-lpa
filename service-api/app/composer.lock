@@ -1159,16 +1159,16 @@
         },
         {
             "name": "laminas/laminas-cache",
-            "version": "3.13.0",
+            "version": "3.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-cache.git",
-                "reference": "8225b16d03bbff2ecf2bd5a4f38c39ca47389e50"
+                "reference": "c4b556ba0e0ba6f9aac245b89f3245138e4e939b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-cache/zipball/8225b16d03bbff2ecf2bd5a4f38c39ca47389e50",
-                "reference": "8225b16d03bbff2ecf2bd5a4f38c39ca47389e50",
+                "url": "https://api.github.com/repos/laminas/laminas-cache/zipball/c4b556ba0e0ba6f9aac245b89f3245138e4e939b",
+                "reference": "c4b556ba0e0ba6f9aac245b89f3245138e4e939b",
                 "shasum": ""
             },
             "require": {
@@ -1176,7 +1176,7 @@
                 "laminas/laminas-eventmanager": "^3.4",
                 "laminas/laminas-servicemanager": "^3.21",
                 "laminas/laminas-stdlib": "^3.6",
-                "php": "~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
                 "psr/cache": "^1.0",
                 "psr/clock": "^1.0",
                 "psr/simple-cache": "^1.0",
@@ -1256,7 +1256,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2025-01-21T12:32:41+00:00"
+            "time": "2026-02-05T15:48:04+00:00"
         },
         {
             "name": "laminas/laminas-cache-storage-adapter-apcu",
@@ -9477,31 +9477,31 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.24.0",
+            "version": "v1.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "a24f1bda2d00a03877f7f99d9e6b150baf543f6d"
+                "reference": "7ab965042096282307992f1b9abff020095757f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/a24f1bda2d00a03877f7f99d9e6b150baf543f6d",
-                "reference": "a24f1bda2d00a03877f7f99d9e6b150baf543f6d",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/7ab965042096282307992f1b9abff020095757f0",
+                "reference": "7ab965042096282307992f1b9abff020095757f0",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.2 || ^2.0",
                 "php": "8.2.* || 8.3.* || 8.4.* || 8.5.*",
                 "phpdocumentor/reflection-docblock": "^5.2",
-                "sebastian/comparator": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
-                "sebastian/recursion-context": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0",
+                "sebastian/comparator": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
+                "sebastian/recursion-context": "^3.0 || ^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "symfony/deprecation-contracts": "^2.5 || ^3.1"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.88",
+                "php-cs-fixer/shim": "^3.93.1",
                 "phpspec/phpspec": "^6.0 || ^7.0 || ^8.0",
-                "phpstan/phpstan": "^2.1.13",
-                "phpunit/phpunit": "^11.0 || ^12.0"
+                "phpstan/phpstan": "^2.1.13, <2.1.34 || ^2.1.39",
+                "phpunit/phpunit": "^11.0 || ^12.0 || ^13.0"
             },
             "type": "library",
             "extra": {
@@ -9542,28 +9542,28 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy/issues",
-                "source": "https://github.com/phpspec/prophecy/tree/v1.24.0"
+                "source": "https://github.com/phpspec/prophecy/tree/v1.25.0"
             },
-            "time": "2025-11-21T13:10:52+00:00"
+            "time": "2026-02-09T11:58:00+00:00"
         },
         {
             "name": "phpspec/prophecy-phpunit",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy-phpunit.git",
-                "reference": "d3c28041d9390c9bca325a08c5b2993ac855bded"
+                "reference": "89f91b01d0640b7820e427e02a007bc6489d8a26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy-phpunit/zipball/d3c28041d9390c9bca325a08c5b2993ac855bded",
-                "reference": "d3c28041d9390c9bca325a08c5b2993ac855bded",
+                "url": "https://api.github.com/repos/phpspec/prophecy-phpunit/zipball/89f91b01d0640b7820e427e02a007bc6489d8a26",
+                "reference": "89f91b01d0640b7820e427e02a007bc6489d8a26",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.3 || ^8",
                 "phpspec/prophecy": "^1.18",
-                "phpunit/phpunit": "^9.1 || ^10.1 || ^11.0 || ^12.0"
+                "phpunit/phpunit": "^9.1 || ^10.1 || ^11.0 || ^12.0 || ^13.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10"
@@ -9597,9 +9597,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy-phpunit/issues",
-                "source": "https://github.com/phpspec/prophecy-phpunit/tree/v2.4.0"
+                "source": "https://github.com/phpspec/prophecy-phpunit/tree/v2.5.0"
             },
-            "time": "2025-05-13T13:52:32+00:00"
+            "time": "2026-02-09T15:40:55+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -10241,21 +10241,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.3.5",
+            "version": "2.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "9442f4037de6a5347ae157fe8e6c7cda9d909070"
+                "reference": "ca9ebb81d280cd362ea39474dabd42679e32ca6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/9442f4037de6a5347ae157fe8e6c7cda9d909070",
-                "reference": "9442f4037de6a5347ae157fe8e6c7cda9d909070",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/ca9ebb81d280cd362ea39474dabd42679e32ca6b",
+                "reference": "ca9ebb81d280cd362ea39474dabd42679e32ca6b",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.1.36"
+                "phpstan/phpstan": "^2.1.38"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -10289,7 +10289,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.3.5"
+                "source": "https://github.com/rectorphp/rector/tree/2.3.6"
             },
             "funding": [
                 {
@@ -10297,7 +10297,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-28T15:22:48+00:00"
+            "time": "2026-02-06T14:25:06+00:00"
         },
         {
             "name": "revolt/event-loop",
@@ -14135,16 +14135,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.15.0",
+            "version": "6.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "204d06619833a297b402cbc66be7f2df74437db4"
+                "reference": "28dc127af1b5aecd52314f6f645bafc10d0e11f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/204d06619833a297b402cbc66be7f2df74437db4",
-                "reference": "204d06619833a297b402cbc66be7f2df74437db4",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/28dc127af1b5aecd52314f6f645bafc10d0e11f9",
+                "reference": "28dc127af1b5aecd52314f6f645bafc10d0e11f9",
                 "shasum": ""
             },
             "require": {
@@ -14168,7 +14168,7 @@
                 "netresearch/jsonmapper": "^5.0",
                 "nikic/php-parser": "^5.0.0",
                 "php": "~8.1.31 || ~8.2.27 || ~8.3.16 || ~8.4.3 || ~8.5.0",
-                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0",
+                "sebastian/diff": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0",
                 "spatie/array-to-xml": "^2.17.0 || ^3.0",
                 "symfony/console": "^6.0 || ^7.0 || ^8.0",
                 "symfony/filesystem": "~6.3.12 || ~6.4.3 || ^7.0.3 || ^8.0",
@@ -14249,7 +14249,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-01-30T13:53:17+00:00"
+            "time": "2026-02-07T19:27:16+00:00"
         }
     ],
     "aliases": [],
