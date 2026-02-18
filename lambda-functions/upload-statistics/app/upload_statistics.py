@@ -1,5 +1,6 @@
 import os
 import boto3
+from collections import defaultdict
 import datetime
 from dateutil.relativedelta import relativedelta
 import logging
@@ -202,22 +203,29 @@ class StatisticsCollector:
         data = {"monthly": monthly_sum}
         return data
 
-    def sum_unique_dynamodb_counts(self, table_name):
-        monthly_sum = {}
+    def dynamodb_viewer_activity_counts(self, table_name):
+        monthly_sum = defaultdict(int)
+        monthly_unique = defaultdict(int)
         seen = set()
+
+        start_date = self.startdate.strftime('%Y-%m-01')
 
         for page in self.dynamodb_scan_paginator.paginate(TableName=table_name):
             for item in page['Items']:
                 code = item['ViewerCode']['S']
+                month = '-'.join(item['Viewed']['S'].split('-', 2)[:2]) + '-01'
+
+                if month >= start_date:
+                    monthly_sum[month] += 1
+
                 if code not in seen:
-                    month = '-'.join(item['Viewed']['S'].split('-', 2)[:2]) + '-01'
-                    if month in monthly_sum:
-                        monthly_sum[month] += 1
-                    else:
-                        monthly_sum[month] = 1
+                    monthly_unique[month] += 1
                     seen.add(code)
 
-        return {'monthly': monthly_sum, 'total': len(seen)}
+        return {
+            'sum': {'monthly': monthly_sum},
+            'unique': {'monthly': monthly_unique, 'total': len(seen)}
+        }
 
     def get_statistics(self):
         try:
@@ -242,16 +250,12 @@ class StatisticsCollector:
                 filter_expression="Added BETWEEN :fromdate AND :todate",
             )
 
-            self.logger.info(f"{message_prefix} viewer_codes_viewed")
-            statistics["statistics"]["viewer_codes_viewed"] = self.sum_dynamodb_counts(
-                table_name=f"{self.dynamodb_table_prefix}ViewerActivity",
-                filter_expression="Viewed BETWEEN :fromdate AND :todate",
-            )
-
-            self.logger.info(f"{message_prefix} viewer_unique_codes_viewed")
-            statistics['statistics']['viewer_unique_codes_viewed'] = self.sum_unique_dynamodb_counts(
+            self.logger.info(f"{message_prefix} viewer_codes_viewed and viewer_unique_codes_viewed")
+            viewer_activity = self.dynamodb_viewer_activity_counts(
                 table_name=f"{self.dynamodb_table_prefix}ViewerActivity",
             )
+            statistics["statistics"]["viewer_codes_viewed"] = viewer_activity['sum']
+            statistics['statistics']['viewer_unique_codes_viewed'] = viewer_activity['unique']
 
         except Exception as e:
             self.logger.error("Exception gathering data")
