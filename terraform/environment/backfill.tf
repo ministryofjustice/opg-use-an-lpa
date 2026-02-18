@@ -44,7 +44,7 @@ data "aws_iam_policy_document" "lambda_backfill" {
   statement {
     sid       = "BackfillKMSDecrypt"
     effect    = "Allow"
-    resources = [data.aws_kms_alias.lambda_backfill.target_key_arn]
+    resources = [aws_kms_alias.lambda_backfill[0].target_key_arn]
     actions = [
       "kms:Decrypt",
       "kms:DescribeKey"
@@ -158,14 +158,10 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "lambda_backfill" 
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm     = "aws:kms"
-      kms_master_key_id = data.aws_kms_alias.lambda_backfill.arn
+      kms_master_key_id = aws_kms_alias.lambda_backfill[0].arn
     }
     bucket_key_enabled = true
   }
-}
-
-data "aws_kms_alias" "lambda_backfill" {
-  name = "alias/lambda-backfill-${local.environment.account_name}"
 }
 
 data "aws_caller_identity" "current" {}

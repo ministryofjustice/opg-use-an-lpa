@@ -1,18 +1,21 @@
 
 resource "aws_kms_key" "lambda_backfill" {
+  count                   = local.environment.deploy_backfill_lambda ? 1 : 0
   description             = "KMS key for the Lambda backfill S3 bucket"
   deletion_window_in_days = 7
   enable_key_rotation     = true
-  policy                  = data.aws_iam_policy_document.lambda_backfill_kms.json
+  policy                  = data.aws_iam_policy_document.lambda_backfill_kms[0].json
 }
 
 resource "aws_kms_alias" "lambda_backfill" {
-  name          = "alias/lambda-backfill-${local.account_name}"
-  target_key_id = aws_kms_key.lambda_backfill.key_id
+  count         = local.environment.deploy_backfill_lambda ? 1 : 0
+  name          = "alias/backfill-lambda-${local.environment_name}"
+  target_key_id = aws_kms_key.lambda_backfill[0].key_id
 }
 
 
 data "aws_iam_policy_document" "lambda_backfill_kms" {
+  count = local.environment.deploy_backfill_lambda ? 1 : 0
   statement {
     sid       = "Enable Root account permissions on Key"
     effect    = "Allow"
@@ -88,7 +91,7 @@ data "aws_iam_policy_document" "lambda_backfill_kms" {
   }
 
   statement {
-    sid       = "AllowS3Decryption"
+    sid       = "AllowBreakglassS3Decryption"
     effect    = "Allow"
     resources = ["*"]
     actions = [
@@ -100,7 +103,7 @@ data "aws_iam_policy_document" "lambda_backfill_kms" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/backfill-lambda-${local.account_name}"
+        module.lambda_backfill[0].lambda_role.arn
       ]
     }
 
