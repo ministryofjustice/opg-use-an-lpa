@@ -26,38 +26,38 @@
                 <th scope="row" class="govuk-table__header">Accounts created</th>
                 {{range .Result}}
                     {{ $accounts_created := add .account_created_event .auth_onelogin_account_created_event }}
-                    <td class="govuk-table__cell">{{ printf "%.0f" $accounts_created }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_created }}</td>
                 {{end}}
             </tr>
 
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Accounts deleted</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .account_deleted_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .account_deleted_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs added</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .lpas_added }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpas_added }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Property and Finance LPA added</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .added_lpa_type_pfa_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_pfa_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Health and Welfare LPA added</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .added_lpa_type_hw_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_hw_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs deleted</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .lpa_removed_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpa_removed_event }}</td>
                 {{end}}
             </tr>
             </tbody>
@@ -79,31 +79,31 @@
                 <th scope="row" class="govuk-table__header">Activation key requested</th>
                 {{range .Result}}
                     {{ $accounts_activated := add .older_lpa_needs_cleansing_event .older_lpa_force_activation_key_event .older_lpa_success_event .oolpa_key_requested_for_donor_event .oolpa_key_requested_for_attorney_event}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" $accounts_activated }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_activated }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for Property and Finance</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .full_match_key_request_success_lpa_type_pfa_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_pfa_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for Health and Welfare</th>
                 {{range .Result }}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .full_match_key_request_success_lpa_type_hw_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_hw_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Key requested for overseas</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .user_abroad_address_request_success_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .user_abroad_address_request_success_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">LPAs submitted for cleansing</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .older_lpa_needs_cleansing_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .older_lpa_needs_cleansing_event }}</td>
                 {{end}}
             </tr>
             </tbody>
@@ -124,25 +124,31 @@
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of Access codes created</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .viewer_codes_created }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_created }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of access code views</th>
                 {{ range .Result }}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .viewer_codes_viewed }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_viewed }}</td>
+                {{end}}
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Number of unique access code views</th>
+                {{ range .Result }}
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_unique_codes_viewed }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of access codes viewed expired</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .view_lpa_share_code_expired_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_expired_event }}</td>
                 {{end}}
             </tr>
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Number of Access codes cancelled</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .view_lpa_share_code_cancelled_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_cancelled_event }}</td>
                 {{end}}
             </tr>
             </tbody>
@@ -163,7 +169,7 @@
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">Download Summary</th>
                 {{range .Result}}
-                    <td class="govuk-table__cell">{{ printf "%.0f" .download_summary_event }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .download_summary_event }}</td>
                 {{end}}
             </tr>
             </tbody>
