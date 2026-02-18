@@ -85,11 +85,12 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
-        $hw  = $this->translator->translate('Health and welfare', []);
-        $pfa = $this->translator->translate('Property and finance', []);
-
         if (!empty($lpaData['lpa'])) {
-            $lpaType = $lpaData['lpa']->getCaseSubtype() === 'hw' ? $hw : $pfa;
+            $lpaType = $this->resolveLpaType(
+                $lpaData['lpa']->getCaseSubtype(),
+                $lpaData['lpa']->getUId(),
+                false // not flash context
+            );
         } else {
             throw new BadRequestException('Lpa to remove cannot be found');
         }
@@ -116,13 +117,14 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             /** @var FlashMessagesInterface $flash */
             $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
 
-            $hw  = $this->translator->translate('health and welfare', [], null, 'flashMessage');
-            $pfa = $this->translator->translate('property and finance', [], null, 'flashMessage');
-
             //data to be used in flash message
-            $donor   = $removedLpaData['lpa']['donor']['firstnames']
-                . ' ' . $removedLpaData['lpa']['donor']['surname'];
-            $lpaType = $removedLpaData['lpa']['caseSubtype'] === 'hw' ? $hw : $pfa;
+            $donor = $removedLpaData['lpa']['donor']['firstnames'] . ' ' . $removedLpaData['lpa']['donor']['surname'];
+
+            $lpaType = $this->resolveLpaType(
+                $removedLpaData['lpa']['caseSubtype'],
+                $removedLpaData['lpa']['lpaReference'] ?? '',
+                true // flash context
+            );
 
             $message = $this->translator->translate(
                 "You've removed %donor%'s %lpaType% LPA",
@@ -139,5 +141,23 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         }
 
         throw new BadRequestException('Invalid Form');
+    }
+
+    private function resolveLpaType(string $subtype, ?string $reference, bool $flashContext): string
+    {
+        $reference = strtoupper($reference ?? '');
+        $isDigital = str_starts_with($reference, 'M');
+
+        $subtype = strtolower($subtype);
+
+        if ($subtype === 'hw') {
+            $text = $isDigital ? 'Personal welfare' : 'Health and welfare';
+        } else {
+            $text = $isDigital ? 'Property and affairs' : 'Property and finance';
+        }
+
+        return $flashContext
+            ? $this->translator->translate(strtolower($text), [], null, 'flashMessage')
+            : $this->translator->translate($text, []);
     }
 }

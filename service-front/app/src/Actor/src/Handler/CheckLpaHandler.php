@@ -189,10 +189,20 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     'donor_name',
                     $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname()
                 );
-                $this->session->set(
-                    'lpa_type',
-                    $lpa->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance'
+//                $this->session->set(
+//                    'lpa_type',
+//                    $lpa->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance'
+//                );
+
+                $caseSubtype = strtolower($lpa->getCaseSubtype());
+                $label       = $this->resolveLpaLabel(
+                    $caseSubtype,
+                    $lpa->getUId()
                 );
+
+                // Store raw subtype for event logging and flash message
+                $this->session->set('lpa_case_subtype', $caseSubtype);
+                $this->session->set('lpa_type_label', $label);
 
                 $templateName = 'actor::check-lpa';
                 if (($this->featureEnabled)('support_datastore_lpas')) {
@@ -239,18 +249,20 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
             switch ($result->getResponse()) {
                 case AddLpaApiResult::ADD_LPA_SUCCESS:
                     /** @var FlashMessagesInterface $flash */
-                    $flash   = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
-                    $donor   = $this->session->get('donor_name');
-                    $lpaType = $this->session->get('lpa_type');
+                    $flash = $request->getAttribute(FlashMessageMiddleware::FLASH_ATTRIBUTE);
+                    $donor = $this->session->get('donor_name');
+
+                    $caseSubtype = $this->session->get('lpa_case_subtype');
+                    $lpaType     = $this->session->get('lpa_type_label');
 
                     $this->logger->notice(
                         'Account with Id {id} added LPA of type {lpaType} to their account',
                         [
                             'id'         => $this->identity,
-                            'event_code' => $lpaType === 'health and welfare'
+                            'event_code' => $caseSubtype === 'hw'
                                 ? EventCodes::ADDED_LPA_TYPE_HW
                                 : EventCodes::ADDED_LPA_TYPE_PFA,
-                            'lpaType'    => $lpaType,
+                            'lpaType'    => $caseSubtype,
                         ]
                     );
 
@@ -288,5 +300,19 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     public function state(ServerRequestInterface $request): AddLpaState
     {
         return $this->loadState($request, AddLpaState::class);
+    }
+
+    private function resolveLpaLabel(string $subtype, string $reference): string
+    {
+        $caseSubtype = strtolower($subtype);
+        $reference   = strtoupper($reference);
+
+        $isDigital = str_starts_with($reference, 'M');
+
+        if ($caseSubtype === 'hw') {
+            return $isDigital ? 'personal welfare' : 'health and welfare';
+        }
+
+        return $isDigital ? 'property and affairs' : 'property and finance';
     }
 }
