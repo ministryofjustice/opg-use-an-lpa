@@ -42,12 +42,9 @@ data "aws_iam_policy_document" "lambda_backfill" {
   }
 
   statement {
-    sid    = "LambdaAccessDynamoDB"
-    effect = "Allow"
-    resources = [
-      aws_dynamodb_table.use_users_table.arn,
-      "${aws_dynamodb_table.use_users_table.arn}/index/*"
-    ]
+    sid       = "LambdaAccessDynamoDB"
+    effect    = "Allow"
+    resources = [aws_dynamodb_table.use_users_table.arn]
     actions = [
       "dynamodb:BatchWriteItem",
     ]
