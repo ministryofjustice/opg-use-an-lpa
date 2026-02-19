@@ -42,6 +42,18 @@ data "aws_iam_policy_document" "lambda_backfill" {
   }
 
   statement {
+    sid    = "LambdaAccessDynamoDB"
+    effect = "Allow"
+    resources = [
+      aws_dynamodb_table.use_users_table.arn,
+      "${aws_dynamodb_table.use_users_table.arn}/index/*"
+    ]
+    actions = [
+      "dynamodb:BatchWriteItem",
+    ]
+  }
+
+  statement {
     sid       = "BackfillKMSDecrypt"
     effect    = "Allow"
     resources = [aws_kms_alias.lambda_backfill[0].target_key_arn]
