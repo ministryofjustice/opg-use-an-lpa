@@ -64,7 +64,7 @@ class CheckLpaHandlerFactoryTest extends TestCase
             ->get(FeatureEnabled::class)
             ->willReturn($this->prophesize(FeatureEnabled::class)->reveal());
         $containerProphecy
-            ->get(FeatureEnabled::class)
+            ->get(LpaTypeResolver::class)
             ->willReturn($this->prophesize(LpaTypeResolver::class)->reveal());
 
         $factory = new CheckLpaHandlerFactory();
