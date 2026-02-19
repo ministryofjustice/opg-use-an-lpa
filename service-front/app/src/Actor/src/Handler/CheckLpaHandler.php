@@ -18,10 +18,10 @@ use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
-use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\LpaService;
+use Common\Service\Lpa\LpaTypeResolver;
 use Common\Service\Security\RateLimitService;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
@@ -66,6 +66,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         private TranslatorInterface $translator,
         private AddLpa $addLpa,
         private FeatureEnabled $featureEnabled,
+        private LpaTypeResolver $lpaTypeResolver,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -189,13 +190,9 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                     'donor_name',
                     $lpa->getDonor()->getFirstname() . ' ' . $lpa->getDonor()->getSurname()
                 );
-//                $this->session->set(
-//                    'lpa_type',
-//                    $lpa->getCaseSubtype() === 'hw' ? 'health and welfare' : 'property and finance'
-//                );
 
                 $caseSubtype = strtolower($lpa->getCaseSubtype());
-                $label       = $this->resolveLpaLabel(
+                $label       = $this->lpaTypeResolver->resolveLabel(
                     $caseSubtype,
                     $lpa->getUId()
                 );
@@ -259,10 +256,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'Account with Id {id} added LPA of type {lpaType} to their account',
                         [
                             'id'         => $this->identity,
-                            'event_code' => $caseSubtype === 'hw'
-                                ? EventCodes::ADDED_LPA_TYPE_HW
-                                : EventCodes::ADDED_LPA_TYPE_PFA,
-                            'lpaType'    => $caseSubtype,
+                            'event_code' => $this->lpaTypeResolver->resolveEventCode($caseSubtype),
                         ]
                     );
 
@@ -300,19 +294,5 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     public function state(ServerRequestInterface $request): AddLpaState
     {
         return $this->loadState($request, AddLpaState::class);
-    }
-
-    private function resolveLpaLabel(string $subtype, string $reference): string
-    {
-        $caseSubtype = strtolower($subtype);
-        $reference   = strtoupper($reference);
-
-        $isDigital = str_starts_with($reference, 'M');
-
-        if ($caseSubtype === 'hw') {
-            return $isDigital ? 'personal welfare' : 'health and welfare';
-        }
-
-        return $isDigital ? 'property and affairs' : 'property and finance';
     }
 }

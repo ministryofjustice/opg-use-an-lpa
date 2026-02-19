@@ -15,6 +15,7 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
+use Common\Service\Lpa\LpaTypeResolver;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
@@ -44,6 +45,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private RemoveLpa $removeLpa,
+        private LpaTypeResolver $lpaTypeResolver,
         private TranslatorInterface $translator,
         private LpaService $lpaService,
     ) {
@@ -86,14 +88,14 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
         if (!empty($lpaData['lpa'])) {
-            $lpaType = $this->resolveLpaType(
+            $label = $this->lpaTypeResolver->resolveLabel(
                 $lpaData['lpa']->getCaseSubtype(),
-                $lpaData['lpa']->getUId(),
-                false // not flash context
+                $lpaData['lpa']->getUId()
             );
         } else {
             throw new BadRequestException('Lpa to remove cannot be found');
         }
+        $lpaType = $this->translator->translate($label);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'user'       => $this->user,
@@ -120,11 +122,11 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             //data to be used in flash message
             $donor = $removedLpaData['lpa']['donor']['firstnames'] . ' ' . $removedLpaData['lpa']['donor']['surname'];
 
-            $lpaType = $this->resolveLpaType(
+            $label   = $this->lpaTypeResolver->resolveLabel(
                 $removedLpaData['lpa']['caseSubtype'],
-                $removedLpaData['lpa']['lpaReference'] ?? '',
-                true // flash context
+                $removedLpaData['lpa']['lpaReference'] ?? ''
             );
+            $lpaType = $this->translator->translate($label, [], null, 'flashMessage');
 
             $message = $this->translator->translate(
                 "You've removed %donor%'s %lpaType% LPA",
@@ -141,23 +143,5 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         }
 
         throw new BadRequestException('Invalid Form');
-    }
-
-    private function resolveLpaType(string $subtype, ?string $reference, bool $flashContext): string
-    {
-        $reference = strtoupper($reference ?? '');
-        $isDigital = str_starts_with($reference, 'M');
-
-        $subtype = strtolower($subtype);
-
-        if ($subtype === 'hw') {
-            $text = $isDigital ? 'Personal welfare' : 'Health and welfare';
-        } else {
-            $text = $isDigital ? 'Property and affairs' : 'Property and finance';
-        }
-
-        return $flashContext
-            ? $this->translator->translate(strtolower($text), [], null, 'flashMessage')
-            : $this->translator->translate($text, []);
     }
 }

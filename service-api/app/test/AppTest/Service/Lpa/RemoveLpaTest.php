@@ -129,30 +129,33 @@ class RemoveLpaTest extends TestCase
         );
 
         $this->old_lpa_response = [
-            'donor'       => [
+            'donor'        => [
                 'uId'        => $this->getLpaDataFixtureOld()->getDonor()->getUid(),
                 'firstnames' => $this->getLpaDataFixtureOld()->getDonor()->getFirstnames(),
                 'surname'    => $this->getLpaDataFixtureOld()->getDonor()->getSurname(),
             ],
-            'caseSubtype' => $this->getLpaDataFixtureOld()->getCaseSubType(),
+            'caseSubtype'  => $this->getLpaDataFixtureOld()->getCaseSubType(),
+            'lpaReference' =>  $this->getLpaDataFixtureOld()->getUid(),
         ];
 
         $this->new_lpa_response = [
-            'donor'       => [
+            'donor'        => [
                 'uId'        => $this->getLpaDataFixtureNew()->getDonor()->getUid(),
                 'firstnames' => $this->getLpaDataFixtureNew()->getDonor()->getFirstnames(),
                 'surname'    => $this->getLpaDataFixtureNew()->getDonor()->getSurname(),
             ],
-            'caseSubtype' => $this->getLpaDataFixtureNew()->getCaseSubType(),
+            'caseSubtype'  => $this->getLpaDataFixtureNew()->getCaseSubType(),
+            'lpaReference' =>  $this->getLpaDataFixtureOld()->getUid(),
         ];
 
         $this->new_lpa_store_format_response = [
-            'donor'       => [
+            'donor'        => [
                 'uId'        => $this->loadTestLpaStoreLpaFixture()->getDonor()->getUid(),
                 'firstnames' => $this->loadTestLpaStoreLpaFixture()->getDonor()->getFirstnames(),
                 'surname'    => $this->loadTestLpaStoreLpaFixture()->getDonor()->getSurname(),
             ],
-            'caseSubtype' => $this->loadTestLpaStoreLpaFixture()->getCaseSubType(),
+            'caseSubtype'  => $this->loadTestLpaStoreLpaFixture()->getCaseSubType(),
+            'lpaReference' =>  $this->getLpaDataFixtureOld()->getUid(),
         ];
     }
 

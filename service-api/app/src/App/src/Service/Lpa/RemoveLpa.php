@@ -112,7 +112,7 @@ class RemoveLpa
                 'surname'    => $lpaDonorData->getSurname(),
             ],
             'caseSubtype'  => $lpaRemovedData->getCaseSubType(),
-            'lpaReference' => $deletedData['LpaUid'],
+            'lpaReference' => ($deletedData['LpaUid'] ?? $deletedData['SiriusUid'] ?? null),
         ];
     }
 
