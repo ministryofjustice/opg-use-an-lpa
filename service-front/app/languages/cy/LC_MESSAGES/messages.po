@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-02-19T10:00:27+00:00\n"
+"POT-Creation-Date: 2026-02-19T15:28:12+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -435,10 +435,10 @@ msgstr "Math o LPA"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:28
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:112
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:107
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:25
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:26
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:25
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
@@ -453,10 +453,10 @@ msgstr "Eiddo ac arian"
 #: src/Actor/templates/actor/lpa-already-added.html.twig:43
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:32
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:116
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:111
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:29
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:30
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:29
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
@@ -511,7 +511,7 @@ msgstr "Rhoddwr"
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:77
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:53
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:154
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:175
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:174
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:160
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:30
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:139
@@ -2270,7 +2270,7 @@ msgid "LPA type:"
 msgstr "LPA math:"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:21
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:61
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:60
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:45
 msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered"
 msgstr ""
@@ -3714,18 +3714,18 @@ msgstr "Crynodeb o’r LPA"
 msgid "Back to your <abbr title=\"lasting power of attorney\">LPAs</abbr>"
 msgstr "Yn ôl i’ch <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:35
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:34
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:19
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> summary"
 msgstr "Gweld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:46
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:45
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:30
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> has been cancelled"
 msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chanslo"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:56
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:55
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:40
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> is registered and "
@@ -3734,7 +3734,7 @@ msgstr ""
 "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon wedi ei chofrestru a "
 "gallwch nawr ei defnyddio"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:69
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:68
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:54
 msgid ""
 "While you have mental capacity, your attorneys must get your permission to use "
@@ -3743,7 +3743,7 @@ msgstr ""
 "Tra bod gennych allu meddyliol, rhaid i’ch atwrneiod gael eich caniatâd chi i "
 "ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon."
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:72
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:71
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:57
 msgid ""
 "While the donor has mental capacity, you must get their permission to use this "
@@ -3752,7 +3752,7 @@ msgstr ""
 "Tra bod gan y rhoddwr allu meddyliol, rhaid i chi gael eu caniatâd i "
 "ddefnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon."
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:76
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:75
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:61
 msgid ""
 "This <abbr title=\"lasting power of attorney\">LPA</abbr> can only be used "
@@ -3761,7 +3761,7 @@ msgstr ""
 "Dim ond pan fydd y rhoddwr wedi colli gallu y gellir defnyddio’r <abbr "
 "title=\"lasting power of attorney\">LPA</abbr> hon."
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:79
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:78
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:64
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:32
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:23
@@ -3773,7 +3773,7 @@ msgstr ""
 "gynted ag y bydd wedi’i chofrestru oni bai bod y cyfarwyddiadau yn dweud fel "
 "arall."
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:85
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:84
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:69
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:39
 #: src/Common/templates/partials/full-lpa-display.html.twig:39
@@ -3786,7 +3786,7 @@ msgstr ""
 "Mae gan yr atwrneiod awdurdod i wneud penderfyniadau ynglŷn â thriniaeth "
 "cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:87
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:86
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:71
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:41
 #: src/Common/templates/partials/full-lpa-display.html.twig:41
@@ -3797,24 +3797,24 @@ msgstr ""
 "NID oes gan yr atwrneiod yr awdurdod i wneud penderfyniadau ynglŷn â "
 "thriniaeth cynnal bywyd"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:99
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:98
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:84
 msgid "Need to change the donor's details?"
 msgstr "A oes angen newid manylion y rhoddwr?"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:112
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:111
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:97
 msgid "Need to change an attorney's details?"
 msgstr "A oes angen newid manylion atwrnai?"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:123
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:122
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:108
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:108
 #: src/Common/templates/partials/full-lpa-display.html.twig:108
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> details"
 msgstr "Manylion <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:141
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:140
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:126
 msgid ""
 "If any scanned images are not readable, organisations may ask to see the paper "
@@ -3823,19 +3823,19 @@ msgstr ""
 "Os na allwch ddarllen y ddelwedd a sganiwyd, dywedwch wrth yr unigolyn a "
 "roddodd y cod mynediad eich bod eisiau gweld yr LPA bapur."
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:151
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:150
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:136
 msgid "Seen something incorrect in the LPA details?"
 msgstr "Ydych chi wedi gweld rhywbeth sy’n anghywir ym manylion yr LPA?"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:163
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:162
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:148
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:129
 #: src/Common/templates/partials/full-lpa-display.html.twig:129
 msgid "Date summary viewed"
 msgstr "Dyddiad gweld y crynodeb"
 
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:176
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:175
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 msgid ""
 "You cannot use a download or printout of this page instead of giving someone "
@@ -6377,12 +6377,12 @@ msgstr "Mae’r LPA yn barod i’w gweld"
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:30
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:27
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:111
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:106
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:24
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:25
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:24
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
 msgid "Property and affairs"
-msgstr "Eiddo ac arian"
+msgstr "eiddo a materion ariannol"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:12
 msgid "We could not find an LPA with those details"
@@ -6503,9 +6503,9 @@ msgstr "Dewislen"
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:34
 #: src/Actor/templates/actor/lpa-already-added.html.twig:42
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:31
-#: src/Actor/templates/actor/lpa-dashboard.html.twig:115
+#: src/Actor/templates/actor/lpa-dashboard.html.twig:110
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:28
-#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:29
+#: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:28
 msgid "Personal welfare"
 msgstr "lles personol"
 
