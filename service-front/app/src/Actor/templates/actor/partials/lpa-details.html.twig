@@ -5,10 +5,15 @@
         {% else %}
             <h3 class="govuk-heading-m govuk-!-margin-bottom-1 lpa-secondary-text-colour">{{ caseSubtype }}</h3>
         {% endif %}
-        
+
         <p class="govuk-body govuk-!-margin-bottom-1">
             <strong>{% trans %}LPA reference number:{% endtrans %}</strong> {{ lpaReference }} <br>
-            <strong>{% trans %}Added by:{% endtrans %}</strong> {{ actor_name(lpaActor) }}
+
+            {% set actorName = actor_name(lpaActor) %}
+            {% if lpaActorType == "trust-corporation" %}
+                {% set actorName = lpaActor.companyName ~ " " ~ ("(Trust corporation)" | trans) %}
+            {% endif %}
+            <strong>{% trans %}Added by:{% endtrans %}</strong> {{ actorName }}
         </p>
 
         {%  if not actorActive %}

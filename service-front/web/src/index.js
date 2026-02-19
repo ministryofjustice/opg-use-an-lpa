@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 require('es6-promise/auto');
 import jsEnabled from './javascript/jsEnabled';
-import {Accordion, initAll} from 'govuk-frontend';
+import { Accordion, initAll } from 'govuk-frontend';
 import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
@@ -9,7 +9,7 @@ import sessionDialog from './javascript/sessionDialog';
 import showHidePassword from './javascript/showHidePassword';
 import addPolyFill from './javascript/polyfill.js';
 import registerIapImagesComponents from './javascript/iapImages.js';
-import { initCrossServiceHeader } from 'govuk-one-login-service-header/dist/scripts/service-header.js';
+import { initCrossServiceHeader } from '@govuk-one-login/service-header/dist/scripts/service-header.js';
 
 
 //always run this first as GDS FE dependent on it.

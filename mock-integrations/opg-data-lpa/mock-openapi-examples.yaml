@@ -23,7 +23,7 @@ paths:
                             postcode: B89 7JK
                             town: Leafland
                             type: Primary
-                        companyName: ""
+                        companyName: "My Business Ltd"
                         dob: "1990-05-04"
                         email: ""
                         firstname: Jean
@@ -203,7 +203,28 @@ paths:
                     replacementAttorneys: []
                     status: Registered
                     statusDate: null
-                    trustCorporations: []
+                    trustCorporations:
+                      - addresses:
+                          - addressLine1: "Corporate Plaza"
+                            addressLine2: ""
+                            addressLine3: ""
+                            country: ""
+                            county: ""
+                            id: 3207
+                            postcode: ""
+                            town: "Night City"
+                            type: Primary
+                        companyName: Arasaka
+                        dob: null
+                        email: null
+                        firstname: trust
+                        id: 3485
+                        middlenames: null
+                        otherNames: null
+                        salutation: null
+                        surname: test
+                        systemStatus: true
+                        uId: 7000-0015-1998
                     uId: 7000-0000-0047
                     withdrawnDate: null
                 lpa0138:
