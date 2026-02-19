@@ -210,14 +210,14 @@ class StatisticsCollector:
             for item in page['Items']:
                 code = item['ViewerCode']['S']
                 if code not in seen:
-                    month = item['Viewed']['S'].split('T', 1)[0]
+                    month = '-'.join(item['Viewed']['S'].split('-', 2)[:2]) + '-01'
                     if month in monthly_sum:
                         monthly_sum[month] += 1
                     else:
                         monthly_sum[month] = 1
                     seen.add(code)
 
-        return {'monthly': monthly_sum}
+        return {'monthly': monthly_sum, 'total': len(seen)}
 
     def get_statistics(self):
         try:
@@ -317,39 +317,41 @@ class StatisticsCollector:
             return False
 
         for key, value in previous_month_dict.items():
-            if key != "TimePeriod":
-                last_month_metric_count = int(list(value.items())[0][1])
-                try:
-                    total_metric_count = int(
-                        list(totals_response_dict[key].items())[0][1]
-                    )
-                except Exception:
-                    self.logger.info(
-                        f"{key} not found in totals. Creating key and defaulting to 0"
-                    )
-                    total_metric_count = 0
+            if key == "TimePeriod" or key == "viewer_unique_codes_viewed":
+                continue
 
-                new_total_metric_count = total_metric_count + last_month_metric_count
+            last_month_metric_count = int(list(value.items())[0][1])
+            try:
+                total_metric_count = int(
+                    list(totals_response_dict[key].items())[0][1]
+                )
+            except Exception:
+                self.logger.info(
+                    f"{key} not found in totals. Creating key and defaulting to 0"
+                )
+                total_metric_count = 0
 
-                try:
-                    self.aws_dynamodb_client.update_item(
-                        TableName=f"{self.dynamodb_table_prefix}Stats",
-                        Key={"TimePeriod": {"S": "Total"}},
-                        UpdateExpression=f"set {str(key)} = :count",
-                        ExpressionAttributeValues={
-                            ":count": {"N": str(new_total_metric_count)}
-                        },
-                        ReturnValues="ALL_NEW",
-                    )
-                    self.logger.info(
-                        f"Update total for {key} from {total_metric_count} to {new_total_metric_count} based on month: {previous_month}"
-                    )
-                except Exception as e:
-                    self.logger.error(
-                        f"Error updating total for {key} from {total_metric_count} to {new_total_metric_count}"
-                    )
-                    self.logger.error(e)
-                    return False
+            new_total_metric_count = total_metric_count + last_month_metric_count
+
+            try:
+                self.aws_dynamodb_client.update_item(
+                    TableName=f"{self.dynamodb_table_prefix}Stats",
+                    Key={"TimePeriod": {"S": "Total"}},
+                    UpdateExpression=f"set {str(key)} = :count",
+                    ExpressionAttributeValues={
+                        ":count": {"N": str(new_total_metric_count)}
+                    },
+                    ReturnValues="ALL_NEW",
+                )
+                self.logger.info(
+                    f"Update total for {key} from {total_metric_count} to {new_total_metric_count} based on month: {previous_month}"
+                )
+            except Exception as e:
+                self.logger.error(
+                    f"Error updating total for {key} from {total_metric_count} to {new_total_metric_count}"
+                )
+                self.logger.error(e)
+                return False
 
         return True
 
@@ -384,6 +386,23 @@ class StatisticsCollector:
                         }
                     },
                     ReturnValues="ALL_NEW",
+                )
+            except Exception as e:
+                success = False
+                self.logger.error(e)
+
+        if 'total' in value:
+            try:
+                date_formatted = datetime.datetime.strptime(date, "%Y-%m-%d").strftime(
+                    "%Y-%m"
+                )
+                self.aws_dynamodb_client.update_item(
+                    TableName=f"{self.dynamodb_table_prefix}Stats",
+                    Key={"TimePeriod": {"S": "Total"}},
+                    UpdateExpression=f"set {str(key)} = :count",
+                    ExpressionAttributeValues={
+                        ":count": {"N": str(value['total'])}
+                    },
                 )
             except Exception as e:
                 success = False
