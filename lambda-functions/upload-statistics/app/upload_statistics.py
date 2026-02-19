@@ -210,7 +210,7 @@ class StatisticsCollector:
             for item in page['Items']:
                 code = item['ViewerCode']['S']
                 if code not in seen:
-                    month = item['Viewed']['S'].split('T', 1)[0]
+                    month = '-'.join(item['Viewed']['S'].split('-', 2)[:2]) + '-01'
                     if month in monthly_sum:
                         monthly_sum[month] += 1
                     else:
