@@ -38,14 +38,12 @@ class StatisticsCollector:
             dict: A dictionary with monthly statistics for LPAs added.
         """
         return {
-            "statistics": {
-                "lpas_added": {
-                    "monthly": {
-                        "2022-07-01": 5,
-                        "2022-08-01": 5,
-                        "2022-09-01": 5,
-                        "2022-10-01": 5,
-                    }
+            "lpas_added": {
+                "monthly": {
+                    "2022-07": 5,
+                    "2022-08": 5,
+                    "2022-09": 5,
+                    "2022-10": 5,
                 }
             }
         }
@@ -172,10 +170,10 @@ class StatisticsCollector:
             )
 
             sum_value = int(sum(each["Sum"] for each in datapoints if each))
-            monthly_sum[str(month_start)] = sum_value
+            monthly_sum[month_start.strftime("%Y-%m")] = sum_value
             total = total + sum_value
-        data = {"total": total, "monthly": monthly_sum}
-        return data
+
+        return {"total": total, "monthly": monthly_sum}
 
     def list_metrics_for_environment(self):
         metrics_to_ignore = ["Application Request Status"]
@@ -199,7 +197,7 @@ class StatisticsCollector:
                 table_name=table_name,
                 filter_exp=filter_expression,
             )
-            monthly_sum[str(month_start)] = sum_value
+            monthly_sum[month_start.strftime("%Y-%m")] = sum_value
         data = {"monthly": monthly_sum}
         return data
 
@@ -208,12 +206,12 @@ class StatisticsCollector:
         monthly_unique = defaultdict(int)
         seen = set()
 
-        start_date = self.startdate.strftime('%Y-%m-01')
+        start_date = self.startdate.strftime("%Y-%m")
 
         for page in self.dynamodb_scan_paginator.paginate(TableName=table_name):
-            for item in page['Items']:
-                code = item['ViewerCode']['S']
-                month = '-'.join(item['Viewed']['S'].split('-', 2)[:2]) + '-01'
+            for item in page["Items"]:
+                code = item["ViewerCode"]["S"]
+                month = datetime.datetime.fromisoformat(item["Viewed"]["S"]).strftime("%Y-%m")
 
                 if month >= start_date:
                     monthly_sum[month] += 1
@@ -223,29 +221,29 @@ class StatisticsCollector:
                     seen.add(code)
 
         return {
-            'sum': {'monthly': monthly_sum},
-            'unique': {'monthly': monthly_unique, 'total': len(seen)}
+            "sum": {"monthly": monthly_sum},
+            "unique": {"monthly": monthly_unique, "total": len(seen)}
         }
 
     def get_statistics(self):
         try:
             self.logger.info("=== Starting statistics collection ===")
-            statistics = {"statistics": {}}
+            statistics = {}
             message_prefix = "Getting statistics for metric:"
             # Get statistics from Cloudwatch metric statistics
             for metric in self.list_metrics_for_environment():
                 self.logger.info(f"{message_prefix} {metric}")
-                statistics["statistics"][metric] = self.sum_metrics(metric)
+                statistics[metric] = self.sum_metrics(metric)
 
             # Get statistics from Dynamodb counts
             self.logger.info(f"{message_prefix} lpas_added")
-            statistics["statistics"]["lpas_added"] = self.sum_dynamodb_counts(
+            statistics["lpas_added"] = self.sum_dynamodb_counts(
                 table_name=f"{self.dynamodb_table_prefix}UserLpaActorMap",
                 filter_expression="Added BETWEEN :fromdate AND :todate",
             )
 
             self.logger.info(f"{message_prefix} viewer_codes_created")
-            statistics["statistics"]["viewer_codes_created"] = self.sum_dynamodb_counts(
+            statistics["viewer_codes_created"] = self.sum_dynamodb_counts(
                 table_name=f"{self.dynamodb_table_prefix}ViewerCodes",
                 filter_expression="Added BETWEEN :fromdate AND :todate",
             )
@@ -254,8 +252,8 @@ class StatisticsCollector:
             viewer_activity = self.dynamodb_viewer_activity_counts(
                 table_name=f"{self.dynamodb_table_prefix}ViewerActivity",
             )
-            statistics["statistics"]["viewer_codes_viewed"] = viewer_activity['sum']
-            statistics['statistics']['viewer_unique_codes_viewed'] = viewer_activity['unique']
+            statistics["viewer_codes_viewed"] = viewer_activity["sum"]
+            statistics["viewer_unique_codes_viewed"] = viewer_activity["unique"]
 
         except Exception as e:
             self.logger.error("Exception gathering data")
@@ -265,16 +263,15 @@ class StatisticsCollector:
         return statistics
 
     def get_latest_month(self, first_item):
-        highest_month_as_dt = datetime.datetime.strptime("1900-01", "%Y-%m")
+        highest_month = "1900-01"
         for month, _ in first_item["monthly"].items():
-            month_as_dt = datetime.datetime.strptime(month, "%Y-%m-%d")
-            if month_as_dt > highest_month_as_dt:
-                highest_month_as_dt = month_as_dt
+            if month > highest_month:
+                highest_month = month
 
         self.logger.info(
-            f'Latest month in extract: {highest_month_as_dt.strftime("%Y-%m")}'
+            f"Latest month in extract: {highest_month}"
         )
-        return highest_month_as_dt.strftime("%Y-%m")
+        return highest_month
 
     def latest_month_exists_in_dynamodb(self, latest_date):
         response = self.aws_dynamodb_client.get_item(
@@ -282,7 +279,7 @@ class StatisticsCollector:
             Key={"TimePeriod": {"S": str(latest_date)}},
         )
 
-        return True if "Item" in response else False
+        return "Item" in response
 
     def update_dynamodb_totals(self, latest_month):
         previous_month = (
@@ -371,14 +368,11 @@ class StatisticsCollector:
             bool: True if the update is successful, False otherwise.
         """
         success = True
-        for date, count_of_items in value["monthly"].items():
+        for month, count_of_items in value["monthly"].items():
             try:
-                date_formatted = datetime.datetime.strptime(date, "%Y-%m-%d").strftime(
-                    "%Y-%m"
-                )
                 self.aws_dynamodb_client.update_item(
                     TableName=f"{self.dynamodb_table_prefix}Stats",
-                    Key={"TimePeriod": {"S": date_formatted}},
+                    Key={"TimePeriod": {"S": month}},
                     UpdateExpression=f"set {str(key)} = :count",
                     ExpressionAttributeValues={
                         ":count": {
@@ -395,17 +389,14 @@ class StatisticsCollector:
                 success = False
                 self.logger.error(e)
 
-        if 'total' in value:
+        if "total" in value:
             try:
-                date_formatted = datetime.datetime.strptime(date, "%Y-%m-%d").strftime(
-                    "%Y-%m"
-                )
                 self.aws_dynamodb_client.update_item(
                     TableName=f"{self.dynamodb_table_prefix}Stats",
                     Key={"TimePeriod": {"S": "Total"}},
                     UpdateExpression=f"set {str(key)} = :count",
                     ExpressionAttributeValues={
-                        ":count": {"N": str(value['total'])}
+                        ":count": {"N": str(value["total"])}
                     },
                 )
             except Exception as e:
@@ -455,7 +446,7 @@ class StatisticsCollector:
 
         self.logger.info("=== Discovering if we are in new month ===")
         latest_month = self.get_latest_month(
-            first_item=list(dict_of_statistics["statistics"].items())[0][1]
+            first_item=list(dict_of_statistics.items())[0][1]
         )
 
         if not self.latest_month_exists_in_dynamodb(latest_month):
@@ -464,7 +455,7 @@ class StatisticsCollector:
 
         self.logger.info("=== Starting dynamodb update ===")
         # looping over the individual metrics
-        for key, value in dict_of_statistics["statistics"].items():
+        for key, value in dict_of_statistics.items():
             key_formatted = self.get_formatted_key(key)
             self.logger.info(f"Updating {key_formatted}")
             success = self.update_dynamodb_with_statistics(key_formatted, value)
