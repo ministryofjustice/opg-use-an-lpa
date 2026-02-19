@@ -88,8 +88,8 @@ jobs:
             echo "path=$(echo docs)" >> $GITHUB_OUTPUT
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
-            fi
-          echo "path=$(echo all)" >> $GITHUB_OUTPUT
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
+          fi
       - name: show specific path
         env:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
