@@ -141,13 +141,14 @@ class LpaContext extends BaseIntegrationContext
     public function theLPAIsRemoved(): void
     {
         $removedLpaDetails = [
-                'donor'       => [
-                    'uId'         => $this->lpa['donor']['uId'],
-                    'firstname'   => $this->lpa['donor']['firstname'],
-                    'middlenames' => $this->lpa['donor']['middlenames'],
-                    'surname'     => $this->lpa['donor']['surname'],
-                ],
-                'caseSubtype' => $this->lpa['caseSubtype'],
+            'donor'        => [
+                'uId'         => $this->lpa['donor']['uId'],
+                'firstname'   => $this->lpa['donor']['firstname'],
+                'middlenames' => $this->lpa['donor']['middlenames'],
+                'surname'     => $this->lpa['donor']['surname'],
+            ],
+            'caseSubtype'  => $this->lpa['caseSubtype'],
+            'lpaReference' => $this->lpa['uId'],
         ];
 
         $this->apiFixtures->reset();
@@ -1142,7 +1143,10 @@ class LpaContext extends BaseIntegrationContext
     #[Then('/^I am informed that an LPA could not be found with this reference number$/')]
     public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber(): void
     {
-        $allowedErrorMessages = [AccessForAllResult::NOT_FOUND, AccessForAllResult::NOT_ELIGIBLE];
+        $allowedErrorMessages = [
+            AccessForAllResult::NOT_FOUND,
+            AccessForAllResult::NOT_ELIGIBLE,
+        ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
         $result      = $addOlderLpa->validate(
@@ -1705,26 +1709,26 @@ class LpaContext extends BaseIntegrationContext
     public function iAmShownTheDetailsOfAnLPA(): void
     {
         $apiData = isset($this->lpa['uId']) ? [
-                        'donor'       => [
-                            'uId'        => $this->lpa['donor']['uId'],
-                            'firstnames' => sprintf(
-                                '%s %s',
-                                $this->lpa['donor']['firstname'],
-                                $this->lpa['donor']['middlenames'],
-                            ),
-                            'surname'    => $this->lpa['donor']['surname'],
-                        ],
-                        'caseSubtype' => $this->lpa['caseSubtype'],
-                        'role'        => 'donor',
-                    ] : [
-                        'donor'       => [
-                            'uId'        => $this->lpa['donor']['uid'],
-                            'firstnames' => $this->lpa['donor']['firstNames'],
-                            'surname'    => $this->lpa['donor']['lastName'],
-                        ],
-                        'caseSubtype' => $this->lpa['lpaType'],
-                        'role'        => 'donor',
-                    ];
+            'donor'       => [
+                'uId'        => $this->lpa['donor']['uId'],
+                'firstnames' => sprintf(
+                    '%s %s',
+                    $this->lpa['donor']['firstname'],
+                    $this->lpa['donor']['middlenames'],
+                ),
+                'surname'    => $this->lpa['donor']['surname'],
+            ],
+            'caseSubtype' => $this->lpa['caseSubtype'],
+            'role'        => 'donor',
+        ] : [
+            'donor'       => [
+                'uId'        => $this->lpa['donor']['uid'],
+                'firstnames' => $this->lpa['donor']['firstNames'],
+                'surname'    => $this->lpa['donor']['lastName'],
+            ],
+            'caseSubtype' => $this->lpa['lpaType'],
+            'role'        => 'donor',
+        ];
 
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
