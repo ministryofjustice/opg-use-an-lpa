@@ -1,9 +1,10 @@
 {% extends '@actor/layout.html.twig' %}
 {% import "@actor/one-login-error.html.twig" as olerr %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <meta name="robots" content="noindex, nofollow">
+{% block html_title %}
+    {% trans %}Use a lasting power of attorney{% endtrans %} -
+    {% trans %}One Log in{% endtrans %} -
+    GOV.UK
 {% endblock %}
 
 {% block html_title %}
