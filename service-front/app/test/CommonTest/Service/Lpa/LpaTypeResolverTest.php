@@ -15,8 +15,22 @@ class LpaTypeResolverTest extends TestCase
     {
         $resolver = new LpaTypeResolver();
 
-        $result = $resolver->resolveLabel('hw', 'M123456');
+        $result   = $resolver->resolveLabel('hw', 'M123456');
+        $resultEC = $resolver->resolveEventCode('hw');
 
         $this->assertEquals('personal welfare', $result);
+        $this->assertEquals('ADDED_LPA_TYPE_HW', $resultEC);
+    }
+
+    #[Test]
+    public function testDigitalPropertyAndFinance(): void
+    {
+        $resolver = new LpaTypeResolver();
+
+        $result   = $resolver->resolveLabel('pfa', 'M987654');
+        $resultEC = $resolver->resolveEventCode('pfa');
+
+        $this->assertEquals('property and affairs', $result);
+        $this->assertEquals('ADDED_LPA_TYPE_PFA', $resultEC);
     }
 }
