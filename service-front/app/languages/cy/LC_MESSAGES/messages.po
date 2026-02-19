@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-02-16T00:29:54+00:00\n"
+"POT-Creation-Date: 2026-02-16T17:18:35+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -234,7 +234,7 @@ msgstr "Parhau i ddefnyddio’r gwasanaeth"
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:19
 #: src/Actor/templates/actor/partials/use-session-dialog.html.twig:15
 #: src/Common/templates/partials/header/default.html.twig:41
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:65
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:64
 msgid "Sign out"
 msgstr "Allgofnodi"
 
@@ -516,7 +516,7 @@ msgstr "Rhoddwr"
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:159
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:160
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:30
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:216
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:139
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:85
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:37
 #: src/Viewer/templates/viewer/check-code-found.html.twig:37
@@ -2143,7 +2143,7 @@ msgstr "Ydych chi’n byw yn y DU?"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:275
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:198
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
 msgstr "Nac oes"
@@ -3133,7 +3133,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:12
 #: src/Common/templates/partials/header/default.html.twig:39
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:112
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:111
 msgid "Settings"
 msgstr "Gosodiadau"
 
@@ -4751,25 +4751,25 @@ msgstr ""
 "Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod "
 "pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:311
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:234
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 "Y Dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:317
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:240
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
 msgid "Registration date"
 msgstr "Dyddiad cofrestru"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:322
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:245
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:15
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:217
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:140
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
 msgid ""
 "Some words in these preferences or instructions have been removed by the Court "
@@ -4780,31 +4780,31 @@ msgstr ""
 "Gwarchod. I weld pa eiriau a dynnwyd, gofynnwch i gael gweld fersiwn papur o’r "
 "Atwrneiaeth Arhosol neu’r Gorchymyn Lly."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:231
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:154
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:99
 msgid "Preferences"
 msgstr "Dymuniadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:237
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:160
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
 msgid "Yes, the donor made preferences on their LPA."
 msgstr ""
 "Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr>."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:272
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:195
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
 msgid "To view these, ask to see the paper LPA."
 msgstr ""
 "Weld y rhain, gofynnwch am gael gweld y <abbr title=\"atwrneiaeth "
 "arhosol\">LPA</abbr> papur."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:265
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:188
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:271
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:194
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
@@ -4941,11 +4941,11 @@ msgstr ""
 "Ar y cyd ar gyfer rhai penderfyniadau, ar y cyd ac yn unigol ar gyfer rhai "
 "eraill"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:90
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:79
 msgid "Decisions to be made jointly"
 msgstr "Penderfyniadau i'w gwneud ar y cyd"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:160
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:87
 msgid ""
 "A scanned copy of the donor’s joint decisions - the text cannot be digitised "
 "at present"
@@ -4953,19 +4953,19 @@ msgstr ""
 "Copi wedi ei sganio o’r hyn fyddai orau gan y rhoddwr a/neu ei gyfarwyddiadau- "
 "ni ellir digideiddio’r testun ar hyn o bryd"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:185
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:110
 msgid "Restrictions and Conditions"
 msgstr "Cyfyngiadau ac amodau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:181
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:106
 msgid "Yes, the donor added restrictions and conditions to their LPA"
 msgstr "Ydy, mae’r rhoddwr wedi ychwanegu cyfyngiadau ac amodau at ei LPA"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:186
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:111
 msgid "No, the donor did not add restrictions and conditions to their LPA"
 msgstr "Na, nid yw’r rhoddwr wedi ychwanegu cyfyngiadau ac amodau at ei LPA"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:204
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:127
 msgid ""
 "A scanned copy of the donor’s restrictions and/or instructions - the text "
 "cannot be digitised at present"
@@ -5143,24 +5143,24 @@ msgstr "Mae gan yr atwrneiaeth arhosol hon ddewisiadau"
 msgid "This LPA has instructions"
 msgstr "Mae gan yr atwrneiaeth arhosol hon gyfarwyddiadau"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:124
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:123
 #: src/Common/templates/partials/header/one-login.html.twig:50
 msgid "Ancillary navigation"
-msgstr ""
+msgstr "Llywio ategol"
 
 #: src/Common/templates/partials/header/default.html.twig:31
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:129
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
 msgid "Last signed in:"
 msgstr "Mewngofnodwyd diwethaf:"
 
 # More like \"never logged in\"
 #: src/Common/templates/partials/header/default.html.twig:33
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:131
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:130
 msgid "Never"
 msgstr "Erioed wedi mewngofnodi"
 
 #: src/Common/templates/partials/header/default.html.twig:40
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:96
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:95
 msgid "Your LPAs"
 msgstr "Eich LPAs"
 
@@ -5172,7 +5172,7 @@ msgstr "Dangos dewislen One Login GOV.UK"
 msgid "Hide GOV.UK One Login menu"
 msgstr "Cuddio dewislen One Login GOV.UK"
 
-#: src/Common/templates/partials/header/one-login-logged-in.html.twig:80
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:79
 msgid "%service_name% menu"
 msgstr "Dewislen %service_name%"
 
@@ -6486,64 +6486,13 @@ msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:136
-msgid ""
-"Who can make the joint decisions on this LPA has changed. This is because an "
-"attorney has been removed or replaced."
-msgstr ""
-"Mae pwy sy’n gallu gwneud y penderfyniadau ar y cyd ar yr LPA yma wedi newid. "
-"Y rheswm am hyn yw bod atwrnai wedi cael ei ddileu neu ei ddisodli."
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:72
+msgid "Service information"
+msgstr "Gwybodaeth am y gwasanaeth"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:100
-msgid ""
-"There are no longer attorneys who can make the joint decisions on this LPA."
-msgstr ""
-"Nid oes atwrneiod sy’n gallu gwneud y penderfyniadau ar y cyd ar yr LPA yma "
-"mwyach."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:103
-msgid "All other decisions can still be made by:"
-msgstr "Mae’r canlynol yn dal yn gallu gwneud yr holl benderfyniadau eraill:"
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:143
-msgid "All other decisions can still be made jointly and severally by:"
-msgstr ""
-"Mae’r canlynol yn dal yn gallu gwneud yr holl benderfyniadau eraill arall ar y "
-"cyd ac yn unigol:"
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:114
-msgid ""
-"The donor and the attorney have been informed of this. They can contact the "
-"Office of the Public Guardian (OPG) for advice on how these decisions can be "
-"made available again in future. Changes made to this LPA have been checked and "
-"processed by OPG."
-msgstr ""
-"Mae’r rhoddwr a’r atwrnai wedi cael gwybod am hyn. Gallant gysylltu â "
-"Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) i gael cyngor ar sut y gellir sicrhau "
-"bod y penderfyniadau hyn ar gael eto yn y dyfodol. Mae newidiadau i’r LPA yma "
-"wedi cael eu gwirio a’u prosesu gan OPG."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:121
-msgid "The joint decisions for this LPA can now only be made by:"
-msgstr ""
-"Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr LPA "
-"yma bellach:"
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:149
-msgid ""
-"The donor and the attorneys have been informed of this. Changes made to this "
-"LPA have been checked and processed by the Office of the Public Guardian."
-msgstr ""
-"Mae’r rhoddwr a’r atwrneiod wedi cael gwybod am hyn. Mae newidiadau a wnaed "
-"i’r LPA yma wedi cael eu gwirio a’u prosesu gan Swyddfa’r Gwarcheidwad "
-"Cyhoeddus."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:137
-msgid ""
-"The joint decisions for this LPA can now only be made, and must be agreed, by:"
-msgstr ""
-"Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr LPA "
-"yma bellach, a rhaid iddynt gytuno arnynt:"
+#: src/Common/templates/partials/header/one-login-logged-in.html.twig:81
+msgid "Menu"
+msgstr "Dewislen"
 
 #~ msgctxt "error"
 #~ msgid "Enter your new email address"
@@ -6708,9 +6657,6 @@ msgstr ""
 
 #~ msgid "Hide service navigation menu"
 #~ msgstr "Cuddio dewislen llywio’r gwasanaeth"
-
-#~ msgid "Menu"
-#~ msgstr "Dewislen"
 
 #~ msgid "Close"
 #~ msgstr "Cau"
