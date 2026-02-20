@@ -7,10 +7,10 @@ namespace CommonTest\Service\OneLogin;
 use Closure;
 use Common\Entity\User;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\OneLogin\AuthenticationData;
 use Common\Service\OneLogin\OneLoginService;
 use DateTime;
 use DateTimeInterface;
-use Facile\OpenIDClient\Session\AuthSession;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -81,12 +81,12 @@ class OneLoginServiceTest extends TestCase
         $code            = 'fakeCode';
         $nonce           = 'fakeNonce';
         $redirect        = 'FAKE_REDIRECT';
-        $authCredentials = AuthSession::fromArray([
+        $authCredentials = AuthenticationData::fromArray([
             'state'   => $state,
             'nonce'   => $nonce,
             'customs' => [
-                 'ui_locale'    => 'en',
-                 'redirect_uri' => $redirect,
+                'ui_locale'    => 'en',
+                'redirect_uri' => $redirect,
             ],
         ]);
 
