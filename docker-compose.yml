@@ -260,6 +260,26 @@ services:
     entrypoint: [ "/aws-lambda/aws-lambda-rie", "/usr/local/bin/python", "-m", "awslambdaric" ]
     command: [ "upload_statistics.lambda_handler" ]
 
+  # ---------------------------
+  # Lambda to upload monthly reports to Analytical platform
+
+  upload-monthly-reports-lambda:
+    container_name: upload-monthly-reports
+    build:
+      context: ./lambda-functions/upload-monthly-reports
+      dockerfile: Dockerfile
+    environment:
+      ENVIRONMENT: local
+      REGION: eu-west-1
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+    volumes:
+      - ./lambda-functions/upload-monthly-reports/app:/function/app
+      - ./lambda-functions/.aws-lambda-rie:/aws-lambda
+    ports:
+      - 9008:8080
+
   proxy:
     container_name: proxy
     image: traefik:3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e
