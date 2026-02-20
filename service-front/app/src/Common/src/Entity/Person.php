@@ -15,6 +15,7 @@ class Person implements ProcessPersonsInterface
         public readonly ?string $addressLine1,
         public readonly ?string $addressLine2,
         public readonly ?string $addressLine3,
+        public readonly ?bool $cannotMakeJointDecisions,
         public readonly ?string $country,
         public readonly ?string $county,
         #[CastToDateTimeImmutable('!Y-m-d')]
@@ -111,6 +112,11 @@ class Person implements ProcessPersonsInterface
 
     public function getSystemStatus(): bool
     {
-        return (bool) $this->systemStatus;
+        return (bool)$this->systemStatus;
+    }
+
+    public function getCannotMakeJointDecisions(): ?bool
+    {
+        return $this->cannotMakeJointDecisions ?? null;
     }
 }

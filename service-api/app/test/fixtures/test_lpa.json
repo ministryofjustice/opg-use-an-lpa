@@ -68,7 +68,8 @@
         }
       ],
       "systemStatus": true,
-      "companyName": ""
+      "companyName": "",
+      "cannotMakeJointDecisions": true
     },
     {
       "id": 12,
@@ -93,7 +94,8 @@
         }
       ],
       "systemStatus": true,
-      "companyName": ""
+      "companyName": "",
+      "cannotMakeJointDecisions": true
     }
   ],
   "replacementAttorneys": [],

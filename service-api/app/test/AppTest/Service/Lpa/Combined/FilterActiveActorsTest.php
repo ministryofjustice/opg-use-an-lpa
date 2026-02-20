@@ -65,6 +65,7 @@ class FilterActiveActorsTest extends TestCase
             systemStatus: ActorStatus::ACTIVE,
             town:         '',
             uId:          '7345678901',
+            cannotMakeJointDecisions: true,
         );
 
         $this->trustCorporation = new SiriusLpaTrustCorporation(

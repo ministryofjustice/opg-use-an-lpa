@@ -29,14 +29,15 @@ class PersonTest extends TestCase
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
-        $expectedSalutation   = '';
-        $expectedFirstname    = 'Rachel';
-        $expectedMiddlename   = '';
-        $expectedSurname      = 'Sanderson';
-        $expectedDob          = new DateTimeImmutable('1948-11-01');
-        $expectedCompanyName  = 'trust corporation';
-        $expectedUid          = '700000000799';
-        $expectedSystemStatus = true;
+        $expectedSalutation               = '';
+        $expectedFirstname                = 'Rachel';
+        $expectedMiddlename               = '';
+        $expectedSurname                  = 'Sanderson';
+        $expectedDob                      = new DateTimeImmutable('1948-11-01');
+        $expectedCompanyName              = 'trust corporation';
+        $expectedUid                      = '700000000799';
+        $expectedSystemStatus             = true;
+        $expectedCannotMakeJointDecisions = true;
 
         $this->assertEquals($expectedSalutation, $combinedLpa->getDonor()->getSalutation());
         $this->assertEquals($expectedMiddlename, $combinedLpa->getDonor()->getMiddlenames());
@@ -47,6 +48,10 @@ class PersonTest extends TestCase
         $this->assertEquals($expectedUid, $combinedLpa->getDonor()->getId());
         $this->assertEquals($expectedFirstname, $combinedLpa->getDonor()->getFirstname());
         $this->assertEquals($expectedSystemStatus, $combinedLpa->getDonor()->getSystemStatus());
+        $this->assertEquals(
+            $expectedCannotMakeJointDecisions,
+            $combinedLpa->trustCorporations[0]->getCannotMakeJointDecisions()
+        );
     }
 
     #[Test]
@@ -67,7 +72,7 @@ class PersonTest extends TestCase
 
         $this->assertEquals(
             [
-            (new Address())
+                (new Address())
                 ->setAddressLine1('Address Line 1')
                 ->setAddressLine2('Address Line 2')
                 ->setAddressLine3('Address Line 3')

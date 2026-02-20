@@ -935,6 +935,7 @@ class AddAccessForAllLpaTest extends TestCase
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: true,
             country:      null,
             county:       null,
             dob:          new DateTimeImmutable('1977-11-21'),
@@ -947,13 +948,14 @@ class AddAccessForAllLpaTest extends TestCase
             surname:      'Person',
             systemStatus: ActorStatus::INACTIVE,
             town:         null,
-            uId:          '700000002222'
+            uId:          '700000002222',
         );
 
         $attorney2 = new SiriusLpaAttorney(
             addressLine1: null,
             addressLine2: null,
             addressLine3: null,
+            cannotMakeJointDecisions: true,
             country:      null,
             county:       null,
             dob:          new DateTimeImmutable('1980-03-01'),
@@ -966,7 +968,7 @@ class AddAccessForAllLpaTest extends TestCase
             surname:      'Testing',
             systemStatus: ActorStatus::ACTIVE,
             town:         null,
-            uId:          '700000055554'
+            uId:          '700000055554',
         );
 
         $attorneys =  [

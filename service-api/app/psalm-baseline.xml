@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="6.14.3@d0b040a91f280f071c1abcb1b77ce3822058725a">
+<files psalm-version="6.15.0@204d06619833a297b402cbc66be7f2df74437db4">
   <file src="src/App/src/DataAccess/ApiGateway/SiriusLpas.php">
     <UnusedClosureParam>
       <code><![CDATA[$id]]></code>
@@ -63,6 +63,7 @@
       <code><![CDATA[$addressLine1]]></code>
       <code><![CDATA[$addressLine2]]></code>
       <code><![CDATA[$addressLine3]]></code>
+      <code><![CDATA[$cannotMakeJointDecisions]]></code>
       <code><![CDATA[$country]]></code>
       <code><![CDATA[$county]]></code>
       <code><![CDATA[$email]]></code>
