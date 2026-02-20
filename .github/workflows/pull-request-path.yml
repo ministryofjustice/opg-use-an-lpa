@@ -88,6 +88,7 @@ jobs:
             echo "path=$(echo docs)" >> $GITHUB_OUTPUT
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
       - name: show specific path
         env:
@@ -121,8 +122,7 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      needs.workflow_variables.result == 'success' &&
-      needs.workflow_variables.outputs.specific_path != 'docs'
+      needs.workflow_variables.result == 'success'
 
   node_test:
     name: test node dependencies
@@ -131,8 +131,7 @@ jobs:
       - workflow_variables
     if: |
       always() &&
-      needs.workflow_variables.result == 'success' &&
-      needs.workflow_variables.outputs.specific_path == 'all'
+      needs.workflow_variables.result == 'success'
 
   node_build:
     name: build node dependencies
@@ -141,8 +140,7 @@ jobs:
       - workflow_variables
     if: |
       always() &&
-      needs.workflow_variables.result == 'success' &&
-      needs.workflow_variables.outputs.specific_path == 'all'
+      needs.workflow_variables.result == 'success'
 
   docker_build_scan_push:
     name: build, test, scan and push
@@ -159,7 +157,6 @@ jobs:
     secrets: inherit
     if: |
       always() &&
-      needs.workflow_variables.outputs.specific_path != 'docs' &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
