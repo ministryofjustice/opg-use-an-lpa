@@ -16,6 +16,12 @@
             "php": "8.3.22"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/ministryofjustice/laminas-cache"
+        }
+    ],
     "extra": {
         "zf": {
             "component-whitelist": [
@@ -44,10 +50,10 @@
         "blazon/psr11-monolog": "^5.0.1",
         "elie29/zend-phpdi-config": "^10.0.0",
         "eventsauce/object-hydrator": "^1.6.1",
-        "facile-it/php-openid-client": "^0.3.5",
+        "facile-it/php-openid-client": "^0.4.0",
         "guzzlehttp/guzzle": "^7.9.3",
         "guzzlehttp/psr7": "^2.7.1",
-        "laminas/laminas-cache": "^3.13",
+        "laminas/laminas-cache": "dev-3.x-psrcache-v2-backport as 3.14.0",
         "laminas/laminas-cache-storage-adapter-apcu": "^2.6",
         "laminas/laminas-config-aggregator": "^1.18",
         "laminas/laminas-diactoros": "^3.6",
@@ -61,13 +67,11 @@
         "psr/clock": "^1.0",
         "ramsey/uuid": "^4.9",
         "spatie/php-cloneable": "^1.0.2",
-        "symfony/console": "^6.4.23",
-        "web-token/jwt-encryption-algorithm-aeskw": "^3.4.8",
-        "web-token/jwt-signature-algorithm-ecdsa": "^3.4.8"
+        "symfony/console": "^6.4.23"
     },
     "require-dev": {
         "behat/behat": "^3.23",
-        "cooperaj/behat-psr-extension": "^2.4",
+        "cooperaj/behat-psr-extension": "^3.0",
         "filp/whoops": "^2.18.3",
         "laminas/laminas-component-installer": "^3.5",
         "laminas/laminas-development-mode": "^3.14",
