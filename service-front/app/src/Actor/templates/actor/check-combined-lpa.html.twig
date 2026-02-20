@@ -15,6 +15,9 @@
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
+                    {% set lpaReference = lpa.uId ?? null %}
+                    {% set isDigital = lpaReference and lpaReference starts with 'M-' %}
+                    {% set subtype = lpaType|lower %}
 
                     <dl class="govuk-summary-list govuk-summary-list">
                         <div class="govuk-summary-list__row">
@@ -22,10 +25,14 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.caseSubtype.value|lower == "pfa" %}
-                                    {% trans %}Property and finance{% endtrans %}
+                                {% if subtype == 'pfa' %}
+                                    {{ isDigital
+                                    ? 'Property and affairs'|trans
+                                    : 'Property and finance'|trans }}
                                 {% else %}
-                                    {% trans %}Health and welfare{% endtrans %}
+                                    {{ isDigital
+                                    ? 'Personal welfare'|trans
+                                    : 'Health and welfare'|trans }}
                                 {% endif %}
                             </dd>
                         </div>

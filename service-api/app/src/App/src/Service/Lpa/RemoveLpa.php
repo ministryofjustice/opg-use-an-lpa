@@ -106,12 +106,13 @@ class RemoveLpa
 
         // TODO UML-3914 Return a response object here
         return [
-            'donor'       => [
+            'donor'        => [
                 'uId'        => $lpaDonorData->getUid(),
                 'firstnames' => $lpaDonorData->getFirstnames(),
                 'surname'    => $lpaDonorData->getSurname(),
             ],
-            'caseSubtype' => $lpaRemovedData->getCaseSubType(),
+            'caseSubtype'  => $lpaRemovedData->getCaseSubType(),
+            'lpaReference' => ($deletedData['LpaUid'] ?? $deletedData['SiriusUid'] ?? null),
         ];
     }
 

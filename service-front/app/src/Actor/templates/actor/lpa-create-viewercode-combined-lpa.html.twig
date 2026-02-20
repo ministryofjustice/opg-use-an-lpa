@@ -15,8 +15,23 @@
 
             <div class="govuk-grid-row govuk-!-margin-top-0 govuk-!-padding-bottom-0">
 
+                {% set lpaReference = lpa.uId %}
+                {% set isDigital = lpaReference starts with 'M-' %}
+                {% set subtype = lpa.caseSubtype.value|lower %}
+
                 <div class="govuk-grid-column-two-thirds">
-                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">{{ actor_name(lpa.donor, false) }}, {{ lpa.caseSubtype.value == 'pfa' ? 'Property and finance' | trans : 'Health and welfare' | trans }}</span>
+                    <span class="govuk-caption-xl govuk-!-margin-bottom-3 govuk-!-margin-top-0">
+                        {{ actor_name(lpa.donor, false) }},
+                        {% if subtype == 'pfa' %}
+                            {{ isDigital
+                            ? 'Property and affairs'|trans
+                            : 'Property and finance'|trans }}
+                        {% else %}
+                            {{ isDigital
+                            ? 'Personal welfare'|trans
+                            : 'Health and welfare'|trans }}
+                        {% endif %}
+                    </span>
                     <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">{% trans %}Which organisation do you want to give access to?{% endtrans %}</h1>
                 </div>
 
