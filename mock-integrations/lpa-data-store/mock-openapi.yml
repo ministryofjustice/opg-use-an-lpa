@@ -62,8 +62,8 @@ paths:
         description: The UID of the case
         schema:
           type: string
-          pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-789Q-P4DF-4UX3
+          pattern: "M(-[0-9]{4}){3}"
+          example: M-7890-0400-4000
       - name: presign-images
         in: query
         required: false
@@ -131,8 +131,8 @@ paths:
         description: The UID of the case
         schema:
           type: string
-          pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-789Q-P4DF-4UX3
+          pattern: "M(-[0-9]{4}){3}"
+          example: M-7890-0400-4000
     post:
       operationId: createUpdate
       summary: Update an LPA
@@ -206,8 +206,8 @@ paths:
         description: The UID of the case
         schema:
           type: string
-          pattern: "M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})"
-          example: M-789Q-P4DF-4UX3
+          pattern: "M(-[0-9]{4}){3}"
+          example: M-7890-0400-4000
     get:
       operationId: getStaticLpa
       summary: Retrieve a static LPA
@@ -328,8 +328,8 @@ components:
           type: array
           items:
             type: string
-            pattern: M-([A-Z0-9]{4})-([A-Z0-9]{4})-([A-Z0-9]{4})
-            example: M-789Q-P4DF-4UX3
+            pattern: "M(-[0-9]{4}){3}"
+            example: M-7890-0400-4000
     GetListResponse:
       type: object
       required:
