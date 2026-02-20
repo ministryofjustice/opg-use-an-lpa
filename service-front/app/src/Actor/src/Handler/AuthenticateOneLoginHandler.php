@@ -12,8 +12,8 @@ use Common\Handler\SessionAware;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
+use Common\Service\OneLogin\AuthenticationData;
 use Common\Service\OneLogin\OneLoginService;
-use Facile\OpenIDClient\Session\AuthSession;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Laminas\Diactoros\Response\RedirectResponse;
 use Mezzio\Authentication\UserInterface;
@@ -70,7 +70,7 @@ class AuthenticateOneLoginHandler extends AbstractHandler implements CsrfGuardAw
 
             $this
                 ->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE)
-                ?->set(OneLoginService::OIDC_AUTH_INTERFACE, AuthSession::fromArray($result));
+                ?->set(OneLoginService::OIDC_AUTH_INTERFACE, AuthenticationData::fromArray($result));
 
             return new RedirectResponse($result['url']);
         }
