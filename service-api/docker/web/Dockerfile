@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:4655ddff4704d6b6c85f5a5862b5d0840941fcc95a4f4668f04b1d6f85858e7c
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:410975ce8efc6d9dedc6e51ee0b994ab53a98d1d6e75ea86d65a090ed81270bb
 USER root
 
 COPY service-api/docker/web/default.conf.template /etc/nginx/templates/default.conf.template
