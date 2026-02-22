@@ -49,6 +49,8 @@ class LpaExtensionTest extends TestCase
             'is_sirius_lpa'                   => 'isSiriusLpa',
             'is_online_channel'               => 'isOnlineChannel',
             'is_english'                      => 'isEnglish',
+            'lpa_display_type'                => 'lpaDisplayType',
+            'lpa_display_type_from_values'    => 'lpaDisplayTypeFromValues',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -585,5 +587,91 @@ class LpaExtensionTest extends TestCase
         $this->assertTrue($extension->isEnglish('/cyan'));
 
         $this->assertFalse($extension->isEnglish('/cy/an'));
+    }
+
+    #[DataProvider('lpaDisplayTypeProvider')]
+    #[Test]
+    public function it_returns_correct_lpa_display_type(Lpa $lpa, string $expected): void
+    {
+        $extension = new LpaExtension();
+
+        $result = $extension->lpaDisplayType($lpa);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function lpaDisplayTypeProvider(): array
+    {
+        $siriusPfa = new Lpa();
+        $siriusPfa->setUId('700000000001');
+        $siriusPfa->setCaseSubtype('pfa');
+
+        $siriusHw = new Lpa();
+        $siriusHw->setUId('700000000002');
+        $siriusHw->setCaseSubtype('hw');
+
+        $modernPfa = new Lpa();
+        $modernPfa->setUId('M-123456789');
+        $modernPfa->setCaseSubtype('pfa');
+
+        $modernHw = new Lpa();
+        $modernHw->setUId('M-987654321');
+        $modernHw->setCaseSubtype('hw');
+
+        return [
+            [
+                $siriusPfa,
+                'Property and finance',
+            ],
+            [
+                $siriusHw,
+                'Health and welfare',
+            ],
+            [
+                $modernPfa,
+                'Property and affairs',
+            ],
+            [
+                $modernHw,
+                'Personal welfare',
+            ],
+        ];
+    }
+
+    #[DataProvider('lpaDisplayTypeFromValuesProvider')]
+    #[Test]
+    public function it_returns_correct_lpa_display_type_from_values(string $uid, string $subtype, string $expected): void
+    {
+        $extension = new LpaExtension();
+
+        $result = $extension->lpaDisplayTypeFromValues($uid, $subtype);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function lpaDisplayTypeFromValuesProvider(): array
+    {
+        return [
+            [
+                '700000000001',
+                'pfa',
+                'Property and finance',
+            ],
+            [
+                '700000000002',
+                'hw',
+                'Health and welfare',
+            ],
+            [
+                'M-123456789',
+                'pfa',
+                'Property and affairs',
+            ],
+            [
+                'M-987654321',
+                'hw',
+                'Personal welfare',
+            ],
+        ];
     }
 }

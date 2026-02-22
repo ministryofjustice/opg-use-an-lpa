@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
+use BackedEnum;
 use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -39,6 +40,11 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_sirius_lpa', [$this, 'isSiriusLpa']),
             new TwigFunction('is_online_channel', [$this, 'isOnlineChannel']),
             new TwigFunction('is_english', [$this, 'isEnglish']),
+            new TwigFunction('lpa_display_type', [$this, 'lpaDisplayType']),
+            new TwigFunction('lpa_display_type_from_values', [
+                $this,
+                'lpaDisplayTypeFromValues',
+            ],),
         ];
     }
 
@@ -118,7 +124,7 @@ class LpaExtension extends AbstractExtension
      * and converts it for displaying on pages
      *
      * @param  DateTimeInterface|string|null $date
-     * @param  string                        $parseFormat A PHP Datetime format string that should be used to parse $date
+     * @param  string $parseFormat A PHP Datetime format string that should be used to parse $date
      * @return string
      */
     public function formatDate(DateTimeInterface|string|null $date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
@@ -247,5 +253,40 @@ class LpaExtension extends AbstractExtension
     public function isEnglish(string $path): bool
     {
         return !str_starts_with($path, '/cy/');
+    }
+
+    public function lpaDisplayType(Lpa|CombinedLpa $lpa): string
+    {
+        $isSirius = $this->isSiriusLpa($lpa->getUid());
+        $subtype  = $lpa->getCaseSubtype();
+
+        // Normalise enum to string safely
+        if ($subtype instanceof BackedEnum) {
+            $subtype = $subtype->value;
+        }
+
+        $subtype = strtolower((string) $subtype);
+        if ($subtype === 'pfa') {
+            return $isSirius ? 'Property and finance' : 'Property and affairs';
+        }
+
+        return $isSirius ? 'Health and welfare' : 'Personal welfare';
+    }
+
+    public function lpaDisplayTypeFromValues(string $lpaUid, string $subtype): string
+    {
+        $isSirius = $this->isSiriusLpa($lpaUid);
+
+        $subtype = strtolower($subtype);
+
+        if ($subtype === 'pfa') {
+            return $isSirius
+                ? 'Property and finance'
+                : 'Property and affairs';
+        }
+
+        return $isSirius
+            ? 'Health and welfare'
+            : 'Personal welfare';
     }
 }

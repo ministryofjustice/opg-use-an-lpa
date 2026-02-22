@@ -8,12 +8,12 @@ use Common\Service\Log\EventCodes;
 
 class LpaTypeResolver
 {
-    public function resolveLabel(string $subtype, string $reference): string
+    public function resolveLabel(string $subtype, string $lpaUid): string
     {
         $caseSubtype = strtolower($subtype);
-        $reference   = strtoupper($reference);
+        $reference   = strtoupper($lpaUid);
 
-        $isDigital = str_starts_with($reference, 'M');
+        $isDigital = str_starts_with($lpaUid, 'M');
 
         if ($caseSubtype === 'hw') {
             return $isDigital ? 'personal welfare' : 'health and welfare';
