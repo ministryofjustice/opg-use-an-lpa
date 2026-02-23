@@ -97,11 +97,6 @@
       <code><![CDATA[array]]></code>
     </LessSpecificImplementedReturnType>
   </file>
-  <file src="src/Actor/src/Handler/AuthenticateOneLoginHandler.php">
-    <InvalidArgument>
-      <code><![CDATA[$result]]></code>
-    </InvalidArgument>
-  </file>
   <file src="src/Actor/src/Handler/CancelCodeHandler.php">
     <ImplementationRequirementViolation>
       <code><![CDATA[Session]]></code>

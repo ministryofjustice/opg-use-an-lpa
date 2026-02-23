@@ -12,8 +12,8 @@ use Common\Handler\SessionAware;
 use Common\Handler\Traits\Logger;
 use Common\Handler\Traits\Session;
 use Common\Service\Log\EventCodes;
+use Common\Service\OneLogin\AuthenticationData;
 use Common\Service\OneLogin\OneLoginService;
-use Facile\OpenIDClient\Session\AuthSession;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -49,10 +49,10 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
         $authParams = $request->getQueryParams();
 
         $session     = $this->getSession($request, SessionMiddleware::SESSION_ATTRIBUTE);
-        $authSession = AuthSession::fromArray($session->get(OneLoginService::OIDC_AUTH_INTERFACE) ?? []);
-        $ui_locale   = $authSession->getCustoms()['ui_locale'] ?? null;
+        $authSession = AuthenticationData::fromArray($session->get(OneLoginService::OIDC_AUTH_INTERFACE) ?? []);
+        $ui_locale   = $authSession->customs['ui_locale'] ?? null;
 
-        if ($authSession->getState() === null) {
+        if ($authSession->state === null) {
             $this->logError(OneLoginForm::SESSION_MISSING_ERROR);
 
             return $this->redirectToRoute(

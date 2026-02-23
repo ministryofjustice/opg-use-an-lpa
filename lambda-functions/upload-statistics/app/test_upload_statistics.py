@@ -79,7 +79,7 @@ class TestStatisticsCollector(unittest.TestCase):
         statistics_collector.environment = "test"
 
         return statistics_collector
-    
+
     @mock_aws
     def test_update_statistics(self):
         """Test that the statistics are updated correctly"""
@@ -113,10 +113,10 @@ class TestStatisticsCollector(unittest.TestCase):
         statistics_collector = self.setUp()
         stats = {
             "monthly": {
-                "2022-07-01": 5,
-                "2022-08-01": 5,
-                "2022-09-01": 5,
-                "2022-10-01": 5,
+                "2022-07": 5,
+                "2022-08": 5,
+                "2022-09": 5,
+                "2022-10": 5,
             }
         }
 
@@ -154,10 +154,10 @@ class TestStatisticsCollector(unittest.TestCase):
         statistics_collector = self.setUp()
         stats = {
             "monthly": {
-                "2022-07-01": 5,
-                "2022-08-01": 5,
-                "2022-09-01": 5,
-                "2022-10-01": 5,
+                "2022-07": 5,
+                "2022-08": 5,
+                "2022-09": 5,
+                "2022-10": 5,
             }
         }
 
@@ -191,7 +191,7 @@ class TestStatisticsCollector(unittest.TestCase):
             statistics_collector.get_metric_statistic(start_date, end_date, "account_created_event")[0]['Sum'],
             5,
         )
-        
+
 
 if __name__ == '__main__':
     unittest.main()
