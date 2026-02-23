@@ -1,4 +1,4 @@
-package server_test
+package server
 
 import (
 	"bytes"
@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/hlog"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +25,7 @@ func TestWithJSONLogging(t *testing.T) {
 
 	assert.HTTPStatusCode(t, WithJSONLogging(next, log).ServeHTTP, "GET", "/", nil, 200)
 
-	err := json.Unmarshal(w.Bytes(), new(map[string]interface{}))
+	err := json.Unmarshal(w.Bytes(), new(map[string]any))
 	if err != nil {
 		t.Error("failed to write JSON log")
 	}
