@@ -22,7 +22,7 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {{ lpa_display_type(lpa)|trans }}
+                                {{ lpa_display_type_from_values(lpa.uId, lpa.caseSubtype.value)|trans }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">

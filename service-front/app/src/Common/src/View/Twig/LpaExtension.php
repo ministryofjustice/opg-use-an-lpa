@@ -17,9 +17,15 @@ use IntlDateFormatter;
 use Locale;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Acpr\I18n\TranslatorInterface;
 
 class LpaExtension extends AbstractExtension
 {
+    public function __construct(private TranslatorInterface $translator,)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @return array<TwigFunction>
      */
@@ -40,11 +46,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_sirius_lpa', [$this, 'isSiriusLpa']),
             new TwigFunction('is_online_channel', [$this, 'isOnlineChannel']),
             new TwigFunction('is_english', [$this, 'isEnglish']),
-            new TwigFunction('lpa_display_type', [$this, 'lpaDisplayType']),
-            new TwigFunction('lpa_display_type_from_values', [
-                $this,
-                'lpaDisplayTypeFromValues',
-            ],),
+            new TwigFunction('lpa_display_type_from_values', [$this, 'lpaDisplayTypeFromValues']),
         ];
     }
 
@@ -255,24 +257,6 @@ class LpaExtension extends AbstractExtension
         return !str_starts_with($path, '/cy/');
     }
 
-    public function lpaDisplayType(Lpa|CombinedLpa $lpa): string
-    {
-        $isSirius = $this->isSiriusLpa($lpa->getUid());
-        $subtype  = $lpa->getCaseSubtype();
-
-        // Normalise enum to string safely
-        if ($subtype instanceof BackedEnum) {
-            $subtype = $subtype->value;
-        }
-
-        $subtype = strtolower((string) $subtype);
-        if ($subtype === 'pfa') {
-            return $isSirius ? 'Property and finance' : 'Property and affairs';
-        }
-
-        return $isSirius ? 'Health and welfare' : 'Personal welfare';
-    }
-
     public function lpaDisplayTypeFromValues(string $lpaUid, string $subtype): string
     {
         $isSirius = $this->isSiriusLpa($lpaUid);
@@ -281,12 +265,12 @@ class LpaExtension extends AbstractExtension
 
         if ($subtype === 'pfa') {
             return $isSirius
-                ? 'Property and finance'
-                : 'Property and affairs';
+                ? $this->translator->translate('Property and finance')
+                : $this->translator->translate('Property and affairs');
         }
 
         return $isSirius
-            ? 'Health and welfare'
-            : 'Personal welfare';
+            ? $this->translator->translate('Health and welfare')
+            : $this->translator->translate('Personal welfare');
     }
 }
