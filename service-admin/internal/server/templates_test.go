@@ -1,4 +1,4 @@
-package server_test
+package server
 
 import (
 	"html/template"
@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"testing"
 
-	. "github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server"
 	"github.com/ministryofjustice/opg-use-an-lpa/service-admin/internal/server/handlers"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
@@ -77,8 +76,6 @@ func TestTemplates_Get(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tt := tt
-
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -117,10 +114,22 @@ func TestWithTemplates(t *testing.T) {
 	assert.HTTPSuccess(t, sut.ServeHTTP, "GET", "/", nil, "handler not successfully running")
 }
 
+func TestReadableDateTime(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, "2 January 2020 at 12:13PM", readableDateTime("2020-01-02T12:13:14"))
+	assert.Equal(t, "blah", readableDateTime("blah"))
+}
+
+func TestReadableMonth(t *testing.T) {
+	t.Parallel()
+
+	assert.Equal(t, "Jan 2020", readableMonth("2020-01"))
+	assert.Equal(t, "blah", readableMonth("blah"))
+}
+
 func TestAdd(t *testing.T) {
 	t.Parallel()
 
-	result := Add(1, 2, 3)
-
-	assert.Equal(t, result, 6.0)
+	assert.Equal(t, 6.0, add(1, 2, 3))
 }

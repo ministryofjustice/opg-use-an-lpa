@@ -42,6 +42,7 @@ func LoadTemplates(folder fs.FS) *Templates {
 	t := template.New("")
 	t = t.Funcs(template.FuncMap{
 		"readableDateTime": readableDateTime,
+		"readableMonth":    readableMonth,
 		"add":              add,
 	})
 
@@ -95,6 +96,15 @@ func readableDateTime(date string) string {
 	}
 
 	return t.In(l).Format("2 January 2006 at 3:04PM")
+}
+
+func readableMonth(month string) string {
+	t, err := time.Parse("2006-01", month)
+	if err != nil {
+		return month
+	}
+
+	return t.Format("Jan 2006")
 }
 
 func add(nums ...float64) float64 {
