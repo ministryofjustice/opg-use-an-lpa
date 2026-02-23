@@ -11,7 +11,7 @@ class LpaTypeResolver
     public function resolveLabel(string $subtype, string $lpaUid): string
     {
         $caseSubtype = strtolower($subtype);
-        $reference   = strtoupper($lpaUid);
+        $lpaUid      = strtoupper($lpaUid);
 
         $isDigital = str_starts_with($lpaUid, 'M');
 
