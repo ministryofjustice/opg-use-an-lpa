@@ -8,8 +8,10 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"math"
 	"os"
 	"slices"
+	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -24,6 +26,11 @@ import (
 var (
 	s3Client     *BucketClient
 	dynamoClient *TableClient
+)
+
+const (
+	maxRetries     = 10
+	initialBackoff = 100 * time.Millisecond
 )
 
 func main() {
@@ -192,16 +199,35 @@ func processFile(
 			return fmt.Errorf("batch write item: %w", err)
 		}
 
-		if unprocessedItems := dynamodbClient.UnprocessedItems(output); len(unprocessedItems) > 0 {
+		retries := 0
+		backoff := initialBackoff
+		unprocessedItems := dynamodbClient.UnprocessedItems(output)
+
+		for len(unprocessedItems) > 0 {
+			retries++
+			backoff = time.Duration(float64(backoff) * math.Pow(2, float64(retries)))
+			time.Sleep(backoff)
+
+			var unprocessedIDs []string
 			for _, unprocessed := range unprocessedItems {
 				var id string
 				attributevalue.Unmarshal(unprocessed.PutRequest.Item["Id"], &id)
-				slog.Warn("unprocessed item", slog.Any("Id", id))
+				unprocessedIDs = append(unprocessedIDs, id)
 			}
 
-			// For now return if this does happen so we can figure out why, and
-			// fix. Probably would be better than continuing as it may happen again...
-			return errors.New("unprocessed items")
+			if retries > maxRetries {
+				slog.Warn("unprocessed items", slog.Any("ids", unprocessedIDs))
+				return fmt.Errorf("max retries: still have %d unprocessed items", len(unprocessedItems))
+			} else {
+				slog.Warn("reprocessing unprocessed items", slog.Any("ids", unprocessedIDs))
+			}
+
+			output, err = dynamodbClient.BatchWriteItem(ctx, unprocessedItems)
+			if err != nil {
+				return fmt.Errorf("retry (%d) batch write item: %w", retries, err)
+			}
+
+			unprocessedItems = dynamodbClient.UnprocessedItems(output)
 		}
 	}
 	slog.Info("processed file", slog.String("key", key))

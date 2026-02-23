@@ -48,10 +48,10 @@ class AuthorisationClientManager
             ->setCacheTtl(self::CACHE_TTL);
 
         $cachedProvider = new JwksProviderBuilder();
-        $cachedProvider
-            ->setHttpClient($this->httpClient)
-            ->setCache(($this->cacheFactory)('one-login'))
-            ->setCacheTtl(self::CACHE_TTL);
+        $cachedProvider = $cachedProvider
+            ->withHttpClient($this->httpClient)
+            ->withCache(($this->cacheFactory)('one-login'))
+            ->withCacheTtl(self::CACHE_TTL);
 
         $issuer = $this->issuerBuilder
             ->setMetadataProviderBuilder($cachedBuilder)
@@ -66,7 +66,7 @@ class AuthorisationClientManager
         );
 
         $jwksProvider = new JwksProviderBuilder();
-        $jwksProvider->setJwks(
+        $jwksProvider = $jwksProvider->withJwks(
             [
                 'keys' => [($this->jwkFactory)($this->keyPairManager)->jsonSerialize()],
             ],

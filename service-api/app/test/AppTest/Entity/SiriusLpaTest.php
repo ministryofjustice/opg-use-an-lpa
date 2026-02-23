@@ -34,6 +34,7 @@ class SiriusLpaTest extends TestCase
                     addressLine1: null,
                     addressLine2: null,
                     addressLine3: null,
+                    cannotMakeJointDecisions: true,
                     country:      null,
                     county:       null,
                     dob:          new DateTimeImmutable(

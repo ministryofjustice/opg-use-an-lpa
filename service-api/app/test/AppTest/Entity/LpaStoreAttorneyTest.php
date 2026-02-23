@@ -17,6 +17,7 @@ class LpaStoreAttorneyTest extends TestCase
             line1:        null,
             line2:        null,
             line3:        null,
+            cannotMakeJointDecisions: null,
             country:      null,
             county:       null,
             dateOfBirth:  null,

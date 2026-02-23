@@ -10,169 +10,104 @@
     </div>
 
     {{if .Result}}
-        <table class="govuk-table">
-            <thead class="govuk-table__header">
+      <table class="govuk-table">
+        <thead class="govuk-table__header">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Category: Account</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Accounts created</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Accounts deleted</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">LPAs added</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Property and Finance LPA added</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Health and Welfare LPA added</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">LPAs deleted</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {{ range $k, $_ := .Result }}
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Category: Account</th>
-                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
-                <th scope="col" class="govuk-table__header">Current month - Current year</th>
-                <th scope="col" class="govuk-table__header">Total</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Accounts created</th>
-                {{range .Result}}
-                    {{ $accounts_created := add .account_created_event .auth_onelogin_account_created_event }}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_created }}</td>
-                {{end}}
-            </tr>
+              <th scope="row" class="govuk-table__header">{{ readableMonth $k }}</th>
 
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Accounts deleted</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .account_deleted_event }}</td>
-                {{end}}
+              {{ $accounts_created := add .account_created_event .auth_onelogin_account_created_event }}
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_created }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .account_deleted_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpas_added }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_pfa_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_hw_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpa_removed_event }}</td>
             </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">LPAs added</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpas_added }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Property and Finance LPA added</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_pfa_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Health and Welfare LPA added</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .added_lpa_type_hw_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">LPAs deleted</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .lpa_removed_event }}</td>
-                {{end}}
-            </tr>
-            </tbody>
-        </table>
+          {{ end }}
+        </tbody>
+      </table>
 
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
+      <table class="govuk-table">
+        <thead class="govuk-table__header">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Category: Activation keys</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Activation key requested</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Key requested for Property and Finance</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Key requested for Health and Welfare</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Key requested for overseas</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">LPAs submitted for cleansing</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {{ range $k, $_ := .Result }}
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Category: Activation keys</th>
-                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
-                <th scope="col" class="govuk-table__header">Current month - Current year</th>
-                <th scope="col" class="govuk-table__header">Total</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Activation key requested</th>
-                {{range .Result}}
-                    {{ $accounts_activated := add .older_lpa_needs_cleansing_event .older_lpa_force_activation_key_event .older_lpa_success_event .oolpa_key_requested_for_donor_event .oolpa_key_requested_for_attorney_event}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_activated }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Key requested for Property and Finance</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_pfa_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Key requested for Health and Welfare</th>
-                {{range .Result }}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_hw_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Key requested for overseas</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .user_abroad_address_request_success_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">LPAs submitted for cleansing</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .older_lpa_needs_cleansing_event }}</td>
-                {{end}}
-            </tr>
-            </tbody>
-        </table>
+              <th scope="row" class="govuk-table__header">{{ readableMonth $k }}</th>
 
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Category: Access codes</th>
-                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
-                <th scope="col" class="govuk-table__header">Current month - Current year</th>
-                <th scope="col" class="govuk-table__header">Total</th>
+              {{ $accounts_activated := add .older_lpa_needs_cleansing_event .older_lpa_force_activation_key_event .older_lpa_success_event .oolpa_key_requested_for_donor_event .oolpa_key_requested_for_attorney_event}}
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" $accounts_activated }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_pfa_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .full_match_key_request_success_lpa_type_hw_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .user_abroad_address_request_success_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .older_lpa_needs_cleansing_event }}</td>
             </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Number of Access codes created</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_created }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Number of access code views</th>
-                {{ range .Result }}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_viewed }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Number of unique access code views</th>
-                {{ range .Result }}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_unique_codes_viewed }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Number of access codes viewed expired</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_expired_event }}</td>
-                {{end}}
-            </tr>
-            <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Number of Access codes cancelled</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_cancelled_event }}</td>
-                {{end}}
-            </tr>
-            </tbody>
-        </table>
+          {{ end }}
+        </tbody>
+      </table>
 
-        <table class="govuk-table">
-            <thead class="govuk-table__head">
+      <table class="govuk-table">
+        <thead class="govuk-table__header">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Category: Access codes</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Number of access codes created</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Number of access code views</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Number of unique access code views</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Number of access codes viewed expired</th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Number of access codes cancelled</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {{ range $k, $_ := .Result }}
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header"> </th>
-                <th scope="col" class="govuk-table__header">3 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">2 months previous - Current year</th>
-                <th scope="col" class="govuk-table__header">Previous month - Current year</th>
-                <th scope="col" class="govuk-table__header">Current month - Current year</th>
-                <th scope="col" class="govuk-table__header">Total</th>
+              <th scope="row" class="govuk-table__header">{{ readableMonth $k }}</th>
+
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_created }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_codes_viewed }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .viewer_unique_codes_viewed }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_expired_event }}</td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .view_lpa_share_code_cancelled_event }}</td>
             </tr>
-            </thead>
-            <tbody class="govuk-table__body">
+          {{ end }}
+        </tbody>
+      </table>
+
+      <table class="govuk-table">
+        <thead class="govuk-table__header">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header"> </th>
+            <th scope="col" class="govuk-table__header govuk-table__cell--numeric">Download summary</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {{ range $k, $_ := .Result }}
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">Download Summary</th>
-                {{range .Result}}
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .download_summary_event }}</td>
-                {{end}}
+              <th scope="row" class="govuk-table__header">{{ readableMonth $k }}</th>
+
+              <td class="govuk-table__cell govuk-table__cell--numeric">{{ printf "%.0f" .download_summary_event }}</td>
             </tr>
-            </tbody>
-        </table>
+          {{ end }}
+        </tbody>
+      </table>
     {{end}}
 {{end}}

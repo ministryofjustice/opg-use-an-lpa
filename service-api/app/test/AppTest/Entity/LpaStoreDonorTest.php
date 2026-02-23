@@ -17,6 +17,7 @@ class LpaStoreDonorTest extends TestCase
             line1:             null,
             line2:             null,
             line3:             null,
+            cannotMakeJointDecisions: true,
             country:           null,
             county:            null,
             dateOfBirth:       null,
