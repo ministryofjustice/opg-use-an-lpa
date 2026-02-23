@@ -28,6 +28,8 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('addressLine3')]
         ?string $addressLine3,
+        #[MapFrom('cannotMakeJointDecisions')]
+        ?bool $cannotMakeJointDecisions,
         #[MapFrom('addresses')]
         #[ExtractAddressFieldFrom('country')]
         ?string $country,
@@ -55,21 +57,22 @@ class SiriusLpaAttorney extends Person implements ActorMatchingInterface, AddAcc
         ?string $uId,
     ) {
         parent::__construct(
-            addressLine1: $addressLine1,
-            addressLine2: $addressLine2,
-            addressLine3: $addressLine3,
-            country:      $country,
-            county:       $county,
-            dob:          $dob,
-            email:        $email,
-            firstnames:   isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
-            name:         null,
-            otherNames:   $otherNames,
-            postcode:     $postcode,
-            surname:      $surname,
-            systemStatus: $systemStatus,
-            town:         $town,
-            uId:          $uId,
+            addressLine1:               $addressLine1,
+            addressLine2:               $addressLine2,
+            addressLine3:               $addressLine3,
+            cannotMakeJointDecisions:   $cannotMakeJointDecisions,
+            country:                    $country,
+            county:                     $county,
+            dob:                        $dob,
+            email:                      $email,
+            firstnames:                 isset($firstname) ? trim(sprintf('%s %s', $firstname, $middlenames)) : null,
+            name:                       null,
+            otherNames:                 $otherNames,
+            postcode:                   $postcode,
+            surname:                    $surname,
+            systemStatus:               $systemStatus,
+            town:                       $town,
+            uId:                        $uId
         );
     }
 

@@ -72,54 +72,131 @@
     </div>
 </dl>
 
-{% if not is_sirius_lpa(lpa.Uid) %}
-    {% if lpa.caseAttorneyJointlyAndJointlyAndSeverally %}
-        <div class="govuk-inset-text govuk-!-margin-top-0 govuk-!-padding-right-0">
+{% set attorneys = lpa.attorneys|default([]) %}
+{% set trustCorps = lpa.trustCorporations|default([]) %}
+{% set everyone = attorneys|merge(trustCorps) %}
+
+{# Joint decision makers are those who can make joint decisions #}
+{% set jointDecisionMakers = everyone|filter(p => p.cannotMakeJointDecisions is null or p.cannotMakeJointDecisions is not same as(true)) %}
+
+{# Are all attorneys able to make joint decisions? #}
+{% set all_can_make_joint_decisions = (jointDecisionMakers|length == everyone|length) %}
+
+{% if lpa.caseAttorneyJointlyAndJointlyAndSeverally and not is_sirius_lpa(lpa.Uid) %}
+    <dl class="govuk-summary-list govuk-summary-list--no-border">
+    <div class="govuk-inset-text govuk-!-margin-top-0">
+        <dt class="govuk-summary-list__key">
             <h3 class="govuk-heading-s">
                 {% trans %}Decisions to be made jointly{% endtrans %}
             </h3>
+        </dt>
 
-            {% if lpa.howAttorneysMakeDecisionsDetailsImages is not empty %}
-                {% for image in lpa.howAttorneysMakeDecisionsDetailsImages %}
-                    {% if image.path is not empty %}
-                        <div class="opg-lpa__document-extract">
-                            <img class="opg-ip__image" src="{{ image.path }}"
-                                 alt="{% trans %}A scanned copy of the donor’s joint decisions - the text cannot be digitised at present{% endtrans %}">
-                        </div>
+        {# Scenario1: This if covers scenario1 to check if all attorneys can make join decisions#}
+        {% if not all_can_make_joint_decisions %}
+            <dd class="govuk-summary-list__value">
+                {# Scenario 2: Cannot make joint decision true for all attorneys/tc, where multiple attorneys #}
+                {% if jointDecisionMakers|length == 0 %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}There are no longer attorneys who can make the joint decisions on this LPA.{% endtrans %}</p>
+
+                    {% if everyone|length == 1 %}
+                        <p>{% trans %}All other decisions can still be made by:{% endtrans %}</p>
+                    {% else %}
+                        <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
                     {% endif %}
-                {% endfor %}
-            {% else %}
-                <div class="govuk-body opg-lpa__document-extract">
-                    <p class="govuk-body govuk-!-margin-2">
-                        {{ lpa.howAttorneysMakeDecisionsDetails }}
+
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>
+                    {% trans %}
+                        The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG.
+                    {% endtrans %}
                     </p>
-                </div>
-            {% endif %}
-        </div>
-    {% endif %}
+                {# SCENARIO 4: Cannot make joint decision false for one attorney, where multiple attorneys #}
+                {% elseif jointDecisionMakers|length == 1 %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}The joint decisions for this LPA can now only be made by:{% endtrans %}</p>
+                    <ul>
+                        {% set p = jointDecisionMakers|first %}
+                        <li>{{ actor_name(p) }}</li>
+                    </ul>
+
+                    <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian.{% endtrans %}</p>
+                {# Scenario 3: Cannot make joint decision false for multiple attorneys but not all attorneys can make joint decisions #}
+                {% else %}
+                    <p>{% trans %}Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced.{% endtrans %}</p>
+                    <p>{% trans %}The joint decisions for this LPA can now only be made, and must be agreed, by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in jointDecisionMakers %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}All other decisions can still be made jointly and severally by:{% endtrans %}</p>
+                    <ul>
+                        {% for person in everyone %}
+                            <li>{{ actor_name(person) }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p>{% trans %}The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian.{% endtrans %}</p>
+                {% endif %}
+            </dd>
+        {% endif %}
+
+
+        {% if lpa.howAttorneysMakeDecisionsDetailsImages is not empty %}
+            {% for image in lpa.howAttorneysMakeDecisionsDetailsImages %}
+                {% if image.path is not empty %}
+                    <div class="opg-lpa__document-extract">
+                        <img class="opg-ip__image" src="{{ image.path }}"
+                                 alt="{% trans %}A scanned copy of the donor’s joint decisions - the text cannot be digitised at present{% endtrans %}">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="govuk-body opg-lpa__document-extract">
+                <p class="govuk-body govuk-!-margin-2">
+                    {{ lpa.howAttorneysMakeDecisionsDetails }}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+    </dl>
+{% endif %}
 
     <dl class="govuk-summary-list govuk-summary-list--no-border">
-        {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty %}
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key"
-                    id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
-                <dd class="govuk-summary-list__value">{% trans %}Yes, the donor added restrictions and conditions to their LPA{% endtrans %}</dd>
-            </div>
-        {% else %}
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
-                <dd class="govuk-summary-list__value">{% trans %}No, the donor did not add restrictions and conditions to their LPA{% endtrans %}</dd>
-            </div>
+        {% if not is_sirius_lpa(lpa.Uid) %}
+            {% if lpa.restrictionsAndConditions is not empty or lpa.restrictionsAndConditionsImages is not empty %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key"
+                        id="restrictions-and-conditions-label">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">{% trans %}Yes, the donor added restrictions and conditions to their LPA{% endtrans %}</dd>
+                </div>
+            {% else %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{% trans %}Restrictions and Conditions{% endtrans %}</dt>
+                    <dd class="govuk-summary-list__value">{% trans %}No, the donor did not add restrictions and conditions to their LPA{% endtrans %}</dd>
+                </div>
+            {% endif %}
         {% endif %}
     </dl>
 
-    {% if lpa.restrictionsAndConditions is not empty %}
-        <div class="govuk-grid-row opg-lpa__document-extract" aria-labelledby="restrictions-and-conditions-label">
-            <p class="govuk-body govuk-!-margin-2">
-                {{ lpa.restrictionsAndConditions }}
-            </p>
-        </div>
-    {% elseif lpa.restrictionsAndConditionsImages is not empty %}
+    {% if not is_sirius_lpa(lpa.Uid) %}
+        {% if lpa.restrictionsAndConditions is not empty %}
+            <div class="govuk-grid-row opg-lpa__document-extract" aria-labelledby="restrictions-and-conditions-label">
+                <p class="govuk-body govuk-!-margin-2">
+                    {{ lpa.restrictionsAndConditions }}
+                </p>
+            </div>
+        {% elseif lpa.restrictionsAndConditionsImages is not empty %}
             {% for image in lpa.restrictionsAndConditionsImages %}
                 {% if image.path is not empty %}
                     <div class="opg-lpa__document-extract" aria-labelledby="restrictions-and-conditions-label">
@@ -128,8 +205,8 @@
                     </div>
                 {% endif %}
             {% endfor %}
+        {% endif %}
     {% endif %}
-{% endif %}
 
 {% if lpa.applicationHasGuidance or lpa.applicationHasRestrictions %}
     {% if lpa.hasSeveranceWarning %}

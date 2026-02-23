@@ -8,6 +8,7 @@ value:
         addressLine1: 81 NighOnTimeWeBuiltIt Street
         addressLine2: null
         addressLine3: null
+        cannotMakeJointDecisions: false
         country: GB
         county: null
         dob: 1982-07-24
@@ -30,6 +31,7 @@ value:
         - addressLine1: 81 NighOnTimeWeBuiltIt Street
           addressLine2: null
           addressLine3: null
+          cannotMakeJointDecisions: false
           country: GB
           county: null
           dob: '1982-07-24'

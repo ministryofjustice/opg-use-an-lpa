@@ -23,6 +23,8 @@ class LpaStoreDonor extends Person implements ActorMatchingInterface
         #[MapFrom('address')]
         #[ExtractAddressFieldFrom('line3')]
         ?string $line3,
+        #[MapFrom('cannotMakeJointDecisions')]
+        ?bool $cannotMakeJointDecisions,
         #[MapFrom('address')]
         #[ExtractAddressFieldFrom('country')]
         ?string $country,
@@ -43,21 +45,22 @@ class LpaStoreDonor extends Person implements ActorMatchingInterface
         ?string $uId,
     ) {
         parent::__construct(
-            addressLine1: $line1,
-            addressLine2: $line2,
-            addressLine3: $line3,
-            country:      $country,
-            county:       $county,
-            dob:          $dateOfBirth,
-            email:        $email,
-            firstnames:   $firstNames,
-            name:         null,
-            otherNames:   $otherNamesKnownBy,
-            postcode:     $postcode,
-            surname:      $lastName,
-            systemStatus: null,
-            town:         $town,
-            uId:          $uId,
+            addressLine1:               $line1,
+            addressLine2:               $line2,
+            addressLine3:               $line3,
+            cannotMakeJointDecisions:   $cannotMakeJointDecisions,
+            country:                    $country,
+            county:                     $county,
+            dob:                        $dateOfBirth,
+            email:                      $email,
+            firstnames:                 $firstNames,
+            name:                       null,
+            otherNames:                 $otherNamesKnownBy,
+            postcode:                   $postcode,
+            surname:                    $lastName,
+            systemStatus:               null,
+            town:                       $town,
+            uId:                        $uId
         );
     }
 

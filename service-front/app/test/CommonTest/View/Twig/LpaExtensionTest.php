@@ -109,6 +109,7 @@ class LpaExtensionTest extends TestCase
             addressLine1: 'Street 1',
             addressLine2: 'Street 2',
             addressLine3: 'Street 3',
+            cannotMakeJointDecisions: true,
             country: 'Country',
             county: 'County',
             dob: new DateTimeImmutable('22-12-1997'),
