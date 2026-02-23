@@ -381,16 +381,16 @@
         },
         {
             "name": "elie29/zend-phpdi-config",
-            "version": "v10.0.2",
+            "version": "v10.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/elie29/zend-di-config.git",
-                "reference": "f1d613cda3f5588972c4daad3aacfc48d063275d"
+                "reference": "c58df38e6f865508b5b8cb02e31c3a8ae4ab13ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/elie29/zend-di-config/zipball/f1d613cda3f5588972c4daad3aacfc48d063275d",
-                "reference": "f1d613cda3f5588972c4daad3aacfc48d063275d",
+                "url": "https://api.github.com/repos/elie29/zend-di-config/zipball/c58df38e6f865508b5b8cb02e31c3a8ae4ab13ef",
+                "reference": "c58df38e6f865508b5b8cb02e31c3a8ae4ab13ef",
                 "shasum": ""
             },
             "require": {
@@ -438,20 +438,20 @@
                 "issues": "https://github.com/elie29/zend-di-config/issues",
                 "source": "https://github.com/elie29/zend-di-config"
             },
-            "time": "2026-01-03T14:44:42+00:00"
+            "time": "2026-02-09T08:32:28+00:00"
         },
         {
             "name": "eventsauce/object-hydrator",
-            "version": "1.7.0",
+            "version": "1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EventSaucePHP/ObjectHydrator.git",
-                "reference": "dce7a268e6cae58640acc1e43b703a498af65bfe"
+                "reference": "29f66149d2b0c57f356ad4fa6dd5f88821d04d9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EventSaucePHP/ObjectHydrator/zipball/dce7a268e6cae58640acc1e43b703a498af65bfe",
-                "reference": "dce7a268e6cae58640acc1e43b703a498af65bfe",
+                "url": "https://api.github.com/repos/EventSaucePHP/ObjectHydrator/zipball/29f66149d2b0c57f356ad4fa6dd5f88821d04d9f",
+                "reference": "29f66149d2b0c57f356ad4fa6dd5f88821d04d9f",
                 "shasum": ""
             },
             "require": {
@@ -460,7 +460,7 @@
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.4",
-                "league/construct-finder": "^1.1",
+                "league/construct-finder": "^1.6",
                 "phpbench/phpbench": "^1.2",
                 "phpstan/phpstan": "^1.7",
                 "phpunit/phpunit": "^9.5.11",
@@ -494,7 +494,7 @@
             ],
             "support": {
                 "issues": "https://github.com/EventSaucePHP/ObjectHydrator/issues",
-                "source": "https://github.com/EventSaucePHP/ObjectHydrator/tree/1.7.0"
+                "source": "https://github.com/EventSaucePHP/ObjectHydrator/tree/1.8.0"
             },
             "funding": [
                 {
@@ -502,7 +502,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-26T19:49:21+00:00"
+            "time": "2026-02-13T21:06:58+00:00"
         },
         {
             "name": "facile-it/php-jose-verifier",
