@@ -21,7 +21,6 @@ use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\AddLpaApiResult;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\LpaTypeResolver;
 use Common\Service\Security\RateLimitService;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
@@ -37,6 +36,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Common\Service\Features\FeatureEnabled;
+use Actor\Handler\ResolveLpaType\LpaTypeResolverTrait;
 
 /**
  * @codeCoverageIgnore
@@ -48,6 +48,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     use SessionTrait;
     use State;
     use User;
+    use LpaTypeResolverTrait;
 
     public const ADD_LPA_FLASH_MSG = 'add_lpa_flash_msg';
 
@@ -66,7 +67,6 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
         private TranslatorInterface $translator,
         private AddLpa $addLpa,
         private FeatureEnabled $featureEnabled,
-        private LpaTypeResolver $lpaTypeResolver,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -192,7 +192,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                 );
 
                 $caseSubtype = strtolower($lpa->getCaseSubtype());
-                $label       = $this->lpaTypeResolver->resolveLabel(
+                $label       = $this->resolveLabel(
                     $caseSubtype,
                     $lpa->getUId()
                 );
@@ -256,7 +256,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
                         'Account with Id {id} added LPA of type {lpaType} to their account',
                         [
                             'id'         => $this->identity,
-                            'event_code' => $this->lpaTypeResolver->resolveEventCode($caseSubtype),
+                            'event_code' => $this->resolveEventCode($caseSubtype),
                         ]
                     );
 

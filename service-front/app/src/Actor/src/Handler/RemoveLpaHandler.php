@@ -15,7 +15,6 @@ use Common\Handler\Traits\User;
 use Common\Handler\UserAware;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Lpa\RemoveLpa;
-use Common\Service\Lpa\LpaTypeResolver;
 use Exception;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
@@ -26,6 +25,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
+use Actor\Handler\ResolveLpaType\LpaTypeResolverTrait;
 
 /**
  * @codeCoverageIgnore
@@ -34,6 +34,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 {
     use CsrfGuard;
     use User;
+    use LpaTypeResolverTrait;
 
     public const REMOVE_LPA_FLASH_MSG = 'remove_lpa_flash_msg';
 
@@ -45,7 +46,6 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         UrlHelper $urlHelper,
         LoggerInterface $logger,
         private RemoveLpa $removeLpa,
-        private LpaTypeResolver $lpaTypeResolver,
         private TranslatorInterface $translator,
         private LpaService $lpaService,
     ) {
@@ -88,14 +88,13 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
         $this->form->setData(['actor_lpa_token' => $actorLpaToken]);
 
         if (!empty($lpaData['lpa'])) {
-            $label = $this->lpaTypeResolver->resolveLabel(
+            $lpaType = $this->resolveLabel(
                 $lpaData['lpa']->getCaseSubtype(),
                 $lpaData['lpa']->getUId()
             );
         } else {
             throw new BadRequestException('Lpa to remove cannot be found');
         }
-        $lpaType = $this->translator->translate($label);
 
         return new HtmlResponse($this->renderer->render('actor::confirm-remove-lpa', [
             'user'       => $this->user,
@@ -122,11 +121,10 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
             //data to be used in flash message
             $donor = $removedLpaData['lpa']['donor']['firstnames'] . ' ' . $removedLpaData['lpa']['donor']['surname'];
 
-            $label   = $this->lpaTypeResolver->resolveLabel(
+            $lpaType = $this->resolveLabel(
                 $removedLpaData['lpa']['caseSubtype'],
                 $removedLpaData['lpa']['lpaReference'] ?? ''
             );
-            $lpaType = $this->translator->translate($label, [], null, 'flashMessage');
 
             $message = $this->translator->translate(
                 "You've removed %donor%'s %lpaType% LPA",

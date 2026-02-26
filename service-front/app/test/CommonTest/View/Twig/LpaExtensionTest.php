@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Acpr\I18n\Translator;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -17,14 +18,21 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
+use Acpr\I18n\TranslatorInterface;
 
 class LpaExtensionTest extends TestCase
 {
     private LpaDataFormatter $lpaDataFormatter;
+    private TranslatorInterface $translator;
 
     public function setUp(): void
     {
         $this->lpaDataFormatter = new LpaDataFormatter();
+
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->translator
+            ->method('translate')
+            ->willReturnCallback(fn (string $message) => $message);
     }
 
     #[Test]
@@ -594,7 +602,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_returns_correct_lpa_display_type_from_values(string $uid, string $subtype, string $expected): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $result = $extension->lpaDisplayTypeFromValues($uid, $subtype);
 

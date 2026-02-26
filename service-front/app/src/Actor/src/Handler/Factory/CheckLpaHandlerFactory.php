@@ -7,7 +7,6 @@ namespace Actor\Handler\Factory;
 use Actor\Handler\CheckLpaHandler;
 use Common\Service\Lpa\AddLpa;
 use Common\Service\Lpa\LpaService;
-use Common\Service\Lpa\LpaTypeResolver;
 use Common\Service\Security\RateLimitServiceFactory;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Template\TemplateRendererInterface;
@@ -31,7 +30,6 @@ class CheckLpaHandlerFactory
             $container->get(TranslatorInterface::class),
             $container->get(AddLpa::class),
             $container->get(FeatureEnabled::class),
-            $container->get(LpaTypeResolver::class),
         );
     }
 }

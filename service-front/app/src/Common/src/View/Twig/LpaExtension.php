@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Common\View\Twig;
 
-use BackedEnum;
 use Common\Entity\Person;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -264,9 +263,13 @@ class LpaExtension extends AbstractExtension
         $subtype = strtolower($subtype);
 
         if ($subtype === 'pfa') {
-            return $isSirius ? 'Property and finance' : 'Property and affairs';
+            return $isSirius
+                ? $this->translator->translate('Property and finance')
+                : $this->translator->translate('Property and affairs');
         }
 
-        return $isSirius ? 'Health and welfare' : 'Personal welfare';
+        return $isSirius
+            ? $this->translator->translate('Health and welfare')
+            : $this->translator->translate('Personal welfare');
     }
 }
