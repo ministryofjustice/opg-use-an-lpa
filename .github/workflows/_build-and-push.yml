@@ -26,6 +26,11 @@ on:
         required: false
         default: "all"
         type: string
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
     outputs:
       matrix_job_names:
         value: ${{ jobs.docker_build_scan_push.outputs.matrix_job_names }}

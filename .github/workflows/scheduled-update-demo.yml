@@ -28,14 +28,19 @@ jobs:
       terraform_path: environment
       apply: true
       specific_path: terraform
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   seed_dynamodb:
     name: seed dynamodb
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_environment
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
       workspace: demo
 

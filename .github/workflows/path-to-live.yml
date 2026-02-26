@@ -83,7 +83,10 @@ jobs:
       - workflow_variables
     with:
       workspace: development
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -121,7 +124,9 @@ jobs:
       branch_name: main
       push_to_ecr: true
       specific_path: all
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
@@ -137,7 +142,8 @@ jobs:
       - workflow_variables
     with:
       specific_path: 'all'
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   terraform_apply_shared_development:
     name: terraform apply shared development
@@ -150,7 +156,10 @@ jobs:
       terraform_path: account
       apply: true
       specific_path: all
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_shared_preproduction:
     name: terraform apply shared preproduction
@@ -162,7 +171,10 @@ jobs:
       terraform_path: account
       apply: true
       specific_path: all
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_preproduction:
     name: terraform apply preproduction
@@ -176,14 +188,19 @@ jobs:
       container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   seed_dynamodb_preproduction:
     name: seed dynamodb in preproduction
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_preproduction
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
       workspace: preproduction
 
@@ -194,7 +211,12 @@ jobs:
       - seed_dynamodb_preproduction
     with:
       workspace: preproduction
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+      ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
+      ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
 
   terraform_apply_shared_production:
     name: terraform apply shared production
@@ -206,7 +228,10 @@ jobs:
       terraform_path: account
       apply: true
       specific_path: all
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_production:
     name: terraform apply production
@@ -221,7 +246,10 @@ jobs:
       apply: true
       specific_path: all
       extra_vars: "-var public_access_enabled=true"
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   production_health_check:
     name: health check production
