@@ -99,7 +99,10 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ inputs.terraform_workspace }}
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success'
@@ -136,7 +139,9 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.parsed_branch }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     if: |
       always() &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
@@ -151,7 +156,8 @@ jobs:
     needs:
       - docker_build_scan_push
       - workflow_variables
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     if: |
       always() &&
       ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
@@ -166,7 +172,10 @@ jobs:
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       apply: true
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.terraform_lint.result == 'success'
@@ -186,7 +195,10 @@ jobs:
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
       extra_vars: "-var public_access_enabled=${{ inputs.public_access_enabled }}"
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.terraform_lint.result == 'success' &&
@@ -199,7 +211,9 @@ jobs:
     needs:
       - terraform_apply_environment
       - terraform_apply_shared_development
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
       workspace: ${{ inputs.terraform_workspace }}
     if: |
@@ -215,7 +229,12 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ inputs.terraform_workspace }}
-    secrets: inherit
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+      ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
+      ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&

@@ -5,6 +5,13 @@ on:
     # 6am and 6pm every day except Sundays
     - cron: '0 6,18 * * 0-6'
   workflow_call:
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
+        required: true
 
 permissions:
   contents: read

@@ -11,6 +11,17 @@ on:
         description: 'Terraform workspace'
         required: true
         type: string
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
+      ONE_LOGIN_OTP_SECRET:
+        required: true
+      ONE_LOGIN_CREDENTIALS:
+        required: true
+      ONE_LOGIN_USER_PASSWORD:
+        required: true
 
 jobs:
   build-web:
