@@ -537,6 +537,62 @@ class CombinedLpaManagerTest extends TestCase
         );
     }
 
+    /**
+     * UML-4260 The recorded actor is not resolvable (may have been removed from LPA)
+     */
+    #[Test]
+    public function can_get_by_user_lpa_actor_token_sirius_when_actor_is_now_unresolvable()
+    {
+        $testLpaToken = 'token-1';
+        $testUserId   = 'userId-1';
+
+        $siriusLpaResponse = new Lpa(
+            $this->loadTestSiriusLpaFixture(),
+            new DateTimeImmutable('now'),
+        );
+
+        $userLpaActorMapResponse = [
+            'Id'         => $testLpaToken,
+            'UserId'     => $testUserId,
+            'SiriusUid'  => $siriusLpaResponse->getData()->uId,
+            'ActorId'    => $siriusLpaResponse->getData()->attorneys[0]->uId,
+            'ActivateBy' => (new DateTimeImmutable('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
+            'Added'      => (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM),
+            'DueBy'      => (new DateTimeImmutable('now +1 month'))->format(DateTimeInterface::ATOM),
+        ];
+
+        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesProphecy
+            ->__invoke([$userLpaActorMapResponse])
+            ->willReturn(
+                [
+                    [$siriusLpaResponse->getData()->uId],
+                    [],
+                ]
+            );
+        $this->siriusLpasProphecy
+            ->get($siriusLpaResponse->getData()->uId ?? '')
+            ->willReturn($siriusLpaResponse);
+        $this->filterActiveActorsProphecy
+            ->__invoke($siriusLpaResponse->getData())
+            ->willReturn($siriusLpaResponse->getData());
+        $this->resolveActorProphecy
+            ->__invoke(
+                $siriusLpaResponse->getData(),
+                $userLpaActorMapResponse['ActorId'],
+            )->willReturn(null);
+        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
+
+        $service = $this->getLpaService();
+        $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
+
+        $this->assertEquals($siriusLpaResponse->getData(), $result->lpa);
+        $this->assertEquals(
+            $siriusLpaResponse->getLookupTime()->format(DateTimeInterface::ATOM),
+            $result->lookupDateTime->format(DateTimeInterface::ATOM)
+        );
+    }
+
     #[Test]
     public function get_by_user_lpa_actor_token_sirius_returns_throws_exception_when_user_not_match()
     {

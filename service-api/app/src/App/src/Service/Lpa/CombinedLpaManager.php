@@ -96,9 +96,11 @@ class CombinedLpaManager implements LpaManagerInterface
         }
 
         // If an actor has been stored against an LPA then attempt to resolve it from the API return
-        if (isset($lpaActorMap['ActorId'])) {
-            // If an active attorney is not found then this is null
-            $result = $result->withActor(($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId']));
+        if (
+            isset($lpaActorMap['ActorId'])
+            && ($actor = ($this->resolveActor)($lpaData, (string) $lpaActorMap['ActorId'])) !== null
+        ) {
+            $result = $result->withActor($actor);
         }
 
         // Extract and return only LPAs where status is Registered or Cancelled
