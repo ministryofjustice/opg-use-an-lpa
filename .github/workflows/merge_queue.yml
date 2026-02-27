@@ -1,4 +1,4 @@
-name: "[Workflow] Path to live"
+name: "[Merge Queue] Preproduction Integration"
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -8,9 +8,8 @@ defaults:
     shell: bash
 
 on:
-  push:
-    branches:
-      - 'main'
+  merge_group:
+    types: [checks_requested]
 
 permissions:
   contents: read
@@ -33,10 +32,13 @@ jobs:
       contents: write
     outputs:
       short_sha:  ${{ steps.variables.outputs.short_sha }}
-      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
+      semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: get changed docs files in any folder
         id: changed-files-docs
@@ -56,24 +58,13 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/semver@e3177e63e9f2951dd3f1f7c7aa093918a5a0794a # v4.3.6
         id: semver_tag
         with:
-          with_v: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          create_release: false
           default_bump: minor
-          prerelease: false
-        if: ${{ steps.changed-files-docs.outputs.path != 'docs' }}
-
-  update_documentation:
-    name: update documentation
-    runs-on: ubuntu-latest
-    needs:
-      - workflow_variables
-    steps:
-      - name: only update documentation
-        run: echo 'Only docs have changed - skipping rest of pipeline'
-    if: |
-      needs.workflow_variables.outputs.specific_path == 'docs'
 
   terraform_lint:
     name: lint terraform code
@@ -81,7 +72,7 @@ jobs:
     needs:
       - workflow_variables
     with:
-      workspace: development
+      workspace: preproduction
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -119,8 +110,8 @@ jobs:
       - node_test
       - node_build
     with:
-      tag: main-${{ needs.workflow_variables.outputs.semver_tag }}
-      branch_name: main
+      tag: integration-${{ needs.workflow_variables.outputs.semver_tag }}
+      branch_name: ${{ github.ref_name }}
       push_to_ecr: true
       specific_path: all
     secrets:
@@ -144,128 +135,93 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
-  terraform_apply_shared_development:
-    name: terraform apply shared development
+  terraform_apply_shared_preproduction:
+    name: terraform apply shared preproduction
+    uses: ./.github/workflows/_run-terraform.yml
+    with:
+      workspace: preproduction
+      terraform_path: account
+      apply: true
+      specific_path: all
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
+  terraform_apply_preproduction:
+    name: terraform apply preproduction
     uses: ./.github/workflows/_run-terraform.yml
     needs:
+      - terraform_apply_shared_preproduction
+      - workflow_variables
       - docker_build_scan_push
-      - terraform_lint
     with:
-      workspace: development
-      terraform_path: account
-      apply: true
-      specific_path: all
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
-  terraform_apply_shared_production:
-    name: terraform apply shared production
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_shared_development
-    with:
-      workspace: production
-      terraform_path: account
-      apply: true
-      specific_path: all
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
-  terraform_apply_production:
-    name: terraform apply production
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_shared_production
-      - workflow_variables
-    with:
-      workspace: production
+      workspace: preproduction
       terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
+      container_version: preproduction-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
       specific_path: all
-      extra_vars: "-var public_access_enabled=true"
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
-  production_health_check:
-    name: health check production
-    runs-on: ubuntu-latest
+  seed_dynamodb_preproduction:
+    name: seed dynamodb in preproduction
+    uses: ./.github/workflows/_seed-database.yml
     needs:
-      - terraform_apply_production
-    steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-        with:
-          fetch-depth: '0'
-      - name: download cluster_config
-        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
-        with:
-          name: environment_config_file_production
-          path: terraform/environment
-      - name: workflow has ended without issue
-        run: |
-          viewer_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_view_fqdn | xargs)
-          viewer_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$viewer_fqdn/healthcheck)
-          [[ $viewer_response == 200 ]] || (echo "Error with Viewer health check. HTTP status: ${viewer_response}" && exit 1)
-
-          use_fqdn=$(cat ./terraform/environment/cluster_config.json | jq .public_facing_use_fqdn | xargs)
-          use_response=$(curl --write-out %{http_code} --silent --output /dev/null https://$use_fqdn/healthcheck)
-          [[ $use_response == 200 ]] || (echo "Error with Use health check. HTTP status: ${use_response}" && exit 1)
-
-  slack_notify_documentation_update:
-    name: notify documentation update
-    uses: ./.github/workflows/_slack-notification.yml
-    needs:
-      - update_documentation
-      - workflow_variables
-    with:
-      template: documentation_update.txt
-      documentation_update: ${{ needs.update_documentation.result }}
-      workspace: production
+      - terraform_apply_preproduction
     secrets:
-      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: needs.workflow_variables.outputs.specific_path == 'docs'
-
-  slack_notify:
-    name: notify of result
-    uses: ./.github/workflows/_slack-notification.yml
-    needs:
-      - production_health_check
-      - slack_notify_documentation_update
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
-      template: production_release.txt
-      workflow_status: ${{ needs.production_health_check.result }}
-      workspace: production
+      workspace: preproduction
+
+  run_behat_suite_preproduction:
+    name: run behat tests against preproduction
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb_preproduction
+    with:
+      workspace: preproduction
     secrets:
-      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: ${{ always() && needs.slack_notify_documentation_update.result == 'skipped' }}
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+      ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
+      ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
 
   # Required end of workflow job
   end_of_workflow:
-    name: end of workflow
+    name: End of Workflow
     runs-on: ubuntu-latest
     needs:
       - workflow_variables
-      - slack_notify
-      - slack_notify_documentation_update
+      - terraform_lint
+      - node_test
+      - node_build
+      - docker_build_scan_push
+      - terraform_apply_shared_preproduction
+      - terraform_apply_preproduction
+      - seed_dynamodb_preproduction
+      - run_behat_suite_preproduction
+
     steps:
-      - name: workflow has ended
+      - name: End of Workflow
         run: |
-          if ${{ contains(needs.slack_notify.result, 'success') }}; then
-            echo "Deployment to production successful"
-            echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
-            echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
-            exit 0
-          elif ${{ contains(needs.slack_notify_documentation_update.result, 'success')}}; then
-            echo "Documentation update successful"
-            exit 0
-          else
-            echo "Deployment to production failed"
+            if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
+                ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
+                ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
+                ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
+                ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
+                ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
+                ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
+                then
+                echo "Preproduction environment tested, built and deployed"
+                echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
+                exit 0
+            else
+            echo "Previous jobs in pipeline failed."
             exit 1
-          fi
+            fi
     if: always()
