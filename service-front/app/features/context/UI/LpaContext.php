@@ -17,7 +17,6 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
-use stdClass;
 
 use function PHPUnit\Framework\assertStringContainsString;
 
@@ -2974,40 +2973,16 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/dashboard');
     }
 
-    #[Given('/^I am on the dashboard page to check LPA of subtype "([^"]*)" and uid "([^"]*)"$/')]
-    public function iAmOnTheDashboardToCheckLPAOfSubtypeAndUid(string $subtype, string $uid): void
+    #[Given('/^I am on the dashboard page to check "([^"]*)" LPA of subtype "([^"]*)" and uid "([^"]*)"$/')]
+    public function iAmOnTheDashboardToCheckLPAOfSubtypeAndUid(string $lpa, string $subtype, string $uid): void
     {
-        $donorName = 'John Smith'; // Example donor
-        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
-
-        // Override values dynamically
-        $this->lpa->caseSubtype = $subtype;
-        $this->lpa->uId         = $uid;
-
-        // Inject into lpaData
-        $this->lpaData = [
-            'user-lpa-actor-token'       => $this->userLpaActorToken,
-            'lpa'                        => $this->lpa,
-            'actor'                      => $this->lpaData['actor'] ?? [],
-            'applicationHasRestrictions' => $this->lpa->applicationHasRestrictions,
-            'applicationHasGuidance'     => $this->lpa->applicationHasGuidance,
-        ];
-
-        $this->dashboardLPAs = [
-            $this->userLpaActorToken => $this->lpaData,
-        ];
-
-        $this->iAmOnTheDashboardPage();
-    }
-
-    #[Given('/^I am on the dashboard page to check New Lpa of subtype "([^"]*)" and uid "([^"]*)"$/')]
-    public function iAmOnTheDashboardToCheckNewLpaOfSubtypeAndUid(string $subtype, string $uid): void
-    {
-        //$donorName = 'John Smith'; // Example donor
-        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+        if ($lpa === 'Old') {
+            $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+        } else {
+            $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+        }
 
         $userLpaActorToken = '987654321';
-        $actorId           = 9;
 
         // Override values dynamically
         $lpa->caseSubtype = $subtype;
@@ -3015,6 +2990,7 @@ class LpaContext implements Context
 
         $lpaData = [
             'user-lpa-actor-token' => $userLpaActorToken,
+            'date'                 => 'today',
             'lpa'                  => $lpa,
             'actor'                => [
                 'type'    => 'primary-attorney',
