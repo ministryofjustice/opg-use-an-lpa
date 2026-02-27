@@ -1,0 +1,223 @@
+name: "[Merge Queue] Preproduction Integration"
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+  id-token: write
+
+jobs:
+  workflow_variables:
+    runs-on: ubuntu-latest
+    name: output workflow variables
+    permissions:
+      contents: write
+    outputs:
+      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
+      specific_path: ${{ steps.variables.outputs.path }}
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: get changed docs files in any folder
+        id: changed-files-docs
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        with:
+          files: |
+            **/*.md
+      - name: extract variables for workflow
+        id: variables
+        run: |
+          echo "short_sha=$(echo ${GITHUB_SHA:0:7})" >> $GITHUB_OUTPUT
+          if [[ ${{ steps.changed-files-docs.outputs.only_changed }} = "true" ]]
+          then
+            echo "path=$(echo docs)" >> $GITHUB_OUTPUT
+          else
+            echo "path=$(echo all)" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Bump version and push tag
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        id: semver_tag
+        with:
+          with_v: true
+          default_bump: minor
+          prerelease: true
+        if: ${{ steps.changed-files-docs.outputs.path != 'docs' }}
+
+  terraform_lint:
+    name: lint terraform code
+    uses: ./.github/workflows/_lint-terraform.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace: preproduction
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path != 'docs'
+
+  node_test:
+    name: test node dependencies
+    uses: ./.github/workflows/_node-test.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  node_build:
+    name: build node dependencies
+    uses: ./.github/workflows/_node-build.yml
+    needs:
+      - workflow_variables
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.workflow_variables.outputs.specific_path == 'all'
+
+  docker_build_scan_push:
+    name: build, test, scan and push
+    uses: ./.github/workflows/_build-and-push.yml
+    needs:
+      - workflow_variables
+      - node_test
+      - node_build
+    with:
+      tag: integration-${{ needs.workflow_variables.outputs.semver_tag }}
+      branch_name: ${{ github.ref_name }}
+      push_to_ecr: true
+      specific_path: all
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+    if: |
+      always() &&
+      needs.workflow_variables.outputs.specific_path != 'docs' &&
+      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
+      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
+      needs.workflow_variables.result == 'success'
+
+  code_coverage:
+    name: upload to code coverage
+    uses: ./.github/workflows/_codecov.yml
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    with:
+      specific_path: 'all'
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  terraform_apply_shared_preproduction:
+    name: terraform apply shared preproduction
+    uses: ./.github/workflows/_run-terraform.yml
+    with:
+      workspace: preproduction
+      terraform_path: account
+      apply: true
+      specific_path: all
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
+  terraform_apply_preproduction:
+    name: terraform apply preproduction
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_shared_preproduction
+      - workflow_variables
+    with:
+      workspace: preproduction
+      terraform_path: environment
+      container_version: preproduction-${{ needs.workflow_variables.outputs.semver_tag }}
+      apply: true
+      specific_path: all
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
+  seed_dynamodb_preproduction:
+    name: seed dynamodb in preproduction
+    uses: ./.github/workflows/_seed-database.yml
+    needs:
+      - terraform_apply_preproduction
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+    with:
+      workspace: preproduction
+
+  run_behat_suite_preproduction:
+    name: run behat tests against preproduction
+    uses: ./.github/workflows/_run-behat-tests.yml
+    needs:
+      - seed_dynamodb_preproduction
+    with:
+      workspace: preproduction
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
+      ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
+      ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
+
+  # Required end of workflow job
+  end_of_workflow:
+    name: End of Workflow
+    runs-on: ubuntu-latest
+    needs:
+      - workflow_variables
+      - terraform_lint
+      - node_test
+      - node_build
+      - docker_build_scan_push
+      - terraform_apply_shared_preproduction
+      - terraform_apply_preproduction
+      - seed_dynamodb_preproduction
+      - run_behat_suite_preproduction
+
+    steps:
+      - name: End of Workflow
+        run: |
+            if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
+                ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
+                ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
+                ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
+                ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
+                ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
+                ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
+                then
+                echo "Preproduction environment tested, built and deployed"
+                echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
+                exit 0
+            else
+            echo "Previous jobs in pipeline failed."
+            exit 1
+            fi
+    if: always()
