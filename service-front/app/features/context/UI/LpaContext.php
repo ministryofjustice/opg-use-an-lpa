@@ -17,6 +17,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\AssertionFailedError;
+use stdClass;
 
 use function PHPUnit\Framework\assertStringContainsString;
 
@@ -1141,7 +1142,7 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->clickLink('Check access codes');
+        $this->ui->clickLink('Check access code');
     }
 
     #[When('/^I click to check my access codes that is used to view LPA$/')]
@@ -1517,6 +1518,7 @@ class LpaContext implements Context
         $this->lpaData = [
             'user-lpa-actor-token'       => $this->userLpaActorToken,
             'date'                       => 'today',
+            'caseSubType'                => 'hw',
             'actor'                      => [
                 'type'    => 'primary-attorney',
                 'details' => [
@@ -2928,7 +2930,7 @@ class LpaContext implements Context
                                     'surname'   => 'Bundlaaaa',
                                     'dob'       => '1970-01-24',
                                 ],
-                                'type'    => 'property-and-financial-affairs',
+                                'type'    => 'Health and welfare',
                                 'status'  => 'Registered',
                                 'channel' => 'digital',
                             ],
@@ -2970,6 +2972,68 @@ class LpaContext implements Context
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    #[Given('/^I am on the dashboard page to check LPA of subtype "([^"]*)" and uid "([^"]*)"$/')]
+    public function iAmOnTheDashboardToCheckLPAOfSubtypeAndUid(string $subtype, string $uid): void
+    {
+        $donorName = 'John Smith'; // Example donor
+        $this->lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+
+        // Override values dynamically
+        $this->lpa->caseSubtype = $subtype;
+        $this->lpa->uId         = $uid;
+
+        // Inject into lpaData
+        $this->lpaData = [
+            'user-lpa-actor-token'       => $this->userLpaActorToken,
+            'lpa'                        => $this->lpa,
+            'actor'                      => $this->lpaData['actor'] ?? [],
+            'applicationHasRestrictions' => $this->lpa->applicationHasRestrictions,
+            'applicationHasGuidance'     => $this->lpa->applicationHasGuidance,
+        ];
+
+        $this->dashboardLPAs = [
+            $this->userLpaActorToken => $this->lpaData,
+        ];
+
+        $this->iAmOnTheDashboardPage();
+    }
+
+    #[Given('/^I am on the dashboard page to check New Lpa of subtype "([^"]*)" and uid "([^"]*)"$/')]
+    public function iAmOnTheDashboardToCheckNewLpaOfSubtypeAndUid(string $subtype, string $uid): void
+    {
+        //$donorName = 'John Smith'; // Example donor
+        $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+
+        $userLpaActorToken = '987654321';
+        $actorId           = 9;
+
+        // Override values dynamically
+        $lpa->caseSubtype = $subtype;
+        $lpa->uId         = $uid;
+
+        $lpaData = [
+            'user-lpa-actor-token' => $userLpaActorToken,
+            'lpa'                  => $lpa,
+            'actor'                => [
+                'type'    => 'primary-attorney',
+                'details' => $lpa->attorneys[0],
+            ],
+            'added'                => '2021-10-5 12:00:00',
+        ];
+
+        $this->dashboardLPAs = [
+            $userLpaActorToken => $lpaData,
+        ];
+
+        $this->iAmOnTheDashboardPage();
+    }
+
+    #[Then('/^I can see the lpa type added is "([^"]*)"$/')]
+    public function iCanSeeTheLpaTypeAddedIs(string $expectedLabel): void
+    {
+        $this->ui->assertPageContainsText($expectedLabel);
     }
 
     #[Given('/^I am on the dashboard page to see the digital LPA details/')]

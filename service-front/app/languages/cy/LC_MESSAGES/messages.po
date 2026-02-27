@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-02-24T22:36:24+00:00\n"
+"POT-Creation-Date: 2026-02-27T00:10:03+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6470,7 +6470,7 @@ msgctxt "flashMessage"
 msgid "property and finance"
 msgstr "eiddo a materion ariannol"
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:131
+#: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr "Rydych wedi tynnu atwrneiaeth arhosol %donor% ar gyfer %lpaType%"
@@ -6554,19 +6554,18 @@ msgstr ""
 msgid "Personal welfare"
 msgstr "Lles personol"
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:26
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:20
 msgid "personal welfare"
 msgstr "lles personol"
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:27
-#| msgctxt "flashMessage"
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:21
 msgid "health and welfare"
 msgstr "iechyd a lles"
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:31
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:25
 msgid "property and affairs"
 msgstr "eiddo a materion ariannol"
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:32
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
-msgstr "eiddo ac arian"
+msgstr "eiddo a materion ariannol"

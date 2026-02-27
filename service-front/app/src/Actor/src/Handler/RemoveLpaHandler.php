@@ -25,7 +25,7 @@ use Mezzio\Template\TemplateRendererInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
-use Actor\Handler\ResolveLpaType\LpaTypeResolverTrait;
+use Actor\Handler\ResolveLpaTypeTrait\LpaTypeResolver;
 
 /**
  * @codeCoverageIgnore
@@ -34,7 +34,7 @@ class RemoveLpaHandler extends AbstractHandler implements UserAware, CsrfGuardAw
 {
     use CsrfGuard;
     use User;
-    use LpaTypeResolverTrait;
+    use LpaTypeResolver;
 
     public const REMOVE_LPA_FLASH_MSG = 'remove_lpa_flash_msg';
 

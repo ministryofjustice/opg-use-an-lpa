@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-02-24T22:36:24+00:00\n"
+"POT-Creation-Date: 2026-02-27T00:10:03+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4630,7 +4630,7 @@ msgctxt "flashMessage"
 msgid "property and finance"
 msgstr ""
 
-#: src/Actor/src/Handler/RemoveLpaHandler.php:131
+#: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
 msgid "You've removed %donor%'s %lpaType% LPA"
 msgstr ""
@@ -4687,18 +4687,18 @@ msgstr ""
 msgid "Personal welfare"
 msgstr ""
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:26
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:20
 msgid "personal welfare"
 msgstr ""
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:27
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:21
 msgid "health and welfare"
 msgstr ""
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:31
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:25
 msgid "property and affairs"
 msgstr ""
 
-#: src/Actor/src/Handler/ResolveLpaType/LpaTypeResolverTrait.php:32
+#: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
 msgstr ""

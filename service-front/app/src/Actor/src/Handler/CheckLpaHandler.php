@@ -36,7 +36,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
 use Common\Service\Features\FeatureEnabled;
-use Actor\Handler\ResolveLpaType\LpaTypeResolverTrait;
+use Actor\Handler\ResolveLpaTypeTrait\LpaTypeResolver;
 
 /**
  * @codeCoverageIgnore
@@ -48,7 +48,7 @@ class CheckLpaHandler extends AbstractHandler implements CsrfGuardAware, UserAwa
     use SessionTrait;
     use State;
     use User;
-    use LpaTypeResolverTrait;
+    use LpaTypeResolver;
 
     public const ADD_LPA_FLASH_MSG = 'add_lpa_flash_msg';
 

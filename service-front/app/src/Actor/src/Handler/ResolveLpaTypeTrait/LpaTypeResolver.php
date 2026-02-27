@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Actor\Handler\ResolveLpaType;
+namespace Actor\Handler\ResolveLpaTypeTrait;
 
 use Common\Service\Log\EventCodes;
 
-trait LpaTypeResolverTrait
+trait LpaTypeResolver
 {
     public function resolveLabel(string $subtype, string $lpaUid): string
     {
