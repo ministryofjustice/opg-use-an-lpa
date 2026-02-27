@@ -160,68 +160,11 @@ jobs:
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
-  terraform_apply_shared_preproduction:
-    name: terraform apply shared preproduction
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_shared_development
-    with:
-      workspace: preproduction
-      terraform_path: account
-      apply: true
-      specific_path: all
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
-  terraform_apply_preproduction:
-    name: terraform apply preproduction
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - terraform_apply_shared_preproduction
-      - workflow_variables
-    with:
-      workspace: preproduction
-      terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
-      apply: true
-      specific_path: all
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
-  seed_dynamodb_preproduction:
-    name: seed dynamodb in preproduction
-    uses: ./.github/workflows/_seed-database.yml
-    needs:
-      - terraform_apply_preproduction
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-    with:
-      workspace: preproduction
-
-  run_behat_suite_preproduction:
-    name: run behat tests against preproduction
-    uses: ./.github/workflows/_run-behat-tests.yml
-    needs:
-      - seed_dynamodb_preproduction
-    with:
-      workspace: preproduction
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
-      ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
-      ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
-
   terraform_apply_shared_production:
     name: terraform apply shared production
     uses: ./.github/workflows/_run-terraform.yml
     needs:
-      - run_behat_suite_preproduction
+      - terraform_apply_shared_development
     with:
       workspace: production
       terraform_path: account
