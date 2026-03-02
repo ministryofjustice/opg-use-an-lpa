@@ -30,6 +30,8 @@ class TranslationUpdateCommandFactory
             ],
             [
                 'src/Actor/src/Handler/',
+                'src/Viewer/src/Handler/',
+                'src/Common/src/View/Twig/',
             ]
         );
     }

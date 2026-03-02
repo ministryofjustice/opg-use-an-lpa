@@ -153,11 +153,13 @@ class CheckYourAnswersHandler extends AbstractHandler implements
             switch ($result->getResponse()) {
                 case AccessForAllResult::LPA_ALREADY_ADDED:
                     $lpaAddedData = $result->getData();
+
                     return new HtmlResponse(
                         $this->renderer->render(
                             'actor::lpa-already-added',
                             [
                                 'user'       => $this->user,
+                                'lpaUid'     => $state->referenceNumber,
                                 'donor'      => $lpaAddedData->getDonor(),
                                 'lpaType'    => $lpaAddedData->getCaseSubtype(),
                                 'actorToken' => $lpaAddedData->getLpaActorToken(),
