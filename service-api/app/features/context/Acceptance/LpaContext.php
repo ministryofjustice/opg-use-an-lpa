@@ -2409,12 +2409,13 @@ class LpaContext implements Context
     {
         $actorId           = 700000000054;
         $expected_response = [
-            'donor'       => [
+            'donor'        => [
                 'uId'        => '700000000053',
                 'firstnames' => 'Ian Deputy',
                 'surname'    => 'Deputy',
             ],
-            'caseSubtype' => 'hw',
+            'caseSubtype'  => 'hw',
+            'lpaReference' => 700000000054,
         ];
 
         // UserLpaActorMap::get

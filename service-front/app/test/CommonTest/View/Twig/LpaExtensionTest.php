@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\View\Twig;
 
+use Acpr\I18n\Translator;
 use Common\Entity\Address;
 use Common\Entity\CaseActor;
 use Common\Entity\Lpa;
@@ -17,20 +18,27 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Twig\TwigFunction;
+use Acpr\I18n\TranslatorInterface;
 
 class LpaExtensionTest extends TestCase
 {
     private LpaDataFormatter $lpaDataFormatter;
+    private TranslatorInterface $translator;
 
     public function setUp(): void
     {
         $this->lpaDataFormatter = new LpaDataFormatter();
+
+        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->translator
+            ->method('translate')
+            ->willReturnCallback(fn (string $message) => $message);
     }
 
     #[Test]
     public function it_returns_an_array_of_exported_twig_functions(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $functions = $extension->getFunctions();
 
@@ -49,6 +57,7 @@ class LpaExtensionTest extends TestCase
             'is_sirius_lpa'                   => 'isSiriusLpa',
             'is_online_channel'               => 'isOnlineChannel',
             'is_english'                      => 'isEnglish',
+            'lpa_display_type_from_values'    => 'lpaDisplayTypeFromValues',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -67,7 +76,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_concatenates_an_address_array_into_a_comma_separated_string($addressLines, $expected): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $address = new Address();
         if (isset($addressLines['addressLine1'])) {
@@ -103,7 +112,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_concatenates_an_address_array_into_a_comma_separated_string_for_combined_format(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $actor = new Person(
             addressLine1: 'Street 1',
@@ -207,7 +216,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_concatenates_name_parts_into_a_single_string($nameLines, $expected): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $actor = new CaseActor();
         if (isset($nameLines['salutation'])) {
@@ -270,7 +279,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_creates_a_correctly_formatted_string_from_an_iso_date($date, $locale, $expected): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         // retain the current locale
         $originalLocale = Locale::getDefault();
@@ -319,7 +328,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_creates_a_correctly_formatted_string_from_an_iso_date_for_check_codes($date, $locale, $expected): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         // retain the current locale
         $originalLocale = Locale::getDefault();
@@ -364,7 +373,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_a_code_is_cancelled($shareCodeArray, $expected): void
     {
 
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $status = $extension->isCodeCancelled($shareCodeArray);
 
@@ -407,7 +416,7 @@ class LpaExtensionTest extends TestCase
     public function it_checks_if_a_code_has_expired($expiryDate, $expected): void
     {
 
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $status = $extension->hasCodeExpired($expiryDate);
 
@@ -447,7 +456,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_calculates_the_number_of_days_to_a_date_in_the_future_is_positive(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $date = new DateTime('+1 week');
 
@@ -459,7 +468,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_returns_an_empty_string_if_expiry_date_is_null(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $days = $extension->daysRemaining(null);
 
@@ -469,7 +478,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_returns_an_hyphenated_viewer_code(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $viewerCode = $extension->formatViewerCode('111122223333');
 
@@ -479,7 +488,7 @@ class LpaExtensionTest extends TestCase
      #[Test]
     public function it_checks_if_an_LPA_is_cancelled(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
         $lpa       = new Lpa();
 
         $lpa->setCancellationDate(new DateTime('-1 days'));
@@ -492,7 +501,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_an_LPA_is_not_cancelled(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
         $lpa       = new Lpa();
 
         $lpa->setStatus('Registered');
@@ -504,7 +513,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_an_LPA_is_revoked(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
         $lpa       = new Lpa();
 
         $lpa->setStatus('Revoked');
@@ -516,7 +525,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_returns_donor_name_from_donor_nameDob_string(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $donorNameWithDob = 'Harry Potter 1980-07-31';
         $donorName        = $extension->donorNameWithDobRemoved($donorNameWithDob);
@@ -527,7 +536,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_an_lpa_donor_signature_is_old_for_i_and_p(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
         $lpa       = new Lpa();
 
         $lpa->setLpaDonorSignatureDate(new DateTime('2015-01-01'));
@@ -555,7 +564,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_an_lpa_is_sirius_lpa_for_combined_lpa(): void
     {
-        $extension   = new LpaExtension();
+        $extension   = new LpaExtension($this->translator);
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/test_lpa.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
@@ -567,7 +576,7 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_an_LPA_is_online_channel_lpa_store(): void
     {
-        $extension   = new LpaExtension();
+        $extension   = new LpaExtension($this->translator);
         $lpa         = json_decode(file_get_contents(__DIR__ . '../../../../../test/fixtures/4UX3.json'), true);
         $combinedLpa = ($this->lpaDataFormatter)($lpa);
 
@@ -579,12 +588,49 @@ class LpaExtensionTest extends TestCase
     #[Test]
     public function it_checks_if_path_is_english(): void
     {
-        $extension = new LpaExtension();
+        $extension = new LpaExtension($this->translator);
 
         $this->assertTrue($extension->isEnglish(''));
         $this->assertTrue($extension->isEnglish('/'));
         $this->assertTrue($extension->isEnglish('/cyan'));
 
         $this->assertFalse($extension->isEnglish('/cy/an'));
+    }
+
+    #[DataProvider('lpaDisplayTypeFromValuesProvider')]
+    #[Test]
+    public function it_returns_correct_lpa_display_type_from_values(string $uid, string $subtype, string $expected): void
+    {
+        $extension = new LpaExtension($this->translator);
+
+        $result = $extension->lpaDisplayTypeFromValues($uid, $subtype);
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public static function lpaDisplayTypeFromValuesProvider(): array
+    {
+        return [
+            [
+                '700000000001',
+                'pfa',
+                'Property and finance',
+            ],
+            [
+                '700000000002',
+                'hw',
+                'Health and welfare',
+            ],
+            [
+                'M-123456789',
+                'pfa',
+                'Property and affairs',
+            ],
+            [
+                'M-987654321',
+                'hw',
+                'Personal welfare',
+            ],
+        ];
     }
 }

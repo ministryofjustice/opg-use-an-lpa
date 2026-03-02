@@ -22,11 +22,7 @@
                                 {% trans %}Type of LPA{% endtrans %}
                             </dt>
                             <dd class="govuk-summary-list__value">
-                                {% if lpa.caseSubtype.value|lower == "pfa" %}
-                                    {% trans %}Property and finance{% endtrans %}
-                                {% else %}
-                                    {% trans %}Health and welfare{% endtrans %}
-                                {% endif %}
+                                {{ lpa_display_type_from_values(lpa.uId, lpa.caseSubtype.value) }}
                             </dd>
                         </div>
                         <div class="govuk-summary-list__row">

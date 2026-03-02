@@ -16,9 +16,15 @@ use IntlDateFormatter;
 use Locale;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Acpr\I18n\TranslatorInterface;
 
 class LpaExtension extends AbstractExtension
 {
+    public function __construct(private TranslatorInterface $translator,)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @return array<TwigFunction>
      */
@@ -39,6 +45,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('is_sirius_lpa', [$this, 'isSiriusLpa']),
             new TwigFunction('is_online_channel', [$this, 'isOnlineChannel']),
             new TwigFunction('is_english', [$this, 'isEnglish']),
+            new TwigFunction('lpa_display_type_from_values', [$this, 'lpaDisplayTypeFromValues']),
         ];
     }
 
@@ -118,7 +125,7 @@ class LpaExtension extends AbstractExtension
      * and converts it for displaying on pages
      *
      * @param  DateTimeInterface|string|null $date
-     * @param  string                        $parseFormat A PHP Datetime format string that should be used to parse $date
+     * @param  string $parseFormat A PHP Datetime format string that should be used to parse $date
      * @return string
      */
     public function formatDate(DateTimeInterface|string|null $date, string $parseFormat = 'Y-m-d\TH:i:sP'): string
@@ -247,5 +254,22 @@ class LpaExtension extends AbstractExtension
     public function isEnglish(string $path): bool
     {
         return !str_starts_with($path, '/cy/');
+    }
+
+    public function lpaDisplayTypeFromValues(string $lpaUid, string $subtype): string
+    {
+        $isSirius = $this->isSiriusLpa($lpaUid);
+
+        $subtype = strtolower($subtype);
+
+        if ($subtype === 'pfa') {
+            return $isSirius
+                ? $this->translator->translate('Property and finance')
+                : $this->translator->translate('Property and affairs');
+        }
+
+        return $isSirius
+            ? $this->translator->translate('Health and welfare')
+            : $this->translator->translate('Personal welfare');
     }
 }
