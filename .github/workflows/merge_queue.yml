@@ -193,7 +193,7 @@ jobs:
 
   # Required end of workflow job
   end_of_workflow:
-    name: End of Workflow
+    name: end of workflow
     runs-on: ubuntu-latest
     needs:
       - workflow_variables
