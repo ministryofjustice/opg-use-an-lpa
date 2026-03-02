@@ -11,6 +11,10 @@ import pytz
 import base64
 import hashlib
 
+def with_identity(user):
+    user['Identity'] = 'urn:fdc:mock-one-login:2023:' + base64.b64encode(hashlib.sha256(user['Email'].encode('utf-8')).digest()).decode("utf-8")
+    return user
+
 if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
     # For local development
     dynamodb = boto3.resource(
@@ -57,6 +61,24 @@ nextYear = endOfToday + datetime.timedelta(days=365)
 
 activateBy = Decimal(nextYear.timestamp())
 
+
+# Duplicate account testing
+actorUserDuplicate1aID = '55dc3ed8-5d37-1714-f89b-b4d40d56656a'
+actorUserDuplicate1bID = '4dc2230e-e669-28c4-cfe3-82c9b3480d3b'
+actorUserDuplicate2aID = '2f686aa5-1af4-5d34-3f1b-e096cf897ebe'
+actorUserDuplicate2bID = '584f9052-ee61-4d34-f96b-933c4e9564f2'
+actorUserDuplicate3aID = '1271831e-e033-cbd4-c613-fb3c20275137'
+actorUserDuplicate3bID = '7a54b602-dd95-efd4-732b-15838f6abe72'
+actorUserDuplicate4aID = '23347331-45f5-3ee4-dec3-bdbca5e8dddf'
+actorUserDuplicate4bID = '46fb2189-627d-45a4-75d3-c89cbb136e70'
+actorUserDuplicate5aID = '2751fdf0-9efe-0424-fb4b-0de8d91634e7'
+actorUserDuplicate5bID = 'ede7af9a-59ee-6904-dab3-798a9c23bf55'
+
+userLpaActorDuplicate2aID = '0840234c-456d-40e0-af01-48abbf584ded'
+userLpaActorDuplicate3aID = '71737efb-1819-fe44-28e3-3d86700eadd8'
+userLpaActorDuplicate4aID = 'e556934e-7f84-0824-d7db-c0017dce74da'
+userLpaActorDuplicate4bID = '4bc3bfb9-f3f7-9d24-97e3-cd4df809dc9c'
+
 viewerCodes = [
     {
         'ViewerCode': "P9H8A6MLD3AM",
@@ -86,6 +108,89 @@ viewerCodes = [
         'Organisation': "Test Organisation",
         'UserLpaActor': "806f3720-5b43-49ce-ac66-c670860bf4ee",
         'Comment': 'Seeded data: Expired viewer code'
+    },
+    {
+        'ViewerCode': "N4KBEBEZMNJF",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': '085b6474-d61e-41a4-9778-acb5870c5084',
+        'Comment': 'Seeded data: Valid viewer code'
+    },
+    {
+        'ViewerCode': "AAAAAAAAAAAA",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate2aID,
+        'Comment': 'Seeded data: Valid viewer code'
+    },
+    {
+        'ViewerCode': "BBBBBBBBBBBB",
+        'SiriusUid': '700000000138',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate3aID,
+        'Comment': 'Seeded data: Valid viewer code'
+    },
+    {
+        'ViewerCode': "CCCCCCCCCCC1",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4aID,
+        'Comment': 'Seeded data: Valid viewer code'
+    },
+    {
+        'ViewerCode': "CCCCCCCCCCC2",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Cancelled': lastWeek.isoformat(),
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4aID,
+        'Comment': 'Seeded data: Cancelled viewer code'
+    },
+    {
+        'ViewerCode': "CCCCCCCCCCC3",
+        'SiriusUid': '700000000047',
+        'Expires': lastWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4aID,
+        'Comment': 'Seeded data: Cancelled viewer code'
+    },
+    {
+        'ViewerCode': "DDDDDDDDDDD1",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4bID,
+        'Comment': 'Seeded data: Valid viewer code'
+    },
+    {
+        'ViewerCode': "DDDDDDDDDDD2",
+        'SiriusUid': '700000000047',
+        'Expires': nextWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Cancelled': lastWeek.isoformat(),
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4bID,
+        'Comment': 'Seeded data: Cancelled viewer code'
+    },
+    {
+        'ViewerCode': "DDDDDDDDDDD3",
+        'SiriusUid': '700000000047',
+        'Expires': lastWeek.isoformat(),
+        'Added': "2019-01-01T12:34:56.123456Z",
+        'Organisation': "Test Organisation",
+        'UserLpaActor': userLpaActorDuplicate4bID,
+        'Comment': 'Seeded data: Cancelled viewer code'
     },
 ]
 
@@ -123,13 +228,13 @@ for i in viewerCodes:
 actorUsersTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_ACTOR_USERS'])
 
 actorUsers = [
-    {
+    with_identity({
         'Id': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Email': 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
         'LastLogin': datetime.datetime.now().isoformat(),
         'Password': sha256_crypt.hash('umlTest1'),
         'Comment': 'Seeded data: Default test user'
-    },
+    }),
     {
         'Id': 'gb9e7e88-f283-49c6-a79c-65d5d309ef88',
         'Email': 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
@@ -137,22 +242,77 @@ actorUsers = [
         'Password': sha256_crypt.hash('umlTest2'),
         'Comment': 'Seeded data: Default test user',
         'NeedsReset': datetime.datetime.now().isoformat()
-    }
+    },
+    with_identity({
+        'Id': actorUserDuplicate1aID,
+        'Email': 'opg-use-an-lpa+duplicate-1@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate with an LPA)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate1bID,
+        'Email': 'opg-use-an-lpa+duplicate-1@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate without an LPA)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate2aID,
+        'Email': 'opg-use-an-lpa+duplicate-2@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different activation code, with active access code)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate2bID,
+        'Email': 'opg-use-an-lpa+duplicate-2@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different activation code, without active access code)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate3aID,
+        'Email': 'opg-use-an-lpa+duplicate-3@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different actor, with active access code)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate3bID,
+        'Email': 'opg-use-an-lpa+duplicate-3@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different actor, without active access code)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate4aID,
+        'Email': 'opg-use-an-lpa+duplicate-4@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different activation code, with access codes)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate4bID,
+        'Email': 'opg-use-an-lpa+duplicate-4@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different activation code, with access codes)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate5aID,
+        'Email': 'opg-use-an-lpa+duplicate-5a@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different email, with LPA)',
+    }),
+    with_identity({
+        'Id': actorUserDuplicate5bID,
+        'Email': 'opg-use-an-lpa+duplicate-5b@digital.justice.gov.uk',
+        'LastLogin': datetime.datetime.now().isoformat(),
+        'Comment': 'Seeded data: Default test user (duplicate different email, without LPA)',
+    }),
 ]
 
 for i in actorUsers:
     try:
-        actorUsersTable.delete_item(
-            Key={
-                'Id': 'IDENTITY#urn:fdc:mock-one-login:2023:' + base64.b64encode(hashlib.sha256(i['Email'].encode('utf-8')).digest()).decode("utf-8"),
-            },
-        )
-        actorUsersTable.put_item(
-            Item=i,
-        )
-        response = actorUsersTable.get_item(
-            Key={'Id': i['Id']}
-        )
+        actorUsersTable.put_item(Item=i)
+        actorUsersTable.put_item(Item={'Id': 'EMAIL#' + i['Email']})
+        if 'Identity' in i:
+            actorUsersTable.put_item(Item={'Id': 'IDENTITY#' + i['Identity']})
+
+        response = actorUsersTable.get_item(Key={'Id': i['Id']})
         print(json.dumps(response['Item'], indent=4, separators=(',', ': ')))
     except botocore.exceptions.ClientError as error:
         print(error.response['Error']['Code'],
@@ -257,7 +417,79 @@ userLpaActorMap = [
         'ActivatedOn': '2026-01-30T23:00:00Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Comment': 'Seeded data'
-    }
+    },
+    {
+        'Id': 'a7e9fa48-248c-41c8-a90b-aacc591b435c',
+        'LpaUid': 'M-0407-6149-4861',
+        'ActorId': 'dde2e65b-7c8d-4f8f-a504-538c7f1bc6d6',
+        'Added': '2026-01-30T23:00:00Z',
+        'ActivatedOn': '2026-01-30T23:00:00Z',
+        'UserId': actorUserDuplicate1aID,
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': userLpaActorDuplicate2aID,
+        'SiriusUid': '700000000047',
+        'ActorId': 9,
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': actorUserDuplicate2aID,
+        'ActivationCode': 'WWFCCH41R456',
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': '052f9adf-5c63-4fc9-a29f-8d659a01192e',
+        'SiriusUid': '700000000047',
+        'ActorId': 9,
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': actorUserDuplicate2bID,
+        'ActivationCode': 'WWFCCH41R789',
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': userLpaActorDuplicate3aID,
+        'LpaUid': '700000000138',
+        'ActorId': 23,
+        'Added': '2026-01-30T23:00:00Z',
+        'ActivatedOn': '2026-01-30T23:00:00Z',
+        'UserId': actorUserDuplicate3aID,
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': '24ab679f-05f4-f0c4-eeab-d5998f2a08ec',
+        'LpaUid': '700000000138',
+        'ActorId': 59,
+        'Added': '2026-01-30T23:00:00Z',
+        'ActivatedOn': '2026-01-30T23:00:00Z',
+        'UserId': actorUserDuplicate3bID,
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': userLpaActorDuplicate4aID,
+        'SiriusUid': '700000000047',
+        'ActorId': 9,
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': actorUserDuplicate4aID,
+        'ActivationCode': 'WWFCCH41R123',
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': userLpaActorDuplicate4bID,
+        'SiriusUid': '700000000047',
+        'ActorId': 9,
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': actorUserDuplicate4bID,
+        'ActivationCode': 'WWFCCH41R456',
+        'Comment': 'Seeded data'
+    },
+    {
+        'Id': '00534eb9-85dc-c9e4-8c33-acbf2651e7dc',
+        'SiriusUid': '700000000047',
+        'ActorId': 9,
+        'Added': '2021-04-22T15:01:11.548361Z',
+        'UserId': actorUserDuplicate5aID,
+        'ActivationCode': 'WWFCCH41R456',
+        'Comment': 'Seeded data'
+    },
 ]
 
 for i in userLpaActorMap:
