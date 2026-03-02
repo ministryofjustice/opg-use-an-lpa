@@ -9,6 +9,27 @@ Feature: The user is able to see correct information on their dashboard
     And I am currently signed in
     And I have added an LPA to my account
 
+  @ui
+  Scenario Outline: Old lPA type label is correctly displayed on dashboard
+    Given I am on the dashboard page to check "Old" LPA of subtype "<subtype>" and uid "<uid>"
+    Then I can see the lpa type added is "<expectedLabel>"
+
+    Examples:
+      | subtype | uid              | expectedLabel           |
+      | hw      | 700000000054     | Health and welfare      |
+      | pfa     | 700000000055     | Property and finance    |
+
+  @ui @ff:support_datastore_lpas:true
+  Scenario Outline: New LPA type label is correctly displayed on dashboard
+    Given I am on the dashboard page to check "New" LPA of subtype "<subtype>" and uid "<uid>"
+    Then I can see the lpa type added is "<expectedLabel>"
+
+    Examples:
+      | subtype | uid               | expectedLabel           |
+      | hw      | M-700000000054    | Personal welfare        |
+      | pfa     | M-789004004000    | Property and affairs    |
+
+
   @integration @ui
   Scenario Outline: As a user I can see the number of active access codes an LPA has
     Given I have 2 codes for one of my LPAs

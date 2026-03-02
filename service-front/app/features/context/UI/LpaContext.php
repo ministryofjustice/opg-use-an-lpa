@@ -1141,7 +1141,7 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->clickLink('Check access codes');
+        $this->ui->clickLink('Check access code');
     }
 
     #[When('/^I click to check my access codes that is used to view LPA$/')]
@@ -1517,6 +1517,7 @@ class LpaContext implements Context
         $this->lpaData = [
             'user-lpa-actor-token'       => $this->userLpaActorToken,
             'date'                       => 'today',
+            'caseSubType'                => 'hw',
             'actor'                      => [
                 'type'    => 'primary-attorney',
                 'details' => [
@@ -2928,7 +2929,7 @@ class LpaContext implements Context
                                     'surname'   => 'Bundlaaaa',
                                     'dob'       => '1970-01-24',
                                 ],
-                                'type'    => 'property-and-financial-affairs',
+                                'type'    => 'Health and welfare',
                                 'status'  => 'Registered',
                                 'channel' => 'digital',
                             ],
@@ -2970,6 +2971,45 @@ class LpaContext implements Context
 
         $this->ui->visit('/lpa/dashboard');
         $this->ui->assertPageAddress('/lpa/dashboard');
+    }
+
+    #[Given('/^I am on the dashboard page to check "([^"]*)" LPA of subtype "([^"]*)" and uid "([^"]*)"$/')]
+    public function iAmOnTheDashboardToCheckLPAOfSubtypeAndUid(string $lpa, string $subtype, string $uid): void
+    {
+        if ($lpa === 'Old') {
+            $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/full_example.json'));
+        } else {
+            $lpa = json_decode(file_get_contents(__DIR__ . '../../../../test/fixtures/combined_lpa.json'));
+        }
+
+        $userLpaActorToken = '987654321';
+
+        // Override values dynamically
+        $lpa->caseSubtype = $subtype;
+        $lpa->uId         = $uid;
+
+        $lpaData = [
+            'user-lpa-actor-token' => $userLpaActorToken,
+            'date'                 => 'today',
+            'lpa'                  => $lpa,
+            'actor'                => [
+                'type'    => 'primary-attorney',
+                'details' => $lpa->attorneys[0],
+            ],
+            'added'                => '2021-10-5 12:00:00',
+        ];
+
+        $this->dashboardLPAs = [
+            $userLpaActorToken => $lpaData,
+        ];
+
+        $this->iAmOnTheDashboardPage();
+    }
+
+    #[Then('/^I can see the lpa type added is "([^"]*)"$/')]
+    public function iCanSeeTheLpaTypeAddedIs(string $expectedLabel): void
+    {
+        $this->ui->assertPageContainsText($expectedLabel);
     }
 
     #[Given('/^I am on the dashboard page to see the digital LPA details/')]
