@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-02-27T00:10:03+00:00\n"
+"POT-Creation-Date: 2026-03-03T14:39:52+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -2364,12 +2364,6 @@ msgstr ""
 msgid "Find out more about deleting your account"
 msgstr ""
 
-#. Global
-#: src/Actor/templates/actor/form-error-messages.html.twig:4
-msgctxt "error"
-msgid "As you have not used this service for over 20 minutes, the page has timed out. We've now refreshed the page - please try to sign in again"
-msgstr ""
-
 #. Create account, change password, password reset
 #: src/Actor/templates/actor/form-error-messages.html.twig:7
 msgctxt "error"
@@ -4701,4 +4695,10 @@ msgstr ""
 
 #: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
+msgstr ""
+
+#. Global
+#: src/Actor/templates/actor/form-error-messages.html.twig:4
+msgctxt "error"
+msgid "As you have not used this service for over 20 minutes, the page has timed out"
 msgstr ""

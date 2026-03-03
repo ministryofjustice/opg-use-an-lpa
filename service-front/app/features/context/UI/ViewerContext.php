@@ -727,8 +727,7 @@ class ViewerContext implements Context
     public function iHaveAnErrorMessageInformingMeToTryAgain(): void
     {
         $this->ui->assertPageContainsText(
-            "As you have not used this service for over 20 minutes, the page has timed out. We've now " .
-                'refreshed the page - please try to sign in again'
+            'As you have not used this service for over 20 minutes, the page has timed out'
         );
     }
 

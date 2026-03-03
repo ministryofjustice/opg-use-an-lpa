@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-02-27T00:10:03+00:00\n"
+"POT-Creation-Date: 2026-03-03T14:39:52+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3171,16 +3171,6 @@ msgstr ""
 #: src/Actor/templates/actor/settings.html.twig:42
 msgid "Find out more about deleting your account"
 msgstr "Rhagor o wybodaeth am ddileu eich cyfrif"
-
-#. Global
-#: src/Actor/templates/actor/form-error-messages.html.twig:4
-msgctxt "error"
-msgid ""
-"As you have not used this service for over 20 minutes, the page has timed out. "
-"We've now refreshed the page - please try to sign in again"
-msgstr ""
-"Gan nad ydych wedi defnyddio’r gwasanaeth hwn ers dros 20 munud, mae’r dudalen "
-"wedi cau. Rydym bellach wedi adnewyddu’r dudalen - ceisiwch fewngofnodi eto"
 
 #. Create account, change password, password reset
 #: src/Actor/templates/actor/form-error-messages.html.twig:7
@@ -6569,3 +6559,12 @@ msgstr "eiddo a materion ariannol"
 #: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
 msgstr "eiddo a materion ariannol"
+
+#. Global
+#: src/Actor/templates/actor/form-error-messages.html.twig:4
+msgctxt "error"
+msgid ""
+"As you have not used this service for over 20 minutes, the page has timed out"
+msgstr ""
+"Mae’r dudalen hon wedi rhewi gan nad ydych wedi defnyddio’r gwasanaeth hwn am "
+"dros 20 munud"
