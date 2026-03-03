@@ -396,17 +396,25 @@ class SiriusLpaManagerTest extends TestCase
         $this->assertNotNull($result->actor);
     }
 
+    /**
+     * UML-4260 The recorded actor is not resolvable (may have been removed from LPA)
+     */
     #[Test]
     public function can_get_by_user_token_with_an_inactive_actor(): void
     {
         $t = $this->init_valid_user_token_active_and_inactive_actor();
+
+        // resolves LPA actor as primary attorney
+        $this->resolveActorProphecy
+            ->__invoke($t->filteredLpa, (string) $t->ActorId)
+            ->willReturn(null);
 
         $service = $this->getLpaService();
 
         $result = $service->getByUserLpaActorToken($t->Token, (string) $t->UserId);
 
         $this->assertNotNull($result);
-        $this->assertNotNull($result->actor);
+        $this->assertNull($result->actor);
     }
 
     #[Test]
