@@ -81,5 +81,4 @@ return [
             ],
         ],
     ],
-    'track-old-emails'     => (getenv('TRACK_OLD_EMAILS') ?: '') === '1',
 ];
