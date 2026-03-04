@@ -224,26 +224,30 @@ jobs:
 
   docker_build_scan_push:
     name: build, test, scan and push
-    uses: ./.github/workflows/_build-and-push.yml
+    runs-on: ubuntu-latest
+    steps:
+      - name: fail job for testing
+        run: exit 1
+    # uses: ./.github/workflows/_build-and-push.yml
     needs:
       - workflow_variables
       - node_test
       - node_build
       - consolidate_tags
-    with:
-      tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
-      branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
-      push_to_ecr: true
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-    if: |
-      always() &&
-      needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
-      (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
-      (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
-      needs.workflow_variables.result == 'success'
+    # with:
+    #   tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
+    #   branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+    #   push_to_ecr: true
+    #   specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+    # secrets:
+    #   AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+    #   AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+    if: always()
+    #   always() &&
+    #   needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
+    #   (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
+    #   (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
+    #   needs.workflow_variables.result == 'success'
 
   pact_upload:
     name: upload contracts to pact
