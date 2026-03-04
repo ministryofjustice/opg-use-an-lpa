@@ -42,6 +42,7 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
+      detect_app_code_changes: ${{ steps.detect-app-code-changes.outputs.app_code_changed }}
 
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -64,6 +65,24 @@ jobs:
         with:
           files: |
             lambda-functions/event-receiver/**
+      - name: get changed files in app code
+        id: changed-files-app
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
+        with:
+          files: |
+            service-admin/**
+            lambda-functions/**
+            service-front/**
+            service-api/**
+            .github/workflows/_build-and-push.yml
+      - name: detect any application code changes
+        id: detect-app-code-changes
+        run: |
+          if [[ "${{ steps.changed-files-app.outputs.any_changed }}" == "true" ]]; then
+            echo "app_code_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "app_code_changed=false" >> $GITHUB_OUTPUT
+          fi
       - name: get changed files in the terraform folder
         id: changed-files-terraform
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
@@ -150,6 +169,59 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
 
+  pull_latest_docker_tag:
+    name: pull latest docker tag
+    runs-on: ubuntu-latest
+    needs:
+      - workflow_variables
+    if: needs.workflow_variables.outputs.detect_app_code_changes == 'false'
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPAGetParameterGithubAction
+      - name: Pull latest tag from SSM
+        id: pull_tag
+        run: |
+          key="/use-an-lpa/container-version/${{ needs.workflow_variables.outputs.workspace_name }}"
+          value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text 2>/dev/null || true)
+          if [ -z "$value" ]; then
+            key="/use-an-lpa/container-version/production"
+            value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text)
+          fi
+          echo "Using $key: $value"
+          echo "tag=${value}" >> $GITHUB_OUTPUT
+          echo "env=${key}" >> $GITHUB_OUTPUT
+    outputs:
+      docker_tag: ${{ steps.pull_tag.outputs.tag }}
+      tag_from: ${{ steps.pull_tag.outputs.env }}
+
+  consolidate_tags:
+    needs:
+      - workflow_variables
+      - pull_latest_docker_tag
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: consolidate tags
+        id: consolidate_tags
+        run: |
+          if [[ "${{ needs.pull_latest_docker_tag.result }}" == "success" ]]; then
+            TAG="${{ needs.pull_latest_docker_tag.outputs.docker_tag }}"
+            echo "### Tag for deployment $TAG pulled from SSM" >> $GITHUB_STEP_SUMMARY
+          else
+            TAG="${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
+            echo "### New tag for deployment $TAG" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+    outputs:
+      docker_tag: ${{ steps.consolidate_tags.outputs.tag }}
+
   docker_build_scan_push:
     name: build, test, scan and push
     uses: ./.github/workflows/_build-and-push.yml
@@ -157,8 +229,9 @@ jobs:
       - workflow_variables
       - node_test
       - node_build
+      - consolidate_tags
     with:
-      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
@@ -167,7 +240,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     if: |
       always() &&
-      needs.workflow_variables.outputs.specific_path != 'docs' &&
+      needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
       needs.workflow_variables.result == 'success'
@@ -175,14 +248,15 @@ jobs:
   pact_upload:
     name: upload contracts to pact
     uses: ./.github/workflows/_pact-upload.yml
-    with:
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-      branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
-      commit_sha: ${{ github.event.pull_request.head.sha }}
     needs:
       - docker_build_scan_push
       - workflow_variables
+      - consolidate_tags
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
+      branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+      commit_sha: ${{ github.event.pull_request.head.sha }}
     secrets:
       PACT_BROKER_PASSWORD: ${{ secrets.PACT_BROKER_PASSWORD }}
     if: |
@@ -192,11 +266,11 @@ jobs:
   code_coverage:
     name: upload to code coverage
     uses: ./.github/workflows/_codecov.yml
-    with:
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     needs:
       - docker_build_scan_push
       - workflow_variables
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     if: |
@@ -227,12 +301,14 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - docker_build_scan_push
+      - pull_latest_docker_tag
+      - consolidate_tags
       - terraform_lint
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
       terraform_path: environment
-      container_version: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
+      container_version: ${{ needs.consolidate_tags.outputs.docker_tag }}
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
@@ -243,31 +319,7 @@ jobs:
     if: |
       always() &&
       needs.terraform_lint.result == 'success' &&
-      needs.docker_build_scan_push.result == 'success' &&
-      needs.workflow_variables.result == 'success'
-
-  terraform_preproduction_plan_environment:
-    name: terraform plan preproduction environment
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - docker_build_scan_push
-      - terraform_lint
-      - workflow_variables
-    with:
-      workspace: preproduction
-      terraform_path: environment
-      container_version: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-      apply: false
-      specific_path: all
-      add_ttl: false
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always() &&
-      needs.terraform_lint.result == 'success' &&
-      needs.docker_build_scan_push.result == 'success' &&
+      (needs.docker_build_scan_push.result == 'success' || needs.pull_latest_docker_tag.result == 'success') &&
       needs.workflow_variables.result == 'success'
 
   seed_dynamodb:
@@ -329,9 +381,11 @@ jobs:
     needs:
       - workflow_variables
       - update_documentation
+      - pull_latest_docker_tag
+      - consolidate_tags
       - docker_build_scan_push
       - run_behat_suite
-      - terraform_preproduction_plan_environment
+      - terraform_apply_environment
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
@@ -366,9 +420,9 @@ jobs:
 
       - name: workflow has ended without issue
         run: |
-          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_preproduction_plan_environment.result, 'success') }}; then
+          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_apply_environment.result, 'success') }}; then
             echo "${{ needs.workflow_variables.outputs.safe_branch_name }} PR environment tested, built and deployed"
-            echo "Tag Used: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
+            echo "Tag Used: ${{ needs.consolidate_tags.outputs.docker_tag }}"
             echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"
             exit 0
           elif [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]; then
