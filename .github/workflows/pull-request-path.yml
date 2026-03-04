@@ -169,58 +169,19 @@ jobs:
       needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
 
-  pull_latest_docker_tag:
-    name: pull latest docker tag
-    runs-on: ubuntu-latest
+  resolve_docker_tag:
+    name: resolve docker tag
+    uses: ./.github/workflows/_tags-job.yml
     needs:
       - workflow_variables
-    if: needs.workflow_variables.outputs.detect_app_code_changes == 'false'
-    steps:
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
-          role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPAGetParameterGithubAction
-      - name: Pull latest tag from SSM
-        id: pull_tag
-        run: |
-          key="/use-an-lpa/container-version/${{ needs.workflow_variables.outputs.workspace_name }}"
-          value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text 2>/dev/null || true)
-          if [ -z "$value" ]; then
-            key="/use-an-lpa/container-version/production"
-            value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text)
-          fi
-          echo "Using $key: $value"
-          echo "tag=${value}" >> $GITHUB_OUTPUT
-          echo "env=${key}" >> $GITHUB_OUTPUT
-    outputs:
-      docker_tag: ${{ steps.pull_tag.outputs.tag }}
-      tag_from: ${{ steps.pull_tag.outputs.env }}
-
-  consolidate_tags:
-    needs:
-      - workflow_variables
-      - pull_latest_docker_tag
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: consolidate tags
-        id: consolidate_tags
-        run: |
-          if [[ "${{ needs.pull_latest_docker_tag.result }}" == "success" ]]; then
-            TAG="${{ needs.pull_latest_docker_tag.outputs.docker_tag }}"
-            echo "### Tag for deployment $TAG pulled from SSM" >> $GITHUB_STEP_SUMMARY
-          else
-            TAG="${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
-            echo "### New tag for deployment $TAG" >> $GITHUB_STEP_SUMMARY
-          fi
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
-    outputs:
-      docker_tag: ${{ steps.consolidate_tags.outputs.tag }}
+    with:
+      workspace_name: ${{ needs.workflow_variables.outputs.workspace_name }}
+      safe_branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+      short_sha: ${{ needs.workflow_variables.outputs.short_sha }}
+      detect_app_code_changes: ${{ needs.workflow_variables.outputs.detect_app_code_changes }}
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   docker_build_scan_push:
     name: build, test, scan and push
@@ -229,9 +190,9 @@ jobs:
       - workflow_variables
       - node_test
       - node_build
-      - consolidate_tags
+      - resolve_docker_tag
     with:
-      tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
+      tag: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
@@ -251,10 +212,10 @@ jobs:
     needs:
       - docker_build_scan_push
       - workflow_variables
-      - consolidate_tags
+      - resolve_docker_tag
     with:
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-      tag: ${{ needs.consolidate_tags.outputs.docker_tag }}
+      tag: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
       commit_sha: ${{ github.event.pull_request.head.sha }}
     secrets:
@@ -301,14 +262,13 @@ jobs:
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - docker_build_scan_push
-      - pull_latest_docker_tag
-      - consolidate_tags
+      - resolve_docker_tag
       - terraform_lint
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
       terraform_path: environment
-      container_version: ${{ needs.consolidate_tags.outputs.docker_tag }}
+      container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
@@ -319,7 +279,7 @@ jobs:
     if: |
       always() &&
       needs.terraform_lint.result == 'success' &&
-      (needs.docker_build_scan_push.result == 'success' || needs.pull_latest_docker_tag.result == 'success') &&
+      (needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false') &&
       needs.workflow_variables.result == 'success'
 
   seed_dynamodb:
@@ -381,8 +341,7 @@ jobs:
     needs:
       - workflow_variables
       - update_documentation
-      - pull_latest_docker_tag
-      - consolidate_tags
+      - resolve_docker_tag
       - docker_build_scan_push
       - run_behat_suite
       - terraform_apply_environment
@@ -422,7 +381,7 @@ jobs:
         run: |
           if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_apply_environment.result, 'success') }}; then
             echo "${{ needs.workflow_variables.outputs.safe_branch_name }} PR environment tested, built and deployed"
-            echo "Tag Used: ${{ needs.consolidate_tags.outputs.docker_tag }}"
+            echo "Tag Used: ${{ needs.resolve_docker_tag.outputs.docker_tag }}"
             echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"
             exit 0
           elif [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]; then

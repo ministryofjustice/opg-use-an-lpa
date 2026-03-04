@@ -1,0 +1,72 @@
+name: "[Job] Resolve Docker Tag"
+
+on:
+  workflow_call:
+    inputs:
+      workspace_name:
+        required: true
+        type: string
+      safe_branch_name:
+        required: true
+        type: string
+      short_sha:
+        required: true
+        type: string
+      detect_app_code_changes:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID_ACTIONS:
+        required: true
+      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        required: true
+    outputs:
+      docker_tag:
+        description: "Final docker tag to use"
+        value: ${{ jobs.resolve.outputs.docker_tag }}
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    outputs:
+      docker_tag: ${{ steps.resolve_tags.outputs.tag }}
+
+    steps:
+      - name: Configure AWS credentials
+        if: inputs.detect_app_code_changes == 'false'
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
+          role-duration-seconds: 900
+          role-session-name: OPGUseAnLPAGetParameterGithubAction
+
+      - name: Pull latest tag from SSM
+        id: pull_tag
+        if: inputs.detect_app_code_changes == 'false'
+        run: |
+          key="/use-an-lpa/container-version/${{ inputs.workspace_name }}"
+          value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text 2>/dev/null || true)
+
+          if [ -z "$value" ]; then
+            key="/use-an-lpa/container-version/production"
+            value=$(aws ssm get-parameter --name "$key" --query "Parameter.Value" --output text)
+          fi
+
+          echo "Using $key: $value"
+          echo "tag=${value}" >> $GITHUB_OUTPUT
+
+      - name: Resolve tags
+        id: resolve_tags
+        run: |
+          if [[ "${{ inputs.detect_app_code_changes }}" == "false" ]]; then
+            TAG="${{ steps.pull_tag.outputs.tag }}"
+            echo "### Tag for deployment $TAG pulled from SSM" >> $GITHUB_STEP_SUMMARY
+          else
+            TAG="${{ inputs.safe_branch_name }}-${{ inputs.short_sha }}"
+            echo "### New tag for deployment $TAG" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
