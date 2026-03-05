@@ -31,8 +31,6 @@ jobs:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always()
 
   workflow_variables:
     runs-on: ubuntu-latest
@@ -42,7 +40,7 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
-      detect_app_code_changes: ${{ steps.detect-app-code-changes.outputs.app_code_changed }}
+      detect_app_code_changes: ${{ steps.changed-files-app.outputs.any_changed }}
 
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -59,12 +57,7 @@ jobs:
         with:
           files: |
             service-admin/**
-      - name: get changed files in the event-receiver folder
-        id: changed-files-event
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
-        with:
-          files: |
-            lambda-functions/event-receiver/**
+
       - name: get changed files in app code
         id: changed-files-app
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
@@ -75,26 +68,21 @@ jobs:
             service-front/**
             service-api/**
             .github/workflows/_build-and-push.yml
-      - name: detect any application code changes
-        id: detect-app-code-changes
-        run: |
-          if [[ "${{ steps.changed-files-app.outputs.any_changed }}" == "true" ]]; then
-            echo "app_code_changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "app_code_changed=false" >> $GITHUB_OUTPUT
-          fi
+
       - name: get changed files in the terraform folder
         id: changed-files-terraform
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             terraform/**
+
       - name: get changed docs files in any folder
         id: changed-files-docs
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             **/*.md
+
       - name: extract variables for workflow
         id: variables
         run: |
@@ -111,6 +99,7 @@ jobs:
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
+
       - name: show specific path
         env:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
@@ -145,8 +134,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path != 'docs'
 
   node_test:
@@ -155,8 +142,6 @@ jobs:
     needs:
       - workflow_variables
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
 
   node_build:
@@ -165,8 +150,6 @@ jobs:
     needs:
       - workflow_variables
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
 
   resolve_docker_tag:
@@ -204,7 +187,8 @@ jobs:
       needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
-      needs.workflow_variables.result == 'success'
+      needs.workflow_variables.result == 'success' &&
+      needs.resolve_docker_tag.result == 'success'
 
   pact_upload:
     name: upload contracts to pact
@@ -222,7 +206,9 @@ jobs:
       PACT_BROKER_PASSWORD: ${{ secrets.PACT_BROKER_PASSWORD }}
     if: |
       always() &&
-      needs.docker_build_scan_push.result == 'success'
+      needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false' &&
+      needs.workflow_variables.result == 'success' &&
+      needs.resolve_docker_tag.result == 'success'
 
   code_coverage:
     name: upload to code coverage
@@ -235,8 +221,7 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     if: |
-      always() &&
-      ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
+      always()
 
   terraform_apply_shared_development:
     name: terraform apply shared development
@@ -253,9 +238,6 @@ jobs:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always() &&
-      needs.terraform_lint.result == 'success'
 
   terraform_apply_environment:
     name: terraform apply environment
@@ -280,7 +262,8 @@ jobs:
       always() &&
       needs.terraform_lint.result == 'success' &&
       (needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false') &&
-      needs.workflow_variables.result == 'success'
+      needs.workflow_variables.result == 'success' &&
+      needs.resolve_docker_tag.result == 'success'
 
   seed_dynamodb:
     name: seed dynamodb
@@ -294,10 +277,6 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-    if: |
-      always() &&
-      needs.terraform_apply_environment.result == 'success' &&
-      needs.terraform_apply_shared_development.result == 'success'
 
   run_behat_suite:
     name: run behat tests against environment
@@ -313,10 +292,6 @@ jobs:
       ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
       ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
       ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
-    if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
-      needs.seed_dynamodb.result == 'success'
 
   slack_notify:
     name: notify of result
@@ -330,9 +305,6 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
-    if: |
-      always() &&
-      needs.run_behat_suite.result == 'success'
 
   # Required end of workflow job
   end_of_workflow:
