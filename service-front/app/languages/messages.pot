@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-03-04T13:54:54+00:00\n"
+"POT-Creation-Date: 2026-03-05T14:19:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -4654,4 +4654,20 @@ msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:41
 msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:12
+msgid "Your information is safe and any LPAs you’ve already added to this account are still there."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:15
+msgid "This is a rare problem and you’ll need to call our contact centre so our technical team can resolve it for you. Please call 0300 456 0300 and quote the incident number %incidentNumber%."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:10
+msgid "There’s a problem with your sign-in"
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:21
+msgid "Opening hours are Monday to Friday, 9am to 5pm, except Wednesdays, 10am to 5pm."
 msgstr ""

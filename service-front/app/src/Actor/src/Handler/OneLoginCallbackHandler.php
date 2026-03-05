@@ -14,6 +14,7 @@ use Common\Handler\Traits\Session;
 use Common\Service\Log\EventCodes;
 use Common\Service\OneLogin\AuthenticationData;
 use Common\Service\OneLogin\OneLoginService;
+use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
 use Mezzio\Session\SessionMiddleware;
@@ -86,7 +87,20 @@ class OneLoginCallbackHandler extends AbstractHandler implements LoggerAware, Se
             throw new RuntimeException('Required parameters not passed for authentication', 500);
         }
 
-        $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
+        try {
+            $user = $this->oneLoginService->callback($authParams['code'], $authParams['state'], $authSession);
+        } catch (ApiException $ex) {
+            if ($ex->getCode() === 409) {
+                $incidentNumber = rand(1000, 9999) . '-' . rand(1000, 9999);
+                $this->logger->warning($ex->getMessage(), ['incidentNumber' => $incidentNumber]);
+
+                return new HtmlResponse($this->renderer->render('error::409', [
+                    'incidentNumber' => $incidentNumber,
+                ]));
+            }
+
+            throw $ex;
+        }
 
         $session->set(UserInterface::class, [
             'username' => $user->getIdentity(),
