@@ -18,7 +18,6 @@ class ActorUsers implements ActorUsersInterface
     public function __construct(
         private readonly DynamoDbClient $client,
         private readonly string $actorUsersTable,
-        private readonly bool $trackOldEmails = false,
     ) {
     }
 
@@ -238,23 +237,6 @@ class ActorUsers implements ActorUsersInterface
                 ],
             ],
         ];
-
-        if ($this->trackOldEmails) {
-            array_push($items, [
-                'Update' => [
-                    'TableName'                 => $this->actorUsersTable,
-                    'Key'                       => [
-                        'Id' => ['S' => '#OLDEMAILS'],
-                    ],
-                    'UpdateExpression'          => 'ADD Emails :Email',
-                    'ExpressionAttributeValues' => [
-                        ':Email' => [
-                            'SS' => [$oldEmail . '=' . hash('sha256', $oldEmail)],
-                        ],
-                    ],
-                ],
-            ]);
-        }
 
         $this->client->transactWriteItems(['TransactItems' => $items]);
     }
