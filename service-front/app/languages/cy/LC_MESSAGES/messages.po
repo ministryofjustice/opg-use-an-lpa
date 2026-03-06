@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-03-04T13:54:54+00:00\n"
+"POT-Creation-Date: 2026-03-05T14:19:35+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -6506,3 +6506,33 @@ msgid ""
 msgstr ""
 "Os ydych chi wedi colli eich allwedd cadarnhau, neu os nad ydych wedi cael un "
 "o’r blaen, gallwch ofyn am un newydd."
+
+#: src/Common/templates/error/409.html.twig:12
+msgid ""
+"Your information is safe and any LPAs you’ve already added to this account are "
+"still there."
+msgstr ""
+"Mae eich gwybodaeth yn ddiogel ac mae unrhyw LPA a ychwanegwyd gennych i’r "
+"cyfrif hwn yn dal yno."
+
+#: src/Common/templates/error/409.html.twig:15
+msgid ""
+"This is a rare problem and you’ll need to call our contact centre so our "
+"technical team can resolve it for you. Please call 0300 456 0300 and quote the "
+"incident number %incidentNumber%."
+msgstr ""
+"Mae hon yn broblem brin a byddwch angen cysylltu gyda’n canolfan gyswllt er "
+"mwyn i’n tîm technegol ei datrys ichi.\n"
+"A fyddech cystal â ffonio 0300 456 0300 a dyfynnu’r rhif digwyddiad "
+"%incidentNumber%."
+
+#: src/Common/templates/error/409.html.twig:10
+msgid "There’s a problem with your sign-in"
+msgstr "Mae yna broblem yn mewngofnodi"
+
+#: src/Common/templates/error/409.html.twig:21
+msgid ""
+"Opening hours are Monday to Friday, 9am to 5pm, except Wednesdays, 10am to 5pm."
+msgstr ""
+"Oriau agor yw dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw dydd Mercher, 10am "
+"tan 5pm."

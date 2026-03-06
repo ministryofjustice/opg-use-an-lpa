@@ -1,0 +1,29 @@
+{% extends '@layout/default.html.twig' %}
+
+{% block html_title %}{% trans %}There’s a problem with your sign-in{% endtrans %} - {{ parent() }} {% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container">
+    <main class="govuk-main-wrapper">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-heading-xl">{% trans %}There’s a problem with your sign-in{% endtrans %}</h1>
+          <p class="govuk-body">
+            {% trans %}Your information is safe and any LPAs you’ve already added to this account are still there.{% endtrans %}
+          </p>
+          <p class="govuk-body">
+            {% trans with {'%incidentNumber': incidentNumber} %}
+            This is a rare problem and you’ll need to call our contact centre so our technical team can resolve it for you.
+            Please call 0300 456 0300 and quote the incident number %incidentNumber%.
+            {% endtrans %}
+          </p>
+          <p class="govuk-body">
+            {% trans %}
+            Opening hours are Monday to Friday, 9am to 5pm, except Wednesdays, 10am to 5pm.
+            {% endtrans %}
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+{% endblock %}
