@@ -222,6 +222,7 @@ jobs:
       always() &&
       ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
 
+  # TODO:
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -236,6 +237,8 @@ jobs:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
+      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
 
   terraform_apply_environment:
     name: terraform apply environment
