@@ -18,6 +18,10 @@ on:
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
+
+permissions:
+  id-token: write
+
 jobs:
   lint-terraform:
     runs-on: ubuntu-latest
