@@ -1,4 +1,4 @@
-FROM golang:1.25.7-alpine3.23@sha256:f6751d823c26342f9506c03797d2527668d095b0a15f1862cddb4d927a7a4ced AS base
+FROM golang:1.26.0-alpine3.23@sha256:d4c4845f5d60c6a974c6000ce58ae079328d03ab7f721a0734277e69905473e5 AS base
 
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 
@@ -12,7 +12,7 @@ COPY internal/ ./internal
 
 RUN go build -tags lambda.norpc -ldflags="-s -w" -o /go/bin/main ./
 
-FROM gcr.io/distroless/static:nonroot@sha256:e8a4044e0b4ae4257efa45fc026c0bc30ad320d43bd4c1a7d5271bd241e386d0 AS production
+FROM gcr.io/distroless/static:nonroot@sha256:f512d819b8f109f2375e8b51d8cfd8aafe81034bc3e319740128b7d7f70d5036 AS production
 
 WORKDIR /var/task
 
