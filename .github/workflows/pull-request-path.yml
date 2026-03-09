@@ -222,7 +222,6 @@ jobs:
       always() &&
       ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
 
-  # TODO:
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -230,11 +229,11 @@ jobs:
       - terraform_lint
       - workflow_variables
     with:
-      workspace: development
-      terraform_path: account
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       apply: false
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      terraform_path: account
+      workspace: development
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
@@ -249,13 +248,13 @@ jobs:
       - terraform_lint
       - workflow_variables
     with:
-      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
-      terraform_path: environment
-      container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
-      apply: true
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
+      apply: true
+      container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      terraform_path: environment
+      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}

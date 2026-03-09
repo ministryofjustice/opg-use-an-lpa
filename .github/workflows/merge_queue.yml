@@ -31,7 +31,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      short_sha: ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
@@ -42,7 +42,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             **/*.md
@@ -131,7 +131,7 @@ jobs:
       - docker_build_scan_push
       - workflow_variables
     with:
-      specific_path: 'all'
+      specific_path: "all"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -139,10 +139,11 @@ jobs:
     name: terraform apply shared preproduction
     uses: ./.github/workflows/_run-terraform.yml
     with:
-      workspace: preproduction
-      terraform_path: account
       apply: true
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       specific_path: all
+      terraform_path: account
+      workspace: preproduction
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -156,11 +157,12 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
     with:
-      workspace: preproduction
-      terraform_path: environment
-      container_version: integration-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
+      container_version: integration-${{ needs.workflow_variables.outputs.semver_tag }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       specific_path: all
+      terraform_path: environment
+      workspace: preproduction
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -209,19 +211,19 @@ jobs:
     steps:
       - name: End of Workflow
         run: |
-            if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
-                ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
-                ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
-                ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
-                ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
-                ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
-                ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
-                then
-                echo "Preproduction environment tested, built and deployed"
-                echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
-                exit 0
-            else
-            echo "Previous jobs in pipeline failed."
-            exit 1
-            fi
+          if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
+              ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
+              ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
+              ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
+              ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
+              ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
+              ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
+              then
+              echo "Preproduction environment tested, built and deployed"
+              echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
+              exit 0
+          else
+          echo "Previous jobs in pipeline failed."
+          exit 1
+          fi
     if: always()
