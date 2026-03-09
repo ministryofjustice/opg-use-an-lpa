@@ -233,7 +233,7 @@ jobs:
       terraform_path: account
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       apply: false
-      oidc_terraform_role: ${{ env.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
@@ -252,7 +252,7 @@ jobs:
       apply: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
-      oidc_terraform_role: ${{ env.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
     secrets:
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
