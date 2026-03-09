@@ -10,6 +10,8 @@ use App\Exception\NotFoundException;
 use App\Service\User\RecoverAccount;
 use App\Service\User\ResolveOAuthUser;
 use App\Service\User\UserService;
+use Aws\CommandInterface;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -173,6 +175,96 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('newFakeEmail', $user['Email']);
 
         $this->assertArrayNotHasKey('Password', $user);
+    }
+
+    #[Test]
+    public function linked_onelogin_user_update_throws_exception_when_conflict(): void
+    {
+        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
+        $actorUsersInterfaceProphecy
+            ->changeEmail(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $userServiceProphecy = $this->prophesize(UserService::class);
+        $userServiceProphecy
+            ->getByIdentity('fakeSub')
+            ->willReturn(
+                [
+                    'Id'        => 'fakeId',
+                    'Identity'  => 'fakeSub',
+                    'Email'     => 'fakeEmail',
+                    'Password'  => 'fakePassword',
+                    'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
+                ]
+            );
+
+        $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
+        $recoverAccountProphecy
+            ->__invoke(Argument::cetera())
+            ->willThrow(new DynamoDbException(
+                'message',
+                $this->prophesize(CommandInterface::class)->reveal(),
+                ['body' => ['CancellationReasons' => [['Code' => 'ConditionalCheckFailed']]]],
+            ));
+
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $sut = new ResolveOAuthUser(
+            $actorUsersInterfaceProphecy->reveal(),
+            $userServiceProphecy->reveal(),
+            $recoverAccountProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $this->expectException(ConflictException::class);
+        ($sut)('fakeSub', 'newFakeEmail');
+    }
+
+    #[Test]
+    public function linked_onelogin_user_update_throws_exception_when_other_dynamo_issue(): void
+    {
+        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
+        $actorUsersInterfaceProphecy
+            ->changeEmail(Argument::cetera())
+            ->shouldNotBeCalled();
+
+        $userServiceProphecy = $this->prophesize(UserService::class);
+        $userServiceProphecy
+            ->getByIdentity('fakeSub')
+            ->willReturn(
+                [
+                    'Id'        => 'fakeId',
+                    'Identity'  => 'fakeSub',
+                    'Email'     => 'fakeEmail',
+                    'Password'  => 'fakePassword',
+                    'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
+                ]
+            );
+
+        $recoverAccountProphecy = $this->prophesize(RecoverAccount::class);
+        $recoverAccountProphecy
+            ->__invoke(Argument::cetera())
+            ->willThrow(new DynamoDbException(
+                'message',
+                $this->prophesize(CommandInterface::class)->reveal(),
+                ['body' => ['CancellationReasons' => [['Code' => 'None']]]],
+            ));
+
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $sut = new ResolveOAuthUser(
+            $actorUsersInterfaceProphecy->reveal(),
+            $userServiceProphecy->reveal(),
+            $recoverAccountProphecy->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $this->expectException(DynamoDbException::class);
+        ($sut)('fakeSub', 'newFakeEmail');
     }
 
     #[Test]

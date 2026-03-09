@@ -206,9 +206,7 @@ jobs:
       PACT_BROKER_PASSWORD: ${{ secrets.PACT_BROKER_PASSWORD }}
     if: |
       always() &&
-      needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false' &&
-      needs.workflow_variables.result == 'success' &&
-      needs.resolve_docker_tag.result == 'success'
+      needs.docker_build_scan_push.result == 'success'
 
   code_coverage:
     name: upload to code coverage
@@ -221,7 +219,8 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     if: |
-      always()
+      always() &&
+      ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
 
   terraform_apply_shared_development:
     name: terraform apply shared development
@@ -277,6 +276,10 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+    if: |
+      always() &&
+      needs.terraform_apply_environment.result == 'success' &&
+      needs.terraform_apply_shared_development.result == 'success'
 
   run_behat_suite:
     name: run behat tests against environment
@@ -292,6 +295,10 @@ jobs:
       ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
       ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
       ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
+    if: |
+      always() &&
+      needs.workflow_variables.result == 'success' &&
+      needs.seed_dynamodb.result == 'success'
 
   slack_notify:
     name: notify of result
@@ -305,6 +312,9 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
       webhook: ${{ secrets.DEV_SLACK_WEB_HOOK }}
+    if: |
+      always() &&
+      needs.run_behat_suite.result == 'success'
 
   # Required end of workflow job
   end_of_workflow:

@@ -8,9 +8,11 @@ use App\DataAccess\Repository\ActorUsersInterface;
 use App\Service\Log\EventCodes;
 use App\Exception\{ConflictException, CreationException, NotFoundException};
 use App\Service\Log\Output\Email;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTimeInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
+use Exception;
 
 /**
  * Given an OIDC 'sub' identity and an email it attempts to resolve a user out of our database.
@@ -151,7 +153,19 @@ class ResolveOAuthUser
      */
     private function userUpdate(array $user, string $email): array
     {
-        return ($this->recoverAccount)($user, $email) ?? $this->updateEmail($user, $email);
+        try {
+            return ($this->recoverAccount)($user, $email) ?? $this->updateEmail($user, $email);
+        } catch (DynamoDbException $ex) {
+            $reasons = $ex->toArray()['CancellationReasons'] ?? [];
+
+            foreach ($reasons as $reason) {
+                if ($reason['Code'] === 'ConditionalCheckFailed') {
+                    throw new ConflictException('User already exists with identity ' . $user['Identity']);
+                }
+            }
+
+            throw $ex;
+        }
     }
 
     /**

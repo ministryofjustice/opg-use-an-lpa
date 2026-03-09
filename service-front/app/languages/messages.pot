@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-03-03T14:39:52+00:00\n"
+"POT-Creation-Date: 2026-03-05T14:19:35+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -244,7 +244,7 @@ msgstr ""
 msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:116
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:62
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
@@ -444,7 +444,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:121
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:66
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:40
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:99
 #: src/Actor/templates/actor/check-lpa.html.twig:104
@@ -488,73 +488,19 @@ msgstr ""
 msgid "the donor has removed you as an attorney"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:25
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:23
 msgid "Do you have an activation key to add an LPA?"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:30
-msgid "You need your own unique activation key to add an LPA to your account. <br> Activation keys expire after 12 months."
 msgstr ""
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:45
-msgid "Where can I find my activation key?"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:51
-msgid "For LPAs registered in the last 12 months"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:58
-msgid "Your activation key is on the letter we sent you that told you the LPA had been registered."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:63
-msgid "For LPAs registered more than 12 months ago"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:70
-msgid "You have to request an activation key from us."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:72
-msgid "If you’ve already requested an activation key, you'll find it on the letter or email we sent you."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:79
-msgid "When activation keys cannot be used"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:83
-msgid "This service cannot be used for:"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:85
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
-msgid "LPAs with reference numbers fewer than 12 digits and registered before January 2016"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:86
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:29
-msgid "enduring powers of attorney (EPAs)"
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:88
-msgid "You’ll need to show the paper LPA or EPA to people or organisations instead."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:93
-msgid "If you’ve lost your activation key, its expired, or you’ve not had one before, you can request a new one."
-msgstr ""
-
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:101
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:49
 msgid "Yes, I have an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/add-lpa-triage.html.twig:105
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:53
 msgid "No, I need to request an activation key"
 msgstr ""
 
@@ -4701,4 +4647,27 @@ msgstr ""
 #: src/Actor/templates/actor/form-error-messages.html.twig:4
 msgctxt "error"
 msgid "As you have not used this service for over 20 minutes, the page has timed out"
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:28
+msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
+msgstr ""
+
+#: src/Actor/templates/actor/add-lpa-triage.html.twig:41
+msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:12
+msgid "Your information is safe and any LPAs you’ve already added to this account are still there."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:15
+msgid "This is a rare problem and you’ll need to call our contact centre so our technical team can resolve it for you. Please call 0300 456 0300 and quote the incident number %incidentNumber%."
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:10
+msgid "There’s a problem with your sign-in"
+msgstr ""
+
+#: src/Common/templates/error/409.html.twig:21
+msgid "Opening hours are Monday to Friday, 9am to 5pm, except Wednesdays, 10am to 5pm."
 msgstr ""
