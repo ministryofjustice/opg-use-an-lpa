@@ -8,14 +8,14 @@ on:
   workflow_call:
     inputs:
       workspace:
-        description: 'Terraform workspace'
+        description: "Terraform workspace"
+        required: true
+        type: string
+      oidc_terraform_role:
+        description: "OIDC terraform role to assume"
         required: true
         type: string
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
-        required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
-        required: true
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
 jobs:
@@ -25,8 +25,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - folder: 'environment'
-          - folder: 'account'
+          - folder: "environment"
+          - folder: "account"
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
@@ -46,8 +46,7 @@ jobs:
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: ${{ inputs.oidc_terraform_role }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRGithubAction
