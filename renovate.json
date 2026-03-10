@@ -84,6 +84,30 @@
       ],
       "matchManagers": [
         "dockerfile"
+      ],
+      "matchPackageNames": [
+        "!php"
+      ]
+    },
+    {
+      "description": [
+        "Docker Images: PHP handling"
+      ],
+      "labels": [
+        "Dependencies",
+        "Renovate",
+        "Docker"
+      ],
+      "groupName": "Docker Updates",
+      "matchUpdateTypes": [
+        "patch",
+        "digest"
+      ],
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchPackageNames": [
+        "php"
       ]
     },
     {
