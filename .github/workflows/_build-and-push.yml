@@ -26,14 +26,19 @@ on:
         required: false
         default: "all"
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
+      oidc_docker_role:
+        description: "OIDC role to assume for ecr permissions"
         required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
-        required: true
+        type: string
     outputs:
       matrix_job_names:
         value: ${{ jobs.docker_build_scan_push.outputs.matrix_job_names }}
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+  id-token: write
 
 jobs:
   docker_build_scan_push:
@@ -134,10 +139,8 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: ${{ inputs.oidc_docker_role }}
           aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRGithubAction
         if: |

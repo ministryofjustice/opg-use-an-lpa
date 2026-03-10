@@ -113,9 +113,7 @@ jobs:
       branch_name: ${{ github.ref_name }}
       push_to_ecr: true
       specific_path: all
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
