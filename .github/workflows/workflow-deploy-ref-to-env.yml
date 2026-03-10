@@ -1,21 +1,20 @@
-
 name: "[Workflow] Deploy branch to specified environment"
 
 on:
   workflow_dispatch:
     inputs:
       git_ref:
-        description: 'Branch name to deploy (e.g. uml1234)'
+        description: "Branch name to deploy (e.g. uml1234)"
         required: true
       public_access_enabled:
-        description: 'Enable public access to the environment'
+        description: "Enable public access to the environment"
         type: boolean
         required: true
         default: false
       terraform_workspace:
-        description: 'Terraform workspace to deploy to'
+        description: "Terraform workspace to deploy to"
         required: true
-        default: 'ur'
+        default: "ur"
 
 defaults:
   run:
@@ -51,7 +50,7 @@ jobs:
     name: output workflow variables
     outputs:
       parsed_branch: ${{ inputs.git_ref }}
-      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -61,13 +60,13 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             terraform/**
@@ -98,10 +97,9 @@ jobs:
     needs:
       - workflow_variables
     with:
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       workspace: ${{ inputs.terraform_workspace }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
@@ -166,10 +164,11 @@ jobs:
     needs:
       - terraform_lint
     with:
-      workspace: development
-      terraform_path: account
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       apply: true
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      terraform_path: account
+      workspace: development
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -193,6 +192,7 @@ jobs:
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
       extra_vars: "-var public_access_enabled=${{ inputs.public_access_enabled }}"
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
