@@ -227,8 +227,8 @@ jobs:
       - workflow_variables
     with:
       apply: false
-      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       terraform_path: account
       workspace: development
@@ -247,8 +247,8 @@ jobs:
       add_ttl: true
       apply: true
       container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
-      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       terraform_path: environment
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
