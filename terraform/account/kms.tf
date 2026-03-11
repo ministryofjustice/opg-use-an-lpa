@@ -51,21 +51,6 @@ module "cloudwatch_mrk" {
   }
 }
 
-module "dynamodb_mrk" {
-  source = "./modules/multi_region_kms"
-
-  key_description         = "DynamoDB encryption ${local.environment}"
-  key_alias               = "dynamodb-encryption-mrk"
-  deletion_window_in_days = 10
-  key_policy              = data.aws_iam_policy_document.dynamodb_kms_merged.json
-
-  providers = {
-    aws.primary   = aws.eu_west_1
-    aws.secondary = aws.eu_west_2
-  }
-}
-
-
 # No longer used but kept to keep regional KMS keys
 resource "aws_kms_key" "sessions_viewer" {
   description             = "Managers keys for sessions in Viewer"
