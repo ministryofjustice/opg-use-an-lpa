@@ -161,9 +161,7 @@ jobs:
       safe_branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
       short_sha: ${{ needs.workflow_variables.outputs.short_sha }}
       detect_app_code_changes: ${{ needs.workflow_variables.outputs.detect_app_code_changes }}
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      oidc_parameter_store_role: ${{ vars.OIDC_PARAMETER_STORE_ROLE }}
 
   docker_build_scan_push:
     name: build, test, scan and push
