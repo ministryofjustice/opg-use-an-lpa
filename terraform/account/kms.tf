@@ -216,7 +216,7 @@ data "aws_iam_policy_document" "event_receiver_kms" {
 }
 
 module "dynamodb_encryption_key" {
-  source      = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.5"
+  source      = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.6"
   description = "DynamoDB encryption key for ${local.environment}"
   alias       = "dynamodb-encryption-key-${local.environment}"
   usage_services = [
