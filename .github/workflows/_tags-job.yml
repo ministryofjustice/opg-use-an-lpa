@@ -15,11 +15,10 @@ on:
       detect_app_code_changes:
         required: true
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
+      oidc_parameter_store_role:
+        description: "OIDC role to assume for fetching docker tag from SSM"
         required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
-        required: true
+        type: string
     outputs:
       docker_tag:
         description: "Final docker tag to use"
@@ -36,10 +35,8 @@ jobs:
         if: inputs.detect_app_code_changes == 'false'
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::311462405659:role/opg-use-an-lpa-ci
+          role-to-assume: ${{ inputs.oidc_parameter_store_role }}
           role-duration-seconds: 900
           role-session-name: OPGUseAnLPAGetParameterGithubAction
 
