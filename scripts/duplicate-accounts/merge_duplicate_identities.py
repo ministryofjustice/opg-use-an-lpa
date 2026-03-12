@@ -1,9 +1,10 @@
 import argparse
 import boto3
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, UTC
 from decimal import Decimal
 import json
+
 
 #######
 # 1. Connect to AWS account
@@ -62,7 +63,7 @@ def parse_args():
 
     return parser.parse_args()
 
-#Connecting to dynamodb
+#Connecting to dynamodb, this returns ActorUsers table
 def get_dynamo_table(environment):
     creds = assume_role(environment)
 
@@ -94,7 +95,7 @@ def scan_actor_users(table):
 
     return items
 
-#Group users by identity
+#Groups users by identity
 def group_by_identity(users):
     grouped = defaultdict(list)
 
@@ -105,7 +106,7 @@ def group_by_identity(users):
 
     return grouped
 
-# Load the LPA table
+# Loads and returns the UserLpaActorMap table
 def get_lpa_table(environment):
     creds = assume_role(environment)
 
@@ -124,6 +125,8 @@ def get_lpa_table(environment):
 
     return dynamodb.Table(f"{TABLE_PREFIX[environment]}-UserLpaActorMap")
 
+
+# Loads and returns the ViewerCodes table
 def get_viewer_code_table(environment):
     creds = assume_role(environment)
 
@@ -142,8 +145,22 @@ def get_viewer_code_table(environment):
 
     return dynamodb.Table(f"{table_prefix[environment]}-ViewerCodes")
 
+
+def get_actor_users_table(environment):
+    return get_dynamo_table(environment)
+
+
+def get_mapping_by_id(lpa_table, mapping_id):
+    response = lpa_table.get_item(Key={"Id": mapping_id})
+    return response.get("Item")
+
+
+def get_actor_user_by_id(actor_table, user_id):
+    response = actor_table.get_item(Key={"Id": user_id})
+    return response.get("Item")
+
 # Fetch LPAs for a user
-# Scan whole table
+# Scan whole UserLpaCAtorMap table and returns all mappings for a user
 def get_user_lpas(lpa_table, user_id):
 
     response = lpa_table.scan(
@@ -163,11 +180,15 @@ def get_user_lpas(lpa_table, user_id):
 
     return items
 
+
+# Deteremines the primary - mostly recently logged in
 def determine_primary(group):
     def login_value(user):
         return user.get("LastLogin") or ""
     return max(group, key=login_value)
 
+
+# This returns all viewer coes associated to a given mapping
 def get_viewer_codes_for_mapping(viewer_table, mapping_id):
     response = viewer_table.scan(
         FilterExpression="UserLpaActor = :mapping_id",
@@ -186,7 +207,11 @@ def get_viewer_codes_for_mapping(viewer_table, mapping_id):
 
     return items
 
+def get_lpa_identifier(mapping):
+    return mapping.get("LpaUid") or mapping.get("SiriusUid")
 
+
+# This groups mappings by same actor, same LPA
 def group_mappings_by_logical_key(mappings):
     grouped = defaultdict(list)
 
@@ -196,7 +221,11 @@ def group_mappings_by_logical_key(mappings):
 
     return grouped
 
-
+# For each duplicate identity
+# If only one mapping - keep it
+# If multiple mapping and exactly one has viewer code, keep the referenced mapping and delete others
+# Multiple mappings and more than one has viewer codes, keep all referenced codes
+# Multiple mapping and none have viewer codes, keep one and delete rest
 def choose_mappings_to_keep(grouped_mappings, viewer_table):
     keep_mapping_ids = set()
     delete_mapping_ids = set()
@@ -237,7 +266,13 @@ def choose_mappings_to_keep(grouped_mappings, viewer_table):
     return keep_mapping_ids, delete_mapping_ids
 
 
-
+# The main function that builds the actual plan for one duplicate identity
+# Choose primary user
+# Load all mappings for all users in the identity group
+# Group mappings by logic cal Actor Id and LPA
+# Decide which mapping to keep/delete
+# Decide which mapping moves to primary user
+# Mark secodary user for deletion
 def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table):
     primary = determine_primary(group)
     secondaries = [u for u in group if u["Id"] != primary["Id"]]
@@ -252,51 +287,105 @@ def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table):
 
     move_mapping_ids = []
     for mapping in all_mappings:
-        if mapping["Id"] in keep_mapping_ids and mapping["UserId"] != primary["Id"]:
+        if mapping["Id"] in keep_mapping_ids and mapping.get("UserId") != primary["Id"]:
             move_mapping_ids.append(mapping["Id"])
 
+    compact_mappings = []
+    for mapping in all_mappings:
+        compact_mappings.append({
+            "Id": mapping["Id"],
+            "UserId": mapping.get("UserId"),
+            "ActorId": clean(mapping.get("ActorId")),
+            "LpaIdentifier": get_lpa_identifier(mapping),
+        })
+
     return {
-         "Id": mapping["Id"],
-         "UserId": mapping.get("UserId"),
-         "ActorId": clean(mapping.get("ActorId")),
-         "LpaIdentifier": get_lpa_identifier(mapping)
+        "identity": identity,
+        "primary_user_id": primary["Id"],
+        "secondary_user_ids": [u["Id"] for u in secondaries],
+        "all_mappings": compact_mappings,
+        "keep_mapping_ids": sorted(list(keep_mapping_ids)),
+        "move_mapping_ids": sorted(list(move_mapping_ids)),
+        "delete_mapping_ids": sorted(list(delete_mapping_ids)),
+        "delete_secondary_user_ids": [u["Id"] for u in secondaries],
     }
 
 # runs with --execute option
+# PLACEHOLDER
 def execute_merge_plan(environment, merge_plan):
-
     print("\nExecuting merge plan...")
 
+    actor_table = get_actor_users_table(environment)
     lpa_table = get_lpa_table(environment)
 
-    for item in merge_plan:
-        action = item["Action"]
+    for plan in merge_plan:
+        print("\n" + "=" * 60)
+        print(f"Executing identity: {plan['identity']}")
+        print(f"Primary user: {plan['primary_user_id']}")
 
-        print(f"Executing: {action}")
+        primary_user_id = plan["primary_user_id"]
 
-        # Example execution logic
-        if action.startswith("Move ActorId"):
+        # 1. Move mappings that should now belong to primary
+        for mapping_id in plan["move_mapping_ids"]:
+            mapping = get_mapping_by_id(lpa_table, mapping_id)
 
-            # Real implementation would update UserId
-            # in UserLpaActorMap
+            if not mapping:
+                print(f" - SKIP move {mapping_id}: mapping not found")
+                continue
 
-            pass
+            current_user_id = mapping.get("UserId")
 
-        elif action.startswith("Delete empty secondary account"):
-            # Delete ActorUser
-            pass
+            if current_user_id == primary_user_id:
+                print(f" - SKIP move {mapping_id}: already belongs to primary")
+                continue
 
-        elif action.startswith("Delete duplicate ActorId"):
-            # Delete duplicate mapping
-            pass
+            print(
+                f" - MOVE mapping {mapping_id}: "
+                f"{current_user_id} -> {primary_user_id}"
+            )
 
-    print("Execution complete")
+            lpa_table.update_item(
+                Key={"Id": mapping_id},
+                UpdateExpression="SET UserId = :new_user",
+                ExpressionAttributeValues={
+                    ":new_user": primary_user_id
+                }
+            )
 
+        # 2. Delete duplicate mappings
+        for mapping_id in plan["delete_mapping_ids"]:
+            mapping = get_mapping_by_id(lpa_table, mapping_id)
+
+            if not mapping:
+                print(f" - SKIP delete mapping {mapping_id}: already deleted")
+                continue
+
+            print(f" - DELETE duplicate mapping {mapping_id}")
+
+            lpa_table.delete_item(
+                Key={"Id": mapping_id}
+            )
+
+        # 3. Delete secondary actor user accounts
+        for secondary_user_id in plan["delete_secondary_user_ids"]:
+            actor_user = get_actor_user_by_id(actor_table, secondary_user_id)
+
+            if not actor_user:
+                print(f" - SKIP delete user {secondary_user_id}: already deleted")
+                continue
+
+            print(f" - DELETE secondary account {secondary_user_id}")
+
+            actor_table.delete_item(
+                Key={"Id": secondary_user_id}
+            )
+
+    print("\nExecution complete")
 
 #Export the merge plan to JSON before execution for review, migration artifact
 def save_merge_plan(environment, merge_plan):
 
-    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     filename = f"merge_plan_{environment}_{timestamp}.json"
 
     with open(filename, "w") as f:
@@ -304,31 +393,14 @@ def save_merge_plan(environment, merge_plan):
 
     print(f"\nMerge plan saved to: {filename}")
 
-
-#Clean DynamoDB values like decimal, extracts LpaUid/SiriusUid
-def format_lpa_records(lpas):
-    formatted = []
-
-    for l in lpas:
-        lpa_uid = l.get("LpaUid") or l.get("SiriusUid")
-
-        formatted.append({
-            "ActorId": clean(l.get("ActorId")),
-            "LpaUid": lpa_uid,
-            "UserId": l.get("UserId")
-        })
-
-    return formatted
-#
-
-def get_lpa_identifier(mapping):
-    return mapping.get("LpaUid") or mapping.get("SiriusUid")
-
+# Helper to convert Dynamodb decimal to plain int
 def clean(value):
     if isinstance(value, Decimal):
         return int(value)
     return value
 
+
+# Prints the plan for a single duplicate identity group.
 def print_merge_plan_for_identity(plan):
     print(f"Primary user: {plan['primary_user_id']}")
     print(f"Secondary users: {plan['secondary_user_ids']}")
@@ -336,8 +408,8 @@ def print_merge_plan_for_identity(plan):
     print("\nMappings:")
     for mapping in plan["all_mappings"]:
         mapping_id = mapping["Id"]
-        actor_id = clean(mapping.get("ActorId"))
-        lpa_id = get_lpa_identifier(mapping)
+        actor_id = mapping.get("ActorId")
+        lpa_id = mapping.get("LpaIdentifier")
         user_id = mapping.get("UserId")
 
         flags = []
@@ -356,8 +428,8 @@ def print_merge_plan_for_identity(plan):
     print("\nPlanned actions:")
     for mapping in plan["all_mappings"]:
         mapping_id = mapping["Id"]
-        actor_id = clean(mapping.get("ActorId"))
-        lpa_id = get_lpa_identifier(mapping)
+        actor_id = mapping.get("ActorId")
+        lpa_id = mapping.get("LpaIdentifier")
 
         if mapping_id in plan["move_mapping_ids"]:
             print(f" - Move mapping {mapping_id} (ActorId {actor_id}, LPA {lpa_id}) to {plan['primary_user_id']}")
@@ -368,7 +440,18 @@ def print_merge_plan_for_identity(plan):
     for secondary_user_id in plan["delete_secondary_user_ids"]:
         print(f" - Delete secondary account {secondary_user_id}")
 
-
+#   It does:
+#   connect to all required tables
+#   scan all users
+#   group users by identity
+#   keep only duplicate identities
+#   for each duplicate group:
+#   build plan
+#   print plan
+#   collect plan into merge_plan
+#   print a summary
+#   save the merge plan JSON
+#   optionally ask for execute confirmation
 def run_plan(environment, limit=None, execute=False):
     if environment == "production":
         raise Exception("Refusing to run against production without explicit approval.")
