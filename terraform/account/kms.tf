@@ -51,21 +51,6 @@ module "cloudwatch_mrk" {
   }
 }
 
-module "dynamodb_mrk" {
-  source = "./modules/multi_region_kms"
-
-  key_description         = "DynamoDB encryption ${local.environment}"
-  key_alias               = "dynamodb-encryption-mrk"
-  deletion_window_in_days = 10
-  key_policy              = data.aws_iam_policy_document.dynamodb_kms_merged.json
-
-  providers = {
-    aws.primary   = aws.eu_west_1
-    aws.secondary = aws.eu_west_2
-  }
-}
-
-
 # No longer used but kept to keep regional KMS keys
 resource "aws_kms_key" "sessions_viewer" {
   description             = "Managers keys for sessions in Viewer"
@@ -215,164 +200,42 @@ data "aws_iam_policy_document" "event_receiver_kms" {
   }
 }
 
-# See the following link for further information
-# https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html
-data "aws_iam_policy_document" "dynamodb_kms_merged" {
-  source_policy_documents = [
-    data.aws_iam_policy_document.dynamodb_kms.json,
-    data.aws_iam_policy_document.dynamodb_kms_development_account_operator_admin.json
+module "dynamodb_encryption_key" {
+  source      = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.6"
+  description = "DynamoDB encryption key for ${local.environment}"
+  alias       = "dynamodb-encryption-key-${local.environment}"
+  usage_services = [
+    "dynamodb.amazonaws.com",
+    "backup.*.amazonaws.com"
   ]
-}
+  primary_region     = "eu-west-1"
+  replicas_to_create = ["eu-west-2"]
 
-data "aws_iam_policy_document" "dynamodb_kms" {
-  statement {
-    sid       = "Enable Root account permissions on Key"
-    effect    = "Allow"
-    actions   = ["kms:*"]
-    resources = ["*"]
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-      ]
-    }
-  }
-  statement {
-    sid       = "Allow Encryption by Service"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "kms:Encrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey",
-    ]
+  administrator_roles = [
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci"
+  ]
+  decryption_roles = ["*"]
+  encryption_roles = ["*"]
 
-    principals {
-      type = "Service"
-      identifiers = [
-        "dynamodb.amazonaws.com"
-      ]
-    }
-  }
+  grant_roles = [
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+    aws_iam_role.aws_backup_role.arn
+  ]
 
-  statement {
-    sid       = "Allow Decryption by Service"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "kms:Decrypt",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey"
-    ]
-
-    principals {
-      type = "Service"
-      identifiers = [
-        "dynamodb.amazonaws.com"
-      ]
-    }
-  }
-
-  statement {
-    sid       = "Key Administrator"
-    effect    = "Allow"
-    resources = ["*"]
-    actions = [
-      "kms:Create*",
-      "kms:Describe*",
-      "kms:Enable*",
-      "kms:List*",
-      "kms:Put*",
-      "kms:Update*",
-      "kms:Revoke*",
-      "kms:Disable*",
-      "kms:Get*",
-      "kms:Delete*",
-      "kms:TagResource",
-      "kms:UntagResource",
-      "kms:ScheduleKeyDeletion",
-      "kms:CancelKeyDeletion",
-      "kms:ReplicateKey",
-    ]
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-      ]
-    }
-  }
-
-  statement {
-    sid    = "Key Administrator Decryption"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
-    actions = [
-      "kms:Decrypt",
-    ]
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-      ]
-    }
-  }
-
-  statement {
-    sid    = "Allow Key to be used for Encryption"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
-    actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:DescribeKey",
-    ]
-    principals {
-      type = "AWS"
-      identifiers = [
-        local.account_name == "development" ? "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_name}-api-task-role",
-      ]
-    }
-  }
-}
-
-data "aws_iam_policy_document" "dynamodb_kms_development_account_operator_admin" {
-  statement {
-    sid    = "Dev Account Key Administrator"
-    effect = "Allow"
-    resources = [
-      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
-    ]
-    actions = [
-      "kms:Create*",
-      "kms:Describe*",
-      "kms:Enable*",
-      "kms:List*",
-      "kms:Put*",
-      "kms:Update*",
-      "kms:Revoke*",
-      "kms:Disable*",
-      "kms:Get*",
-      "kms:Delete*",
-      "kms:TagResource",
-      "kms:UntagResource",
-      "kms:ScheduleKeyDeletion",
-      "kms:CancelKeyDeletion",
-    ]
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/operator"
-      ]
-    }
-  }
+  encryption_role_patterns = [
+    aws_iam_role.aws_backup_role.arn,
+    "-api-task-role",
+    "-opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+  ]
+  decryption_role_patterns = [
+    aws_iam_role.aws_backup_role.arn,
+    "-api-task-role",
+    "-opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+  ]
+  caller_accounts = [
+    data.aws_caller_identity.current.account_id,
+  ]
 }
