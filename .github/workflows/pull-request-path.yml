@@ -269,9 +269,9 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      dynamodb_seeding_dev_role: ${{ vars.OIDC_DYNAMODB_SEEDING_DEVELOPMENT }}
+      lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
+      codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success' &&
