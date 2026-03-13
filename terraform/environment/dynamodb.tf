@@ -7,7 +7,7 @@ resource "aws_dynamodb_table" "use_codes_table" {
   deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -30,6 +30,7 @@ resource "aws_dynamodb_table" "use_codes_table" {
       region_name                 = replica.value.name
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
       point_in_time_recovery      = true
     }
   }
@@ -49,7 +50,7 @@ resource "aws_dynamodb_table" "stats_table" {
   #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -72,6 +73,7 @@ resource "aws_dynamodb_table" "stats_table" {
       region_name                 = replica.value.name
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
       point_in_time_recovery      = true
     }
   }
@@ -89,7 +91,7 @@ resource "aws_dynamodb_table" "use_users_table" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -171,6 +173,7 @@ resource "aws_dynamodb_table" "use_users_table" {
       region_name                 = replica.value.name
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
       point_in_time_recovery      = true
     }
   }
@@ -187,7 +190,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
   deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -226,6 +229,7 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
       region_name                 = replica.value.name
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
       point_in_time_recovery      = true
     }
   }
@@ -244,7 +248,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -272,6 +276,7 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
       point_in_time_recovery      = true
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
     }
   }
 
@@ -288,7 +293,7 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk.target_key_arn : null
+    kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
   }
 
   attribute {
@@ -348,6 +353,7 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
       region_name                 = replica.value.name
       propagate_tags              = true
       deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
+      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
       point_in_time_recovery      = true
     }
   }
@@ -355,6 +361,12 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
   provider = aws.eu_west_1
 }
 
-data "aws_kms_alias" "dynamodb_cmk" {
-  name = "alias/dynamodb-encryption-key-${local.environment.account_name}"
+data "aws_kms_alias" "dynamodb_cmk_eu_west_1" {
+  provider = aws.eu_west_1
+  name     = "alias/dynamodb-encryption-key-${local.environment.account_name}"
+}
+
+data "aws_kms_alias" "dynamodb_cmk_eu_west_2" {
+  provider = aws.eu_west_2
+  name     = "alias/dynamodb-encryption-key-${local.environment.account_name}"
 }
