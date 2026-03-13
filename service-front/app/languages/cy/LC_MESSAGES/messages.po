@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-03-05T14:19:35+00:00\n"
+"POT-Creation-Date: 2026-03-12T10:40:09+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : "
 "n==6 ? 4 : 5);\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
@@ -211,7 +211,7 @@ msgstr "DILËWYD"
 msgid "EXPIRED"
 msgstr "WEDI DOD I BEN"
 
-#: src/Actor/templates/actor/partials/cancel-code-option.html.twig:8
+#: src/Actor/templates/actor/partials/cancel-code-option.html.twig:9
 msgid "Cancel organisation's access"
 msgstr "Canslo mynediad sefydliad"
 
@@ -6536,3 +6536,17 @@ msgid ""
 msgstr ""
 "Oriau agor yw dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw dydd Mercher, 10am "
 "tan 5pm."
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
+msgid ""
+"LPAs with reference numbers fewer than 12 digits and registered before January "
+"2016"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:29
+msgid "enduring powers of attorney (EPAs)"
+msgstr ""
+
+#: src/Actor/templates/actor/partials/cancel-code-option.html.twig:12
+msgid "If you want this code to be cancelled please contact %createdBy%."
+msgstr "Os ydych am i’r cod hwn gael ei ganslo, cysylltwch â %createdBy%."
