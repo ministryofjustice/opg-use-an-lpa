@@ -314,13 +314,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "${local.policy_region_prefix}KMSAccess"
+    sid    = "${local.policy_region_prefix}SecretsManagerKMSAccess"
     effect = "Allow"
 
     actions = [
       "kms:Decrypt",
     ]
-
     resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
   }
 
@@ -373,6 +372,18 @@ data "aws_iam_policy_document" "api_permissions_role" {
         module.event_bus.receive_events_bus_arn,
       ]
     }
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
   }
 
   provider = aws.region
