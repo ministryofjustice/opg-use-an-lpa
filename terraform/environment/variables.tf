@@ -95,6 +95,7 @@ variable "environments" {
         have_a_backup_plan              = bool
       })
       dynamodb_tables = object({
+        cmk_encryption_enabled      = bool
         deletion_protection_enabled = bool
         actor_codes = object({
           name = string
