@@ -22,7 +22,13 @@ Feature: Actor able to cancel access code
     When  I cancel the organisation access code
     Then I want to be asked for confirmation prior to cancellation
 
-  @integration
+  @acceptance
+  Scenario: As a user not be able to cancel a viewer code created by another person
+    Given I can see all of my access codes and their details
+    When I cancel the organisation access code created by another person
+    Then the access code is not cancelled
+
+  @integration @acceptance
   Scenario: As a user be able to view the cancelled viewer codes
     Given I can see all of my access codes and their details
     When I cancel the organisation access code

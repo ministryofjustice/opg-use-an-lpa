@@ -55,7 +55,7 @@ Feature: Add an older LPA
     And I confirm the details I provided are correct
     Then I should be told that I have already added this LPA
 
-  @acceptance @integration @only
+  @acceptance @integration
   Scenario: The user is able to request a new key for an LPA that they have already requested a key for
     Given I am on the add an older LPA page
     When I provide the details from a valid paper LPA which I have already requested an activation key for
