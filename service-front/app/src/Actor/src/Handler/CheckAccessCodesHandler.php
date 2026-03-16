@@ -84,6 +84,7 @@ class CheckAccessCodesHandler extends AbstractHandler implements UserAware, Csrf
             if (
                 new DateTime($code['Expires']) >= (new DateTime('now'))->setTime(23, 59, 59)
                 && !array_key_exists('Cancelled', $code)
+                && $actorLpaToken === $code['UserLpaActor']
             ) {
                 $form = new CancelCode($this->getCsrfGuard($request));
                 $form->setAttribute('action', $this->urlHelper->generate('lpa.confirm-cancel-code'));
