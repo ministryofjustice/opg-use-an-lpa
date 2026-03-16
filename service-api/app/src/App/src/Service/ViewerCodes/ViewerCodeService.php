@@ -151,7 +151,8 @@ class ViewerCodeService
             return;
         }
 
-        if ($this->viewerCodesRepository->get($code) === null) {
+        $viewerCode = $this->viewerCodesRepository->get($code);
+        if ($viewerCode === null || $viewerCode['UserLpaActor'] !== $userLpaActorToken) {
             return;
         }
 

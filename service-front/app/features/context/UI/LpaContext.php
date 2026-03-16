@@ -1655,6 +1655,85 @@ class LpaContext implements Context
         $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
     }
 
+    #[Given('/^I and another person have generated access codes for an organisation and can see the details$/')]
+    public function iAndAnotherPersonHaveGeneratedAccessCodesForAnOrganisationAndCanSeeTheDetails(): void
+    {
+        $anotherUserLpaActorToken = 'another_user';
+        $anotherAccessCode        = 'ANOTHER43125';
+        $anotherActorId           = 700000000057;
+
+        $this->iHaveCreatedAnAccessCode();
+        $this->iAmOnTheDashboardPage();
+
+        // API call for get LpaById
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        'user-lpa-actor-token' => $this->userLpaActorToken,
+                        'date'                 => 'date',
+                        'lpa'                  => $this->lpa,
+                        'actor'                => $this->lpaData['actor'],
+                    ]
+                ),
+                'LpaService::getLPAById'
+            )
+        );
+
+        // API call to get access codes
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode(
+                    [
+                        [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new DateTime('yesterday'))->format('c'),
+                            'Expires'      => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                            'Viewed'       => false,
+                            'ActorId'      => $this->actorId,
+                        ],
+                        [
+                            'SiriusUid'    => $this->lpa->uId,
+                            'Added'        => (new DateTime('yesterday'))->format('c'),
+                            'Expires'      => (new DateTime('+1 month'))->setTime(23, 59, 59)->format('c'),
+                            'UserLpaActor' => $anotherUserLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $anotherAccessCode,
+                            'Viewed'       => false,
+                            'ActorId'      => $anotherActorId,
+                        ],
+                    ]
+                ),
+                self::VIEWER_CODE_SERVICE_GET_SHARE_CODES
+            )
+        );
+
+        $this->iClickToCheckMyAccessCodesThatIsUsedToViewLPA();
+
+        $this->ui->assertPageContainsText('Active codes');
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-1 dl.govuk-summary-list',
+            'V - XYZ3 - 21AB - C987'
+        );
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-1 dl.govuk-summary-list',
+            'Ian Deputy'
+        );
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-2 dl.govuk-summary-list',
+            'V - ANOT - HER4 - 3125'
+        );
+        $this->ui->assertElementContainsText(
+            '#accordion-default-content-2 dl.govuk-summary-list',
+            'Simon Matthews'
+        );
+    }
+
     #[Given('I have generated an access code for an LPA on my account')]
     public function iHaveGeneratedAnAccessCodeForAnLPAOnMyAccount(): void
     {
@@ -3413,5 +3492,17 @@ class LpaContext implements Context
     {
         $this->ui->assertPageAddress('/lpa/view-lpa');
         $this->ui->assertPageContainsText($decisionInfo);
+    }
+
+    #[When('/^I want to cancel the organisation access code created by another person/')]
+    public function iWantToCancelTheOrganisationAccessCodeCreatedByAnotherPerson(): void
+    {
+        // nothing
+    }
+
+    #[Then('/^I should see who created it/')]
+    public function iShouldSeeWhoCreatedIt(): void
+    {
+        $this->ui->assertPageContainsText('If you want this code to be cancelled please contact Simon Matthews.');
     }
 }
