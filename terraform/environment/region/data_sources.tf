@@ -185,3 +185,8 @@ data "aws_s3_bucket" "access_log" {
 
   provider = aws.region
 }
+
+data "aws_kms_alias" "dynamodb_cmk" {
+  provider = aws.region
+  name     = "alias/dynamodb-encryption-key-${var.account_name}"
+}
