@@ -1,13 +1,15 @@
-{{ govuk_form_open(code.form) }}
-        {{ govuk_form_element(code.form.get('__csrf')) }}
-        {{ govuk_form_element(code.form.get('lpa_token')) }}
-        {{ govuk_form_element(code.form.get('viewer_code')) }}
-        {{ govuk_form_element(code.form.get('organisation')) }}
+{% if code.form is defined %}
+  {{ govuk_form_open(code.form) }}
+  {{ govuk_form_element(code.form.get('__csrf')) }}
+  {{ govuk_form_element(code.form.get('lpa_token')) }}
+  {{ govuk_form_element(code.form.get('viewer_code')) }}
+  {{ govuk_form_element(code.form.get('organisation')) }}
 
-<button data-prevent-double-click="true" type="submit" class="org-cancel govuk-body lpa-account-delete">
+  <button data-prevent-double-click="true" type="submit" class="org-cancel govuk-body lpa-account-delete">
     {% trans %}Cancel organisation's access{% endtrans %}
-</button>
+  </button>
 
-{{ govuk_form_close() }}
-
-
+  {{ govuk_form_close() }}
+{% else %}
+  <p class="govuk-body">{% trans with {'%createdBy%': code.CreatedBy} %}If you want this code to be cancelled please contact %createdBy%.{% endtrans %}</p>
+{% endif %}

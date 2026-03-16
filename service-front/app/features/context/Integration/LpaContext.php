@@ -1089,6 +1089,12 @@ class LpaContext extends BaseIntegrationContext
         $this->iCanSeeAllOfMyAccessCodesAndTheirDetails();
     }
 
+    #[Given('/^I and another person have generated access codes for an organisation and can see the details$/')]
+    public function iAndAnotherPersonHaveGeneratedAccessCodesForAnOrganisationAndCanSeeTheDetails(): void
+    {
+        $this->iHaveGeneratedAnAccessCodeForAnOrganisationAndCanSeeTheDetails();
+    }
+
     #[When('/^I have shared the access code with organisations to view my LPA$/')]
     #[Given('/^I have shared the access code with organisations and they have viewed my LPA$/')]
     public function iHaveSharedTheAccessCodeWithOrganisationsToViewMyLPA(): void
