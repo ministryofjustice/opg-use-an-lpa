@@ -168,11 +168,11 @@ jobs:
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_preproduction
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
       workspace: preproduction
+      dynamodb_seeding_role: ${{ vars.OIDC_DYNAMODB_SEEDING_PREPRODUCTION }}
+      lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
+      codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
 
   run_behat_suite_preproduction:
     name: run behat tests against preproduction
