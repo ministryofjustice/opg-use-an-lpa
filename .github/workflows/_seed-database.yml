@@ -5,13 +5,9 @@ on:
         description: "Suffix of the environment_config_file_ artifact to download"
         required: true
         type: string
-      dynamodb_seeding_dev_role:
-        description: "The OIDC role to assume for seeding dynamodb in development"
-        required: false
-        type: string
-      dynamodb_seeding_preprod_role:
-        description: "The OIDC role to assume for seeding dynamodb in preproduction"
-        required: false
+      dynamodb_seeding_role:
+        description: "The OIDC role to assume for seeding DynamoDB"
+        required: true
         type: string
       lpa_store_seeding_role:
         description: "The OIDC role to assume for seeding in lpa store"
@@ -59,22 +55,10 @@ jobs:
           fi
           echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
 
-      - name: Select DynamoDB seeding role
-        id: select_role
-        run: |
-          if [[ "$AWS_ACCOUNT_ID" == "367815980639" ]]; then
-            echo "role=${{ inputs.dynamodb_seeding_dev_role }}" >> $GITHUB_OUTPUT
-          elif [[ "$AWS_ACCOUNT_ID" == "888228022356" ]]; then
-            echo "role=${{ inputs.dynamodb_seeding_preprod_role }}" >> $GITHUB_OUTPUT
-          else
-            echo "Unknown account: $AWS_ACCOUNT_ID"
-            exit 1
-          fi
-
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          role-to-assume: ${{ steps.select_role.outputs.role }}
+          role-to-assume: ${{ inputs.dynamodb_seeding_role }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPASeedGithubAction

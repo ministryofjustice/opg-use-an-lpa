@@ -269,7 +269,7 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
-      dynamodb_seeding_dev_role: ${{ vars.OIDC_DYNAMODB_SEEDING_DEVELOPMENT }}
+      dynamodb_seeding_role: ${{ vars.OIDC_DYNAMODB_SEEDING_DEVELOPMENT }}
       lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
       codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
     if: |

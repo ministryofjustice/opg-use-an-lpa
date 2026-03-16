@@ -170,7 +170,7 @@ jobs:
       - terraform_apply_preproduction
     with:
       workspace: preproduction
-      dynamodb_seeding_preprod_role: ${{ vars.OIDC_DYNAMODB_SEEDING_PREPRODUCTION }}
+      dynamodb_seeding_role: ${{ vars.OIDC_DYNAMODB_SEEDING_PREPRODUCTION }}
       lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
       codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
 
