@@ -515,7 +515,7 @@ class ViewerCodeServiceTest extends TestCase
         $viewerCodeRepoProphecy
             ->get('123412341234')
             ->shouldBeCalled()
-            ->willReturn([]);
+            ->willReturn(['UserLpaActor' => 'user_actor_lpa_token']);
         $viewerCodeRepoProphecy
             ->cancel('123412341234', Argument::type(DateTime::class))
             ->shouldBeCalled();

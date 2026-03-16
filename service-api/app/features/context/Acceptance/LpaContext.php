@@ -1023,7 +1023,7 @@ class LpaContext implements Context
         Assert::assertEmpty($response);
     }
 
-    #[When('/^I cancel the organisation access code/')]
+    #[When('/^I cancel the organisation access code$/')]
     public function iCancelTheOrganisationAccessCode(): void
     {
         // UserLpaActorMap::get
@@ -1059,6 +1059,7 @@ class LpaContext implements Context
                 'user-token' => $this->userId,
             ]
         );
+        Assert::assertEquals(0, $this->awsFixtures->count());
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -1136,6 +1137,7 @@ class LpaContext implements Context
                 'user-token' => $this->userId,
             ]
         );
+        Assert::assertEquals(0, $this->awsFixtures->count());
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -1147,6 +1149,230 @@ class LpaContext implements Context
         Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
         Assert::assertEquals($response[0]['UserLpaActor'], $this->userLpaActorToken);
         Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid'    => $this->lpaUid,
+                            'Added'        => '2021-01-05 12:34:56',
+                            'Expires'      => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::cancel
+        $this->awsFixtures->append(
+            new Result([]),
+        );
+
+        $this->apiPut(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            ['code' => $this->accessCode],
+            ['User-Token' => $this->userId],
+        );
+        Assert::assertEquals(0, $this->awsFixtures->count());
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+    }
+
+    #[When('/^I cancel the organisation access code created by another person$/')]
+    public function iCancelTheOrganisationAccessCodeCreatedByAnotherPerson(): void
+    {
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // LpaRepository::get
+        $this->apiFixtures->append(
+            new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode($this->lpa)
+            )
+        );
+
+        // API call to get lpa
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken,
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('date', $response);
+        Assert::assertArrayHasKey('actor', $response);
+        Assert::assertEquals($response['user-lpa-actor-token'], $this->userLpaActorToken);
+        Assert::assertEquals($response['lpa']['uId'], $this->lpa->uId);
+        Assert::assertEquals($response['actor']['details']['uId'], $this->actorId);
+
+        // Get the share codes
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByUserLpaActorId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'UserLpaActor' => 'another_user_token',
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => $this->accessCode,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to get access codes
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+
+        $response = $this->getResponseAsJson();
+
+        Assert::assertArrayHasKey('ViewerCode', $response[0]);
+        Assert::assertArrayHasKey('Expires', $response[0]);
+        Assert::assertEquals($response[0]['Organisation'], $this->organisation);
+        Assert::assertEquals($response[0]['SiriusUid'], $this->lpaUid);
+        Assert::assertEquals($response[0]['UserLpaActor'], 'another_user_token');
+        Assert::assertEquals($response[0]['Added'], '2021-01-05 12:34:56');
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid'    => $this->lpaUid,
+                            'Added'        => '2021-01-05 12:34:56',
+                            'Expires'      => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'UserLpaActor' => 'another_user_token',
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        $this->apiPut(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            ['code' => $this->accessCode],
+            ['User-Token' => $this->userId],
+        );
+
+        $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
+    }
+
+    #[Then('/^the access code is not cancelled$/')]
+    public function theAccessCodeIsNotCancelled(): void
+    {
+        // Nothing to do
     }
 
     #[When('/^I click to check my access code now expired/')]
@@ -1436,36 +1662,30 @@ class LpaContext implements Context
         $this->awsFixtures->append(
             new Result(
                 [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                0 => [
-                                    'SiriusUid'    => $this->lpaUid,
-                                    'Added'        => '2021-01-05 12:34:56',
-                                    'Expires'      => '2022-01-05 12:34:56',
-                                    'Cancelled'    => '2022-01-05 12:34:56',
-                                    'UserLpaActor' => $this->userLpaActorToken,
-                                    'Organisation' => $this->organisation,
-                                    'ViewerCode'   => $this->accessCode,
-                                ],
-                            ]
-                        ),
-                    ],
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid'    => $this->lpaUid,
+                            'Added'        => '2021-01-05 12:34:56',
+                            'Expires'      => '2022-01-05 12:34:56',
+                            'Cancelled'    => '2022-01-05 12:34:56',
+                            'UserLpaActor' => $this->userLpaActorToken,
+                            'Organisation' => $this->organisation,
+                            'ViewerCode'   => $this->accessCode,
+                        ],
+                    ),
                 ]
             )
         );
 
-        // ViewerCodes::cancel
-        $this->awsFixtures->append(new Result());
-
         // ViewerCodeService::cancelShareCode
         $this->apiPut(
             '/v1/lpas/' . $this->userLpaActorToken . '/codes',
-            ['code' => $shareCode],
+            ['code' => $this->accessCode],
             [
                 'user-token' => $this->base->userAccountId,
             ]
         );
+        Assert::assertEquals(0, $this->awsFixtures->count());
     }
 
     #[When('/^I fill in the form and click the cancel button$/')]
@@ -1861,10 +2081,77 @@ class LpaContext implements Context
     #[Then('/^I should be shown the details of the cancelled viewer code with cancelled status/')]
     public function iShouldBeShownTheDetailsOfTheCancelledViewerCodeWithCancelledStatus(): void
     {
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // ViewerCodes::getCodesByLpaId
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'SiriusUid'    => $this->lpaUid,
+                                'Added'        => '2021-01-05 12:34:56',
+                                'Expires'      => (new DateTime('tomorrow'))->format('Y-m-d\TH:i:s.u\Z'),
+                                'UserLpaActor' => $this->userLpaActorToken,
+                                'Organisation' => $this->organisation,
+                                'ViewerCode'   => $this->accessCode,
+                                'Cancelled'    => (new DateTime('now'))->format('Y-m-d\TH:i:s.u\Z'),
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+
+        // ViewerCodeActivity::getStatusesForViewerCodes
+        $this->awsFixtures->append(new Result());
+
+        // UserLpaActorMap::get
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => $this->marshalAwsResultData(
+                        [
+                            'SiriusUid' => $this->lpaUid,
+                            'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
+                            'Id'        => $this->userLpaActorToken,
+                            'ActorId'   => $this->actorId,
+                            'UserId'    => $this->userId,
+                        ]
+                    ),
+                ]
+            )
+        );
+
+        // API call to get access codes
+        $this->apiGet(
+            '/v1/lpas/' . $this->userLpaActorToken . '/codes',
+            [
+                'user-token' => $this->userId,
+            ]
+        );
+        Assert::assertEquals(0, $this->awsFixtures->count());
+
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
         $response = $this->getResponseAsJson();
-        Assert::assertArrayHasKey('Cancelled', $response);
+        Assert::assertArrayHasKey('Cancelled', $response[0]);
     }
 
     #[Then('/^I should be shown the details of the viewer code with status(.*)/')]
