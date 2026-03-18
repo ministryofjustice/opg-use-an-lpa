@@ -5,31 +5,29 @@ on:
         description: "Suffix of the environment_config_file_ artifact to download"
         required: true
         type: string
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
+      dynamodb_seeding_role:
+        description: "The OIDC role to assume for seeding DynamoDB"
         required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
+        type: string
+      lpa_store_seeding_role:
+        description: "The OIDC role to assume for seeding in lpa store"
         required: true
+        type: string
+      codes_seeding_role:
+        description: "The OIDC role to assume for seeding codes"
+        required: true
+        type: string
 
 permissions:
   id-token: write
 
 jobs:
-  terraform_workflow:
+  db_seeding:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: "0"
-
-      - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          aws-region: eu-west-1
-          role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: download cluster_config
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
@@ -46,14 +44,27 @@ jobs:
       - name: install requirements
         run: pip install -r service-api/seeding/requirements.txt
 
-      - name: seed dynamodb
+      - name: Determine AWS account
+        id: detect_account
         run: |
-          export AWS_ACCOUNT_ID=$(cat ./terraform/environment/cluster_config.json | jq .account_id | xargs)
+          AWS_ACCOUNT_ID=$(cat ./terraform/environment/cluster_config.json | jq .account_id | xargs)
           if [[ "${AWS_ACCOUNT_ID}" == "690083044361" ]]
           then
             echo "Production account detected. Exiting"
             exit 1
           fi
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: ${{ inputs.dynamodb_seeding_role }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPASeedGithubAction
+
+      - name: seed dynamodb
+        run: |
           export DYNAMODB_TABLE_ACTOR_CODES=$(cat ./terraform/environment/cluster_config.json | jq .actor_lpa_codes_table | xargs)
           export DYNAMODB_TABLE_VIEWER_CODES=$(cat ./terraform/environment/cluster_config.json | jq .viewer_codes_table | xargs)
           export DYNAMODB_TABLE_ACTOR_USERS=$(cat ./terraform/environment/cluster_config.json | jq .use_users_table | xargs)
@@ -70,11 +81,9 @@ jobs:
       - name: configure AWS credentials for lpa-store seeding
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
-          role-to-assume: arn:aws:iam::493907465011:role/use-a-lpa-dev-seeding
+          role-to-assume: ${{ inputs.lpa_store_seeding_role }}
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: seed lpa
@@ -90,7 +99,7 @@ jobs:
         with:
           aws-region: eu-west-1
           role-duration-seconds: 1800
-          role-to-assume: arn:aws:iam::288342028542:role/opg-use-an-lpa-ci-seeding-role
+          role-to-assume: ${{ inputs.codes_seeding_role }}
           role-session-name: OPGUseAnLPASeedGithubAction
 
       - name: seed codes
