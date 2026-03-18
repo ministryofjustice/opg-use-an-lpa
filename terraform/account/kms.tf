@@ -223,18 +223,24 @@ module "dynamodb_encryption_key" {
     aws_iam_role.aws_backup_role.arn
   ]
 
-  encryption_role_patterns = [
-    aws_iam_role.aws_backup_role.arn,
-    "-api-task-role",
-    "-opg-use-an-lpa-ci",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-  ]
-  decryption_role_patterns = [
-    aws_iam_role.aws_backup_role.arn,
-    "-api-task-role",
-    "-opg-use-an-lpa-ci",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-  ]
+  encryption_role_patterns = concat(
+    [
+      aws_iam_role.aws_backup_role.arn,
+      "-api-task-role",
+      "-opg-use-an-lpa-ci",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+    ],
+    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
+  )
+  decryption_role_patterns = concat(
+    [
+      aws_iam_role.aws_backup_role.arn,
+      "-api-task-role",
+      "-opg-use-an-lpa-ci",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+    ],
+    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
+  )
   caller_accounts = [
     data.aws_caller_identity.current.account_id,
   ]
