@@ -230,7 +230,7 @@ module "dynamodb_encryption_key" {
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     ],
-    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-*"] : []
+    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
   )
   decryption_role_patterns = concat(
     [
@@ -239,7 +239,7 @@ module "dynamodb_encryption_key" {
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     ],
-    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-*"] : []
+    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
   )
   caller_accounts = [
     data.aws_caller_identity.current.account_id,
