@@ -23,29 +23,33 @@ if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
 else:
 
     if os.getenv('CI'):
-        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/opg-use-an-lpa-ci"
+        # For GitHub Actions, the OIDC role is used
+        dynamodb = boto3.resource(
+            'dynamodb',
+            region_name='eu-west-1'
+        )
 
     else:
         role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/operator"
 
-    # Get a auth token
-    session = boto3.client(
-        'sts',
-        region_name='eu-west-1',
-    ).assume_role(
-        RoleArn=role_arn,
-        RoleSessionName='db_seeding',
-        DurationSeconds=900
-    )
+        # Get a auth token
+        session = boto3.client(
+            'sts',
+            region_name='eu-west-1',
+        ).assume_role(
+            RoleArn=role_arn,
+            RoleSessionName='db_seeding',
+            DurationSeconds=900
+        )
 
-    # Create a authenticated client
-    dynamodb = boto3.resource(
-        'dynamodb',
-        region_name='eu-west-1',
-        aws_access_key_id=session['Credentials']['AccessKeyId'],
-        aws_secret_access_key=session['Credentials']['SecretAccessKey'],
-        aws_session_token=session['Credentials']['SessionToken']
-    )
+        # Create a authenticated client
+        dynamodb = boto3.resource(
+            'dynamodb',
+            region_name='eu-west-1',
+            aws_access_key_id=session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=session['Credentials']['SecretAccessKey'],
+            aws_session_token=session['Credentials']['SessionToken']
+        )
 
 viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
