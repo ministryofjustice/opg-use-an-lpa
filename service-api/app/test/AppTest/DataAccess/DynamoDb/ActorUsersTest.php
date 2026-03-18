@@ -502,9 +502,8 @@ class ActorUsersTest extends TestCase
                     ],
                     [
                         'Put' => [
-                            'TableName'           => self::TABLE_NAME,
-                            'ConditionExpression' => 'attribute_not_exists(Id)',
-                            'Item'                => [
+                            'TableName' => self::TABLE_NAME,
+                            'Item'      => [
                                 'Id' => ['S' => 'EMAIL#newemail@example.com'],
                             ],
                         ],
