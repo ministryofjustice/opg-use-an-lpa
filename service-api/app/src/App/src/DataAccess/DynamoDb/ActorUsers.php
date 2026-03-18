@@ -229,9 +229,8 @@ class ActorUsers implements ActorUsersInterface
             ],
             [
                 'Put' => [
-                    'TableName'           => $this->actorUsersTable,
-                    'ConditionExpression' => 'attribute_not_exists(Id)',
-                    'Item'                => [
+                    'TableName' => $this->actorUsersTable,
+                    'Item'      => [
                         'Id' => ['S' => 'EMAIL#' . $newEmail],
                     ],
                 ],
