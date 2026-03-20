@@ -11,11 +11,11 @@ on:
         description: "Terraform workspace"
         required: true
         type: string
+      ingress_management_role:
+        description: "OIDC role to allow GitHub Actions to manage ingress rules for the environment"
+        required: true
+        type: string
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS:
-        required: true
-      AWS_SECRET_ACCESS_KEY_ACTIONS:
-        required: true
       ONE_LOGIN_OTP_SECRET:
         required: true
       ONE_LOGIN_CREDENTIALS:
@@ -66,8 +66,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: ${{ inputs.ingress_management_role }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPABehatGithubAction
