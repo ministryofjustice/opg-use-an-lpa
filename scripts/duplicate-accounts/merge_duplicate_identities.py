@@ -1,10 +1,12 @@
 import argparse
 import boto3
 from collections import defaultdict
+from boto3.dynamodb.conditions import Key
 from datetime import datetime, UTC
 from decimal import Decimal
 import json
 import time
+import os
 
 #######
 # 1. Connect to AWS account
@@ -56,9 +58,27 @@ def parse_args():
     )
 
     parser.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help="Skip this many duplicate identities before processing"
+    )
+
+    parser.add_argument(
         "--execute",
         action="store_true",
-        help="Apply the merge plan (default is dry-run)"
+        help="Apply a reviewed merge plan"
+    )
+
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory to save merge plan files"
+    )
+
+    parser.add_argument(
+        "--plan-file",
+        help="Path to a previously generated merge plan JSON file"
     )
 
     return parser.parse_args()
@@ -81,7 +101,7 @@ def get_dynamo_table(environment):
     TABLE_PREFIX = {
 #         "production": "ual-prod",
 #         "preproduction": "ual-preprod",
-        "development": "3648uml4167",
+        "development": "3644uml4037",
         "demo": "demo",
     }
 
@@ -124,7 +144,7 @@ def get_lpa_table(environment):
     )
 
     TABLE_PREFIX = {
-       "development": "3648uml4167",
+       "development": "3644uml4037",
         "demo": "demo"
     }
 
@@ -145,7 +165,7 @@ def get_viewer_code_table(environment):
     )
 
     table_prefix = {
-        "development": "3648uml4167",
+        "development": "3644uml4037",
         "demo": "demo",
     }
 
@@ -176,18 +196,17 @@ def determine_primary(group):
 # Fetch LPAs for a user
 # Scan whole UserLpaCAtorMap table and returns all mappings for a user [primary & secodary]
 def get_user_lpas(lpa_table, user_id):
-
-    response = lpa_table.scan(
-        FilterExpression="UserId = :uid",
-        ExpressionAttributeValues={":uid": user_id}
+    response = lpa_table.query(
+        IndexName="UserIndex",
+        KeyConditionExpression=Key("UserId").eq(user_id)
     )
 
     items = response.get("Items", [])
 
     while "LastEvaluatedKey" in response:
-        response = lpa_table.scan(
-            FilterExpression="UserId = :uid",
-            ExpressionAttributeValues={":uid": user_id},
+        response = lpa_table.query(
+            IndexName="UserIndex",
+            KeyConditionExpression=Key("UserId").eq(user_id),
             ExclusiveStartKey=response["LastEvaluatedKey"]
         )
         items.extend(response.get("Items", []))
@@ -618,6 +637,9 @@ def execute_merge_plan(environment, merge_plan):
 
             actor_table.delete_item(Key={"Id": secondary_user_id})
 
+        mark_identity_completed(environment, plan["identity"])
+        print(f" - CHECKPOINT saved for identity {plan['identity']}")
+
     print("\nExecution complete")
 
     execution_duration = time.perf_counter() - execution_start
@@ -625,15 +647,54 @@ def execute_merge_plan(environment, merge_plan):
 
 
 #Export the merge plan to JSON before execution for review, migration artifact
-def save_merge_plan(environment, merge_plan):
+def save_merge_plan(environment, merge_plan, output_dir="."):
+    os.makedirs(output_dir, exist_ok=True)
 
     timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-    filename = f"merge_plan_{environment}_{timestamp}.json"
+    filename = os.path.join(output_dir, f"merge_plan_{environment}_{timestamp}.json")
 
     with open(filename, "w") as f:
         json.dump(merge_plan, f, indent=2)
 
     print(f"\nMerge plan saved to: {filename}")
+    return filename
+
+
+# Checkpoint helpers
+# After each identity is executed successfully, the script will record that identity in a local checkpoint file.
+# it will:
+# load the checkpoint file
+# skip identities already completed
+# continue with the remaining ones
+def get_checkpoint_filename(environment):
+    return f"merge_checkpoint_{environment}.json"
+
+
+def load_checkpoint(environment):
+    filename = get_checkpoint_filename(environment)
+
+    if not os.path.exists(filename):
+        return {"completed_identities": []}
+
+    with open(filename, "r") as f:
+        return json.load(f)
+
+
+def save_checkpoint(environment, checkpoint):
+    filename = get_checkpoint_filename(environment)
+
+    with open(filename, "w") as f:
+        json.dump(checkpoint, f, indent=2)
+
+
+def mark_identity_completed(environment, identity):
+    checkpoint = load_checkpoint(environment)
+
+    completed = set(checkpoint.get("completed_identities", []))
+    completed.add(identity)
+
+    checkpoint["completed_identities"] = sorted(list(completed))
+    save_checkpoint(environment, checkpoint)
 
 
 # Helper to convert Dynamodb decimal to plain int
@@ -641,6 +702,10 @@ def clean(value):
     if isinstance(value, Decimal):
         return int(value)
     return value
+
+def load_merge_plan(plan_file):
+    with open(plan_file, "r") as f:
+        return json.load(f)
 
 
 #   It does:
@@ -655,7 +720,7 @@ def clean(value):
 #   Print a summary
 #   Save the merge plan JSON
 #   optionally ask for execute confirmation
-def run_plan(environment, limit=None, execute=False):
+def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
     script_start = time.perf_counter()
 
     if environment == "production":
@@ -676,16 +741,32 @@ def run_plan(environment, limit=None, execute=False):
         if len(group) > 1
     }
 
-    print(f"Found {len(duplicates)} duplicate identities\n")
+    checkpoint = load_checkpoint(environment)
+    completed_identities = set(checkpoint.get("completed_identities", []))
+
+    if completed_identities:
+        print(f"Checkpoint loaded: {len(completed_identities)} identities already completed")
+
+    duplicates = {
+        identity: group
+        for identity, group in duplicates.items()
+        if identity not in completed_identities
+    }
+
+    duplicate_items = sorted(duplicates.items(), key=lambda x: x[0])
+
+    slice_start = offset
+    slice_end = offset + limit if limit is not None else None
+    selected_items = duplicate_items[slice_start:slice_end]
+
+    print(f"Found {len(duplicates)} duplicate identities total")
+    print(f"Processing identities from offset {slice_start} to {slice_end}\n")
 
     processed = 0
     merge_plan = []
 
-    for identity, group in duplicates.items():
+    for identity, group in selected_items:
         identity_start = time.perf_counter()
-
-        if limit and processed >= limit:
-            break
 
         print("=" * 100)
         print(f"Identity: {identity}")
@@ -712,24 +793,42 @@ def run_plan(environment, limit=None, execute=False):
             f"secondary_users={len(plan['delete_secondary_user_ids'])}"
         )
 
-    save_merge_plan(environment, merge_plan)
-
-    if execute:
-        confirm = input("\nType YES to execute this merge plan: ")
-        if confirm == "YES":
-            execute_merge_plan(environment, merge_plan)
-        else:
-            print("Execution cancelled")
+    if not merge_plan:
+        print("No duplicate identities selected for this batch.")
+    else:
+        save_merge_plan(environment, merge_plan, output_dir)
 
     total_duration = time.perf_counter() - script_start
 
     print("\n" + "=" * 100)
+    print(f"Processed {processed} identity group(s) in this batch")
     print(f"TOTAL SCRIPT RUNTIME: {total_duration:.3f} seconds")
     print("=" * 100)
 
 def main():
     args = parse_args()
-    run_plan(args.environment, args.limit, args.execute)
+
+    if args.execute:
+        if not args.plan_file:
+            raise Exception("Execution requires --plan-file pointing to a reviewed merge plan JSON")
+
+        if args.environment == "production":
+            confirm = input("You are about to modify PRODUCTION. Type PRODUCTION to continue: ")
+            if confirm != "PRODUCTION":
+                print("Execution cancelled")
+                return
+
+        merge_plan = load_merge_plan(args.plan_file)
+        execute_merge_plan(args.environment, merge_plan)
+        return
+
+    run_plan(
+        environment=args.environment,
+        limit=args.limit,
+        offset=args.offset,
+        execute=False,
+        output_dir=args.output_dir,
+    )
 
 
 if __name__ == "__main__":
