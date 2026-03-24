@@ -48,8 +48,8 @@ class CodeScanReport:
         return open_alerts
 
 
-    def get_trivy_alerts(self) -> list:
-        """Function retruns high and critical severity trivy alerts"""
+    def get_snyk_alerts(self) -> list:
+        """Function returns high and critical severity snyk alerts"""
         open_alerts = self._get_open_alerts()
 
         high_alerts = []
@@ -57,7 +57,7 @@ class CodeScanReport:
 
         for alert in open_alerts:
             tool_name = alert['tool']['name']
-            if tool_name != 'Trivy':
+            if tool_name != 'Snyk':
                 continue
 
             alert_severity = alert['rule']['security_severity_level']
@@ -71,10 +71,10 @@ class CodeScanReport:
 
 
     def generate_report(self) -> str:
-        high_alerts, critical_alerts = self.get_trivy_alerts()
+        high_alerts, critical_alerts = self.get_snyk_alerts()
 
         overall_report = (
-            f"Trivy Code Scan Report\n"
+            f"Snyk Code Scan Report\n"
             f"{'-' * 100}\n"
             f"*HIGH ALERTS*: [{len(high_alerts)}]\n"
             f"*CRITICAL ALERTS*: [{len(critical_alerts)}]\n"
@@ -120,7 +120,7 @@ class CodeScanReport:
 
 def main():
     parser = argparse.ArgumentParser(
-    description='Check Trivy code scan alerts.')
+    description='Check Snyk code scan alerts.')
     parser.add_argument('--slack_webhook',
                         default=os.getenv('SLACK_WEBHOOK'),
                         help='Webhook to use, determines what channel to post to')

@@ -16,7 +16,7 @@ on:
         required: true
         type: string
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
 
 permissions:
@@ -57,7 +57,7 @@ jobs:
 
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
-          ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: terraform fmt ${{ matrix.folder }} check
         run: terraform fmt -check -recursive

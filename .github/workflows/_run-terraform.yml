@@ -43,7 +43,7 @@ on:
         required: true
         type: string
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
 
 permissions:
@@ -99,7 +99,7 @@ jobs:
       - name: set pagerduty token
         run: |
           export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
-            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+            shared/pagerduty-token --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
           echo "::add-mask::$TF_VAR_pagerduty_token"
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
@@ -113,7 +113,7 @@ jobs:
 
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
         with:
-          ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: output terraform variables
         env:
