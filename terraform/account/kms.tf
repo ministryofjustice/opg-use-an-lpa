@@ -229,6 +229,7 @@ module "dynamodb_encryption_key" {
       "-api-task-role",
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+      "-admin-task-role",
     ],
     local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
   )
@@ -238,6 +239,7 @@ module "dynamodb_encryption_key" {
       "-api-task-role",
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+      "-admin-task-role",
     ],
     local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
   )

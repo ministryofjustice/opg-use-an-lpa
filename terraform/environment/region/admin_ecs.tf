@@ -221,6 +221,18 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     resources = var.parameter_store_arns
   }
 
+  statement {
+    sid    = "${local.policy_region_prefix}DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
+  }
+
   provider = aws.region
 }
 
