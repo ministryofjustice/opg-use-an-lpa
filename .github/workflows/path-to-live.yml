@@ -85,7 +85,7 @@ jobs:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       workspace: development
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -124,6 +124,8 @@ jobs:
       push_to_ecr: true
       specific_path: all
       oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
+    secrets:
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
@@ -156,7 +158,7 @@ jobs:
       terraform_path: account
       workspace: development
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_shared_production:
     name: terraform apply shared production
@@ -171,7 +173,7 @@ jobs:
       terraform_path: account
       workspace: production
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_production:
     name: terraform apply production
@@ -189,7 +191,7 @@ jobs:
       terraform_path: environment
       workspace: production
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   production_health_check:
     name: health check production
