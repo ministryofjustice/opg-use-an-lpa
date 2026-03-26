@@ -46,8 +46,6 @@ resource "aws_dynamodb_table" "stats_table" {
   stream_view_type            = "NEW_AND_OLD_IMAGES"
   deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
 
-
-  #tfsec:ignore:aws-dynamodb-table-customer-key - same as the other tables. Will update in one go as separate ticket
   server_side_encryption {
     enabled     = true
     kms_key_arn = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_1.target_key_arn : null
