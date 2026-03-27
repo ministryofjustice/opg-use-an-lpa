@@ -270,11 +270,6 @@ class DataStoreLpasTest extends TestCase
     #[Test]
     public function can_lookup_multiple_lpas(): void
     {
-        $uids         = [
-            'M-7890-0400-4000',
-            'M-789Q-X7DT-5PDP',
-            'M-WILL-FAIL-HYDR',
-        ];
         $apiBaseUri   = 'http://localhost';
         $traceId      = 'test-trace-id';
         $originatorId = 'originator-id';
@@ -316,7 +311,14 @@ class DataStoreLpasTest extends TestCase
         $this->requestFactoryProphecy->createRequest('POST', $apiBaseUri . '/lpas')
             ->willReturn($this->requestProphecy->reveal());
 
-        $this->streamFactoryProphecy->createStream(json_encode(['uids' => $uids]))
+        $this->streamFactoryProphecy
+            ->createStream(json_encode([
+                'uids' => [
+                    'M-7890-0400-4000',
+                    'M-789Q-X7DT-5PDP',
+                    'M-WILL-FAIL-HYDR',
+                ],
+            ]))
             ->willReturn($this->prophesize(StreamInterface::class)->reveal());
 
         $this->requestSignerFactoryProphecy->__invoke(SignatureType::DataStoreLpas, Argument::type('string'))
@@ -355,7 +357,13 @@ class DataStoreLpasTest extends TestCase
             $traceId,
         );
 
-        $lpas = $moderniseLpas->setOriginatorId($originatorId)->lookup($uids);
+        $lpas = $moderniseLpas->setOriginatorId($originatorId)->lookup([
+            'M-7890-0400-4000',
+            'M-789Q-X7DT-5PDP',
+            'M-WILL-FAIL-HYDR',
+            'M-7890-0400-4000',
+            'M-789Q-X7DT-5PDP',
+        ]);
 
         $this->assertCount(2, $lpas);
         foreach ($lpas as $lpa) {
