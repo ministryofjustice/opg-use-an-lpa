@@ -49,7 +49,7 @@ jobs:
 
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/branch-name@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
 
       - name: get changed files in the admin folder
         id: changed-files-admin
