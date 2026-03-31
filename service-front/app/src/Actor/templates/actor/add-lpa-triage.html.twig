@@ -12,118 +12,63 @@
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 {{ govuk_form_open(form) }}
-                <div class="govuk-grid-column-two-thirds">
 
+                <div class="govuk-grid-column-two-thirds">
                     {{ govuk_error_summary(form) }}
                     {{ govuk_form_element(form.get('__csrf')) }}
 
-                    <div class="govuk-form-group">
-                        <fieldset class="govuk-fieldset">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+                            <h1 class="govuk-fieldset__heading">
+                                {% trans %}Do you have an activation key to add an LPA?{% endtrans %}
+                            </h1>
+                        </legend>
 
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                                <h1 class="govuk-fieldset__heading">
-                                    {% trans %}Do you have an activation key to add an LPA?{% endtrans %}
-                                </h1>
-                            </legend>
+                        <p class="govuk-body">
+                            {% trans %}
+                                You need your own unique activation key to add an LPA to your account.
+                                These are sent to you when the LPA is registered and expire after 12 months.
+                            {% endtrans %}
+                        </p>
 
-                            <p class="govuk-body">
-                                {% trans %}
-                                    You need your own unique activation key to add an LPA to your account. <br> Activation keys expire after 12 months.
-                                {% endtrans %}
-                            </p>
-                            <p class="govuk-body">
-                                {% trans %}
-                                    Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56.
-                                {% endtrans %}
-                            </p>
+                        <p class="govuk-body">
+                            {% trans %}
+                                Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56.
+                            {% endtrans %}
+                        </p>
 
-                            <details class="govuk-details" data-module="govuk-details" data-gaEventType="onClick"
-                                     data-gaAction="Details" data-gaCategory="ActivationKey"
-                                     data-gaLabel="Where can I find my activation key?">
-                                <summary class="govuk-details__summary" role="button">
-                                    <span class="govuk-details__summary-text">
-                                        {% trans %}Where can I find my activation key?{% endtrans %}
-                                    </span>
-                                </summary>
+                        <p class="govuk-body">
+                            {% trans %}
+                                If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one.
+                            {% endtrans %}
+                        </p>
 
-                                <div class="govuk-details__text">
-                                    <h3 class="govuk-heading-s">
-                                        {% trans %}
-                                            For LPAs registered in the last 12 months
-                                        {% endtrans %}
-                                    </h3>
-                                </div>
+                        {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
+                            [
+                                {
+                                    'label': 'Yes, I have an activation key'| trans,
+                                    'value': 'Yes'
+                                },
+                                {
+                                    'label': 'No, I need to request an activation key'| trans,
+                                    'value': 'No'
+                                }
+                            ]}
+                        ) }}
+                    </fieldset>
 
-                                <div class="govuk-details__text">
-                                    <p>{% trans %}Your activation key is on the letter we sent you that told you the LPA had been registered.{% endtrans %}</p>
-                                </div>
-
-                                <div class="govuk-details__text">
-                                    <h3 class="govuk-heading-s">
-                                        {% trans %}
-                                            For LPAs registered more than 12 months ago
-                                        {% endtrans %}
-                                    </h3>
-                                </div>
-
-                                <div class="govuk-details__text">
-                                    <p>{% trans %}You have to request an activation key from us.{% endtrans %}</p>
-                                    <p>
-                                        {% trans %}
-                                            If you’ve already requested an activation key, you'll find it on the letter or email we sent you.
-                                        {% endtrans %}
-                                    </p>
-                                </div>
-                                <div class="govuk-details__text">
-                                    <h3 class="govuk-heading-s">
-                                        {% trans %}
-                                            When activation keys cannot be used
-                                        {% endtrans %}
-                                    </h3>
-                                    <p>{% trans %}This service cannot be used for:{% endtrans %}</p>
-                                    <ul class="govuk-list govuk-list--bullet">
-                                        <li>{% trans %}LPAs with reference numbers fewer than 12 digits and registered before January 2016{% endtrans %}</li>
-                                        <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
-                                    </ul>
-                                    <p>{% trans %}You’ll need to show the paper LPA or EPA to people or organisations instead.{% endtrans %}</p>
-                                </div>
-                            </details>
-
-                            <p class="govuk-body">
-                                {% trans %}
-                                    If you’ve lost your activation key, its expired, or you’ve not had one before, you can request a new one.
-                                {% endtrans %}
-                            </p>
-
-                            {{ govuk_form_element(form.get('activation_key_triage'), {'value_options':
-                                [
-                                    {
-                                        'label': 'Yes, I have an activation key'| trans,
-                                        'value': 'Yes'
-                                    },
-                                    {
-                                        'label': 'No, I need to request an activation key'| trans,
-                                        'value': 'No'
-                                    }
-                                ]}
-                            ) }}
-
-                        </fieldset>
-                    </div>
-                    <div class="moj-button-menu">
-                        <button role="button" type="submit" data-prevent-double-click="true" draggable="false"
-                                class="govuk-button moj-button-menu__item" data-module="govuk-button">
+                    <div class="govuk-button-group">
+                        <button role="button" type="submit" data-prevent-double-click="true" draggable="false" class="govuk-button" data-module="govuk-button">
                             {% trans %}Continue{% endtrans %}
                         </button>
-                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
-                           class="govuk-button moj-button-menu__item govuk-button--secondary "
-                           data-module="govuk-button">
+
+                        <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
                             {% trans %}Cancel{% endtrans %}
                         </a>
                     </div>
+
                     {{ govuk_form_close() }}
                 </div>
-
             </div>
         </main>
     </div>

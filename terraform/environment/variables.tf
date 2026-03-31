@@ -80,7 +80,6 @@ variable "environments" {
       associate_alb_with_waf_web_acl_enabled           = bool
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
-      deploy_backfill_lambda                           = bool
       application_flags = object({
         use_older_lpa_journey  = bool
         delete_lpa_feature     = bool
@@ -96,6 +95,7 @@ variable "environments" {
         have_a_backup_plan              = bool
       })
       dynamodb_tables = object({
+        cmk_encryption_enabled      = bool
         deletion_protection_enabled = bool
         actor_codes = object({
           name = string

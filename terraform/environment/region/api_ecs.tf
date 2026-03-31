@@ -137,7 +137,7 @@ resource "aws_security_group_rule" "api_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.api_ecs_service.id
   lifecycle {
     create_before_destroy = true
@@ -314,13 +314,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
   }
 
   statement {
-    sid    = "${local.policy_region_prefix}KMSAccess"
+    sid    = "${local.policy_region_prefix}SecretsManagerKMSAccess"
     effect = "Allow"
 
     actions = [
       "kms:Decrypt",
     ]
-
     resources = [data.aws_kms_alias.secrets_manager.target_key_arn]
   }
 
@@ -373,6 +372,18 @@ data "aws_iam_policy_document" "api_permissions_role" {
         module.event_bus.receive_events_bus_arn,
       ]
     }
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
   }
 
   provider = aws.region
@@ -584,10 +595,6 @@ locals {
         {
           name  = "LPA_STORE_JWT_SECRET",
           value = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
-        },
-        {
-          name  = "TRACK_OLD_EMAILS",
-          value = var.deploy_backfill_lambda ? "1" : "",
         }
       ]
   })

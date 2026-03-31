@@ -1,3 +1,10 @@
+resource "aws_ssm_parameter" "container_version" {
+  name     = "/use-an-lpa/container-version/${local.environment_name}"
+  type     = "String"
+  value    = var.container_version
+  provider = aws.management
+}
+
 resource "aws_ssm_parameter" "system_message_view_en" {
   name  = "/system-message/${local.environment_name}/view/en"
   type  = "String"

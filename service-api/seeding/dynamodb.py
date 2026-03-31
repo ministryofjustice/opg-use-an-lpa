@@ -23,29 +23,33 @@ if 'AWS_ENDPOINT_DYNAMODB' in os.environ:
 else:
 
     if os.getenv('CI'):
-        role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/opg-use-an-lpa-ci"
+        # For GitHub Actions, the OIDC role is used
+        dynamodb = boto3.resource(
+            'dynamodb',
+            region_name='eu-west-1'
+        )
 
     else:
         role_arn = f"arn:aws:iam::{os.environ['AWS_ACCOUNT_ID']}:role/operator"
 
-    # Get a auth token
-    session = boto3.client(
-        'sts',
-        region_name='eu-west-1',
-    ).assume_role(
-        RoleArn=role_arn,
-        RoleSessionName='db_seeding',
-        DurationSeconds=900
-    )
+        # Get a auth token
+        session = boto3.client(
+            'sts',
+            region_name='eu-west-1',
+        ).assume_role(
+            RoleArn=role_arn,
+            RoleSessionName='db_seeding',
+            DurationSeconds=900
+        )
 
-    # Create a authenticated client
-    dynamodb = boto3.resource(
-        'dynamodb',
-        region_name='eu-west-1',
-        aws_access_key_id=session['Credentials']['AccessKeyId'],
-        aws_secret_access_key=session['Credentials']['SecretAccessKey'],
-        aws_session_token=session['Credentials']['SessionToken']
-    )
+        # Create a authenticated client
+        dynamodb = boto3.resource(
+            'dynamodb',
+            region_name='eu-west-1',
+            aws_access_key_id=session['Credentials']['AccessKeyId'],
+            aws_secret_access_key=session['Credentials']['SecretAccessKey'],
+            aws_session_token=session['Credentials']['SessionToken']
+        )
 
 viewerCodesTable = dynamodb.Table(os.environ['DYNAMODB_TABLE_VIEWER_CODES'])
 
@@ -329,7 +333,7 @@ userLpaActorMap = [
     {
         'Id': '906f3720-5b43-49ce-ac66-c670860bf4ee',
         'SiriusUid': '700000000138',
-        'ActorId': 23,
+        'ActorId': '700000000971',
         'Added': '2020-08-19T15:22:32.838097Z ',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivationCode': 'XW34H3HYFDDM',
@@ -338,7 +342,7 @@ userLpaActorMap = [
     {
         'Id': '806f3720-5b43-49ce-ac66-c670860bf4ee',
         'SiriusUid': '700000000138',
-        'ActorId': 23,
+        'ActorId': '700000000971',
         'Added': '2020-08-19T15:22:32.838097Z ',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivationCode': 'XW34H3HYFDDL',
@@ -347,7 +351,7 @@ userLpaActorMap = [
     {
         'Id': 'f1315df5-b7c3-430a-baa0-9b96cc629648',
         'SiriusUid': '700000000344',
-        'ActorId': 59,
+        'ActorId': '700000001391',
         'Added': '2020-08-20T14:37:49.522828Z',
         'ActivatedOn': '2020-08-22T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
@@ -357,7 +361,7 @@ userLpaActorMap = [
     {
         'Id': '085b6474-d61e-41a4-9778-acb5870c5084',
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivationCode': 'WWFCCH41R123',
@@ -366,7 +370,7 @@ userLpaActorMap = [
     {
         'Id': 'e69a80db-0001-45a1-a4c5-06bd7ecf8d2e',
         'SiriusUid': '700000000435',
-        'ActorId': 78,
+        'ActorId': '700000001599',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'ActivateBy': activateBy,
@@ -376,7 +380,7 @@ userLpaActorMap = [
     {
         'Id': '1600be0d-727c-41aa-a9cb-45857a73ba4f',
         'SiriusUid': '700000000252',
-        'ActorId': 43,
+        'ActorId': '700000001219',
         'Added': '2021-04-23T11:44:11.324804Z',
         'ActivatedOn': '2021-04-24T11:44:11.324804Z',
         'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
@@ -430,7 +434,7 @@ userLpaActorMap = [
     {
         'Id': userLpaActorDuplicate2aID,
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': actorUserDuplicate2aID,
         'ActivationCode': 'WWFCCH41R456',
@@ -439,7 +443,7 @@ userLpaActorMap = [
     {
         'Id': '052f9adf-5c63-4fc9-a29f-8d659a01192e',
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': actorUserDuplicate2bID,
         'ActivationCode': 'WWFCCH41R789',
@@ -448,7 +452,7 @@ userLpaActorMap = [
     {
         'Id': userLpaActorDuplicate3aID,
         'LpaUid': '700000000138',
-        'ActorId': 23,
+        'ActorId': '700000000971',
         'Added': '2026-01-30T23:00:00Z',
         'ActivatedOn': '2026-01-30T23:00:00Z',
         'UserId': actorUserDuplicate3aID,
@@ -457,7 +461,7 @@ userLpaActorMap = [
     {
         'Id': '24ab679f-05f4-f0c4-eeab-d5998f2a08ec',
         'LpaUid': '700000000138',
-        'ActorId': 59,
+        'ActorId': '700000001334',
         'Added': '2026-01-30T23:00:00Z',
         'ActivatedOn': '2026-01-30T23:00:00Z',
         'UserId': actorUserDuplicate3bID,
@@ -466,7 +470,7 @@ userLpaActorMap = [
     {
         'Id': userLpaActorDuplicate4aID,
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': actorUserDuplicate4aID,
         'ActivationCode': 'WWFCCH41R123',
@@ -475,7 +479,7 @@ userLpaActorMap = [
     {
         'Id': userLpaActorDuplicate4bID,
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': actorUserDuplicate4bID,
         'ActivationCode': 'WWFCCH41R456',
@@ -484,7 +488,7 @@ userLpaActorMap = [
     {
         'Id': '00534eb9-85dc-c9e4-8c33-acbf2651e7dc',
         'SiriusUid': '700000000047',
-        'ActorId': 9,
+        'ActorId': '700000000815',
         'Added': '2021-04-22T15:01:11.548361Z',
         'UserId': actorUserDuplicate5aID,
         'ActivationCode': 'WWFCCH41R456',

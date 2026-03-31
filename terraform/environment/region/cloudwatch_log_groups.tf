@@ -24,3 +24,16 @@ EOF
 
   provider = aws.region
 }
+
+resource "aws_cloudwatch_query_definition" "viewer_code_expiry" {
+  name            = "Application Logs/${var.environment_name} viewer code expiry"
+  log_group_names = [aws_cloudwatch_log_group.application_logs.name]
+
+  query_string = <<EOF
+fields @timestamp, @message
+| filter @message like /The code [A-Z0-9]+ entered by user to view LPA has expired./
+| stats count_distinct(context.code) by context.expiredBy
+EOF
+
+  provider = aws.region
+}

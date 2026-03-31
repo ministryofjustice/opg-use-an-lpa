@@ -31,7 +31,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      short_sha:  ${{ steps.variables.outputs.short_sha }}
+      short_sha: ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
@@ -42,7 +42,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             **/*.md
@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@e3177e63e9f2951dd3f1f7c7aa093918a5a0794a # v4.3.6
+        uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
         id: semver_tag
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -72,11 +72,10 @@ jobs:
     needs:
       - workflow_variables
     with:
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       workspace: preproduction
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -114,9 +113,9 @@ jobs:
       branch_name: ${{ github.ref_name }}
       push_to_ecr: true
       specific_path: all
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
@@ -131,7 +130,7 @@ jobs:
       - docker_build_scan_push
       - workflow_variables
     with:
-      specific_path: 'all'
+      specific_path: "all"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -139,14 +138,14 @@ jobs:
     name: terraform apply shared preproduction
     uses: ./.github/workflows/_run-terraform.yml
     with:
-      workspace: preproduction
-      terraform_path: account
       apply: true
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       specific_path: all
+      terraform_path: account
+      workspace: preproduction
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_preproduction:
     name: terraform apply preproduction
@@ -156,26 +155,26 @@ jobs:
       - workflow_variables
       - docker_build_scan_push
     with:
-      workspace: preproduction
-      terraform_path: environment
-      container_version: integration-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
+      container_version: integration-${{ needs.workflow_variables.outputs.semver_tag }}
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       specific_path: all
+      terraform_path: environment
+      workspace: preproduction
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   seed_dynamodb_preproduction:
     name: seed dynamodb in preproduction
     uses: ./.github/workflows/_seed-database.yml
     needs:
       - terraform_apply_preproduction
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
     with:
       workspace: preproduction
+      dynamodb_seeding_role: ${{ vars.OIDC_DYNAMODB_SEEDING_PREPRODUCTION }}
+      lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
+      codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
 
   run_behat_suite_preproduction:
     name: run behat tests against preproduction
@@ -184,9 +183,8 @@ jobs:
       - seed_dynamodb_preproduction
     with:
       workspace: preproduction
+      ingress_management_role: ${{ vars.OIDC_INGRESS_MANAGEMENT_PREPRODUCTION }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
       ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
       ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
@@ -209,19 +207,19 @@ jobs:
     steps:
       - name: End of Workflow
         run: |
-            if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
-                ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
-                ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
-                ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
-                ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
-                ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
-                ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
-                then
-                echo "Preproduction environment tested, built and deployed"
-                echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
-                exit 0
-            else
-            echo "Previous jobs in pipeline failed."
-            exit 1
-            fi
+          if  ${{ contains(needs.node_test.result, 'success') || contains(needs.node_test.result, 'skipped') }} &&
+              ${{ contains(needs.node_build.result, 'success') || contains(needs.node_build.result, 'skipped') }} &&
+              ${{ contains(needs.docker_build_scan_push.result, 'success') }} &&
+              ${{ contains(needs.terraform_apply_shared_preproduction.result, 'success') }} &&
+              ${{ contains(needs.terraform_apply_preproduction.result, 'success') }} &&
+              ${{ contains(needs.seed_dynamodb_preproduction.result, 'success') }} &&
+              ${{ contains(needs.run_behat_suite_preproduction.result, 'success') }};
+              then
+              echo "Preproduction environment tested, built and deployed"
+              echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
+              exit 0
+          else
+          echo "Previous jobs in pipeline failed."
+          exit 1
+          fi
     if: always()

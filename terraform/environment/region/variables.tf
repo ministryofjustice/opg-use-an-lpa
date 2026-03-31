@@ -287,8 +287,3 @@ variable "lpa_store_account_id" {
   description = "The AWS ID of the LPA store account"
   type        = string
 }
-
-variable "deploy_backfill_lambda" {
-  description = "Whether or not to deploy the backfill lambda"
-  type        = bool
-}

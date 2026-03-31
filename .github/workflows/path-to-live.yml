@@ -10,7 +10,7 @@ defaults:
 on:
   push:
     branches:
-      - 'main'
+      - "main"
 
 permissions:
   contents: read
@@ -32,15 +32,17 @@ jobs:
     permissions:
       contents: write
     outputs:
-      short_sha:  ${{ steps.variables.outputs.short_sha }}
-      semver_tag: ${{ steps.semver_tag.outputs.created_tag }}
+      short_sha: ${{ steps.variables.outputs.short_sha }}
+      semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: "0"
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891  # 47.0.1
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             **/*.md
@@ -56,10 +58,9 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
         id: semver_tag
         with:
-          with_v: true
           default_bump: minor
           prerelease: false
         if: ${{ steps.changed-files-docs.outputs.path != 'docs' }}
@@ -81,11 +82,10 @@ jobs:
     needs:
       - workflow_variables
     with:
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       workspace: development
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -123,9 +123,9 @@ jobs:
       branch_name: main
       push_to_ecr: true
       specific_path: all
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
@@ -140,7 +140,7 @@ jobs:
       - docker_build_scan_push
       - workflow_variables
     with:
-      specific_path: 'all'
+      specific_path: "all"
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -151,14 +151,14 @@ jobs:
       - docker_build_scan_push
       - terraform_lint
     with:
-      workspace: development
-      terraform_path: account
       apply: true
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       specific_path: all
+      terraform_path: account
+      workspace: development
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_shared_production:
     name: terraform apply shared production
@@ -166,14 +166,14 @@ jobs:
     needs:
       - terraform_apply_shared_development
     with:
-      workspace: production
-      terraform_path: account
       apply: true
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PRODUCTION }}
       specific_path: all
+      terraform_path: account
+      workspace: production
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_production:
     name: terraform apply production
@@ -182,16 +182,16 @@ jobs:
       - terraform_apply_shared_production
       - workflow_variables
     with:
-      workspace: production
-      terraform_path: environment
-      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       apply: true
-      specific_path: all
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
       extra_vars: "-var public_access_enabled=true"
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PRODUCTION }}
+      specific_path: all
+      terraform_path: environment
+      workspace: production
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   production_health_check:
     name: health check production
@@ -201,7 +201,7 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
       - name: download cluster_config
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:

@@ -18,12 +18,19 @@ class IngressManager:
     def __init__(self, config_file):
         self.read_parameters_from_file(config_file)
         self.set_iam_role_session()
-        self.aws_ec2_client = boto3.client(
-            'ec2',
-            region_name=self.aws_region,
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+
+        if self.aws_iam_session:
+            self.aws_ec2_client = boto3.client(
+                'ec2',
+                region_name=self.aws_region,
+                aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+                aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+                aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+        else:
+            self.aws_ec2_client = boto3.client(
+                'ec2',
+                region_name=self.aws_region,
+            )
 
     def read_parameters_from_file(self, config_file):
         with open(config_file) as json_file:
@@ -37,22 +44,22 @@ class IngressManager:
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
-                self.aws_account_id)
+            # don't assume role in CI, use OIDC creds
+            self.aws_iam_session = None
         else:
             role_arn = 'arn:aws:iam::{}:role/operator'.format(
                 self.aws_account_id)
 
-        sts = boto3.client(
-            'sts',
-            region_name='eu-west-1',
-        )
-        session = sts.assume_role(
-            RoleArn=role_arn,
-            RoleSessionName='managing_environment_ingress',
-            DurationSeconds=900
-        )
-        self.aws_iam_session = session
+            sts = boto3.client(
+                'sts',
+                region_name='eu-west-1',
+            )
+            session = sts.assume_role(
+                RoleArn=role_arn,
+                RoleSessionName='managing_environment_ingress',
+                DurationSeconds=900
+            )
+            self.aws_iam_session = session
 
     def get_ip_addresses(self):
         host_public_cidr = urllib.request.urlopen(

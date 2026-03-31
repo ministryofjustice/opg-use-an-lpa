@@ -30,9 +30,7 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
       AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always()
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   workflow_variables:
     runs-on: ubuntu-latest
@@ -42,6 +40,7 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
+      detect_app_code_changes: ${{ steps.changed-files-app.outputs.any_changed }}
 
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -50,7 +49,7 @@ jobs:
 
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/branch-name@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
 
       - name: get changed files in the admin folder
         id: changed-files-admin
@@ -58,24 +57,32 @@ jobs:
         with:
           files: |
             service-admin/**
-      - name: get changed files in the event-receiver folder
-        id: changed-files-event
+
+      - name: get changed files in app code
+        id: changed-files-app
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
-            lambda-functions/event-receiver/**
+            service-admin/**
+            lambda-functions/**
+            service-front/**
+            service-api/**
+            .github/workflows/_build-and-push.yml
+
       - name: get changed files in the terraform folder
         id: changed-files-terraform
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             terraform/**
+
       - name: get changed docs files in any folder
         id: changed-files-docs
         uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
           files: |
             **/*.md
+
       - name: extract variables for workflow
         id: variables
         run: |
@@ -92,6 +99,7 @@ jobs:
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
+
       - name: show specific path
         env:
           SPECIFIC_PATH: ${{ steps.variables.outputs.path }}
@@ -120,14 +128,11 @@ jobs:
     needs:
       - workflow_variables
     with:
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path != 'docs'
 
   node_test:
@@ -136,8 +141,6 @@ jobs:
     needs:
       - workflow_variables
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
 
   node_build:
@@ -146,9 +149,19 @@ jobs:
     needs:
       - workflow_variables
     if: |
-      always() &&
-      needs.workflow_variables.result == 'success' &&
       needs.workflow_variables.outputs.specific_path == 'all'
+
+  resolve_docker_tag:
+    name: resolve docker tag
+    uses: ./.github/workflows/_tags-job.yml
+    needs:
+      - workflow_variables
+    with:
+      workspace_name: ${{ needs.workflow_variables.outputs.workspace_name }}
+      safe_branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+      short_sha: ${{ needs.workflow_variables.outputs.short_sha }}
+      detect_app_code_changes: ${{ needs.workflow_variables.outputs.detect_app_code_changes }}
+      oidc_parameter_store_role: ${{ vars.OIDC_PARAMETER_STORE_ROLE }}
 
   docker_build_scan_push:
     name: build, test, scan and push
@@ -157,32 +170,35 @@ jobs:
       - workflow_variables
       - node_test
       - node_build
+      - resolve_docker_tag
     with:
-      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
+      tag: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.safe_branch_name }}
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
-      needs.workflow_variables.outputs.specific_path != 'docs' &&
+      needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
       (needs.node_test.result == 'success' || needs.node_test.result == 'skipped') &&
       (needs.node_build.result == 'success' || needs.node_build.result == 'skipped') &&
-      needs.workflow_variables.result == 'success'
+      needs.workflow_variables.result == 'success' &&
+      needs.resolve_docker_tag.result == 'success'
 
   pact_upload:
     name: upload contracts to pact
     uses: ./.github/workflows/_pact-upload.yml
-    with:
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
-      tag: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-      branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
-      commit_sha: ${{ github.event.pull_request.head.sha }}
     needs:
       - docker_build_scan_push
       - workflow_variables
+      - resolve_docker_tag
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      tag: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
+      branch: ${{ needs.workflow_variables.outputs.safe_branch_name }}
+      commit_sha: ${{ github.event.pull_request.head.sha }}
     secrets:
       PACT_BROKER_PASSWORD: ${{ secrets.PACT_BROKER_PASSWORD }}
     if: |
@@ -192,11 +208,11 @@ jobs:
   code_coverage:
     name: upload to code coverage
     uses: ./.github/workflows/_codecov.yml
-    with:
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     needs:
       - docker_build_scan_push
       - workflow_variables
+    with:
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     if: |
@@ -210,65 +226,41 @@ jobs:
       - terraform_lint
       - workflow_variables
     with:
-      workspace: development
-      terraform_path: account
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       apply: false
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
+      terraform_path: account
+      workspace: development
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always() &&
-      needs.terraform_lint.result == 'success'
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_environment:
     name: terraform apply environment
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - docker_build_scan_push
+      - resolve_docker_tag
       - terraform_lint
       - workflow_variables
     with:
-      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
-      terraform_path: environment
-      container_version: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-      apply: true
-      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       add_ttl: true
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-    if: |
-      always() &&
-      needs.terraform_lint.result == 'success' &&
-      needs.docker_build_scan_push.result == 'success' &&
-      needs.workflow_variables.result == 'success'
-
-  terraform_preproduction_plan_environment:
-    name: terraform plan preproduction environment
-    uses: ./.github/workflows/_run-terraform.yml
-    needs:
-      - docker_build_scan_push
-      - terraform_lint
-      - workflow_variables
-    with:
-      workspace: preproduction
+      apply: true
+      container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       terraform_path: environment
-      container_version: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}
-      apply: false
-      specific_path: all
-      add_ttl: false
+      workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
     if: |
       always() &&
       needs.terraform_lint.result == 'success' &&
-      needs.docker_build_scan_push.result == 'success' &&
-      needs.workflow_variables.result == 'success'
+      (needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false') &&
+      needs.workflow_variables.result == 'success' &&
+      needs.resolve_docker_tag.result == 'success'
 
   seed_dynamodb:
     name: seed dynamodb
@@ -279,9 +271,9 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
-    secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+      dynamodb_seeding_role: ${{ vars.OIDC_DYNAMODB_SEEDING_DEVELOPMENT }}
+      lpa_store_seeding_role: ${{ vars.OIDC_LPA_SEEDING_DEVELOPMENT }}
+      codes_seeding_role: ${{ vars.OIDC_CODES_SEEDING }}
     if: |
       always() &&
       needs.terraform_apply_environment.result == 'success' &&
@@ -295,9 +287,8 @@ jobs:
       - workflow_variables
     with:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
+      ingress_management_role: ${{ vars.OIDC_INGRESS_MANAGEMENT_DEVELOPMENT }}
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
       ONE_LOGIN_OTP_SECRET: ${{ secrets.ONE_LOGIN_OTP_SECRET }}
       ONE_LOGIN_CREDENTIALS: ${{ secrets.ONE_LOGIN_CREDENTIALS }}
       ONE_LOGIN_USER_PASSWORD: ${{ secrets.ONE_LOGIN_USER_PASSWORD }}
@@ -329,9 +320,10 @@ jobs:
     needs:
       - workflow_variables
       - update_documentation
+      - resolve_docker_tag
       - docker_build_scan_push
       - run_behat_suite
-      - terraform_preproduction_plan_environment
+      - terraform_apply_environment
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
@@ -366,9 +358,9 @@ jobs:
 
       - name: workflow has ended without issue
         run: |
-          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_preproduction_plan_environment.result, 'success') }}; then
+          if ${{ contains(needs.run_behat_suite.result, 'success') && contains(needs.terraform_apply_environment.result, 'success') }}; then
             echo "${{ needs.workflow_variables.outputs.safe_branch_name }} PR environment tested, built and deployed"
-            echo "Tag Used: ${{ needs.workflow_variables.outputs.safe_branch_name }}-${{ needs.workflow_variables.outputs.short_sha }}"
+            echo "Tag Used: ${{ needs.resolve_docker_tag.outputs.docker_tag }}"
             echo "URL: https://${{ needs.workflow_variables.outputs.workspace_name }}.use-lasting-power-of-attorney.service.gov.uk"
             exit 0
           elif [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]; then
