@@ -30,7 +30,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
-        fetch-depth: 2
+        fetch-depth: 0
 
     - name: Setup PHP with tools
       uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
@@ -45,9 +45,16 @@ jobs:
         phpcs --version
         phpcs -i
 
-    - uses: thenabeel/action-phpcs@ad4dc4eb272624204befdf0249959972cfc432b8 # v8
-      with:
-        files: "${{ matrix.service_path }}/**/*.php" # you may customize glob as needed
-        phpcs_path: phpcs
-        standard: ${{ matrix.service_path }}/app/phpcs.xml.dist
-        fail_on_warnings: false
+    - name: Detect changed PHP files
+      run: |
+        {
+          echo "CHANGED_PHP_FILES<<EOF"
+          git diff --name-only origin/main... -- '${{ matrix.service_path }}/**/*.php'
+          echo "EOF"
+        } >> "$GITHUB_ENV"
+
+    - name: Run phpcs
+      if: env.CHANGED_PHP_FILES != ''
+      run: |
+        echo "::add-matcher::.github/phpcs-problem-matcher.json"
+        phpcs --standard=${{ matrix.service_path }}/app/phpcs.xml.dist --basepath="$GITHUB_WORKSPACE" --report-xml --report-full $CHANGED_PHP_FILES
