@@ -15,6 +15,8 @@ jobs:
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: '.nvmrc'
+      - name: ":chains: SLSA"
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c # v1.4.0
       - name: cache node modules
         id: cache-npm
         uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
