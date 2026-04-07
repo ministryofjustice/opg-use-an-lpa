@@ -73,9 +73,7 @@ jobs:
       - name: configure AWS credentials for getting pagerduty token
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-          role-to-assume: arn:aws:iam::367815980639:role/opg-use-an-lpa-ci
+          role-to-assume: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPADevAssumeGithubAction
@@ -90,8 +88,7 @@ jobs:
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
           aws-region: eu-west-1
           role-duration-seconds: 3600
           role-session-name: OPGUseAnLPATerraformGithubAction

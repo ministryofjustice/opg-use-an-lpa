@@ -127,10 +127,6 @@ jobs:
           matrix.svc_prefix == 'front' &&
           inputs.specific_path == 'all'
 
-      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
-        if: |
-          inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
-
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
