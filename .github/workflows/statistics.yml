@@ -14,6 +14,11 @@ on:
 defaults:
   run:
     shell: bash
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   stats_to_slack:
     name: "Post service stats to Slack"
@@ -23,8 +28,7 @@ jobs:
       - name: Setup AWS credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
+          role-to-assume: ${{ vars.oidc_get_statistics }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGGetServiceStats

@@ -241,7 +241,8 @@ module "dynamodb_encryption_key" {
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
     ],
-    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
+    local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : [],
+    local.environment == "production" ? ["use-a-lpa-github-actions-get-statistics"] : []
   )
   caller_accounts = [
     data.aws_caller_identity.current.account_id,
