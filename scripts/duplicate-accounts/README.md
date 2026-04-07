@@ -24,6 +24,10 @@ The script:
 ## Requirements
 boto3
 
+```
+pip install -r ./requirements.txt
+```
+
 ## Build
 Run from the folder containing dockerfile
 
@@ -73,6 +77,7 @@ Optional: save plan file to host
 
 Mount a host folder
 
+```
 mkdir -p output
 
 aws-vault exec identity -- sh -c '
@@ -85,3 +90,4 @@ docker run --rm \
   duplicate-identity-merge \
   --environment demo \
   --limit 1
+```
