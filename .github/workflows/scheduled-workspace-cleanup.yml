@@ -54,7 +54,7 @@ jobs:
       - name: set pagerduty token
         run: |
           export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
-            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+            shared/pagerduty-token --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
           echo "::add-mask::$TF_VAR_pagerduty_token"
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
