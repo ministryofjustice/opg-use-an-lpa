@@ -11,13 +11,12 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	v4 "github.com/aws/aws-sdk-go-v2/aws/signer/v4"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
@@ -25,105 +24,47 @@ import (
 )
 
 const (
-	lpaUID              = "M-7890-0400-4000"
-	donorUID            = "eda719db-8880-4dda-8c5d-bb9ea12c236f"
-	attorneyUID         = "9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d"
-	trustCorporationUID = "1d95993a-ffbb-484c-b2fe-f4cca51801da"
-	lpaBody             = `{
-	"lpaType": "personal-welfare",
-	"channel": "paper",
-	"language": "en",
-	"donor": {
-		"uid": "` + donorUID + `",
-		"firstNames": "Feeg",
-		"lastName": "Bundlaaaa",
-		"address": {
-			"line1": "74 Cloob Close",
-			"town": "Mahhhhhhhhhh",
-			"postcode": "TP6 8EX",
-			"country": "GB"
-		},
-		"dateOfBirth": "1970-01-24",
-		"email": "nobody@not.a.real.domain",
-		"contactLanguagePreference": "en"
-	},
-	"attorneys": [
-		{
-			"uid": "` + attorneyUID + `",
-			"firstNames": "Herman",
-			"lastName": "Seakrest",
-			"address": {
-				"line1": "81 NighOnTimeWeBuiltIt Street",
-				"town": "Mahhhhhhhhhh",
-				"postcode": "PC4 6UZ",
-				"country": "GB"
-			},
-			"dateOfBirth": "1982-07-24",
-			"status": "active",
-			"appointmentType": "original",
-			"channel": "paper"
-		}
-	],
-	"trustCorporations": [
-		{
-			"uid": "` + trustCorporationUID + `",
-			"name": "Trust us Corp.",
-			"address": {
-				"line1": "103 Line 1",
-				"town": "Town",
-				"country": "GB"
-			},
-			"status": "active",
-			"appointmentType": "original",
-			"channel": "paper",
-			"companyNumber": "ABCD1234"
-		}
-	],
-	"certificateProvider": {
-		"uid": "6808960d-12cf-47c5-a2bc-3177deb8599c",
-		"firstNames": "Vone",
-		"lastName": "Spust",
-		"address": {
-			"line1": "122111 Zonnington Way",
-			"town": "Mahhhhhhhhhh",
-			"country": "GB"
-		},
-		"channel": "online",
-		"email": "a@example.com",
-		"phone": "070009000"
-	},
-	"lifeSustainingTreatmentOption": "option-a",
-	"signedAt": "2024-01-10T23:00:00Z",
-	"witnessedByCertificateProviderAt": "2024-01-11T01:00:00Z",
-	"certificateProviderNotRelatedConfirmedAt": "2024-01-11T22:00:00Z",
-	"howAttorneysMakeDecisions": "jointly",
-	"restrictionsAndConditions": "I do not want to be put into a care home unless x"
-}`
+	// opg-use-an-lpa+test-user@digital.justice.gov.uk
+	userID = "bf9e7e77-f283-49c6-a79c-65d5d309ef77"
 )
 
 func main() {
 	var (
+		ctx = context.Background()
+
 		lpaStoreBaseURL                = os.Getenv("LPA_STORE_BASE_URL")
 		lpaStoreSecretARN              = os.Getenv("LPA_STORE_SECRET_ARN")
 		activationCodesTableARN        = os.Getenv("ACTIVATION_CODES_TABLE_ARN")
 		paperVerificationCodesTableARN = os.Getenv("PAPER_VERIFICATION_CODES_TABLE_ARN")
+		userLpaActorMapTableARN        = os.Getenv("USER_LPA_ACTOR_MAP_TABLE_ARN")
+		viewerCodesTableARN            = os.Getenv("VIEWER_CODES_TABLE_ARN")
 	)
-	if (lpaStoreBaseURL == "" && lpaStoreSecretARN == "") == (paperVerificationCodesTableARN == "") {
-		log.Fatal("set LPA_STORE_BASE_URL and LPA_STORE_SECRET_ARN for lpa-store seeding, or ACTIVATION_CODES_TABLE_ARN and PAPER_VERIFICATION_CODES_TABLE_ARN for codes seeding")
+
+	lpas := []Lpa{
+		readLpa("M-7890-0400-4000", "d9b9caa0-d657-4917-b15a-462f8acd32bf"),
+		readLpa("M-7890-0500-5009", "626458b6-eb4e-21e4-95db-ce9b5b3e3f7c"),
 	}
 
-	if paperVerificationCodesTableARN == "" {
-		if err := runLpaStore(context.Background(), lpaStoreBaseURL, lpaStoreSecretARN); err != nil {
+	if lpaStoreBaseURL != "" && lpaStoreSecretARN != "" {
+		if err := runLpaStore(ctx, lpaStoreBaseURL, lpaStoreSecretARN, lpas); err != nil {
+			log.Fatal(err)
+		}
+	} else if activationCodesTableARN != "" && paperVerificationCodesTableARN != "" {
+		if err := runCodes(ctx, activationCodesTableARN, paperVerificationCodesTableARN, lpas); err != nil {
+			log.Fatal(err)
+		}
+	} else if userLpaActorMapTableARN != "" && viewerCodesTableARN != "" {
+		if err := runViewerCodes(ctx, userLpaActorMapTableARN, viewerCodesTableARN, lpas); err != nil {
 			log.Fatal(err)
 		}
 	} else {
-		if err := runCodes(context.Background(), activationCodesTableARN, paperVerificationCodesTableARN); err != nil {
-			log.Fatal(err)
-		}
+		log.Fatal(`for seeding lpa-store set LPA_STORE_BASE_URL and LPA_STORE_SECRET_ARN
+for seeding activation and paper verification codes set ACTIVATION_CODES_TABLE_ARN and PAPER_VERIFICATION_CODES_TABLE
+for seeding viewer codes set USER_LPA_ACTOR_MAP_TABLE_ARN and VIEWER_CODES_TABLE_ARN`)
 	}
 }
 
-func runLpaStore(ctx context.Context, lpaStoreBaseURL, lpaStoreSecretARN string) error {
+func runLpaStore(ctx context.Context, lpaStoreBaseURL, lpaStoreSecretARN string, lpas []Lpa) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
@@ -134,58 +75,80 @@ func runLpaStore(ctx context.Context, lpaStoreBaseURL, lpaStoreSecretARN string)
 		return fmt.Errorf("new lpa store client: %w", err)
 	}
 
-	created, err := lpaStore.createLPA(ctx)
-	if err != nil {
-		return err
-	}
-
-	if created {
-		if err := lpaStore.update(ctx, map[string]any{
-			"type": "CERTIFICATE_PROVIDER_SIGN",
-			"changes": []map[string]any{
-				{"key": "/certificateProvider/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
-			},
-		}); err != nil {
-			return fmt.Errorf("certificate provider sign: %w", err)
+	for _, lpa := range lpas {
+		created, err := lpaStore.createLPA(ctx, lpa.UID, lpa.Body)
+		if err != nil {
+			return fmt.Errorf("create %s: %w", lpa.UID, err)
 		}
 
-		if err := lpaStore.update(ctx, map[string]any{
-			"type": "ATTORNEY_SIGN",
-			"changes": []map[string]any{
-				{"key": "/attorneys/0/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
-			},
-		}); err != nil {
-			return fmt.Errorf("attorney sign: %w", err)
-		}
+		if created {
+			if err := lpaStore.update(ctx, lpa.UID, map[string]any{
+				"type": "CERTIFICATE_PROVIDER_SIGN",
+				"changes": []map[string]any{
+					{"key": "/certificateProvider/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
+				},
+			}); err != nil {
+				return fmt.Errorf("certificate provider sign: %w", err)
+			}
 
-		if err := lpaStore.update(ctx, map[string]any{
-			"type": "TRUST_CORPORATION_SIGN",
-			"changes": []map[string]any{
-				{"key": "/trustCorporations/0/contactLanguagePreference", "new": "en", "old": nil},
-				{"key": "/trustCorporations/0/mobile", "new": "07000120202", "old": nil},
-				{"key": "/trustCorporations/0/companyNumber", "new": "575656565", "old": "ABCD1234"},
-				{"key": "/trustCorporations/0/signatories/0/firstNames", "new": "John", "old": nil},
-				{"key": "/trustCorporations/0/signatories/0/lastName", "new": "Signer", "old": nil},
-				{"key": "/trustCorporations/0/signatories/0/professionalTitle", "new": "Law guy", "old": nil},
-				{"key": "/trustCorporations/0/signatories/0/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
-			},
-		}); err != nil {
-			return fmt.Errorf("trust corporation sign: %w", err)
-		}
+			if err := lpaStore.update(ctx, lpa.UID, map[string]any{
+				"type": "ATTORNEY_SIGN",
+				"changes": []map[string]any{
+					{"key": "/attorneys/0/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
+				},
+			}); err != nil {
+				return fmt.Errorf("attorney sign: %w", err)
+			}
 
-		if err := lpaStore.update(ctx, map[string]any{"type": "STATUTORY_WAITING_PERIOD"}); err != nil {
-			return fmt.Errorf("statutory waiting period: %w", err)
-		}
+			if err := lpaStore.update(ctx, lpa.UID, map[string]any{
+				"type": "TRUST_CORPORATION_SIGN",
+				"changes": []map[string]any{
+					{"key": "/trustCorporations/0/contactLanguagePreference", "new": "en", "old": nil},
+					{"key": "/trustCorporations/0/mobile", "new": "07000120202", "old": nil},
+					{"key": "/trustCorporations/0/companyNumber", "new": "575656565", "old": "ABCD1234"},
+					{"key": "/trustCorporations/0/signatories/0/firstNames", "new": "John", "old": nil},
+					{"key": "/trustCorporations/0/signatories/0/lastName", "new": "Signer", "old": nil},
+					{"key": "/trustCorporations/0/signatories/0/professionalTitle", "new": "Law guy", "old": nil},
+					{"key": "/trustCorporations/0/signatories/0/signedAt", "new": "2024-01-02T11:00:00Z", "old": nil},
+				},
+			}); err != nil {
+				return fmt.Errorf("trust corporation sign: %w", err)
+			}
 
-		if err := lpaStore.update(ctx, map[string]any{"type": "REGISTER"}); err != nil {
-			return fmt.Errorf("register: %w", err)
+			if err := lpaStore.update(ctx, lpa.UID, map[string]any{"type": "STATUTORY_WAITING_PERIOD"}); err != nil {
+				return fmt.Errorf("statutory waiting period: %w", err)
+			}
+
+			if err := lpaStore.update(ctx, lpa.UID, map[string]any{"type": "REGISTER"}); err != nil {
+				return fmt.Errorf("register: %w", err)
+			}
 		}
 	}
 
 	return nil
 }
 
-func runCodes(ctx context.Context, activationCodesTableARN, paperVerificationCodesTableARN string) error {
+type activationCode struct {
+	Code            string `dynamodbav:"code"`
+	Active          bool   `dynamodbav:"active"`
+	Actor           string `dynamodbav:"actor"`
+	Dob             string `dynamodbav:"dob"`
+	ExpiryDate      int64  `dynamodbav:"expiry_date"`
+	GeneratedDate   string `dynamodbav:"generated_date"`
+	LastUpdatedDate string `dynamodbav:"last_updated_date"`
+	Lpa             string `dynamodbav:"lpa"`
+	StatusDetails   string `dynamodbav:"status_details"`
+}
+
+type paperVerificationCode struct {
+	PK           string
+	UpdatedAt    time.Time
+	ActorLPA     string
+	ExpiresAt    time.Time `dynamodbav:",omitempty"`
+	ExpiryReason string    `dynamodbav:",omitempty"`
+}
+
+func runCodes(ctx context.Context, activationCodesTableARN, paperVerificationCodesTableARN string, lpas []Lpa) error {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
@@ -193,75 +156,136 @@ func runCodes(ctx context.Context, activationCodesTableARN, paperVerificationCod
 
 	dynamo := dynamodb.NewFromConfig(cfg)
 
-	_, err = dynamo.BatchWriteItem(ctx, &dynamodb.BatchWriteItemInput{
-		RequestItems: map[string][]types.WriteRequest{
-			activationCodesTableARN: {
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"code":              &types.AttributeValueMemberS{Value: "PAPERATORNEY"},
-						"active":            &types.AttributeValueMemberBOOL{Value: true},
-						"actor":             &types.AttributeValueMemberS{Value: attorneyUID},
-						"dob":               &types.AttributeValueMemberS{Value: "1982-07-24"},
-						"expiry_date":       &types.AttributeValueMemberN{Value: strconv.FormatInt(time.Now().AddDate(1, 0, 0).Unix(), 10)},
-						"generated_date":    &types.AttributeValueMemberS{Value: time.Now().Format(time.DateOnly)},
-						"last_updated_date": &types.AttributeValueMemberS{Value: time.Now().Format(time.DateOnly)},
-						"lpa":               &types.AttributeValueMemberS{Value: lpaUID},
-						"status_details":    &types.AttributeValueMemberS{Value: "Generated"},
-					},
-				}},
-			},
-			paperVerificationCodesTableARN: {
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":        &types.AttributeValueMemberS{Value: "PAPER#P-1234-1234-1234-12"},
-						"UpdatedAt": &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":  &types.AttributeValueMemberS{Value: donorUID + "#" + lpaUID},
-					},
-				}},
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":        &types.AttributeValueMemberS{Value: "PAPER#P-1234-1234-1234-23"},
-						"UpdatedAt": &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":  &types.AttributeValueMemberS{Value: attorneyUID + "#" + lpaUID},
-					},
-				}},
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":        &types.AttributeValueMemberS{Value: "PAPER#P-1234-1234-1234-34"},
-						"UpdatedAt": &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":  &types.AttributeValueMemberS{Value: trustCorporationUID + "#" + lpaUID},
-					},
-				}},
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":           &types.AttributeValueMemberS{Value: "PAPER#P-3456-3456-3456-34"},
-						"UpdatedAt":    &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":     &types.AttributeValueMemberS{Value: donorUID + "#" + lpaUID},
-						"ExpiresAt":    &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ExpiryReason": &types.AttributeValueMemberS{Value: "cancelled"},
-					},
-				}},
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":           &types.AttributeValueMemberS{Value: "PAPER#P-5678-5678-5678-56"},
-						"UpdatedAt":    &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":     &types.AttributeValueMemberS{Value: donorUID + "#" + lpaUID},
-						"ExpiresAt":    &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ExpiryReason": &types.AttributeValueMemberS{Value: "first_time_use"},
-					},
-				}},
-				{PutRequest: &types.PutRequest{
-					Item: map[string]types.AttributeValue{
-						"PK":           &types.AttributeValueMemberS{Value: "PAPER#P-5678-5678-5678-67"},
-						"UpdatedAt":    &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339Nano)},
-						"ActorLPA":     &types.AttributeValueMemberS{Value: donorUID + "#" + lpaUID},
-						"ExpiresAt":    &types.AttributeValueMemberS{Value: time.Now().Add(7 * 24 * time.Hour).Format(time.RFC3339Nano)},
-						"ExpiryReason": &types.AttributeValueMemberS{Value: "first_time_use"},
-					},
-				}},
+	_, err = dynamo.BatchWriteItem(ctx, createBatch(map[string][]any{
+		activationCodesTableARN: {
+			activationCode{
+				Code:            "PAPERATORNEY",
+				Active:          true,
+				Actor:           lpas[0].AttorneyUIDs[0],
+				Dob:             "1982-07-24",
+				ExpiryDate:      time.Now().AddDate(1, 0, 0).Unix(),
+				GeneratedDate:   time.Now().Format(time.DateOnly),
+				LastUpdatedDate: time.Now().Format(time.DateOnly),
+				Lpa:             lpas[0].UID,
+				StatusDetails:   "Generated",
 			},
 		},
-	})
+		paperVerificationCodesTableARN: {
+			paperVerificationCode{
+				PK:        "PAPER#P-1234-1234-1234-12",
+				UpdatedAt: time.Now(),
+				ActorLPA:  lpas[0].DonorUID + "#" + lpas[0].UID,
+			},
+			paperVerificationCode{
+				PK:        "PAPER#P-1234-1234-1234-23",
+				UpdatedAt: time.Now(),
+				ActorLPA:  lpas[0].AttorneyUIDs[0] + "#" + lpas[0].UID,
+			},
+			paperVerificationCode{
+				PK:        "PAPER#P-1234-1234-1234-34",
+				UpdatedAt: time.Now(),
+				ActorLPA:  lpas[0].TrustCorporationUIDs[0] + "#" + lpas[0].UID,
+			},
+			paperVerificationCode{
+				PK:           "PAPER#P-3456-3456-3456-34",
+				UpdatedAt:    time.Now(),
+				ActorLPA:     lpas[0].DonorUID + "#" + lpas[0].UID,
+				ExpiresAt:    time.Now(),
+				ExpiryReason: "cancelled",
+			},
+			paperVerificationCode{
+				PK:           "PAPER#P-5678-5678-5678-56",
+				UpdatedAt:    time.Now(),
+				ActorLPA:     lpas[0].DonorUID + "#" + lpas[0].UID,
+				ExpiresAt:    time.Now(),
+				ExpiryReason: "first_time_use",
+			},
+			paperVerificationCode{
+				PK:           "PAPER#P-5678-5678-5678-67",
+				UpdatedAt:    time.Now(),
+				ActorLPA:     lpas[0].DonorUID + "#" + lpas[0].UID,
+				ExpiresAt:    time.Now().Add(7 * 24 * time.Hour),
+				ExpiryReason: "first_time_use",
+			},
+		},
+	}))
+
+	return err
+}
+
+type userLpaActorMap struct {
+	Id          string
+	LpaUid      string
+	ActorId     string
+	Added       time.Time
+	ActivatedOn time.Time
+	UserId      string
+	Comment     string
+}
+
+type viewerCode struct {
+	ViewerCode   string
+	SiriusUid    string
+	Expires      string
+	Added        time.Time
+	Organisation string
+	UserLpaActor string
+	Comment      string
+}
+
+func runViewerCodes(ctx context.Context, userLpaActorMapTableARN, viewerCodesTableARN string, lpas []Lpa) error {
+	cfg, err := config.LoadDefaultConfig(ctx)
+	if err != nil {
+		return fmt.Errorf("load config: %w", err)
+	}
+
+	dynamo := dynamodb.NewFromConfig(cfg)
+
+	nextWeek := time.Now().AddDate(0, 0, 7).Format(time.RFC3339)
+	lastWeek := time.Now().AddDate(0, 0, -7).Format(time.RFC3339)
+
+	_, err = dynamo.BatchWriteItem(ctx, createBatch(map[string][]any{
+		userLpaActorMapTableARN: {
+			userLpaActorMap{
+				Id:          lpas[0].UserLpaActorMapID,
+				LpaUid:      lpas[0].UID,
+				ActorId:     lpas[0].DonorUID,
+				Added:       time.Now(),
+				ActivatedOn: time.Now(),
+				UserId:      userID,
+				Comment:     "Seeded data",
+			},
+			userLpaActorMap{
+				Id:          lpas[1].UserLpaActorMapID,
+				LpaUid:      lpas[1].UID,
+				ActorId:     lpas[1].DonorUID,
+				Added:       time.Now(),
+				ActivatedOn: time.Now(),
+				UserId:      userID,
+				Comment:     "Seeded data",
+			},
+		},
+		viewerCodesTableARN: {
+			viewerCode{
+				ViewerCode:   "A000B000C000",
+				SiriusUid:    lpas[0].UID,
+				Expires:      nextWeek,
+				Added:        time.Now(),
+				Organisation: "Test Organisation",
+				UserLpaActor: lpas[0].UserLpaActorMapID,
+				Comment:      "Seeded data: Valid viewer code",
+			},
+			viewerCode{
+				ViewerCode:   "E000F000G000",
+				SiriusUid:    lpas[1].UID,
+				Expires:      lastWeek,
+				Added:        time.Now(),
+				Organisation: "Another Test Organisation",
+				UserLpaActor: lpas[1].UserLpaActorMapID,
+				Comment:      "Seeded data: Valid viewer code",
+			},
+		},
+	}))
 	return err
 }
 
@@ -290,8 +314,8 @@ func newLpaStoreClient(ctx context.Context, cfg aws.Config, baseURL, secretARN s
 	}, nil
 }
 
-func (l *lpaStoreClient) createLPA(ctx context.Context) (created bool, err error) {
-	resp, err := l.do(ctx, http.MethodPut, "/lpas/"+lpaUID, strings.NewReader(lpaBody))
+func (l *lpaStoreClient) createLPA(ctx context.Context, uid string, body []byte) (created bool, err error) {
+	resp, err := l.do(ctx, http.MethodPut, "/lpas/"+uid, bytes.NewReader(body))
 	if err != nil {
 		return false, fmt.Errorf("do lpa-store request: %w", err)
 	}
@@ -323,7 +347,7 @@ func (l *lpaStoreClient) createLPA(ctx context.Context) (created bool, err error
 	}
 }
 
-func (l *lpaStoreClient) update(ctx context.Context, update map[string]any) error {
+func (l *lpaStoreClient) update(ctx context.Context, lpaUID string, update map[string]any) error {
 	data, err := json.Marshal(update)
 	if err != nil {
 		return err
@@ -396,4 +420,69 @@ func callLambda(cfg aws.Config, signer *v4.Signer, req *http.Request) (*http.Res
 	}
 
 	return http.DefaultClient.Do(req)
+}
+
+func createBatch(req map[string][]any) *dynamodb.BatchWriteItemInput {
+	input := &dynamodb.BatchWriteItemInput{
+		RequestItems: map[string][]types.WriteRequest{},
+	}
+
+	for table, items := range req {
+		for _, item := range items {
+			encoded, _ := attributevalue.MarshalMap(item)
+
+			input.RequestItems[table] = append(input.RequestItems[table], types.WriteRequest{
+				PutRequest: &types.PutRequest{Item: encoded},
+			})
+		}
+	}
+
+	return input
+}
+
+type Lpa struct {
+	UID                  string
+	Body                 []byte
+	DonorUID             string
+	AttorneyUIDs         []string
+	TrustCorporationUIDs []string
+
+	// associate the ID with the LPA so it is set consistently across runs
+	UserLpaActorMapID string
+}
+
+func readLpa(uid, userLpaActorMapID string) Lpa {
+	body, _ := os.ReadFile("lpas/" + uid + ".json")
+
+	var lpa struct {
+		Donor struct {
+			UID string
+		}
+		Attorneys []struct {
+			UID string
+		}
+		TrustCorporations []struct {
+			UID string
+		}
+	}
+	json.Unmarshal(body, &lpa)
+
+	var attorneyUIDs []string
+	for _, a := range lpa.Attorneys {
+		attorneyUIDs = append(attorneyUIDs, a.UID)
+	}
+
+	var trustCorporationUIDs []string
+	for _, c := range lpa.TrustCorporations {
+		trustCorporationUIDs = append(trustCorporationUIDs, c.UID)
+	}
+
+	return Lpa{
+		UID:                  uid,
+		Body:                 body,
+		DonorUID:             lpa.Donor.UID,
+		AttorneyUIDs:         attorneyUIDs,
+		TrustCorporationUIDs: trustCorporationUIDs,
+		UserLpaActorMapID:    userLpaActorMapID,
+	}
 }
