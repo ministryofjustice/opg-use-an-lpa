@@ -55,9 +55,9 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPAECRGithubAction
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
-          ssh-private-key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+          deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: terraform fmt ${{ matrix.folder }} check
         run: terraform fmt -check -recursive
