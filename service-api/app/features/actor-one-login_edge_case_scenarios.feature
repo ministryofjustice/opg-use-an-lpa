@@ -20,3 +20,15 @@ Feature: Authorise One Login with duplicate protection edge cases
     Then I am not taken to my dashboard
     And A new local account is not created
     And I am shown an account conflict error
+
+
+  @acceptance
+  Scenario: A user cannot regain access by creating a new one login account after deleting the original one
+    Given an existing local account is linked to a deleted one login account
+    And another one login account exists with a different subject
+    And that other one login account has been changed to use the same email address
+    And I have completed a successful one login sign-in process with that other one login account
+    When I am returned to the use an lpa service
+    Then I am not taken to my dashboard
+    And I am not linked to the existing local account
+    And I am shown an account conflict error
