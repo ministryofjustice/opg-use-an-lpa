@@ -101,7 +101,7 @@ resource "aws_security_group_rule" "admin_ecs_service_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for ECR access
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.admin_ecs_service.id
   lifecycle {
     create_before_destroy = true
@@ -219,6 +219,18 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "ssm:PutParameters"
     ]
     resources = var.parameter_store_arns
+  }
+
+  statement {
+    sid    = "${local.policy_region_prefix}DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
   }
 
   provider = aws.region

@@ -75,7 +75,7 @@ jobs:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_PREPRODUCTION }}
       workspace: preproduction
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
@@ -114,6 +114,8 @@ jobs:
       push_to_ecr: true
       specific_path: all
       oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
+    secrets:
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
       needs.workflow_variables.outputs.specific_path != 'docs' &&
@@ -143,7 +145,7 @@ jobs:
       terraform_path: account
       workspace: preproduction
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_preproduction:
     name: terraform apply preproduction
@@ -161,7 +163,7 @@ jobs:
       terraform_path: environment
       workspace: preproduction
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   seed_dynamodb_preproduction:
     name: seed dynamodb in preproduction
@@ -216,6 +218,9 @@ jobs:
               echo "Preproduction environment tested, built and deployed"
               echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
               exit 0
+          elif [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]; then
+            echo 'Ending docs workflow'
+            exit 0
           else
           echo "Previous jobs in pipeline failed."
           exit 1

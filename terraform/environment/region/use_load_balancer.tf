@@ -24,7 +24,7 @@ resource "aws_lb_target_group" "use" {
 
 resource "aws_lb" "use" {
   name                       = "${var.environment_name}-actor"
-  internal                   = false #tfsec:ignore:aws-elb-alb-not-public - Intentionally public facing
+  internal                   = false
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet.public[*].id
@@ -240,7 +240,7 @@ resource "aws_security_group_rule" "use_loadbalancer_ingress_http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr - open ingress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
@@ -265,7 +265,7 @@ resource "aws_security_group_rule" "use_loadbalancer_ingress_public_access" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-ingress-sgr - open ingress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region
@@ -277,7 +277,7 @@ resource "aws_security_group_rule" "use_loadbalancer_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.use_loadbalancer.id
 
   provider = aws.region

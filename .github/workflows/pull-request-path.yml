@@ -28,9 +28,7 @@ jobs:
     name: cleanup pr workspaces
     uses: ./.github/workflows/scheduled-workspace-cleanup.yml
     secrets:
-      AWS_ACCESS_KEY_ID_ACTIONS: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
-      AWS_SECRET_ACCESS_KEY_ACTIONS: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   workflow_variables:
     runs-on: ubuntu-latest
@@ -49,7 +47,7 @@ jobs:
 
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/.github/actions/branch-name@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/branch-name@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
 
       - name: get changed files in the admin folder
         id: changed-files-admin
@@ -131,7 +129,7 @@ jobs:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
     if: |
       needs.workflow_variables.outputs.specific_path != 'docs'
 
@@ -177,6 +175,8 @@ jobs:
       push_to_ecr: true
       specific_path: ${{ needs.workflow_variables.outputs.specific_path }}
       oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
+    secrets:
+      SNYK_OPG_ORG_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
     if: |
       always() &&
       needs.workflow_variables.outputs.detect_app_code_changes == 'true' &&
@@ -231,7 +231,7 @@ jobs:
       terraform_path: account
       workspace: development
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
   terraform_apply_environment:
     name: terraform apply environment
@@ -251,7 +251,7 @@ jobs:
       terraform_path: environment
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
     if: |
       always() &&

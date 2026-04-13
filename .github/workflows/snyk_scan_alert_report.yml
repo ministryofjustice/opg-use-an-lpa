@@ -1,4 +1,4 @@
-name: "[Trivy] scan alert report"
+name: "[Snyk] scan alert report"
 
 defaults:
   run:
@@ -9,7 +9,7 @@ on:
     - cron: 30 10 * * 1-5
 
 jobs:
-  trivy_scan_alert_report:
+  snyk_scan_alert_report:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -21,11 +21,11 @@ jobs:
           cache: 'pip'
 
       - name: install requirements
-        run: pip install -r ./scripts/pipeline/generate_trivy_report/requirements.txt
+        run: pip install -r ./scripts/pipeline/generate_snyk_report/requirements.txt
 
       - name: send report to slack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
         run: |
-          python ./scripts/pipeline/generate_trivy_report/code_scan_report.py
+          python ./scripts/pipeline/generate_snyk_report/code_scan_report.py

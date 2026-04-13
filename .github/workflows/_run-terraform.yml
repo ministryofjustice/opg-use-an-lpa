@@ -43,7 +43,7 @@ on:
         required: true
         type: string
     secrets:
-      USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY:
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
 
 permissions:
@@ -78,11 +78,9 @@ jobs:
 
       - name: "Set terraform version"
         id: set-terraform-version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
         with:
           terraform_directory: ./terraform/${{ inputs.terraform_path }}
-
-      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
 
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
@@ -99,7 +97,7 @@ jobs:
       - name: set pagerduty token
         run: |
           export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
-            pagerduty_api_key --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+            shared/pagerduty-token --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
           echo "::add-mask::$TF_VAR_pagerduty_token"
           echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
 
@@ -111,9 +109,9 @@ jobs:
           role-to-assume: ${{ inputs.oidc_terraform_role }}
           role-session-name: OPGUseAnLPATerraformGithubAction
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
-          ssh-private-key: ${{ secrets.USE_AN_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+          deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: output terraform variables
         env:

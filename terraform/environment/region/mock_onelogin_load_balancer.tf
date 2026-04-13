@@ -20,7 +20,7 @@ resource "aws_lb_target_group" "mock_onelogin" {
 resource "aws_lb" "mock_onelogin" {
   count                      = var.mock_onelogin_enabled ? 1 : 0
   name                       = "${var.environment_name}-mock-onelogin"
-  internal                   = false #tfsec:ignore:aws-elb-alb-not-public - public alb
+  internal                   = false
   load_balancer_type         = "application"
   drop_invalid_header_fields = true
   subnets                    = data.aws_subnet.public[*].id
@@ -120,7 +120,7 @@ resource "aws_security_group_rule" "mock_onelogin_loadbalancer_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr - open egress for load balancers
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.mock_onelogin_loadbalancer[0].id
 
   provider = aws.region
