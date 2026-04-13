@@ -15,11 +15,13 @@ import os
 #######
 
 AWS_ACCOUNT_IDS = {
-#     "production": "690083044361",
-#     "preproduction": "888228022356",
-     "development": "367815980639",
-      "demo": "367815980639",
+    "production": "690083044361",
+    "preproduction": "888228022356",
+    "development": "367815980639",
+    "demo": "367815980639",
 }
+
+CHECKPOINT_BUCKET = "Duplicate-Accounts-s3"
 
 #Assume AWS role
 def assume_role(environment):
@@ -78,6 +80,7 @@ def parse_args():
 
     parser.add_argument(
         "--plan-file",
+        type=str,
         help="Path to a previously generated merge plan JSON file"
     )
 
@@ -99,8 +102,8 @@ def get_dynamo_table(environment):
     )
 
     TABLE_PREFIX = {
-#         "production": "ual-prod",
-#         "preproduction": "ual-preprod",
+        "production": "ual-prod",
+        "preproduction": "ual-preprod",
         "development": "3644uml4037",
         "demo": "demo",
     }
@@ -144,8 +147,10 @@ def get_lpa_table(environment):
     )
 
     TABLE_PREFIX = {
+       "production": "ual-prod",
+       "preproduction": "ual-preprod",
        "development": "3644uml4037",
-        "demo": "demo"
+       "demo": "demo",
     }
 
     return dynamodb.Table(f"{TABLE_PREFIX[environment]}-UserLpaActorMap")
@@ -164,12 +169,14 @@ def get_viewer_code_table(environment):
         aws_session_token=creds["SessionToken"],
     )
 
-    table_prefix = {
+    TABLE_PREFIX = {
+        "production": "ual-prod",
+        "preproduction": "ual-preprod",
         "development": "3644uml4037",
         "demo": "demo",
     }
 
-    return dynamodb.Table(f"{table_prefix[environment]}-ViewerCodes")
+    return dynamodb.Table(f"{TABLE_PREFIX[environment]}-ViewerCodes")
 
 # Helper table accessor
 def get_actor_users_table(environment):
@@ -188,9 +195,16 @@ def get_actor_user_by_id(actor_table, user_id):
 
 # Deteremines the primary - mostly recently logged in
 def determine_primary(group):
-    def login_value(user):
-        return user.get("LastLogin") or ""
-    return max(group, key=login_value)
+    def parse_login(user):
+        value = user.get("LastLogin")
+        if not value:
+            return datetime.min
+        try:
+            return datetime.fromisoformat(value)
+        except:
+            return datetime.min
+
+    return max(group, key=parse_login)
 
 
 # Fetch LPAs for a user
@@ -214,24 +228,24 @@ def get_user_lpas(lpa_table, user_id):
     return items
 
 
-# This returns all viewer coes associated to a given mapping
-def get_viewer_codes_for_mapping(viewer_table, mapping_id):
-    response = viewer_table.scan(
-        FilterExpression="UserLpaActor = :mapping_id",
-        ExpressionAttributeValues={":mapping_id": mapping_id}
-    )
-
-    items = response.get("Items", [])
-
-    while "LastEvaluatedKey" in response:
-        response = viewer_table.scan(
-            FilterExpression="UserLpaActor = :mapping_id",
-            ExpressionAttributeValues={":mapping_id": mapping_id},
-            ExclusiveStartKey=response["LastEvaluatedKey"]
-        )
-        items.extend(response.get("Items", []))
-
-    return items
+# # This returns all viewer coes associated to a given mapping
+# def get_viewer_codes_for_mapping(viewer_table, mapping_id):
+#     response = viewer_table.scan(
+#         FilterExpression="UserLpaActor = :mapping_id",
+#         ExpressionAttributeValues={":mapping_id": mapping_id}
+#     )
+#
+#     items = response.get("Items", [])
+#
+#     while "LastEvaluatedKey" in response:
+#         response = viewer_table.scan(
+#             FilterExpression="UserLpaActor = :mapping_id",
+#             ExpressionAttributeValues={":mapping_id": mapping_id},
+#             ExclusiveStartKey=response["LastEvaluatedKey"]
+#         )
+#         items.extend(response.get("Items", []))
+#
+#     return items
 
 
 # Gets one viewer code row by its code
@@ -244,11 +258,62 @@ def get_viewer_code_by_id(viewer_table, viewer_code):
 def get_lpa_identifier(mapping):
     return mapping.get("LpaUid") or mapping.get("SiriusUid")
 
-def choose_canonical_for_group(mappings, viewer_table, primary_user_id):
+def get_sirius_uid(mapping):
+    return mapping.get("SiriusUid")
+
+def get_viewer_codes_for_sirius_uid(viewer_table, sirius_uid):
+    response = viewer_table.query(
+        IndexName="SiriusUidIndex",
+        KeyConditionExpression=Key("SiriusUid").eq(sirius_uid)
+    )
+
+    items = response.get("Items", [])
+
+    while "LastEvaluatedKey" in response:
+        response = viewer_table.query(
+            IndexName="SiriusUidIndex",
+            KeyConditionExpression=Key("SiriusUid").eq(sirius_uid),
+            ExclusiveStartKey=response["LastEvaluatedKey"]
+        )
+        items.extend(response.get("Items", []))
+
+    return items
+
+def get_viewer_codes_for_sirius_uid_cached(viewer_table, sirius_uid, cache):
+    if sirius_uid not in cache:
+        cache[sirius_uid] = get_viewer_codes_for_sirius_uid(viewer_table, sirius_uid)
+    return cache[sirius_uid]
+
+def group_viewer_codes_by_mapping(viewer_codes):
+    grouped = defaultdict(list)
+
+    for code in viewer_codes:
+        mapping_id = code.get("UserLpaActor")
+        if mapping_id:
+            grouped[mapping_id].append(code)
+
+    return grouped
+
+def choose_canonical_for_group(mappings, viewer_table, primary_user_id, viewer_code_cache):
+    sirius_uid = get_sirius_uid(mappings[0])
+
+    if not sirius_uid:
+        print(f"WARNING: Missing SiriusUid for mappings {[m['Id'] for m in mappings]}")
+        return mappings[0]["Id"], set(), [], {}
+
+    viewer_codes = get_viewer_codes_for_sirius_uid_cached(
+        viewer_table,
+        sirius_uid,
+        viewer_code_cache
+    )
+
+    codes_by_mapping = group_viewer_codes_by_mapping(viewer_codes)
+
     candidates = []
 
     for mapping in mappings:
-        codes = get_viewer_codes_for_mapping(viewer_table, mapping["Id"])
+        codes = codes_by_mapping.get(mapping["Id"], [])
+
         candidates.append({
             "mapping": mapping,
             "codes": codes,
@@ -273,6 +338,7 @@ def choose_canonical_for_group(mappings, viewer_table, primary_user_id):
 
     for entry in candidates:
         mapping = entry["mapping"]
+
         if mapping["Id"] == canonical_id:
             continue
 
@@ -286,8 +352,21 @@ def choose_canonical_for_group(mappings, viewer_table, primary_user_id):
                 "to_mapping_id": canonical_id,
             })
 
-    return canonical_id, delete_mapping_ids, viewer_code_updates
+    return canonical_id, delete_mapping_ids, viewer_code_updates, codes_by_mapping
 
+def get_checkpoint_key(environment):
+    return f"merge-checkpoints/{environment}.json"
+
+def get_s3_client(environment):
+    creds = assume_role(environment)
+
+    return boto3.client(
+        "s3",
+        region_name="eu-west-1",
+        aws_access_key_id=creds["AccessKeyId"],
+        aws_secret_access_key=creds["SecretAccessKey"],
+        aws_session_token=creds["SessionToken"],
+    )
 
 # Dry-run display function
 # Shows which user is retained - the primary user
@@ -463,27 +542,36 @@ def group_mappings_by_logical_key(mappings):
 #       - evey other becomes a duplicate to delete
 #       - any viewer code pointing to duplicate mapping ids are repoinred to the CM id
 #   To meet the rule- only one mapping row should remain per (ActorId, LPA) and all viewer codes should point to that same surviving mapping id
-def choose_canonical_mappings(grouped_mappings, viewer_table, primary_user_id):
+def choose_canonical_mappings(grouped_mappings, viewer_table, primary_user_id, viewer_code_cache):
     canonical_mapping_ids = set()
     delete_mapping_ids = set()
     viewer_code_updates = []
+    all_codes_by_mapping = {}
 
     for _, mappings in grouped_mappings.items():
         if len(mappings) == 1:
             canonical_mapping_ids.add(mappings[0]["Id"])
             continue
 
-        canonical_id, group_delete_ids, group_viewer_updates = choose_canonical_for_group(
+        (
+            canonical_id,
+            group_delete_ids,
+            group_viewer_updates,
+            codes_by_mapping
+        ) = choose_canonical_for_group(
             mappings,
             viewer_table,
             primary_user_id,
+            viewer_code_cache
         )
 
         canonical_mapping_ids.add(canonical_id)
         delete_mapping_ids.update(group_delete_ids)
         viewer_code_updates.extend(group_viewer_updates)
 
-    return canonical_mapping_ids, delete_mapping_ids, viewer_code_updates
+        all_codes_by_mapping.update(codes_by_mapping)
+
+    return canonical_mapping_ids, delete_mapping_ids, viewer_code_updates, all_codes_by_mapping
 
 
 # The main function that builds the actual plan for one duplicate identity
@@ -494,7 +582,7 @@ def choose_canonical_mappings(grouped_mappings, viewer_table, primary_user_id):
 # Decide which mapping moves to primary user
 # Decide viewer codes to repoint to mapping if any
 # Mark secodary user for deletion
-def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table):
+def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table, viewer_code_cache):
     primary = determine_primary(group)
     secondaries = [u for u in group if u["Id"] != primary["Id"]]
 
@@ -504,10 +592,16 @@ def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table):
         all_mappings.extend(user_mappings)
 
     grouped_mappings = group_mappings_by_logical_key(all_mappings)
-    canonical_mapping_ids, delete_mapping_ids, viewer_code_updates = choose_canonical_mappings(
+    (
+        canonical_mapping_ids,
+        delete_mapping_ids,
+        viewer_code_updates,
+        codes_by_mapping
+    ) = choose_canonical_mappings(
         grouped_mappings,
         viewer_table,
-        primary["Id"]
+        primary["Id"],
+        viewer_code_cache
     )
 
     move_mapping_ids = []
@@ -527,7 +621,7 @@ def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table):
     mapping_viewer_codes = {}
 
     for mapping in all_mappings:
-        codes = get_viewer_codes_for_mapping(viewer_table, mapping["Id"])
+        codes = codes_by_mapping.get(mapping["Id"], [])
         mapping_viewer_codes[mapping["Id"]] = [
             code["ViewerCode"] for code in codes
         ]
@@ -584,7 +678,11 @@ def execute_merge_plan(environment, merge_plan):
             lpa_table.update_item(
                 Key={"Id": mapping_id},
                 UpdateExpression="SET UserId = :new_user",
-                ExpressionAttributeValues={":new_user": primary_user_id}
+                ConditionExpression="UserId = :expected_user",
+                ExpressionAttributeValues={
+                        ":new_user": primary_user_id,
+                        ":expected_user": current_user_id
+                    }
             )
 
         # 2. Repoint viewer codes to canonical mapping ids
@@ -670,21 +768,51 @@ def get_checkpoint_filename(environment):
     return f"merge_checkpoint_{environment}.json"
 
 
-def load_checkpoint(environment):
-    filename = get_checkpoint_filename(environment)
+# def load_checkpoint(environment):
+#     filename = get_checkpoint_filename(environment)
+#
+#     if not os.path.exists(filename):
+#         return {"completed_identities": []}
+#
+#     with open(filename, "r") as f:
+#         return json.load(f)
 
-    if not os.path.exists(filename):
+def load_checkpoint(environment):
+    s3 = get_s3_client(environment)
+    key = get_checkpoint_key(environment)
+
+    try:
+        response = s3.get_object(
+            Bucket=CHECKPOINT_BUCKET,
+            Key=key
+        )
+        body = response["Body"].read()
+        return json.loads(body)
+
+    except s3.exceptions.NoSuchKey:
         return {"completed_identities": []}
 
-    with open(filename, "r") as f:
-        return json.load(f)
+    except Exception as e:
+        print(f"WARNING: Failed to load checkpoint from S3: {e}")
+        return {"completed_identities": []}
 
+
+# def save_checkpoint(environment, checkpoint):
+#     filename = get_checkpoint_filename(environment)
+#
+#     with open(filename, "w") as f:
+#         json.dump(checkpoint, f, indent=2)
 
 def save_checkpoint(environment, checkpoint):
-    filename = get_checkpoint_filename(environment)
+    s3 = get_s3_client(environment)
+    key = get_checkpoint_key(environment)
 
-    with open(filename, "w") as f:
-        json.dump(checkpoint, f, indent=2)
+    s3.put_object(
+        Bucket=CHECKPOINT_BUCKET,
+        Key=key,
+        Body=json.dumps(checkpoint),
+        ContentType="application/json"
+    )
 
 
 def mark_identity_completed(environment, identity):
@@ -732,6 +860,9 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
     lpa_table = get_lpa_table(environment)
     viewer_table = get_viewer_code_table(environment)
 
+    # cache for viewer codes by SiriusUid
+    viewer_code_cache = {}
+
     users = scan_actor_users(actor_table)
     grouped = group_by_identity(users)
 
@@ -771,7 +902,14 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
         print("=" * 100)
         print(f"Identity: {identity}")
 
-        plan = build_merge_plan_for_identity(identity, group, viewer_table, lpa_table)
+        plan = build_merge_plan_for_identity(
+                    identity,
+                    group,
+                    viewer_table,
+                    lpa_table,
+                    viewer_code_cache
+                )
+
         print_merge_plan_for_identity(plan)
 
         merge_plan.append(plan)

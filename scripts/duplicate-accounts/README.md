@@ -43,9 +43,11 @@ docker run --rm \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SESSION_TOKEN \
   -e AWS_DEFAULT_REGION=eu-west-1 \
+  -v "$(pwd)/output:/app/output" \
   duplicate-identity-merge \
   --environment demo \
-  --limit 1
+  --output-dir output
+  --limit 1 '
 ```
 
 Execute:
@@ -56,10 +58,14 @@ docker run --rm -it \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SESSION_TOKEN \
   -e AWS_DEFAULT_REGION=eu-west-1 \
+  -v "$(pwd)/output:/app/output" \
   duplicate-identity-merge \
   --environment demo \
   --limit 1 \
-  --execute
+  --execute \
+  --plan-file <file name> '
+  --output-dir output \
+
 ```
 
 add --offset so batches can be run like:
