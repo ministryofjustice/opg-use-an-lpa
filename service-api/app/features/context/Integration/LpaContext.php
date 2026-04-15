@@ -125,7 +125,12 @@ class LpaContext extends BaseIntegrationContext
         $olderLpaService = $this->container->get(AccessForAllLpaService::class);
 
         try {
-            $olderLpaService->requestAccessByLetter(new LpaUid($this->lpaUid), $this->actorLpaId, $this->userId, '00-0-0-0-00');
+            $olderLpaService->requestAccessByLetter(
+                new LpaUid($this->lpaUid),
+                $this->actorLpaId,
+                $this->userId,
+                '00-0-0-0-00'
+            );
         } catch (ApiException) {
             throw new Exception('Failed to request access code letter');
         }
@@ -207,11 +212,11 @@ class LpaContext extends BaseIntegrationContext
         $codeData          = $viewerCodeService->addCode($this->userLpaActorToken, $this->userId, $this->organisation);
 
         $codeExpiry = (new DateTime($codeData['expires']))->format('Y-m-d');
-        $in30Days   = (new DateTime('23:59:59 +30 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
+        $in50Days   = (new DateTime('23:59:59 +50 days', new DateTimeZone('Europe/London')))->format('Y-m-d');
 
         Assert::assertArrayHasKey('code', $codeData);
         Assert::assertNotNull($codeData['code']);
-        Assert::assertEquals($codeExpiry, $in30Days);
+        Assert::assertEquals($codeExpiry, $in50Days);
         Assert::assertEquals($codeData['organisation'], $this->organisation);
     }
 
@@ -1767,8 +1772,14 @@ class LpaContext extends BaseIntegrationContext
                 'force_activation_key' => false,
             ]);
         } catch (LpaAlreadyHasActivationKeyException $lpaAlreadyHasActivationKeyException) {
-            Assert::assertEquals(StatusCodeInterface::STATUS_BAD_REQUEST, $lpaAlreadyHasActivationKeyException->getCode());
-            Assert::assertEquals('LPA has an activation key already', $lpaAlreadyHasActivationKeyException->getMessage());
+            Assert::assertEquals(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                $lpaAlreadyHasActivationKeyException->getCode()
+            );
+            Assert::assertEquals(
+                'LPA has an activation key already',
+                $lpaAlreadyHasActivationKeyException->getMessage()
+            );
 
             if (($this->container->get(FeatureEnabled::class))('support_datastore_lpas')) {
                  $donor        = LpaTestUtilities::MapEntityFromData(
