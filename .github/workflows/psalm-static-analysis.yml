@@ -19,6 +19,11 @@ jobs:
           - name: api
             image: api-app
             directory: service-api/app
+        command:
+          - category: psalm
+            command_extra: ""
+          - category: psalm-taint
+            command_extra: "--taint-analysis --ignore-baseline"
     env:
       IMAGE: ${{ matrix.psalm.image }}
     steps:
@@ -33,12 +38,9 @@ jobs:
         run: |
           mkdir -m 0777 ./output
           docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
-          vendor/bin/psalm --report=/tmp/output/results.sarif --output-format=github --long-progress
-
-      - name: Run psalm taint analysis
-        run: |
-          docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
-          vendor/bin/psalm --output-format=github --taint-analysis --report=/tmp/output/results.sarif --long-progress --ignore-baseline
+          vendor/bin/psalm --output-format=github --long-progress --report=/tmp/output/results.sarif $COMMAND_EXTRA
+        env:
+          COMMAND_EXTRA: ${{ matrix.command.command_extra }}
 
       - name: Add prefix to Psalm paths
         if: always()
@@ -49,4 +51,4 @@ jobs:
         uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
         with:
           sarif_file: ./output/results.sarif
-          category: psalm-${{ matrix.psalm.name }}
+          category: ${{ matrix.command.category }}-${{ matrix.psalm.name }}
