@@ -270,7 +270,7 @@ jobs:
       (needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false') &&
       needs.workflow_variables.result == 'success' &&
       needs.resolve_docker_tag.result == 'success' &&
-      needs.psalm_analysis.result == 'success'
+      (needs.psalm_analysis.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false')
 
   seed_dynamodb:
     name: seed dynamodb
