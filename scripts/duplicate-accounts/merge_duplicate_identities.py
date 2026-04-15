@@ -21,7 +21,7 @@ AWS_ACCOUNT_IDS = {
     "demo": "367815980639",
 }
 
-CHECKPOINT_BUCKET = "Duplicate-Accounts-s3"
+CHECKPOINT_BUCKET = "duplicate-accounts-s3"
 
 #Assume AWS role
 def assume_role(environment):
@@ -82,6 +82,18 @@ def parse_args():
         "--plan-file",
         type=str,
         help="Path to a previously generated merge plan JSON file"
+    )
+
+    parser.add_argument(
+        "--plan-key",
+        type=str,
+        help="S3 key of the merge plan (e.g. merge-plans/dev/xxx.json)"
+    )
+
+    parser.add_argument(
+        "--list-plans",
+        action="store_true",
+        help="List merge plans in S3"
     )
 
     return parser.parse_args()
@@ -228,26 +240,6 @@ def get_user_lpas(lpa_table, user_id):
     return items
 
 
-# # This returns all viewer coes associated to a given mapping
-# def get_viewer_codes_for_mapping(viewer_table, mapping_id):
-#     response = viewer_table.scan(
-#         FilterExpression="UserLpaActor = :mapping_id",
-#         ExpressionAttributeValues={":mapping_id": mapping_id}
-#     )
-#
-#     items = response.get("Items", [])
-#
-#     while "LastEvaluatedKey" in response:
-#         response = viewer_table.scan(
-#             FilterExpression="UserLpaActor = :mapping_id",
-#             ExpressionAttributeValues={":mapping_id": mapping_id},
-#             ExclusiveStartKey=response["LastEvaluatedKey"]
-#         )
-#         items.extend(response.get("Items", []))
-#
-#     return items
-
-
 # Gets one viewer code row by its code
 def get_viewer_code_by_id(viewer_table, viewer_code):
     response = viewer_table.get_item(Key={"ViewerCode": viewer_code})
@@ -367,6 +359,27 @@ def get_s3_client(environment):
         aws_secret_access_key=creds["SecretAccessKey"],
         aws_session_token=creds["SessionToken"],
     )
+
+def get_merge_plan_key(environment, timestamp):
+    return f"merge-plans/{environment}/merge_plan_{timestamp}.json"
+
+def list_merge_plans(environment):
+    s3 = get_s3_client(environment)
+
+    prefix = f"merge-plans/{environment}/"
+
+    response = s3.list_objects_v2(
+        Bucket=CHECKPOINT_BUCKET,
+        Prefix=prefix
+    )
+
+    if "Contents" not in response:
+        print("No merge plans found")
+        return
+
+    print("\nAvailable merge plans:")
+    for obj in response["Contents"]:
+        print(f" - {obj['Key']}")
 
 # Dry-run display function
 # Shows which user is retained - the primary user
@@ -735,6 +748,7 @@ def execute_merge_plan(environment, merge_plan):
 
             actor_table.delete_item(Key={"Id": secondary_user_id})
 
+        # After successful execution , mark as completed
         mark_identity_completed(environment, plan["identity"])
         print(f" - CHECKPOINT saved for identity {plan['identity']}")
 
@@ -744,8 +758,8 @@ def execute_merge_plan(environment, merge_plan):
     print(f"\nExecution time: {execution_duration:.3f} seconds")
 
 
-#Export the merge plan to JSON before execution for review, migration artifact
-def save_merge_plan(environment, merge_plan, output_dir="."):
+#Export the merge plan to JSON before execution for review, migration artifact - save to LOCAL
+def save_merge_plan_local(environment, merge_plan, output_dir="."):
     os.makedirs(output_dir, exist_ok=True)
 
     timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
@@ -757,16 +771,33 @@ def save_merge_plan(environment, merge_plan, output_dir="."):
     print(f"\nMerge plan saved to: {filename}")
     return filename
 
+# Export the merge plan to JSON before execution for review, migration artifact - save to S3
+def save_merge_plan_s3(environment, merge_plan):
+    s3 = get_s3_client(environment)
+
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
+    key = get_merge_plan_key(environment, timestamp)
+
+    s3.put_object(
+        Bucket=CHECKPOINT_BUCKET,
+        Key=key,
+        Body=json.dumps(merge_plan, indent=2)
+        ContentType="application/json"
+    )
+
+    print(f"\nMerge plan saved to S3:")
+    print(f"s3://{CHECKPOINT_BUCKET}/{key}")
+
+    return key
 
 # Checkpoint helpers
-# After each identity is executed successfully, the script will record that identity in a local checkpoint file.
+# After each identity is executed successfully, the script will record that identity in a  checkpoint file [saved to S3].
 # it will:
 # load the checkpoint file
 # skip identities already completed
 # continue with the remaining ones
-def get_checkpoint_filename(environment):
-    return f"merge_checkpoint_{environment}.json"
-
+# def get_checkpoint_filename(environment):
+#     return f"merge_checkpoint_{environment}.json"
 
 # def load_checkpoint(environment):
 #     filename = get_checkpoint_filename(environment)
@@ -814,7 +845,8 @@ def save_checkpoint(environment, checkpoint):
         ContentType="application/json"
     )
 
-
+# Checkpoint is updated after each identity completes
+# checkpoint lives in s3://<bucket>/merge-checkpoints/<environment>.json
 def mark_identity_completed(environment, identity):
     checkpoint = load_checkpoint(environment)
 
@@ -835,7 +867,17 @@ def load_merge_plan(plan_file):
     with open(plan_file, "r") as f:
         return json.load(f)
 
+# Load merge plan from S3
+def load_merge_plan_s3(environment, plan_key):
+    s3 = get_s3_client(environment)
 
+    response = s3.get_object(
+        Bucket=CHECKPOINT_BUCKET,
+        Key=plan_key
+    )
+
+    body = response["Body"].read()
+    return json.loads(body)
 #   It does:
 #   Connect to all required tables
 #   Scan all users
@@ -878,6 +920,7 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
     if completed_identities:
         print(f"Checkpoint loaded: {len(completed_identities)} identities already completed")
 
+    # Skip already processed identities
     duplicates = {
         identity: group
         for identity, group in duplicates.items()
@@ -934,7 +977,9 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
     if not merge_plan:
         print("No duplicate identities selected for this batch.")
     else:
-        save_merge_plan(environment, merge_plan, output_dir)
+        # save_merge_plan(environment, merge_plan, output_dir) # save to local dir
+        key = save_merge_plan_s3(environment, merge_plan)
+        print(f"\nUse this to execute:\n--execute --plan-key {key}")
 
     total_duration = time.perf_counter() - script_start
 
@@ -946,9 +991,16 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
 def main():
     args = parse_args()
 
+    if args.list_plans:
+        list_merge_plans(args.environment)
+        return
+
     if args.execute:
-        if not args.plan_file:
-            raise Exception("Execution requires --plan-file pointing to a reviewed merge plan JSON")
+#         if not args.plan_file:
+#             raise Exception("Execution requires --plan-file pointing to a reviewed merge plan JSON")
+
+        if not args.plan_key:
+                raise Exception("Execution requires --plan-key (S3 key)")
 
         if args.environment == "production":
             confirm = input("You are about to modify PRODUCTION. Type PRODUCTION to continue: ")
@@ -956,7 +1008,11 @@ def main():
                 print("Execution cancelled")
                 return
 
-        merge_plan = load_merge_plan(args.plan_file)
+
+        print(f"Using merge plan: {args.plan_key}")
+
+        # merge_plan = load_merge_plan(args.plan_file). # usd when loading json file localy
+        merge_plan = load_merge_plan_s3(args.environment, args.plan_key)
         execute_merge_plan(args.environment, merge_plan)
         return
 

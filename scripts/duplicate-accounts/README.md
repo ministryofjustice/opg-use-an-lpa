@@ -1,19 +1,26 @@
 # merge accounts - users with more than one account with same one login subject
 
-Combine accounts that have the same one login subject in a way that retains the added LPAs and active share codes.
+Merge duplicate ActorUsers accounts that share the same One Login identity, while preserving LPAs and Viewer Codes.
 
 ### What the script does
-This is a one-off migration script for merging duplicate ActorUsers records based on shared One Login identity.
+This is a one-off migration script designed to safely merge duplicate user accounts in DynamoDB.
 
-The script:
+It follows a plan → review → execute workflow and uses S3 for persistence, allowing execution from different environments and safe resumption.
 
-1. finds duplicate accounts by Identity
-2. selects the most recently logged-in account as primary
-3. merges UserLpaActorMap rows
-4. repoints ViewerCodes where required
-5. deletes duplicate mappings and secondary accounts
-6. supports dry-run and execute modes
-7. Setup for containerising and running the script
+### What the script does:
+
+For each duplicate identity group:
+
+1. Identifies duplicate users by Identity
+2. Selects a primary user (most recent login)
+3. Collects all UserLpaActorMap mappings
+4. Resolves duplicate mappings (same ActorId + LPA)
+5. Repoints ViewerCodes where necessary
+6. Moves canonical mappings to the primary user
+7. Deletes:
+   - duplicate mappings
+   - secondary user accounts
+8. Tracks progress using S3 checkpoints
 
 ### Prerequisites
     Docker installed
@@ -35,7 +42,9 @@ Run from the folder containing dockerfile
 docker build -t duplicate-identity-merge .
 ```
 
-Dry run:
+### Workflow
+
+## 1. Generate merge plan - Dry run:
 ```
 aws-vault exec identity -- sh -c '
 docker run --rm \
@@ -43,14 +52,35 @@ docker run --rm \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SESSION_TOKEN \
   -e AWS_DEFAULT_REGION=eu-west-1 \
-  -v "$(pwd)/output:/app/output" \
   duplicate-identity-merge \
   --environment demo \
-  --output-dir output
   --limit 1 '
 ```
 
-Execute:
+This will:
+    - scan for duplicate identities
+    - generate a merge plan
+    - print them to console
+    - store it to S3
+
+Output:
+    Printed plan in terminal
+    Saved to S3:
+    ```
+    s3://duplicate-accounts-s3/merge-plans/demo/merge_plan_YYYYMMDD_HHMMSS.json
+    ```
+
+## 2. Review Merge Plan:
+
+Before executing:
+    Open the plan in S3
+    Validate:
+        correct primary user selected
+        mappings are correct
+        viewer code moves are expected
+
+## 3. Execute Merhe Plan:
+
 ```
 aws-vault exec identity -- sh -c '
 docker run --rm -it \
@@ -58,42 +88,54 @@ docker run --rm -it \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SESSION_TOKEN \
   -e AWS_DEFAULT_REGION=eu-west-1 \
-  -v "$(pwd)/output:/app/output" \
   duplicate-identity-merge \
   --environment demo \
-  --limit 1 \
   --execute \
-  --plan-file <file name> '
-  --output-dir output \
+  --plan-key <s3 key>'
 
 ```
+eg: --plan-key merge-plans/demo/merge_plan_20260415_123456.json
 
-add --offset so batches can be run like:
+This will:
+    apply all changes to DynamoDB
+    update viewer codes
+    delete duplicates
+    write progress checkpoints to S3
 
---limit 100 --offset 0
---limit 100 --offset 100
+## To resume safely interrupted runs:
+
+The script stores progress in S3 checkpoints and will resume automatically.
+No change to command — just rerun.
+
+Script will:
+    load checkpoint from S3
+    skip completed identities
+    continue remaining work
 
 
-Notes:
-    - Run dry-run first and review the merge plan output
-    - Use --limit to process small batches first
-    - The script to be treated as plan → review → execute
-
-Optional: save plan file to host
-
-Mount a host folder
-
+## List available plans:
 ```
-mkdir -p output
-
 aws-vault exec identity -- sh -c '
 docker run --rm \
   -e AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY \
   -e AWS_SESSION_TOKEN \
   -e AWS_DEFAULT_REGION=eu-west-1 \
-  -v "$(pwd)/output:/app/output" \
   duplicate-identity-merge \
   --environment demo \
-  --limit 1
+  --list-plans'
+
 ```
+
+## Batching
+add --offset so batches can be run like:
+
+--limit 100 --offset 0
+--limit 100 --offset 100
+
+## Recommended
+1. Run with --limit 5
+2. Review plan in S3
+3. Execute
+4. Validate results
+5. Increase batch size gradually
