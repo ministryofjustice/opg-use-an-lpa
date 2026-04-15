@@ -150,7 +150,6 @@ jobs:
     needs:
       - docker_build_scan_push
       - workflow_variables
-    if: needs.workflow_variables.outputs.detect_app_code_changes == 'true'
 
   terraform_apply_shared_development:
     name: terraform apply shared development
@@ -279,10 +278,11 @@ jobs:
       - workflow_variables
       - slack_notify
       - slack_notify_documentation_update
+      - production_health_check
     steps:
       - name: workflow has ended
         run: |
-          if ${{ contains(needs.slack_notify.result, 'success') }}; then
+          if ${{ needs.production_health_check.result == 'success' }}; then
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
             echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
