@@ -147,6 +147,8 @@ jobs:
   psalm_analysis:
     name: psalm static analysis
     uses: ./.github/workflows/psalm-static-analysis.yml
+    permissions:
+      security-events: read
     needs:
       - docker_build_scan_push
       - workflow_variables
