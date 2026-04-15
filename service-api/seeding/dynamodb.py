@@ -405,15 +405,6 @@ userLpaActorMap = [
         'Comment': 'Seeded data'
     },
     {
-        'Id': '1c72b660-0da0-4acf-9c27-2de57c1a255b',
-        'LpaUid': 'M-7890-0400-4000',
-        'ActorId': '9ac5cb7c-fc75-40c7-8e53-059f36dbbe3d',
-        'Added': '2024-09-18T12:23:45.742378Z',
-        'ActivatedOn': '2024-09-18T12:23:45.742378Z',
-        'UserId': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
-        'Comment': 'Seeded data'
-    },
-    {
         'Id': '420aae9c-0301-453c-948c-0053616016e4',
         'LpaUid': 'M-0407-6149-4861',
         'ActorId': 'dde2e65b-7c8d-4f8f-a504-538c7f1bc6d6',

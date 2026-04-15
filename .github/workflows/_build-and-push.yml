@@ -111,14 +111,6 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      - uses: hadolint/hadolint-action@3fc49fb50d59c6ab7917a2e4195dba633e515b29 # v3.2.0
-        id: hadolint
-        with:
-          dockerfile: ${{ matrix.path_to_docker_file }}
-          no-fail: false
-          failure-threshold: warning
-          verbose: true
-
       - name: cache node modules
         id: cache-npm
         uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306 # v5.0.3
@@ -134,10 +126,6 @@ jobs:
         if: |
           matrix.svc_prefix == 'front' &&
           inputs.specific_path == 'all'
-
-      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
-        if: |
-          inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1

@@ -82,8 +82,6 @@ jobs:
         with:
           terraform_directory: ./terraform/${{ inputs.terraform_path }}
 
-      - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7
-
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.version }}
@@ -111,9 +109,9 @@ jobs:
           role-to-assume: ${{ inputs.oidc_terraform_role }}
           role-session-name: OPGUseAnLPATerraformGithubAction
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
-          ssh-private-key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+          deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
       - name: output terraform variables
         env:

@@ -193,6 +193,23 @@ jobs:
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
+  terraform_apply_demo:
+    name: terraform apply demo
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_shared_production
+      - workflow_variables
+    with:
+      apply: true
+      container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
+      oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+      oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      specific_path: all
+      terraform_path: environment
+      workspace: demo
+    secrets:
+      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+
   production_health_check:
     name: health check production
     runs-on: ubuntu-latest
