@@ -144,6 +144,14 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  psalm_analysis:
+    name: psalm static analysis
+    uses: ./.github/workflows/psalm-static-analysis.yml
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    if: needs.workflow_variables.outputs.detect_app_code_changes == 'true'
+
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -181,6 +189,7 @@ jobs:
     needs:
       - terraform_apply_shared_production
       - workflow_variables
+      - psalm_analysis
     with:
       apply: true
       container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}

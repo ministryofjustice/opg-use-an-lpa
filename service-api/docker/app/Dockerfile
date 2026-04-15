@@ -56,8 +56,8 @@ RUN set -xe \
   && install-php-extensions xdebug-stable ffi \
   && echo "ffi.enable=true" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini
 
-# Development images are only ever run using compose so will have this mounted in as a volume
-RUN rm -rf /app/vendor
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
+    composer check-platform-reqs
 
 CMD ["php-fpm"]
 

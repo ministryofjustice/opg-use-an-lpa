@@ -165,9 +165,17 @@ jobs:
             cp -R ./service-${SVC_PREFIX}/web/dist/stylesheets/pdf.css service-${SVC_PREFIX}/app/assets/stylesheets/pdf.css
           fi
           docker build --target development --file service-${SVC_PREFIX}/docker/app/Dockerfile --tag ${SVC_PREFIX}-app:latest .
+          docker save ${SVC_PREFIX}-app:latest -o image.tar
         if: |
           matrix.build_development_docker == 'true' &&
           (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
+
+      - name: save development target image as artifact
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
+        with:
+          name: ${{ matrix.svc_prefix }}-app-test
+          path: image.tar
+        if: matrix.build_development_docker == 'true'
 
       - name: install python
         uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
