@@ -3,7 +3,7 @@ name: Psalm Static analysis - Service API
 on: workflow_call
 
 permissions:
-  security-events: read
+  security-events: write
 
 jobs:
   psalm:
