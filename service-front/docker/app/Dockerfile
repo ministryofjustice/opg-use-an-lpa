@@ -33,10 +33,6 @@ COPY service-front/app/composer.json service-front/app/composer.lock /app/
 RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader && \
     composer check-platform-reqs
 
-FROM dependency AS dependency-dev
-
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
-
 #
 # Create production image using base and app files
 #
@@ -51,14 +47,14 @@ COPY --from=dependency /app/vendor /app/vendor
 FROM app AS development
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /composer /usr/bin/
-COPY --from=dependency-dev /app/vendor /app/vendor
 
 COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/app-php.ini
 
 RUN set -xe \
   && install-php-extensions xdebug-stable
 
-RUN composer check-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
+    composer check-platform-reqs
 
 CMD ["php-fpm"]
 

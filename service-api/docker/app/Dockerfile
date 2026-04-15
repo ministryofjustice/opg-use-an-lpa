@@ -41,17 +41,12 @@ FROM php-base AS app
 COPY service-api/app /app
 COPY --from=dependency /app/vendor /app/vendor
 
-FROM dependency AS dependency-dev
-
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs
-
 #
 # Install development dependencies and tools into production image
 #
 FROM app AS development
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /composer /usr/bin/
-COPY --from=dependency-dev /app/vendor /app/vendor
 
 COPY service-api/docker/app/app-php.development.ini /usr/local/etc/php/conf.d/app-php.ini
 
@@ -61,7 +56,8 @@ RUN set -xe \
   && install-php-extensions xdebug-stable ffi \
   && echo "ffi.enable=true" >> /usr/local/etc/php/conf.d/docker-php-ext-ffi.ini
 
-RUN composer check-platform-reqs
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
+    composer check-platform-reqs
 
 CMD ["php-fpm"]
 
