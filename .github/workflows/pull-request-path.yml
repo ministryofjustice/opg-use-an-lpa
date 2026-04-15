@@ -217,6 +217,16 @@ jobs:
       always() &&
       ( needs.docker_build_scan_push.result == 'success' || needs.docker_build_scan_push.result == 'failure' )
 
+  psalm_analysis:
+    name: psalm static analysis
+    uses: ./.github/workflows/psalm-static-analysis.yml
+    permissions:
+      security-events: read
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+    if: needs.workflow_variables.outputs.detect_app_code_changes == 'true'
+
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -241,6 +251,7 @@ jobs:
       - resolve_docker_tag
       - terraform_lint
       - workflow_variables
+      - psalm_analysis
     with:
       add_ttl: true
       apply: true
@@ -258,7 +269,8 @@ jobs:
       needs.terraform_lint.result == 'success' &&
       (needs.docker_build_scan_push.result == 'success' || needs.workflow_variables.outputs.detect_app_code_changes == 'false') &&
       needs.workflow_variables.result == 'success' &&
-      needs.resolve_docker_tag.result == 'success'
+      needs.resolve_docker_tag.result == 'success' &&
+      needs.psalm_analysis.result == 'success'
 
   seed_dynamodb:
     name: seed dynamodb

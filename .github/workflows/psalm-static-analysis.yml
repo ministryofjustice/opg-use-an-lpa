@@ -1,0 +1,52 @@
+name: Psalm Static analysis - Service API
+
+on: workflow_call
+
+permissions:
+  security-events: read
+
+jobs:
+  psalm:
+    name: Psalm
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        psalm:
+          - name: front
+            image: front-app
+            directory: service-front/app
+          - name: api
+            image: api-app
+            directory: service-api/app
+    env:
+      IMAGE: ${{ matrix.psalm.image }}
+    steps:
+      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: ${{ matrix.psalm.image }}-test
+          path: /tmp/images
+      - name: Load Images
+        run: docker load -i /tmp/images/image.tar
+
+      - name: Run psalm
+        run: |
+          mkdir -m 0777 ./output
+          docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
+          vendor/bin/psalm --report=/tmp/output/results.sarif --output-format=github --long-progress
+
+      - name: Run psalm taint analysis
+        run: |
+          docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
+          vendor/bin/psalm --output-format=github --taint-analysis --report=/tmp/output/results.sarif --long-progress --ignore-baseline
+
+      - name: Add prefix to Psalm paths
+        if: always()
+        run: |
+          sed -i 's|"uri":"|"uri":"${{ matrix.psalm.directory }}\/|g' ./output/results.sarif
+      - name: Upload Security Analysis results to GitHub
+        if: always()
+        uses: github/codeql-action/upload-sarif@0499de31b99561a6d14a36a5f662c2a54f91beee # v4.31.2
+        with:
+          sarif_file: ./output/results.sarif
+          category: psalm-${{ matrix.psalm.name }}
