@@ -168,14 +168,14 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         $codeExpiry = (new DateTime($response['expires']))->format('Y-m-d');
-        $in30Days   = (new DateTime(
-            '23:59:59 +30 days',
+        $in50Days   = (new DateTime(
+            '23:59:59 +50 days',
             new DateTimeZone('Europe/London')
         ))->format('Y-m-d');
 
         Assert::assertArrayHasKey('code', $response);
         Assert::assertNotNull($response['code']);
-        Assert::assertEquals($codeExpiry, $in30Days);
+        Assert::assertEquals($codeExpiry, $in50Days);
         Assert::assertEquals($response['organisation'], $this->organisation);
     }
 
