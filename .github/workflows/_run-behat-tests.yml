@@ -75,7 +75,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          pip install boto3
+          pip install -r scripts/pipeline/ci_ingress/requirements.txt
           echo ${TF_WORKSPACE}
           if [[ "${TF_WORKSPACE}" != "production" ]]; then
             python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json --add
