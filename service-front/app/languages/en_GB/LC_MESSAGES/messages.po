@@ -1,12 +1,15 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2026-04-13T09:55:13+00:00\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-04-17 14:55+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/"
+"opg-use-an-lpa/application/en_GB/>\n"
 "Language: en_GB\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.17\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -58,6 +61,7 @@ msgstr ""
 msgid "%count% active access code"
 msgid_plural "%count% active access codes"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "No active access codes"
@@ -123,6 +127,7 @@ msgstr ""
 msgid "Access code expires in %count% day"
 msgid_plural "Access code expires in %count% days"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:23
 msgid "Access code cancelled %date%"
@@ -879,6 +884,7 @@ msgstr ""
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:78
 msgid "Your account contains duplicate LPAs"
@@ -3531,6 +3537,7 @@ msgstr ""
 msgid "%attorneyOrdinal% attorney"
 msgid_plural "%attorneyOrdinal% attorney"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details-combined-lpa.html.twig:12
 #: src/Common/templates/partials/lpa-summary-details/lpa-attorney-details.html.twig:12
@@ -4134,6 +4141,7 @@ msgstr ""
 msgid "in %count% day, on %date%"
 msgid_plural "in %count% days, on %date%"
 msgstr[0] ""
+msgstr[1] ""
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:38
 #: src/Viewer/templates/viewer/check-code-found.html.twig:38
