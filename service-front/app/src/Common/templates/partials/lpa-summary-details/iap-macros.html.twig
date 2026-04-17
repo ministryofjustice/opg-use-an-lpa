@@ -45,7 +45,7 @@
 {% macro preferences_error() %}
     {% if application is same as('actor') %}
         {{ _self.images_error(
-            'We are unable to show the preferences for this <abbr title="lasting power of attorney">LPA</abbr>.
+            'We are unable to show the words entered in this part of this <abbr title="lasting power of attorney">LPA</abbr>.
             You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr>
             to anyone who needs to see them.' | trans
         ) }}
@@ -74,7 +74,7 @@
 {% macro instructions_error() %}
     {% if application is same as('actor') %}
         {{ _self.images_error(
-            'We are unable to show the instructions for this <abbr title="lasting power of attorney">LPA</abbr>.
+            'We are unable to show the words entered in this part of this <abbr title="lasting power of attorney">LPA</abbr>.
             You’ll need to show the paper <abbr title="lasting power of attorney">LPA</abbr>
             to anyone who needs to see them.' | trans
         ) }}

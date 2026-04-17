@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-04-13T09:55:13+00:00\n"
+"POT-Creation-Date: 2026-04-17T09:47:43+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -2050,8 +2050,6 @@ msgstr "Ydych chi’n byw yn y DU?"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:63
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:275
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:143
 msgid "No"
 msgstr "Nac oes"
 
@@ -4649,19 +4647,19 @@ msgstr ""
 "Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod "
 "pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:311
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:309
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr ""
 "Y Dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</"
 "abbr>"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:317
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:315
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
 msgid "Registration date"
 msgstr "Dyddiad cofrestru"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:322
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:320
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:15
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
@@ -4683,26 +4681,11 @@ msgstr ""
 msgid "Preferences"
 msgstr "Dymuniadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:237
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:105
-msgid "Yes, the donor made preferences on their LPA."
-msgstr ""
-"Oes, mae’r rhoddwr wedi rhoi cyfarwyddiadau yn ei <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr>."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:272
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
-msgid "To view these, ask to see the paper LPA."
-msgstr ""
-"Weld y rhain, gofynnwch am gael gweld y <abbr title=\"atwrneiaeth "
-"arhosol\">LPA</abbr> papur."
-
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:265
-#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:133
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:264
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:132
 msgid "Instructions"
 msgstr "Cyfarwyddiadau"
 
-#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:271
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:139
 msgid "Yes, the donor set instructions on their LPA."
 msgstr ""
@@ -6449,14 +6432,6 @@ msgstr ""
 "Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr LPA "
 "yma bellach, a rhaid iddynt gytuno arnynt:"
 
-#: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:22
-msgid "ABC"
-msgstr ""
-
-#: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:22
-msgid "XYZ"
-msgstr ""
-
 #: src/Common/src/View/Twig/LpaExtension.php:273
 msgid "Personal welfare"
 msgstr "Lles personol"
@@ -6546,3 +6521,33 @@ msgstr ""
 #: src/Actor/templates/actor/partials/cancel-code-option.html.twig:14
 msgid "If you want this code to be cancelled please contact %createdBy%."
 msgstr "Os ydych am i’r cod hwn gael ei ganslo, cysylltwch â %createdBy%."
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:135
+msgid "Yes, the donor entered words in this part of the LPA form."
+msgstr "Do, rhoddodd y rhoddwr eiriau yn y rhan hon o'r ffurflen LPA."
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:269
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
+msgid ""
+"We are unable to show the words entered in this part of this LPA. You’ll need "
+"to show the paper LPA to anyone who needs to see them."
+msgstr ""
+"Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i chi "
+"ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
+
+#: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:273
+#: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
+msgid "No, the donor did not enter any words in this part of the LPA form."
+msgstr "Na, ni roddodd y rhoddwr unrhyw eiriau yn y rhan hon o'r ffurflen LPA."
+
+#: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:79
+msgid ""
+"We are unable to show the words entered in this part of this <abbr "
+"title=\"lasting power of attorney\">LPA</abbr>.\n"
+"            You’ll need to show the paper <abbr title=\"lasting power of "
+"attorney\">LPA</abbr>\n"
+"            to anyone who needs to see them."
+msgstr ""
+"Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i chi "
+"ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
