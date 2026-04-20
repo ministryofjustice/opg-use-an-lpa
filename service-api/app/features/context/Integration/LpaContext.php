@@ -2738,6 +2738,7 @@ class LpaContext extends BaseIntegrationContext
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
+            'addedDate'            => '2020-01-01',
         ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);

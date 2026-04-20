@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-04-17T09:47:43+00:00\n"
+"POT-Creation-Date: 2026-04-21T13:28:53+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -341,6 +341,7 @@ msgstr ""
 msgid "Type of LPA"
 msgstr ""
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:59
@@ -353,6 +354,7 @@ msgstr ""
 msgid "Property and finance"
 msgstr ""
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:61
@@ -366,6 +368,7 @@ msgstr ""
 msgid "Health and welfare"
 msgstr ""
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:14
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:30
 #: src/Actor/templates/actor/check-lpa.html.twig:34
 #: src/Actor/templates/actor/lpa-already-added.html.twig:21
@@ -511,6 +514,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:29
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:84
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
@@ -3141,6 +3145,7 @@ msgstr ""
 msgid "The letter will be sent to the address we have for you on our records. We send the key by post because its more secure."
 msgstr ""
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:25
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:15
 msgid "You should hear from us or get the activation key letter by %dueDate%. If not, please contact us."
 msgstr ""
@@ -4680,4 +4685,16 @@ msgid ""
 "We are unable to show the words entered in this part of this <abbr title=\"lasting power of attorney\">LPA</abbr>.\n"
 "            You’ll need to show the paper <abbr title=\"lasting power of attorney\">LPA</abbr>\n"
 "            to anyone who needs to see them."
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
+msgid "You’ve already asked for an activation key for this LPA today"
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:18
+msgid "LPA type"
+msgstr ""
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:24
+msgid "We’ll post you a letter with your activation key for this LPA. It will be sent to the address we have for you on our records. We send the key by post because it’s more secure."
 msgstr ""

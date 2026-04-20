@@ -57,7 +57,8 @@ class AddAccessForAllLpa
      *         surname: string,
      *     },
      *     caseSubtype: string,
-     *     activationKeyDueDate: DateTimeInterface
+     *     activationKeyDueDate: DateTimeInterface,
+     *     added: DateTimeInterface,
      * }|null $lpaAddedData
      * @throws LpaAlreadyHasActivationKeyException
      * @throws LpaActivationKeyAlreadyRequestedException
@@ -87,6 +88,7 @@ class AddAccessForAllLpa
                     ],
                     'caseSubtype'          => $lpaAddedData['caseSubtype'],
                     'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']->format('Y-m-d'),
+                    'addedDate'            => $lpaAddedData['added']->format('Y-m-d'),
                 ],
             );
         }
@@ -171,6 +173,7 @@ class AddAccessForAllLpa
                     'uId' => $matchData['reference_number'],
                 ]
             );
+            unset($lpaAddedData['added']);
             throw new LpaAlreadyAddedException($lpaAddedData);
         }
 

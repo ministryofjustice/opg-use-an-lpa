@@ -259,6 +259,7 @@ class LpaContext implements Context
             ],
             'caseSubtype'   => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken,
+            'added'         => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -714,6 +715,7 @@ class LpaContext implements Context
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
+            'addedDate'            => '2020-01-01',
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);

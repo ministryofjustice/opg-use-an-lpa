@@ -37,6 +37,7 @@ class LpaActivationKeyAlreadyRequestedExceptionTest extends TestCase
             ],
             'caseSubtype'          => 'pfa',
             'activationKeyDueDate' => '2020-12-31',
+            'addedDate'            => '2020-12-16',
             'some'                 => 'additional',
             'data'                 => 'here,',
         ];
@@ -50,6 +51,7 @@ class LpaActivationKeyAlreadyRequestedExceptionTest extends TestCase
                 ],
                 'caseSubtype'          => 'pfa',
                 'activationKeyDueDate' => '2020-12-31',
+                'addedDate'            => '2020-12-16',
             ],
             $sut->getAdditionalDataForLogging(),
         );

@@ -59,7 +59,7 @@ jobs:
       if: env.CHANGED_PHP_FILES != ''
       run: |
         docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
-        vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-xml=/tmp/output/phpcs-report.xml \
+        vendor/bin/phpcs -n --standard=phpcs.xml.dist --report=full --report-xml=/tmp/output/phpcs-report.xml \
         $CHANGED_PHP_FILES
 
     - name: Publish PHPCS as PR annotations
