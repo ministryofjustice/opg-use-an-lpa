@@ -716,7 +716,7 @@ class OidcContext implements Context
         // NA
     }
 
-    #[When('/^I am returned to the use an lpa service in this scenario where account has been changed to use the same email$/')]
+    #[When('/^I am returned to the service in this scenario where account has been changed to use the same email$/')]
     public function iAmReturnedToTheUseAnLpaServiceInThisScenarioWhereAccountHasBeenChangedToUseTheSameEmail(): void
     {
         $this->oidcFixtureSetup();
