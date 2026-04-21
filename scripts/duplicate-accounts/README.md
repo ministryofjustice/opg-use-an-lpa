@@ -102,6 +102,15 @@ This will:
     delete duplicates
     write progress checkpoints to S3
 
+    eg:
+        {
+            "completed_identities": [
+                "abc-identity-123",
+                "xyz-identity-456",
+                "user-identity-789"
+            ]
+        }
+
 ## To resume safely interrupted runs:
 
 The script stores progress in S3 checkpoints and will resume automatically.

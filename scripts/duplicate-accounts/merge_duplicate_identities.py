@@ -781,7 +781,7 @@ def save_merge_plan_s3(environment, merge_plan):
     s3.put_object(
         Bucket=CHECKPOINT_BUCKET,
         Key=key,
-        Body=json.dumps(merge_plan, indent=2)
+        Body=json.dumps(merge_plan, indent=2),
         ContentType="application/json"
     )
 
