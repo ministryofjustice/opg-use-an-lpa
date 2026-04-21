@@ -231,14 +231,13 @@
                 <dt class="govuk-summary-list__key">{% trans %}Preferences{% endtrans %}</dt>
                 <dd class="govuk-summary-list__value">
                     {% if lpa.applicationHasGuidance %}
-                        {% if iap_images is defined %}
-                            {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                        {% else %}
-                            {% trans %}Yes, the donor made preferences on their LPA.{% endtrans %}
-                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                        {% trans %}Yes, the donor entered words in this part of the LPA form.{% endtrans %}
+                        {% if iap_images is not defined %}
+                            <br>{% trans %}We are unable to show the words entered in this part of this LPA.
+                            You’ll need to show the paper LPA to anyone who needs to see them.{% endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans %}No{% endtrans %}
+                        {% trans %}No, the donor did not enter any words in this part of the LPA form.{% endtrans %}
                     {% endif %}
                 </dd>
             </div>
@@ -265,14 +264,13 @@
                 <dt class="govuk-summary-list__key">{% trans %}Instructions{% endtrans %}</dt>
                 <dd class="govuk-summary-list__value">
                     {% if lpa.applicationHasRestrictions %}
-                        {% if iap_images is defined %}
-                            {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                        {% else %}
-                            {% trans %}Yes, the donor set instructions on their LPA.{% endtrans %}
-                            <br>{% trans %}To view these, ask to see the paper LPA.{% endtrans %}
+                        {% trans %}Yes, the donor entered words in this part of the LPA form.{% endtrans %}
+                        {% if iap_images is not defined %}
+                            <br>{% trans %}We are unable to show the words entered in this part of this LPA.
+                            You’ll need to show the paper LPA to anyone who needs to see them.{% endtrans %}
                         {% endif %}
                     {% else %}
-                        {% trans %}No{% endtrans %}
+                        {% trans %}No, the donor did not enter any words in this part of the LPA form.{% endtrans %}
                     {% endif %}
                 </dd>
             </div>

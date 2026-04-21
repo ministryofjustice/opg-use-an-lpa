@@ -53,8 +53,8 @@ COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/
 RUN set -xe \
   && install-php-extensions xdebug-stable
 
-# Development images are only ever run using compose so will have this mounted in as a volume
-RUN rm -rf /app/vendor
+RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
+    composer check-platform-reqs
 
 CMD ["php-fpm"]
 

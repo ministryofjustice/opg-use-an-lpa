@@ -25,15 +25,19 @@ class ViewerContext implements Context
     private const LPA_SERVICE_GET_LPA_BY_CODE         = 'LpaService::getLpaByCode';
     private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
-    private $lpaSurname;
-    private $lpaShareCode;
-    private $lpaReferenceNumber;
-    private $paperVerificationCode;
-    private $lpaData;
-    private $lpaStoredCode;
-    private $lpaViewedBy;
-    private $imageCollectionStatus;
-    private $systemMessageData;
+    private string $lpaSurname;
+    private string $lpaShareCode;
+    private string $lpaReferenceNumber;
+    private string $paperVerificationCode;
+
+    /** @var array<mixed> $lpaData */
+    private array $lpaData;
+    private string $lpaStoredCode;
+    private string $lpaViewedBy;
+    private string $imageCollectionStatus;
+
+    /** @var array<string, string> $systemMessageData */
+    private array $systemMessageData;
 
     #[Then('/^a PDF is downloaded$/')]
     public function aPDFIsDownloaded(): void
@@ -179,11 +183,17 @@ class ViewerContext implements Context
     public function iAmToldThatWeCannotCurrentlyGetTheInstructionsAndPreferencesImages(): void
     {
         $this->ui->assertElementNotOnPage('iap-preferences .iap-loader');
-        $this->ui->assertElementNotContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertElementNotContainsText(
+            'iap-preferences',
+            'A scanned image of the donor’s preferences will appear here soon'
+        );
         $this->ui->assertElementContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementNotOnPage('iap-instructions .iap-loader');
-        $this->ui->assertElementNotContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
+        $this->ui->assertElementNotContainsText(
+            'iap-instructions',
+            'A scanned image of the donor’s instructions will appear here soon'
+        );
         $this->ui->assertElementContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
@@ -191,11 +201,17 @@ class ViewerContext implements Context
     public function iAmToldToWaitForInstructionsAndPreferencesImages(): void
     {
         $this->ui->assertElementOnPage('iap-preferences .iap-loader');
-        $this->ui->assertElementContainsText('iap-preferences', 'A scanned image of the donor’s preferences will appear here soon');
+        $this->ui->assertElementContainsText(
+            'iap-preferences',
+            'A scanned image of the donor’s preferences will appear here soon'
+        );
         $this->ui->assertElementNotContainsText('iap-preferences', 'We cannot show the preferences for this');
 
         $this->ui->assertElementOnPage('iap-instructions .iap-loader');
-        $this->ui->assertElementContainsText('iap-instructions', 'A scanned image of the donor’s instructions will appear here soon');
+        $this->ui->assertElementContainsText(
+            'iap-instructions',
+            'A scanned image of the donor’s instructions will appear here soon'
+        );
         $this->ui->assertElementNotContainsText('iap-instructions', 'We cannot show the instructions for this');
     }
 
@@ -298,7 +314,7 @@ class ViewerContext implements Context
 
         $data = [
             'lpa'     => $this->lpaData,
-            'expires' => (new DateTime('+30 days'))->format('c'),
+            'expires' => (new DateTime('+50 days'))->format('c'),
         ];
 
         $data['iap'] = [
@@ -359,7 +375,7 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'lpa'       => $this->lpaData,
-                        'expires'   => (new DateTime('+30 days'))->format('c'),
+                        'expires'   => (new DateTime('+50 days'))->format('c'),
                         'cancelled' => (new DateTime('-1 day'))->format('c'),
                     ]
                 ),
@@ -396,7 +412,7 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'lpa'       => $this->lpaData,
-                        'expires'   => (new DateTime('+30 days'))->format('c'),
+                        'expires'   => (new DateTime('+50 days'))->format('c'),
                         'cancelled' => (new DateTime('-1 day'))->format('c'),
                     ]
                 )
@@ -435,7 +451,7 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'lpa'     => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'expires' => (new DateTime('+50 days'))->format('c'),
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -459,7 +475,7 @@ class ViewerContext implements Context
 
         $data = [
             'lpa'     => $this->lpaData,
-            'expires' => (new DateTime('+30 days'))->format('c'),
+            'expires' => (new DateTime('+50 days'))->format('c'),
         ];
 
         if (
@@ -806,7 +822,7 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'lpa'     => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'expires' => (new DateTime('+50 days'))->format('c'),
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -1017,7 +1033,7 @@ class ViewerContext implements Context
                 json_encode(
                     [
                         'lpa'     => $this->lpaData,
-                        'expires' => (new DateTime('+30 days'))->format('c'),
+                        'expires' => (new DateTime('+50 days'))->format('c'),
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
@@ -1245,7 +1261,10 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/found-lpa")]');
+        $link = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            '//a[contains(@href,"/paper-verification/found-lpa")]'
+        );
         if ($link === null) {
             throw new Exception('Change link not found');
         }
@@ -1281,7 +1300,10 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/code-sent-to")]');
+        $link = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            '//a[contains(@href,"/paper-verification/code-sent-to")]'
+        );
         if ($link === null) {
             throw new Exception('Change link not found');
         }
@@ -1317,7 +1339,10 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/attorney-date-of-birth")]');
+        $link = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            '//a[contains(@href,"/paper-verification/attorney-date-of-birth")]'
+        );
         if ($link === null) {
             throw new Exception('Change link not found');
         }
@@ -1331,7 +1356,10 @@ class ViewerContext implements Context
     {
         $this->ui->assertPageAddress('/paper-verification/check-answers');
 
-        $link = $this->ui->getSession()->getPage()->find('xpath', '//a[contains(@href,"/paper-verification/number-of-attorneys")]');
+        $link = $this->ui->getSession()->getPage()->find(
+            'xpath',
+            '//a[contains(@href,"/paper-verification/number-of-attorneys")]'
+        );
         if ($link === null) {
             throw new Exception('Change link not found');
         }
