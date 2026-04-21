@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\Exception\NotFoundException;
 use AppTest\OidcUtilities;
 use Aws\Command;
 use Aws\DynamoDb\Exception\DynamoDbException;
@@ -48,6 +49,18 @@ class OidcContext implements Context
     private bool $hasExistingLocalAccount                   = false;
     private bool $identityDuplicationProtectionRecordExists = false;
     private bool $emailDuplicationProtectionRecordExists    = false;
+    private bool $migrateToOAuthShouldConflict              = false;
+    private bool $changeEmailShouldConflict                 = false;
+    private bool $identityLookupShouldFail                  = false;
+
+    /** @var array<string, mixed>|null */
+    private ?array $unmigratedUser = null;
+
+    /** @var array<string, mixed>|null */
+    private ?array $identityLookupUser = null;
+
+    /** @var array<string, mixed>|null */
+    private ?array $emailLookupUser = null;
 
     protected function coreIdentityTokenSetup(): string
     {
@@ -192,6 +205,107 @@ class OidcContext implements Context
         Assert::assertSame($response['nonce'], $query['nonce']);
         Assert::assertSame('["Cl.Cm"]', $query['vtr']);
         Assert::assertSame('en', $query['ui_locales']);
+    }
+
+    #[When('/^I am returned to the use an lpa service in this scenario where email already exists$/')]
+    public function iAmReturnedToTheUseAnLpaServiceInThisScenarioWhereEmailAlreadyExists(): void
+    {
+        $this->oidcFixtureSetup();
+
+        // 1. Token exchange
+        $this->apiFixtures->append(function (RequestInterface $request): ResponseInterface {
+            Assert::assertSame('/token', $request->getUri()->getPath());
+
+            return new Response(
+                200,
+                [],
+                json_encode([
+                    'access_token' => $this->accessToken,
+                    'token_type'   => 'Bearer',
+                    'id_token'     => $this->identityTokenSetup(),
+                ])
+            );
+        });
+
+        // 2. JWKS
+        $this->apiFixtures->append(function (RequestInterface $request): ResponseInterface {
+            Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
+
+            return new Response(
+                200,
+                [],
+                json_encode([
+                    'keys' => [
+                        JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
+                    ],
+                ])
+            );
+        });
+
+        //Userinfo
+        $this->apiFixtures->append(function (RequestInterface $request): ResponseInterface {
+            Assert::assertSame('/userinfo', $request->getUri()->getPath());
+
+            return new Response(
+                200,
+                [],
+                json_encode([
+                    'sub'   => $this->sub,
+                    'email' => $this->email,
+                ])
+            );
+        });
+
+        //Existing local account lookup returns nothing
+        $this->awsFixtures->append(new Result([
+            'Items' => $this->hasExistingLocalAccount ? [
+                $this->marshalAwsResultData([
+                    'Id'       => 'existing-user',
+                    'Identity' => $this->sub,
+                    'Email'    => $this->email,
+                ]),
+            ] : [],
+        ]));
+
+        //EMAIL duplication
+        if ($this->emailDuplicationProtectionRecordExists) {
+            $this->awsFixtures->append(new Result([
+                'Items' => [
+                    [
+                        'email' => $this->email,
+                        'type'  => 'EMAIL_DUPLICATE',
+                    ],
+                ],
+            ]));
+        } else {
+            $this->awsFixtures->append(new Result(['Items' => []]));
+        }
+
+        //NO account creation allowed
+        $this->awsFixtures->append(function () {
+            throw new DynamoDbException(
+                'Blocked due to duplication',
+                new Command('TransactWriteItems'),
+                [
+                    'CancellationReasons' => [
+                        ['Code' => 'ConditionalCheckFailed'],
+                    ],
+                ]
+            );
+        });
+
+        //CALL callback endpoint
+        $this->apiPost('/v1/auth/callback', [
+            'code'         => '1234',
+            'state'        => '1234',
+            'auth_session' => [
+                'state'   => '1234',
+                'nonce'   => $this->nonce,
+                'customs' => [
+                    'redirect_uri' => 'https://sut',
+                ],
+            ],
+        ]);
     }
 
     #[When('/^I am returned to the use an lpa service$/')]
@@ -524,7 +638,7 @@ class OidcContext implements Context
             function (): void {
                 throw new DynamoDbException(
                     'Transaction cancelled',
-                    '',
+                    new Command('TransactWriteItems'),
                     [
                         'CancellationReasons' => [
                             ['Code' => 'None'],
@@ -535,6 +649,19 @@ class OidcContext implements Context
                 );
             }
         );
+
+        $this->apiPost(
+            '/v1/auth/callback',
+            [
+                'code'         => '1234',
+                'state'        => '1234',
+                'auth_session' => [
+                    'state'   => '1234',
+                    'nonce'   => $this->nonce,
+                    'customs' => ['redirect_uri' => 'https://sut'],
+                ],
+            ],
+        );
     }
 
     #[Then('/^I am not taken to my dashboard$/')]
@@ -542,15 +669,376 @@ class OidcContext implements Context
     #[Then('/^I am shown an account conflict error$/')]
     public function iAmNotTakenToMyDashboard(): void
     {
-        Assert::assertNotSame(
-            StatusCodeInterface::STATUS_OK,
-            [],
-        );
+        $this->ui->assertSession()->statusCodeNotEquals(StatusCodeInterface::STATUS_OK);
     }
 
     #[Given('/^an EMAIL duplication protection record already exists for my one login email address$/')]
     public function anEmailDuplicationProtectionRecordAlreadyExistsForMyOneLoginEmailAddress(): void
     {
         $this->emailDuplicationProtectionRecordExists = true;
+    }
+
+    #[Given('/^an existing local account is linked to a deleted one login account$/')]
+    public function anExistingLocalAccountIsLinkedToADeletedOneLoginAccount(): void
+    {
+        $this->emailLookupUser = [
+            'Id'        => '1111-11-11-11-111',
+            'Identity'  => 'original-deleted-subject',
+            'Email'     => 'shared@example.com',
+            'Password'  => 'password',
+            'LastLogin' => (new DateTimeImmutable('-10 days'))->format('c'),
+        ];
+    }
+
+    #[Given('/^another one login account exists with a different subject$/')]
+    public function anotherOneLoginAccountExistsWithADifferentSubject(): void
+    {
+        $this->identityLookupUser = [
+            'Id'        => '2222-22-22-22-222',
+            'Identity'  => 'different-subject',
+            'Email'     => 'other@example.com',
+            'Password'  => 'password',
+            'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
+        ];
+    }
+
+    #[Given('/^that other one login account has been changed to use the same email address$/')]
+    public function thatOtherOneLoginAccountHasBeenChangedToUseTheSameEmailAddress(): void
+    {
+        $this->sub                       = 'different-subject';
+        $this->email                     = 'shared@example.com';
+        $this->changeEmailShouldConflict = true;
+    }
+
+    #[Given('/^I have completed a successful one login sign\-in process with that other one login account$/')]
+    public function iHaveCompletedASuccessfulOneLoginSignInProcessWithThatOtherOneLoginAccount(): void
+    {
+        // NA
+    }
+
+    #[When('/^I am returned to the use an lpa service in this scenario where account has been changed to use the same email$/')]
+    public function iAmReturnedToTheUseAnLpaServiceInThisScenarioWhereAccountHasBeenChangedToUseTheSameEmail(): void
+    {
+        $this->oidcFixtureSetup();
+
+        /** @link AuthorisationService::callback() */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/token', $request->getUri()->getPath());
+
+                $request->getBody()->rewind();
+                parse_str($request->getBody()->getContents(), $data);
+
+                Assert::assertSame('authorization_code', $data['grant_type']);
+                Assert::assertSame('1234', $data['code']);
+                Assert::assertSame('https://sut', $data['redirect_uri']);
+                Assert::assertSame(
+                    'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                    $data['client_assertion_type'],
+                );
+
+                $this->verifyTokenSignature($data['client_assertion'], $this->oneLoginClientPrivateKey);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'access_token' => $this->accessToken,
+                            'token_type'   => 'Bearer',
+                            'id_token'     => $this->identityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /** @link AuthorisationService::callback() */
+        // Call to fetch issuer signing certificate for id_token
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'keys' => [
+                                JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
+                            ],
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /**
+         * @link AuthorisationService::callback()
+         * Call to fetch user identity
+         */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/userinfo', $request->getUri()->getPath());
+                Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'sub'                                             => $this->sub,
+                            'email'                                           => $this->email,
+                            'email_verified'                                  => true,
+                            'phone'                                           => '01406946277',
+                            'phone_verified'                                  => true,
+                            'updated_at'                                      => time(),
+                            'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /** @link ActorUsers::getByIdentity() returns SECOND account */
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [
+                    $this->marshalAwsResultData($this->identityLookupUser),
+                ],
+            ]),
+        );
+
+        /** @link ActorUsers::getByEmail() → returns ORIGINAL account */
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [
+                    $this->marshalAwsResultData($this->emailLookupUser),
+                ],
+            ]),
+        );
+
+        /** RecoverAccount → check LPAs (none) */
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [],
+            ]),
+        );
+
+        /** changeEmail() → FAIL with conditional check */
+        $this->awsFixtures->append(
+            function (): void {
+                throw new DynamoDbException(
+                    'Transaction cancelled',
+                    new Command('TransactWriteItems'),
+                    [
+                        'CancellationReasons' => [
+                            ['Code' => 'None'],
+                            ['Code' => 'ConditionalCheckFailed'],
+                            ['Code' => 'None'],
+                        ],
+                    ],
+                );
+            }
+        );
+
+        /** @link ActorUsers::recordSuccessfulLogin() */
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPost(
+            '/v1/auth/callback',
+            [
+                'code'         => '1234',
+                'state'        => '1234',
+                'auth_session' => [
+                    'state'   => '1234',
+                    'nonce'   => $this->nonce,
+                    'customs' => [
+                        'redirect_uri' => 'https://sut',
+                    ],
+                ],
+            ],
+        );
+    }
+
+    #[Then('/^I am not linked to the existing local account$/')]
+    #[Then('/^I am not linked to the unmigrated account/')]
+    public function iAmNotLinkedToTheExistingLocalAccount(): void
+    {
+        $this->ui->assertSession()->statusCodeEquals(500);
+    }
+
+    #[Given('/^an unmigrated username and password account exists$/')]
+    public function unmigratedAccountExists(): void
+    {
+        $this->email = 'unmigratedEmail@example.com';
+
+        $this->unmigratedUser = [
+            'Id'    => 'legacy-user-id',
+            'Email' => $this->email,
+            // NO Identity
+        ];
+    }
+
+    #[Given('/^that account has a backfilled EMAIL duplication protection record$/')]
+    public function emailDuplicationRecordExists(): void
+    {
+        $this->emailDuplicationProtectionRecordExists = true;
+    }
+
+    #[Given('/^an existing one login account exists with a different email address$/')]
+    public function existingOneLoginAccountExists(): void
+    {
+        $this->sub   = 'new-sub-123';
+        $this->email = 'new@example.com';
+    }
+
+    #[Given('/^the one login account email address has been updated to match the unmigrated account email address$/')]
+    public function emailUpdatedToMatchUnmigrated(): void
+    {
+        $this->email = 'unmigratedEmail@example.com';
+    }
+
+    #[Given('/^I have completed a successful one login sign-in process with the existing one login account$/')]
+    public function loginWithExistingAccount(): void
+    {
+        $this->identityLookupShouldFail     = true;
+        $this->migrateToOAuthShouldConflict = true;
+    }
+
+    #[When('/^I am returned to the use an lpa service in this situation$/')]
+    public function iAmReturnedToTheUseAnLpaServiceInThisSituation(): void
+    {
+        $this->oidcFixtureSetup();
+
+        /** @link AuthorisationService::callback() */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/token', $request->getUri()->getPath());
+
+                $request->getBody()->rewind();
+                parse_str($request->getBody()->getContents(), $data);
+
+                Assert::assertSame('authorization_code', $data['grant_type']);
+                Assert::assertSame('1234', $data['code']);
+                Assert::assertSame('https://sut', $data['redirect_uri']);
+                Assert::assertSame(
+                    'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                    $data['client_assertion_type'],
+                );
+
+                $this->verifyTokenSignature($data['client_assertion'], $this->oneLoginClientPrivateKey);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'access_token' => $this->accessToken,
+                            'token_type'   => 'Bearer',
+                            'id_token'     => $this->identityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /** @link AuthorisationService::callback() */
+        // Call to fetch issuer signing certificate for id_token
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'keys' => [
+                                JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
+                            ],
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /**
+         * @link AuthorisationService::callback()
+         * Call to fetch user identity
+         */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/userinfo', $request->getUri()->getPath());
+                Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'sub'                                             => $this->sub,
+                            'email'                                           => $this->email,
+                            'email_verified'                                  => true,
+                            'phone'                                           => '01406946277',
+                            'phone_verified'                                  => true,
+                            'updated_at'                                      => time(),
+                            'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /** @link ActorUsers::getByIdentity() returns SECOND account */
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [],
+            ]),
+        );
+
+        /** @link ActorUsers::getByEmail() → returns ORIGINAL account */
+        $this->awsFixtures->append(
+            new Result([
+                'Items' => [
+                    $this->marshalAwsResultData($this->unmigratedUser),
+                ],
+            ])
+        );
+
+        /** changeEmail() → FAIL with conditional check */
+        $this->awsFixtures->append(
+            function (): void {
+                throw new DynamoDbException(
+                    'Transaction cancelled',
+                    new Command('TransactWriteItems'),
+                    [
+                        'CancellationReasons' => [
+                            ['Code' => 'None'],
+                            ['Code' => 'ConditionalCheckFailed'],
+                            ['Code' => 'None'],
+                        ],
+                    ],
+                );
+            }
+        );
+
+        /** @link ActorUsers::recordSuccessfulLogin() */
+        $this->awsFixtures->append(new Result([]));
+
+        $this->apiPost(
+            '/v1/auth/callback',
+            [
+                'code'         => '1234',
+                'state'        => '1234',
+                'auth_session' => [
+                    'state'   => '1234',
+                    'nonce'   => $this->nonce,
+                    'customs' => [
+                        'redirect_uri' => 'https://sut',
+                    ],
+                ],
+            ],
+        );
     }
 }
