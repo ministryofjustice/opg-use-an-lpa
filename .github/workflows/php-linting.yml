@@ -1,21 +1,17 @@
 name: "PHP Linting with Code Sniffer"
-on:
-  pull_request:
-    paths:
-      - "**.php"
-      - "**/app/phpcs.xml.dist"
-      - ".github/workflows/php-linting.yml"
+
+on: workflow_call
 
 permissions:
-  actions: read
-  checks: read
-  contents: none
+  actions: none
+  checks: none
+  contents: read
   deployments: none
   issues: none
   packages: none
-  pull-requests: write
+  pull-requests: none
   repository-projects: none
-  security-events: none
+  security-events: write
   statuses: none
 
 jobs:
@@ -23,38 +19,51 @@ jobs:
     name: Lint PHP
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        service_path: [ 'service-front', 'service-api' ]
-
+        lint:
+          - name: front
+            image: front-app
+            directory: service-front/app
+          - name: api
+            image: api-app
+            directory: service-api/app
+    env:
+      IMAGE: ${{ matrix.lint.image }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       with:
         fetch-depth: 0
 
-    - name: Setup PHP with tools
-      uses: shivammathur/setup-php@cf4cade2721270509d5b1c766ab3549210a39a2a # 2.33.0
-      with:
-        php-version: '8.3'
-
-    - name: Install and configure phpcs
-      run: |
-        export install_dir=$HOME/.composer/vendor
-        composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
-        composer global require --no-interaction squizlabs/php_codesniffer:4.0.1 slevomat/coding-standard:8.25.1
-        phpcs --version
-        phpcs -i
-
     - name: Detect changed PHP files
       run: |
         {
           echo "CHANGED_PHP_FILES<<EOF"
-          git diff --name-only origin/main... -- '${{ matrix.service_path }}/**/*.php'
+          git diff --name-only origin/main... -- '${{ matrix.lint.directory }}/**/*.php' | sed "s|^${{ matrix.lint.directory }}/||g"
           echo "EOF"
         } >> "$GITHUB_ENV"
 
+    - name: Download Docker Image
+      if: env.CHANGED_PHP_FILES != ''
+      uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+      with:
+        name: ${{ matrix.lint.image }}-test
+        path: /tmp/images
+    - name: Load Image
+      if: env.CHANGED_PHP_FILES != ''
+      run: docker load -i /tmp/images/image.tar
+
     - name: Run phpcs
+      id: phpcs
       if: env.CHANGED_PHP_FILES != ''
       run: |
+        docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
+        vendor/bin/phpcs --standard=phpcs.xml.dist --report=full --report-xml=/tmp/output/phpcs-report.xml \
+        $CHANGED_PHP_FILES
+
+    - name: Publish PHPCS as PR annotations
+      if: ${{ always() && steps.phpcs.outcome == 'failure' }}
+      run: |
         echo "::add-matcher::.github/phpcs-problem-matcher.json"
-        phpcs --standard=${{ matrix.service_path }}/app/phpcs.xml.dist --basepath="$GITHUB_WORKSPACE" --report-xml --report-full $CHANGED_PHP_FILES
+        more ./output/phpcs-report.xml | sed "s|file name=\"|file name=\"${{ matrix.lint.directory }}/|g"

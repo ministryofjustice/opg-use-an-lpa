@@ -49,9 +49,9 @@ class ViewerCodeServiceTest extends TestCase
     #[Test]
     public function it_will_make_a_new_viewer_code_for_a_Sirius_lpa(): void
     {
-        // code will expire 30 days from midnight of the day the test runs
+        // code will expire 50 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
-            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
+            '23:59:59 +50 days',                // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
         );
 
@@ -105,9 +105,9 @@ class ViewerCodeServiceTest extends TestCase
     #[Test]
     public function it_will_make_a_new_viewer_code_for_a_data_store_lpa(): void
     {
-        // code will expire 30 days from midnight of the day the test runs
+        // code will expire 50 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
-            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
+            '23:59:59 +50 days',                // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
         );
 
@@ -250,9 +250,9 @@ class ViewerCodeServiceTest extends TestCase
     #[Test]
     public function it_will_cancel_any_pvcs_when_creating_a_data_store_lpa_code(): void
     {
-        // code will expire 30 days from midnight of the day the test runs
+        // code will expire 50 days from midnight of the day the test runs
         $codeExpiry = new DateTime(
-            '23:59:59 +30 days',                // Set to the last moment of the day, x days from now.
+            '23:59:59 +50 days',                // Set to the last moment of the day, x days from now.
             new DateTimeZone('Europe/London')   // Ensures we compensate for GMT vs BST.
         );
 
@@ -304,7 +304,7 @@ class ViewerCodeServiceTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(
                 new UpstreamResponse(
-                    new PaperVerificationCodeExpiry(new DateTimeImmutable('23:59:59 +30 days')),
+                    new PaperVerificationCodeExpiry(new DateTimeImmutable('23:59:59 +50 days')),
                     new DateTimeImmutable('now'),
                 )
             );

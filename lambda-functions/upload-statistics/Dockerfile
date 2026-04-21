@@ -5,10 +5,7 @@ RUN mkdir -p /app
 COPY requirements.txt /app
 
 # Install the function's dependencies
-RUN pip install \
-    --no-cache-dir \
-    --target /app \
-    -r /app/requirements.txt
+RUN pip install --no-cache-dir --target /app -r /app/requirements.txt
 
 # Use a slim version of the base Python image to reduce the final image size
 FROM python:3.14-slim@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456

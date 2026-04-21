@@ -144,6 +144,25 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  phpcs_analysis:
+    name: phpcs static analysis
+    uses: ./.github/workflows/php-linting.yml
+    permissions:
+      contents: read
+      security-events: write
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+
+  psalm_analysis:
+    name: psalm static analysis
+    uses: ./.github/workflows/psalm-static-analysis.yml
+    permissions:
+      security-events: write
+    needs:
+      - docker_build_scan_push
+      - workflow_variables
+
   terraform_apply_shared_development:
     name: terraform apply shared development
     uses: ./.github/workflows/_run-terraform.yml
@@ -181,6 +200,8 @@ jobs:
     needs:
       - terraform_apply_shared_production
       - workflow_variables
+      - phpcs_analysis
+      - psalm_analysis
     with:
       apply: true
       container_version: main-${{ needs.workflow_variables.outputs.semver_tag }}
@@ -270,10 +291,11 @@ jobs:
       - workflow_variables
       - slack_notify
       - slack_notify_documentation_update
+      - production_health_check
     steps:
       - name: workflow has ended
         run: |
-          if ${{ contains(needs.slack_notify.result, 'success') }}; then
+          if ${{ needs.production_health_check.result == 'success' }}; then
             echo "Deployment to production successful"
             echo "Tag Used: main-${{ needs.workflow_variables.outputs.semver_tag }}"
             echo "URL: https://use-lasting-power-of-attorney.service.gov.uk"
