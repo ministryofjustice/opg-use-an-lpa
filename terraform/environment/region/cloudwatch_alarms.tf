@@ -46,6 +46,78 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
   provider = aws.region
 }
 
+# 4XX anomaly alarms
+resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
+  actions_enabled     = false
+  alarm_description   = "Anomaly detection for 4XX Errors returned to viewer users in ${var.environment_name}"
+  alarm_name          = "${var.environment_name} viewer 4XX anomaly"
+  datapoints_to_alarm = 2
+  evaluation_periods  = 2
+  threshold_metric_id = "ad1"
+  comparison_operator = "GreaterThanUpperThreshold"
+
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+
+  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    label       = "4XX anomaly detection band"
+    return_data = true
+  }
+  metric_query {
+    id          = "m1"
+    return_data = true
+    metric {
+      metric_name = "HTTPCode_Target_4XX_Count"
+      namespace   = "AWS/ApplicationELB"
+      period      = 60
+      stat        = "Sum"
+      dimensions = {
+        "LoadBalancer" = trimprefix(split(":", aws_lb.viewer.arn)[5], "loadbalancer/")
+      }
+    }
+  }
+  provider = aws.region
+}
+resource "aws_cloudwatch_metric_alarm" "actor_4xx_anomaly" {
+  actions_enabled     = false
+  alarm_description   = "Anomaly detection for 4XX Errors returned to actor users in ${var.environment_name}"
+  alarm_name          = "${var.environment_name} actor 4XX anomaly"
+  datapoints_to_alarm = 2
+  evaluation_periods  = 2
+  threshold_metric_id = "ad1"
+  comparison_operator = "GreaterThanUpperThreshold"
+
+  insufficient_data_actions = []
+  treat_missing_data        = "notBreaching"
+
+  alarm_actions = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  metric_query {
+    id          = "ad1"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    label       = "4XX anomaly detection band"
+    return_data = true
+  }
+  metric_query {
+    id          = "m1"
+    return_data = true
+    metric {
+      metric_name = "HTTPCode_Target_4XX_Count"
+      namespace   = "AWS/ApplicationELB"
+      period      = 60
+      stat        = "Sum"
+      dimensions = {
+        "LoadBalancer" = trimprefix(split(":", aws_lb.use.arn)[5], "loadbalancer/")
+      }
+    }
+  }
+  provider = aws.region
+}
+
 resource "aws_cloudwatch_metric_alarm" "unexpected_data_lpa_api_resposnes" {
   actions_enabled     = true
   alarm_name          = "${var.environment_name}_unexpected_data_lpa_api_resposnes"
