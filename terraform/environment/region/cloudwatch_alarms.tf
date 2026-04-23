@@ -63,7 +63,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
   ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   metric_query {
     id          = "ad1"
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 4)"
     label       = "4XX anomaly detection band"
     return_data = true
   }
@@ -98,7 +98,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_4xx_anomaly" {
   ok_actions    = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   metric_query {
     id          = "ad1"
-    expression  = "ANOMALY_DETECTION_BAND(m1, 2)"
+    expression  = "ANOMALY_DETECTION_BAND(m1, 4)"
     label       = "4XX anomaly detection band"
     return_data = true
   }
