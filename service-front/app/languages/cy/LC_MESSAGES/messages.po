@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-04-17T09:47:43+00:00\n"
+"POT-Creation-Date: 2026-04-21T13:28:53+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -427,6 +427,7 @@ msgstr "Yn ôl"
 msgid "Type of LPA"
 msgstr "Math o LPA"
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:26
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:59
@@ -439,6 +440,7 @@ msgstr "Math o LPA"
 msgid "Property and finance"
 msgstr "Eiddo ac arian"
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:28
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:61
@@ -452,6 +454,7 @@ msgstr "Eiddo ac arian"
 msgid "Health and welfare"
 msgstr "Iechyd a lles"
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:14
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:30
 #: src/Actor/templates/actor/check-lpa.html.twig:34
 #: src/Actor/templates/actor/lpa-already-added.html.twig:21
@@ -611,6 +614,7 @@ msgstr "Ailosod eich cyfrinair"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:29
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:25
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:84
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:17
@@ -4269,6 +4273,7 @@ msgstr ""
 "cofnodion. Rydym yn anfon yr allwedd drwy’r post oherwydd bod hynny’n fwy "
 "diogel."
 
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:25
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:15
 msgid ""
 "You should hear from us or get the activation key letter by %dueDate%. If not, "
@@ -6551,3 +6556,31 @@ msgid ""
 msgstr ""
 "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i chi "
 "ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
+msgid "You’ve already asked for an activation key for this LPA today"
+msgstr ""
+"Rydych eisoes wedi gofyn am allwedd cadarnhau cyfrif ar gyfer yr LPA hwn heddiw"
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:18
+msgid "LPA type"
+msgstr "Math o atwrneiaeth arhosol:"
+
+#: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:24
+msgid ""
+"We’ll post you a letter with your activation key for this LPA. It will be sent "
+"to the address we have for you on our records. We send the key by post because "
+"it’s more secure."
+msgstr ""
+"Byddwn yn anfon llythyr atoch gyda’r allwedd cadarnhau cyfrif ar gyfer yr LPA "
+"hwn. Bydd yn cael ei hanfon i’r cyfeiriad sydd gennym yn ein cofnodion. Rydym "
+"yn anfon yr allwedd drwy’r post oherwydd ei fod yn fwy diogel."
+
+#~ msgid ""
+#~ "We’ll post you a letter with your activation key for this LPA. It will be "
+#~ "sent to to the address we have for you on our records. We send the key by "
+#~ "post because it’s more secure."
+#~ msgstr ""
+#~ "Byddwn yn anfon llythyr atoch gyda’r allwedd cadarnhau cyfrif ar gyfer yr "
+#~ "LPA hwn. Bydd yn cael ei hanfon i’r cyfeiriad sydd gennym yn ein cofnodion. "
+#~ "Rydym yn anfon yr allwedd drwy’r post oherwydd ei fod yn fwy diogel."

@@ -73,6 +73,7 @@ class LpaAlreadyAdded
             ],
             'caseSubtype'   => $lpa->lpa->getCaseSubtype(),
             'lpaActorToken' => $record['Id'],
+            'added'         => $record['Added'],
         ];
 
         if (isset($lpa->activationKeyDueDate)) {

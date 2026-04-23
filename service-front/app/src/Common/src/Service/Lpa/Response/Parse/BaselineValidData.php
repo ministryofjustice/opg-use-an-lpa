@@ -19,7 +19,8 @@ trait BaselineValidData
      *         surname: string,
      *     },
      *     caseSubtype: string,
-     *     activationKeyDueDate?: string
+     *     activationKeyDueDate?: string,
+     *     addedDate?: string
      * } $data
  * @return bool
      */

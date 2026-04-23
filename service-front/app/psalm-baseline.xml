@@ -183,18 +183,6 @@
     </UnusedProperty>
   </file>
   <file src="src/Actor/src/Handler/RequestActivationKey/CheckYourAnswersHandler.php">
-    <UndefinedMethod>
-      <code><![CDATA[getAttorney]]></code>
-      <code><![CDATA[getAttorney]]></code>
-      <code><![CDATA[getCaseSubtype]]></code>
-      <code><![CDATA[getCaseSubtype]]></code>
-      <code><![CDATA[getDonor]]></code>
-      <code><![CDATA[getDonor]]></code>
-      <code><![CDATA[getDonor]]></code>
-      <code><![CDATA[getDueDate]]></code>
-      <code><![CDATA[getDueDate]]></code>
-      <code><![CDATA[getLpaActorToken]]></code>
-    </UndefinedMethod>
     <UnusedProperty>
       <code><![CDATA[$featureEnabled]]></code>
       <code><![CDATA[$localisedDate]]></code>

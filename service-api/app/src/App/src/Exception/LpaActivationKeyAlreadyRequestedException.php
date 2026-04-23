@@ -28,6 +28,7 @@ class LpaActivationKeyAlreadyRequestedException extends AbstractApiException imp
             ],
             'caseSubtype'          => $data['caseSubtype'] ?? '',
             'activationKeyDueDate' => $data['activationKeyDueDate'] ?? '',
+            'addedDate'            => $data['addedDate'] ?? '',
         ];
     }
 }
