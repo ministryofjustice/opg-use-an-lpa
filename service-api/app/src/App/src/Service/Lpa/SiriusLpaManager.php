@@ -6,8 +6,10 @@ namespace App\Service\Lpa;
 
 use App\Enum\LpaSource;
 use App\Exception\ApiException;
+use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
 use App\Service\Lpa\Combined\FilterActiveActors;
+use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Service\Lpa\Combined\UserLpaActorToken as UserLpaActorTokenResponse;
 use App\Service\Lpa\IsValid\IsValidInterface;
 use App\Service\Lpa\ResolveActor\HasActorInterface;
@@ -36,6 +38,7 @@ class SiriusLpaManager implements LpaManagerInterface
         private ResolveActor $resolveActor,
         private IsValidLpa $isValidLpa,
         private FilterActiveActors $filterActiveActors,
+        private RejectInvalidLpa $rejectInvalidLpa,
         private LoggerInterface $logger,
     ) {
     }
@@ -130,43 +133,16 @@ class SiriusLpaManager implements LpaManagerInterface
 
         $lpa = $this->getByUid(new LpaUid($viewerCodeData['SiriusUid']));
 
-        //---
-
-        // Check donor's surname
-
-        if (
-            is_null($lpa) ||
-            !Equals::lastName($lpa->getData()->getDonor()->getSurname(), $donorSurname)
-        ) {
+        if ($lpa === null) {
             throw new NotFoundException();
         }
 
-        //---
-        // Whilst the checks in this section could be done before we lookup the LPA, they are done
-        // at this point as we only want to acknowledge if a code has expired if donor surname matched.
-
-        if (!isset($viewerCodeData['Expires']) || !($viewerCodeData['Expires'] instanceof DateTime)) {
-            $this->logger->info(
-                'The code {code} entered by user to view LPA does not have an expiry date set.',
-                ['code' => $viewerCode]
-            );
+        // Whilst the checks in this invokable could be done before we look up the LPA, they are done
+        // at this point as we only want to acknowledge if a code has expired if the donor surname matched.
+        try {
+            ($this->rejectInvalidLpa)($lpa, $viewerCode, $donorSurname, $viewerCodeData);
+        } catch (MissingCodeExpiryException) {
             throw ApiException::create('Missing code expiry data in Dynamo response');
-        }
-
-        if (new DateTime() > $viewerCodeData['Expires']) {
-            $this->logger->info(
-                'The code {code} entered by user to view LPA has expired.',
-                [
-                    'code'      => $viewerCode,
-                    'expiredBy' => $viewerCodeData['Expires']->diff(new DateTime())->format('%R%a days'),
-                ],
-            );
-            throw new GoneException('Share code expired');
-        }
-
-        if (isset($viewerCodeData['Cancelled'])) {
-            $this->logger->info('The code {code} entered by user is cancelled.', ['code' => $viewerCode]);
-            throw new GoneException('Share code cancelled');
         }
 
         $lpaData = $lpa->getData();
