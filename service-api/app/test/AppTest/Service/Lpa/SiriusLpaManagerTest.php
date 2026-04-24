@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\{Repository\InstructionsAndPreferencesImagesInterface,
-    Repository\LpasInterface,
-    Repository\UserLpaActorMapInterface,
-    Repository\ViewerCodeActivityInterface,
-    Repository\ViewerCodesInterface};
-use App\DataAccess\Repository\Response\{InstructionsAndPreferencesImages, Lpa};
+use App\DataAccess\Repository\InstructionsAndPreferencesImagesInterface;
+use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\UserLpaActorMapInterface;
+use App\DataAccess\Repository\ViewerCodeActivityInterface;
+use App\DataAccess\Repository\ViewerCodesInterface;
+use App\DataAccess\Repository\Response\InstructionsAndPreferencesImages;
+use App\DataAccess\Repository\Response\Lpa;
 use App\Enum\InstructionsAndPreferencesImagesResult;
 use App\Exception\ApiException;
+use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
 use App\Service\Features\FeatureEnabled;
-use App\Service\Lpa\{Combined\FilterActiveActors,
-    IsValidLpa,
-    ResolveActor,
-    ResolveActor\ActorType,
-    ResolveActor\LpaActor,
-    SiriusLpa,
-    SiriusLpaManager,
-    SiriusPerson};
+use App\Service\Lpa\Combined\FilterActiveActors;
+use App\Service\Lpa\IsValidLpa;
+use App\Service\Lpa\ResolveActor;
+use App\Service\Lpa\ResolveActor\ActorType;
+use App\Service\Lpa\ResolveActor\LpaActor;
+use App\Service\Lpa\SiriusLpa;
+use App\Service\Lpa\SiriusLpaManager;
+use App\Service\Lpa\SiriusPerson;
+use App\Service\Lpa\Combined\RejectInvalidLpa;
 use App\Value\LpaUid;
 use DateInterval;
 use DateTime;
@@ -47,6 +50,7 @@ class SiriusLpaManagerTest extends TestCase
     private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
     private FilterActiveActors|ObjectProphecy $filterActiveActorProphecy;
     private FeatureEnabled|ObjectProphecy $featureEnabledProphecy;
+    private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
     private LoggerInterface|ObjectProphecy $loggerProphecy;
 
     public function setUp(): void
@@ -61,6 +65,7 @@ class SiriusLpaManagerTest extends TestCase
         $this->isValidLpaProphecy                  = $this->prophesize(IsValidLpa::class);
         $this->filterActiveActorsProphecy          = $this->prophesize(FilterActiveActors::class);
         $this->featureEnabledProphecy              = $this->prophesize(FeatureEnabled::class);
+        $this->rejectInvalidLpaProphecy            = $this->prophesize(RejectInvalidLpa::class);
         $this->loggerProphecy                      = $this->prophesize(LoggerInterface::class);
     }
 
@@ -75,6 +80,7 @@ class SiriusLpaManagerTest extends TestCase
             $this->resolveActorProphecy->reveal(),
             $this->isValidLpaProphecy->reveal(),
             $this->filterActiveActorsProphecy->reveal(),
+            $this->rejectInvalidLpaProphecy->reveal(),
             $this->loggerProphecy->reveal(),
         );
     }
@@ -779,31 +785,27 @@ class SiriusLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_get_lpa_with_invalid_donor_by_viewer_code(): void
-    {
-        $t = $this->init_valid_get_by_viewer_account();
-
-        $service = $this->getLpaService();
-
-        $this->expectException(NotFoundException::class);
-        $result = $service->getByViewerCode($t->ViewerCode, 'different-donor-name', null);
-    }
-
-    #[Test]
     public function cannot_get_lpa_by_viewer_code_with_missing_expiry(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
         $service = $this->getLpaService();
 
-        //---
-
-        $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
+        $viewerCodeData = [
             'ViewerCode'   => $t->ViewerCode,
             'SiriusUid'    => $t->SiriusUid,
-            //'Expires' => $t->Expires,             <-- Expires is removed
             'Organisation' => $t->Organisation,
-        ]);
+        ];
+
+        //---
+
+        $this->viewerCodesInterfaceProphecy
+            ->get($t->ViewerCode)
+            ->willReturn($viewerCodeData);
+
+        $this->rejectInvalidLpaProphecy
+            ->__invoke($t->Lpa, $t->ViewerCode, $t->DonorSurname, $viewerCodeData)
+            ->willThrow(new MissingCodeExpiryException());
 
         //---
 
@@ -814,7 +816,7 @@ class SiriusLpaManagerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_get_lpa_by_viewer_code_with_cancelled(): void
+    public function cannot_get_lpa_by_viewer_code_when_rejected(): void
     {
         $t = $this->init_valid_get_by_viewer_account();
 
@@ -822,42 +824,26 @@ class SiriusLpaManagerTest extends TestCase
 
         //---
 
-        $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
+        $viewerCodeData = [
             'ViewerCode'   => $t->ViewerCode,
             'SiriusUid'    => $t->SiriusUid,
             'Expires'      => new DateTime('1 hour'),
             'Cancelled'    => true,
             'Organisation' => $t->Organisation,
-        ]);
+        ];
+
+        $this->viewerCodesInterfaceProphecy
+            ->get($t->ViewerCode)
+            ->willReturn($viewerCodeData);
+
+        $this->rejectInvalidLpaProphecy
+            ->__invoke($t->Lpa, $t->ViewerCode, $t->DonorSurname, $viewerCodeData)
+            ->willThrow(new RuntimeException('Share code blah'));
 
         //---
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Share code cancelled');
-
-        $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
-    }
-
-    #[Test]
-    public function cannot_get_lpa_by_viewer_code_with_expired_expiry(): void
-    {
-        $t = $this->init_valid_get_by_viewer_account();
-
-        $service = $this->getLpaService();
-
-        //---
-
-        $this->viewerCodesInterfaceProphecy->get($t->ViewerCode)->willReturn([
-            'ViewerCode'   => $t->ViewerCode,
-            'SiriusUid'    => $t->SiriusUid,
-            'Expires'      => new DateTime('-1 hour'),
-            'Organisation' => $t->Organisation,
-        ]);
-
-        //---
-
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Share code expired');
+        $this->expectExceptionMessage('Share code blah');
 
         $service->getByViewerCode($t->ViewerCode, $t->DonorSurname, null);
     }
