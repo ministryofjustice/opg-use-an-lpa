@@ -20,6 +20,7 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
 use App\Exception\GoneException;
+use App\Service\Equals;
 use App\Value\LpaUid;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -134,8 +135,8 @@ class SiriusLpaManager implements LpaManagerInterface
         // Check donor's surname
 
         if (
-            is_null($lpa)
-            || strtolower($lpa->getData()->getDonor()->getSurname()) !== strtolower($donorSurname)
+            is_null($lpa) ||
+            !Equals::lastName($lpa->getData()->getDonor()->getSurname(), $donorSurname)
         ) {
             throw new NotFoundException();
         }

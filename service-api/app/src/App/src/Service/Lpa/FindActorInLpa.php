@@ -6,6 +6,7 @@ namespace App\Service\Lpa;
 
 use App\Entity\LpaStore\LpaStoreAttorney;
 use App\Exception\ActorDateOfBirthNotSetException;
+use App\Service\Equals;
 use App\Service\Lpa\FindActorInLpa\ActorMatch;
 use App\Service\Lpa\FindActorInLpa\ActorMatchingInterface;
 use App\Service\Lpa\FindActorInLpa\FindActorInLpaInterface;
@@ -149,15 +150,6 @@ class FindActorInLpa
             }
         }
 
-        $matchData = $this->normaliseComparisonData($matchData);
-        $actorData = $this->normaliseComparisonData(
-            [
-                'first_names' => $actor->getFirstname(),
-                'last_name'   => $actor->getSurname(),
-                'postcode'    => $actor->getPostcode(),
-            ]
-        );
-
         $this->logger->debug(
             'Doing actor data comparison against actor with id {actor_id}',
             [
@@ -183,15 +175,15 @@ class FindActorInLpa
             return self::NO_MATCH__DOB;
         }
 
-        $match = $actorData['first_names'] !== $matchData['first_names']
-            ? $match | self::NO_MATCH__FIRSTNAMES
-            : $match;
-        $match = $actorData['last_name'] !== $matchData['last_name']
-            ? $match | self::NO_MATCH__SURNAME
-            : $match;
-        $match = $actorData['postcode'] !== $matchData['postcode']
-            ? $match | self::NO_MATCH__POSTCODE
-            : $match;
+        $match = Equals::firstNames($actor->getFirstname(), $matchData['first_names'])
+            ? $match
+            : $match | self::NO_MATCH__FIRSTNAMES;
+        $match = Equals::lastName($actor->getSurname(), $matchData['last_name'])
+            ? $match
+            : $match | self::NO_MATCH__SURNAME;
+        $match = Equals::postcode($actor->getPostcode(), $matchData['postcode'])
+            ? $match
+            : $match | self::NO_MATCH__POSTCODE;
 
         if ($match === self::MATCH) {
             $this->logger->info(
@@ -213,34 +205,5 @@ class FindActorInLpa
         }
 
         return $match;
-    }
-
-    /**
-     * Formats data attributes for comparison in the older lpa journey
-     *
-     * @param array $data
-     * @return ?array
-     */
-    private function normaliseComparisonData(array $data): ?array
-    {
-        $data['first_names'] = $this->turnUnicodeCharToAscii(
-            strtolower(explode(' ', trim($data['first_names']))[0])
-        );
-        $data['last_name']   = $this->turnUnicodeCharToAscii(strtolower(trim($data['last_name'])));
-        $data['postcode']    = strtolower(str_replace(' ', '', $data['postcode']));
-
-        return $data;
-    }
-
-    /**
-     * Replace any unicode apostrophe's in string to an ascii [introduced to resolve iphone entry issue]
-     *
-     * @param string $string
-     * @return string
-     */
-    private function turnUnicodeCharToAscii(string $string): string
-    {
-        $charsToReplace = ['’'];
-        return str_ireplace($charsToReplace, '\'', $string);
     }
 }
