@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-04-21T13:28:53+00:00\n"
+"POT-Creation-Date: 2026-04-27T00:53:48+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -2713,16 +2713,8 @@ msgstr ""
 msgid "We've already sent you an activation key for this LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:12
-msgid "We posted an activation key to the address we have for you on our records. It should have arrived by %dueDate%."
-msgstr ""
-
-#: src/Actor/templates/actor/already-have-activation-key.html.twig:13
-msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before."
-msgstr ""
-
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:14
-msgid "If the letter did not arrive, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
+msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before."
 msgstr ""
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:24
@@ -4697,4 +4689,12 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:24
 msgid "We’ll post you a letter with your activation key for this LPA. It will be sent to the address we have for you on our records. We send the key by post because it’s more secure."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:12
+msgid "We posted an activation key to the address we have for you on our records."
+msgstr ""
+
+#: src/Actor/templates/actor/already-have-activation-key.html.twig:13
+msgid "If the activation key has not arrived by %dueDate%, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
 msgstr ""
