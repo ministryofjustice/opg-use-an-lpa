@@ -28,7 +28,7 @@
     "babel-jest": "^29.2.2",
     "core-js": "^3.26.0",
     "es6-promise": "^4.2.8",
-    "esbuild": "0.27.3",
+    "esbuild": "0.28.0",
     "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
@@ -40,7 +40,7 @@
     "sass": "^1.75.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.28.6",
+    "@babel/runtime": "7.29.2",
     "@govuk-one-login/service-header": "^5.0.0",
     "@jest/globals": "^29.6.4",
     "@ministryofjustice/frontend": "7.1.1",
