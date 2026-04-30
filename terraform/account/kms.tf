@@ -288,7 +288,7 @@ module "aws_backup_cross_account_key" {
   primary_region     = "eu-west-1"
   replicas_to_create = []
   providers = {
-    aws = aws.management
+    aws = aws.backup
   }
   usage_services = ["backup.amazonaws.com"]
 
