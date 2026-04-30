@@ -250,13 +250,13 @@ module "dynamodb_encryption_key" {
 }
 
 module "aws_backup_source_account_key" {
-  source             = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.5"
+  source             = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.9"
   description        = "Encryption keys for Use an LPA backups copied into the backup account"
   alias              = "opg-use-an-lpa-${local.account_name}-aws-backup-source-account-key"
   primary_region     = "eu-west-1"
   replicas_to_create = ["eu-west-2"]
   providers = {
-    aws = aws.eu-west-1
+    aws = aws.eu_west_1
   }
   usage_services = ["backup.*.amazonaws.com"]
 
@@ -265,30 +265,30 @@ module "aws_backup_source_account_key" {
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
   ]
   decryption_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
   encryption_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
   grant_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
 }
 
 module "aws_backup_cross_account_key" {
-  source             = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.6"
+  source             = "git::https://github.com/ministryofjustice/opg-terraform-aws-kms-key.git?ref=v0.0.9"
   description        = "Encryption keys for Use an LPA backups copied into the backup account"
   alias              = "opg-use-an-lpa-${local.account_name}-aws-backup-key"
   primary_region     = "eu-west-1"
   replicas_to_create = []
   providers = {
-    aws = aws.backup
+    aws = aws.management
   }
   usage_services = ["backup.amazonaws.com"]
 
@@ -297,17 +297,17 @@ module "aws_backup_cross_account_key" {
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
   ]
   decryption_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
   encryption_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
   grant_roles = [
-    aws_iam_role.aurora_backup_role.arn,
+    aws_iam_role.aws_backup_role.arn,
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
   ]
