@@ -40,7 +40,7 @@ jobs:
       run: |
         {
           echo "CHANGED_PHP_FILES<<EOF"
-          git diff --name-only origin/main... -- '${{ matrix.lint.directory }}/**/*.php' | sed "s|^${{ matrix.lint.directory }}/||g"
+          git diff --name-only --diff-filter AM origin/main... -- '${{ matrix.lint.directory }}/**/*.php' | sed "s|^${{ matrix.lint.directory }}/||g"
           echo "EOF"
         } >> "$GITHUB_ENV"
 
