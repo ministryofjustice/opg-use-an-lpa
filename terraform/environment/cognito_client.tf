@@ -19,7 +19,7 @@ resource "aws_cognito_user_pool_client" "use_a_lasting_power_of_attorney_admin" 
   user_pool_id                         = local.admin_cognito_user_pool_id
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["openid"]
-  supported_identity_providers         = ["COGNITO"]
+  supported_identity_providers         = local.environment.entra_enabled ? ["COGNITO", "EntraID"] : ["COGNITO"]
   allowed_oauth_flows_user_pool_client = true
   explicit_auth_flows = [
     "ALLOW_CUSTOM_AUTH",
