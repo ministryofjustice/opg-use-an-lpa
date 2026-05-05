@@ -30,10 +30,8 @@
 declare(strict_types=1);
 
 use Mezzio\Application;
-use Mezzio\MiddlewareFactory;
-use Psr\Container\ContainerInterface;
 
-$viewerRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
+$viewerRoutes = function (Application $app): void {
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->route('/home', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home');
     $app->route('/', Viewer\Handler\EnterCodeHandler::class, ['GET', 'POST'], 'home-trial');
@@ -101,9 +99,7 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
                 'pv.view');
 };
 
-$actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
-
+$actorRoutes = function (Application $app): void {
     $app->route('/home', Actor\Handler\AuthenticateOneLoginHandler::class, ['GET', 'POST'], 'home');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
     $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
