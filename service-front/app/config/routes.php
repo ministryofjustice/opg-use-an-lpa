@@ -29,7 +29,6 @@
 
 declare(strict_types=1);
 
-use Common\Middleware\Routing\ConditionalRoutingMiddleware;
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
 use Psr\Container\ContainerInterface;
@@ -103,8 +102,6 @@ $viewerRoutes = function (Application $app, MiddlewareFactory $factory, Containe
 };
 
 $actorRoutes = function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
-    $DELETE_LPA_FEATURE = 'delete_lpa_feature';
-
     $defaultNotFoundPage = Actor\Handler\LpaDashboardHandler::class;
 
     $app->route('/home', Actor\Handler\AuthenticateOneLoginHandler::class, ['GET', 'POST'], 'home');
@@ -301,13 +298,7 @@ $actorRoutes = function (Application $app, MiddlewareFactory $factory, Container
 
     $app->route('/lpa/remove-lpa', [
         Common\Middleware\Authentication\AuthenticationMiddleware::class,
-        new ConditionalRoutingMiddleware(
-            $container,
-            $factory,
-            $DELETE_LPA_FEATURE,
-            Actor\Handler\RemoveLpaHandler::class,
-            $defaultNotFoundPage
-        )
+        Actor\Handler\RemoveLpaHandler::class
     ], ['GET', 'POST'], 'lpa.remove-lpa');
 };
 

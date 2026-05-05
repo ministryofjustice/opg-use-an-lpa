@@ -358,10 +358,6 @@ locals {
           value = "60"
         },
         {
-          name  = "DELETE_LPA_FEATURE",
-          value = tostring(var.feature_flags.delete_lpa_feature)
-        },
-        {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(var.feature_flags.allow_meris_lpas)
         },
