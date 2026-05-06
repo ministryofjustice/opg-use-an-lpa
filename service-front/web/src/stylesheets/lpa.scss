@@ -1,7 +1,7 @@
-@import "../../node_modules/govuk-frontend/dist/govuk/settings/all";
-@import "../../node_modules/govuk-frontend/dist/govuk/tools/all";
-@import "../../node_modules/govuk-frontend/dist/govuk/helpers/all";
-@import "../../node_modules/govuk-frontend/dist/govuk/objects/all";
+@import "../../node_modules/govuk-frontend/dist/govuk/settings/index";
+@import "../../node_modules/govuk-frontend/dist/govuk/tools/index";
+@import "../../node_modules/govuk-frontend/dist/govuk/helpers/index";
+@import "../../node_modules/govuk-frontend/dist/govuk/objects/index";
 
 @import 'lpa-account-menu';
 @import 'govuk-panel';
@@ -29,6 +29,6 @@
 
 .opg-lpa__document-extract {
   box-sizing: border-box;
-  border:  govuk-spacing(1) solid govuk-colour('mid-grey');
+  border:  govuk-spacing(1) solid govuk-colour("black", $variant: "tint-80");
   margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
 }
