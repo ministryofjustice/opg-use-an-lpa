@@ -43,8 +43,8 @@
     "@babel/runtime": "7.29.2",
     "@govuk-one-login/service-header": "^5.0.0",
     "@jest/globals": "^29.6.4",
-    "@ministryofjustice/frontend": "7.1.1",
-    "govuk-frontend": "^5.3.1",
+    "@ministryofjustice/frontend": "^9.0.0",
+    "govuk-frontend": "^6.0.0",
     "perfume.js": "^6.4.0"
   },
   "jest-junit": {
