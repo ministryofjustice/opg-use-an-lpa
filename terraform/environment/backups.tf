@@ -7,7 +7,6 @@ module "dynamodb_backup" {
     aws.eu_west_2 = aws.eu_west_2
   }
 
-  backups_enabled             = local.environment.dynamodb_backups.backups_enabled
   daily_backup_cold_storage   = local.environment.dynamodb_backups.daily_cold_storage_in_days
   daily_backup_deletion       = local.environment.dynamodb_backups.daily_backup_deletion_in_days
   environment_name            = local.environment_name
