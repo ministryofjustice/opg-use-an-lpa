@@ -100,7 +100,6 @@ services:
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
 
       # Feature flags
-      DELETE_LPA_FEATURE: "true"
       ALLOW_MERIS_LPAS: "false"
       SUPPORT_DATASTORE_LPAS: "true"
       PAPER_VERIFICATION: "true"
