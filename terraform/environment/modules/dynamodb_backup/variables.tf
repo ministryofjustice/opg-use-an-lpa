@@ -1,0 +1,38 @@
+variable "environment_name" {
+  type        = string
+  description = "Environment name to use in resource names"
+}
+
+variable "backups_enabled" {
+  type        = bool
+  description = "Enable backups for the environment"
+}
+
+variable "daily_backup_deletion" {
+  type        = number
+  description = "Number of days to retain daily backups before deletion"
+}
+
+variable "monthly_backup_deletion" {
+  type        = number
+  description = "Number of days to retain monthly backups before deletion"
+}
+variable "daily_backup_cold_storage" {
+  type        = number
+  description = "Number of days to retain daily backups in cold storage"
+}
+variable "monthly_backup_cold_storage" {
+  type        = number
+  description = "Number of days to retain monthly backups in cold storage"
+}
+
+variable "key_alias" {
+  type        = string
+  description = "The alias for the KMS key used to encrypt DynamoDB backups in the source account"
+}
+
+variable "dynamodb_table_arns_to_backup" {
+  type        = set(string)
+  default     = []
+  description = "The ARNs of the DynamoDB tables to backup"
+}
