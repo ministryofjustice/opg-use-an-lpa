@@ -3,11 +3,6 @@ variable "environment_name" {
   description = "Environment name to use in resource names"
 }
 
-variable "backups_enabled" {
-  type        = bool
-  description = "Enable backups for the environment"
-}
-
 variable "daily_backup_deletion" {
   type        = number
   description = "Number of days to retain daily backups before deletion"
