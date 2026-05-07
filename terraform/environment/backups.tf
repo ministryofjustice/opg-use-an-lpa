@@ -3,7 +3,6 @@ module "dynamodb_backup" {
   source = "./modules/dynamodb_backup"
   providers = {
     aws           = aws.eu_west_1
-    aws.eu_west_1 = aws.eu_west_1
     aws.eu_west_2 = aws.eu_west_2
   }
 
