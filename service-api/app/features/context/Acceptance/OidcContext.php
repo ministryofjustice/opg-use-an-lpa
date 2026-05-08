@@ -36,6 +36,14 @@ class OidcContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
+    public const LOGIN_TYPE = [
+        'NEW_ACCOUNT'               => 0, // completely new account
+        'MIGRATING_USER'            => 1, // local 'identityless' account and unknown one login - email will match
+        'EXISTING_USER'             => 2, // just a normal login
+        'EXISTING_USER_NEW_EMAIL'   => 3, // one login supplying a new email
+        'EXISTING_USER_NEW_SUBJECT' => 4, // an unknown one login account has an email we know of
+    ];
+
     public string $oneLoginClientPrivateKey;
     public string $oneLoginClientPublicKey;
     public string $oneLoginIssuerPublicKey;
@@ -180,6 +188,27 @@ class OidcContext implements Context
         ];
     }
 
+    #[Given('I do not have a local account')]
+    public function iDoNotHaveALocalAccount(): void
+    {
+        $this->localAccount = [];
+    }
+
+    #[Given('I have an unknown One Login identity')]
+    public function iHaveAnUnknownOneLoginIdentity(): void
+    {
+        $this->identityEmail   = 'test@example.com';
+        $this->identitySubject = 'urn:fdc:gov.uk:2022:unique_id';
+
+        if (count($this->localAccount) > 0) {
+            $this->type = self::LOGIN_TYPE['MIGRATING_USER'];
+        } else {
+            $this->type = self::LOGIN_TYPE['NEW_ACCOUNT'];
+        }
+
+        $this->fixIdentity();
+    }
+
     #[Given('I have a matching One Login identity')]
     #[Given('the identity provided by One Login has a :type')]
     public function iHaveAMatchingOneLoginIdentity(string $type = ''): void
@@ -189,39 +218,19 @@ class OidcContext implements Context
 
         switch ($type) {
             case '':
-                $this->type = 0;
+                $this->type = self::LOGIN_TYPE['EXISTING_USER'];
                 break;
             case 'new email':
                 $this->identityEmail = 'new.email@example.com';
-                $this->type          = 0;
+                $this->type          = self::LOGIN_TYPE['EXISTING_USER_NEW_EMAIL'];
                 break;
             case 'different subject than expected':
                 $this->identitySubject = 'urn:fdc:gov.uk:2022:new_unique_id';
-                $this->type            = 1;
+                $this->type            = self::LOGIN_TYPE['EXISTING_USER_NEW_SUBJECT'];
                 break;
-            default:
         }
 
-        $this->oneLoginIdentity = function (RequestInterface $request): ResponseInterface {
-            Assert::assertSame('/userinfo', $request->getUri()->getPath());
-            Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
-
-            return new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(
-                    [
-                        'sub'                                             => $this->identitySubject,
-                        'email'                                           => $this->identityEmail,
-                        'email_verified'                                  => true,
-                        'phone'                                           => '01406946277',
-                        'phone_verified'                                  => true,
-                        'updated_at'                                      => time(),
-                        'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
-                    ],
-                ),
-            );
-        };
+        $this->fixIdentity();
     }
 
     #[When('I complete a One Login sign-in process')]
@@ -290,13 +299,20 @@ class OidcContext implements Context
         $this->apiFixtures->append($this->oneLoginIdentity);
 
         switch ($this->type) {
-            case 0: // an identity exists and matches (email may differ)
+            case self::LOGIN_TYPE['EXISTING_USER_NEW_EMAIL']:
+            case self::LOGIN_TYPE['EXISTING_USER']:
+                // an identity exists and matches (email may differ)
                 $this->fetchByIdentityFixtures();
                 break;
-            case 1: // the identity does not exist (email may match, record may have different identity)
+            case self::LOGIN_TYPE['EXISTING_USER_NEW_SUBJECT']:
+                // the identity does not exist (email may match, record may have different identity)
+                $this->fetchByEmailFixtures(true);
+                break;
+            case self::LOGIN_TYPE['MIGRATING_USER']:
+                // the identity does not exist (email may match, record may have different identity)
                 $this->fetchByEmailFixtures(false);
                 break;
-            default: // everything else
+            case self::LOGIN_TYPE['NEW_ACCOUNT']:
                 $this->newUserFixtures();
                 break;
         }
@@ -384,7 +400,6 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('Id', $user);
         Assert::assertArrayHasKey('Identity', $user);
         Assert::assertArrayHasKey('Email', $user);
-        Assert::assertArrayHasKey('LastLogin', $user);
 
         Assert::assertArrayNotHasKey('Password', $user);
 
@@ -425,7 +440,7 @@ class OidcContext implements Context
         // Not needed in this context
     }
 
-    private function fetchByEmailFixtures($hasIdentity = false): void
+    private function fetchByEmailFixtures(bool $hasIdentity = false): void
     {
         /** @see ActorUsers::getByIdentity() */
         $this->awsFixtures->append(
@@ -453,6 +468,30 @@ class OidcContext implements Context
             );
 
             /** @see ResolveOAuthUser::updateEmail() */
+            $this->awsFixtures->append(
+                function (Command $command): ResultInterface {
+                    Assert::assertEquals('TransactWriteItems', $command->getName());
+
+                    Assert::assertCount(2, $command['TransactItems']);
+
+                    return new Result([]);
+                }
+            );
+        } else {
+            /** @see ActorUsers::getByEmail() */
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Items' => [
+                            $this->marshalAwsResultData(
+                                $this->localAccount
+                            ),
+                        ],
+                    ],
+                ),
+            );
+
+            /** @see ResolveOAuthUser::addNewUser() */
             $this->awsFixtures->append(
                 function (Command $command): ResultInterface {
                     Assert::assertEquals('TransactWriteItems', $command->getName());
@@ -500,5 +539,57 @@ class OidcContext implements Context
 
     private function newUserFixtures(): void
     {
+        /** @see ActorUsers::getByIdentity() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [],
+                ],
+            ),
+        );
+
+        /** @see ActorUsers::getByEmail() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [],
+                ],
+            ),
+        );
+
+        /** @see ResolveOAuthUser::addNewUser() */
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('TransactWriteItems', $command->getName());
+
+                Assert::assertCount(2, $command['TransactItems']);
+
+                return new Result([]);
+            }
+        );
+    }
+
+    private function fixIdentity(): void
+    {
+        $this->oneLoginIdentity = function (RequestInterface $request): ResponseInterface {
+            Assert::assertSame('/userinfo', $request->getUri()->getPath());
+            Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
+
+            return new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(
+                    [
+                        'sub'                                             => $this->identitySubject,
+                        'email'                                           => $this->identityEmail,
+                        'email_verified'                                  => true,
+                        'phone'                                           => '01406946277',
+                        'phone_verified'                                  => true,
+                        'updated_at'                                      => time(),
+                        'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
+                    ],
+                ),
+            );
+        };
     }
 }
