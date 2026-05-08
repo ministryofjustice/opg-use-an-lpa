@@ -23,6 +23,9 @@ class ActorUsersTest extends TestCase
 
     public const string TABLE_NAME = 'test-table-name';
 
+    /**
+     * @var ObjectProphecy<DynamoDbClient>
+     */
     private ObjectProphecy $dynamoDbClientProphecy;
 
     protected function setUp(): void
@@ -59,12 +62,43 @@ class ActorUsersTest extends TestCase
                     ],
                 ],
             ],
+        ];
+
+        $this->dynamoDbClientProphecy
+            ->transactWriteItems(['TransactItems' => $items])
+            ->shouldBeCalled()
+            ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 200]]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $actorRepo->add($id, $email, $identity, $now);
+    }
+
+    #[Test]
+    public function will_add_a_new_user_whilst_ignoring_orphan_identity_records(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $email    = 'a@b.com';
+        $identity = '67890-6789-6789-6789-67890';
+        $now      = '2020-12-12T12:12:12';
+
+        $items = [
             [
                 'Put' => [
-                    'TableName'           => self::TABLE_NAME,
-                    'ConditionExpression' => 'attribute_not_exists(Id)',
-                    'Item'                => [
-                        'Id' => ['S' => 'EMAIL#' . $email],
+                    'TableName' => self::TABLE_NAME,
+                    'Item'      => [
+                        'Id'        => ['S' => $id],
+                        'Email'     => ['S' => $email],
+                        'Identity'  => ['S' => $identity],
+                        'CreatedAt' => ['S' => $now],
+                    ],
+                ],
+            ],
+            [
+                'Put' => [
+                    'TableName' => self::TABLE_NAME,
+                    'Item'      => [
+                        'Id' => ['S' => 'IDENTITY#' . $identity],
                     ],
                 ],
             ],
@@ -77,7 +111,7 @@ class ActorUsersTest extends TestCase
 
         $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
-        $actorRepo->add($id, $email, $identity, $now);
+        $actorRepo->add($id, $email, $identity, $now, true);
     }
 
     #[Test]
@@ -364,12 +398,6 @@ class ActorUsersTest extends TestCase
                     [
                         'Delete' => [
                             'TableName' => self::TABLE_NAME,
-                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
-                        ],
-                    ],
-                    [
-                        'Delete' => [
-                            'TableName' => self::TABLE_NAME,
                             'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
                         ],
                     ],
@@ -407,12 +435,6 @@ class ActorUsersTest extends TestCase
                         'Delete' => [
                             'TableName' => self::TABLE_NAME,
                             'Key'       => ['Id' => ['S' => $id]],
-                        ],
-                    ],
-                    [
-                        'Delete' => [
-                            'TableName' => self::TABLE_NAME,
-                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
                         ],
                     ],
                 ],
@@ -455,12 +477,6 @@ class ActorUsersTest extends TestCase
                     [
                         'Delete' => [
                             'TableName' => 'users-table',
-                            'Key'       => ['Id' => ['S' => 'EMAIL#' . $email]],
-                        ],
-                    ],
-                    [
-                        'Delete' => [
-                            'TableName' => 'users-table',
                             'Key'       => ['Id' => ['S' => 'IDENTITY#' . $identity]],
                         ],
                     ],
@@ -478,38 +494,18 @@ class ActorUsersTest extends TestCase
     public function will_change_a_users_email(): void
     {
         $this->dynamoDbClientProphecy
-            ->transactWriteItems([
-                'TransactItems' => [
-                    [
-                        'Update' => [
-                            'TableName'                 => self::TABLE_NAME,
-                            'Key'                       => ['Id' => ['S' => 'fakeId']],
-                            'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-                            'ExpressionAttributeValues' => [
-                                ':p' => [
-                                    'S' => 'newemail@example.com',
-                                ],
-                            ],
-                        ],
-                    ],
-                    [
-                        'Delete' => [
-                            'TableName' => self::TABLE_NAME,
-                            'Key'       => [
-                                'Id' => ['S' => 'EMAIL#oldemail@example.com'],
-                            ],
-                        ],
-                    ],
-                    [
-                        'Put' => [
-                            'TableName' => self::TABLE_NAME,
-                            'Item'      => [
-                                'Id' => ['S' => 'EMAIL#newemail@example.com'],
-                            ],
+            ->updateItem(
+                [
+                    'TableName'                 => self::TABLE_NAME,
+                    'Key'                       => ['Id' => ['S' => 'fakeId']],
+                    'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                    'ExpressionAttributeValues' => [
+                        ':p' => [
+                            'S' => 'newemail@example.com',
                         ],
                     ],
                 ],
-            ])->shouldBeCalled();
+            )->shouldBeCalled();
 
         $sut = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
 
