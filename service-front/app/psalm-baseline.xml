@@ -13,12 +13,6 @@
       <code><![CDATA[$factory]]></code>
     </UnusedClosureParam>
   </file>
-  <file src="config/routes.php">
-    <UnusedClosureParam>
-      <code><![CDATA[$container]]></code>
-      <code><![CDATA[$factory]]></code>
-    </UnusedClosureParam>
-  </file>
   <file src="src/Actor/src/Form/AddLpa/ActivationKey.php">
     <LessSpecificImplementedReturnType>
       <code><![CDATA[array]]></code>
@@ -436,11 +430,6 @@
     <UnusedProperty>
       <code><![CDATA[$translator]]></code>
     </UnusedProperty>
-  </file>
-  <file src="src/Common/src/Middleware/Routing/ConditionalRoutingMiddleware.php">
-    <UnusedDocblockParam>
-      <code><![CDATA[$container]]></code>
-    </UnusedDocblockParam>
   </file>
   <file src="src/Common/src/Middleware/Session/SessionAttributeAllowlistMiddleware.php">
     <UnusedForeachValue>
