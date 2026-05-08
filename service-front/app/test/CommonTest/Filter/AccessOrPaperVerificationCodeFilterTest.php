@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace CommonTest\Filter;
 
-use Common\Filter\ActorViewerCodeFilter;
+use Common\Filter\AccessOrPaperVerificationCodeFilter;
 use Exception;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class ActorViewerCodeFilterTest extends TestCase
+class AccessOrPaperVerificationCodeFilterTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ActorViewerCodeFilter $filter;
+    private AccessOrPaperVerificationCodeFilter $filter;
 
     public function setUp(): void
     {
-        $this->filter = new ActorViewerCodeFilter();
+        $this->filter = new AccessOrPaperVerificationCodeFilter();
     }
 
     #[Test]
@@ -40,6 +40,14 @@ class ActorViewerCodeFilterTest extends TestCase
     public static function codeFormatProvider(): array
     {
         return [
+            [
+                'VBCD-1234-EFGH',
+                'VBCD1234EFGH',
+            ],
+            [
+                'PBCD-1234-EFGH',
+                'PBCD1234EFGH',
+            ],
             [
                 'V-ABCD-1234-EFGH',
                 'ABCD1234EFGH',
@@ -65,28 +73,32 @@ class ActorViewerCodeFilterTest extends TestCase
                 'ABCD1234EFGH',
             ],
             [
-                'C-ABCD-1234-EFGH',
-                'ABCD1234EFGH',
+                'P-AB12-CD34-EF56-G7',
+                'P-AB12-CD34-EF56-G7',
             ],
             [
-                'c-abCd-1234-EfgH',
-                'ABCD1234EFGH',
+                'P-ab12-CD34-ef56-G7',
+                'P-AB12-CD34-EF56-G7',
             ],
             [
-                'C abcd 1234 efgh',
-                'ABCD1234EFGH',
+                'P AB12 CD34 EF56 G7',
+                'P-AB12-CD34-EF56-G7',
             ],
             [
-                'C   abcd   1234   efgh',
-                'ABCD1234EFGH',
+                'P   AB12   CD34   EF56   G7',
+                'P-AB12-CD34-EF56-G7',
             ],
             [
-                'C - ABCD - 1234 - EFGH',
-                'ABCD1234EFGH',
+                'P - AB12 - CD34 - EF56 - G7',
+                'P-AB12-CD34-EF56-G7',
             ],
             [
-                'c--ABCD--1234--EFGH',
-                'ABCD1234EFGH',
+                'P--AB12--CD34--EF56--G7',
+                'P-AB12-CD34-EF56-G7',
+            ],
+            [
+                'PAB12CD34EF56G7',
+                'P-AB12-CD34-EF56-G7',
             ],
         ];
     }

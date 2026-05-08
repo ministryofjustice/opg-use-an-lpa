@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace CommonTest\Filter;
 
-use Common\Filter\ActorViewerCodeFilter;
+use Common\Filter\AccessCodeFilter;
 use Exception;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 
-class ActorViewerCodeFilterTest extends TestCase
+class AccessCodeFilterTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ActorViewerCodeFilter $filter;
+    private AccessCodeFilter $filter;
 
     public function setUp(): void
     {
-        $this->filter = new ActorViewerCodeFilter();
+        $this->filter = new AccessCodeFilter();
     }
 
     #[Test]
@@ -65,28 +65,12 @@ class ActorViewerCodeFilterTest extends TestCase
                 'ABCD1234EFGH',
             ],
             [
-                'C-ABCD-1234-EFGH',
+                'V$ABCD[]1234()EFGH',
                 'ABCD1234EFGH',
             ],
             [
-                'c-abCd-1234-EfgH',
-                'ABCD1234EFGH',
-            ],
-            [
-                'C abcd 1234 efgh',
-                'ABCD1234EFGH',
-            ],
-            [
-                'C   abcd   1234   efgh',
-                'ABCD1234EFGH',
-            ],
-            [
-                'C - ABCD - 1234 - EFGH',
-                'ABCD1234EFGH',
-            ],
-            [
-                'c--ABCD--1234--EFGH',
-                'ABCD1234EFGH',
+                'Q$ABCD[]1234()EFGH',
+                'QABCD1234EFGH',
             ],
         ];
     }
