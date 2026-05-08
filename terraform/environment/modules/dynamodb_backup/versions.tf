@@ -1,10 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
-      configuration_aliases = [
-        aws.eu_west_2
-      ]
+      source  = "hashicorp/aws"
       version = ">= 6.40.0"
     }
     pagerduty = {

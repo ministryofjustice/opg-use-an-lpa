@@ -31,3 +31,9 @@ variable "dynamodb_table_arns_to_backup" {
   default     = []
   description = "The ARNs of the DynamoDB tables to backup"
 }
+
+variable "replica_region" {
+  type        = string
+  description = "The region where backups will be replicated to"
+  default     = "eu-west-2"
+}
