@@ -75,7 +75,7 @@ class ActorUsers implements ActorUsersInterface
             if ($ex->getAwsErrorCode() !== 'TransactionCanceledException') {
                 $reasons = $ex->toArray()['CancellationReasons'];
 
-                // three transactions (from above) means the array will contain 2 items detailing the failures
+                // two transactions (from above) means the array will contain 2 items detailing the failures
                 // we can reliably hard code the keys here unless someone decides to change order of the transaction
                 if ($reasons[1]['Code'] === 'ConditionalCheckFailed') {
                     throw new ConflictException(

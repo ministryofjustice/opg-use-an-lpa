@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace AppTest\DataAccess\DynamoDb;
 
 use App\DataAccess\DynamoDb\ActorUsers;
+use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
+use Aws\CommandInterface;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTime;
 use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -121,6 +124,7 @@ class ActorUsersTest extends TestCase
         $email    = 'a@b.com';
         $identity = 'urn:fdc:one-login:2023:HASH=';
 
+        // status code is unexpected
         $this->dynamoDbClientProphecy->transactWriteItems(Argument::any())
             ->willReturn($this->createAWSResult(['@metadata' => ['statusCode' => 500]]));
 
@@ -128,6 +132,32 @@ class ActorUsersTest extends TestCase
 
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage('Failed to create account with code');
+
+        $actorRepo->add($id, $email, $identity, 'now');
+    }
+
+    #[Test]
+    public function will_throw_exception_when_adding_a_new_user_that_doesnt_succeed_with_orphan(): void
+    {
+        $id       = '12345-1234-1234-1234-12345';
+        $email    = 'a@b.com';
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+
+        $command = $this->prophesize(CommandInterface::class);
+
+        $this->dynamoDbClientProphecy->transactWriteItems(Argument::any())
+            ->willThrow(new DynamoDbException('', $command->reveal(), [
+                'body' => [
+                    'CancellationReasons' => [
+                        ['Code' => 'None'],
+                        ['Code' => 'ConditionalCheckFailed'],
+                    ],
+                ],
+            ]));
+
+        $actorRepo = new ActorUsers($this->dynamoDbClientProphecy->reveal(), self::TABLE_NAME);
+
+        $this->expectException(ConflictException::class);
 
         $actorRepo->add($id, $email, $identity, 'now');
     }
