@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\DataAccess\DynamoDb;
 
 use App\DataAccess\Repository\ActorUsersInterface;
+use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use Aws\DynamoDb\DynamoDbClient;
+use Aws\DynamoDb\Exception\DynamoDbException;
 use Aws\DynamoDb\Marshaler;
 use Fig\Http\Message\StatusCodeInterface;
 
@@ -21,49 +23,70 @@ class ActorUsers implements ActorUsersInterface
     ) {
     }
 
+    /**
+     * @throws ConflictException
+     * @throws CreationException
+     */
     public function add(
         string $id,
         string $email,
         string $identity,
         string $now,
+        bool $ignoreOrphanIdentity = false,
     ): void {
-        $result = $this->client->transactWriteItems([
-            'TransactItems' => [
-                [
-                    'Put' => [
-                        'TableName' => $this->actorUsersTable,
-                        'Item'      => [
-                            'Id'        => ['S' => $id],
-                            'Email'     => ['S' => $email],
-                            'Identity'  => ['S' => $identity],
-                            'CreatedAt' => ['S' => $now],
-                        ],
-                    ],
-                ],
-                [
-                    'Put' => [
-                        'TableName'           => $this->actorUsersTable,
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'IDENTITY#' . $identity],
-                        ],
-                    ],
-                ],
-                [
-                    'Put' => [
-                        'TableName'           => $this->actorUsersTable,
-                        'ConditionExpression' => 'attribute_not_exists(Id)',
-                        'Item'                => [
-                            'Id' => ['S' => 'EMAIL#' . $email],
-                        ],
-                    ],
+        $identityPinning = [
+            'Put' => [
+                'TableName' => $this->actorUsersTable,
+                'Item'      => [
+                    'Id' => ['S' => 'IDENTITY#' . $identity],
                 ],
             ],
-        ]);
+        ];
 
-        $code = $result->get('@metadata')['statusCode'] ?? null;
-        if ($code !== StatusCodeInterface::STATUS_OK) {
-            throw new CreationException('Failed to create account with code', ['code' => $code]);
+        if (! $ignoreOrphanIdentity) {
+            $identityPinning['Put']['ConditionExpression'] = 'attribute_not_exists(Id)';
+        }
+
+        try {
+            $result = $this->client->transactWriteItems(
+                [
+                    'TransactItems' => [
+                        [
+                            'Put' => [
+                                'TableName' => $this->actorUsersTable,
+                                'Item'      => [
+                                    'Id'        => ['S' => $id],
+                                    'Email'     => ['S' => $email],
+                                    'Identity'  => ['S' => $identity],
+                                    'CreatedAt' => ['S' => $now],
+                                ],
+                            ],
+                        ],
+                        $identityPinning,
+                    ],
+                ]
+            );
+
+            $code = $result->get('@metadata')['statusCode'] ?? null;
+            if ($code !== StatusCodeInterface::STATUS_OK) {
+                throw new CreationException('Failed to create account with code', ['code' => $code]);
+            }
+        } catch (DynamoDbException $ex) {
+            if ($ex->getAwsErrorCode() !== 'TransactionCanceledException') {
+                $reasons = $ex->toArray()['CancellationReasons'];
+
+                // three transactions (from above) means the array will contain 2 items detailing the failures
+                // we can reliably hard code the keys here unless someone decides to change order of the transaction
+                if ($reasons[1]['Code'] === 'ConditionalCheckFailed') {
+                    throw new ConflictException(
+                        'User identity/subject pinning already exists',
+                        ['identity' => $identity],
+                        $ex,
+                    );
+                }
+            }
+
+            throw new CreationException('Failed to create account with code', [], $ex);
         }
     }
 
@@ -158,8 +181,8 @@ class ActorUsers implements ActorUsersInterface
                     'Update' => [
                         'TableName'                 => $this->actorUsersTable,
                         'Key'                       => ['Id' => ['S' => $user['Id']]],
-                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
-                            . 'PasswordResetExpiry, NeedsReset',
+                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, '
+                            . 'PasswordResetToken, PasswordResetExpiry, NeedsReset',
                         'ExpressionAttributeValues' => $marshaler->marshalItem([':sub' => $identity]),
                         'ExpressionAttributeNames'  => [
                             '#sub' => 'Identity',
@@ -175,9 +198,6 @@ class ActorUsers implements ActorUsersInterface
                         ],
                     ],
                 ],
-                // But not EMAIL# as we will be inserting this for all existing
-                // accounts manually. That way we can be sure that no email will
-                // be used twice.
             ],
         ]);
 
@@ -206,38 +226,18 @@ class ActorUsers implements ActorUsersInterface
 
     public function changeEmail(string $id, string $oldEmail, string $newEmail): void
     {
-        $items = [
+        $this->client->updateItem(
             [
-                'Update' => [
-                    'TableName'                 => $this->actorUsersTable,
-                    'Key'                       => ['Id' => ['S' => $id]],
-                    'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
-                    'ExpressionAttributeValues' => [
-                        ':p' => [
-                            'S' => $newEmail,
-                        ],
+                'TableName'                 => $this->actorUsersTable,
+                'Key'                       => ['Id' => ['S' => $id]],
+                'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                'ExpressionAttributeValues' => [
+                    ':p' => [
+                        'S' => $newEmail,
                     ],
                 ],
             ],
-            [
-                'Delete' => [
-                    'TableName' => $this->actorUsersTable,
-                    'Key'       => [
-                        'Id' => ['S' => 'EMAIL#' . $oldEmail],
-                    ],
-                ],
-            ],
-            [
-                'Put' => [
-                    'TableName' => $this->actorUsersTable,
-                    'Item'      => [
-                        'Id' => ['S' => 'EMAIL#' . $newEmail],
-                    ],
-                ],
-            ],
-        ];
-
-        $this->client->transactWriteItems(['TransactItems' => $items]);
+        );
     }
 
     public function delete(string $accountId): array
@@ -249,12 +249,6 @@ class ActorUsers implements ActorUsersInterface
                 'Delete' => [
                     'TableName' => $this->actorUsersTable,
                     'Key'       => ['Id' => ['S' => $accountId]],
-                ],
-            ],
-            [
-                'Delete' => [
-                    'TableName' => $this->actorUsersTable,
-                    'Key'       => ['Id' => ['S' => 'EMAIL#' . $user['Email']]],
                 ],
             ],
         ];
