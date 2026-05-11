@@ -1,7 +1,7 @@
 module github.com/ministryofjustice/opg-use-an-lpa/service-admin/proxy
 
-go 1.24.4
+go 1.25.0
 
-require github.com/ministryofjustice/opg-go-common v1.146.0
+require github.com/ministryofjustice/opg-go-common v1.165.12
 
 require github.com/golang-jwt/jwt/v4 v4.5.2
