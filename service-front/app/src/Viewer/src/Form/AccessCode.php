@@ -73,7 +73,7 @@ final class AccessCode extends AbstractForm implements InputFilterProviderInterf
                         'name'                   => NotEmpty::class,
                         'break_chain_on_failure' => true,
                         'options'                => [
-                            'message' => 'Enter the donor\'s last name',
+                            'message' => 'Enter the donor’s last name',
                         ],
                     ],
                 ],
