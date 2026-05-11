@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Viewer\Form;
 
 use Common\Filter\ConvertQuotesToApostrophe;
-use Common\Filter\ShareCodeFilter;
+use Common\Filter\AccessOrPaperVerificationCodeFilter;
 use Common\Form\AbstractForm;
 use Laminas\Filter\StringTrim;
 use Laminas\InputFilter\InputFilterProviderInterface;
 use Laminas\Validator\NotEmpty;
 use Laminas\Validator\Regex;
-use Laminas\Validator\StringLength;
 use Mezzio\Csrf\CsrfGuardInterface;
 
 class AccessOrPaperVerificationCode extends AbstractForm implements InputFilterProviderInterface
@@ -40,7 +39,7 @@ class AccessOrPaperVerificationCode extends AbstractForm implements InputFilterP
                 'required'   => true,
                 'filters'    => [
                     ['name' => StringTrim::class],
-                    ['name' => ShareCodeFilter::class],
+                    ['name' => AccessOrPaperVerificationCodeFilter::class],
                 ],
                 'validators' => [
                     [
