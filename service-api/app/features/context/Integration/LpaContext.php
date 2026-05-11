@@ -2738,13 +2738,12 @@ class LpaContext extends BaseIntegrationContext
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
-            'addedDate'            => '2020-01-01',
         ];
 
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         try {
-            $addOlderLpa->validateRequest(
+            $result = $addOlderLpa->validateRequest(
                 $this->userId,
                 [
                     'reference_number'     => $this->lpaUid,
@@ -2755,16 +2754,16 @@ class LpaContext extends BaseIntegrationContext
                     'force_activation_key' => false,
                 ]
             );
-        } catch (LpaActivationKeyAlreadyRequestedException $lpaActivationKeyAlreadyRequestedException) {
+        } catch (LpaAlreadyHasActivationKeyException $lpaAlreadyHasActivationKeyException) {
             Assert::assertEquals(
                 StatusCodeInterface::STATUS_BAD_REQUEST,
-                $lpaActivationKeyAlreadyRequestedException->getCode()
+                $lpaAlreadyHasActivationKeyException->getCode()
             );
             Assert::assertEquals(
-                'Activation key already requested for LPA',
-                $lpaActivationKeyAlreadyRequestedException->getMessage()
+                'LPA has an activation key already',
+                $lpaAlreadyHasActivationKeyException->getMessage()
             );
-            Assert::assertEquals($expectedResponse, $lpaActivationKeyAlreadyRequestedException->getAdditionalData());
+            Assert::assertEquals($expectedResponse, $lpaAlreadyHasActivationKeyException->getAdditionalData());
             return;
         }
 
