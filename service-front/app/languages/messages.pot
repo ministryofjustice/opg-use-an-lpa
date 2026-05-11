@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Language: en_GB\n"
-"POT-Creation-Date: 2026-04-27T00:53:48+00:00\n"
+"POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -77,7 +77,7 @@ msgstr ""
 msgid "View LPA summary"
 msgstr ""
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:70
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:69
 msgid "Remove LPA"
 msgstr ""
 
@@ -2517,9 +2517,7 @@ msgid "Enter the donor's first names"
 msgstr ""
 
 #. Add Older LPA
-#. ShareCode
 #: src/Actor/templates/actor/form-error-messages.html.twig:50
-#: src/Viewer/templates/viewer/form-error-messages.html.twig:11
 msgctxt "error"
 msgid "Enter the donor's last name"
 msgstr ""
@@ -3807,10 +3805,6 @@ msgstr ""
 msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:52
-msgid "The code I've been given does not begin with a V"
-msgstr ""
-
 #: src/Viewer/templates/viewer/enter-code.html.twig:56
 msgid "The donor or attorney may have given you the wrong code."
 msgstr ""
@@ -4338,6 +4332,7 @@ msgstr ""
 msgid "name of 1 attorney named on the notice of registration"
 msgstr ""
 
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:28
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:53
 msgid "Donor’s last name"
@@ -4697,4 +4692,8 @@ msgstr ""
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:13
 msgid "If the activation key has not arrived by %dueDate%, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:52
+msgid "The code I’ve been given does not begin with a V"
 msgstr ""
