@@ -162,7 +162,7 @@ class ViewerContext implements Context
     #[Then('/^I am told that I must enter the donor\'s last name$/')]
     public function iAmToldThatIMustEnterTheDonorSLastName(): void
     {
-        $this->ui->assertPageContainsText("Enter the donor's last name");
+        $this->ui->assertPageContainsText('Enter the donor’s last name');
     }
 
     #[Then('/^I am told that my input is invalid because (.*)$/')]

@@ -11,13 +11,13 @@ use Laminas\InputFilter\InputFilter;
 use Mezzio\Csrf\CsrfGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Viewer\Form\ShareCode;
+use Viewer\Form\AccessCode;
 
-class ShareCodeTest extends TestCase
+class AccessCodeTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ShareCode $form;
+    private AccessCode $form;
 
     /**
      * @var string[]
@@ -32,15 +32,15 @@ class ShareCodeTest extends TestCase
     {
         $guardProphecy = $this->prophesize(CsrfGuardInterface::class);
 
-        $this->form = new ShareCode($guardProphecy->reveal());
+        $this->form = new AccessCode($guardProphecy->reveal());
     }
 
     public function testIsAForm(): void
     {
         $this->assertInstanceOf(AbstractForm::class, $this->form);
-        $this->assertInstanceOf(ShareCode::class, $this->form);
+        $this->assertInstanceOf(AccessCode::class, $this->form);
 
-        $this->assertEquals('share_code', $this->form->getName());
+        $this->assertEquals('access_code', $this->form->getName());
     }
 
     public function testInputs(): void

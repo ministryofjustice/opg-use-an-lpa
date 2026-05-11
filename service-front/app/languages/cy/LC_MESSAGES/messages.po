@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-04-27T00:53:48+00:00\n"
+"POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -95,7 +95,7 @@ msgstr "Gwirio codau mynediad"
 msgid "View LPA summary"
 msgstr "Gweld crynodeb LPA"
 
-#: src/Actor/templates/actor/partials/lpa-details.html.twig:70
+#: src/Actor/templates/actor/partials/lpa-details.html.twig:69
 msgid "Remove LPA"
 msgstr "Dileu LPA"
 
@@ -3313,9 +3313,7 @@ msgid "Enter the donor's first names"
 msgstr "Rhowch enw’r rhoddwr"
 
 #. Add Older LPA
-#. ShareCode
 #: src/Actor/templates/actor/form-error-messages.html.twig:50
-#: src/Viewer/templates/viewer/form-error-messages.html.twig:11
 msgctxt "error"
 msgid "Enter the donor's last name"
 msgstr "Rhowch enw olaf y rhoddwr"
@@ -5162,10 +5160,6 @@ msgstr ""
 "Mae codau mynediad yn gyfuniad o 13 llythyren a rhifau ac yn dechrau gyda V<br/"
 ">Er enghraifft, V-AB12-CD34-EF56"
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:52
-msgid "The code I've been given does not begin with a V"
-msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
-
 #: src/Viewer/templates/viewer/enter-code.html.twig:56
 msgid "The donor or attorney may have given you the wrong code."
 msgstr "Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi."
@@ -6034,6 +6028,7 @@ msgstr "nifer yr atwrneiod a enwir ar yr hysbysiad cofrestru"
 msgid "name of 1 attorney named on the notice of registration"
 msgstr "enw un atwrnai a enwir ar yr hysbysiad cofrestru"
 
+#: src/Viewer/templates/viewer/enter-code.html.twig:34
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:28
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:53
 msgid "Donor’s last name"
@@ -6575,6 +6570,13 @@ msgstr ""
 "Os nad yw’r allwedd actifadu wedi cyrraedd erbyn %dueDate%, <a class=\"govuk-"
 "link\" href=\"%link%\">cysylltwch â ni</a> i wneud yn siŵr bod eich cyfeiriad "
 "cywir gennym cyn i chi ofyn am allwedd newydd."
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:52
+msgid "The code I’ve been given does not begin with a V"
+msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
+
+#~ msgid "The code I've been given does not begin with a V"
+#~ msgstr "Nid yw’r cod yr wyf wedi ei gael yn dechrau efo V"
 
 #~ msgid ""
 #~ "We’ll post you a letter with your activation key for this LPA. It will be "
