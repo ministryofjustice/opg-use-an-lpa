@@ -715,11 +715,10 @@ class LpaContext implements Context
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
-            'addedDate'            => '2020-01-01',
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
-        $this->ui->assertSession()->responseContains('Activation key already requested for LPA');
+        $this->ui->assertSession()->responseContains('LPA has an activation key already');
         Assert::assertEquals($expectedResponse, $this->getResponseAsJson()['data']);
     }
 
