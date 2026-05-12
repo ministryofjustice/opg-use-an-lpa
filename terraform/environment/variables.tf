@@ -86,6 +86,7 @@ variable "environments" {
         paper_verification     = bool
       })
       dynamodb_backups = object({
+        backups_enabled                 = bool
         daily_backup_deletion_in_days   = number
         daily_cold_storage_in_days      = number
         monthly_backup_deletion_in_days = number
