@@ -174,6 +174,12 @@ clear_config_cache:
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
 
+service-front/app/languages/%/LC_MESSAGES/messages.mo: service-front/app/languages/%/LC_MESSAGES/messages.po
+	msgfmt -o $@ $^
+
+.PHONY: msgfmt
+msgfmt: service-front/app/languages/cy/LC_MESSAGES/messages.mo service-front/app/languages/en_GB/LC_MESSAGES/messages.mo
+
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048
 	@openssl rsa -pubout -in $(SM_PATH)private_key.pem -out $(SM_PATH)public_key.pem
