@@ -8,11 +8,11 @@ variable "account_mapping" {
   description = "Mapping of account names to account names. This is used so that development can be the default account name for ephemeral environments"
 }
 
-variable "lambda_container_version" {
-  description = "The version of the lambda container to use"
-  type        = string
-  default     = "latest"
-}
+# variable "lambda_container_version" {
+#   description = "The version of the lambda container to use"
+#   type        = string
+#   default     = "latest"
+# }
 
 variable "accounts" {
   type = map(
@@ -23,11 +23,11 @@ variable "accounts" {
       retention_in_days      = number
       pagerduty_service_name = string
       pagerduty_service_id   = string
-      opg_metrics = object({
+      opg_metrics = optional(object({
         enabled                     = bool
         api_key_secretsmanager_name = string
         endpoint_url                = string
-      })
+      }))
       dns_firewall = object({
         enabled         = bool
         domains_allowed = list(string)
