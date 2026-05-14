@@ -272,11 +272,11 @@ variable "session_expiry_warning" {
   type        = string
 }
 
-variable "ship_metrics_queue_enabled" {
-  description = "Whether or not to forward metrics to opg-metrics"
-  type        = bool
-  default     = false
-}
+# variable "ship_metrics_queue_enabled" {
+#   description = "Whether or not to forward metrics to opg-metrics"
+#   type        = bool
+#   default     = false
+# }
 
 variable "sirius_account_id" {
   description = "The AWS ID of the Sirius account."
