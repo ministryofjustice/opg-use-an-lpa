@@ -1,4 +1,4 @@
-FROM python:3.14@sha256:61346539f7b26521a230e72c11da5ebd872924745074b19736e7d65ba748c366 AS build-image
+FROM python:3.14@sha256:89a288a9a9e9141b9f0c51744c358138da6369897792f1af3f5425e407d9529a AS build-image
 
 # Copy function code
 RUN mkdir -p /app
@@ -8,7 +8,7 @@ COPY requirements.txt /app
 RUN pip install --no-cache-dir --target /app -r /app/requirements.txt
 
 # Use a slim version of the base Python image to reduce the final image size
-FROM python:3.14-slim@sha256:6a27522252aef8432841f224d9baaa6e9fce07b07584154fa0b9a96603af7456
+FROM python:3.14-slim@sha256:7a500125bc50693f2214e842a621440a1b1b9cbb2188f74ab045d29ed2ea5856
 
 # Update openssl to non-vulnerable version
 RUN apt-get update && \
