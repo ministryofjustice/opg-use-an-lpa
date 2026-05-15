@@ -110,7 +110,7 @@ resource "aws_wafv2_web_acl" "main" {
 
     statement {
       rate_based_statement {
-        limit              = 5
+        limit              = 10
         aggregate_key_type = "IP"
 
         scope_down_statement {
@@ -281,6 +281,8 @@ resource "aws_wafv2_regex_pattern_set" "suspicious_uri_patterns" {
   regular_expression {
     regex_string = "(?i)\\.(env|git|sql|bak|php|asp|aspx|cgi|sh|exe|tar|gz|tgz|zip|rar|7z|z|bz2|lz|xz|db|sqlite|sqlitedb|war|jar|config|conf|ini|log|pem|key|p12|pfx|crt|ovpn|htaccess|htpasswd|DS_Store|swp)$"
   }
+
+  provider = aws.region
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "main" {
