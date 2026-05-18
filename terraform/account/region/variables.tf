@@ -7,11 +7,11 @@ variable "account" {
     retention_in_days      = number
     pagerduty_service_name = string
     pagerduty_service_id   = string
-    opg_metrics = object({
+    opg_metrics = optional(object({
       enabled                     = bool
       api_key_secretsmanager_name = string
       endpoint_url                = string
-    })
+    }))
     dns_firewall = object({
       enabled         = bool
       domains_allowed = list(string)
@@ -36,10 +36,10 @@ variable "environment_name" {
   type        = string
 }
 
-variable "lambda_container_version" {
-  description = "The version of the lambda container"
-  type        = string
-}
+# variable "lambda_container_version" {
+#   description = "The version of the lambda container"
+#   type        = string
+# }
 
 variable "network_cidr_block" {
   type        = string

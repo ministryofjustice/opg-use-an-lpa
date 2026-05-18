@@ -22,5 +22,5 @@ six==1.17.0
     # via python-dateutil
 snapshot-restore-py==1.0.0
     # via awslambdaric
-urllib3==2.6.3
+urllib3==2.7.0
     # via botocore
