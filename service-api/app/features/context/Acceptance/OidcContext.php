@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace BehatTest\Context\Acceptance;
 
+use App\DataAccess\DynamoDb\ActorUsers;
+use App\Service\User\ResolveOAuthUser;
 use AppTest\OidcUtilities;
 use Aws\Command;
 use Aws\Result;
@@ -14,6 +16,7 @@ use Behat\Step\Then;
 use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
+use Closure;
 use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
@@ -33,29 +36,55 @@ class OidcContext implements Context
     use BaseAcceptanceContextTrait;
     use SetupEnv;
 
+    public const LOGIN_TYPE = [
+        'NEW_ACCOUNT'               => 0, // completely new account
+        'MIGRATING_USER'            => 1, // local 'identityless' account and unknown one login - email will match
+        'EXISTING_USER'             => 2, // just a normal login
+        'EXISTING_USER_NEW_EMAIL'   => 3, // one login supplying a new email
+        'EXISTING_USER_NEW_SUBJECT' => 4, // an unknown one login account has an email we know of
+    ];
+
     public string $oneLoginClientPrivateKey;
     public string $oneLoginClientPublicKey;
     public string $oneLoginIssuerPublicKey;
     public string $oneLoginOutOfBandPublicKey;
-    public string $accessToken = '12345';
-    public string $clientId    = 'client-id';
-    public string $nonce       = 'nonce1234';
-    public string $sub         = 'urn:fdc:gov.uk:2022:unique_id';
-    public string $email       = 'test@example.com';
-    public string $birthday    = '1970-01-01';
+    public string $accessToken     = '12345';
+    public string $clientId        = 'client-id';
+    public string $nonce           = 'nonce1234';
+    public string $identityEmail   = '';
+    public string $identitySubject = '';
+    public int $type               = 0;
+
+    /**
+     * @var array{
+     *  Id: string,
+     *  Identity?: string,
+     *  Email: string,
+     *  Password: string,
+     *  LastLogin: string
+     * }
+     */
+    public array $localAccount        = [];
+    public ?Closure $oneLoginIdentity = null;
 
     protected function coreIdentityTokenSetup(): string
     {
-        [$token, $this->oneLoginOutOfBandPublicKey] =
-            OidcUtilities::generateCoreIdentityToken($this->sub, $this->birthday);
+        [
+            $token,
+            $this->oneLoginOutOfBandPublicKey,
+        ] =
+            OidcUtilities::generateCoreIdentityToken($this->identitySubject, '1970-01-01');
 
         return $token;
     }
 
     protected function identityTokenSetup(): string
     {
-        [$token, $this->oneLoginIssuerPublicKey] = OidcUtilities::generateIdentityToken(
-            $this->sub,
+        [
+            $token,
+            $this->oneLoginIssuerPublicKey,
+        ] = OidcUtilities::generateIdentityToken(
+            $this->identitySubject,
             $this->clientId,
             $this->nonce,
         );
@@ -72,14 +101,17 @@ class OidcContext implements Context
 
         apcu_clear_cache();
 
-        [$this->oneLoginClientPrivateKey, $this->oneLoginClientPublicKey] = OidcUtilities::generateKeyPair(
+        [
+            $this->oneLoginClientPrivateKey,
+            $this->oneLoginClientPublicKey,
+        ] = OidcUtilities::generateKeyPair(
             [
                 'private_key_bits' => 2048,
                 'private_key_type' => OPENSSL_KEYTYPE_RSA,
             ]
         );
 
-        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        /** @see AbstractKeyPairManager::fetchKeyPairFromSecretsManager() */
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
                 Assert::assertEquals('GetSecretValue', $command->getName());
@@ -89,7 +121,7 @@ class OidcContext implements Context
             }
         );
 
-        // AbstractKeyPairManager::fetchKeyPairFromSecretsManager()
+        /** @see AbstractKeyPairManager::fetchKeyPairFromSecretsManager() */
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
                 Assert::assertEquals('GetSecretValue', $command->getName());
@@ -99,7 +131,7 @@ class OidcContext implements Context
             }
         );
 
-        // AuthorisationClientManager::get()
+        /** @see AuthorisationClientManager::get() */
         $this->apiFixtures->append(
             function (RequestInterface $request): ResponseInterface {
                 Assert::assertEquals('/.well-known/openid-configuration', $request->getUri()->getPath());
@@ -144,6 +176,151 @@ class OidcContext implements Context
         return json_decode((string) $jws->getPayload(), true);
     }
 
+    #[Given('I have a local account')]
+    public function iHaveALocalAccount(): void
+    {
+        $this->localAccount = [
+            'Id'        => '0000-00-00-00-000',
+            'Identity'  => 'urn:fdc:gov.uk:2022:unique_id',
+            'Email'     => 'test@example.com',
+            'Password'  => 'password',
+            'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
+        ];
+    }
+
+    #[Given('I do not have a local account')]
+    public function iDoNotHaveALocalAccount(): void
+    {
+        $this->localAccount = [];
+    }
+
+    #[Given('I have an unknown One Login identity')]
+    public function iHaveAnUnknownOneLoginIdentity(): void
+    {
+        $this->identityEmail   = 'test@example.com';
+        $this->identitySubject = 'urn:fdc:gov.uk:2022:unique_id';
+
+        if (count($this->localAccount) > 0) {
+            $this->type = self::LOGIN_TYPE['MIGRATING_USER'];
+        } else {
+            $this->type = self::LOGIN_TYPE['NEW_ACCOUNT'];
+        }
+
+        $this->fixIdentity();
+    }
+
+    #[Given('I have a matching One Login identity')]
+    #[Given('the identity provided by One Login has a :type')]
+    public function iHaveAMatchingOneLoginIdentity(string $type = ''): void
+    {
+        $this->identityEmail   = 'test@example.com';
+        $this->identitySubject = 'urn:fdc:gov.uk:2022:unique_id';
+
+        switch ($type) {
+            case '':
+                $this->type = self::LOGIN_TYPE['EXISTING_USER'];
+                break;
+            case 'new email':
+                $this->identityEmail = 'new.email@example.com';
+                $this->type          = self::LOGIN_TYPE['EXISTING_USER_NEW_EMAIL'];
+                break;
+            case 'different subject than expected':
+                $this->identitySubject = 'urn:fdc:gov.uk:2022:new_unique_id';
+                $this->type            = self::LOGIN_TYPE['EXISTING_USER_NEW_SUBJECT'];
+                break;
+        }
+
+        $this->fixIdentity();
+    }
+
+    #[When('I complete a One Login sign-in process')]
+    public function iCompleteAOneLoginSignInProcess(): void
+    {
+        $this->oidcFixtureSetup();
+
+        /** @see  AuthorisationService::callback() */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/token', $request->getUri()->getPath());
+
+                $request->getBody()->rewind();
+                parse_str($request->getBody()->getContents(), $data);
+
+                Assert::assertSame('authorization_code', $data['grant_type']);
+                Assert::assertSame('1234', $data['code']);
+                Assert::assertSame('https://sut', $data['redirect_uri']);
+                Assert::assertSame(
+                    'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+                    $data['client_assertion_type'],
+                );
+
+                $this->verifyTokenSignature($data['client_assertion'], $this->oneLoginClientPrivateKey);
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'access_token' => $this->accessToken,
+                            'token_type'   => 'Bearer',
+                            'id_token'     => $this->identityTokenSetup(),
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /**
+         * @see AuthorisationService::callback()
+         * Call to fetch issuer signing certificate for id_token
+         */
+        $this->apiFixtures->append(
+            function (RequestInterface $request): ResponseInterface {
+                Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
+
+                return new Response(
+                    StatusCodeInterface::STATUS_OK,
+                    [],
+                    json_encode(
+                        [
+                            'keys' => [
+                                JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
+                            ],
+                        ],
+                    ),
+                );
+            },
+        );
+
+        /**
+         * @see AuthorisationService::callback()
+         * Call to fetch user identity
+         */
+        $this->apiFixtures->append($this->oneLoginIdentity);
+
+        switch ($this->type) {
+            case self::LOGIN_TYPE['EXISTING_USER_NEW_EMAIL']:
+            case self::LOGIN_TYPE['EXISTING_USER']:
+                // an identity exists and matches (email may differ)
+                $this->fetchByIdentityFixtures();
+                break;
+            case self::LOGIN_TYPE['EXISTING_USER_NEW_SUBJECT']:
+                // the identity does not exist (email may match, record may have different identity)
+                $this->fetchByEmailFixtures(true);
+                break;
+            case self::LOGIN_TYPE['MIGRATING_USER']:
+                // the identity does not exist (email may match, record may have different identity)
+                $this->fetchByEmailFixtures(false);
+                break;
+            case self::LOGIN_TYPE['NEW_ACCOUNT']:
+                $this->newUserFixtures();
+                break;
+        }
+
+        /** @see  ActorUsers::recordSuccessfulLogin() */
+        $this->awsFixtures->append(new Result([]));
+    }
+
     #[Then('/^I am redirected to the one login service$/')]
     public function iAmRedirectedToTheOneLoginService(): void
     {
@@ -180,112 +357,9 @@ class OidcContext implements Context
         Assert::assertSame('en', $query['ui_locales']);
     }
 
-    #[When('/^I am returned to the use an lpa service$/')]
+    #[Then('/^I am returned to the use an lpa service$/')]
     public function iAmReturnedToTheUseAnLpaService(): void
     {
-        $this->oidcFixtureSetup();
-
-        /** @link AuthorisationService::callback() */
-        $this->apiFixtures->append(
-            function (RequestInterface $request): ResponseInterface {
-                Assert::assertSame('/token', $request->getUri()->getPath());
-
-                $request->getBody()->rewind();
-                parse_str($request->getBody()->getContents(), $data);
-
-                Assert::assertSame('authorization_code', $data['grant_type']);
-                Assert::assertSame('1234', $data['code']);
-                Assert::assertSame('https://sut', $data['redirect_uri']);
-                Assert::assertSame(
-                    'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-                    $data['client_assertion_type'],
-                );
-
-                $this->verifyTokenSignature($data['client_assertion'], $this->oneLoginClientPrivateKey);
-
-                return new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'access_token' => $this->accessToken,
-                            'token_type'   => 'Bearer',
-                            'id_token'     => $this->identityTokenSetup(),
-                        ],
-                    ),
-                );
-            },
-        );
-
-        /** @link AuthorisationService::callback() */
-        // Call to fetch issuer signing certificate for id_token
-        $this->apiFixtures->append(
-            function (RequestInterface $request): ResponseInterface {
-                Assert::assertSame('/.well-known/jwks', $request->getUri()->getPath());
-
-                return new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'keys' => [
-                                JWKFactory::createFromKey($this->oneLoginIssuerPublicKey),
-                            ],
-                        ],
-                    ),
-                );
-            },
-        );
-
-        /**
-         * @link AuthorisationService::callback()
-         * Call to fetch user identity
-         */
-        $this->apiFixtures->append(
-            function (RequestInterface $request): ResponseInterface {
-                Assert::assertSame('/userinfo', $request->getUri()->getPath());
-                Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
-
-                return new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'sub'                                             => $this->sub,
-                            'email'                                           => $this->email,
-                            'email_verified'                                  => true,
-                            'phone'                                           => '01406946277',
-                            'phone_verified'                                  => true,
-                            'updated_at'                                      => time(),
-                            'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
-                        ],
-                    ),
-                );
-            },
-        );
-
-        /** @link ActorUsers::getByIdentity() */
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'Id'        => '0000-00-00-00-000',
-                                'Identity'  => $this->sub,
-                                'Email'     => $this->email,
-                                'Password'  => 'password',
-                                'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
-                            ]
-                        ),
-                    ],
-                ],
-            ),
-        );
-
-        /** @link ActorUsers::recordSuccessfulLogin() */
-        $this->awsFixtures->append(new Result([]));
-
         $this->apiPost(
             '/v1/auth/callback',
             [
@@ -312,8 +386,8 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('redirect_uri', $response);
     }
 
-    #[Then('/^I am taken to my dashboard$/')]
-    public function iAmTakenToMyDashboard(): void
+    #[Then('/^the login process is a success$/')]
+    public function theLoginProcessIsASuccess(): void
     {
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_OK);
 
@@ -326,24 +400,11 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('Id', $user);
         Assert::assertArrayHasKey('Identity', $user);
         Assert::assertArrayHasKey('Email', $user);
-        Assert::assertArrayHasKey('LastLogin', $user);
 
         Assert::assertArrayNotHasKey('Password', $user);
 
-        Assert::assertSame($user['Identity'], $this->sub);
-        Assert::assertSame($user['Email'], $this->email);
-    }
-
-    #[Given('/^I have an existing local account$/')]
-    public function iHaveAnExistingLocalAccount(): void
-    {
-        // Not needed in this context
-    }
-
-    #[Given('/^I have completed a successful one login sign\-in process$/')]
-    public function iHaveCompletedASuccessfulOneLoginSignInProcess(): void
-    {
-        // Not needed in this context
+        Assert::assertSame($user['Identity'], $this->identitySubject);
+        Assert::assertSame($user['Email'], $this->identityEmail);
     }
 
     #[When('/^I logout of the application$/')]
@@ -356,8 +417,8 @@ class OidcContext implements Context
             [
                 'user' => [
                     'Id'        => '0000-00-00-00-000',
-                    'Identity'  => $this->sub,
-                    'Email'     => $this->email,
+                    'Identity'  => $this->identitySubject,
+                    'Email'     => $this->identityEmail,
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
                     'IdToken'   => $this->identityTokenSetup(),
                 ],
@@ -377,5 +438,158 @@ class OidcContext implements Context
     public function iWishToLoginToTheUseAnLpaService(): void
     {
         // Not needed in this context
+    }
+
+    private function fetchByEmailFixtures(bool $hasIdentity = false): void
+    {
+        /** @see ActorUsers::getByIdentity() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [],
+                ],
+            ),
+        );
+
+        if (!$hasIdentity) {
+            unset($this->localAccount['Identity']);
+
+            /** @see ActorUsers::getByEmail() */
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Items' => [
+                            $this->marshalAwsResultData(
+                                $this->localAccount
+                            ),
+                        ],
+                    ],
+                ),
+            );
+
+            /** @see ResolveOAuthUser::updateEmail() */
+            $this->awsFixtures->append(
+                function (Command $command): ResultInterface {
+                    Assert::assertEquals('TransactWriteItems', $command->getName());
+
+                    Assert::assertCount(2, $command['TransactItems']);
+
+                    return new Result([]);
+                }
+            );
+        } else {
+            /** @see ActorUsers::getByEmail() */
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Items' => [
+                            $this->marshalAwsResultData(
+                                $this->localAccount
+                            ),
+                        ],
+                    ],
+                ),
+            );
+
+            /** @see ResolveOAuthUser::addNewUser() */
+            $this->awsFixtures->append(
+                function (Command $command): ResultInterface {
+                    Assert::assertEquals('TransactWriteItems', $command->getName());
+
+                    Assert::assertCount(2, $command['TransactItems']);
+
+                    return new Result([]);
+                }
+            );
+        }
+    }
+
+    private function fetchByIdentityFixtures(): void
+    {
+        /** @see ActorUsers::getByIdentity() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [
+                        $this->marshalAwsResultData(
+                            $this->localAccount
+                        ),
+                    ],
+                ],
+            ),
+        );
+
+        // Email is different to expected.
+        if ($this->identityEmail !== $this->localAccount['Email']) {
+            /** @see ActorUsers::getByEmail() */
+            $this->awsFixtures->append(
+                new Result(['Items' => []]) // email not found
+            );
+
+            /** @see ResolveOAuthUser::updateEmail() */
+            $this->awsFixtures->append(
+                function (Command $command): ResultInterface {
+                    Assert::assertEquals('UpdateItem', $command->getName());
+
+                    return new Result([]);
+                }
+            );
+        }
+    }
+
+    private function newUserFixtures(): void
+    {
+        /** @see ActorUsers::getByIdentity() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [],
+                ],
+            ),
+        );
+
+        /** @see ActorUsers::getByEmail() */
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Items' => [],
+                ],
+            ),
+        );
+
+        /** @see ResolveOAuthUser::addNewUser() */
+        $this->awsFixtures->append(
+            function (Command $command): ResultInterface {
+                Assert::assertEquals('TransactWriteItems', $command->getName());
+
+                Assert::assertCount(2, $command['TransactItems']);
+
+                return new Result([]);
+            }
+        );
+    }
+
+    private function fixIdentity(): void
+    {
+        $this->oneLoginIdentity = function (RequestInterface $request): ResponseInterface {
+            Assert::assertSame('/userinfo', $request->getUri()->getPath());
+            Assert::assertSame('Bearer ' . $this->accessToken, $request->getHeader('authorization')[0]);
+
+            return new Response(
+                StatusCodeInterface::STATUS_OK,
+                [],
+                json_encode(
+                    [
+                        'sub'                                             => $this->identitySubject,
+                        'email'                                           => $this->identityEmail,
+                        'email_verified'                                  => true,
+                        'phone'                                           => '01406946277',
+                        'phone_verified'                                  => true,
+                        'updated_at'                                      => time(),
+                        'https://vocab.account.gov.uk/v1/coreIdentityJWT' => $this->coreIdentityTokenSetup(),
+                    ],
+                ),
+            );
+        };
     }
 }

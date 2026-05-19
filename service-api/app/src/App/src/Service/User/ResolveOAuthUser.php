@@ -97,7 +97,24 @@ class ResolveOAuthUser
     private function attemptToFetchUserByEmail(string $identity, string $email): ?array
     {
         try {
-            $user = $this->usersRepository->migrateToOAuth($this->userService->getByEmail($email), $identity);
+            $user = $this->userService->getByEmail($email);
+
+            // UML-4300 don't migrate accounts with existing OneLogin Identities.
+            // this is a change to behaviour and may need a revisit. As currently implemented
+            // in this class this will result in a new account being created.
+            if (isset($user['Identity'])) {
+                $this->logger->info(
+                    'User already has assigned identity {identity}, not migrating',
+                    [
+                        'identity'   => $user['Identity'],
+                        'email'      => new Email($email),
+                        'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CONTAINS_IDENTITY,
+                    ]
+                );
+                return null;
+            }
+
+            $user = $this->usersRepository->migrateToOAuth($user, $identity);
 
             $this->logger->info(
                 'Migrated existing account with email {email} to OIDC login',
@@ -132,16 +149,29 @@ class ResolveOAuthUser
                     'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CREATED,
                 ]
             );
-
-            return $user;
         } catch (ConflictException $e) {
-            $this->logger->notice(
-                'Creation of new OAuth account failed due to existing account with matching Identity field',
-                ['identity' => $identity]
-            );
+            /**
+             * if the exception contains an identity as a reason then it is an orphan identity and we can
+             * work around it. this should only be used assuming that we've already identified that an account
+             * doesn't already exist with this identity @see attemptToFetchUserByIdentity()
+             */
+            if (count($e->getAdditionalData()) === 1 && isset($e->getAdditionalData()['identity'])) {
+                $user = $this->userService->addWithOrphanIdentityBypass($email, $identity);
+            } else {
+                throw $e;
+            }
 
-            throw $e;
+            $this->logger->info(
+                'Created new OIDC login for account with email {email} with orphan bypass',
+                [
+                    'identity'   => $identity,
+                    'email'      => new Email($email),
+                    'event_code' => EventCodes::AUTH_ONELOGIN_ACCOUNT_CREATED_WITH_ORPHAN_BYPASS,
+                ]
+            );
         }
+
+        return $user;
     }
 
     /**

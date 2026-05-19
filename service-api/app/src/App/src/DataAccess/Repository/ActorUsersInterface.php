@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataAccess\Repository;
 
+use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 
@@ -31,13 +32,17 @@ interface ActorUsersInterface
     /**
      * Add an actor user
      *
+     * @param bool $ignoreOrphanIdentity Forces to the operation to succeed by ignoring an exisiting 'IDENTITY#' record.
+     *                                   Only intended to be used in cases where the record is known to be an orphan.
      * @throws CreationException
+     * @throws ConflictException
      */
     public function add(
         string $id,
         string $email,
         string $identity,
         string $now,
+        bool $ignoreOrphanIdentity = false,
     ): void;
 
     /**

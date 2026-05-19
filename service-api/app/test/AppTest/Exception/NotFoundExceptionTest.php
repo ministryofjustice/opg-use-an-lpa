@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AppTest\Exception;
 
 use App\Exception\NotFoundException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class NotFoundExceptionTest extends TestCase
 {
-    public function testDataGets(): void
+    #[Test]
+    public function dataGets(): void
     {
         $message = 'nfe message';
 

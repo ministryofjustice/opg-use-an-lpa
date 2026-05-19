@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AppTest\Exception;
 
 use App\Exception\GoneException;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GoneExceptionTest extends TestCase
 {
-    public function testDataGets(): void
+    #[Test]
+    public function dataGets(): void
     {
         $message = 'ge message';
 
