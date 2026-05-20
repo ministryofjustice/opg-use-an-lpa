@@ -9,7 +9,6 @@ use App\Exception\ConflictException;
 use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use App\Service\Log\Output\Email;
-use Aws\DynamoDb\Exception\DynamoDbException;
 use DateTimeInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
@@ -37,19 +36,13 @@ class UserService
         // Generate unique id for user
         $id = $this->generateUniqueId();
 
-        try {
-            $this->usersRepository->add($id, $email, $identity, $this->clock->now()->format(DateTimeInterface::ATOM));
-        } catch (DynamoDbException $ex) {
-            $reasons = $ex->toArray()['CancellationReasons'] ?? [];
-
-            foreach ($reasons as $reason) {
-                if ($reason['Code'] === 'ConditionalCheckFailed') {
-                    throw new ConflictException('User already exists with identity ' . $identity);
-                }
-            }
-
-            throw $ex;
-        }
+        $this->usersRepository->add(
+            $id,
+            $email,
+            $identity,
+            $this->clock->now()->format(DateTimeInterface::ATOM),
+            false,
+        );
 
         $this->logger->info(
             'Account with Id {id} created for identity {identity} using email {email}',
@@ -57,6 +50,40 @@ class UserService
                 'id'       => $id,
                 'email'    => new Email($email),
                 'identity' => $identity,
+            ]
+        );
+
+        return [
+            'Id'       => $id,
+            'Email'    => $email,
+            'Identity' => $identity,
+        ];
+    }
+
+    /**
+     * @psalm-return ActorUser The created user
+     * @throws CreationException
+     */
+    public function addWithOrphanIdentityBypass(string $email, string $identity): array
+    {
+        // Generate unique id for user
+        $id = $this->generateUniqueId();
+
+        $this->usersRepository->add(
+            $id,
+            $email,
+            $identity,
+            $this->clock->now()->format(DateTimeInterface::ATOM),
+            true,
+        );
+
+        $this->logger->info(
+            'Account with Id {id} created for identity {identity} using email {email} with identity bypass',
+            [
+                'id'       => $id,
+                'email'    => new Email($email),
+                'identity' => $identity,
+
             ]
         );
 

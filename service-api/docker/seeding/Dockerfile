@@ -1,4 +1,4 @@
-FROM python:alpine@sha256:faee120f7885a06fcc9677922331391fa690d911c020abb9e8025ff3d908e510
+FROM python:alpine@sha256:a3de013592ea520507c1f18d880592338bd21abfe706237e68ed4126e21b6900
 
 ENV WAITFORIT_VERSION="v2.4.1"
 RUN wget -q -O /usr/local/bin/waitforit https://github.com/maxclaus/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 \
