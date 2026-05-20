@@ -70,6 +70,8 @@ class LpaAlreadyAddedTest extends TestCase
     #[Test]
     public function returns_not_activated_flag_if_lpa_requested_but_not_active(): void
     {
+        $now = new DateTimeImmutable('now');
+
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -77,6 +79,7 @@ class LpaAlreadyAddedTest extends TestCase
                     [
                         'Id'         => $this->userLpaActorToken,
                         'SiriusUid'  => $this->lpaUid,
+                        'Added'      => $now,
                         'ActivateBy' => (new DateTimeImmutable('now'))->format('Y-m-d H:i:s'),
                     ],
                 ]
@@ -103,6 +106,7 @@ class LpaAlreadyAddedTest extends TestCase
                 'caseSubtype'   => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
                 'notActivated'  => true,
+                'added'         => $now,
             ],
             $lpaAddedData
         );
@@ -133,6 +137,8 @@ class LpaAlreadyAddedTest extends TestCase
     #[Test]
     public function returns_lpa_data_if_lpa_is_already_added_combined(): void
     {
+        $now = new DateTimeImmutable('now');
+
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -140,6 +146,7 @@ class LpaAlreadyAddedTest extends TestCase
                     [
                         'Id'        => $this->userLpaActorToken,
                         'SiriusUid' => $this->lpaUid,
+                        'Added'     => $now,
                     ],
                 ]
             );
@@ -164,6 +171,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ],
                 'caseSubtype'   => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
+                'added'         => $now,
             ],
             $lpaAddedData
         );
@@ -172,6 +180,8 @@ class LpaAlreadyAddedTest extends TestCase
     #[Test]
     public function returns_lpa_data_if_lpa_is_already_added_old(): void
     {
+        $now = new DateTimeImmutable('now');
+
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -179,6 +189,7 @@ class LpaAlreadyAddedTest extends TestCase
                     [
                         'Id'        => $this->userLpaActorToken,
                         'SiriusUid' => $this->lpaUid,
+                        'Added'     => $now,
                     ],
                 ]
             );
@@ -203,6 +214,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ],
                 'caseSubtype'   => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
+                'added'         => $now,
             ],
             $lpaAddedData
         );
@@ -211,6 +223,8 @@ class LpaAlreadyAddedTest extends TestCase
     #[Test]
     public function correctly_handles_records_without_sirius_uids_if_lpa_already_added(): void
     {
+        $now = new DateTimeImmutable('now');
+
         $this->userLpaActorMapProphecy
             ->getByUserId($this->userId)
             ->willReturn(
@@ -218,10 +232,12 @@ class LpaAlreadyAddedTest extends TestCase
                     [
                         'Id'     => '0123-01-01-01-01234',
                         'LpaUid' => 'M-1234-1234-1234',
+                        'Added'  => $now,
                     ],
                     [
                         'Id'        => $this->userLpaActorToken,
                         'SiriusUid' => $this->lpaUid,
+                        'Added'     => $now,
                     ],
                 ]
             );
@@ -246,6 +262,7 @@ class LpaAlreadyAddedTest extends TestCase
                 ],
                 'caseSubtype'   => 'hw',
                 'lpaActorToken' => $this->userLpaActorToken,
+                'added'         => $now,
             ],
             $lpaAddedData
         );

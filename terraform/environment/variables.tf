@@ -81,13 +81,12 @@ variable "environments" {
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
       application_flags = object({
-        use_older_lpa_journey  = bool
-        delete_lpa_feature     = bool
         allow_meris_lpas       = bool
         support_datastore_lpas = bool
         paper_verification     = bool
       })
       dynamodb_backups = object({
+        backups_enabled                 = bool
         daily_backup_deletion_in_days   = number
         daily_cold_storage_in_days      = number
         monthly_backup_deletion_in_days = number

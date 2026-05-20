@@ -7,8 +7,10 @@ namespace CommonTest\Service\Lpa;
 use Common\Entity\CaseActor;
 use Common\Service\Lpa\AccessForAllApiResult;
 use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use DateTime;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,43 +28,31 @@ class AccessForAllApiResultTest extends TestCase
         $this->assertEquals($additionalData, $response->getData());
     }
 
-    /**
-     * Creates the already added DTO for the data provider
-     *
-     * @return LpaAlreadyAdded
-     */
-    private static function createAlreadyAddedDTO()
+    private static function createAlreadyAddedDTO(): LpaAlreadyAdded
     {
-        $donor = new CaseActor();
-        $donor->setUId('12345');
-        $donor->setFirstname('Example');
-        $donor->setMiddlenames('Donor');
-        $donor->setSurname('Person');
-
         $dto = new LpaAlreadyAdded();
-        $dto->setDonor($donor);
+        $dto->setDonor(self::createDonor());
         $dto->setCaseSubtype('hw');
         $dto->setLpaActorToken('abc');
         return $dto;
     }
 
-    /**
-     * Creates the key exists DTO for the data provider
-     *
-     * @return ActivationKeyExists
-     */
-    private static function createActivationKeyExistsDTO()
+    private static function createActivationKeyExistsDTO(): ActivationKeyExists
+    {
+        $dto = new ActivationKeyExists();
+        $dto->setDonor(self::createDonor());
+        $dto->setCaseSubtype('pfa');
+        return $dto;
+    }
+
+    private static function createDonor(): CaseActor
     {
         $donor = new CaseActor();
         $donor->setUId('12345');
         $donor->setFirstname('Example');
         $donor->setMiddlenames('Donor');
         $donor->setSurname('Person');
-
-        $dto = new ActivationKeyExists();
-        $dto->setDonor($donor);
-        $dto->setCaseSubtype('pfa');
-        return $dto;
+        return $donor;
     }
 
     /**
@@ -71,16 +61,51 @@ class AccessForAllApiResultTest extends TestCase
     public static function validDataTypeProvider()
     {
         return [
-            [AccessForAllResult::LPA_ALREADY_ADDED, self::createAlreadyAddedDTO()],
-            [AccessForAllResult::HAS_ACTIVATION_KEY, self::createActivationKeyExistsDTO()],
-            [AccessForAllResult::KEY_ALREADY_REQUESTED, self::createActivationKeyExistsDTO()],
-            [AccessForAllResult::DOES_NOT_MATCH, []],
-            [AccessForAllResult::NOT_ELIGIBLE, []],
-            [AccessForAllResult::NOT_FOUND, []],
-            [AccessForAllResult::SUCCESS,[]],
-            [AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING,[]],
-            [AccessForAllResult::POSTCODE_NOT_SUPPLIED,[]],
-            [AccessForAllResult::STATUS_NOT_VALID,[]],
+            [
+                AccessForAllResult::LPA_ALREADY_ADDED,
+                self::createAlreadyAddedDTO(),
+            ],
+            [
+                AccessForAllResult::HAS_ACTIVATION_KEY,
+                self::createActivationKeyExistsDTO(),
+            ],
+            [
+                AccessForAllResult::KEY_ALREADY_REQUESTED,
+                new ActivationKeyAlreadyRequested(
+                    donor: self::createDonor(),
+                    caseSubtype: 'pfa',
+                    addedDate: '2020-01-02',
+                    activationKeyDueDate: '2020-01-17',
+                ),
+            ],
+            [
+                AccessForAllResult::DOES_NOT_MATCH,
+                [],
+            ],
+            [
+                AccessForAllResult::NOT_ELIGIBLE,
+                [],
+            ],
+            [
+                AccessForAllResult::NOT_FOUND,
+                [],
+            ],
+            [
+                AccessForAllResult::SUCCESS,
+                [],
+            ],
+            [
+                AccessForAllResult::OLDER_LPA_NEEDS_CLEANSING,
+                [],
+            ],
+            [
+                AccessForAllResult::POSTCODE_NOT_SUPPLIED,
+                [],
+            ],
+            [
+                AccessForAllResult::STATUS_NOT_VALID,
+                [],
+            ],
         ];
     }
 

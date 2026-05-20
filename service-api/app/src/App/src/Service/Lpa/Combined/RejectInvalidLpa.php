@@ -8,6 +8,7 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use App\Exception\GoneException;
 use App\Exception\MissingCodeExpiryException;
 use App\Exception\NotFoundException;
+use App\Service\Equals;
 use DateTimeInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
@@ -41,9 +42,7 @@ class RejectInvalidLpa
         }
 
         // Does the donor match? If not then return nothing (Lpa not found with those details)
-        if (
-            strtolower($lpa->getData()->getDonor()->getSurname()) !== strtolower($donorSurname)
-        ) {
+        if (!Equals::lastName($lpa->getData()->getDonor()->getSurname(), $donorSurname)) {
             $this->logger->info(
                 'The donor entered by the user to view the lpa with {code} does not match',
                 ['code' => $viewerCode]

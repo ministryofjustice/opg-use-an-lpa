@@ -21,11 +21,16 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\AddAccessForAllLpa;
 use Common\Service\Lpa\LocalisedDate;
 use Common\Service\Lpa\Response\AccessForAllResult;
+use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
+use Common\Service\Lpa\Response\ActivationKeyExists;
+use Common\Service\Lpa\Response\LpaAlreadyAdded;
+use Common\Service\Lpa\Response\LpaMatch;
 use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
 use Common\Workflow\WorkflowStep;
+use DateTime;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Mezzio\Authentication\UserInterface;
 use Mezzio\Helper\UrlHelper;
@@ -152,6 +157,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
 
             switch ($result->getResponse()) {
                 case AccessForAllResult::LPA_ALREADY_ADDED:
+                    /** @var LpaAlreadyAdded $lpaAddedData */
                     $lpaAddedData = $result->getData();
 
                     return new HtmlResponse(
@@ -180,10 +186,10 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                         $this->urlHelper->generate('lpa.confirm-activation-key-generation')
                     );
 
-                    $activationKeyDueDate = date(
-                        'Y-m-d',
-                        strtotime(($result->getData()->getDueDate()))
-                    );
+                    /** @var ActivationKeyExists $data */
+                    $data = $result->getData();
+
+                    $activationKeyDueDate = date('Y-m-d', strtotime($data->getDueDate()));
 
                     return new HtmlResponse(
                         $this->renderer->render(
@@ -203,20 +209,27 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                         $this->urlHelper->generate('lpa.confirm-activation-key-generation')
                     );
 
-                    $activationKeyDueDate = date(
-                        'Y-m-d',
-                        strtotime(($result->getData()->getDueDate()))
-                    );
+                    /** @var ActivationKeyAlreadyRequested $data */
+                    $data = $result->getData();
+
+                    $activationKeyDueDate = date('Y-m-d', strtotime($data->getDueDate()));
+                    $requestedToday       = $data->getAddedDate() === (new DateTime())->format('Y-m-d');
 
                     return new HtmlResponse(
-                        $this->renderer->render(
-                            'actor::already-requested-activation-key',
-                            [
+                        $requestedToday
+                            ? $this->renderer->render('actor::already-requested-activation-key-today', [
+                                'user'           => $this->user,
+                                'dueDate'        => $activationKeyDueDate,
+                                'donorFirstname' => $data->getDonor()->getFirstname(),
+                                'donorSurname'   => $data->getDonor()->getSurname(),
+                                'caseSubtype'    => $data->getCaseSubtype(),
+                                'form'           => $form,
+                            ])
+                            : $this->renderer->render('actor::already-requested-activation-key', [
                                 'user'    => $this->user,
                                 'dueDate' => $activationKeyDueDate,
                                 'form'    => $form,
-                            ]
-                        )
+                            ])
                     );
 
                 case AccessForAllResult::DOES_NOT_MATCH:
@@ -229,6 +242,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
                         $this->urlHelper->generate('lpa.confirm-activation-key-generation')
                     );
 
+                    /** @var LpaMatch $lpaData */
                     $lpaData = $result->getData();
                     $actor   = $lpaData->getAttorney() ?? $lpaData->getDonor();
 

@@ -12,6 +12,7 @@ use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use DateTime;
+use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 use Psr\Http\Message\RequestInterface;
@@ -184,6 +185,47 @@ class RequestActivationKeyContext implements Context
             )
         );
         $this->iPressTheContinueButton();
+    }
+
+    #[When('/^I request the activation key that was requested today again$/')]
+    public function iRequestAnActivationKeyThatWasAlreadyRequestedToday(): void
+    {
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_BAD_REQUEST,
+                json_encode(
+                    [
+                        'title'   => 'Bad request',
+                        'details' => 'Activation key already requested for LPA',
+                        'data'    => [
+                            'donor'                => [
+                                'uId'        => '7000-0000-1234',
+                                'firstnames' => 'Barry',
+                                'surname'    => 'Barrington',
+                            ],
+                            'caseSubtype'          => 'hw',
+                            'lpaActorToken'        => '539953cb-8d17-e134-f61b-599d819c8734',
+                            'activationKeyDueDate' => (new DateTime())->modify('+14 days')->format('Y-m-d'),
+                            'addedDate'            => (new DateTime())->format('Y-m-d'),
+                        ],
+                    ]
+                ),
+                self::ADD_OLDER_LPA_VALIDATE,
+            )
+        );
+
+        $this->iAmOnTheRequestAnActivationKeyPage();
+        $this->iRequestAnActivationKeyWithValidDetails();
+        $this->iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey();
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->iPressTheContinueButton();
+    }
+
+    #[Then('/^I should be told that I have already requested an activation key for this LPA today$/')]
+    public function iShouldBeToldThatIHaveAlreadyRequestedAnActivationKeyForThisLpaToday(): void
+    {
+        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+        $this->ui->assertPageContainsText('You’ve already asked for an activation key for this LPA today');
     }
 
     #[Given('/^I request an activation key for an unregistered LPA$/')]
@@ -835,6 +877,12 @@ class RequestActivationKeyContext implements Context
         $this->iAmAskedToCheckMyAnswersBeforeRequestingAnActivationKey();
     }
 
+    #[Given('I have requested an activation key')]
+    public function iHaveRequestedAnActivationKey(): void
+    {
+        /* not needed */
+    }
+
     #[Given('I have requested an activation key with valid details and do not live in the UK')]
     public function iHaveRequestedAnActivationKeyWithValidDetailsAndDoNotLiveInUK(): void
     {
@@ -1442,6 +1490,7 @@ class RequestActivationKeyContext implements Context
                             ],
                             'caseSubtype'          => $this->lpa->caseSubtype,
                             'activationKeyDueDate' => '2022-01-30',
+                            'addedDate'            => '2022-01-16',
                         ],
                     ]
                 ),

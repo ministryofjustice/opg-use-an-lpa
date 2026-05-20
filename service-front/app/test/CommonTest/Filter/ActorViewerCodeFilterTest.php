@@ -40,18 +40,54 @@ class ActorViewerCodeFilterTest extends TestCase
     public static function codeFormatProvider(): array
     {
         return [
-            ['V-ABCD-1234-EFGH', 'ABCD1234EFGH'],
-            ['v-abCd-1234-EfgH', 'ABCD1234EFGH'],
-            ['V abcd 1234 efgh', 'ABCD1234EFGH'],
-            ['V - ABCD - 1234 - EFGH', 'ABCD1234EFGH'],
-            ['V   ABCD   1234   EFGH', 'ABCD1234EFGH'],
-            ['v--ABCD--1234--EFGH', 'ABCD1234EFGH'],
-            ['C-ABCD-1234-EFGH', 'ABCD1234EFGH'],
-            ['c-abCd-1234-EfgH', 'ABCD1234EFGH'],
-            ['C abcd 1234 efgh', 'ABCD1234EFGH'],
-            ['C   abcd   1234   efgh', 'ABCD1234EFGH'],
-            ['C - ABCD - 1234 - EFGH', 'ABCD1234EFGH'],
-            ['c--ABCD--1234--EFGH', 'ABCD1234EFGH'],
+            [
+                'V-ABCD-1234-EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'v-abCd-1234-EfgH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'V abcd 1234 efgh',
+                'ABCD1234EFGH',
+            ],
+            [
+                'V - ABCD - 1234 - EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'V   ABCD   1234   EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'v--ABCD--1234--EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'C-ABCD-1234-EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'c-abCd-1234-EfgH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'C abcd 1234 efgh',
+                'ABCD1234EFGH',
+            ],
+            [
+                'C   abcd   1234   efgh',
+                'ABCD1234EFGH',
+            ],
+            [
+                'C - ABCD - 1234 - EFGH',
+                'ABCD1234EFGH',
+            ],
+            [
+                'c--ABCD--1234--EFGH',
+                'ABCD1234EFGH',
+            ],
         ];
     }
 }

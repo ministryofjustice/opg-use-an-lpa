@@ -1,9 +1,9 @@
 .lpa-header-alt-1 {
-  color: govuk-colour('blue');
+  color: govuk-colour("blue");
 }
 
 .lpa-secondary-text-colour {
-  color: govuk-colour('dark-grey');
+  color: govuk-colour("black", $variant: "tint-25");
 }
 
 button.org-cancel {

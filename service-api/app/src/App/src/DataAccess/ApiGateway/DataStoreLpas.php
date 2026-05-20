@@ -82,7 +82,7 @@ class DataStoreLpas extends AbstractApiClient implements AuditableLpasInterface
             ->createRequest('POST', $url)
             ->withBody(
                 $this->streamFactory->createStream(
-                    json_encode(['uids' => $uids])
+                    json_encode(['uids' => array_values(array_unique($uids))])
                 )
             );
         $request = $this->createRequestSigner()->sign($this->attachHeaders($request));

@@ -168,14 +168,14 @@ class LpaContext implements Context
         $response = $this->getResponseAsJson();
 
         $codeExpiry = (new DateTime($response['expires']))->format('Y-m-d');
-        $in30Days   = (new DateTime(
-            '23:59:59 +30 days',
+        $in50Days   = (new DateTime(
+            '23:59:59 +50 days',
             new DateTimeZone('Europe/London')
         ))->format('Y-m-d');
 
         Assert::assertArrayHasKey('code', $response);
         Assert::assertNotNull($response['code']);
-        Assert::assertEquals($codeExpiry, $in30Days);
+        Assert::assertEquals($codeExpiry, $in50Days);
         Assert::assertEquals($response['organisation'], $this->organisation);
     }
 
@@ -259,6 +259,7 @@ class LpaContext implements Context
             ],
             'caseSubtype'   => $this->lpa->caseSubtype,
             'lpaActorToken' => $this->userLpaActorToken,
+            'added'         => (new DateTimeImmutable('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
@@ -714,6 +715,7 @@ class LpaContext implements Context
             ],
             'caseSubtype'          => $this->lpa->caseSubtype,
             'activationKeyDueDate' => $activationKeyDueDate,
+            'addedDate'            => '2020-01-01',
         ];
 
         $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);

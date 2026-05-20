@@ -33,9 +33,3 @@ jobs:
           cd service-front/web/
           mkdir -p ./test-results/junit
           ./node_modules/.bin/jest --ci --runInBand --reporters=summary --reporters=github-actions --reporters=jest-junit
-      - name: test summary
-        uses: test-summary/action@31493c76ec9e7aa675f1585d3ed6f1da69269a86 # v2.4
-        with:
-          paths: |
-            **/service-front/web/test-results/junit/results.xml
-        if: always()

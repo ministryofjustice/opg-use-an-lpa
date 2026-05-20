@@ -106,3 +106,9 @@ Feature: Ask for an activation key
     Given I am on the add an LPA reference number page
     When I click the Cancel link
     Then I am redirected to the LPA dashboard page
+
+  @ui
+  Scenario: The user is shown an error message when attempting to request activation keys for the same LPA twice on the same day
+    Given I have requested an activation key
+    When I request the activation key that was requested today again
+    Then I should be told that I have already requested an activation key for this LPA today

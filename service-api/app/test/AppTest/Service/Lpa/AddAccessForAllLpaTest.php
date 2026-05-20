@@ -221,6 +221,7 @@ class AddAccessForAllLpaTest extends TestCase
             'lpaActorToken'        => 'qwerty-54321',
             'activationKeyDueDate' => $activationKeyDueDate,
             'notActivated'         => true,
+            'added'                => $createdDate,
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -238,14 +239,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->lpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $expectedException = new LpaActivationKeyAlreadyRequestedException(
-            [
-                'donor'                => $this->lpaData->getDonor(),
-                'caseSubtype'          => $this->lpaData->getCaseSubtype(),
-                'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
-            ]
-        );
-
+        $expectedException = new LpaActivationKeyAlreadyRequestedException([]);
         $this->expectExceptionObject($expectedException);
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }
@@ -270,6 +264,7 @@ class AddAccessForAllLpaTest extends TestCase
             'lpaActorToken'        => 'qwerty-54321',
             'activationKeyDueDate' => $activationKeyDueDate,
             'notActivated'         => true,
+            'added'                => $createdDate,
         ];
 
         $this->lpaAlreadyAddedProphecy
@@ -287,14 +282,7 @@ class AddAccessForAllLpaTest extends TestCase
             ->__invoke($this->siriusLpaData, $this->dataToMatch)
             ->willReturn($this->resolvedActor);
 
-        $expectedException = new LpaActivationKeyAlreadyRequestedException(
-            [
-                'donor'                => $this->siriusLpaData->getDonor(),
-                'caseSubtype'          => $this->siriusLpaData->getCaseSubtype(),
-                'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
-            ]
-        );
-
+        $expectedException = new LpaActivationKeyAlreadyRequestedException([]);
         $this->expectExceptionObject($expectedException);
         $this->getSut()->validateRequest($this->userId, $this->dataToMatch);
     }

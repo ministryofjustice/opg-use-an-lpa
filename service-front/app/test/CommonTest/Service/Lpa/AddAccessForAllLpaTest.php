@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Lpa;
 
+use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -15,6 +16,7 @@ use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Common\Service\Lpa\Response\LpaMatch;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyAlreadyRequested;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
@@ -38,16 +40,18 @@ class AddAccessForAllLpaTest extends TestCase
     private ObjectProphecy|ApiClient $apiClientProphecy;
     private ObjectProphecy|LoggerInterface $loggerProphecy;
     private ObjectProphecy|ParseActivationKeyExists $parseKeyExistsProphecy;
+    private ObjectProphecy|ParseActivationKeyAlreadyRequested $parseKeyAlreadyRequestedProphecy;
     private ObjectProphecy|ParseLpaAlreadyAdded $parseAlreadyAddedProphecy;
     private ObjectProphecy|ParseLpaMatch $parseOlderLpaMatchProphecy;
 
     public function setUp(): void
     {
-        $this->apiClientProphecy          = $this->prophesize(ApiClient::class);
-        $this->loggerProphecy             = $this->prophesize(LoggerInterface::class);
-        $this->parseKeyExistsProphecy     = $this->prophesize(ParseActivationKeyExists::class);
-        $this->parseAlreadyAddedProphecy  = $this->prophesize(ParseLpaAlreadyAdded::class);
-        $this->parseOlderLpaMatchProphecy = $this->prophesize(ParseLpaMatch::class);
+        $this->apiClientProphecy                = $this->prophesize(ApiClient::class);
+        $this->loggerProphecy                   = $this->prophesize(LoggerInterface::class);
+        $this->parseKeyExistsProphecy           = $this->prophesize(ParseActivationKeyExists::class);
+        $this->parseKeyAlreadyRequestedProphecy = $this->prophesize(ParseActivationKeyAlreadyRequested::class);
+        $this->parseAlreadyAddedProphecy        = $this->prophesize(ParseLpaAlreadyAdded::class);
+        $this->parseOlderLpaMatchProphecy       = $this->prophesize(ParseLpaMatch::class);
 
         $this->olderLpa = [
             'reference_number' => '700000000000',
@@ -64,6 +68,7 @@ class AddAccessForAllLpaTest extends TestCase
             $this->loggerProphecy->reveal(),
             $this->parseAlreadyAddedProphecy->reveal(),
             $this->parseKeyExistsProphecy->reveal(),
+            $this->parseKeyAlreadyRequestedProphecy->reveal(),
             $this->parseOlderLpaMatchProphecy->reveal()
         );
     }
@@ -130,9 +135,18 @@ class AddAccessForAllLpaTest extends TestCase
     public static function exceptionThrown(): array
     {
         return [
-            ['LPA not eligible due to registration date', AccessForAllResult::NOT_ELIGIBLE],
-            ['LPA details do not match', AccessForAllResult::DOES_NOT_MATCH],
-            ['LPA status invalid', AccessForAllResult::STATUS_NOT_VALID],
+            [
+                'LPA not eligible due to registration date',
+                AccessForAllResult::NOT_ELIGIBLE,
+            ],
+            [
+                'LPA details do not match',
+                AccessForAllResult::DOES_NOT_MATCH,
+            ],
+            [
+                'LPA status invalid',
+                AccessForAllResult::STATUS_NOT_VALID,
+            ],
         ];
     }
 
@@ -271,11 +285,14 @@ class AddAccessForAllLpaTest extends TestCase
         $donor->setMiddlenames($response['donor']['middlenames']);
         $donor->setSurname($response['donor']['surname']);
 
-        $dto = new ActivationKeyExists();
-        $dto->setDonor($donor);
-        $dto->setCaseSubtype($response['caseSubtype']);
+        $dto = new ActivationKeyAlreadyRequested(
+            addedDate: '2020-12-01',
+            donor: $donor,
+            caseSubtype: $response['caseSubtype'],
+            activationKeyDueDate: '2020-12-16',
+        );
 
-        $this->parseKeyExistsProphecy
+        $this->parseKeyAlreadyRequestedProphecy
             ->__invoke($response)
             ->willReturn($dto);
 

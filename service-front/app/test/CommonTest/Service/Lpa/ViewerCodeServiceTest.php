@@ -42,7 +42,7 @@ class ViewerCodeServiceTest extends TestCase
     {
         $lpaId      = '700000000047';
         $viewerCode = '123456789012';
-        $expiry     = (new DateTime('now +30 days'))->format('c');
+        $expiry     = (new DateTime('now +50 days'))->format('c');
         $orgName    = 'Test Org';
 
         $return = [
@@ -172,7 +172,7 @@ class ViewerCodeServiceTest extends TestCase
     public function it_orders_viewercode_by_order_of_added_date(): void
     {
         $lpaId  = '98765432-01234-01234-01234-012345678901';
-        $expiry = (new DateTime('now +30 days'))->format('c');
+        $expiry = (new DateTime('now +50 days'))->format('c');
 
         $shareCodes = [
             0 => [

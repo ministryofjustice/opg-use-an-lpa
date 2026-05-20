@@ -63,6 +63,12 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPASeedGithubAction
 
+      - name: Setup Go
+        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
+        with:
+          go-version: "^1.23.4"
+          cache-dependency-path: "scripts/seed_lpas_and_codes/go.sum"
+
       - name: seed dynamodb
         run: |
           export DYNAMODB_TABLE_ACTOR_CODES=$(cat ./terraform/environment/cluster_config.json | jq .actor_lpa_codes_table | xargs)
@@ -72,11 +78,11 @@ jobs:
           export DYNAMODB_TABLE_STATS=$(cat ./terraform/environment/cluster_config.json | jq .stats_table | xargs)
           python service-api/seeding/dynamodb.py
 
-      - name: Setup Go
-        uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
-        with:
-          go-version: "^1.23.4"
-          cache-dependency-path: "scripts/seed_lpas_and_codes/go.sum"
+          ACCOUNT_ID=$(cat ./terraform/environment/cluster_config.json | jq .account_id | xargs)
+          export USER_LPA_ACTOR_MAP_TABLE_ARN="arn:aws:dynamodb:eu-west-1:$ACCOUNT_ID:table/$DYNAMODB_TABLE_USER_LPA_ACTOR_MAP"
+          export VIEWER_CODES_TABLE_ARN="arn:aws:dynamodb:eu-west-1:$ACCOUNT_ID:table/$DYNAMODB_TABLE_VIEWER_CODES"
+          cd scripts/seed_lpas_and_codes
+          go run -v main.go
 
       - name: configure AWS credentials for lpa-store seeding
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1

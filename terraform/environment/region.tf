@@ -48,9 +48,9 @@ module "eu_west_1" {
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning
-  ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
-  sirius_account_id                                = local.environment.sirius_account_id
-  lpa_store_account_id                             = local.environment.lpa_store_account_id
+  # ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
+  sirius_account_id    = local.environment.sirius_account_id
+  lpa_store_account_id = local.environment.lpa_store_account_id
 
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
@@ -72,7 +72,6 @@ module "eu_west_1" {
   feature_flags = {
     "allow_meris_lpas"             = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar" = local.environment.deploy_opentelemetry_sidecar
-    "delete_lpa_feature"           = local.environment.application_flags.delete_lpa_feature
     "support_datastore_lpas"       = local.environment.application_flags.support_datastore_lpas
     "paper_verification"           = local.environment.application_flags.paper_verification
   }
@@ -139,9 +138,9 @@ module "eu_west_2" {
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning
-  ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
-  sirius_account_id                                = local.environment.sirius_account_id
-  lpa_store_account_id                             = local.environment.lpa_store_account_id
+  # ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
+  sirius_account_id    = local.environment.sirius_account_id
+  lpa_store_account_id = local.environment.lpa_store_account_id
 
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
@@ -163,7 +162,6 @@ module "eu_west_2" {
   feature_flags = {
     "allow_meris_lpas"             = local.environment.application_flags.allow_meris_lpas
     "deploy_opentelemetry_sidecar" = local.environment.deploy_opentelemetry_sidecar
-    "delete_lpa_feature"           = local.environment.application_flags.delete_lpa_feature
     "support_datastore_lpas"       = local.environment.application_flags.support_datastore_lpas
     "paper_verification"           = local.environment.application_flags.paper_verification
   }

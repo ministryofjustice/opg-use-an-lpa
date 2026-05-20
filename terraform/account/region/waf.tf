@@ -72,8 +72,98 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
   rule {
-    name     = "AWS-AWSManagedRulesCommonRuleSet"
+    name     = "BlockSuspiciousURIPatterns"
     priority = 3
+
+    action {
+      block {}
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
+
+        field_to_match {
+          uri_path {}
+        }
+
+        text_transformation {
+          priority = 0
+          type     = "LOWERCASE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "BlockSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "RateLimitSuspiciousURIPatterns"
+    priority = 4
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 10
+        aggregate_key_type = "IP"
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "AWS-AWSManagedRulesBotControlRuleSet"
+    priority = 5
+
+    override_action {
+      count {} # start in count mode
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesBotControlRuleSet"
+        vendor_name = "AWS"
+
+        managed_rule_group_configs {
+          aws_managed_rules_bot_control_rule_set {
+            inspection_level = "COMMON"
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWS-AWSManagedRulesBotControlRuleSet"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "AWS-AWSManagedRulesCommonRuleSet"
+    priority = 6
 
     override_action {
       none {}
@@ -104,7 +194,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   rule {
     name     = "RateLimitSessionCheck"
-    priority = 4
+    priority = 7
 
     action {
       block {}
@@ -153,7 +243,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   rule {
     name     = "RateLimitByIP"
-    priority = 5
+    priority = 8
 
     action {
       block {}
@@ -178,6 +268,18 @@ resource "aws_wafv2_web_acl" "main" {
     cloudwatch_metrics_enabled = true
     metric_name                = "${var.account_name}-web-acl"
     sampled_requests_enabled   = true
+  }
+
+  provider = aws.region
+}
+
+resource "aws_wafv2_regex_pattern_set" "suspicious_uri_patterns" {
+  name        = "suspicious-uri-patterns"
+  description = "Regex pattern set for suspicious URI patterns"
+  scope       = "REGIONAL"
+
+  regular_expression {
+    regex_string = "(?i)\\.(env|git|sql|bak|php|asp|aspx|cgi|sh|exe|tar|gz|tgz|zip|rar|7z|z|bz2|lz|xz|db|sqlite|sqlitedb|war|jar|config|conf|ini|log|pem|key|p12|pfx|crt|ovpn|htaccess|htpasswd|DS_Store|swp)$"
   }
 
   provider = aws.region

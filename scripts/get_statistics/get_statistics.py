@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 class StatisticsCollector:
     aws_cloudwatch_client = ''
     aws_dynamodb_client = ''
+    aws_iam_session = ''
     dynamodb_scan_paginator = ''
     environment = ''
     startdate = ''
@@ -17,50 +18,51 @@ class StatisticsCollector:
     metrics_list = []
 
     def __init__(self, environment, startdate, enddate):
-        aws_account_ids = {
-            'production': "690083044361",
-            'preproduction': "888228022356",
-            'development': "367815980639",
-        }
         self.environment = environment
-        aws_account_id = aws_account_ids.get(
-            self.environment, "367815980639")
+        self.set_iam_role_session()
 
-        aws_iam_session = self.set_iam_role_session(aws_account_id)
-        self.aws_cloudwatch_client = boto3.client(
-            'cloudwatch',
-            region_name='eu-west-1',
-            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
+        if self.aws_iam_session:
+            self.aws_cloudwatch_client = boto3.client(
+                'cloudwatch',
+                region_name='eu-west-1',
+                aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+                aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+                aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
 
-        self.aws_dynamodb_client = boto3.client(
-            'dynamodb',
-            region_name='eu-west-1',
-            aws_access_key_id=aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=aws_iam_session['Credentials']['SessionToken'])
+            self.aws_dynamodb_client = boto3.client(
+                'dynamodb',
+                region_name='eu-west-1',
+                aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
+                aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
+                aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+        else:
+            self.aws_cloudwatch_client = boto3.client(
+                'cloudwatch',
+                region_name='eu-west-1',
+            )
+
+            self.aws_dynamodb_client = boto3.client(
+                'dynamodb',
+                region_name='eu-west-1',
+            )
 
         self.dynamodb_scan_paginator = self.aws_dynamodb_client.get_paginator("scan")
 
         self.format_dates(startdate, enddate)
 
-    def set_iam_role_session(self, aws_account_id):
+    def set_iam_role_session(self):
         if os.getenv('CI'):
-            role_arn = 'arn:aws:iam::{}:role/opg-use-an-lpa-ci'.format(
-                aws_account_id)
+            # don't assume role in CI, use OIDC creds
+            self.aws_iam_session = None
         else:
-            role_arn = 'arn:aws:iam::{}:role/breakglass'.format(
-                aws_account_id)
-
-        sts = boto3.client(
-            'sts',
-            region_name='eu-west-1')
-        session = sts.assume_role(
-            RoleArn=role_arn,
-            RoleSessionName='getting_service_statistics',
-            DurationSeconds=900)
-        return session
+            sts = boto3.client(
+                'sts',
+                region_name='eu-west-1')
+            session = sts.assume_role(
+                RoleArn='arn:aws:iam::690083044361:role/breakglass',
+                RoleSessionName='getting_service_statistics',
+                DurationSeconds=900)
+            self.aws_iam_session = session
 
     def format_dates(self, startdate, enddate):
         self.startdate = datetime.date.fromisoformat(

@@ -9,6 +9,7 @@ use Common\Service\ApiClient\Client as ApiClient;
 use Common\Service\Log\EventCodes;
 use Common\Service\Lpa\Response\AccessForAllResult;
 use Common\Service\Lpa\Response\Parse\ParseLpaMatch;
+use Common\Service\Lpa\Response\Parse\ParseActivationKeyAlreadyRequested;
 use Common\Service\Lpa\Response\Parse\ParseActivationKeyExists;
 use Common\Service\Lpa\Response\Parse\ParseLpaAlreadyAdded;
 use DateTimeInterface;
@@ -33,11 +34,6 @@ class AddAccessForAllLpa
     private const LPA_STATE_INVALID         = 'LPA status invalid';
 
     /**
-     * @param ApiClient                $apiClient
-     * @param LoggerInterface          $logger
-     * @param ParseLpaAlreadyAdded     $parseLpaAlreadyAddedResponse
-     * @param ParseActivationKeyExists $parseActivationKeyExistsResponse
-     * @param ParseLpaMatch            $parseAccessForAllLpaMatchResponse
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -45,6 +41,7 @@ class AddAccessForAllLpa
         private LoggerInterface $logger,
         private ParseLpaAlreadyAdded $parseLpaAlreadyAddedResponse,
         private ParseActivationKeyExists $parseActivationKeyExistsResponse,
+        private ParseActivationKeyAlreadyRequested $parseActivationKeyAlreadyRequestedResponse,
         private ParseLpaMatch $parseAccessForAllLpaMatchResponse,
     ) {
     }
@@ -190,7 +187,7 @@ class AddAccessForAllLpa
                 $code     = EventCodes::OLDER_LPA_KEY_ALREADY_REQUESTED;
                 $response = new AccessForAllApiResult(
                     AccessForAllResult::KEY_ALREADY_REQUESTED,
-                    ($this->parseActivationKeyExistsResponse)($additionalData)
+                    ($this->parseActivationKeyAlreadyRequestedResponse)($additionalData)
                 );
                 break;
 

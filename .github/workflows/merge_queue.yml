@@ -218,6 +218,9 @@ jobs:
               echo "Preproduction environment tested, built and deployed"
               echo "Tag Used: integration-${{ needs.workflow_variables.outputs.semver_tag }}"
               exit 0
+          elif [[ ${{ needs.workflow_variables.outputs.specific_path }} = 'docs' ]]; then
+            echo 'Ending docs workflow'
+            exit 0
           else
           echo "Previous jobs in pipeline failed."
           exit 1
