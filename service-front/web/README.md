@@ -4,8 +4,8 @@ The aim of this project is to create a shared resource of CSS and JS to be used 
 
 The service automatically runs on docker-compose up. However you can run it independently using the following commands
 
-- `npm run build` (This runs a one off production build of all assets)
-- `npm run build` (This runs webpack in watch mode for development meaning any changes will automatically get recompiled)
+- `docker compose run --rm npm run build` (This runs a one off production build of all assets)
+- `docker compose run --rm npm run build` (This runs webpack in watch mode for development meaning any changes will automatically get recompiled)
 
 # Testing
 
@@ -17,8 +17,8 @@ Coverage is fed into codecov for easy reporting via Github and will fail the bui
 
 You can run the test by running the following
 
-`npm run test` - This will run tests and generate a coverage report
-`npm run test:watch` - This will run tests without coverage but in a watch state so you can get instant feedback when developing.
+`docker compose run --rm npm run test` - This will run tests and generate a coverage report
+`docker compose run --rm npm run test:watch` - This will run tests without coverage but in a watch state so you can get instant feedback when developing.
 
 ## SCSS
 

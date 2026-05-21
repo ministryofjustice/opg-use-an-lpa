@@ -5,13 +5,12 @@ services:
   # ---------------------------
   # Asset build
 
-  esbuild:
-    container_name: esbuild
+  npm:
     build:
       context: .
       dockerfile: service-front/web/Dockerfile
-    entrypoint: >
-      sh -c "npm ci --verbose --ignore-scripts && npm run build"
+    entrypoint: npm
+    command: run build
     volumes:
       - ./service-front/web:/web:rw
       - esbuild:/web/dist
@@ -31,7 +30,7 @@ services:
       APP_HOST: viewer-app
       APP_PORT: 9000
     depends_on:
-      - esbuild
+      - npm
       - viewer-app
 
   viewer-app:
@@ -81,7 +80,7 @@ services:
       APP_HOST: actor-app
       APP_PORT: 9000
     depends_on:
-      - esbuild
+      - npm
       - actor-app
 
   actor-app:
