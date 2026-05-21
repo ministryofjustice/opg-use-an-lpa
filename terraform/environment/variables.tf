@@ -89,9 +89,10 @@ variable "environments" {
         backups_enabled                 = bool
         daily_backup_deletion_in_days   = number
         daily_cold_storage_in_days      = number
+        have_a_backup_plan              = bool
         monthly_backup_deletion_in_days = number
         monthly_cold_storage_in_days    = number
-        have_a_backup_plan              = bool
+        region_replication_enabled      = bool
       })
       dynamodb_tables = object({
         cmk_encryption_enabled      = bool

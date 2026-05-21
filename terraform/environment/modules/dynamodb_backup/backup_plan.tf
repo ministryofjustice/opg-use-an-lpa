@@ -15,7 +15,7 @@ resource "aws_backup_plan" "main" {
     }
 
     copy_action {
-      destination_vault_arn = aws_backup_vault.replica.arn
+      destination_vault_arn = aws_backup_vault.replica[0].arn
       lifecycle {
         cold_storage_after = var.daily_backup_cold_storage
         delete_after       = var.daily_backup_deletion
@@ -36,7 +36,7 @@ resource "aws_backup_plan" "main" {
     }
 
     copy_action {
-      destination_vault_arn = aws_backup_vault.replica.arn
+      destination_vault_arn = aws_backup_vault.replica[0].arn
       lifecycle {
         cold_storage_after = var.monthly_backup_cold_storage
         delete_after       = var.monthly_backup_deletion
