@@ -16,7 +16,6 @@ class PotGenerator
     public function __construct(
         private GeneratorInterface $writer,
         private string $localePath = 'languages/',
-        private string $defaultLocale = 'en_GB',
     ) {
     }
 
@@ -35,7 +34,6 @@ class PotGenerator
 
     protected function writeFile(Translations $translations, string $domain): bool
     {
-        $translations->getHeaders()->setLanguage($this->defaultLocale);
         $translations->getHeaders()->set('POT-Creation-Date', (new DateTime())->format('c'));
 
         return $this->writer->generateFile($translations, sprintf('%s%s.pot', $this->localePath, $domain));

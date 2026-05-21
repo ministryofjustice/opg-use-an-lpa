@@ -46,7 +46,7 @@ build:
 .PHONY: build
 
 build_frontend_assets:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run build"
+	$(COMPOSE) run --rm npm run build
 .PHONY: build_frontend_assets
 
 rebuild:
@@ -102,7 +102,7 @@ unit_test_actor_app:
 .PHONY: unit_test_actor_app
 
 unit_test_javascript:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm run test"
+	$(COMPOSE) run --rm npm test
 .PHONY: unit_test_actor_app
 
 unit_test_api_app:
@@ -147,7 +147,7 @@ run_front_composer_update:
 .PHONY: run_front_composer_update
 
 run_front_npm_update:
-	$(COMPOSE) run --rm --entrypoint="/bin/sh -c" esbuild "npm update"
+	$(COMPOSE) run --rm npm update
 .PHONY: run_front_npm_update
 
 run_api_composer_update:
@@ -173,6 +173,12 @@ clear_config_cache:
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
+
+service-front/app/languages/%/LC_MESSAGES/messages.mo: service-front/app/languages/%/LC_MESSAGES/messages.po
+	msgfmt -o $@ $^
+
+.PHONY: msgfmt
+msgfmt: service-front/app/languages/cy/LC_MESSAGES/messages.mo service-front/app/languages/en_GB/LC_MESSAGES/messages.mo
 
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048

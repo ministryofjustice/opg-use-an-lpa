@@ -26,10 +26,9 @@ jobs:
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
-            cd ./service-front/web/ && npm ci --ignore-scripts
+            docker compose run --rm npm ci --ignore-scripts
           fi
       - name: run tests with jest
         run: |
-          cd service-front/web/
           mkdir -p ./test-results/junit
-          ./node_modules/.bin/jest --ci --runInBand --reporters=summary --reporters=github-actions --reporters=jest-junit
+          docker compose run --rm --volume $(pwd)/test-results:/web/test-results npm run jest --ci --runInBand --reporters=summary --reporters=github-actions --reporters=jest-junit

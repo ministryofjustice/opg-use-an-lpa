@@ -66,6 +66,18 @@ class EventCodes
     public const string AUTH_ONELOGIN_ACCOUNT_RECOVERED = 'AUTH_ONELOGIN_ACCOUNT_RECOVERED';
 
     /**
+     * During a login attempt an account was matched by email that did not contain the expected identity.
+     */
+    public const string AUTH_ONELOGIN_ACCOUNT_CONTAINS_IDENTITY = 'AUTH_ONE_LOGIN_ACCOUNT_CONTAINS_IDENTITY';
+
+    /**
+     * A one login authentication transaction resulted in a new local account being created but an orphan
+     * IDENTITY# record had to be ignored.
+     */
+    public const string AUTH_ONELOGIN_ACCOUNT_CREATED_WITH_ORPHAN_BYPASS
+        = 'AUTH_ONELOGIN_ACCOUNT_CREATED_WITH_ORPHAN_BYPASS';
+
+    /**
      * Whilst retrieving an LPA from upstream sources, using information that refers to it,
      * the LPA was not found.
      */

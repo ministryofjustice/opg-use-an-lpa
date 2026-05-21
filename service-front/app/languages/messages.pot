@@ -1,6 +1,5 @@
 msgid ""
 msgstr ""
-"Language: en_GB\n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
 "X-Domain: messages\n"
 
