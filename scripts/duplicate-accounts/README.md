@@ -1,9 +1,23 @@
 # Merge duplicate accounts
 
-This Read me explains the Layer 1 plan for the merge duplicate account functionality.
+This script identifies duplicate OneLogin identities from the `ActorUsers` Athena table and exports the duplicate account dataset to S3 in JSON format.
+
+The exported dataset is intended to act as the source input for downstream duplicate account merge planning workflows.
+
+This script forms Layer 1 of the duplicate account merge process.
 
 ### Objective:
 Find duplicate OneLogin identities from the ActorUsers table and export them as a JSON dataset to S3.
+
+### High Level Flow
+
+The script performs the following steps:
+
+1. Execute an Athena query against the `ActorUsers` dataset
+2. Identify duplicate OneLogin identities
+3. Group associated account IDs by identity
+4. Generate a JSON dataset
+5. Upload the dataset to S3
 
 
 ## Athena Query
@@ -33,24 +47,74 @@ identity-2,user-c
 
 THe Python script should transform csv result into JSON format
 
-### Requirements for the script
+### Requirements
+
+## AWS serviecs
+Script needs access to
+- Athena
+- S3
+
 Script name: TransformAthenaCSVToJson.py
+
+## Python dependencies
 ```
-boto3
+pip install boto3
 ```
 
-This script performs the below:
+## AWS permissions
+The executing role needs permissions to
 
-1. Connect to DynamoDB
-2. Scan ActorUsers table
-3. Group users by Identity
-4. Keep only duplicate identities
-5. Build JSON output
-6. Upload JSON file to S3
+- Athena
+  - `athena:StartQueryExecution`
+  - `athena:GetQueryExecution`
+  - `athena:GetQueryResults`
 
-### Script output
+- S3
+  - `s3:PutObject`
+  - `s3:GetObject`
+  - `s3:ListBucket`
+
+### Configuration
+
+The following values are currently configured directly in the script:
+
+```python
+DATABASE = "your_athena_database"
+OUTPUT_BUCKET = "duplicate-accounts-bucket"
+OUTPUT_PREFIX = "inputs"
 ```
-s3://duplicate-accounts-bucket/inputs/duplicate-identities-20260521T184500Z.json
+
+These should eventually become command-line arguments or environment variables.
+
+# Running the Script
+
+```
+python export_duplicate_identities.py
+```
+
+The script must be run from a CloudShell or Cloud9 environment.
+
+### Athena output files
+
+Athena writes temporary query result files to:
+
+```
+s3://<bucket>/athena-results/
+```
+
+These files are intermediary Athena artifacts and are separate from the final exported JSON dataset.
+
+### Final Script output
+
+The final JSON dataset is uploaded to:
+
+```
+s3://<bucket>/<prefix>/duplicate-identities-<timestamp>.json
+```
+
+Example:
+```
+s3://duplicate-accounts-bucket/inputs/duplicate-identities-20260521T120000Z.json
 ```
 
 ### Contents of JSON file should look like
@@ -94,10 +158,4 @@ eg:
     s3://duplicate-accounts-bucket/inputs/duplicate-identities-20260521T184500Z.json
 
     Complete
-```
-
-### Athena output files
-
-```
-
 ```
