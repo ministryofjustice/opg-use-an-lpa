@@ -7,7 +7,9 @@
   "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
     "test": "CI=true jest --coverage",
+    "jest": "jest",
     "test:watch": "jest --watch",
+    "install-and-build": "npm ci --ignore-scripts && npm run build",
     "build": " npm run build-scss && BABEL_ENV=build babel src --out-dir dist && node build.js",
     "accessibility-check": "node ./pa11y.js",
     "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
