@@ -13,7 +13,3 @@ RUN apk add --no-cache \
   ttf-freefont
 
 WORKDIR /web
-
-COPY service-front/web/package.json .
-COPY service-front/web/package-lock.json .
-RUN npm ci --ignore-scripts

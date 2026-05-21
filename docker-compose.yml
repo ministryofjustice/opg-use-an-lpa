@@ -10,7 +10,7 @@ services:
       context: .
       dockerfile: service-front/web/Dockerfile
     entrypoint: npm
-    command: run build
+    command: run install-and-build
     volumes:
       - ./service-front/web:/web:rw
       - esbuild:/web/dist
