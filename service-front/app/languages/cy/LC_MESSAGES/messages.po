@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-05-26 08:52+0000\n"
+"PO-Revision-Date: 2026-05-26 11:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -13,8 +13,9 @@ msgstr ""
 "X-Generator: Poedit 3.9\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
+#, fuzzy
 msgid "This LPA has restrictions and conditions.<br>"
-msgstr "Mae gan yr LPA hon cyfyngiadau ac amodau!<br>"
+msgstr "Mae gan yr LPA hon cyfyngiadau ac amodau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:12
 msgid "This LPA has instructions.<br>"
