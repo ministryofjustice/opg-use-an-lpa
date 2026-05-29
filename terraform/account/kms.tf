@@ -213,7 +213,8 @@ module "dynamodb_encryption_key" {
 
   administrator_roles = [
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci"
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/opg-use-an-lpa-ci"
   ]
   decryption_roles = ["*"]
   encryption_roles = ["*"]
@@ -230,6 +231,7 @@ module "dynamodb_encryption_key" {
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
+      "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
     ],
     local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : []
   )
@@ -240,12 +242,14 @@ module "dynamodb_encryption_key" {
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
+      "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
     ],
     local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : [],
     local.environment == "production" ? ["use-a-lpa-github-actions-get-statistics"] : []
   )
   caller_accounts = [
     data.aws_caller_identity.current.account_id,
+    data.aws_caller_identity.backup.account_id
   ]
 }
 
