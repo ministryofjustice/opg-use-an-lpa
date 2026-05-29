@@ -89,7 +89,6 @@ variable "environments" {
         backups_enabled                 = bool
         daily_backup_deletion_in_days   = number
         daily_cold_storage_in_days      = number
-        have_a_backup_plan              = bool
         monthly_backup_deletion_in_days = number
         monthly_cold_storage_in_days    = number
         region_replication_enabled      = bool
