@@ -42,3 +42,8 @@ variable "replica_region" {
   description = "The region where backups will be replicated to"
   default     = "eu-west-2"
 }
+
+variable "cross_account_backup_enabled" {
+  type        = bool
+  description = "Whether to enable cross-account backup replication"
+}

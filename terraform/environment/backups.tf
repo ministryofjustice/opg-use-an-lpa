@@ -2,7 +2,8 @@ module "dynamodb_backup" {
   count  = local.environment.dynamodb_backups.backups_enabled ? 1 : 0
   source = "./modules/dynamodb_backup"
   providers = {
-    aws = aws.eu_west_1
+    aws        = aws.eu_west_1
+    aws.backup = aws.backup
   }
   daily_backup_cold_storage   = local.environment.dynamodb_backups.daily_cold_storage_in_days
   daily_backup_deletion       = local.environment.dynamodb_backups.daily_backup_deletion_in_days
