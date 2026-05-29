@@ -72,8 +72,43 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
   rule {
-    name     = "BlockSuspiciousURIPatterns"
+    name     = "RateLimitSuspiciousURIPatterns"
     priority = 3
+
+    action {
+      block {}
+    }
+
+    statement {
+      rate_based_statement {
+        limit                 = 10
+        aggregate_key_type    = "IP"
+        evaluation_window_sec = 60
+
+        scope_down_statement {
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 0
+              type     = "LOWERCASE"
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "RateLimitSuspiciousURIPatterns"
+      sampled_requests_enabled   = true
+    }
+  }
+  rule {
+    name     = "BlockSuspiciousURIPatterns"
+    priority = 4
 
     action {
       block {}
@@ -97,40 +132,6 @@ resource "aws_wafv2_web_acl" "main" {
     visibility_config {
       cloudwatch_metrics_enabled = true
       metric_name                = "BlockSuspiciousURIPatterns"
-      sampled_requests_enabled   = true
-    }
-  }
-  rule {
-    name     = "RateLimitSuspiciousURIPatterns"
-    priority = 4
-
-    action {
-      block {}
-    }
-
-    statement {
-      rate_based_statement {
-        limit              = 10
-        aggregate_key_type = "IP"
-
-        scope_down_statement {
-          regex_pattern_set_reference_statement {
-            arn = aws_wafv2_regex_pattern_set.suspicious_uri_patterns.arn
-            field_to_match {
-              uri_path {}
-            }
-            text_transformation {
-              priority = 0
-              type     = "LOWERCASE"
-            }
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "RateLimitSuspiciousURIPatterns"
       sampled_requests_enabled   = true
     }
   }
