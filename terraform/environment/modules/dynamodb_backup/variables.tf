@@ -1,3 +1,8 @@
+variable "account_name" {
+  type        = string
+  description = "AWS account name to use in resource names"
+}
+
 variable "environment_name" {
   type        = string
   description = "Environment name to use in resource names"
