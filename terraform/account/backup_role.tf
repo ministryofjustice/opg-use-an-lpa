@@ -1,3 +1,4 @@
+# Remove this backup vault once the backups have expired in the vault
 resource "aws_backup_vault" "main" {
   name = "${local.environment}_main_backup_vault"
 
