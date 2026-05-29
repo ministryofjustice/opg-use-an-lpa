@@ -1,17 +1,16 @@
 module "dynamodb_backup" {
   count  = local.environment.dynamodb_backups.backups_enabled ? 1 : 0
   source = "./modules/dynamodb_backup"
-  providers = {
-    aws        = aws.eu_west_1
-    aws.backup = aws.backup
-  }
-  daily_backup_cold_storage   = local.environment.dynamodb_backups.daily_cold_storage_in_days
-  daily_backup_deletion       = local.environment.dynamodb_backups.daily_backup_deletion_in_days
-  environment_name            = local.environment_name
-  key_alias                   = data.aws_kms_alias.backup_key_alias.name
-  monthly_backup_cold_storage = local.environment.dynamodb_backups.monthly_cold_storage_in_days
-  monthly_backup_deletion     = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
-  region_replication_enabled  = local.environment.dynamodb_backups.region_replication_enabled
+
+  account_name                 = local.environment.account_name
+  cross_account_backup_enabled = local.environment.dynamodb_backups.cross_account_backup_enabled
+  daily_backup_cold_storage    = local.environment.dynamodb_backups.daily_cold_storage_in_days
+  daily_backup_deletion        = local.environment.dynamodb_backups.daily_backup_deletion_in_days
+  environment_name             = local.environment_name
+  key_alias                    = data.aws_kms_alias.backup_key_alias.name
+  monthly_backup_cold_storage  = local.environment.dynamodb_backups.monthly_cold_storage_in_days
+  monthly_backup_deletion      = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
+  region_replication_enabled   = local.environment.dynamodb_backups.region_replication_enabled
   dynamodb_table_arns_to_backup = [
     aws_dynamodb_table.use_codes_table.arn,
     aws_dynamodb_table.use_users_table.arn,
@@ -20,6 +19,10 @@ module "dynamodb_backup" {
     aws_dynamodb_table.user_lpa_actor_map.arn,
     aws_dynamodb_table.stats_table.arn,
   ]
+  providers = {
+    aws        = aws.eu_west_1
+    aws.backup = aws.backup
+  }
 }
 
 data "aws_kms_alias" "backup_key_alias" {
