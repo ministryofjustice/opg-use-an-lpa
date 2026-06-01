@@ -38,12 +38,12 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
       workspace_name: ${{ steps.set_workspace_name.outputs.workspace_name }}
-      detect_app_code_changes: ${{ steps.changed-files-app.outputs.any_changed }}
+      detect_app_code_changes: ${{ steps.changed-files-app.outputs.has_changes }}
 
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Set safe branch name
         id: safe_branch_name
@@ -51,16 +51,16 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
         with:
-          files: |
+          paths: |
             service-admin/**
 
       - name: get changed files in app code
         id: changed-files-app
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
         with:
-          files: |
+          paths: |
             service-admin/**
             lambda-functions/**
             service-front/**
@@ -69,16 +69,16 @@ jobs:
 
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
         with:
-          files: |
+          paths: |
             terraform/**
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
         with:
-          files: |
+          paths: |
             **/*.md
 
       - name: extract variables for workflow
