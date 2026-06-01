@@ -102,7 +102,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::${local.environment.account_id}:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::238302996107:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
