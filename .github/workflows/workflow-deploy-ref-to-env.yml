@@ -60,15 +60,15 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
-          paths: |
+          files: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
+        uses: tj-actions/changed-files@e0021407031f5be11a464abee9a0776171c79891 # 47.0.1
         with:
-          paths: |
+          files: |
             terraform/**
 
       - name: extract variables for workflow
