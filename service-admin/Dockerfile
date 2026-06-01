@@ -36,5 +36,4 @@ COPY --from=asset-env /app/web/static web/static
 
 USER appuser
 
-
 ENTRYPOINT ["./admin"]

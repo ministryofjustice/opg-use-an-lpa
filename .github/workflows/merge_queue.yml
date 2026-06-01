@@ -42,7 +42,7 @@ jobs:
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f90a91695b7d02fe2b4133ba2f9ebc2c0f6b8f94 # v4.8.5
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           paths: |
             **/*.md

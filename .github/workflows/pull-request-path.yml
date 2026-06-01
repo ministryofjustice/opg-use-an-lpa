@@ -51,14 +51,14 @@ jobs:
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           paths: |
             service-admin/**
 
       - name: get changed files in app code
         id: changed-files-app
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           paths: |
             service-admin/**
@@ -69,14 +69,14 @@ jobs:
 
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           paths: |
             terraform/**
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@f1ce3ba8bc4a0991ea4b6abbeb281d62995ed1e7 # test-branch
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@9e756945a9e2b6ac5dc81473b01f8b38600e6ed6 # v4.8.6
         with:
           paths: |
             **/*.md
