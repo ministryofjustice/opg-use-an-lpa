@@ -581,7 +581,7 @@ class RequestActivationKeyContext implements Context
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->pressButton('Continue');
+        $this->ui->pressButton('Yes, continue');
     }
 
     #[When('/^I confirm that those details are correct$/')]
@@ -1451,21 +1451,21 @@ class RequestActivationKeyContext implements Context
     public function iAmShownTheDetailsOfAnLPA(): void
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertPageContainsText("Check we've found the right LPA");
+        $this->ui->assertPageContainsText('Is this the LPA you need an activation key for?');
         $this->ui->assertPageNotContainsText("The donor's name");
     }
 
     #[When('/^I realise this is not the correct LPA$/')]
     public function iRealiseThisIsNotTheCorrectLPA(): void
     {
-        $this->ui->assertPageContainsText('This is not the correct LPA');
-        $this->ui->clickLink('This is not the correct LPA');
+        $this->ui->assertPageContainsText('No, try again');
+        $this->ui->clickLink('No, try again');
     }
 
     #[Then('/^I am taken back to the start of the (.*) process$/')]
     public function iAmTakenBackToTheStartOfRequestAnActivationKeyProcess(): void
     {
-        $this->ui->assertPageAddress('/lpa/add');
+        $this->ui->assertPageAddress('/lpa/add-by-paper-information');
     }
 
     #[When('/^I provide the details from a valid paper LPA which I have already requested an activation key for$/')]
@@ -1562,9 +1562,8 @@ class RequestActivationKeyContext implements Context
         $this->iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA();
     }
 
-    #[Then('/^I confirm details of the found LPA are correct$/')]
     #[When('/^I request a new activation key$/')]
-    public function iConfirmDetailsOfTheFoundLpaAreCorrect(): void
+    public function iRequestANewActivationKey(): void
     {
         $earliestRegDate = '2019-09-01';
 
@@ -1615,6 +1614,61 @@ class RequestActivationKeyContext implements Context
 
             $this->ui->assertPageAddress('/lpa/request-code/check-answers');
             $this->ui->pressButton('Continue');
+        }
+    }
+
+    #[Then('/^I confirm details of the found LPA are correct$/')]
+    public function iConfirmDetailsOfTheFoundLpaAreCorrect(): void
+    {
+        $earliestRegDate = '2019-09-01';
+
+        if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_BAD_REQUEST,
+                    json_encode(
+                        [
+                            'title'   => 'Bad request',
+                            'details' => 'LPA needs cleansing',
+                            'data'    => [
+                                'actor_id' => $this->actorUId,
+                            ],
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_CONFIRM
+                )
+            );
+
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Yes, continue');
+        } else {
+            $this->apiFixtures->append(
+                ContextUtilities::newResponse(
+                    StatusCodeInterface::STATUS_OK,
+                    json_encode(
+                        [
+                            'data' => [
+                                'donor'       => [
+                                    'uId'        => $this->lpa->donor->uId,
+                                    'firstnames' => sprintf(
+                                        '%s %s',
+                                        $this->lpa->donor->firstname,
+                                        $this->lpa->donor->middlenames,
+                                    ),
+                                    'surname'    => $this->lpa->donor->surname,
+                                ],
+                                'caseSubtype' => $this->lpa->caseSubtype,
+                                'lpa-id'      => $this->lpa->uId,
+                                'role'        => 'donor',
+                            ],
+                        ]
+                    ),
+                    self::ADD_OLDER_LPA_CONFIRM
+                )
+            );
+
+            $this->ui->assertPageAddress('/lpa/request-code/check-answers');
+            $this->ui->pressButton('Yes, continue');
         }
     }
 
