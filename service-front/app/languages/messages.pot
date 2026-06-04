@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
+"POT-Creation-Date: 2026-06-03T13:10:28+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -248,7 +248,6 @@ msgstr ""
 #: src/Actor/templates/actor/add-lpa/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:35
 #: src/Actor/templates/actor/check-your-answers.html.twig:95
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:77
 #: src/Actor/templates/actor/contact-details.html.twig:40
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:75
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
@@ -299,7 +298,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:9
 #: src/Actor/templates/actor/check-your-answers.html.twig:10
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:9
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:10
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:9
 #: src/Actor/templates/actor/contact-details.html.twig:8
 #: src/Actor/templates/actor/death-notification.html.twig:14
 #: src/Actor/templates/actor/lpa-already-added.html.twig:8
@@ -332,7 +331,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:22
 #: src/Actor/templates/actor/check-lpa.html.twig:22
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:55
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:51
 #: src/Actor/templates/actor/lpa-already-added.html.twig:29
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:24
 #: src/Viewer/templates/viewer/check-code-found.html.twig:24
@@ -343,7 +342,7 @@ msgstr ""
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:26
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:59
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:55
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
@@ -356,7 +355,7 @@ msgstr ""
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:19
 #: src/Actor/templates/actor/check-access-codes.html.twig:19
 #: src/Actor/templates/actor/check-lpa.html.twig:28
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:61
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:57
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
@@ -378,7 +377,7 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:38
 #: src/Actor/templates/actor/check-lpa.html.twig:42
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:24
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:20
 msgid "Your name"
 msgstr ""
 
@@ -397,14 +396,14 @@ msgstr ""
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:54
 #: src/Actor/templates/actor/check-lpa.html.twig:58
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:38
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:66
 msgid "Attorney"
 msgstr ""
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:56
 #: src/Actor/templates/actor/check-lpa.html.twig:60
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:36
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:32
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:62
 msgid "Donor"
 msgstr ""
@@ -3102,24 +3101,12 @@ msgstr ""
 msgid "Please check these terms of use regularly. We may update them without notice. This might happen if there’s a change in the law or to the way the service works. You’ll agree to any changes if you continue to use the service after the terms of use have been updated."
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:17
-msgid "Check we've found the right LPA"
-msgstr ""
-
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:19
-msgid "Using the information you gave us, we found these details."
-msgstr ""
-
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:32
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:28
 msgid "Your role on the LPA"
 msgstr ""
 
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:46
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:42
 msgid "The donor's name"
-msgstr ""
-
-#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:83
-msgid "This is not the correct LPA"
 msgstr ""
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:11
@@ -4695,4 +4682,16 @@ msgstr ""
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:52
 msgid "The code I’ve been given does not begin with a V"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:15
+msgid "Is this the LPA you need an activation key for?"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:71
+msgid "Yes, continue"
+msgstr ""
+
+#: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:77
+msgid "No, try again"
 msgstr ""
