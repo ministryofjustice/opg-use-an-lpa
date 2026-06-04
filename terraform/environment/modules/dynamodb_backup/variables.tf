@@ -1,3 +1,8 @@
+variable "account_name" {
+  type        = string
+  description = "AWS account name to use in resource names"
+}
+
 variable "environment_name" {
   type        = string
   description = "Environment name to use in resource names"
@@ -41,4 +46,9 @@ variable "replica_region" {
   type        = string
   description = "The region where backups will be replicated to"
   default     = "eu-west-2"
+}
+
+variable "cross_account_backup_enabled" {
+  type        = bool
+  description = "Whether to enable cross-account backup replication"
 }
