@@ -188,8 +188,12 @@ jobs:
         run: |
           if [ ${SVC_PREFIX} == 'admin' ]; then
             mkdir -p build/service-${SVC_PREFIX}
-            cd service-${SVC_PREFIX}/
-            go test -race -coverpkg ./... -coverprofile=../build/service-${SVC_PREFIX}/coverage.out -covermode=atomic ./...
+            docker compose run \
+              -v "$PWD/service-admin":/usr/src/service-admin \
+              -v "$PWD/build/service-admin":/usr/src/out \
+              -w /usr/src/service-admin \
+              --entrypoint go \
+              golang -- test -coverpkg ./... -coverprofile=/usr/src/out/coverage.out -covermode=atomic ./...
           elif [ ${SVC_PREFIX} == 'stats_upload' ]; then
             mkdir -p build/service-${SVC_PREFIX}
             cd lambda-functions/upload-statistics/app
