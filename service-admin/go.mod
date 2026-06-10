@@ -3,12 +3,12 @@ module github.com/ministryofjustice/opg-use-an-lpa/service-admin
 go 1.24.4
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.41.5
-	github.com/aws/aws-sdk-go-v2/config v1.32.14
-	github.com/aws/aws-sdk-go-v2/credentials v1.19.14
-	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.37
-	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.57.1
-	github.com/aws/aws-sdk-go-v2/service/ssm v1.68.4
+	github.com/aws/aws-sdk-go-v2 v1.41.11
+	github.com/aws/aws-sdk-go-v2/config v1.32.22
+	github.com/aws/aws-sdk-go-v2/credentials v1.19.21
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.44
+	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.57.8
+	github.com/aws/aws-sdk-go-v2/service/ssm v1.69.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/gorilla/mux v1.8.1
@@ -22,19 +22,20 @@ require (
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.21 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.21 // indirect
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.21 // indirect
+	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.18.27 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.4.27 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.7.27 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/ini v1.8.6 // indirect
-	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.32.14 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.7 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.11.21 // indirect
-	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.21 // indirect
-	github.com/aws/aws-sdk-go-v2/service/signin v1.0.9 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sso v1.30.15 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.35.19 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sts v1.41.10 // indirect
-	github.com/aws/smithy-go v1.24.2 // indirect
+	github.com/aws/aws-sdk-go-v2/internal/v4a v1.4.28 // indirect
+	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.32.20 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.13.11 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.12.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.13.27 // indirect
+	github.com/aws/aws-sdk-go-v2/service/signin v1.1.3 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sso v1.31.1 // indirect
+	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.36.4 // indirect
+	github.com/aws/aws-sdk-go-v2/service/sts v1.43.1 // indirect
+	github.com/aws/smithy-go v1.27.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
