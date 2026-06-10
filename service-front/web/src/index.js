@@ -41,7 +41,7 @@ if (
     document.getElementsByClassName('js-signed-in').length > 0 &&
     document.getElementById('dialog') !== null
 ) {
-    new sessionDialog(document.getElementById('dialog'));
+    new sessionDialog(document.getElementById('dialog'), () => window.location.href = '/session-expired');
 }
 
 //used by smoke test
