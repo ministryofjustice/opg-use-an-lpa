@@ -29,6 +29,7 @@ describe('Session Dialog', () => {
     let dialogOverlay;
     let dialogFocus;
     let jsHideTimeout;
+    let sessionExpired;
 
     beforeEach(() => {
         jest.clearAllTimers();
@@ -36,19 +37,11 @@ describe('Session Dialog', () => {
 
         document.body.innerHTML = html;
 
-        delete window.location;
-        window.location = {
-            port: '80',
-            protocol: 'https:',
-            hostname: 'localhost',
-            pathname: '/',
-            href: ''
-        };
-
         delete global.fetch;
         global.fetch = jest.fn();
 
-        sessionDialogElement = new sessionDialog(document.getElementById("dialog"));
+        sessionExpired = jest.fn();
+        sessionDialogElement = new sessionDialog(document.getElementById("dialog"), sessionExpired);
 
         dialog = document.getElementById('dialog');
         jsHideTimeout = document.querySelector('.jsHideTimeout');
@@ -104,9 +97,7 @@ describe('Session Dialog', () => {
                 await sessionDialogElement.checkSessionExpires();
                 expect(window.fetch).toHaveBeenCalledTimes(1)
 
-                expect(window.location.href).toBe('/session-expired');
-
-
+                expect(sessionExpired).toHaveBeenCalledTimes(1);
             });
         });
 
