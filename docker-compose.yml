@@ -273,3 +273,6 @@ services:
     depends_on:
       - actor-web
       - viewer-web
+
+  golang:
+    image: golang:1.25.11-alpine@sha256:c05ba4b73604069d376c4f41346b05374335b5ca0c46fb6dfede5a59f5196931
