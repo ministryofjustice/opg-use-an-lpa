@@ -25,5 +25,5 @@ data "aws_ecr_repository" "mock_onelogin" {
 }
 
 module "allow_list" {
-  source = "git@github.com:ministryofjustice/terraform-aws-moj-ip-allow-list.git?ref=v3.4.2"
+  source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.4.2"
 }
