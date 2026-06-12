@@ -11,18 +11,19 @@ resource "aws_backup_vault" "replica" {
 }
 
 resource "aws_backup_vault" "cross_account" {
+  count       = var.cross_account_backup_enabled ? 1 : 0
   name        = "opg_use_an_lpa_${var.environment_name}_${data.aws_region.current.region}_backup"
   kms_key_arn = data.aws_kms_key.cross_account_key.arn
   provider    = aws.backup
 }
 
-resource "aws_backup_vault_policy" "primary" {
+resource "aws_backup_vault_policy" "primary_allow_cross_account" {
+  count             = var.cross_account_backup_enabled ? 1 : 0
   backup_vault_name = aws_backup_vault.primary.name
-  policy            = data.aws_iam_policy_document.primary_permissions.json
+  policy            = data.aws_iam_policy_document.primary_cross_account_permissions.json
 }
 
-data "aws_iam_policy_document" "primary_permissions" {
-  provider = aws.backup
+data "aws_iam_policy_document" "primary_cross_account_permissions" {
   statement {
     effect = "Allow"
     principals {
@@ -35,6 +36,7 @@ data "aws_iam_policy_document" "primary_permissions" {
 }
 
 resource "aws_backup_vault_policy" "cross_account" {
+  count             = var.cross_account_backup_enabled ? 1 : 0
   provider          = aws.backup
   backup_vault_name = aws_backup_vault.cross_account.name
   policy            = data.aws_iam_policy_document.cross_account_permissions.json
