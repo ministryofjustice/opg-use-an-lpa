@@ -2,9 +2,9 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-PHP-AWSAWSSDKPHP-15874415:
-    - '*':
+  SNYK-PHP-MTDOWLINGJMESPATHPHP-17337032:
+    - "*":
         reason: None Given
-        expires: 2026-04-21T13:12:43.118Z
-        created: 2026-04-14T13:12:43.128Z
+        expires: 2026-07-15T08:19:23.000Z
+        created: 2026-06-15T08:19:23.000Z
 patch: {}
