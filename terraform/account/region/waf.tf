@@ -136,35 +136,8 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
   rule {
-    name     = "AWS-AWSManagedRulesBotControlRuleSet"
-    priority = 5
-
-    override_action {
-      count {} # start in count mode
-    }
-
-    statement {
-      managed_rule_group_statement {
-        name        = "AWSManagedRulesBotControlRuleSet"
-        vendor_name = "AWS"
-
-        managed_rule_group_configs {
-          aws_managed_rules_bot_control_rule_set {
-            inspection_level = "COMMON"
-          }
-        }
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWS-AWSManagedRulesBotControlRuleSet"
-      sampled_requests_enabled   = true
-    }
-  }
-  rule {
     name     = "AWS-AWSManagedRulesCommonRuleSet"
-    priority = 6
+    priority = 5
 
     override_action {
       none {}
@@ -195,7 +168,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   rule {
     name     = "RateLimitSessionCheck"
-    priority = 7
+    priority = 6
 
     action {
       block {}
@@ -244,7 +217,7 @@ resource "aws_wafv2_web_acl" "main" {
 
   rule {
     name     = "RateLimitByIP"
-    priority = 8
+    priority = 7
 
     action {
       block {}
