@@ -16,6 +16,24 @@ resource "aws_backup_vault" "cross_account" {
   provider    = aws.backup
 }
 
+resource "aws_backup_vault_policy" "primary_allow_cross_account" {
+  count             = var.cross_account_backup_enabled ? 1 : 0
+  backup_vault_name = aws_backup_vault.primary.name
+  policy            = data.aws_iam_policy_document.primary_cross_account_permissions.json
+}
+
+data "aws_iam_policy_document" "primary_cross_account_permissions" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.backup.account_id}:root"]
+    }
+    actions   = ["backup:CopyIntoBackupVault"]
+    resources = [aws_backup_vault.primary.arn]
+  }
+}
+
 resource "aws_backup_vault_policy" "cross_account" {
   provider          = aws.backup
   backup_vault_name = aws_backup_vault.cross_account.name
