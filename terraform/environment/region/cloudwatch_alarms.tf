@@ -233,3 +233,58 @@ moved {
   from = aws_cloudwatch_metric_alarm.admin_ddos_attack_external[0]
   to   = aws_cloudwatch_metric_alarm.admin_ddos_attack_external
 }
+
+# ECS Task Monitoring Alarms - PDF Service
+resource "aws_cloudwatch_metric_alarm" "pdf_high_task_cpu" {
+  alarm_name          = "${var.environment_name}-pdf-high-task-cpu"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 3
+  threshold           = 90
+  alarm_description   = "A single ECS task for the pdf service is sustaining very high CPU utilisation"
+
+  metric_query {
+    id          = "max_cpu"
+    return_data = true
+    metric {
+      metric_name = "CPUUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Maximum"
+      dimensions = {
+        ServiceName = aws_ecs_service.pdf.name
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  insufficient_data_actions = []
+  provider                  = aws.region
+}
+
+resource "aws_cloudwatch_metric_alarm" "pdf_high_task_memory" {
+  alarm_name          = "${var.environment_name}-pdf-high-task-memory"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 3
+  threshold           = 90
+  alarm_description   = "A single ECS task for the pdf service is sustaining very high memory utilisation"
+
+  metric_query {
+    id          = "max_mem"
+    return_data = true
+    metric {
+      metric_name = "MemoryUtilization"
+      namespace   = "AWS/ECS"
+      period      = 60
+      stat        = "Maximum"
+      dimensions = {
+        ServiceName = aws_ecs_service.pdf.name
+        ClusterName = aws_ecs_cluster.use_an_lpa.name
+      }
+    }
+  }
+
+  alarm_actions             = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
+  insufficient_data_actions = []
+  provider                  = aws.region
+}
