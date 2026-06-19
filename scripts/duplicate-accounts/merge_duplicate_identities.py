@@ -1,4 +1,7 @@
 import argparse
+import hashlib
+import pprint
+
 import boto3
 from collections import defaultdict
 from boto3.dynamodb.conditions import Key
@@ -6,207 +9,66 @@ from datetime import datetime, UTC
 from decimal import Decimal
 import json
 import time
-import os
+import math
 
-#######
-# 1. Connect to AWS account
-# Assume the correct role
-# Create Dynamo client using those temporary credentials
-#######
+from botocore.exceptions import ClientError
 
-AWS_ACCOUNT_IDS = {
-    "production": "690083044361",
-    "preproduction": "888228022356",
-    "development": "367815980639",
-    "demo": "367815980639",
-}
-
-CHECKPOINT_BUCKET = "duplicate-accounts-s3"
-
-#Assume AWS role
-def assume_role(environment):
-    account_id = AWS_ACCOUNT_IDS[environment]
-
-    if environment == "production":
-        role_name = "db-analysis"
-    else:
-        role_name = "operator"
-
-    role_arn = f"arn:aws:iam::{account_id}:role/{role_name}"
-
-    sts = boto3.client("sts", region_name="eu-west-1")
-    session = sts.assume_role(
-        RoleArn=role_arn,
-        RoleSessionName="duplicate_identity_merge",
-        DurationSeconds=900,
-    )
-
-    return session["Credentials"]
+# Create connections to AWS service
+dynamodb = boto3.resource("dynamodb", region_name="eu-west-1")
+dynamodb_client = boto3.client("dynamodb", region_name="eu-west-1")
+s3 = boto3.client("s3", region_name="eu-west-1")
 
 # CLI arguments & define command line options
 def parse_args():
     parser = argparse.ArgumentParser(description="Merge duplicate OPG identities")
 
-    parser.add_argument(
-        "--environment",
-        required=True,
-        help="Environment: development | demo | production"
-    )
+    parser.add_argument("--limit", type=int, default=None,
+                        help="Limit number of duplicate identities processed")
+    parser.add_argument("--offset", type=int, default=0,
+                        help="Skip this many duplicate identities before processing")
+    parser.add_argument("--table-prefix", default="demo", type=str,
+                        help="The DynamoDB table prefix to use when querying. default: demo")
+    parser.add_argument("--bucket", type=str,
+                        help="The bucket containing merge plans and work files")
+    parser.add_argument("--work-prefix", default="todo", type=str,
+                        help="Bucket prefix for work files. default: todo")
+    parser.add_argument("--plan-prefix", default="plan", type=str,
+                        help="Bucket prefix for merge plan files. default: plan")
 
-    parser.add_argument(
-        "--limit",
-        type=int,
-        help="Limit number of duplicate identities processed"
-    )
+    parser.add_argument("--plan-file", type=str,
+                        help="Specify a specific merge plan file to run")
 
-    parser.add_argument(
-        "--offset",
-        type=int,
-        default=0,
-        help="Skip this many duplicate identities before processing"
-    )
+    parser.add_argument("--execute", action="store_true",
+                        help="Apply a reviewed merge plan")
 
-    parser.add_argument(
-        "--execute",
-        action="store_true",
-        help="Apply a reviewed merge plan"
-    )
+    args = parser.parse_args()
 
-    parser.add_argument(
-        "--output-dir",
-        default=".",
-        help="Directory to save merge plan files"
-    )
+    if not args.bucket:
+        raise Exception("Execution requires --bucket (S3 bucket)")
 
-    parser.add_argument(
-        "--plan-file",
-        type=str,
-        help="Path to a previously generated merge plan JSON file"
-    )
+    return args
 
-    parser.add_argument(
-        "--plan-key",
-        type=str,
-        help="S3 key of the merge plan (e.g. merge-plans/dev/xxx.json)"
-    )
+def get_actor_users_table(prefix):
+    return dynamodb.Table(f"{prefix}-ActorUsers")
 
-    parser.add_argument(
-        "--list-plans",
-        action="store_true",
-        help="List merge plans in S3"
-    )
+def get_lpa_table(prefix):
+    return dynamodb.Table(f"{prefix}-UserLpaActorMap")
 
-    return parser.parse_args()
-
-# Connecting to dynamodb, this returns ActorUsers table
-# To identify duplicate identities
-# To idetify primary user
-# To identify secondary user
-def get_dynamo_table(environment):
-    creds = assume_role(environment)
-
-    dynamodb = boto3.resource(
-        "dynamodb",
-        region_name="eu-west-1",
-        aws_access_key_id=creds["AccessKeyId"],
-        aws_secret_access_key=creds["SecretAccessKey"],
-        aws_session_token=creds["SessionToken"],
-    )
-
-    TABLE_PREFIX = {
-        "production": "ual-prod",
-        "preproduction": "ual-preprod",
-        "development": "3644uml4037",
-        "demo": "demo",
-    }
-
-    return dynamodb.Table(f"{TABLE_PREFIX[environment]}-ActorUsers")
-
-# Scan Actor Users table to detect duplicate identities
-def scan_actor_users(table):
-    response = table.scan()
-    items = response["Items"]
-
-    while "LastEvaluatedKey" in response:
-        response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
-        items.extend(response["Items"])
-
-    return items
-
-# Groups users by identity
-# Rule says find duplicate accounts based on One Login subject
-def group_by_identity(users):
-    grouped = defaultdict(list)
-
-    for user in users:
-        identity = user.get("Identity")
-        if identity:
-            grouped[identity].append(user)
-
-    return grouped
-
-# Loads and returns the UserLpaActorMap table
-# Maps the user-actor relationship on a LPA
-def get_lpa_table(environment):
-    creds = assume_role(environment)
-
-    dynamodb = boto3.resource(
-        "dynamodb",
-        region_name="eu-west-1",
-        aws_access_key_id=creds["AccessKeyId"],
-        aws_secret_access_key=creds["SecretAccessKey"],
-        aws_session_token=creds["SessionToken"],
-    )
-
-    TABLE_PREFIX = {
-       "production": "ual-prod",
-       "preproduction": "ual-preprod",
-       "development": "3644uml4037",
-       "demo": "demo",
-    }
-
-    return dynamodb.Table(f"{TABLE_PREFIX[environment]}-UserLpaActorMap")
-
-
-# Loads and returns the ViewerCodes table
-# If duplicate mapping exists and has VC, must be repointed to the one canonical mapping that survives
-def get_viewer_code_table(environment):
-    creds = assume_role(environment)
-
-    dynamodb = boto3.resource(
-        "dynamodb",
-        region_name="eu-west-1",
-        aws_access_key_id=creds["AccessKeyId"],
-        aws_secret_access_key=creds["SecretAccessKey"],
-        aws_session_token=creds["SessionToken"],
-    )
-
-    TABLE_PREFIX = {
-        "production": "ual-prod",
-        "preproduction": "ual-preprod",
-        "development": "3644uml4037",
-        "demo": "demo",
-    }
-
-    return dynamodb.Table(f"{TABLE_PREFIX[environment]}-ViewerCodes")
-
-# Helper table accessor
-def get_actor_users_table(environment):
-    return get_dynamo_table(environment)
+def get_viewer_code_table(prefix):
+    return dynamodb.Table(f"{prefix}-ViewerCodes")
 
 # Fetches one UserLpaActorMap by Id
-def get_mapping_by_id(lpa_table, mapping_id):
-    response = lpa_table.get_item(Key={"Id": mapping_id})
+def get_by_id(table, id):
+    response = table.get_item(Key={"Id": id})
     return response.get("Item")
 
-# Fetches one ActorUsers row by Id
-def get_actor_user_by_id(actor_table, user_id):
-    response = actor_table.get_item(Key={"Id": user_id})
+# Gets one viewer code row by its viewer code
+def get_viewer_code_by_id(viewer_table, viewer_code):
+    response = viewer_table.get_item(Key={"ViewerCode": viewer_code})
     return response.get("Item")
-
 
 # Deteremines the primary - mostly recently logged in
-def determine_primary(group):
+def determine_primary(actor_collection):
     def parse_login(user):
         value = user.get("LastLogin")
         if not value:
@@ -216,8 +78,7 @@ def determine_primary(group):
         except:
             return datetime.min
 
-    return max(group, key=parse_login)
-
+    return max(actor_collection, key=parse_login)
 
 # Fetch LPAs for a user
 # Scan whole UserLpaCAtorMap table and returns all mappings for a user [primary & secodary]
@@ -238,13 +99,6 @@ def get_user_lpas(lpa_table, user_id):
         items.extend(response.get("Items", []))
 
     return items
-
-
-# Gets one viewer code row by its code
-def get_viewer_code_by_id(viewer_table, viewer_code):
-    response = viewer_table.get_item(Key={"ViewerCode": viewer_code})
-    return response.get("Item")
-
 
 # Helps return whichever exists
 def get_lpa_identifier(mapping):
@@ -346,40 +200,30 @@ def choose_canonical_for_group(mappings, viewer_table, primary_user_id, viewer_c
 
     return canonical_id, delete_mapping_ids, viewer_code_updates, codes_by_mapping
 
-def get_checkpoint_key(environment):
-    return f"merge-checkpoints/{environment}.json"
+def get_merge_plan_key(plan_prefix, merge_plan):
+    filename = hashlib.md5(merge_plan.get("identity").encode()).hexdigest()
 
-def get_s3_client(environment):
-    creds = assume_role(environment)
+    return f"{plan_prefix}/{filename}.json"
 
-    return boto3.client(
-        "s3",
-        region_name="eu-west-1",
-        aws_access_key_id=creds["AccessKeyId"],
-        aws_secret_access_key=creds["SecretAccessKey"],
-        aws_session_token=creds["SessionToken"],
+def iterate_merge_plans(bucket, plan_prefix):
+    prefix = f"{plan_prefix}/"
+
+    paginator = s3.get_paginator('list_objects_v2')
+    page_iterator = paginator.paginate(
+        Bucket=bucket,
+        Prefix=prefix,
+        PaginationConfig={'PageSize': 10}
     )
 
-def get_merge_plan_key(environment, timestamp):
-    return f"merge-plans/{environment}/merge_plan_{timestamp}.json"
+    for page in page_iterator:
+        plans = []
 
-def list_merge_plans(environment):
-    s3 = get_s3_client(environment)
+        if page.get("Contents"):
+            for plan in page["Contents"]:
+                plans.append(plan["Key"])
 
-    prefix = f"merge-plans/{environment}/"
+            yield plans
 
-    response = s3.list_objects_v2(
-        Bucket=CHECKPOINT_BUCKET,
-        Prefix=prefix
-    )
-
-    if "Contents" not in response:
-        print("No merge plans found")
-        return
-
-    print("\nAvailable merge plans:")
-    for obj in response["Contents"]:
-        print(f" - {obj['Key']}")
 
 # Dry-run display function
 # Shows which user is retained - the primary user
@@ -535,7 +379,7 @@ def print_expected_outcome(plan):
         print(" - None")
 
 
-# This groups identofies mappings by same actor, same LPA - logical duplicates
+# This groups identity mappings by same actor, same LPA - logical duplicates
 # Helps to meet rule - multiple LPAs share the same actor ID delete all but one
 def group_mappings_by_logical_key(mappings):
     grouped = defaultdict(list)
@@ -595,12 +439,12 @@ def choose_canonical_mappings(grouped_mappings, viewer_table, primary_user_id, v
 # Decide which mapping moves to primary user
 # Decide viewer codes to repoint to mapping if any
 # Mark secodary user for deletion
-def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table, viewer_code_cache):
-    primary = determine_primary(group)
-    secondaries = [u for u in group if u["Id"] != primary["Id"]]
+def build_merge_plan_for_identity(identity, actors, lpa_table, viewer_table, viewer_code_cache):
+    primary = determine_primary(actors)
+    secondaries = [u for u in actors if u["Id"] != primary["Id"]]
 
     all_mappings = []
-    for user in group:
+    for user in actors:
         user_mappings = get_user_lpas(lpa_table, user["Id"])
         all_mappings.extend(user_mappings)
 
@@ -642,14 +486,14 @@ def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table, view
     return {
         "identity": identity,
         "primary_user_id": primary["Id"],
-        "secondary_user_ids": [u["Id"] for u in secondaries],
-        "all_mappings": compact_mappings,
+        "secondary_user_ids": [u["Id"] for u in sorted(secondaries, key=lambda u: u["Id"])],
+        "all_mappings": sorted(compact_mappings, key=lambda m: m["Id"]),
         "canonical_mapping_ids": sorted(list(canonical_mapping_ids)),
         "move_mapping_ids": sorted(list(move_mapping_ids)),
         "delete_mapping_ids": sorted(list(delete_mapping_ids)),
-        "viewer_code_updates": viewer_code_updates,
-        "mapping_viewer_codes": mapping_viewer_codes,
-        "delete_secondary_user_ids": [u["Id"] for u in secondaries],
+        "viewer_code_updates": sorted(viewer_code_updates, key=lambda m: m["viewer_code"]),
+        "mapping_viewer_codes": {key:mapping_viewer_codes[key] for key in sorted(mapping_viewer_codes)},
+        "delete_secondary_user_ids": [u["Id"] for u in sorted(secondaries, key=lambda u: u["Id"])],
     }
 
 # runs with --execute option
@@ -657,205 +501,154 @@ def build_merge_plan_for_identity(identity, group, viewer_table, lpa_table, view
 # 2. Repoint viewer codes
 # 3. Delete duplicate mappings
 # 4. Delete secondary accounts
-def execute_merge_plan(environment, merge_plan):
+def execute_merge_plan(table_prefix, merge_plan, viewer_code_cache=None):
+    if viewer_code_cache is None:
+        viewer_code_cache = {}
+
     execution_start = time.perf_counter()
 
-    print("\nExecuting merge plan...")
+    lpa_table = get_lpa_table(table_prefix)
+    viewer_table = get_viewer_code_table(table_prefix)
 
-    actor_table = get_actor_users_table(environment)
-    lpa_table = get_lpa_table(environment)
-    viewer_table = get_viewer_code_table(environment)
+    print("\n" + "=" * 100)
+    print(f"Executing identity: {merge_plan['identity']}")
 
-    for plan in merge_plan:
-        print("\n" + "=" * 60)
-        print(f"Executing identity: {plan['identity']}")
-        print(f"Primary user: {plan['primary_user_id']}")
+    # generate a plan based on current data. it will need to match the stored plan
+    actors = []
+    for actor in [merge_plan['primary_user_id']] + merge_plan['secondary_user_ids']:
+        actors.append(populate_actor(table_prefix, actor))
 
-        primary_user_id = plan["primary_user_id"]
+    current_merge_plan = build_merge_plan_for_identity(
+        merge_plan['identity'],
+        actors,
+        lpa_table,
+        viewer_table,
+        viewer_code_cache
+    )
 
-        # 1. Move canonical mappings to primary
-        for mapping_id in plan["move_mapping_ids"]:
-            mapping = get_mapping_by_id(lpa_table, mapping_id)
+    if current_merge_plan != merge_plan:
+        print(f"ERR - Merge plan does not match stored plan. Skipping.")
+        print(f"{current_merge_plan}")
+        print(f"{merge_plan}")
+        return
 
-            if not mapping:
-                print(f" - SKIP move {mapping_id}: mapping not found")
-                continue
+    primary_user_id = merge_plan["primary_user_id"]
+    print(f"Primary user: {primary_user_id}")
 
-            current_user_id = mapping.get("UserId")
-            if current_user_id == primary_user_id:
-                print(f" - SKIP move {mapping_id}: already belongs to primary")
-                continue
+    transaction = []
 
-            print(f" - MOVE mapping {mapping_id}: {current_user_id} -> {primary_user_id}")
+    # 1. Move canonical mappings to primary
+    for mapping_id in merge_plan["move_mapping_ids"]:
+        current_user_id = [m for m in merge_plan.get("all_mappings") if m.get("Id") == mapping_id][0].get("UserId")
 
-            lpa_table.update_item(
-                Key={"Id": mapping_id},
-                UpdateExpression="SET UserId = :new_user",
-                ConditionExpression="UserId = :expected_user",
-                ExpressionAttributeValues={
-                        ":new_user": primary_user_id,
-                        ":expected_user": current_user_id
+        transaction.append(
+            {
+                "Update": {
+                    "TableName": f"{table_prefix}-UserLpaActorMap",
+                    "Key": {"Id": {"S": mapping_id}},
+                    "UpdateExpression": "SET UserId = :new_user",
+                    "ConditionExpression": "UserId = :expected_user",
+                    "ExpressionAttributeValues": {
+                        ":new_user": {"S": primary_user_id},
+                        ":expected_user": {"S": current_user_id}
                     }
-            )
+                }
+            }
+        )
 
-        # 2. Repoint viewer codes to canonical mapping ids
-        for update in plan["viewer_code_updates"]:
-            viewer_code = update["viewer_code"]
-            to_mapping_id = update["to_mapping_id"]
+        print(f" - MOVE mapping {mapping_id}: {current_user_id} -> {primary_user_id}")
 
-            code_row = get_viewer_code_by_id(viewer_table, viewer_code)
-            if not code_row:
-                print(f" - SKIP viewer code {viewer_code}: not found")
-                continue
+    # 2. Repoint viewer codes to canonical mapping ids
+    for update in merge_plan["viewer_code_updates"]:
+        transaction.append(
+            {
+                "Update": {
+                    "TableName": f"{table_prefix}-ViewerCodes",
+                    "Key": {"ViewerCode": {"S": update.get("viewer_code")}},
+                    "UpdateExpression": "SET UserLpaActor = :new_mapping",
+                    "ConditionExpression": "UserLpaActor = :expected_mapping",
+                    "ExpressionAttributeValues": {
+                        ":new_mapping": {"S": update.get("to_mapping_id")},
+                        ":expected_mapping": {"S": update.get("from_mapping_id")}
+                    }
+                }
+            }
+        )
 
-            current_mapping_id = code_row.get("UserLpaActor")
-            if current_mapping_id == to_mapping_id:
-                print(f" - SKIP viewer code {viewer_code}: already repointed")
-                continue
+        print(
+            f" - UPDATE viewer code {update.get("viewer_code")}: ",
+            f"{update.get("from_mapping_id")} -> {update.get("to_mapping_id")}"
+        )
 
-            print(
-                f" - UPDATE viewer code {viewer_code}: "
-                f"{current_mapping_id} -> {to_mapping_id}"
-            )
+    for mapping_id in merge_plan["delete_mapping_ids"]:
+        transaction.append(
+            {
+                "Delete": {
+                    "TableName": f"{table_prefix}-UserLpaActorMap",
+                    "Key": {"Id": {"S": mapping_id}},
+                    "ConditionExpression": "attribute_exists(UserId)",
+                }
+            }
+        )
 
-            viewer_table.update_item(
-                Key={"ViewerCode": viewer_code},
-                UpdateExpression="SET UserLpaActor = :new_mapping",
-                ExpressionAttributeValues={":new_mapping": to_mapping_id}
-            )
+        print(f" - DELETE duplicate mapping {mapping_id}")
 
-        # 3. Delete duplicate mappings
-        for mapping_id in plan["delete_mapping_ids"]:
-            mapping = get_mapping_by_id(lpa_table, mapping_id)
+    for secondary_user_id in merge_plan["delete_secondary_user_ids"]:
+        transaction.append(
+            {
+                "Delete": {
+                    "TableName": f"{table_prefix}-ActorUsers",
+                    "Key": {"Id": {"S": secondary_user_id}},
+                    "ConditionExpression": "attribute_exists(#sub)",
+                    "ExpressionAttributeNames": {"#sub": "Identity"}
+                }
+            }
+        )
 
-            if not mapping:
-                print(f" - SKIP delete mapping {mapping_id}: already deleted")
-                continue
+        print(f" - DELETE secondary account {secondary_user_id}")
 
-            print(f" - DELETE duplicate mapping {mapping_id}")
-
-            lpa_table.delete_item(Key={"Id": mapping_id})
-
-        # 4. Delete secondary accounts
-        for secondary_user_id in plan["delete_secondary_user_ids"]:
-            actor_user = get_actor_user_by_id(actor_table, secondary_user_id)
-
-            if not actor_user:
-                print(f" - SKIP delete user {secondary_user_id}: already deleted")
-                continue
-
-            print(f" - DELETE secondary account {secondary_user_id}")
-
-            actor_table.delete_item(Key={"Id": secondary_user_id})
-
-        # After successful execution , mark as completed
-        mark_identity_completed(environment, plan["identity"])
-        print(f" - CHECKPOINT saved for identity {plan['identity']}")
+    # throws exception that callers will deal with
+    dynamodb_client.transact_write_items(TransactItems=transaction)
 
     print("\nExecution complete")
 
     execution_duration = time.perf_counter() - execution_start
     print(f"\nExecution time: {execution_duration:.3f} seconds")
 
+def execute_all_plans(bucket, plan_prefix, table_prefix):
+    # cache for viewer codes by SiriusUid
+    viewer_code_cache = {}
 
-#Export the merge plan to JSON before execution for review, migration artifact - save to LOCAL
-def save_merge_plan_local(environment, merge_plan, output_dir="."):
-    os.makedirs(output_dir, exist_ok=True)
+    print(f"Executing all plans in \"{bucket}/{plan_prefix}/\"")
+    for merge_plans in iterate_merge_plans(bucket, plan_prefix):
+        for merge_plan_key in merge_plans:
+            plan = load_from_s3(bucket, merge_plan_key)
 
-    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join(output_dir, f"merge_plan_{environment}_{timestamp}.json")
-
-    with open(filename, "w") as f:
-        json.dump(merge_plan, f, indent=2)
-
-    print(f"\nMerge plan saved to: {filename}")
-    return filename
+            try:
+                execute_merge_plan(table_prefix, plan, viewer_code_cache)
+                move_plan_to_done(bucket, merge_plan_key)
+            except ClientError as e:
+                print(f" - ERR Plan could not be applied: {e}")
 
 # Export the merge plan to JSON before execution for review, migration artifact - save to S3
-def save_merge_plan_s3(environment, merge_plan):
-    s3 = get_s3_client(environment)
-
-    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-    key = get_merge_plan_key(environment, timestamp)
+def save_merge_plan_s3(bucket, plan_prefix, merge_plan):
+    key = get_merge_plan_key(plan_prefix, merge_plan)
 
     s3.put_object(
-        Bucket=CHECKPOINT_BUCKET,
+        Bucket=bucket,
         Key=key,
         Body=json.dumps(merge_plan, indent=2),
-        ContentType="application/json"
+        ContentType="application/json",
+        Metadata={
+            "identity": merge_plan.get("identity"),
+            "primary-id": merge_plan.get("primary_user_id")
+        }
     )
 
     print(f"\nMerge plan saved to S3:")
-    print(f"s3://{CHECKPOINT_BUCKET}/{key}")
+    print(f"s3://{bucket}/{key}")
 
     return key
-
-# Checkpoint helpers
-# After each identity is executed successfully, the script will record that identity in a  checkpoint file [saved to S3].
-# it will:
-# load the checkpoint file
-# skip identities already completed
-# continue with the remaining ones
-# def get_checkpoint_filename(environment):
-#     return f"merge_checkpoint_{environment}.json"
-
-# def load_checkpoint(environment):
-#     filename = get_checkpoint_filename(environment)
-#
-#     if not os.path.exists(filename):
-#         return {"completed_identities": []}
-#
-#     with open(filename, "r") as f:
-#         return json.load(f)
-
-def load_checkpoint(environment):
-    s3 = get_s3_client(environment)
-    key = get_checkpoint_key(environment)
-
-    try:
-        response = s3.get_object(
-            Bucket=CHECKPOINT_BUCKET,
-            Key=key
-        )
-        body = response["Body"].read()
-        return json.loads(body)
-
-    except s3.exceptions.NoSuchKey:
-        return {"completed_identities": []}
-
-    except Exception as e:
-        print(f"WARNING: Failed to load checkpoint from S3: {e}")
-        return {"completed_identities": []}
-
-
-# def save_checkpoint(environment, checkpoint):
-#     filename = get_checkpoint_filename(environment)
-#
-#     with open(filename, "w") as f:
-#         json.dump(checkpoint, f, indent=2)
-
-def save_checkpoint(environment, checkpoint):
-    s3 = get_s3_client(environment)
-    key = get_checkpoint_key(environment)
-
-    s3.put_object(
-        Bucket=CHECKPOINT_BUCKET,
-        Key=key,
-        Body=json.dumps(checkpoint),
-        ContentType="application/json"
-    )
-
-# Checkpoint is updated after each identity completes
-# checkpoint lives in s3://<bucket>/merge-checkpoints/<environment>.json
-def mark_identity_completed(environment, identity):
-    checkpoint = load_checkpoint(environment)
-
-    completed = set(checkpoint.get("completed_identities", []))
-    completed.add(identity)
-
-    checkpoint["completed_identities"] = sorted(list(completed))
-    save_checkpoint(environment, checkpoint)
-
 
 # Helper to convert Dynamodb decimal to plain int
 def clean(value):
@@ -863,100 +656,125 @@ def clean(value):
         return int(value)
     return value
 
-def load_merge_plan(plan_file):
-    with open(plan_file, "r") as f:
-        return json.load(f)
-
 # Load merge plan from S3
-def load_merge_plan_s3(environment, plan_key):
-    s3 = get_s3_client(environment)
-
+def load_from_s3(bucket, plan_file):
     response = s3.get_object(
-        Bucket=CHECKPOINT_BUCKET,
-        Key=plan_key
+        Bucket=bucket,
+        Key=f"{plan_file}"
     )
 
     body = response["Body"].read()
     return json.loads(body)
-#   It does:
-#   Connect to all required tables
-#   Scan all users
-#   Group users by identity
-#   Filter duplicate identities
-#   For each duplicate group:
-#         - build merge plan
-#         - print plan
-#         - collect plan into merge_plan
-#   Print a summary
-#   Save the merge plan JSON
-#   optionally ask for execute confirmation
-def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
+
+def move_plan_to_done(bucket, plan_file):
+    s3.copy_object(
+        Bucket=bucket,
+        CopySource=f"{bucket}/{plan_file}",
+        Key=f"done/{plan_file}"
+    )
+
+    s3.delete_object(
+        Bucket=bucket,
+        Key=f"{plan_file}"
+    )
+
+def load_work_files(bucket, work_prefix, limit=None, offset=0):
+    print(f" - Loading work files from {work_prefix} with offset {offset} and limit {limit}")
+
+    # decide what files to pull
+    # pulls a max of 1000 - we'll never see it
+    all_work_files = s3.list_objects_v2(Bucket=bucket, Prefix=(work_prefix + "/duplicate-identities"))
+    print(f" - Found {len(all_work_files["Contents"])} work files")
+
+    # calculate limit/offset as work-files.
+    # work-files contain up to 100 records
+    first_file = math.ceil(offset/100)
+    last_file  = math.ceil((offset + limit)/100) if limit is not None else len(all_work_files["Contents"])
+    file_range = list(range(first_file, last_file + 1))
+
+    print(f" - Expecting to start at file {first_file} and load {len(file_range) - 1} additional work files")
+
+    # load our work files and pull identities from them
+    work_file_keys = []
+    for file in all_work_files["Contents"]:
+        file_no = int(file["Key"].removeprefix(f"{work_prefix}/duplicate-identities-").removesuffix(".json"))
+        if file_no in file_range:
+            work_file_keys.append(file["Key"])
+
+    identities = []
+    for work_file_key in work_file_keys:
+        file = s3.get_object(Bucket=bucket , Key=work_file_key)
+        identities = identities + json.loads(file["Body"].read())
+
+    # pare down identities to the required ones by relative offsets
+    start_record = offset % 100
+    end_record   = (start_record + limit) if limit is not None else None
+    identities   = identities[start_record:end_record]
+
+    print(f" - Loaded {len(identities)} identities from {len(work_file_keys)} work files")
+    return identities
+
+
+def populate_work_items(table_prefix, work_items):
+    print("\n" + "=" * 100)
+    print(f"Populating work items...")
+
+    populated_items = []
+
+    for work_item in work_items:
+        try:
+            actors = []
+            for ids in work_item.get("user_ids"):
+                actors.append(populate_actor(table_prefix, ids))
+
+            work_item["actors"] = actors
+            populated_items.append(work_item)
+        except RuntimeError as err:
+            print(err)
+
+    return populated_items
+
+def populate_actor(table_prefix, id):
+    actor = get_by_id(get_actor_users_table(table_prefix), id)
+    if actor is None:
+        raise RuntimeError(f" - Actor with id {id} not found, not continuing with this Identity")
+
+    return actor
+
+def build_plans(table_prefix, bucket, work_prefix, plan_prefix, limit=None, offset=0):
     script_start = time.perf_counter()
 
-    if environment == "production":
-        raise Exception("Refusing to run against production without explicit approval.")
-
-    print("Scanning ActorUsers...")
-
-    actor_table = get_dynamo_table(environment)
-    lpa_table = get_lpa_table(environment)
-    viewer_table = get_viewer_code_table(environment)
+    lpa_table    = get_lpa_table(table_prefix)
+    viewer_table = get_viewer_code_table(table_prefix)
 
     # cache for viewer codes by SiriusUid
     viewer_code_cache = {}
 
-    users = scan_actor_users(actor_table)
-    grouped = group_by_identity(users)
+    # output of this will be a dict containing user accounts sharing a single identity
+    # e.g. [identity:actor_with_id1, actor_with_id2, actor_with_id3]]
+    print("Loading work items...")
+    work_items = load_work_files(bucket, work_prefix, limit, offset)
+    duplicates = populate_work_items(table_prefix, work_items)
 
-    duplicates = {
-        identity: group
-        for identity, group in grouped.items()
-        if len(group) > 1
-    }
-
-    checkpoint = load_checkpoint(environment)
-    completed_identities = set(checkpoint.get("completed_identities", []))
-
-    if completed_identities:
-        print(f"Checkpoint loaded: {len(completed_identities)} identities already completed")
-
-    # Skip already processed identities
-    duplicates = {
-        identity: group
-        for identity, group in duplicates.items()
-        if identity not in completed_identities
-    }
-
-    duplicate_items = sorted(duplicates.items(), key=lambda x: x[0])
-
-    slice_start = offset
-    slice_end = offset + limit if limit is not None else None
-    selected_items = duplicate_items[slice_start:slice_end]
-
-    print(f"Found {len(duplicates)} duplicate identities total")
-    print(f"Processing identities from offset {slice_start} to {slice_end}\n")
-
-    processed = 0
     merge_plan = []
 
-    for identity, group in selected_items:
+    for identity in duplicates:
         identity_start = time.perf_counter()
 
         print("=" * 100)
-        print(f"Identity: {identity}")
-
+        print(f"Identity: {identity.get("identity")}")
         plan = build_merge_plan_for_identity(
-                    identity,
-                    group,
-                    viewer_table,
-                    lpa_table,
-                    viewer_code_cache
-                )
+            identity.get("identity"),
+            identity.get("actors"),
+            lpa_table,
+            viewer_table,
+            viewer_code_cache
+        )
 
         print_merge_plan_for_identity(plan)
 
+        save_merge_plan_s3(bucket, plan_prefix, plan)
         merge_plan.append(plan)
-        processed += 1
 
         identity_duration = time.perf_counter() - identity_start
         print(f"\nIdentity processing time: {identity_duration:.3f} seconds")
@@ -975,53 +793,45 @@ def run_plan(environment, limit=None, offset=0, execute=False, output_dir="."):
         )
 
     if not merge_plan:
+        print("\n" + "=" * 100)
         print("No duplicate identities selected for this batch.")
-    else:
-        # save_merge_plan(environment, merge_plan, output_dir) # save to local dir
-        key = save_merge_plan_s3(environment, merge_plan)
-        print(f"\nUse this to execute:\n--execute --plan-key {key}")
 
     total_duration = time.perf_counter() - script_start
 
     print("\n" + "=" * 100)
-    print(f"Processed {processed} identity group(s) in this batch")
+    print(f"Processed {len(merge_plan)} identity group(s) in this batch")
     print(f"TOTAL SCRIPT RUNTIME: {total_duration:.3f} seconds")
     print("=" * 100)
 
 def main():
     args = parse_args()
 
-    if args.list_plans:
-        list_merge_plans(args.environment)
-        return
-
     if args.execute:
-#         if not args.plan_file:
-#             raise Exception("Execution requires --plan-file pointing to a reviewed merge plan JSON")
+        if args.plan_file:
+            print(f"Using merge plan: {args.plan_prefix}/{args.plan_file}")
+            merge_plan_key = f"{args.plan_prefix}/{args.plan_file}"
+            merge_plan = load_from_s3(args.bucket, merge_plan_key)
 
-        if not args.plan_key:
-                raise Exception("Execution requires --plan-key (S3 key)")
+            if merge_plan:
+                print(f" - Found plan for {merge_plan.get("identity")} - executing")
 
-        if args.environment == "production":
-            confirm = input("You are about to modify PRODUCTION. Type PRODUCTION to continue: ")
-            if confirm != "PRODUCTION":
-                print("Execution cancelled")
-                return
+                try:
+                    execute_merge_plan(args.table_prefix, merge_plan)
+                    move_plan_to_done(args.bucket, merge_plan_key)
+                except ClientError as e:
+                    print(f" - ERR Plan could not be applied: {e}")
+        else:
+            execute_all_plans(args.bucket, args.plan_prefix, args.table_prefix)
 
-
-        print(f"Using merge plan: {args.plan_key}")
-
-        # merge_plan = load_merge_plan(args.plan_file). # usd when loading json file localy
-        merge_plan = load_merge_plan_s3(args.environment, args.plan_key)
-        execute_merge_plan(args.environment, merge_plan)
         return
 
-    run_plan(
-        environment=args.environment,
+    build_plans(
+        table_prefix=args.table_prefix,
+        bucket=args.bucket,
+        work_prefix=args.work_prefix,
+        plan_prefix=args.plan_prefix,
         limit=args.limit,
         offset=args.offset,
-        execute=False,
-        output_dir=args.output_dir,
     )
 
 
