@@ -271,6 +271,7 @@ github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD
 github.com/vektra/mockery/v3 v3.6.3 h1:YaBokm33LG0E8w1TccCkcJr/6tRf+zSYiHS8ct4ttCc=
 github.com/vektra/mockery/v3 v3.6.3/go.mod h1:kh58mpWIghfUCfFkNCP72TJmuJUR/dKnrqBZ3HspVq8=
 github.com/vektra/mockery/v3 v3.7.0/go.mod h1:z9Wr23Ha8etImqQwS3boTNR9WkjX6tIklW5c88DRkSw=
+github.com/vektra/mockery/v3 v3.7.1/go.mod h1:fbChccNiUvQaUVaCHS6/7OL5/D65KljJVk31LuPPUjY=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f h1:J9EGpcZtP0E/raorCMxlFGSTBrsSlaDGf3jU/qvAE2c=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
 github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
