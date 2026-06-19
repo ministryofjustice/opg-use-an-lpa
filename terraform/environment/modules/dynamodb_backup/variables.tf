@@ -1,3 +1,8 @@
+variable "account_name" {
+  type        = string
+  description = "AWS account name to use in resource names"
+}
+
 variable "environment_name" {
   type        = string
   description = "Environment name to use in resource names"
@@ -32,8 +37,18 @@ variable "dynamodb_table_arns_to_backup" {
   description = "The ARNs of the DynamoDB tables to backup"
 }
 
+variable "region_replication_enabled" {
+  type        = bool
+  description = "Whether to replicate backups to a secondary region"
+}
+
 variable "replica_region" {
   type        = string
   description = "The region where backups will be replicated to"
   default     = "eu-west-2"
+}
+
+variable "cross_account_backup_enabled" {
+  type        = bool
+  description = "Whether to enable cross-account backup replication"
 }

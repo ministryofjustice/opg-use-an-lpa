@@ -1,10 +1,11 @@
 export default class SessionDialog {
-    constructor(element)
+    constructor(element, sessionExpired)
     {
         this.requestHeaders = { "headers": { "Accept": "application/json" } };
         this.element = element;
         this.dialogOverlay = document.querySelector("#dialog-overlay");
         this.dialogFocus = document.querySelector(".dialog-focus");
+        this.sessionExpired = sessionExpired;
         this._setupEventHandlers();
         this._trapFocus();
         this._runInterval();
@@ -53,7 +54,7 @@ export default class SessionDialog {
     {
         const response = await fetch("/session-check", this.requestHeaders)
         if (response.redirected) {
-            window.location.href = "/session-expired";
+            this.sessionExpired();
         }
         else {
             return response.json()

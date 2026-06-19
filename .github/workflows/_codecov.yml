@@ -46,7 +46,7 @@ jobs:
           inputs.specific_path == 'all' ||
           inputs.specific_path == 'admin'
       - name: service front codecov upload
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
         with:
           name: use-an-lpa-front
           directory: ./service-front
@@ -57,7 +57,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service api codecov upload
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
         with:
           name: use-an-lpa-api
           directory: ./service-api
@@ -68,7 +68,7 @@ jobs:
         if: |
           ( success() || failure() ) && inputs.specific_path == 'all'
       - name: service admin codecov upload
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6
         with:
           name: use-an-lpa-admin
           directory: ./service-admin

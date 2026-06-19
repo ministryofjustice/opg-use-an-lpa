@@ -7,7 +7,9 @@
   "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
     "test": "CI=true jest --coverage",
+    "jest": "jest",
     "test:watch": "jest --watch",
+    "install-and-build": "npm ci --ignore-scripts && npm run build",
     "build": " npm run build-scss && BABEL_ENV=build babel src --out-dir dist && node build.js",
     "accessibility-check": "node ./pa11y.js",
     "build-scss": "npm rebuild sass --verbose && sass --load-path=./ --verbose src/main.scss:dist/stylesheets/main.css src/gds.scss:dist/stylesheets/gds.css src/pdf.scss:dist/pdf.css --style compressed"
@@ -28,19 +30,19 @@
     "babel-jest": "^30.0.0",
     "core-js": "^3.26.0",
     "es6-promise": "^4.2.8",
-    "esbuild": "0.28.0",
+    "esbuild": "0.28.1",
     "esbuild-sass-plugin": "^3.2.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^30.0.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-junit": "^16.0.0",
+    "jest-environment-jsdom": "^30.4.1",
+    "jest-junit": "^17.0.0",
     "prettier": "^3.0.0",
     "sass": "^1.75.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.29.2",
+    "@babel/runtime": "7.29.7",
     "@govuk-one-login/service-header": "^5.0.0",
     "@jest/globals": "^30.0.0",
     "@ministryofjustice/frontend": "^9.0.0",

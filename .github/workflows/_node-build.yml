@@ -26,12 +26,11 @@ jobs:
       - name: install dependencies
         run: |
           if [ ! -d service-front/web/node_modules ]; then
-            cd ./service-front/web/ && npm ci --ignore-scripts
+            docker compose run --rm npm ci --ignore-scripts
           fi
       - name: build assets
         run: |
-          cd service-front/web/
-          npm run build
+          docker compose run --rm --volume $(pwd)/service-front/web/dist:/web/dist npm run build
       - name: archive dist
         uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:

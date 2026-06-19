@@ -6,6 +6,7 @@ namespace AppTest\Service\User;
 
 use App\DataAccess\Repository\ActorUsersInterface;
 use App\Exception\ConflictException;
+use App\Exception\CreationException;
 use App\Exception\NotFoundException;
 use App\Service\User\UserService;
 use Aws\CommandInterface;
@@ -16,6 +17,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
@@ -35,6 +37,7 @@ class UserServiceTest extends TestCase
         $identity = 'urn:fdc:one-login:2023:HASH=';
         $now      = new DateTimeImmutable();
 
+        /** @var ObjectProphecy<ActorUsersInterface> $repoProphecy */
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->add(
             Argument::that(function (string $data) {
@@ -44,6 +47,7 @@ class UserServiceTest extends TestCase
             $email,
             $identity,
             $now->format(DateTimeInterface::ATOM),
+            false,
         );
 
         $clock = $this->prophesize(ClockInterface::class);
@@ -68,20 +72,54 @@ class UserServiceTest extends TestCase
     }
 
     #[Test]
+    public function can_add_a_new_user_with_ignored_orphan_identity(): void
+    {
+        $email    = 'a@b.com';
+        $identity = 'urn:fdc:one-login:2023:HASH=';
+        $now      = new DateTimeImmutable();
+
+        /** @var ObjectProphecy<ActorUsersInterface> $repoProphecy */
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->add(
+            Argument::that(function (string $data) {
+                $this->id = $data;
+                return Uuid::isValid($data);
+            }),
+            $email,
+            $identity,
+            $now->format(DateTimeInterface::ATOM),
+            true,
+        );
+
+        $clock = $this->prophesize(ClockInterface::class);
+        $clock->now()->willReturn($now);
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clock->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $return = $us->addWithOrphanIdentityBypass($email, $identity);
+
+        $this->assertEquals(
+            [
+                'Id'       => $this->id,
+                'Email'    => $email,
+                'Identity' => $identity,
+            ],
+            $return
+        );
+    }
+
+    #[Test]
     public function wont_add_a_user_that_already_exists(): void
     {
         $command = $this->prophesize(CommandInterface::class);
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->add(Argument::cetera())
-            ->willThrow(new DynamoDbException('', $command->reveal(), [
-                'body' => [
-                    'CancellationReasons' => [
-                        ['Code' => 'None'],
-                        ['Code' => 'ConditionalCheckFailed'],
-                    ],
-                ],
-            ]));
+            ->willThrow(ConflictException::class);
 
         $clock = $this->prophesize(ClockInterface::class);
         $clock->now()->willReturn(new DateTimeImmutable());
@@ -93,7 +131,27 @@ class UserServiceTest extends TestCase
         );
 
         $this->expectException(ConflictException::class);
-        $us->add('', '');
+        $us->add('test@example.com', 'identity');
+    }
+
+    #[Test]
+    public function wont_add_a_user_that_already_exists_with_ignored_orphan_identity(): void
+    {
+        $repoProphecy = $this->prophesize(ActorUsersInterface::class);
+        $repoProphecy->add(Argument::cetera())
+            ->willThrow(CreationException::class);
+
+        $clock = $this->prophesize(ClockInterface::class);
+        $clock->now()->willReturn(new DateTimeImmutable());
+
+        $us = new UserService(
+            $repoProphecy->reveal(),
+            $clock->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal()
+        );
+
+        $this->expectException(CreationException::class);
+        $us->addWithOrphanIdentityBypass('test@example.com', 'identity');
     }
 
     #[Test]

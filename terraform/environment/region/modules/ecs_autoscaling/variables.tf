@@ -30,28 +30,28 @@ variable "ecs_task_autoscaling_maximum" {
 
 
 
-variable "autoscaling_metric_max_cpu_target" {
-  description = "The target value for the CPU metric."
+variable "autoscaling_scale_up_cpu_threshold" {
+  description = "Average CPU utilization threshold to trigger scale-up action."
   type        = number
-  default     = 80
+  default     = 70
 }
 
-variable "autoscaling_metric_max_memory_target" {
-  description = "The target value for the memory metric."
+variable "autoscaling_scale_up_memory_threshold" {
+  description = "Average memory utilization threshold to trigger scale-up action."
   type        = number
-  default     = 80
+  default     = 70
 }
 
-variable "autoscaling_metric_min_cpu_target" {
-  description = "The target value for the CPU metric."
+variable "autoscaling_scale_down_cpu_threshold" {
+  description = "Average CPU utilization threshold to trigger scale-down action."
   type        = number
-  default     = 50
+  default     = 40
 }
 
-variable "autoscaling_metric_min_memory_target" {
-  description = "The target value for the memory metric."
+variable "autoscaling_scale_down_memory_threshold" {
+  description = "Average memory utilization threshold to trigger scale-down action."
   type        = number
-  default     = 60
+  default     = 40
 }
 
 variable "ecs_task_autoscaling_minimum" {

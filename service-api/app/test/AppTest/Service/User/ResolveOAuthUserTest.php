@@ -322,6 +322,111 @@ class ResolveOAuthUserTest extends TestCase
     }
 
     #[Test]
+    public function known_email_has_unexpected_one_login_subject(): void
+    {
+        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
+        $actorUsersInterfaceProphecy
+            ->recordSuccessfulLogin('fakeId', Argument::cetera())
+            ->shouldBeCalled();
+
+        $userServiceProphecy = $this->prophesize(UserService::class);
+        $userServiceProphecy
+            ->getByIdentity('fakeSub')
+            ->willThrow(NotFoundException::class);
+        $userServiceProphecy
+            ->getByEmail('fakeEmail')
+            ->willReturn(
+                [
+                    'Id'       => 'fakeId',
+                    'Identity' => 'fakeSub',
+                ]
+            );
+        $userServiceProphecy
+            ->add('fakeEmail', 'fakeSub')
+            ->willReturn(
+                [
+                    'Id'       => 'fakeId',
+                    'Email'    => 'fakeEmail',
+                    'Identity' => 'fakeSub',
+                ]
+            );
+
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $sut = new ResolveOAuthUser(
+            $actorUsersInterfaceProphecy->reveal(),
+            $userServiceProphecy->reveal(),
+            $this->prophesize(RecoverAccount::class)->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $user = ($sut)('fakeSub', 'fakeEmail');
+
+        $this->assertArrayHasKey('Identity', $user);
+        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertArrayHasKey('Email', $user);
+        $this->assertEquals('fakeEmail', $user['Email']);
+
+        $this->assertArrayNotHasKey('Password', $user);
+    }
+
+    #[Test]
+    public function known_email_has_unexpected_one_login_subject_that_is_orphan(): void
+    {
+        $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
+        $actorUsersInterfaceProphecy
+            ->recordSuccessfulLogin('fakeId', Argument::cetera())
+            ->shouldBeCalled();
+
+        $userServiceProphecy = $this->prophesize(UserService::class);
+        $userServiceProphecy
+            ->getByIdentity('fakeSub')
+            ->willThrow(NotFoundException::class);
+        $userServiceProphecy
+            ->getByEmail('fakeEmail')
+            ->willReturn(
+                [
+                    'Id'       => 'fakeId',
+                    'Identity' => 'fakeSub',
+                ]
+            );
+        $userServiceProphecy
+            ->add('fakeEmail', 'fakeSub')
+            ->willThrow(new ConflictException('', ['identity' => 'fakeSub']));
+        $userServiceProphecy
+            ->addWithOrphanIdentityBypass('fakeEmail', 'fakeSub')
+            ->willReturn(
+                [
+                    'Id'       => 'fakeId',
+                    'Email'    => 'fakeEmail',
+                    'Identity' => 'fakeSub',
+                ]
+            );
+
+        $clockProphecy = $this->prophesize(ClockInterface::class);
+        $clockProphecy->now()->willReturn(new DateTimeImmutable('now'));
+
+        $sut = new ResolveOAuthUser(
+            $actorUsersInterfaceProphecy->reveal(),
+            $userServiceProphecy->reveal(),
+            $this->prophesize(RecoverAccount::class)->reveal(),
+            $clockProphecy->reveal(),
+            $this->prophesize(LoggerInterface::class)->reveal(),
+        );
+
+        $user = ($sut)('fakeSub', 'fakeEmail');
+
+        $this->assertArrayHasKey('Identity', $user);
+        $this->assertEquals('fakeSub', $user['Identity']);
+        $this->assertArrayHasKey('Email', $user);
+        $this->assertEquals('fakeEmail', $user['Email']);
+
+        $this->assertArrayNotHasKey('Password', $user);
+    }
+
+    #[Test]
     public function new_onelogin_user_returns_brand_new_user(): void
     {
         $actorUsersInterfaceProphecy = $this->prophesize(ActorUsersInterface::class);
