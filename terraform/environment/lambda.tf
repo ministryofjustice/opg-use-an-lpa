@@ -67,6 +67,18 @@ data "aws_iam_policy_document" "lambda_update_statistics" {
       "dynamodb:PutItem"
     ]
   }
+
+  statement {
+    sid    = "DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
+  }
 }
 
 # Scheduling
