@@ -18,6 +18,8 @@ These two scripts performs the following steps:
 4. Group associated account IDs by identity
 5. Generate a JSON dataset
 6. Upload the dataset to S3
+7. Process work file dataset into merge plans using `merge_duplicate_identities.py`
+8. Run merge plans using `merge_duplicate_identities --execute`
 
 ## Athena Query
 ```
@@ -75,6 +77,31 @@ options:
   -d D        The athena database to query against.
   -b B        The bucket to which to write the work files.
   -p P        Bucket prefix for work files.
+
+$ python ./merge_duplicate_identities.py --help
+usage: merge_duplicate_identities.py [-h] [--limit LIMIT] [--offset OFFSET]
+                                     [--table-prefix TABLE_PREFIX] [--bucket BUCKET]
+                                     [--work-prefix WORK_PREFIX]
+                                     [--plan-prefix PLAN_PREFIX]
+                                     [--plan-file PLAN_FILE]
+                                     [--execute]
+
+Merge duplicate OPG identities
+
+options:
+  -h, --help            show this help message and exit
+  --limit LIMIT         Limit number of duplicate identities processed
+  --offset OFFSET       Skip this many duplicate identities before processing
+  --table-prefix TABLE_PREFIX
+                        The DynamoDB table prefix to use when querying. default: demo
+  --bucket BUCKET       The bucket containing merge plans and work files
+  --work-prefix WORK_PREFIX
+                        Bucket prefix for work files. default: todo
+  --plan-prefix PLAN_PREFIX
+                        Bucket prefix for merge plan files. default: plan
+  --plan-file PLAN_FILE
+                        Specify a specific merge plan file to run
+  --execute             Apply a reviewed merge plan
 ```
 
 For production you would likely use `-d ual -b use-a-lpa-dynamodb-exports-production`
@@ -101,9 +128,9 @@ s3://<bucket>/athena-results/
 ```
 These files are intermediary Athena artifacts and are separate from the final exported JSON dataset.
 
-### Final Script output
+## Discover duplicates Script output
 
-The final JSON dataset is uploaded to:
+The final work plan JSON dataset is uploaded to:
 ```
 s3://<bucket>/<prefix>/duplicate-identities-1.json
 s3://<bucket>/<prefix>/duplicate-identities-2.json
@@ -111,9 +138,9 @@ s3://<bucket>/<prefix>/duplicate-identities-3.json
 s3://<bucket>/<prefix>/duplicate-identities-n.json
 ```
 
-### Contents of JSON file should look like
+### Contents of work plan JSON should look like
 
-```
+```json
 [
   {
     "identity": "urn:fdc:mock-one-login:2023:YiB/vNlBsGVnQfvyrA3hMjOKnI1dlJBBECre/cxUf1A=",
@@ -130,6 +157,27 @@ s3://<bucket>/<prefix>/duplicate-identities-n.json
       "user-e"
     ]
   }
+  ...
 ]
 ```
-This file becomes the input dataset for the Planner Lambda (Layer 2).
+
+## Processing work files into merge plans
+Using the `merge_duplicate_identities.py` script you can process the work files into merge plans.
+
+The bucket and table prefix must be provided using the `--bucket` and `--table-prefix` flags respectively.
+Table prefix can vary depending on the environment - see DynamoDB to ensure you have the correct one for your environment.
+
+```shell
+$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --table-prefix <TABLE_PREFIX>
+
+# using --limit and --offset flags to limit the number of work files processed
+# starting at the 10th work file entry process an additional 10 entries.
+$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --table-prefix <TABLE_PREFIX> --limit 10 --offset 10
+```
+
+## Applying merge plans
+The same script can be used to apply merge plans using the `--execute` flag.
+
+```shell
+$ python merge_duplicate_identities.py --bucket use-a-lpa-dynamodb-exports-<ENVIRONMENT> --execute
+```
