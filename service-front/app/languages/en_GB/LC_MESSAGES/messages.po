@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-06-22T11:54:52+00:00\n"
+"POT-Creation-Date: 2026-06-22T13:24:52+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -274,7 +274,7 @@ msgstr "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
-#: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/enter-code.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
 #: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
@@ -3807,11 +3807,11 @@ msgstr "The donor or attorney may have given you the wrong code."
 msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:61
+#: src/Viewer/templates/viewer/enter-code.html.twig:62
 msgid "This service cannot be used for enduring powers of attorney."
 msgstr "This service cannot be used for enduring powers of attorney."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:62
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:75
 msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
@@ -4727,6 +4727,10 @@ msgstr "the LPA reference number - you’ll find this on the paper LPA and on le
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
 msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
 msgstr "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:58
+msgid "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
+msgstr "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
 
 #~ msgid "What you'll need"
 #~ msgstr "What you'll need"

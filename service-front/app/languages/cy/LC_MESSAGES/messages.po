@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-06-22T11:54:52+00:00\n"
+"POT-Creation-Date: 2026-06-22T13:24:52+00:00\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -282,7 +282,7 @@ msgstr "Trwy barhau, rydych yn cytuno i <a href=\"%link%\" class=\"govuk-link\">
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
-#: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/enter-code.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
 #: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
@@ -3825,11 +3825,11 @@ msgstr "Efallai bod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi."
 msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr "Gofynnwch iddynt fynd i www.gov.uk/defnyddio-atwrneiaeth-arhosol i greu cod mynediad LPA ar gyfer eich sefydliad."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:61
+#: src/Viewer/templates/viewer/enter-code.html.twig:62
 msgid "This service cannot be used for enduring powers of attorney."
 msgstr "Ni ellir defnyddio’r gwasanaeth hwn ar gyfer atwrniaethau parhaus."
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:62
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:75
 msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr "Drwy barhau rydych yn cytuno i'n <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">telerau defnyddio (yn agor mewn tab newydd)</a>."
@@ -4752,6 +4752,10 @@ msgstr "cyfeirnod yr atwrneiaeth arhosol - fe welwch hwn ar yr atwrneiaeth arhos
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
 msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
 msgstr "Os oedd gweithiwr proffesiynol, fel cyfreithiwr, wedi eich helpu i wneud yr LPA, dylai allu rhoi y cyfeirnod i chi."
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:58
+msgid "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
+msgstr "Os ydych yn rhoddwr neu’n atwrnai, gallwch weld yr LPA drwy fewngofnodi i’r gwasanaeth <a href=\"https://www.gov.uk/atwrneiaeth-arhosol/Defnyddio-atwrneiaeth-arhosol\" class=\"govuk-link\">Defnyddio atwrneiaeth arhosol</a>."
 
 #~ msgid "What you'll need"
 #~ msgstr "Beth fydd ei angen arnoch"
