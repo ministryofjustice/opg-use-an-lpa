@@ -3,7 +3,6 @@ import boto3
 import json
 import time
 from collections import defaultdict
-from datetime import datetime, UTC
 
 QUERY = """
 WITH duplicate_identities AS (

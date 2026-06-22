@@ -1,6 +1,5 @@
 import argparse
 import hashlib
-import pprint
 
 import boto3
 from collections import defaultdict
