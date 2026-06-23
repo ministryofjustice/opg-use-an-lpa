@@ -13,8 +13,8 @@
                             <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
                     {% else %}
                         {% trans %}The donor has said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
+                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf
+                        {% endtrans %}
                     {% endif %}
                 {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
                     {% trans %}This <abbr
