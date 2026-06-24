@@ -31,7 +31,6 @@ class UserServiceTest extends TestCase
             ->willReturn([
                 'Id'        => $id,
                 'Email'     => $email,
-                'Password'  => password_hash('pa33w0rd123', PASSWORD_DEFAULT),
                 'LastLogin' => null,
             ]);
 

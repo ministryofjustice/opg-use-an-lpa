@@ -2324,36 +2324,6 @@ msgstr "Os nad oes arnoch angen eich cyfrif Defnyddio atwrneiaeth arhosol mwyach
 msgid "Find out more about deleting your account"
 msgstr "Rhagor o wybodaeth am ddileu eich cyfrif"
 
-#. Create account, change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:7
-msgctxt "error"
-msgid "Password must be 12 characters or more"
-msgstr "Rhaid i’r cyfrinair fod yn 12 nod neu fwy"
-
-#. Create account
-#: src/Actor/templates/actor/form-error-messages.html.twig:8
-msgctxt "error"
-msgid "Passwords do not match"
-msgstr "Nid yw’r cyfrineiriau’n cyfateb"
-
-#. Create account, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:9
-msgctxt "error"
-msgid "Confirm your password"
-msgstr "Cadarnhewch eich cyfrinair"
-
-#. Create account
-#: src/Actor/templates/actor/form-error-messages.html.twig:10
-msgctxt "error"
-msgid "You must accept the terms of use to create an account"
-msgstr "Mae’n rhaid i chi dderbyn y telerau defnyddio i greu cyfrif"
-
-#. Login csrf
-#: src/Actor/templates/actor/form-error-messages.html.twig:13
-msgctxt "error"
-msgid "Security validation failed. Please try again."
-msgstr "Proses dilysu diogelwch wedi methu. Rhowch gynnig arall arni."
-
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:16
 msgctxt "error"

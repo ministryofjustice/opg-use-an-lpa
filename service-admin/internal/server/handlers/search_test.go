@@ -625,7 +625,7 @@ func Test_SearchHandler(t *testing.T) {
 			args: args{
 				accountService: &mockAccountService{GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
 					if s == "test@email.com" {
-						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, nil
+						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", LPAs: []*data.LPA{}}, nil
 					}
 					t.Errorf("Wrong email given expected test@email.com, recieved %s", s)
 					t.FailNow()
@@ -638,10 +638,9 @@ func Test_SearchHandler(t *testing.T) {
 				Query: "test@email.com",
 				Type:  0,
 				Result: &data.ActorUser{
-					ID:              "700000000123",
-					Email:           "test@email.com",
-					ActivationToken: "WWFCCH41R123",
-					LPAs:            []*data.LPA{}},
+					ID:    "700000000123",
+					Email: "test@email.com",
+					LPAs:  []*data.LPA{}},
 				Errors: nil,
 				Path:   "/my_url",
 			},
@@ -651,7 +650,7 @@ func Test_SearchHandler(t *testing.T) {
 			args: args{
 				accountService: &mockAccountService{GetActorByUserEmailFunc: func(ctx context.Context, s string) (*data.ActorUser, error) {
 					if s == "test@email.com" {
-						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", ActivationToken: "WWFCCH41R123", LPAs: []*data.LPA{}}, nil
+						return &data.ActorUser{ID: "700000000123", Email: "test@email.com", LPAs: []*data.LPA{}}, nil
 					}
 					t.Errorf("Wrong email given expected test@email.com, recieved %s", s)
 					t.FailNow()
@@ -664,10 +663,9 @@ func Test_SearchHandler(t *testing.T) {
 				Query: "test@email.com",
 				Type:  0,
 				Result: &data.ActorUser{
-					ID:              "700000000123",
-					Email:           "test@email.com",
-					ActivationToken: "WWFCCH41R123",
-					LPAs:            []*data.LPA{},
+					ID:    "700000000123",
+					Email: "test@email.com",
+					LPAs:  []*data.LPA{},
 				},
 				Errors: nil,
 				Path:   "/my_url",

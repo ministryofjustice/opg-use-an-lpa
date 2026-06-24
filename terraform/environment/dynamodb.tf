@@ -104,10 +104,6 @@ resource "aws_dynamodb_table" "use_users_table" {
     name = "Email"
     type = "S"
   }
-  attribute {
-    name = "ActivationToken"
-    type = "S"
-  }
 
   global_secondary_index {
     name            = "IdentityIndex"
@@ -118,11 +114,6 @@ resource "aws_dynamodb_table" "use_users_table" {
     name            = "EmailIndex"
     hash_key        = "Email"
     projection_type = "ALL"
-  }
-  global_secondary_index {
-    name            = "ActivationTokenIndex"
-    hash_key        = "ActivationToken"
-    projection_type = "KEYS_ONLY"
   }
 
   ttl {

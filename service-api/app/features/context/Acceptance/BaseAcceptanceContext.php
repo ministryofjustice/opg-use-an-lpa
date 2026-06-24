@@ -28,7 +28,6 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
 
     public string $userAccountId;
     public string $userAccountEmail;
-    public string $userAccountPassword;
     public RequestInterface $lastApiRequest;
 
     public function setContainer(ContainerInterface $container): void
@@ -49,8 +48,7 @@ class BaseAcceptanceContext extends RawMinkContext implements Psr11MinkAwareCont
     #[Given('I am a user of the lpa application')]
     public function iAmAUserOfTheLpaApplication(): void
     {
-        $this->userAccountId       = '123456789';
-        $this->userAccountEmail    = 'test@example.com';
-        $this->userAccountPassword = 'pa33w0rd';
+        $this->userAccountId    = '123456789';
+        $this->userAccountEmail = 'test@example.com';
     }
 }
