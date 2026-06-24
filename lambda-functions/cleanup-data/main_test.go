@@ -70,46 +70,7 @@ func TestRun(t *testing.T) {
 				{
 					PutRequest: &types.PutRequest{
 						Item: map[string]types.AttributeValue{
-							"Id":                  &types.AttributeValueMemberS{Value: "all-fields"},
-							"ActivationToken":     &types.AttributeValueMemberS{Value: "sure"},
-							"Comment":             &types.AttributeValueMemberS{Value: "what"},
-							"CreatedAt":           &types.AttributeValueMemberS{Value: "2020-01-02"},
-							"Email":               &types.AttributeValueMemberS{Value: "hey@example.com"},
-							"EmailResetExpiry":    &types.AttributeValueMemberN{Value: "133"},
-							"EmailResetToken":     &types.AttributeValueMemberS{Value: "__hefrhjjkfew="},
-							"ExpiresTTL":          &types.AttributeValueMemberS{Value: "345"},
-							"Identity":            &types.AttributeValueMemberS{Value: "urn:blah"},
-							"LastLogin":           &types.AttributeValueMemberS{Value: "x-y-z"},
-							"NeedsReset":          &types.AttributeValueMemberN{Value: "45343"},
-							"NewEmail":            &types.AttributeValueMemberS{Value: "hey2@example.com"},
-							"Password":            &types.AttributeValueMemberS{Value: "$5$rounds=fejhnwefjkf"},
-							"PasswordResetExpiry": &types.AttributeValueMemberN{Value: "123"},
-							"PasswordResetToken":  &types.AttributeValueMemberS{Value: "__efhwefk__"},
-						},
-					},
-				},
-				{
-					PutRequest: &types.PutRequest{
-						Item: map[string]types.AttributeValue{
-							"Id":                  &types.AttributeValueMemberS{Value: "just-old-fields"},
-							"CreatedAt":           &types.AttributeValueMemberS{Value: "2020-01-02"},
-							"Email":               &types.AttributeValueMemberS{Value: "hey@example.com"},
-							"EmailResetExpiry":    &types.AttributeValueMemberN{Value: "133"},
-							"EmailResetToken":     &types.AttributeValueMemberS{Value: "__hefrhjjkfew="},
-							"ExpiresTTL":          &types.AttributeValueMemberS{Value: "345"},
-							"LastLogin":           &types.AttributeValueMemberS{Value: "x-y-z"},
-							"NeedsReset":          &types.AttributeValueMemberN{Value: "45343"},
-							"NewEmail":            &types.AttributeValueMemberS{Value: "hey2@example.com"},
-							"Password":            &types.AttributeValueMemberS{Value: "$5$rounds=fejhnwefjkf"},
-							"PasswordResetExpiry": &types.AttributeValueMemberN{Value: "123"},
-							"PasswordResetToken":  &types.AttributeValueMemberS{Value: "__efhwefk__"},
-						},
-					},
-				},
-				{
-					PutRequest: &types.PutRequest{
-						Item: map[string]types.AttributeValue{
-							"Id":        &types.AttributeValueMemberS{Value: "just-new-fields"},
+							"Id":        &types.AttributeValueMemberS{Value: "normal-item"},
 							"CreatedAt": &types.AttributeValueMemberS{Value: "2020-01-02"},
 							"Email":     &types.AttributeValueMemberS{Value: "hey@example.com"},
 							"Identity":  &types.AttributeValueMemberS{Value: "urn:blah"},
@@ -129,7 +90,7 @@ func TestRun(t *testing.T) {
 					PutRequest: &types.PutRequest{
 						Item: map[string]types.AttributeValue{
 							"Id":      &types.AttributeValueMemberS{Value: "EMAIL#a"},
-							"Ignored": &types.AttributeValueMemberS{Value: "please"},
+							"Ignored": &types.AttributeValueMemberS{Value: "delete me"},
 						},
 					},
 				},
@@ -144,29 +105,11 @@ func TestRun(t *testing.T) {
 
 	expected := []map[string]types.AttributeValue{
 		{
-			"Id":        &types.AttributeValueMemberS{Value: "all-fields"},
-			"Comment":   &types.AttributeValueMemberS{Value: "what"},
+			"Id":        &types.AttributeValueMemberS{Value: "normal-item"},
 			"CreatedAt": &types.AttributeValueMemberS{Value: "2020-01-02"},
 			"Email":     &types.AttributeValueMemberS{Value: "hey@example.com"},
 			"Identity":  &types.AttributeValueMemberS{Value: "urn:blah"},
 			"LastLogin": &types.AttributeValueMemberS{Value: "x-y-z"},
-		},
-		{
-			"Id":        &types.AttributeValueMemberS{Value: "just-new-fields"},
-			"CreatedAt": &types.AttributeValueMemberS{Value: "2020-01-02"},
-			"Email":     &types.AttributeValueMemberS{Value: "hey@example.com"},
-			"Identity":  &types.AttributeValueMemberS{Value: "urn:blah"},
-			"LastLogin": &types.AttributeValueMemberS{Value: "x-y-z"},
-		},
-		{
-			"Id":        &types.AttributeValueMemberS{Value: "just-old-fields"},
-			"CreatedAt": &types.AttributeValueMemberS{Value: "2020-01-02"},
-			"Email":     &types.AttributeValueMemberS{Value: "hey@example.com"},
-			"LastLogin": &types.AttributeValueMemberS{Value: "x-y-z"},
-		},
-		{
-			"Id":      &types.AttributeValueMemberS{Value: "EMAIL#a"},
-			"Ignored": &types.AttributeValueMemberS{Value: "please"},
 		},
 		{
 			"Id":       &types.AttributeValueMemberS{Value: "IDENTITY#a"},
