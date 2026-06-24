@@ -167,11 +167,6 @@ class ActorUsers implements ActorUsersInterface
     {
         // Update the data manually, so we don't have to get it again
         $user['Identity'] = $identity;
-        unset($user['ActivationToken']);
-        unset($user['ExpiresTTL']);
-        unset($user['PasswordResetToken']);
-        unset($user['PasswordResetExpiry']);
-        unset($user['NeedsReset']);
 
         $marshaler = new Marshaler();
 
@@ -181,8 +176,7 @@ class ActorUsers implements ActorUsersInterface
                     'Update' => [
                         'TableName'                 => $this->actorUsersTable,
                         'Key'                       => ['Id' => ['S' => $user['Id']]],
-                        'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, '
-                            . 'PasswordResetToken, PasswordResetExpiry, NeedsReset',
+                        'UpdateExpression'          => 'SET #sub = :sub',
                         'ExpressionAttributeValues' => $marshaler->marshalItem([':sub' => $identity]),
                         'ExpressionAttributeNames'  => [
                             '#sub' => 'Identity',
@@ -230,7 +224,7 @@ class ActorUsers implements ActorUsersInterface
             [
                 'TableName'                 => $this->actorUsersTable,
                 'Key'                       => ['Id' => ['S' => $id]],
-                'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                'UpdateExpression'          => 'SET Email=:p',
                 'ExpressionAttributeValues' => [
                     ':p' => [
                         'S' => $newEmail,

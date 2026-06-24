@@ -58,10 +58,6 @@ class ResolveOAuthUser
             $this->clock->now()->format(DateTimeInterface::ATOM)
         );
 
-        // Ensure we don't return our Password over the wire. Although we don't set this anymore
-        // the majority of records still have an associated password.
-        unset($user['Password']);
-
         return $user;
     }
 
