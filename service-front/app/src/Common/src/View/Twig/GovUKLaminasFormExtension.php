@@ -19,6 +19,9 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
+/**
+ * @codeCoverageIgnore
+ */
 class GovUKLaminasFormExtension extends AbstractExtension
 {
     /**
@@ -30,7 +33,6 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Checkbox::class => 'form_input_checkbox',
         Element\Csrf::class     => 'form_input_hidden',
         Element\Hidden::class   => 'form_input_hidden',
-        Element\Password::class => 'form_input_password',
         CustomEmail ::class     => 'form_input_email',
         Element\Text::class     => 'form_input_text',
         Element\Number::class   => 'form_input_number',
@@ -38,7 +40,7 @@ class GovUKLaminasFormExtension extends AbstractExtension
         Element\Textarea::class => 'form_input_area',
         Element\Number::class   => 'form_input_number',
         //  Fieldsets
-        Date::class => 'form_fieldset_date',
+        Date::class             => 'form_fieldset_date',
     ];
 
     public function getFunctions(): array
@@ -46,23 +48,47 @@ class GovUKLaminasFormExtension extends AbstractExtension
         return [
             new TwigFunction(
                 'govuk_form_open',
-                [$this, 'formOpen'],
-                ['needs_environment' => true, 'is_safe' => ['html']]
+                [
+                    $this,
+                    'formOpen',
+                ],
+                [
+                    'needs_environment' => true,
+                    'is_safe'           => ['html'],
+                ]
             ),
             new TwigFunction(
                 'govuk_form_close',
-                [$this, 'formClose'],
-                ['needs_environment' => true, 'is_safe' => ['html']]
+                [
+                    $this,
+                    'formClose',
+                ],
+                [
+                    'needs_environment' => true,
+                    'is_safe'           => ['html'],
+                ]
             ),
             new TwigFunction(
                 'govuk_form_element',
-                [$this, 'formElement'],
-                ['needs_environment' => true, 'is_safe' => ['html']]
+                [
+                    $this,
+                    'formElement',
+                ],
+                [
+                    'needs_environment' => true,
+                    'is_safe'           => ['html'],
+                ]
             ),
             new TwigFunction(
                 'govuk_form_fieldset',
-                [$this, 'formFieldset'],
-                ['needs_environment' => true, 'is_safe' => ['html']]
+                [
+                    $this,
+                    'formFieldset',
+                ],
+                [
+                    'needs_environment' => true,
+                    'is_safe'           => ['html'],
+                ]
             ),
         ];
     }

@@ -18,7 +18,7 @@
                     <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}you're a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
+                        <li>{% trans %}you’re a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
                         <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
                     </ul>
 
@@ -30,14 +30,12 @@
                         <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
                     </ul>
 
-                    <h2 class="govuk-heading-m">{% trans %}What you'll need{% endtrans %}</h2>
-
-                    <p class="govuk-body">{% trans %}To ask for a key, you'll need to give us:{% endtrans %}</p>
+                    <h2 class="govuk-heading-m">{% trans %}Details you’ll need to give us{% endtrans %}</h2>
 
                     <ul class="govuk-list govuk-list--bullet">
                         <li>{% trans %}your name and date of birth{% endtrans %}</li>
-                        <li>{% trans %}your current address - all activation keys are sent by post{% endtrans %}</li>
-                        <li>{% trans %}the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG){% endtrans %}</li>
+                        <li>{% trans with {'%link%': path('contact-us')} %}where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class="govuk-link" href="%link%">contact us</a> before continuing so we can update your records{% endtrans %}</li>
+                        <li>{% trans %}the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG){% endtrans %}</li>
                     </ul>
 
 
@@ -52,7 +50,7 @@
                         </summary>
                         <div class="govuk-details__text">
                             <p>{% trans %}If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA.{% endtrans %}</p>
-                            <p>{% trans %}If a professional, such as a solicitor, helped to make the LPA, they should be able to give you the reference number.{% endtrans %}</p>
+                            <p>{% trans %}If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number.{% endtrans %}</p>
                         </div>
                     </details>
                     <div class="moj-button-menu">

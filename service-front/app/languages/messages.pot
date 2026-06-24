@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-06-03T13:10:28+00:00\n"
+"POT-Creation-Date: 2026-06-22T13:24:52+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -256,14 +256,14 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:51
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:62
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:60
 #: src/Actor/templates/actor/request-activation-key/date-of-birth.html.twig:33
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:38
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:60
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:42
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:49
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:39
-#: src/Viewer/templates/viewer/enter-code.html.twig:64
+#: src/Viewer/templates/viewer/enter-code.html.twig:65
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:59
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:95
 #: src/Viewer/templates/viewer/paper-verification/code-sent-to.html.twig:40
@@ -451,7 +451,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:43
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:67
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:65
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
@@ -1179,7 +1179,7 @@ msgid "your email address"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:36
 msgid "your name and date of birth"
 msgstr ""
 
@@ -1751,7 +1751,6 @@ msgstr ""
 msgid "your LPA was registered on or after 1 September 2019"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:21
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr ""
@@ -1926,32 +1925,12 @@ msgstr ""
 msgid "LPAs registered by the Office of the Public Guardian Scotland"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
-msgid "What you'll need"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:35
-msgid "To ask for a key, you'll need to give us:"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:39
-msgid "your current address - all activation keys are sent by post"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:40
-msgid "the LPA reference number - you'll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:50
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:48
 msgid "I do not know the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:54
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:52
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
-msgstr ""
-
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:55
-msgid "If a professional, such as a solicitor, helped to make the LPA, they should be able to give you the reference number."
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
@@ -2308,36 +2287,6 @@ msgstr ""
 
 #: src/Actor/templates/actor/settings.html.twig:42
 msgid "Find out more about deleting your account"
-msgstr ""
-
-#. Create account, change password, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:7
-msgctxt "error"
-msgid "Password must be 12 characters or more"
-msgstr ""
-
-#. Create account
-#: src/Actor/templates/actor/form-error-messages.html.twig:8
-msgctxt "error"
-msgid "Passwords do not match"
-msgstr ""
-
-#. Create account, password reset
-#: src/Actor/templates/actor/form-error-messages.html.twig:9
-msgctxt "error"
-msgid "Confirm your password"
-msgstr ""
-
-#. Create account
-#: src/Actor/templates/actor/form-error-messages.html.twig:10
-msgctxt "error"
-msgid "You must accept the terms of use to create an account"
-msgstr ""
-
-#. Login csrf
-#: src/Actor/templates/actor/form-error-messages.html.twig:13
-msgctxt "error"
-msgid "Security validation failed. Please try again."
 msgstr ""
 
 #. Add LPA
@@ -3799,11 +3748,11 @@ msgstr ""
 msgid "Ask them to go to www.gov.uk/use-lpa to create an LPA access code for your organisation."
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:61
+#: src/Viewer/templates/viewer/enter-code.html.twig:62
 msgid "This service cannot be used for enduring powers of attorney."
 msgstr ""
 
-#: src/Viewer/templates/viewer/enter-code.html.twig:62
+#: src/Viewer/templates/viewer/enter-code.html.twig:63
 #: src/Viewer/templates/viewer/paper-verification/enter-code.html.twig:75
 msgid "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" class=\"govuk-link\" rel=\"noreferrer noopener\">terms of use (opens in new tab)</a>."
 msgstr ""
@@ -4694,4 +4643,28 @@ msgstr ""
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:77
 msgid "No, try again"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
+msgid "you’re a donor or an attorney on the LPA (not a replacement attorney)"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
+msgid "Details you’ll need to give us"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
+msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
+msgstr ""
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
+msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
+msgstr ""
+
+#: src/Viewer/templates/viewer/enter-code.html.twig:58
+msgid "If you’re the donor or an attorney, you can view the LPA by signing into the <a href=\"https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney\" class=\"govuk-link\">Use a lasting power of attorney service</a>."
 msgstr ""

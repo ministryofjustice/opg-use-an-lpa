@@ -602,11 +602,6 @@
       <code><![CDATA[public function isValid($value, $context = null): bool]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="src/Common/src/Validator/PasswordValidator.php">
-    <UnusedClass>
-      <code><![CDATA[PasswordValidator]]></code>
-    </UnusedClass>
-  </file>
   <file src="src/Common/src/View/Twig/FeatureFlagExtension.php">
     <InvalidArgument>
       <code><![CDATA[FeatureFlagRuntime::class . '::featureEnabled']]></code>

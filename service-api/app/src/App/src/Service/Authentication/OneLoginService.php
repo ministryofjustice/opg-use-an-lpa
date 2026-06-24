@@ -79,7 +79,6 @@ class OneLoginService
      * }                          The User retrieved from our records
      * @throws AuthorisationServiceException Throw whilst failing to talk to the OIDC service
      * @throws CreationException             It was not possible to create a new user
-     * @throws ConflictException             The email exists as a "NewEmail" against an existing account
      * @throws NotFoundException             The newly created user was not found when attempting to migrate to OIDC
      */
     public function handleCallback(

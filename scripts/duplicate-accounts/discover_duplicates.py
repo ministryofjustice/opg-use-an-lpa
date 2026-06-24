@@ -3,7 +3,6 @@ import boto3
 import json
 import time
 from collections import defaultdict
-from datetime import datetime, UTC
 
 QUERY = """
 WITH duplicate_identities AS (
@@ -127,7 +126,7 @@ def main():
         description="Retrieve duplicated accounts from Athena and write out work files for deduplication")
     parser.add_argument("-d", type=str, default="",
                         help="The athena database to query against.")
-    parser.add_argument("-b", default="", type=str,
+    parser.add_argument("-b", type=str,
                         help="The bucket to which to write the work files.")
     parser.add_argument("-p", default="todo", type=str,
                         help="Bucket prefix for work files.")

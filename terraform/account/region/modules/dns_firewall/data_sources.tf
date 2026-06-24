@@ -25,7 +25,7 @@ data "aws_vpc" "main" {
     values = [data.aws_default_tags.current.tags.application]
   }
   filter {
-    name   = "tag:name"
+    name   = "tag:Name"
     values = ["${data.aws_default_tags.current.tags.application}-${data.aws_default_tags.current.tags.environment-name}-vpc"]
   }
   provider = aws.region

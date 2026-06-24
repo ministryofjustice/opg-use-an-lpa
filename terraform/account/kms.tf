@@ -242,7 +242,8 @@ module "dynamodb_encryption_key" {
       "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
-      "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
+      "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/data-access"
     ],
     local.environment != "production" ? ["use-a-lpa-github-actions-dynamodb-seeding-"] : [],
     local.environment == "production" ? ["use-a-lpa-github-actions-get-statistics"] : []
