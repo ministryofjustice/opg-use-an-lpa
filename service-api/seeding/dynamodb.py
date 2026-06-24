@@ -312,7 +312,6 @@ actorUsers = [
 for i in actorUsers:
     try:
         actorUsersTable.put_item(Item=i)
-        actorUsersTable.put_item(Item={'Id': 'EMAIL#' + i['Email']})
         if 'Identity' in i:
             actorUsersTable.put_item(Item={'Id': 'IDENTITY#' + i['Identity']})
 
