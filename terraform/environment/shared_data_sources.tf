@@ -6,6 +6,10 @@ data "aws_kms_alias" "event_receiver" {
   name = "alias/event-receiver-mrk"
 }
 
+data "aws_kms_alias" "dynamodb_cmk" {
+  name = "alias/dynamodb-encryption-key-${local.environment.account_name}"
+}
+
 //--------------------
 // ECR Repos
 
@@ -17,17 +21,6 @@ data "aws_ecr_repository" "use_an_lpa_upload_statistics" {
 data "aws_ecr_repository" "use_an_lpa_event_receiver" {
   provider = aws.management
   name     = "use_an_lpa/event_receiver"
-}
-
-data "aws_ecr_repository" "cleanup_data" {
-  name     = "use_an_lpa/backfill_lambda"
-  provider = aws.management
-}
-
-data "aws_ecr_image" "cleanup_data" {
-  repository_name = "use_an_lpa/backfill_lambda"
-  image_tag       = var.container_version
-  provider        = aws.management
 }
 
 data "aws_ecr_repository" "mock_onelogin" {
