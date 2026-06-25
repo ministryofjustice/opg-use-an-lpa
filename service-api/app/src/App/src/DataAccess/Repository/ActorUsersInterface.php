@@ -15,16 +15,7 @@ use App\Exception\NotFoundException;
  *     Id: string,
  *     Identity?: string,
  *     Email: string,
- *     Password?: string,
  *     LastLogin?: string,
- *     ActivationToken?: string,
- *     ExpiresTTL?: int,
- *     PasswordResetToken?: string,
- *     PasswordResetExpiry?: int,
- *     NeedsReset?: bool,
- *     EmailResetToken?: string,
- *     EmailResetExpiry?: int,
- *     NewEmail?: string,
  * }
  */
 interface ActorUsersInterface

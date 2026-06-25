@@ -6,7 +6,6 @@ import disableButtonOnClick from './javascript/disableButtonOnClick';
 import copyAccessCode from './javascript/copyAccessCode';
 import cookieConsent from './javascript/cookieConsent';
 import sessionDialog from './javascript/sessionDialog';
-import showHidePassword from './javascript/showHidePassword';
 import addPolyFill from './javascript/polyfill.js';
 import registerIapImagesComponents from './javascript/iapImages.js';
 import { initCrossServiceHeader } from '@govuk-one-login/service-header/dist/scripts/service-header.js';
@@ -32,7 +31,6 @@ new cookieConsent(
     window.location.pathname === '/cookies',
 );
 copyAccessCode();
-showHidePassword();
 registerIapImagesComponents();
 
 initCrossServiceHeader();

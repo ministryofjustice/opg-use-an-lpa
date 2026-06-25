@@ -236,16 +236,13 @@ actorUsers = [
         'Id': 'bf9e7e77-f283-49c6-a79c-65d5d309ef77',
         'Email': 'opg-use-an-lpa+test-user@digital.justice.gov.uk',
         'LastLogin': datetime.datetime.now().isoformat(),
-        'Password': sha256_crypt.hash('umlTest1'),
         'Comment': 'Seeded data: Default test user'
     }),
     {
         'Id': 'gb9e7e88-f283-49c6-a79c-65d5d309ef88',
         'Email': 'opg-use-an-lpa+test-user1@digital.justice.gov.uk',
         'LastLogin': datetime.datetime.now().isoformat(),
-        'Password': sha256_crypt.hash('umlTest2'),
         'Comment': 'Seeded data: Default test user',
-        'NeedsReset': datetime.datetime.now().isoformat()
     },
     with_identity({
         'Id': actorUserDuplicate1aID,
@@ -312,7 +309,6 @@ actorUsers = [
 for i in actorUsers:
     try:
         actorUsersTable.put_item(Item=i)
-        actorUsersTable.put_item(Item={'Id': 'EMAIL#' + i['Email']})
         if 'Identity' in i:
             actorUsersTable.put_item(Item={'Id': 'IDENTITY#' + i['Identity']})
 

@@ -528,7 +528,7 @@ class ActorUsersTest extends TestCase
                 [
                     'TableName'                 => self::TABLE_NAME,
                     'Key'                       => ['Id' => ['S' => 'fakeId']],
-                    'UpdateExpression'          => 'SET Email=:p REMOVE EmailResetToken, EmailResetExpiry, NewEmail',
+                    'UpdateExpression'          => 'SET Email=:p',
                     'ExpressionAttributeValues' => [
                         ':p' => [
                             'S' => 'newemail@example.com',
@@ -564,8 +564,7 @@ class ActorUsersTest extends TestCase
                         'Update' => [
                             'TableName'                 => 'users-table',
                             'Key'                       => ['Id' => ['S' => $id]],
-                            'UpdateExpression'          => 'SET #sub = :sub REMOVE ActivationToken, ExpiresTTL, PasswordResetToken, '
-                            . 'PasswordResetExpiry, NeedsReset',
+                            'UpdateExpression'          => 'SET #sub = :sub',
                             'ExpressionAttributeValues' => [
                                 ':sub' => ['S' => $identity],
                             ],

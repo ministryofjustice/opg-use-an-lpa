@@ -40,18 +40,16 @@ class AccountContext implements Context
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                'Id'    => $this->base->userAccountId,
+                'Email' => $this->base->userAccountEmail,
             ]),
         ]));
 
         // ActorUsers::get
         $this->awsFixtures->append(new Result([
             'Item' => $this->marshalAwsResultData([
-                'Id'       => $this->base->userAccountId,
-                'Email'    => $this->base->userAccountEmail,
-                'Password' => password_hash($this->base->userAccountPassword, PASSWORD_DEFAULT, ['cost' => 13]),
+                'Id'    => $this->base->userAccountId,
+                'Email' => $this->base->userAccountEmail,
             ]),
         ]));
 
@@ -90,10 +88,16 @@ class AccountContext implements Context
     public function iViewAPageAndTheSystemMessageIsSet(): void
     {
         $this->awsFixtures->append(new Result([
-          'Parameters' => [
-              ['Name' => '/system-message/use/en', 'Value' => 'Use message'],
-              ['Name' => '/system-message/use/cy', 'Value' => 'Neges defnyddio'],
-          ],
+            'Parameters' => [
+                [
+                    'Name'  => '/system-message/use/en',
+                    'Value' => 'Use message',
+                ],
+                [
+                    'Name'  => '/system-message/use/cy',
+                    'Value' => 'Neges defnyddio',
+                ],
+            ],
         ]));
 
         $this->apiGet('/v1/system-message');

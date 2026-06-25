@@ -60,7 +60,6 @@ class OidcContext implements Context
      *  Id: string,
      *  Identity?: string,
      *  Email: string,
-     *  Password: string,
      *  LastLogin: string
      * }
      */
@@ -183,7 +182,6 @@ class OidcContext implements Context
             'Id'        => '0000-00-00-00-000',
             'Identity'  => 'urn:fdc:gov.uk:2022:unique_id',
             'Email'     => 'test@example.com',
-            'Password'  => 'password',
             'LastLogin' => (new DateTimeImmutable('-1 day'))->format('c'),
         ];
     }
@@ -400,8 +398,6 @@ class OidcContext implements Context
         Assert::assertArrayHasKey('Id', $user);
         Assert::assertArrayHasKey('Identity', $user);
         Assert::assertArrayHasKey('Email', $user);
-
-        Assert::assertArrayNotHasKey('Password', $user);
 
         Assert::assertSame($user['Identity'], $this->identitySubject);
         Assert::assertSame($user['Email'], $this->identityEmail);

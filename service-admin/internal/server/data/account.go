@@ -16,12 +16,10 @@ type AccountService struct {
 }
 
 type ActorUser struct {
-	ID              string `json:"Id"`
-	Email           string
-	ActivationToken string
-	ExpiresTTL      int
-	LastLogin       string
-	Identity        string
+	ID        string `json:"Id"`
+	Email     string
+	LastLogin string
+	Identity  string
 
 	LPAs []*LPA
 }

@@ -1,9 +1,6 @@
 import argparse
 import boto3
-import calendar
-import csv
 import re
-from datetime import datetime
 from time import sleep
 
 

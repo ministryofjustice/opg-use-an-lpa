@@ -44,7 +44,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -68,8 +67,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -91,7 +88,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -115,8 +111,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('newFakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -138,7 +132,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -151,7 +144,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'newFakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -173,8 +165,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('newFakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -193,7 +183,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -238,7 +227,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -278,7 +266,6 @@ class ResolveOAuthUserTest extends TestCase
                     'Id'        => 'fakeId',
                     'Identity'  => 'fakeSub',
                     'Email'     => 'fakeEmail',
-                    'Password'  => 'fakePassword',
                     'LastLogin' => (new DateTimeImmutable('-1 day'))->format(DateTimeInterface::ATOM),
                 ]
             );
@@ -317,8 +304,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -368,8 +353,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -422,8 +405,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity']);
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]
@@ -470,8 +451,6 @@ class ResolveOAuthUserTest extends TestCase
         $this->assertEquals('fakeSub', $user['Identity'] ?? '');
         $this->assertArrayHasKey('Email', $user);
         $this->assertEquals('fakeEmail', $user['Email']);
-
-        $this->assertArrayNotHasKey('Password', $user);
     }
 
     #[Test]

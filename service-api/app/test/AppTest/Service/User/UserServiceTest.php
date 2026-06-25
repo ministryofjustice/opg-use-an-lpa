@@ -26,8 +26,6 @@ class UserServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private const string PASS_HASH = '$2y$13$s2xLSYAO3iM020NB07KkReTTn5r/E6ReJiY/UO8WOA9b7udINcgia';
-
     private string $id;
 
     #[Test]
@@ -181,7 +179,7 @@ class UserServiceTest extends TestCase
     {
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);
         $repoProphecy->getByEmail('a@b.com')
-            ->willReturn(['Email' => 'a@b.com', 'Password' => self::PASS_HASH]);
+            ->willReturn(['Email' => 'a@b.com']);
 
         $us = new UserService(
             $repoProphecy->reveal(),
@@ -191,7 +189,7 @@ class UserServiceTest extends TestCase
 
         $return = $us->getByEmail('a@b.com');
 
-        $this->assertEquals(['Email' => 'a@b.com', 'Password' => self::PASS_HASH], $return);
+        $this->assertEquals(['Email' => 'a@b.com'], $return);
     }
 
     #[Test]
@@ -203,7 +201,6 @@ class UserServiceTest extends TestCase
                 [
                     'Email'    => 'a@b.com',
                     'Identity' => 'urn:fdc:one-login:2023:HASH=',
-                    'Password' => self::PASS_HASH,
                 ]
             );
 
@@ -219,7 +216,6 @@ class UserServiceTest extends TestCase
             [
                 'Email'    => 'a@b.com',
                 'Identity' => 'urn:fdc:one-login:2023:HASH=',
-                'Password' => self::PASS_HASH,
             ],
             $return,
         );
@@ -268,7 +264,6 @@ class UserServiceTest extends TestCase
             'Id'        => $id,
             'Email'     => 'a@b.com',
             'LastLogin' => null,
-            'Password'  => self::PASS_HASH,
         ];
 
         $repoProphecy = $this->prophesize(ActorUsersInterface::class);

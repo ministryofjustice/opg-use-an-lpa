@@ -66,9 +66,7 @@ func run(ctx context.Context, event Event) error {
 }
 
 func updateRecords(ctx context.Context, dynamoClient *dynamodb.Client, tableName string, doDelete bool) error {
-	filterExpr := expression.Name("Id").BeginsWith("IDENTITY#").
-		Or(expression.Name("Id").BeginsWith("EMAIL#")).
-		Not()
+	filterExpr := expression.Name("Id").BeginsWith("EMAIL#")
 
 	expr, err := expression.NewBuilder().WithFilter(filterExpr).Build()
 	if err != nil {
@@ -133,12 +131,12 @@ func updateRecords(ctx context.Context, dynamoClient *dynamodb.Client, tableName
 				}
 			}
 
-			slog.Info("updated", slog.Int("count", len(writeRequests)))
+			slog.Info("deleted", slog.Int("count", len(writeRequests)))
 		} else {
 			for _, wr := range writeRequests {
-				var v map[string]any
-				_ = attributevalue.UnmarshalMap(wr.PutRequest.Item, &v)
-				slog.Info("would update", slog.Any("item", v))
+				var id string
+				_ = attributevalue.Unmarshal(wr.DeleteRequest.Key["Id"], &id)
+				slog.Info("would delete", slog.Any("key", id))
 			}
 		}
 	}
@@ -152,33 +150,16 @@ func makeWriteRequests(items []Item) []types.WriteRequest {
 	var result []types.WriteRequest
 
 	for _, item := range items {
-		item, ok := filterFields(item)
-		if !ok {
-			continue
+		key := map[string]types.AttributeValue{
+			"Id": item["Id"],
 		}
 
 		result = append(result, types.WriteRequest{
-			PutRequest: &types.PutRequest{
-				Item: item,
+			DeleteRequest: &types.DeleteRequest{
+				Key: key,
 			},
 		})
 	}
 
 	return result
-}
-
-func filterFields(item Item) (Item, bool) {
-	result := Item{}
-	removed := false
-
-	for k, v := range item {
-		switch k {
-		case "Id", "Comment", "CreatedAt", "Email", "Identity", "LastLogin":
-			result[k] = v
-		default:
-			removed = true
-		}
-	}
-
-	return result, removed
 }

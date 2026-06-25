@@ -25,9 +25,6 @@ trait GenerateAwsResultTrait
      *       'Email' => [
      *         'S' => 'test@example.com',
      *       ],
-     *       'PasswordResetToken' => [
-     *         'S' => 'resetTokenAABBCCDDEE',
-     *       ],
      *     ]
      *   ]
      * ])
