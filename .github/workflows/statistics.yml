@@ -32,16 +32,16 @@ jobs:
           aws-region: eu-west-1
           role-duration-seconds: 1800
           role-session-name: OPGGetServiceStats
-      - name: Set up Python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
         with:
-          python-version: 3.14.2
-      - name: Install requirements
-        run: |
-          pip install -r ./scripts/pipeline/requirements.txt
+          version: "0.11.24"
+          python-version: "3.14.6"
+      - name: Install dependencies
+        working-directory: scripts/pipeline
+        run: uv sync --locked
       - name: Get stats
-        run: |
-          python ./scripts/get_statistics/get_statistics.py > ./stats.json
+        run: uv run --project scripts/pipeline ./scripts/get_statistics/get_statistics.py > ./stats.json
       - name: Show stats in summary (debug only)
         if: runner.debug == '1'
         run: |
@@ -51,7 +51,7 @@ jobs:
         env:
           SLACK_WEB_HOOK: ${{ secrets.STATS_SLACK_WEBHOOK }}
         run: |
-          python ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
+          uv run --project scripts/pipeline ./scripts/pipeline/service_stats_to_slack/stats_slack_notification.py \
           --slack_webhook ${{ env.SLACK_WEB_HOOK }} \
           --template_path ./scripts/pipeline/service_stats_to_slack/service_stats.txt \
           --stats_path ./stats.json

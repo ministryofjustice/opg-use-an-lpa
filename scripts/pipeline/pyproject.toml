@@ -1,0 +1,12 @@
+[project]
+name = "pipeline-scripts"
+version = "0.1.0"
+requires-python = "==3.14.6"
+dependencies = [
+    "botocore==1.42.89",
+    "boto3==1.42.89",
+    "requests==2.33.1",
+    "jinja2==3.1.6",
+]
+[tool.uv]
+package = false
