@@ -29,11 +29,15 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      - name: install python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
         with:
+          version: "0.11.24"
           python-version: "3.14"
-          cache: "pip"
+
+      - name: Install dependencies
+        working-directory: scripts/pipeline/ci_ingress
+        run: uv sync --locked
 
       - name: download cluster_config
         uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
@@ -53,10 +57,9 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          pip install -r scripts/pipeline/ci_ingress/requirements.txt
           echo ${TF_WORKSPACE}
           if [[ "${TF_WORKSPACE}" != "production" ]]; then
-            python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json --add
+            uv run --project scripts/pipeline/ci_ingress scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json --add
           fi
 
       - name: run behat test suite
@@ -99,5 +102,5 @@ jobs:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}
-          python scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json
+          uv run --project scripts/pipeline/ci_ingress scripts/pipeline/ci_ingress/ci_ingress.py ./terraform/environment/cluster_config.json
         if: always()

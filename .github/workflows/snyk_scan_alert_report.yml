@@ -14,18 +14,19 @@ jobs:
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-      - name: install python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
         with:
-          python-version: '3.14'
-          cache: 'pip'
+          version: "0.11.24"
+          python-version: "3.14"
 
-      - name: install requirements
-        run: pip install -r ./scripts/pipeline/generate_snyk_report/requirements.txt
+      - name: Install dependencies
+        working-directory: scripts/pipeline/generate_snyk_report
+        run: uv sync --locked
 
       - name: send report to slack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK: ${{ secrets.PROD_SLACK_WEB_HOOK }}
         run: |
-          python ./scripts/pipeline/generate_snyk_report/code_scan_report.py
+          uv run --project scripts/pipeline/generate_snyk_report scripts/pipeline/generate_snyk_report/code_scan_report.py
