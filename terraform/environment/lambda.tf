@@ -9,7 +9,6 @@ module "lambda_update_statistics" {
   image_uri   = "${data.aws_ecr_repository.use_an_lpa_upload_statistics.repository_url}:${var.container_version}"
   ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
   environment = local.environment_name
-  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   timeout     = 900
   memory      = 1024
 }
@@ -114,7 +113,6 @@ module "event_receiver" {
   image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
   ecr_arn     = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
   environment = local.environment_name
-  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   timeout     = 900
   memory      = 128
 }

@@ -43,8 +43,3 @@ variable "ecr_arn" {
   type        = string
   default     = null
 }
-
-variable "kms_key" {
-  description = "ARN of KMS key for the lambda log group"
-  type        = string
-}

@@ -1,7 +1,3 @@
-data "aws_kms_alias" "cloudwatch_encryption" {
-  name = "alias/cloudwatch-encryption-mrk"
-}
-
 data "aws_kms_alias" "event_receiver" {
   name = "alias/event-receiver-mrk"
 }

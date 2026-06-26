@@ -42,17 +42,6 @@ resource "aws_iam_role_policy" "lambda" {
 
 data "aws_iam_policy_document" "lambda" {
   statement {
-    sid       = "allowLogging"
-    effect    = "Allow"
-    resources = [aws_cloudwatch_log_group.lambda.arn]
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:DescribeLogStreams"
-    ]
-  }
-
-  statement {
     sid       = "AllowECRAccess"
     effect    = "Allow"
     resources = [var.ecr_arn]
