@@ -66,6 +66,13 @@ class ViewLpaSummaryHandler extends AbstractHandler implements UserAware
             'actor'      => $lpaData->actor,
         ];
 
+        $this->logger->info(
+            'Data getting rendered is {value}....... TO BE REMOVED',
+            [
+                'value' => $lpaData->lpa->whenTheLpaCanBeUsed?->value,
+            ]
+        );
+
         // In order to reduce initial load on the images service we do data backed checks
         // to see if we should call it. Ideally these would live in the api layer but we
         // can't do that without a big refactor of how that works atm.
