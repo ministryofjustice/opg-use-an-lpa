@@ -8,14 +8,24 @@ The script uses your IAM user credentials to assume the appropriate role, and by
 
 You can provide the script credentials using [aws-vault](https://github.com/99designs/aws-vault)
 
+## Setup
+
+Install dependencies with uv:
+
+```bash
+uv sync --locked
+```
+
+## Usage
+
 Call the development gateway
 
 ```bash
-aws-vault exec identity -- python ./call_api_gateway.py 700000000000
+aws-vault exec identity -- uv run python call_api_gateway.py 700000000000
 ```
 
 Call the production gateway
 
 ```bash
-aws-vault exec identity -- python ./call_api_gateway.py 700000000000 --production
+aws-vault exec identity -- uv run python call_api_gateway.py 700000000000 --production
 ```
