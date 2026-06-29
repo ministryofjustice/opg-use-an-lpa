@@ -38,6 +38,12 @@ variable "accounts" {
         trail_name_suffix  = string
         bucket_name_suffix = string
       })
+      network_firewall_enabled = bool
+      shared_firewall_configuration = object({
+        enabled      = bool
+        account_id   = string
+        account_name = string
+      })
       permitted_s3_buckets      = list(string)
       s3_access_log_bucket_name = string
       regions = map(
