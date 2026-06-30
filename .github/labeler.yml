@@ -58,3 +58,4 @@ dependencies:
     - '**/vendor/**'
     - '**/node_modules/**'
     - '**/vendor/**'
+    - '**/uv.lock'

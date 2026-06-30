@@ -177,10 +177,12 @@ jobs:
           path: image.tar
         if: matrix.build_development_docker == 'true'
 
-      - name: install python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
         with:
-          python-version: "3.14"
+          version: "0.11.24"
+          python-version: "3.14.6"
+        if: matrix.svc_prefix == 'stats_upload'
 
       - name: docker unit tests
         env:
@@ -197,8 +199,8 @@ jobs:
           elif [ ${SVC_PREFIX} == 'stats_upload' ]; then
             mkdir -p build/service-${SVC_PREFIX}
             cd lambda-functions/upload-statistics/app
-            pip install -r ../requirements-tests.txt
-            python -m unittest -v
+            uv sync --directory .. --frozen --group test
+            uv run python -m unittest -v
           elif [ ${SVC_PREFIX} == 'event' ]; then
             mkdir -p build/service-${SVC_PREFIX}
             cd lambda-functions/${SVC_PREFIX}-receiver/app

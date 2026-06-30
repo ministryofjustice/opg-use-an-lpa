@@ -1,30 +1,25 @@
-FROM python:3.14@sha256:89a288a9a9e9141b9f0c51744c358138da6369897792f1af3f5425e407d9529a AS build-image
+FROM python:3.14.6-slim@sha256:b877e50bd90de10af8d82c57a022fc2e0dc731c5320d762a27986facfc3355c1
 
-# Copy function code
-RUN mkdir -p /app
-COPY requirements.txt /app
+COPY --from=ghcr.io/astral-sh/uv@sha256:b46b03ddfcfbf8f547af7e9eaefdf8a39c8cebcba7c98858d3162bd28cf536f6 /uv /uvx /bin/
 
-# Install the function's dependencies
-RUN pip install --no-cache-dir --target /app -r /app/requirements.txt
-
-# Use a slim version of the base Python image to reduce the final image size
-FROM python:3.14-slim@sha256:7a500125bc50693f2214e842a621440a1b1b9cbb2188f74ab045d29ed2ea5856
-
-# Update openssl to non-vulnerable version
-RUN apt update && \
-    apt install \
-        openssl=3.5.5-1~deb13u2 \
-        libssl3t64=3.5.5-1~deb13u2 \
-        openssl-provider-legacy=3.5.5-1~deb13u2 \
-        libcap2=1:2.75-10+deb13u1+b1 \
-        -y --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
-
-# Set working directory to function root directory
 WORKDIR /app
 
-COPY --from=build-image /app /app
-COPY /app .
+# Update openssl to non-vulnerable version
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        openssl=3.5.6-1~deb13u2 \
+        libssl3t64=3.5.6-1~deb13u2 \
+        openssl-provider-legacy=3.5.6-1~deb13u2 \
+        libcap2=1:2.75-10+deb13u1+b1 \
+    && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/usr/local/bin/python", "-m", "awslambdaric"]
+ENV UV_MALWARE_CHECK=1
+
+COPY pyproject.toml uv.lock ./
+
+RUN uv sync --frozen
+
+COPY app/ ./
+
+ENTRYPOINT ["uv", "run", "python", "-m", "awslambdaric"]
 CMD ["upload_statistics.lambda_handler"]
