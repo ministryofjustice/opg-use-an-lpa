@@ -2,19 +2,14 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  SNYK-DEBIAN13-PERL-17037371:
+  SNYK-DEBIAN13-ATTR-17678182:
     - '*':
-        reason: Docker image doesn't execute perl, and only runs once weekly
-        expires: 2026-06-08T05:00:00.000Z
-        created: 2026-05-29T10:59:17.178Z
-  SNYK-DEBIAN13-PERL-17037434:
+        reason: Base image vuln in attr/libattr1 - very new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2027-07-13T23:59:59.000Z
+        created: 2026-06-30T00:00:00.000Z
+  SNYK-DEBIAN13-ACL-17677866:
     - '*':
-        reason: Docker image doesn't execute perl, and only runs once weekly
-        expires: 2026-06-08T05:00:00.000Z
-        created: 2026-05-29T11:03:33.273Z
-  SNYK-DEBIAN13-PERL-17037374:
-    - '*':
-        reason: Docker image doesn't execute perl, and only runs once weekly
-        expires: 2026-06-08T05:00:00.000Z
-        created: 2026-05-29T11:03:49.751Z
+        reason: Base image vuln in acl/libacl1 - very new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2027-07-13T23:59:59.000Z
+        created: 2026-06-30T00:00:00.000Z
 patch: {}
