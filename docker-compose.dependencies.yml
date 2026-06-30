@@ -63,7 +63,7 @@ services:
   # ---------------------------
   # Cache service
   redis:
-    image: docker.io/redis:8@sha256:c22af04bb576503bf16b3e34a1fd2fd82de0f765afd866d2e380145e0af30d78
+    image: docker.io/redis:8@sha256:2838d5524559494f6f1cd66e97e76b200d64a633a8614200620755ed395daf32
 
   # ---------------------------
   # PDF Generator
@@ -77,7 +77,7 @@ services:
   # Sirius gateway mock
   api-gateway:
     container_name: api-gateway
-    image: docker.io/nginx:stable-alpine@sha256:94da95f06ada2ac33a9016770c45ad4c3037805ed54ec8dbf2d9d2f83f3f462f
+    image: docker.io/nginx:stable-alpine@sha256:0d3b80406a13a767339fbe2f41406d6c7da727ab89cf8fae399e81f780f814d1
     depends_on:
       - mock-data-lpa
       - mock-image-request-handler
@@ -89,7 +89,7 @@ services:
 
   mock-data-lpa:
     container_name: mock-data-lpa
-    image: docker.io/stoplight/prism:5@sha256:fab47aee53c3007facd5d23e7957b1fc312b30dddad27bf570c2cb4a51c5f959
+    image: docker.io/stoplight/prism:5@sha256:3f6d29e31bfe0b99587f0f6f79c423858dd6a2ea7e1e4658273ed930a78a9acf
     command:
       - "mock"
       - "-h"
@@ -102,7 +102,7 @@ services:
 
   mock-image-request-handler:
     container_name: mock-image-request-handler
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -115,7 +115,7 @@ services:
 
   mock-lpa-data-store:
     container_name: mock-lpa-data-store
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -128,7 +128,7 @@ services:
 
   mock-lpa-codes:
     container_name: mock-lpa-codes
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
