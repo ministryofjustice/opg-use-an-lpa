@@ -6,7 +6,11 @@ module "network" {
   default_security_group_ingress      = []
   default_security_group_egress       = []
   aws_networkfirewall_firewall_policy = aws_networkfirewall_firewall_policy.main
-  network_firewall_enabled            = true
+  network_firewall_enabled            = var.account.network_firewall_enabled
+  shared_firewall_configuration = var.account.shared_firewall_configuration.enabled != true ? null : {
+    account_id   = var.account.shared_firewall_configuration.account_id
+    account_name = var.account.shared_firewall_configuration.account_name
+  }
   providers = {
     aws = aws.region
   }
