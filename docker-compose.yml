@@ -255,7 +255,7 @@ services:
       - ./lambda-functions/.aws-lambda-rie:/aws-lambda
     ports:
       - 9007:8080
-    entrypoint: [ "/aws-lambda/aws-lambda-rie", "/usr/local/bin/python", "-m", "awslambdaric" ]
+    entrypoint: [ "/aws-lambda/aws-lambda-rie", "uv", "run", "python", "-m", "awslambdaric" ]
     command: [ "upload_statistics.lambda_handler" ]
 
   proxy:
