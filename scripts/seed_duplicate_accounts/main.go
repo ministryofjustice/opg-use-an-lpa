@@ -99,7 +99,7 @@ func run(args []string, ctx context.Context) int {
 	}
 
 	if cfg.endpointUrl != "" {
-		awsCfg.BaseEndpoint = new(cfg.endpointUrl)
+		awsCfg.BaseEndpoint = &cfg.endpointUrl
 	}
 
 	dynamoClient = dynamodb.NewFromConfig(awsCfg)
@@ -147,6 +147,8 @@ func run(args []string, ctx context.Context) int {
 }
 
 func writeData(tablePrefix string, accounts []account) {
+	notExists := "attribute_not_exists(Id)"
+
 	for _, acc := range accounts {
 		items := []types.TransactWriteItem{}
 
@@ -155,11 +157,12 @@ func writeData(tablePrefix string, accounts []account) {
 			panic(err)
 		}
 
+		tableName := fmt.Sprintf("%sActorUsers", tablePrefix)
 		items = append(items, types.TransactWriteItem{
 			Put: &types.Put{
 				Item:                item,
-				TableName:           new(fmt.Sprintf("%sActorUsers", tablePrefix)),
-				ConditionExpression: new("attribute_not_exists(Id)"),
+				TableName:           &tableName,
+				ConditionExpression: &notExists,
 			},
 		})
 
@@ -169,11 +172,12 @@ func writeData(tablePrefix string, accounts []account) {
 				panic(err)
 			}
 
+			tableName := fmt.Sprintf("%sUserLpaActorMap", tablePrefix)
 			items = append(items, types.TransactWriteItem{
 				Put: &types.Put{
 					Item:                item,
-					TableName:           new(fmt.Sprintf("%sUserLpaActorMap", tablePrefix)),
-					ConditionExpression: new("attribute_not_exists(Id)"),
+					TableName:           &tableName,
+					ConditionExpression: &notExists,
 				},
 			})
 
@@ -183,11 +187,13 @@ func writeData(tablePrefix string, accounts []account) {
 					panic(err)
 				}
 
+				tableName := fmt.Sprintf("%sViewerCodes", tablePrefix)
+				vcNotExists := "attribute_not_exists(ViewerCode)"
 				items = append(items, types.TransactWriteItem{
 					Put: &types.Put{
 						Item:                item,
-						TableName:           new(fmt.Sprintf("%sViewerCodes", tablePrefix)),
-						ConditionExpression: new("attribute_not_exists(ViewerCode)"),
+						TableName:           &tableName,
+						ConditionExpression: &vcNotExists,
 					},
 				})
 			}

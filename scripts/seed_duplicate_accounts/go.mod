@@ -1,6 +1,6 @@
 module seed_duplicate_accounts
 
-go 1.26
+go 1.25
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.42.0
