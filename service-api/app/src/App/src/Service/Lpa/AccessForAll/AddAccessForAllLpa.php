@@ -70,6 +70,28 @@ class AddAccessForAllLpa
         AccessForAllValidation $validationData,
         ?array $lpaAddedData,
     ): void {
+        $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
+            $validationData->actorMatch->lpaUId,
+            $validationData->actorMatch->actor->getUid()
+        );
+
+        if ($hasActivationCode instanceof DateTimeInterface) {
+            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode)
+                ->add(new DateInterval('P10D'));
+
+            throw new LpaAlreadyHasActivationKeyException(
+                [
+                    'donor'                => [
+                        'uId'        => $validationData->lpa->getDonor()->getUid(),
+                        'firstnames' => $validationData->lpa->getDonor()->getFirstnames(),
+                        'surname'    => $validationData->lpa->getDonor()->getSurname(),
+                    ],
+                    'caseSubtype'          => $validationData->getCaseSubtype(),
+                    'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
+                ]
+            );
+        }
+
         if (isset($lpaAddedData['notActivated'])) {
             $this->logger->notice(
                 'User {id} attempted to request a key for the LPA {uId} which they have already requested',
@@ -90,28 +112,6 @@ class AddAccessForAllLpa
                     'activationKeyDueDate' => $lpaAddedData['activationKeyDueDate']->format('Y-m-d'),
                     'addedDate'            => $lpaAddedData['added']->format('Y-m-d'),
                 ],
-            );
-        }
-
-        $hasActivationCode = $this->accessForAllLpaService->hasActivationCode(
-            $validationData->actorMatch->lpaUId,
-            $validationData->actorMatch->actor->getUid()
-        );
-
-        if ($hasActivationCode instanceof DateTimeInterface) {
-            $activationKeyDueDate = DateTimeImmutable::createFromInterface($hasActivationCode)
-                ->add(new DateInterval('P10D'));
-
-            throw new LpaAlreadyHasActivationKeyException(
-                [
-                    'donor'                => [
-                        'uId'        => $validationData->lpa->getDonor()->getUid(),
-                        'firstnames' => $validationData->lpa->getDonor()->getFirstnames(),
-                        'surname'    => $validationData->lpa->getDonor()->getSurname(),
-                    ],
-                    'caseSubtype'          => $validationData->getCaseSubtype(),
-                    'activationKeyDueDate' => $activationKeyDueDate->format('Y-m-d'),
-                ]
             );
         }
     }
