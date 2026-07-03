@@ -102,7 +102,7 @@ class DynamoDBExporterAndQuerier:
 
     def set_iam_role_session(self):
         if self.environment_details["name"] == "production":
-            role_arn = "arn:aws:iam::{}:role/db-analysis".format(
+            role_arn = "arn:aws:iam::{}:role/data-access".format(
                 self.environment_details["account_id"]
             )
         else:
