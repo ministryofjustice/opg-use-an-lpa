@@ -108,7 +108,7 @@ jobs:
             artifact_to_dl: ""
             path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
             snyk_policy_path: "lambda-functions/event-receiver/.snyk"
-          - svc_prefix: "merge-duplicate"
+          - svc_prefix: "duplicate_accounts"
             svc_suffix: "lambda"
             build_development_docker: "false"
             run_unit_tests: "false"
