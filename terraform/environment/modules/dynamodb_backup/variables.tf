@@ -37,6 +37,11 @@ variable "dynamodb_table_arns_to_backup" {
   description = "The ARNs of the DynamoDB tables to backup"
 }
 
+variable "enable_vault_lock" {
+  type        = bool
+  description = "Whether to enable vault lock on the backup vaults"
+}
+
 variable "region_replication_enabled" {
   type        = bool
   description = "Whether to replicate backups to a secondary region"
@@ -51,4 +56,14 @@ variable "replica_region" {
 variable "cross_account_backup_enabled" {
   type        = bool
   description = "Whether to enable cross-account backup replication"
+}
+
+variable "vault_lock_min_retention_days" {
+  type        = number
+  description = "The minimum number of days to retain backups in the vault when vault lock is enabled"
+}
+
+variable "vault_lock_max_retention_days" {
+  type        = number
+  description = "The maximum number of days to retain backups in the vault when vault lock is enabled"
 }
