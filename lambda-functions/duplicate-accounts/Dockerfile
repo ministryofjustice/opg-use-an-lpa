@@ -19,7 +19,7 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv sync --frozen
 
-COPY ../../scripts/duplicate-accounts/merge_duplicate_identities.py lambda.py ./
+COPY merge_duplicate_identities.py lambda.py ./
 
 ENTRYPOINT ["uv", "run", "python", "-m", "awslambdaric"]
 CMD ["lambda.lambda_handler"]
