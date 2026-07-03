@@ -39,6 +39,8 @@ services:
       target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./service-front/app:/app
       - esbuild:/app/assets
@@ -89,6 +91,8 @@ services:
       target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./service-front/app:/app
       - esbuild:/app/assets
@@ -129,10 +133,17 @@ services:
       target: development
       context: .
       dockerfile: service-front/docker/app/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./service-front/app:/app
-    entrypoint:
-      - /usr/bin/composer
+    secrets:
+      - composer-auth
+    entrypoint: >
+      /bin/sh -c "
+        ln -sf /run/secrets/composer-auth auth.json \
+        /usr/bin/composer $${@}
+      "
     command:
       - install
       - --prefer-dist
@@ -165,6 +176,8 @@ services:
       target: development
       context: .
       dockerfile: service-api/docker/app/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./service-api/app:/app
     environment:
@@ -209,10 +222,17 @@ services:
       target: development
       context: .
       dockerfile: service-api/docker/app/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./service-api/app:/app
-    entrypoint:
-      - /usr/bin/composer
+    secrets:
+      - composer-auth
+    entrypoint: >
+      /bin/sh -c "
+        ln -sf /run/secrets/composer-auth auth.json \
+        /usr/bin/composer $${@}
+      "
     command:
       - install
       - --prefer-dist
@@ -276,3 +296,7 @@ services:
 
   golang:
     image: golang:1.25.11-alpine@sha256:c05ba4b73604069d376c4f41346b05374335b5ca0c46fb6dfede5a59f5196931
+
+secrets:
+  composer-auth:
+    file: ./auth.json
