@@ -13,6 +13,7 @@ module "dynamodb_backup" {
   monthly_backup_deletion       = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
   region_replication_enabled    = local.environment.dynamodb_backups.region_replication_enabled
   vault_lock_min_retention_days = local.environment.dynamodb_backups.vault_lock_min_retention_days
+  vault_lock_max_retention_days = local.environment.dynamodb_backups.vault_lock_max_retention_days
   dynamodb_table_arns_to_backup = [
     aws_dynamodb_table.use_codes_table.arn,
     aws_dynamodb_table.use_users_table.arn,

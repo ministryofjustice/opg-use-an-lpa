@@ -62,3 +62,8 @@ variable "vault_lock_min_retention_days" {
   type        = number
   description = "The minimum number of days to retain backups in the vault when vault lock is enabled"
 }
+
+variable "vault_lock_max_retention_days" {
+  type        = number
+  description = "The maximum number of days to retain backups in the vault when vault lock is enabled"
+}

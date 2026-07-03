@@ -95,6 +95,7 @@ variable "environments" {
         monthly_cold_storage_in_days    = number
         region_replication_enabled      = bool
         vault_lock_min_retention_days   = number
+        vault_lock_max_retention_days   = number
       })
       dynamodb_tables = object({
         cmk_encryption_enabled      = bool
