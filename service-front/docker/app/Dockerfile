@@ -30,7 +30,8 @@ FROM php-base AS dependency
 COPY --from=composer /composer /usr/bin/
 COPY service-front/app/composer.json service-front/app/composer.lock /app/
 
-RUN composer install --prefer-dist --no-dev --no-interaction --no-scripts --optimize-autoloader && \
+RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
+    composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --no-dev && \
     composer check-platform-reqs
 
 #
@@ -53,7 +54,8 @@ COPY service-front/docker/app/app-php-development.ini /usr/local/etc/php/conf.d/
 RUN set -xe \
   && install-php-extensions xdebug-stable
 
-RUN composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
+RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
+    composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --ignore-platform-reqs && \
     composer check-platform-reqs
 
 CMD ["php-fpm"]
