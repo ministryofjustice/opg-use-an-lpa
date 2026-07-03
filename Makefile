@@ -51,12 +51,12 @@ build_frontend_assets:
 
 rebuild:
 	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) --profile tools build --no-cache
 .PHONY: rebuild
 
 reset:
 	rm -R service-front/app/vendor service-api/app/vendor tests/smoke/vendor || true
 	$(MAKE) rebuild
-	$(COMPOSE) --profile tools build --no-cache
 	$(MAKE) pull
 	$(MAKE) composer_install
 .PHONY: reset
@@ -125,37 +125,37 @@ development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 composer_install:
-	$(COMPOSE) run --rm front-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-	$(COMPOSE) run --rm api-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm front-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm api-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests -- composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 .PHONY: composer_install
 
 run_front_composer:
-	$(COMPOSE) run --rm front-composer $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm front-composer -- $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run --rm api-composer $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm api-composer -- $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
 
 run_smoke_composer:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer -- $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_smoke_composer
 
 run_front_composer_update:
-	$(COMPOSE) run --rm front-composer update
+	$(COMPOSE) run --rm front-composer -- update
 .PHONY: run_front_composer_update
 
 run_front_npm_update:
-	$(COMPOSE) run --rm npm update
+	$(COMPOSE) run --rm npm -- update
 .PHONY: run_front_npm_update
 
 run_api_composer_update:
-	$(COMPOSE) run --rm api-composer update
+	$(COMPOSE) run --rm api-composer -- update
 .PHONY: run_api_composer_update
 
 run_smoke_composer_update:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer update
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- update
 .PHONY: run_smoke_composer_update
 
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update

@@ -21,10 +21,8 @@ query/s3_objects/**
 query/results/*.csv
 terraform/**/modules/**.terraform.lock.hcl
 
-.structurizr
-docs/diagrams/dsl/**/workspace.json
-
 *.pem
 tests/vendor
 
+auth.json
 docker-compose.override.yml
