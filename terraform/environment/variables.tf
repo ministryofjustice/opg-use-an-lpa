@@ -90,9 +90,12 @@ variable "environments" {
         cross_account_backup_enabled    = bool
         daily_backup_deletion_in_days   = number
         daily_cold_storage_in_days      = number
+        enable_vault_lock               = bool
         monthly_backup_deletion_in_days = number
         monthly_cold_storage_in_days    = number
         region_replication_enabled      = bool
+        vault_lock_min_retention_days   = number
+        vault_lock_max_retention_days   = number
       })
       dynamodb_tables = object({
         cmk_encryption_enabled      = bool
