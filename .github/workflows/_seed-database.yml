@@ -35,14 +35,15 @@ jobs:
           name: environment_config_file_${{ inputs.workspace }}
           path: terraform/environment
 
-      - name: install python
-        uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
+      - name: install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
         with:
-          python-version: "3.14"
-          cache: "pip"
+          version: "0.11.24"
+          python-version: "3.14.6"
 
-      - name: install requirements
-        run: pip install -r service-api/seeding/requirements.txt
+      - name: install dependencies
+        working-directory: service-api/seeding
+        run: uv sync --locked
 
       - name: Determine AWS account
         id: detect_account
@@ -76,7 +77,7 @@ jobs:
           export DYNAMODB_TABLE_ACTOR_USERS=$(cat ./terraform/environment/cluster_config.json | jq .use_users_table | xargs)
           export DYNAMODB_TABLE_USER_LPA_ACTOR_MAP=$(cat ./terraform/environment/cluster_config.json | jq .user_lpa_actor_map | xargs)
           export DYNAMODB_TABLE_STATS=$(cat ./terraform/environment/cluster_config.json | jq .stats_table | xargs)
-          python service-api/seeding/dynamodb.py
+          uv run --project service-api/seeding service-api/seeding/dynamodb.py
 
           ACCOUNT_ID=$(cat ./terraform/environment/cluster_config.json | jq .account_id | xargs)
           export USER_LPA_ACTOR_MAP_TABLE_ARN="arn:aws:dynamodb:eu-west-1:$ACCOUNT_ID:table/$DYNAMODB_TABLE_USER_LPA_ACTOR_MAP"
