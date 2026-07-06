@@ -10,11 +10,10 @@
             </dt>
             <dd class="govuk-summary-list__value">
                 {% if lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasCapacity %}
-                    {% if actor is defined and actor.type != null %}
-                        {% trans %}The donor has said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf
-                        {% endtrans %}
-                    {% endif %}
+                    {% trans %}
+                        The donor has said that this <abbr title="lasting power of attorney">LPA</abbr> can be used now.
+                        While the donor has mental capacity, they can still ask their attorneys to act on their behalf
+                    {% endtrans %}
                 {% elseif lpa.whenTheLpaCanBeUsed != null and lpa.whenTheLpaCanBeUsed.whenHasLostCapacity %}
                     {% trans %}
                         This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost
