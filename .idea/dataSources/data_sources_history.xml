@@ -1,0 +1,57 @@
+<DataSourcesHistory>
+  <DataSourceFromHistory isRemovedFromProject="true">
+    <data-source source="LOCAL" name="Localstack DynamoDB" uuid="620489dc-0c4c-47d3-a1b5-29256ef2b5cc">
+      <database-info product="Dynamo" version="1.0" jdbc-version="4.3" driver-name="Dynamo JDBC Driver" driver-version="0.7" dbms="DYNAMO" exact-version="1.0" exact-driver-version="0.7" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <driver-ref>dynamo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.jetbrains.DynamoDriver</jdbc-driver>
+      <jdbc-url>jdbc:dynamodb://localhost:4566?region=eu-west-1</jdbc-url>
+      <auth-provider>dg.aws.profile</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </DataSourceFromHistory>
+  <DataSourceFromHistory isRemovedFromProject="true">
+    <data-source source="LOCAL" name="statistics.sqlite3" uuid="cb54bd9b-20de-400e-904b-5c5fe5169905">
+      <database-info product="SQLite" version="3.51.1" jdbc-version="4.2" driver-name="SQLite JDBC" driver-version="3.51.1.0" dbms="SQLITE" exact-version="3.51.1" exact-driver-version="3.51">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:/Volumes/PB700K3/applications/koreader/settings/statistics.sqlite3</jdbc-url>
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </DataSourceFromHistory>
+  <DataSourceFromHistory isRemovedFromProject="false">
+    <data-source source="LOCAL" name="@localhost" uuid="74606f0b-c6a3-457d-bb2c-db4dfbb72016">
+      <database-info product="Dynamo" version="1.0" jdbc-version="4.3" driver-name="Dynamo JDBC Driver" driver-version="0.7" dbms="DYNAMO" exact-version="1.0" exact-driver-version="0.7" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <driver-ref>dynamo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.jetbrains.DynamoDriver</jdbc-driver>
+      <jdbc-url>jdbc:dynamodb://localhost:4566?region=eu-west-1</jdbc-url>
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>dg.aws.profile</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </DataSourceFromHistory>
+</DataSourcesHistory>
