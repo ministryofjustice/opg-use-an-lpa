@@ -1,5 +1,4 @@
 {% import "@partials/lpa-summary-details/iap-macros.html.twig" as iap %}
-
 <dl class="govuk-summary-list govuk-summary-list--no-border">
     {% if lpa.caseSubtype == "pfa" %}
         <div class="govuk-summary-list__row">
@@ -7,21 +6,20 @@
                         title="lasting power of attorney">LPA</abbr> be used?{% endtrans %}</dt>
             <dd class="govuk-summary-list__value">
                 {% if lpa.attorneyActDecisions|lower == 'when registered' %}
-                    {% if actor.type == 'donor' %}
-                        {% trans %}You have said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While you have mental capacity, your attorneys can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if you allow them to.{% endtrans %}
-                    {% else %}
-                        {% trans %}The donor has said that this <abbr
-                                title="lasting power of attorney">LPA</abbr> can be used now. While the donor has mental capacity, you can only use the
-                            <abbr title="lasting power of attorney">LPA</abbr> if the donor allows you to.{% endtrans %}
-                    {% endif %}
+                    {% trans %}
+                        The donor has said that this <abbr title="lasting power of attorney">LPA</abbr> can be used now.
+                        While the donor has mental capacity, they can still ask their attorneys to act on their behalf
+                    {% endtrans %}
                 {% elseif lpa.attorneyActDecisions|lower == 'loss of capacity' %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
+                    {% trans %}
+                        This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost
+                        capacity
+                    {% endtrans %}
                 {% elseif lpa.attorneyActDecisions == null %}
-                    {% trans %}This <abbr
-                            title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise.{% endtrans %}
+                    {% trans %}
+                        This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered
+                        unless instructions say otherwise.
+                    {% endtrans %}
                 {% endif %}
             </dd>
         </div>

@@ -42,6 +42,14 @@ class CastToWhenTheLpaCanBeUsedTest extends TestCase
                 'when-capacity-lost',
             ],
             [
+                'When Registered',
+                'when-has-capacity',
+            ],
+            [
+                'Loss of capacity',
+                'when-capacity-lost',
+            ],
+            [
                 '',
                 '',
             ],
