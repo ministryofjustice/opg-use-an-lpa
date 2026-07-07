@@ -97,7 +97,7 @@
     signedAt: "2024-01-10T23:00:00Z",
     howAttorneysMakeDecisions: "jointly-for-some-severally-for-others",
     howAttorneysMakeDecisionsDetails: "My atttorneys must jointly agree on a decision to sell or let out my house.",
-    whenTheLpaCanBeUsed: "when-capacity-lost"
+    whenTheLpaCanBeUsed: "when-has-capacity"
   };
 
   // src/lpas/4861.json
