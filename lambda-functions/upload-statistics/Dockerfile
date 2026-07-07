@@ -31,5 +31,5 @@ COPY --from=builder /app/.venv /app/.venv
 
 COPY app/ ./
 
-ENTRYPOINT ["uv", "run", "python", "-m", "awslambdaric"]
+ENTRYPOINT ["/app/.venv/bin/python", "-m", "awslambdaric"]
 CMD ["upload_statistics.lambda_handler"]
