@@ -61,9 +61,38 @@ variable "cross_account_backup_enabled" {
 variable "vault_lock_min_retention_days" {
   type        = number
   description = "The minimum number of days to retain backups in the vault when vault lock is enabled"
+
+  validation {
+    condition = !var.enable_vault_lock || (var.vault_lock_min_retention_days > 0 &&
+    floor(var.vault_lock_min_retention_days) == var.vault_lock_min_retention_days)
+    error_message = "When enable_vault_lock is true, vault_lock_min_retention_days must be a positive whole number."
+  }
+
+  validation {
+    condition = !var.enable_vault_lock || (var.vault_lock_min_retention_days <= var.daily_backup_deletion &&
+    var.vault_lock_min_retention_days <= var.monthly_backup_deletion)
+    error_message = "When enable_vault_lock is true, vault_lock_min_retention_days must not exceed daily_backup_deletion or monthly_backup_deletion, otherwise backup jobs would request a retention below the vault floor and fail."
+  }
 }
 
 variable "vault_lock_max_retention_days" {
   type        = number
   description = "The maximum number of days to retain backups in the vault when vault lock is enabled"
+
+  validation {
+    condition = !var.enable_vault_lock || (var.vault_lock_max_retention_days > 0 &&
+    floor(var.vault_lock_max_retention_days) == var.vault_lock_max_retention_days)
+    error_message = "When enable_vault_lock is true, vault_lock_max_retention_days must be a positive whole number."
+  }
+
+  validation {
+    condition     = !var.enable_vault_lock || var.vault_lock_max_retention_days >= var.vault_lock_min_retention_days
+    error_message = "When enable_vault_lock is true, vault_lock_max_retention_days must be greater than or equal to vault_lock_min_retention_days."
+  }
+
+  validation {
+    condition = !var.enable_vault_lock || (var.vault_lock_max_retention_days >= var.daily_backup_deletion &&
+    var.vault_lock_max_retention_days >= var.monthly_backup_deletion)
+    error_message = "When enable_vault_lock is true, vault_lock_max_retention_days must be at least as large as daily_backup_deletion and monthly_backup_deletion, otherwise backup jobs would request a retention above the vault ceiling and fail."
+  }
 }
