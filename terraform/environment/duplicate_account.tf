@@ -3,7 +3,7 @@ module "duplicate_accounts" {
   source      = "./modules/lambda"
   lambda_name = "duplicate-accounts"
   environment_variables = {
-    BUCKET           = data.aws_s3_bucket.ual_athena_query_results[0].id,
+    BUCKET           = data.aws_s3_bucket.ual_athena_query_results.id,
     ENVIRONMENT_NAME = local.environment_name
     WORK_FILE_PREFIX = "todo"
     PLAN_FILE_PREFIX = "plan"
