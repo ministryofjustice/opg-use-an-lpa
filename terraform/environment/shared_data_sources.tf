@@ -34,11 +34,11 @@ module "allow_list" {
 
 data "aws_ecr_repository" "duplicate_accounts" {
   provider = aws.management
-  name     = "duplicate_accounts_lambda"
+  name     = "use_an_lpa/duplicate_accounts_lambda"
 }
 
 data "aws_ecr_image" "duplicate_accounts" {
-  repository_name = "use_an_lpa/duplicate_accounts"
+  repository_name = data.aws_ecr_repository.duplicate_accounts.name
   image_tag       = var.container_version
   provider        = aws.management
 }
