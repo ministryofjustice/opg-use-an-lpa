@@ -31,6 +31,10 @@ To maintain repo standards and avoid commiting secrets [install pre-commit](http
 pre-commit install
 ```
 
+Configure a [fine grained Github access token](https://github.com/settings/personal-access-tokens) and replace
+the placeholder in the `auth.json` file with it. It *only* needs public access permissions and is purely an
+exercise in allowing better rate limits than unauthenticated Github access allows.
+
 ### Makefile
 
 A Makefile is maintained that aliases the most useful docker-compose commands.

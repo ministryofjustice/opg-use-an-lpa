@@ -4,6 +4,7 @@
     <inspection_tool class="AngularAmbiguousComponentTag" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AngularBindingTypeMismatch" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AngularCliAddDependency" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="AngularConstantReassignment" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AngularDeferBlockOnTrigger" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AngularForBlockNonIterableVar" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AngularIllegalForLoopTrackAccess" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -20,6 +21,7 @@
     <inspection_tool class="AngularInvalidImportedOrDeclaredSymbol" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="AngularInvalidSelector" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="AngularInvalidTemplateReferenceVariable" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="AngularMisconfiguredDeferTrigger" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AngularMissingEventHandler" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AngularMissingOrInvalidDeclarationInModule" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="AngularMissingRequiredDirectiveInputBinding" enabled="false" level="ERROR" enabled_by_default="false" />
@@ -755,6 +757,7 @@
     <inspection_tool class="PhpParenthesesCanBeOmittedForNewCallInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPartialVirtualPropertyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpPassByRefInspection" enabled="true" level="ERROR" enabled_by_default="true" />
+    <inspection_tool class="PhpPipeOperatorCanBeUsedInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPipeOperatorTypeCheckingInspection" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="PhpPluralMixedCanBeReplacedWithArrayInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="PhpPointlessBooleanExpressionInConditionInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
@@ -958,7 +961,11 @@
     <inspection_tool class="ShellCheck" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="ShiftOutOfRangeJS" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SillyAssignmentJS" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false" />
+    <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+      <option name="processCode" value="true" />
+      <option name="processLiterals" value="true" />
+      <option name="processComments" value="true" />
+    </inspection_tool>
     <inspection_tool class="SqlAddNotNullColumnInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlAggregatesInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="SqlAmbiguousColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
@@ -1042,6 +1049,7 @@
     <inspection_tool class="TailRecursionJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="TaskProblemsInspection" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
     <inspection_tool class="TerraformUnselectedDataLanguage" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="TerragruntDuplicatedBlocks" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="TextLabelInSwitchStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="TfBlockNameValidness" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="TfDuplicatedBlockProperty" enabled="false" level="ERROR" enabled_by_default="false" />

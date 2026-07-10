@@ -1260,7 +1260,7 @@ paths:
                     applicationHasGuidance: true
                     applicationHasRestrictions: true
                     applicationType: Online
-                    attorneyActDecisions: null
+                    attorneyActDecisions: "When Registered"
                     attorneys:
                       - addresses:
                           - addressLine1: 1 test road

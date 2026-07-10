@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="@localhost">
+  <database-model serializer="dbm" dbms="DYNAMO" family-id="DYNAMO" format-version="4.55">
+    <root id="1">
+      <ServerVersion>1.0</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="schema"/>
+    <table id="3" parent="2" name="ActorUsers">
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+    </table>
+    <table id="4" parent="2" name="Stats">
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+    </table>
+    <table id="5" parent="2" name="UserLpaActorMap">
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+    </table>
+    <table id="6" parent="2" name="ViewerActivity">
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+    </table>
+    <table id="7" parent="2" name="ViewerCodes">
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+    </table>
+    <column id="8" parent="3" name="Id">
+      <Position>1</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="9" parent="3" name="Identity">
+      <Position>2</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="10" parent="3" name="Email">
+      <Position>3</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <index id="11" parent="3" name="IdentityIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>Identity</PartitionColumnName>
+    </index>
+    <index id="12" parent="3" name="EmailIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>Email</PartitionColumnName>
+    </index>
+    <key id="13" parent="3" name="primary key">
+      <PartitionColumnName>Id</PartitionColumnName>
+    </key>
+    <column id="14" parent="4" name="TimePeriod">
+      <Position>1</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <key id="15" parent="4" name="primary key">
+      <PartitionColumnName>TimePeriod</PartitionColumnName>
+    </key>
+    <column id="16" parent="5" name="Id">
+      <Position>1</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="17" parent="5" name="UserId">
+      <Position>2</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="18" parent="5" name="ActivationCode">
+      <Position>3</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="19" parent="5" name="SiriusUid">
+      <Position>4</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <index id="20" parent="5" name="UserIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>UserId</PartitionColumnName>
+    </index>
+    <index id="21" parent="5" name="ActivationCodeIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>ActivationCode</PartitionColumnName>
+    </index>
+    <index id="22" parent="5" name="SiriusUidIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>SiriusUid</PartitionColumnName>
+    </index>
+    <key id="23" parent="5" name="primary key">
+      <PartitionColumnName>Id</PartitionColumnName>
+    </key>
+    <column id="24" parent="6" name="ViewerCode">
+      <Position>1</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="25" parent="6" name="Viewed">
+      <Position>2</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <key id="26" parent="6" name="primary key">
+      <PartitionColumnName>ViewerCode</PartitionColumnName>
+      <SortColumnName>Viewed</SortColumnName>
+    </key>
+    <column id="27" parent="7" name="ViewerCode">
+      <Position>1</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="28" parent="7" name="SiriusUid">
+      <Position>2</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <column id="29" parent="7" name="Expires">
+      <Position>3</Position>
+      <StoredType>S|0s</StoredType>
+    </column>
+    <index id="30" parent="7" name="SiriusUidIndex">
+      <Global>1</Global>
+      <ProjectionType>all</ProjectionType>
+      <ReadThroughput>10</ReadThroughput>
+      <WriteThroughput>10</WriteThroughput>
+      <PartitionColumnName>SiriusUid</PartitionColumnName>
+      <SortColumnName>Expires</SortColumnName>
+    </index>
+    <key id="31" parent="7" name="primary key">
+      <PartitionColumnName>ViewerCode</PartitionColumnName>
+    </key>
+  </database-model>
+</dataSource>

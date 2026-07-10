@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="PS-261.26222.71">
+    <data-source name="@localhost" uuid="74606f0b-c6a3-457d-bb2c-db4dfbb72016">
+      <database-info product="Dynamo" version="1.0" jdbc-version="4.3" driver-name="Dynamo JDBC Driver" driver-version="0.7" dbms="DYNAMO" exact-version="1.0" exact-driver-version="0.7" />
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>dg.aws.profile</auth-provider>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="@" />
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+  </component>
+</project>
