@@ -13,7 +13,18 @@ terraform {
   }
 
 }
+
+variable "backup_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci"
+}
+
 variable "default_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci"
+}
+
+variable "identity_role" {
   type    = string
   default = "opg-use-an-lpa-ci"
 }
@@ -90,7 +101,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::631181914621:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::631181914621:role/${var.identity_role}"
     session_name = "terraform-session"
   }
 }
@@ -102,7 +113,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::238302996107:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::238302996107:role/${var.backup_role}"
     session_name = "terraform-session"
   }
 }

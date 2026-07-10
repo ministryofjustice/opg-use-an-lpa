@@ -2,7 +2,6 @@ variable "account" {
   description = "The account object"
   type = object({
     account_id             = string
-    shared_account_id      = number
     is_production          = bool
     retention_in_days      = number
     pagerduty_service_name = string
