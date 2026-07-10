@@ -21,5 +21,5 @@ RUN uv sync --frozen
 
 COPY merge_duplicate_identities.py lambda.py ./
 
-ENTRYPOINT ["uv", "run", "python", "-m", "awslambdaric"]
+ENTRYPOINT ["uv", "run", "--no-sync", "-m", "awslambdaric"]
 CMD ["lambda.lambda_handler"]
