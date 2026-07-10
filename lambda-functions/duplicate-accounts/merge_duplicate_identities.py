@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 
+import os
 import boto3
 from collections import defaultdict
 from boto3.dynamodb.conditions import Key
@@ -13,9 +14,39 @@ import math
 from botocore.exceptions import ClientError
 
 # Create connections to AWS service
-dynamodb = boto3.resource("dynamodb", region_name="eu-west-1")
-dynamodb_client = boto3.client("dynamodb", region_name="eu-west-1")
-s3 = boto3.client("s3", region_name="eu-west-1")
+dynamodb = None
+#boto3.resource("dynamodb", region_name="eu-west-1")
+dynamodb_client = None
+#boto3.client("dynamodb", region_name="eu-west-1")
+s3 = None
+#boto3.client("s3", region_name="eu-west-1")
+
+def initialise():
+    global dynamodb, dynamodb_client, s3
+
+    if "AWS_ENDPOINT_DYNAMODB" in os.environ:
+        dynamodb = boto3.resource(
+            "dynamodb",
+            region_name="eu-west-1",
+            endpoint_url=os.environ["AWS_ENDPOINT_DYNAMODB"],
+        )
+        dynamodb_client = boto3.client(
+            "dynamodb",
+            region_name="eu-west-1",
+            endpoint_url=os.environ["AWS_ENDPOINT_DYNAMODB"],
+        )
+    else:
+        dynamodb = boto3.resource("dynamodb", region_name="eu-west-1")
+        dynamodb_client = boto3.client("dynamodb", region_name="eu-west-1")
+
+    if "AWS_ENDPOINT_S3" in os.environ:
+        s3 = boto3.client(
+            "s3",
+            region_name="eu-west-1",
+            endpoint_url=os.environ["AWS_ENDPOINT_S3"],
+        )
+    else:
+        s3 = boto3.client("s3", region_name="eu-west-1")
 
 # CLI arguments & define command line options
 def parse_args():
@@ -47,14 +78,17 @@ def parse_args():
 
     return args
 
-def get_actor_users_table(prefix):
-    return dynamodb.Table(f"{prefix}-ActorUsers")
+def get_actor_users_table(prefix=None):
+    table_name = f"{prefix}-ActorUsers" if prefix else "ActorUsers"
+    return dynamodb.Table(table_name)
 
-def get_lpa_table(prefix):
-    return dynamodb.Table(f"{prefix}-UserLpaActorMap")
+def get_lpa_table(prefix=None):
+    table_name = f"{prefix}-UserLpaActorMap" if prefix else "UserLpaActorMap"
+    return dynamodb.Table(table_name)
 
-def get_viewer_code_table(prefix):
-    return dynamodb.Table(f"{prefix}-ViewerCodes")
+def get_viewer_code_table(prefix=None):
+    table_name = f"{prefix}-ViewerCodes" if prefix else "ViewerCodes"
+    return dynamodb.Table(table_name)
 
 # Fetches one UserLpaActorMap by Id
 def get_by_id(table, id):
@@ -683,7 +717,14 @@ def load_work_files(bucket, work_prefix, limit=None, offset=0):
     # decide what files to pull
     # pulls a max of 1000 - we'll never see it
     all_work_files = s3.list_objects_v2(Bucket=bucket, Prefix=(work_prefix + "/duplicate-identities"))
+
+    contents = all_work_files.get("Contents", [])
+    if not contents:
+        print(" - No work files found")
+        return []
+
     print(f" - Found {len(all_work_files["Contents"])} work files")
+
 
     # calculate limit/offset as work-files.
     # work-files contain up to 100 records
@@ -755,6 +796,10 @@ def build_plans(table_prefix, bucket, work_prefix, plan_prefix, limit=None, offs
     work_items = load_work_files(bucket, work_prefix, limit, offset)
     duplicates = populate_work_items(table_prefix, work_items)
 
+    if not work_items:
+        print("No work items found. Nothing to process.")
+        return
+
     merge_plan = []
 
     for identity in duplicates:
@@ -803,6 +848,8 @@ def build_plans(table_prefix, bucket, work_prefix, plan_prefix, limit=None, offs
     print("=" * 100)
 
 def main():
+    initialise()
+
     args = parse_args()
 
     if args.execute:

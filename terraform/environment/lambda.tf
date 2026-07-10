@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "lambda_update_statistics" {
       "dynamodb:BatchWrite*",
       "dynamodb:Delete*",
       "dynamodb:Update*",
-      "dynamodb:PutItem"
+      "dynamodb:PutItem",
     ]
   }
 
@@ -182,4 +182,106 @@ resource "aws_lambda_permission" "receive_events_permission" {
   function_name = module.event_receiver[0].lambda_name
   principal     = "sqs.amazonaws.com"
   source_arn    = module.eu_west_1[0].receive_events_sqs_queue_arn[0]
+}
+
+module "duplicate_accounts" {
+  count       = local.environment.duplicate_accounts_lambda ? 1 : 0
+  source      = "./modules/lambda"
+  lambda_name = "duplicate-accounts"
+  environment_variables = {
+    BUCKET           = aws_s3_bucket.duplicate_accounts[0].bucket
+    ENVIRONMENT_NAME = local.environment_name
+    WORK_FILE_PREFIX = "todo"
+    PLAN_FILE_PREFIX = "plan"
+  }
+  image_uri   = "${data.aws_ecr_repository.duplicate_accounts.repository_url}@${data.aws_ecr_image.duplicate_accounts.image_digest}"
+  ecr_arn     = data.aws_ecr_repository.duplicate_accounts.arn
+  environment = local.environment_name
+  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  timeout     = 900
+  memory      = 1024
+}
+
+resource "aws_iam_role_policy" "duplicate_accounts" {
+  count  = local.environment.duplicate_accounts_lambda ? 1 : 0
+  name   = "duplicate_accounts-${local.environment_name}"
+  role   = module.duplicate_accounts[0].lambda_role.id
+  policy = data.aws_iam_policy_document.duplicate_accounts_bucket_policy[0].json
+}
+
+data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
+  count = local.environment.duplicate_accounts_lambda ? 1 : 0
+  statement {
+    sid    = "S3Bucket"
+    effect = "Allow"
+    resources = [
+      aws_s3_bucket.duplicate_accounts[0].arn,
+      "${aws_s3_bucket.duplicate_accounts[0].arn}/*",
+    ]
+    actions = [
+      "s3:ListBucket",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+  }
+
+  statement {
+    sid    = "DynamoTable"
+    effect = "Allow"
+    resources = [
+      aws_dynamodb_table.user_lpa_actor_map.arn,
+      aws_dynamodb_table.viewer_codes_table.arn,
+      aws_dynamodb_table.use_users_table.arn,
+    ]
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:UpdateItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:DescribeTable",
+    ]
+  }
+}
+
+resource "aws_s3_bucket" "duplicate_accounts" {
+  count  = local.environment.duplicate_accounts_lambda ? 1 : 0
+  bucket = "opg-use-an-lpa-duplicate_accounts-${local.environment_name}"
+}
+
+resource "aws_s3_bucket_public_access_block" "duplicate_accounts" {
+  count  = local.environment.duplicate_accounts_lambda ? 1 : 0
+  bucket = aws_s3_bucket.duplicate_accounts[0].id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "duplicate_accounts" {
+  count      = local.environment.duplicate_accounts_lambda ? 1 : 0
+  depends_on = [aws_s3_bucket_public_access_block.duplicate_accounts[0]]
+  bucket     = aws_s3_bucket.duplicate_accounts[0].id
+  policy     = data.aws_iam_policy_document.duplicate_accounts_bucket_policy[0].json
+}
+
+data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
+  count = local.environment.duplicate_accounts_lambda ? 1 : 0
+
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass"]
+    }
+    actions = [
+      "s3:ListBucket",
+      "s3:GetObject"
+    ]
+    resources = [
+      aws_s3_bucket.duplicate_accounts[0].arn,
+      "${aws_s3_bucket.duplicate_accounts[0].arn}/*",
+    ]
+  }
 }

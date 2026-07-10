@@ -595,6 +595,9 @@ locals {
         {
           name  = "LPA_STORE_JWT_SECRET",
           value = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
+        },
+        {
+
         }
       ]
   })
