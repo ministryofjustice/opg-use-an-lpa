@@ -62,4 +62,6 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
       "dynamodb:TransactWriteItems",
     ]
   }
+
+
 }

@@ -49,9 +49,8 @@ module "eu_west_1" {
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning
   # ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
-  sirius_account_id         = local.environment.sirius_account_id
-  lpa_store_account_id      = local.environment.lpa_store_account_id
-  duplicate_accounts_lambda = local.environment.duplicate_accounts_lambda
+  sirius_account_id    = local.environment.sirius_account_id
+  lpa_store_account_id = local.environment.lpa_store_account_id
 
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id
@@ -140,9 +139,8 @@ module "eu_west_2" {
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning
   # ship_metrics_queue_enabled                       = local.environment.ship_metrics_queue_enabled
-  sirius_account_id         = local.environment.sirius_account_id
-  lpa_store_account_id      = local.environment.lpa_store_account_id
-  duplicate_accounts_lambda = local.environment.duplicate_accounts_lambda
+  sirius_account_id    = local.environment.sirius_account_id
+  lpa_store_account_id = local.environment.lpa_store_account_id
 
   admin_cognito = {
     id                          = aws_cognito_user_pool_client.use_a_lasting_power_of_attorney_admin.id

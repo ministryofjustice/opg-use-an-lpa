@@ -287,8 +287,3 @@ variable "lpa_store_account_id" {
   description = "The AWS ID of the LPA store account"
   type        = string
 }
-
-# variable "duplicate_accounts_lambda" {
-#   description = "The duplicate accounts check and processing lambda"
-#   type        = bool
-# }
