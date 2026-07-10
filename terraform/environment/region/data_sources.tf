@@ -46,6 +46,7 @@ data "aws_kms_alias" "cloudwatch_encryption" {
 data "aws_ecr_repository" "use_an_lpa_front_web" {
   provider = aws.management
   name     = "use_an_lpa/front_web"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "use_an_lpa_front_web" {
@@ -57,6 +58,7 @@ data "aws_ecr_image" "use_an_lpa_front_web" {
 data "aws_ecr_repository" "use_an_lpa_front_app" {
   provider = aws.management
   name     = "use_an_lpa/front_app"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "use_an_lpa_front_app" {
@@ -68,6 +70,7 @@ data "aws_ecr_image" "use_an_lpa_front_app" {
 data "aws_ecr_repository" "use_an_lpa_api_web" {
   provider = aws.management
   name     = "use_an_lpa/api_web"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "use_an_lpa_api_web" {
@@ -79,6 +82,7 @@ data "aws_ecr_image" "use_an_lpa_api_web" {
 data "aws_ecr_repository" "use_an_lpa_api_app" {
   provider = aws.management
   name     = "use_an_lpa/api_app"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "use_an_lpa_api_app" {
@@ -90,6 +94,7 @@ data "aws_ecr_image" "use_an_lpa_api_app" {
 data "aws_ecr_repository" "use_an_lpa_pdf" {
   provider = aws.management
   name     = "pdf-service"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "pdf_service" {
@@ -102,6 +107,7 @@ data "aws_ecr_image" "pdf_service" {
 data "aws_ecr_repository" "use_an_lpa_admin_app" {
   provider = aws.management
   name     = "use_an_lpa/admin_app"
+  region   = data.aws_region.current.name
 }
 
 data "aws_ecr_image" "use_an_lpa_admin_app" {
