@@ -17,9 +17,12 @@ ENV UV_MALWARE_CHECK=1
 
 COPY pyproject.toml uv.lock ./
 
-RUN uv sync --frozen
+#RUN uv sync --frozen
+RUN uv export --locked -o requirements.txt \
+    && pip install --no-cache-dir -r requirements.txt \
+    && rm requirements.txt
 
 COPY merge_duplicate_identities.py lambda.py ./
 
-ENTRYPOINT ["uv", "run", "--no-sync", "-m", "awslambdaric"]
+ENTRYPOINT ["python", "-m", "awslambdaric"]
 CMD ["lambda.lambda_handler"]

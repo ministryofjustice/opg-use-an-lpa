@@ -295,10 +295,14 @@ services:
     ports:
       - 9008:8080
     entrypoint: >
-      /bin/sh -c "\
-      . .venv/bin/activate && \
-      /aws-lambda/aws-lambda-rie python -m awslambdaric lambda.lambda_handler \
-      "
+      /aws-lambda/aws-lambda-rie
+      python -m awslambdaric
+      lambda.lambda_handler
+#    entrypoint: >
+#      /bin/sh -c "\
+#      . .venv/bin/activate && \
+#      /aws-lambda/aws-lambda-rie python -m awslambdaric lambda.lambda_handler \
+#      "
     command: []
 
   proxy:
