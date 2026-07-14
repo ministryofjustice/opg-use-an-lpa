@@ -63,5 +63,15 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
     ]
   }
 
-
+  statement {
+    sid    = "DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
+  }
 }
