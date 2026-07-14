@@ -4,7 +4,7 @@ resource "aws_cloudwatch_log_group" "lambda" {
 }
 
 resource "aws_lambda_function" "lambda_function" {
-  function_name = "${var.lambda_name}-${var.environment}"
+  function_name = "${var.environment}-${var.lambda_name}"
   image_uri     = var.image_uri
   package_type  = var.package_type
   role          = aws_iam_role.lambda_role.arn
