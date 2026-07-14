@@ -50,6 +50,8 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
     effect = "Allow"
     resources = [
       aws_dynamodb_table.user_lpa_actor_map.arn,
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/UserIndex",
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/SiriusUidIndex",
       aws_dynamodb_table.viewer_codes_table.arn,
       aws_dynamodb_table.use_users_table.arn,
     ]
