@@ -10,6 +10,7 @@ locals {
     environment-name = local.environment
     owner            = "Sarah Mills: sarah.mills@digital.justice.gov.uk"
     is-production    = local.account.is_production
+    service-area     = "POAS"
   }
 
   optional_tags = {
