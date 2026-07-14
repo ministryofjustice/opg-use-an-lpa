@@ -36,6 +36,7 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
       data.aws_s3_bucket.ual_athena_query_results.arn,
       "${data.aws_s3_bucket.ual_athena_query_results.arn}/plan/*",
       "${data.aws_s3_bucket.ual_athena_query_results.arn}/todo/*",
+      "${data.aws_s3_bucket.ual_athena_query_results.arn}/done/*",
     ]
     actions = [
       "s3:ListBucket",
