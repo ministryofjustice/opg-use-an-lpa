@@ -108,6 +108,14 @@ jobs:
             artifact_to_dl: ""
             path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
             snyk_policy_path: "lambda-functions/event-receiver/.snyk"
+          - svc_prefix: "duplicate_accounts"
+            svc_suffix: "lambda"
+            build_development_docker: "false"
+            run_unit_tests: "false"
+            run_integration_tests: "false"
+            artifact_to_dl: ""
+            path_to_docker_file: "lambda-functions/duplicate-accounts/Dockerfile"
+            snyk_policy_path: "lambda-functions/duplicate-accounts/.snyk"
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
@@ -299,6 +307,8 @@ jobs:
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
               docker build --platform linux/amd64 --provenance=false --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
             fi
+          elif [[ "${SVC_PREFIX}" = "duplicate_accounts" ]]; then
+            docker build --platform linux/amd64 --provenance=false --file lambda-functions/duplicate-accounts/Dockerfile --tag duplicate_accounts_lambda:latest lambda-functions/duplicate-accounts
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
