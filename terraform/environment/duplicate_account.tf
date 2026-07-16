@@ -3,7 +3,7 @@ module "duplicate_accounts" {
   source      = "./modules/lambda"
   lambda_name = "duplicate-accounts"
   environment_variables = {
-    BUCKET           = data.aws_s3_bucket.ual_athena_query_results.id,
+    BUCKET           = data.aws_s3_bucket.ual_athena_query_results[0].id,
     ENVIRONMENT_NAME = local.environment_name
     WORK_FILE_PREFIX = "todo"
     PLAN_FILE_PREFIX = "plan"
@@ -35,9 +35,9 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
     effect = "Allow"
     resources = [
       data.aws_s3_bucket.ual_athena_query_results.arn,
-      "${data.aws_s3_bucket.ual_athena_query_results.arn}/plan/*",
-      "${data.aws_s3_bucket.ual_athena_query_results.arn}/todo/*",
-      "${data.aws_s3_bucket.ual_athena_query_results.arn}/done/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/plan/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/todo/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/done/*",
     ]
     actions = [
       "s3:ListBucket",
