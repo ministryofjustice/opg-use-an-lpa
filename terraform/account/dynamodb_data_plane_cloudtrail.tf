@@ -4,4 +4,5 @@ module "production_dynamodb_cloudtrail" {
   trail_name_suffix             = local.account.dynamodb_cloudtrail.trail_name_suffix
   bucket_name_suffix            = local.account.dynamodb_cloudtrail.bucket_name_suffix
   s3_access_logging_bucket_name = "${local.account.s3_access_log_bucket_name}-${data.aws_region.current.region}"
+  default_boundary              = local.account_name == "development" ? data.aws_iam_policy.default_boundary[0].arn : null
 }

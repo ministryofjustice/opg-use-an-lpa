@@ -6,8 +6,9 @@ resource "aws_backup_vault" "main" {
 }
 
 resource "aws_iam_role" "aws_backup_role" {
-  name               = "aws_backup_role"
-  assume_role_policy = data.aws_iam_policy_document.aws_backup_assume_policy.json
+  name                 = "aws_backup_role"
+  assume_role_policy   = data.aws_iam_policy_document.aws_backup_assume_policy.json
+  permissions_boundary = local.account_name == "development" ? data.aws_iam_policy.default_boundary[0].arn : null
 
   provider = aws.eu_west_1
 }

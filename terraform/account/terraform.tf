@@ -18,7 +18,7 @@ variable "backup_role" {
 }
 
 variable "default_role" {
-  default     = "opg-use-an-lpa-ci"
+  default     = "opg-use-an-lpa-ci-boundary"
   type        = string
   description = "The default role to assume for the AWS providers"
 }

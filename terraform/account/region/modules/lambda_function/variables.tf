@@ -11,6 +11,11 @@ variable "command" {
   default     = null
 }
 
+variable "default_boundary" {
+  description = "Default permissions boundary for non-ci roles"
+  type        = string
+}
+
 variable "entry_point" {
   description = "The ENTRYPOINT for the docker image."
   type        = list(string)
