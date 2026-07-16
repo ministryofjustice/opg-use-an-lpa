@@ -18,7 +18,7 @@ module "duplicate_accounts" {
 
 data "aws_s3_bucket" "ual_athena_query_results" {
   count  = local.environment.duplicate_accounts_lambda ? 1 : 0
-  bucket = "ual-athena-query-results"
+  bucket = "use-a-lpa-dynamodb-exports-${local.environment.account_name}"
 }
 
 resource "aws_iam_role_policy" "duplicate_accounts" {
