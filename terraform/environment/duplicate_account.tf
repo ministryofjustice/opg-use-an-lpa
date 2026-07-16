@@ -34,7 +34,7 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
     sid    = "S3Bucket"
     effect = "Allow"
     resources = [
-      data.aws_s3_bucket.ual_athena_query_results.arn,
+      data.aws_s3_bucket.ual_athena_query_results[0].arn,
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/plan/*",
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/todo/*",
       "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/done/*",
