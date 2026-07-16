@@ -48,3 +48,8 @@ variable "kms_key" {
   description = "ARN of KMS key for the lambda log group"
   type        = string
 }
+
+variable "default_boundary" {
+  description = "Default permissions boundary for non-ci roles"
+  type        = string
+}
