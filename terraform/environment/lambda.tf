@@ -64,7 +64,7 @@ data "aws_iam_policy_document" "lambda_update_statistics" {
       "dynamodb:BatchWrite*",
       "dynamodb:Delete*",
       "dynamodb:Update*",
-      "dynamodb:PutItem"
+      "dynamodb:PutItem",
     ]
   }
 

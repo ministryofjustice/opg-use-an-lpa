@@ -55,3 +55,5 @@ awslocal lambda create-event-source-mapping \
     --batch-size 1 \
     --event-source-arn arn:aws:sqs:eu-west-1:000000000000:event-bus-queue \
     --region "eu-west-1"
+
+awslocal s3 mb s3://duplicate-accounts-bucket

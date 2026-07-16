@@ -60,6 +60,14 @@ services:
       localstack:
         condition: service_healthy
 
+  duplicate-accounts-lambda:
+    depends_on:
+      localstack:
+        condition: service_healthy
+    environment:
+      AWS_ENDPOINT_DYNAMODB: http://localstack:4566
+      AWS_ENDPOINT_S3: http://localstack:4566
+
   # ---------------------------
   # Cache service
   redis:
