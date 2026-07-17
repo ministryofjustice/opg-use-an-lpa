@@ -338,6 +338,31 @@ class DynamoDBExporterAndQuerier:
             outputFileName="CountOfDuplicateAccounts",
         )
 
+    def get_count_of_accounts_not_migrated(self):
+        sql_string = """
+        SELECT COUNT(*) AS not_migrated_accounts
+        FROM actor_users
+        WHERE item.identity.s IS NULL
+        """
+        self.run_athena_query(
+            sql_string,
+            outputFileName="CountOfAccountsNotMigrated",
+        )
+
+    def get_count_of_not_migrated_accounts_with_no_lpas(self):
+        sql_string = """
+        SELECT COUNT(*) AS not_migrated_without_lpas
+        FROM actor_users a
+        LEFT JOIN user_lpa_actor_map m
+            ON a.item.id.s = m.item.userid.s
+        WHERE a.item.identity.s IS NULL
+          AND m.item.userid.s IS NULL
+        """
+        self.run_athena_query(
+            sql_string,
+            outputFileName="CountOfNotMigratedAccountsWithNoLpas",
+        )
+
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -398,15 +423,17 @@ def main():
         work.check_dynamo_export_status()
         work.create_athena_tables()
 
-    work.get_expired_viewed_access_codes()
-    work.get_expired_unviewed_access_codes()
-    work.get_count_of_viewed_access_codes()
-    work.get_count_of_created_access_codes()
-    work.get_count_of_expired_access_codes()
-    work.get_organisations_field()
-    work.get_count_of_lpas_for_users()
+#     work.get_expired_viewed_access_codes()
+#     work.get_expired_unviewed_access_codes()
+#     work.get_count_of_viewed_access_codes()
+#     work.get_count_of_created_access_codes()
+#     work.get_count_of_expired_access_codes()
+#     work.get_organisations_field()
+#     work.get_count_of_lpas_for_users()
+#     work.get_count_of_duplicate_accounts()
     work.get_count_of_users_with_no_lpas()
-    work.get_count_of_duplicate_accounts()
+    work.get_count_of_accounts_not_migrated()
+    work.get_count_of_not_migrated_accounts_with_no_lpas()
 
 
 if __name__ == "__main__":
