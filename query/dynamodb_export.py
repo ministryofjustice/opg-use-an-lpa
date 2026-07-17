@@ -325,7 +325,13 @@ class DynamoDBExporterAndQuerier:
         )
 
     def get_count_of_users_with_no_lpas(self):
-        sql_string = f"SELECT COUNT(item.id.s) from actor_users where item.id.s not in (select item.userid.s from user_lpa_actor_map where item.userid is not null)"
+        sql_string = """
+        SELECT COUNT(*) AS accounts_without_lpas
+        FROM actor_users a
+        LEFT JOIN user_lpa_actor_map m
+            ON a.Item.id.S = m.Item.UserId.S
+        WHERE m.Item.UserId.S IS NULL
+        """
         self.run_athena_query(
             sql_string,
             outputFileName="CountOfUsersWithNoLpas",
@@ -342,21 +348,39 @@ class DynamoDBExporterAndQuerier:
         sql_string = """
         SELECT COUNT(*) AS not_migrated_accounts
         FROM actor_users
-        WHERE item.identity.s IS NULL
+        WHERE Item.id.S NOT LIKE 'IDENTITY#%'
+          AND Item.email.S IS NOT NULL
+          AND TRIM(Item.email.S) <> ''
+          AND (
+                Item.identity.S IS NULL
+                OR TRIM(Item.identity.S) = ''
+              )
         """
         self.run_athena_query(
             sql_string,
             outputFileName="CountOfAccountsNotMigrated",
         )
 
+    def get_count_of_total_user_accounts(self):
+            sql_string = """
+            SELECT COUNT(*) AS actor_accounts
+            FROM actor_users
+            WHERE COALESCE(TRIM(Item.email.S), '') <> ''
+            """
+            self.run_athena_query(
+                sql_string,
+                outputFileName="CountOfAccountsTotal",
+            )
+
+
     def get_count_of_not_migrated_accounts_with_no_lpas(self):
         sql_string = """
-        SELECT COUNT(*) AS not_migrated_without_lpas
-        FROM actor_users a
-        LEFT JOIN user_lpa_actor_map m
-            ON a.item.id.s = m.item.userid.s
-        WHERE a.item.identity.s IS NULL
-          AND m.item.userid.s IS NULL
+          SELECT COUNT(*) AS accounts_without_lpas
+          FROM actor_users a
+          LEFT JOIN user_lpa_actor_map m
+              ON a.Item.id.S = m.Item.UserId.S
+          WHERE COALESCE(TRIM(a.Item.email.S), '') <> ''
+            AND m.Item.UserId.S IS NULL;
         """
         self.run_athena_query(
             sql_string,
@@ -431,9 +455,10 @@ def main():
     work.get_organisations_field()
     work.get_count_of_lpas_for_users()
     work.get_count_of_duplicate_accounts()
-    work.get_count_of_users_with_no_lpas()
     work.get_count_of_accounts_not_migrated()
     work.get_count_of_not_migrated_accounts_with_no_lpas()
+    work.get_count_of_total_user_accounts()
+    work.get_count_of_users_with_no_lpas()
 
 
 if __name__ == "__main__":
