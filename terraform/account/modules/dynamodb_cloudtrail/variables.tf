@@ -21,4 +21,9 @@ variable "s3_access_logging_bucket_name" {
   type        = string
 }
 
+variable "default_boundary" {
+  description = "Default permissions boundary for non-ci roles"
+  type        = string
+}
+
 data "aws_region" "current" {}

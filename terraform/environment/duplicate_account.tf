@@ -8,12 +8,13 @@ module "duplicate_accounts" {
     WORK_FILE_PREFIX = "todo"
     PLAN_FILE_PREFIX = "plan"
   }
-  image_uri   = "${data.aws_ecr_repository.duplicate_accounts.repository_url}@${data.aws_ecr_image.duplicate_accounts.image_digest}"
-  ecr_arn     = data.aws_ecr_repository.duplicate_accounts.arn
-  environment = local.environment_name
-  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
-  timeout     = 900
-  memory      = 1024
+  image_uri        = "${data.aws_ecr_repository.duplicate_accounts.repository_url}@${data.aws_ecr_image.duplicate_accounts.image_digest}"
+  ecr_arn          = data.aws_ecr_repository.duplicate_accounts.arn
+  environment      = local.environment_name
+  kms_key          = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  default_boundary = local.environment.permissions_boundary_enabled ? data.aws_iam_policy.default_boundary[0].arn : null
+  timeout          = 900
+  memory           = 1024
 }
 
 data "aws_s3_bucket" "ual_athena_query_results" {
