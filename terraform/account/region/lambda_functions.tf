@@ -11,7 +11,7 @@
 # module "clsf_to_sqs" {
 #   source            = "./modules/lambda_function"
 #   count             = var.account.opg_metrics.enabled ? 1 : 0
-#   lambda_name       = "clsf-to-sqs-${data.aws_region.current.region}"
+#   lambda_name       = "clsf-to-sqs-${var.region}"
 #   working_directory = "/var/task"
 #   environment_variables = {
 #     "QUEUE_URL" : aws_sqs_queue.ship_to_opg_metrics[0].id,
@@ -65,7 +65,7 @@
 # module "ship_to_opg_metrics" {
 #   source            = "./modules/lambda_function"
 #   count             = var.account.opg_metrics.enabled ? 1 : 0
-#   lambda_name       = "ship-to-opg-metrics-${data.aws_region.current.region}"
+#   lambda_name       = "ship-to-opg-metrics-${var.region}"
 #   working_directory = "/var/task"
 #   environment_variables = {
 #     "OPG_METRICS_URL" : var.account.opg_metrics.endpoint_url

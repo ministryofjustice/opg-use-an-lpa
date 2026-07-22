@@ -2,6 +2,7 @@ locals {
   account_name = lookup(var.account_mapping, terraform.workspace, "development")
   account      = var.accounts[local.account_name]
   environment  = lower(terraform.workspace)
+  region       = data.aws_region.current.region
 
 
   mandatory_moj_tags = {

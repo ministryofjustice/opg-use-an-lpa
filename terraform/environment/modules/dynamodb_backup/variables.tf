@@ -96,3 +96,8 @@ variable "vault_lock_max_retention_days" {
     error_message = "When enable_vault_lock is true, vault_lock_max_retention_days must be at least as large as daily_backup_deletion and monthly_backup_deletion, otherwise backup jobs would request a retention above the vault ceiling and fail."
   }
 }
+
+variable "region" {
+  description = "The AWS region"
+  type        = string
+}
