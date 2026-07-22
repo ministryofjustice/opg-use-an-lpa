@@ -10,6 +10,10 @@ data "aws_kms_alias" "dynamodb_cmk" {
   name = "alias/dynamodb-encryption-key-${local.environment.account_name}"
 }
 
+data "aws_kms_alias" "dynamodb_exports" {
+  name = "alias/dynamodb-exports-${local.environment.account_name}"
+}
+
 //--------------------
 // ECR Repos
 
@@ -41,4 +45,9 @@ data "aws_ecr_image" "duplicate_accounts" {
   repository_name = data.aws_ecr_repository.duplicate_accounts.name
   image_tag       = var.container_version
   provider        = aws.management
+}
+
+data "aws_iam_policy" "default_boundary" {
+  count = local.environment.permissions_boundary_enabled ? 1 : 0
+  name  = "opg-use-an-lpa-non-ci-boundary"
 }

@@ -6,12 +6,13 @@ module "lambda_update_statistics" {
     ENVIRONMENT = local.environment_name
     REGION      = data.aws_region.current.region
   }
-  image_uri   = "${data.aws_ecr_repository.use_an_lpa_upload_statistics.repository_url}:${var.container_version}"
-  ecr_arn     = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
-  environment = local.environment_name
-  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
-  timeout     = 900
-  memory      = 1024
+  image_uri        = "${data.aws_ecr_repository.use_an_lpa_upload_statistics.repository_url}:${var.container_version}"
+  ecr_arn          = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
+  environment      = local.environment_name
+  kms_key          = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  default_boundary = local.environment.permissions_boundary_enabled ? data.aws_iam_policy.default_boundary[0].arn : null
+  timeout          = 900
+  memory           = 1024
 }
 
 
@@ -111,12 +112,13 @@ module "event_receiver" {
     USER_LPA_ACTOR_MAP_TABLE = "${local.environment_name}-UserLpaActorMap"
     ACTOR_USERS_TABLE        = "${local.environment_name}-ActorUsers"
   }
-  image_uri   = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
-  ecr_arn     = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
-  environment = local.environment_name
-  kms_key     = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
-  timeout     = 900
-  memory      = 128
+  image_uri        = "${data.aws_ecr_repository.use_an_lpa_event_receiver.repository_url}:${var.container_version}"
+  ecr_arn          = data.aws_ecr_repository.use_an_lpa_event_receiver.arn
+  environment      = local.environment_name
+  kms_key          = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  default_boundary = local.environment.permissions_boundary_enabled ? data.aws_iam_policy.default_boundary[0].arn : null
+  timeout          = 900
+  memory           = 128
 }
 
 resource "aws_iam_role_policy" "lambda_event_receiver" {

@@ -26,8 +26,9 @@ resource "aws_cloudwatch_log_group" "cloudtrail" {
 }
 
 resource "aws_iam_role" "cloudtrail" {
-  name               = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
-  assume_role_policy = data.aws_iam_policy_document.cloudtrail_role_assume_role_policy.json
+  name                 = "ddb-cloudtrail-${data.aws_region.current.region}-${var.trail_name_suffix}"
+  assume_role_policy   = data.aws_iam_policy_document.cloudtrail_role_assume_role_policy.json
+  permissions_boundary = var.default_boundary
 }
 
 data "aws_iam_policy_document" "cloudtrail_role_assume_role_policy" {
