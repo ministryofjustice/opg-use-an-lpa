@@ -325,7 +325,7 @@ data "aws_iam_policy_document" "waf_cloudwatch_log_encryption_kms" {
     principals {
       type = "Service"
       identifiers = [
-        "logs.${data.aws_region.current.region}.amazonaws.com",
+        "logs.${var.region}.amazonaws.com",
         "events.amazonaws.com"
       ]
     }

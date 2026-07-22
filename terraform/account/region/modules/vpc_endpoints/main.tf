@@ -14,7 +14,7 @@ resource "aws_security_group_rule" "vpc_endpoints_private_subnet_ingress" {
   security_group_id = aws_security_group.vpc_endpoints_private.id
   type              = "ingress"
   cidr_blocks       = var.application_subnets_cidr_blocks
-  description       = "Allow Services in Private Subnets of ${data.aws_region.current.region} to connect to VPC Interface Endpoints"
+  description       = "Allow Services in Private Subnets of ${var.region} to connect to VPC Interface Endpoints"
 }
 
 resource "aws_security_group_rule" "vpc_endpoints_public_subnet_ingress" {
@@ -25,7 +25,7 @@ resource "aws_security_group_rule" "vpc_endpoints_public_subnet_ingress" {
   security_group_id = aws_security_group.vpc_endpoints_private.id
   type              = "ingress"
   cidr_blocks       = var.public_subnets_cidr_blocks
-  description       = "Allow Services in Public Subnets of ${data.aws_region.current.region} to connect to VPC Interface Endpoints"
+  description       = "Allow Services in Public Subnets of ${var.region} to connect to VPC Interface Endpoints"
 }
 
 locals {
@@ -37,7 +37,7 @@ resource "aws_vpc_endpoint" "private" {
   for_each = local.interface_endpoint
 
   vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.${data.aws_region.current.region}.${each.value}"
+  service_name        = "com.amazonaws.${var.region}.${each.value}"
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   security_group_ids  = aws_security_group.vpc_endpoints_private[*].id
@@ -71,7 +71,7 @@ resource "aws_vpc_endpoint_policy" "private" {
 resource "aws_vpc_endpoint" "s3" {
   provider          = aws.region
   vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
+  service_name      = "com.amazonaws.${var.region}.s3"
   route_table_ids   = tolist(var.application_route_tables.ids)
   vpc_endpoint_type = "Gateway"
   policy            = data.aws_iam_policy_document.s3.json
@@ -81,7 +81,7 @@ resource "aws_vpc_endpoint" "s3" {
 resource "aws_vpc_endpoint" "dynamodb" {
   provider          = aws.region
   vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${data.aws_region.current.region}.dynamodb"
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
   route_table_ids   = tolist(var.application_route_tables.ids)
   vpc_endpoint_type = "Gateway"
   policy            = data.aws_iam_policy_document.allow_account_access.json
@@ -122,7 +122,7 @@ data "aws_iam_policy_document" "s3_bucket_access" {
     effect  = "Allow"
     actions = ["s3:GetObject"]
     resources = concat([
-      "arn:aws:s3:::prod-${data.aws_region.current.region}-starport-layer-bucket/*",
+      "arn:aws:s3:::prod-${var.region}-starport-layer-bucket/*",
 
     ], var.permitted_s3_buckets)
     principals {

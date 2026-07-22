@@ -73,3 +73,8 @@ variable "object_ownership" {
     error_message = "object_ownership must be either BucketOwnerPreferred or ObjectWriter"
   }
 }
+
+variable "region" {
+  description = "The aws region"
+  type        = string
+}

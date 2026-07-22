@@ -3,6 +3,11 @@ variable "kms_key_arn" {
   type        = string
 }
 
+variable "default_tags" {
+  description = "Default tags to apply to all resources"
+  type        = map(string)
+}
+
 variable "domains_allowed" {
   description = "The domains allowed to be resolved by the DNS server."
   type        = list(string)
@@ -21,5 +26,10 @@ variable "enable_block" {
 
 variable "brute_force_cache_primary_endpoint_address" {
   description = "The primary endpoint address of the Brute Force Cache."
+  type        = string
+}
+
+variable "region" {
+  description = "The aws region"
   type        = string
 }
