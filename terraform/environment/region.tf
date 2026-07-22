@@ -45,6 +45,8 @@ module "eu_west_1" {
   pagerduty_service_id                             = local.environment.pagerduty_service_id
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
+  region                                           = "eu-west-1"
+  default_tags                                     = local.default_tags
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning
@@ -135,6 +137,8 @@ module "eu_west_2" {
   pagerduty_service_id                             = local.environment.pagerduty_service_id
   public_access_enabled                            = var.public_access_enabled
   regions                                          = local.environment.regions
+  region                                           = "eu-west-2"
+  default_tags                                     = local.default_tags
   session_expires_use                              = local.environment.session_expires_use
   session_expires_view                             = local.environment.session_expires_view
   session_expiry_warning                           = local.environment.session_expiry_warning

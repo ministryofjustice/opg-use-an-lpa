@@ -36,9 +36,9 @@ resource "aws_networkfirewall_firewall_policy" "main" {
 
 resource "aws_networkfirewall_rule_group" "rule_file" {
   capacity = 100
-  name     = "main-${replace(filebase64sha256("${path.module}/network_firewall_rules_${data.aws_default_tags.current.tags.environment-name}.rules"), "/[^[:alnum:]]/", "")}"
+  name     = "main-${replace(filebase64sha256("${path.module}/network_firewall_rules_${var.default_tags["environment-name"]}.rules"), "/[^[:alnum:]]/", "")}"
   type     = "STATEFUL"
-  rules    = file("${path.module}/network_firewall_rules_${data.aws_default_tags.current.tags.environment-name}.rules")
+  rules    = file("${path.module}/network_firewall_rules_${var.default_tags["environment-name"]}.rules")
   lifecycle {
     create_before_destroy = true
   }
@@ -79,6 +79,7 @@ module "vpc_endpoints" {
   public_subnets_cidr_blocks      = module.network.public_subnets[*].cidr_block
   application_route_tables        = data.aws_route_tables.firewalled_network_application
   permitted_s3_buckets            = var.permitted_s3_buckets
+  region                          = var.region
   providers = {
     aws.region = aws.region
   }

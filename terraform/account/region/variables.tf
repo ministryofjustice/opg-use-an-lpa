@@ -36,6 +36,11 @@ variable "account_name" {
   type        = string
 }
 
+variable "default_tags" {
+  description = "default tags to apply to all resources"
+  type        = map(string)
+}
+
 variable "environment_name" {
   description = "The environment name"
   type        = string
@@ -55,4 +60,9 @@ variable "permitted_s3_buckets" {
   type        = list(string)
   default     = []
   description = "S3 buckets permitted through the S3 VPC endpoint"
+}
+
+variable "region" {
+  description = "The aws region"
+  type        = string
 }

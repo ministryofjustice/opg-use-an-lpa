@@ -198,7 +198,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.region,
+          awslogs-region        = var.region,
           awslogs-stream-prefix = "${var.environment_name}.viewer-web.use-an-lpa"
         }
       },
@@ -241,7 +241,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.region,
+          awslogs-region        = var.region,
           awslogs-stream-prefix = "${var.environment_name}.viewer-otel.use-an-lpa"
         }
       },
@@ -276,7 +276,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = data.aws_region.current.region,
+          awslogs-region        = var.region,
           awslogs-stream-prefix = "${var.environment_name}.viewer-app.use-an-lpa"
         }
       },
