@@ -10,6 +10,10 @@ data "aws_kms_alias" "dynamodb_cmk" {
   name = "alias/dynamodb-encryption-key-${local.environment.account_name}"
 }
 
+data "aws_kms_alias" "dynamodb_exports" {
+  name = "alias/dynamodb-exports-${local.environment.account_name}"
+}
+
 //--------------------
 // ECR Repos
 

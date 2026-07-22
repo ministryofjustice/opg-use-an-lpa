@@ -76,6 +76,7 @@ data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
       "kms:Decrypt",
     ]
     resources = [
+      data.aws_kms_alias.dynamodb_exports.target_key_arn,
       data.aws_kms_alias.dynamodb_cmk.target_key_arn,
     ]
   }
