@@ -15,7 +15,7 @@ require (
 	github.com/ministryofjustice/opg-go-common v1.165.22
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.35.1
-	github.com/sethvargo/go-retry v0.3.0
+	github.com/sethvargo/go-retry v0.4.0
 	github.com/spf13/afero v1.15.0
 	github.com/stretchr/testify v1.11.1
 )
