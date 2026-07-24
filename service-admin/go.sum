@@ -427,6 +427,8 @@ github.com/ministryofjustice/opg-go-common v1.165.13 h1:amW87PBqx2R3+xEGqhzDBVJX
 github.com/ministryofjustice/opg-go-common v1.165.13/go.mod h1:vCZEQbcNz2EZYY1bziRqBOFizKqdGKe4f5R0IRyLXY8=
 github.com/ministryofjustice/opg-go-common v1.165.19 h1:z9jU5mqSxBJjU6st/mMPus5SSPr8ia2NV42q8dSNmeA=
 github.com/ministryofjustice/opg-go-common v1.165.19/go.mod h1:TFofvLqGdYvkTji+VA+MinEu7++QuKxvnyPXPqu1ruM=
+github.com/ministryofjustice/opg-go-common v1.165.22 h1:Nbz4QG3wCxsRqNFssb+PjfHQg0L19RU8vfPa4h8f7so=
+github.com/ministryofjustice/opg-go-common v1.165.22/go.mod h1:A9/mRIbW+4OYxs7eVh67s8SrFK2VLoON4MB6BYlQG9Q=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
