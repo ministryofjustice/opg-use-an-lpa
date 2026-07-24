@@ -281,20 +281,6 @@ jobs:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: needs.workflow_variables.outputs.specific_path == 'docs'
 
-  slack_notify_translation_update:
-    name: notify translations update
-    uses: ./.github/workflows/_slack-notification.yml
-    needs:
-      - production_health_check
-      - workflow_variables
-    with:
-      template: translations_update.txt
-      translations_update: ${{ needs.workflow_variables.outputs.translations_update }}
-      workspace: production
-    secrets:
-      webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: needs.workflow_variables.outputs.translations_update == 'true'
-
   slack_notify:
     name: notify of result
     uses: ./.github/workflows/_slack-notification.yml
@@ -302,16 +288,20 @@ jobs:
       - production_health_check
       - slack_notify_documentation_update
       - slack_notify_translation_update
+      - workflow_variables
     with:
-      template: production_release.txt
+      template: |-
+        ${{ case(
+          needs.workflow_variables.outputs.translations_update == 'true', 'translations_update.txt',
+          'production_release.txt'
+        ) }}
       workflow_status: ${{ needs.production_health_check.result }}
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
     if: |
       always() &&
-      needs.slack_notify_documentation_update.result == 'skipped' &&
-      needs.slack_notify_translation_update.result == 'skipped'
+      needs.slack_notify_documentation_update.result == 'skipped'
 
   # Required end of workflow job
   end_of_workflow:
