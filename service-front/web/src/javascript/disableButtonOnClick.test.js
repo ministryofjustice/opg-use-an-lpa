@@ -61,7 +61,7 @@ describe('disableButtonOnClick', () => {
 
       expect(button.disabled).toBe(false);
 
-      est.useRealTimers();
+      jest.useRealTimers();
 
     });
   });
