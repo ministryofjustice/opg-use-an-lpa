@@ -1,16 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-06-22T23:07:09+00:00\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
+"PO-Revision-Date: 2026-07-24 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: en_GB\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Poedit 3.9\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
@@ -228,7 +227,7 @@ msgstr "To make an LPA online, or to continue to make an LPA you’ve started, g
 
 #: src/Actor/templates/actor/one-login.html.twig:48
 msgid "Sign in to use your lasting power of attorney"
-msgstr "Sign in to use your lasting power of attorney"
+msgstr "Sign in to use your lasting power of attorney (LPA)"
 
 #: src/Actor/templates/actor/one-login.html.twig:51
 msgid "You’ll need to sign in to the Use a lasting power of attorney service using GOV.UK One Login."
@@ -633,7 +632,7 @@ msgstr "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added wil
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:19
 msgid "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
-msgstr "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
+msgstr "you will not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid "You can still use paper versions of these <abbr title=\"lasting powers of attorney\">LPAs</abbr> if:"
@@ -873,7 +872,7 @@ msgstr "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, in
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
 msgid "ask for an activation key if you have not been given one - or it has expired"
-msgstr "ask for an activation key if you have not been given one - or it has expired"
+msgstr "ask for an activation key if you have not been given one, or if it has expired"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:50
 msgid "Add another LPA"
@@ -1649,7 +1648,7 @@ msgstr "all access codes you’ve created for this LPA will be valid until they 
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
-msgstr "you’ll not be able to see how the LPA is being used or has been used"
+msgstr "you will not be able to see how the LPA is being used or has been used"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
