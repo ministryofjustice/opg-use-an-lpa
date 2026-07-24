@@ -39,4 +39,29 @@ describe('disableButtonOnClick', () => {
       expect(button.disabled).toBe(true);
     });
   });
+
+  describe('with button reenable attribute', () => {
+    test('clicking the download button should disable it and reenable after 5s', () => {
+
+      jest.useFakeTimers();
+
+      document.body.innerHTML =
+        <form name="test" onsubmit="return false">
+          <button type="submit" data-prevent-double-click="true" data-reenable-after="5000">Click</button>
+        </form>
+
+      disableButtonOnClick(document.getElementsByTagName('form'));
+      const button = document.querySelector('button');
+      button.click();
+
+      expect(button.disabled).toBe(true);
+
+      jest.advanceTimersByTime(5000);
+
+      expect(button.disabled).toBe(false);
+
+      est.useRealTimers();
+
+    });
+  });
 });
