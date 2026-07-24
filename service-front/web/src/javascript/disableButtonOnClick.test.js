@@ -45,10 +45,11 @@ describe('disableButtonOnClick', () => {
 
       jest.useFakeTimers();
 
-      document.body.innerHTML =
-        <form name="test" onsubmit="return false">
-          <button type="submit" data-prevent-double-click="true" data-reenable-after="5000">Click</button>
-        </form>
+      document.body.innerHTML = `
+      <form name="test" onsubmit="return false">
+        <button type="submit" data-prevent-double-click="true" data-reenable-after="5000">Click</button>
+      </form>
+    `;
 
       disableButtonOnClick(document.getElementsByTagName('form'));
       const button = document.querySelector('button');
