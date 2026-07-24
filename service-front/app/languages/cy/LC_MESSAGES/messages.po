@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2026-06-22T23:07:09+00:00\n"
-"PO-Revision-Date: \n"
+"POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
+"PO-Revision-Date: 2026-07-24 10:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n==3 ? 3 : n==6 ? 4 : 5);\n"
+"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
 "X-Generator: Poedit 3.9\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -235,6 +235,7 @@ msgid "To make an LPA online, or to continue to make an LPA you’ve started, go
 msgstr "Er mwyn gwneud atwrneiaeth arhosol ar-lein, neu i barhau ag atwrneiaeth arhosol rydych chi wedi’i dechrau yn barod, ewch i’r <a href=\"%link%\" class=\"govuk-link\">gwasanaeth Gwneud atwrneiaeth arhosol.</a>"
 
 #: src/Actor/templates/actor/one-login.html.twig:48
+#, fuzzy
 msgid "Sign in to use your lasting power of attorney"
 msgstr "Mewngofnodwch i ddefnyddio eich atwrneiaeth arhosol"
 
@@ -640,6 +641,7 @@ msgid "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will
 msgstr "bydd unrhyw atwrneiaethau arhosol yr ydych wedi’u hychwanegu yn cael eu dileu’n barhaol"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:19
+#, fuzzy
 msgid "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
 msgstr "ni fyddwch yn gallu gweld sut mae’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> hynny yn cael eu defnyddio"
 
@@ -880,6 +882,7 @@ msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, inc
 msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, gan gynnwys delwedd wedi’i sganio o unrhyw gyfyngiadau ac amodau (neu ‘ddewisiadau a chyfarwyddiadau’ yn dibynnu pryd cafodd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ei gwneud)"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
+#, fuzzy
 msgid "ask for an activation key if you have not been given one - or it has expired"
 msgstr "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi dod i ben"
 
@@ -1662,6 +1665,7 @@ msgid "all access codes you’ve created for this LPA will be valid until they a
 msgstr "bydd pob cod mynediad yr ydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes y byddant yn dod i ben neu yn cael eu dileu"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
+#, fuzzy
 msgid "you’ll not be able to see how the LPA is being used or has been used"
 msgstr "ni fyddwch yn gallu gweld sut y mae’r LPA yn cael ei defnyddio na sut y mae wedi cael ei defnyddio"
 
