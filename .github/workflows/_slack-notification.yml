@@ -12,11 +12,6 @@ on:
         required: false
         type: string
         default: failure
-      translations_update:
-        description: 'Whether the pipeline was translations only'
-        required: false
-        type: string
-        default: failure
       template:
         description: 'Template to use'
         required: true
@@ -74,15 +69,6 @@ jobs:
             --slack_webhook ${SLACK_WEB_HOOK} \
             --template_path scripts/pipeline/post_release_slack_notification/${TEMPLATE} \
             --commit_message "$commit_message"
-
-      - name: Notify Slack Translations Update
-        env:
-          SLACK_WEB_HOOK: ${{ secrets.webhook }}
-        if: inputs.workflow_status != 'success' && inputs.translations_update == 'success'
-        run: |
-          uv run --project scripts/pipeline scripts/pipeline/post_release_slack_notification/post_release_slack_notification.py \
-            --slack_webhook ${SLACK_WEB_HOOK} \
-            --template_path scripts/pipeline/post_release_slack_notification/translations_update.txt
 
       - name: Notify Slack Documentation Update
         env:
