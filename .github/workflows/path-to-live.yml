@@ -299,9 +299,7 @@ jobs:
       workspace: production
     secrets:
       webhook: ${{ secrets.PROD_SLACK_WEB_HOOK }}
-    if: |
-      always() &&
-      needs.slack_notify_documentation_update.result == 'skipped'
+    if: ${{ always() && needs.slack_notify_documentation_update.result == 'skipped' }}
 
   # Required end of workflow job
   end_of_workflow:
