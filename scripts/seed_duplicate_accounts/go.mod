@@ -1,13 +1,13 @@
 module seed_duplicate_accounts
 
-go 1.25
+go 1.26.0
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.43.0
 	github.com/aws/aws-sdk-go-v2/config v1.32.31
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.53
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.61.0
-	github.com/go-faker/faker/v4 v4.9.0
+	github.com/go-faker/faker/v4 v4.10.0
 	github.com/google/uuid v1.6.0
 )
 
