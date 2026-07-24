@@ -1,11 +1,3 @@
-data "aws_default_tags" "current" {
-  provider = aws.region
-}
-
-data "aws_region" "current" {
-  provider = aws.region
-}
-
 data "aws_vpc" "default" {
   default  = true
   provider = aws.region
@@ -13,7 +5,7 @@ data "aws_vpc" "default" {
 
 data "aws_service" "services" {
   for_each   = toset(local.service_id)
-  region     = data.aws_region.current.region
+  region     = var.region
   service_id = each.value
 
   provider = aws.region
@@ -22,11 +14,11 @@ data "aws_service" "services" {
 data "aws_vpc" "main" {
   filter {
     name   = "tag:application"
-    values = [data.aws_default_tags.current.tags.application]
+    values = [var.default_tags["application"]]
   }
   filter {
     name   = "tag:Name"
-    values = ["${data.aws_default_tags.current.tags.application}-${data.aws_default_tags.current.tags.environment-name}-vpc"]
+    values = ["${var.default_tags["application"]}-${var.default_tags["environment-name"]}-vpc"]
   }
   provider = aws.region
 }
