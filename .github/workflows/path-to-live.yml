@@ -284,7 +284,6 @@ jobs:
     needs:
       - production_health_check
       - slack_notify_documentation_update
-      - slack_notify_translation_update
       - workflow_variables
     with:
       template: |-
