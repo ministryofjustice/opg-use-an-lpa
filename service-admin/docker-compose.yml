@@ -3,7 +3,7 @@ version: "3.6"
 services:
     webpack:
         container_name: admin-webpack
-        image: node:24-alpine@sha256:682368d8253e0c3364b803956085c456a612d738bd635926d73fa24db3ce53d7
+        image: node:24-alpine@sha256:a0b9bf06e4e6193cf7a0f58816cc935ff8c2a908f81e6f1a95432d679c54fbfd
         working_dir: /app
         entrypoint: |
             sh -c "npm i && npm run build"
