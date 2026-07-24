@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-24 10:02+0000\n"
+"PO-Revision-Date: 2026-07-24 11:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -3249,7 +3249,7 @@ msgstr "Arbed newidiadau"
 #: src/Common/templates/common/contact-us.html.twig:13
 #: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
-msgstr "Cysylltu â ni"
+msgstr "Cysylltwch â ni"
 
 #: src/Common/templates/common/contact-us.html.twig:15
 msgid "If you need help with this service you can get in touch by telephone or email."
@@ -3621,11 +3621,11 @@ msgstr "Gweld y cwcis"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
-msgstr "Ffôn"
+msgstr "Ffonio"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
-msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r Deyrnas Unedig: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
+msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r DU: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
