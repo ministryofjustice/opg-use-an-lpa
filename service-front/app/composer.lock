@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "07f3c69b778e50af8aab20bf5f0e5ee1",
+    "content-hash": "d5c28161557e802d419e77171d7a24a2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.388.2",
+            "version": "3.388.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "d48fe5eabeda0cf58025636f78ac8dcd8e60a724"
+                "reference": "ff7499bfa2b987c8fbae495fe0e851cfdde6172f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/d48fe5eabeda0cf58025636f78ac8dcd8e60a724",
-                "reference": "d48fe5eabeda0cf58025636f78ac8dcd8e60a724",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ff7499bfa2b987c8fbae495fe0e851cfdde6172f",
+                "reference": "ff7499bfa2b987c8fbae495fe0e851cfdde6172f",
                 "shasum": ""
             },
             "require": {
@@ -153,9 +153,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.388.2"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.388.8"
             },
-            "time": "2026-07-08T23:12:50+00:00"
+            "time": "2026-07-16T18:07:15+00:00"
         },
         {
             "name": "blazon/psr11-monolog",
