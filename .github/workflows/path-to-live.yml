@@ -35,6 +35,7 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
+      translations_update: ${{ steps.changed-files-translations.outputs.has_changes }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
@@ -56,6 +57,14 @@ jobs:
           else
             echo "path=$(echo all)" >> $GITHUB_OUTPUT
           fi
+
+      - name: get changed translation files in any folder
+        id: changed-files-translations
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
+        with:
+          paths: |
+            **/*.po
+            **/*.mo
 
       - name: Bump version and push tag
         uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
@@ -275,8 +284,13 @@ jobs:
     needs:
       - production_health_check
       - slack_notify_documentation_update
+      - workflow_variables
     with:
-      template: production_release.txt
+      template: |-
+        ${{ case(
+          needs.workflow_variables.outputs.translations_update == 'true', 'translations_update.txt',
+          'production_release.txt'
+        ) }}
       workflow_status: ${{ needs.production_health_check.result }}
       workspace: production
     secrets:
