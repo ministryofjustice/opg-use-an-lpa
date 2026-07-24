@@ -35,7 +35,7 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
-      translations_update: ${{ steps.translations.outputs.updated }}
+      translations_update: ${{ steps.changed-files-translations.outputs.has_changes }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
@@ -65,9 +65,6 @@ jobs:
           paths: |
             **/*.po
             **/*.mo
-      - name: extract variables for workflow
-        id: translations
-        run: echo "updated=${{ steps.changed-files-translations.outputs.has_changes }}" >> $GITHUB_OUTPUT
 
       - name: Bump version and push tag
         uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
