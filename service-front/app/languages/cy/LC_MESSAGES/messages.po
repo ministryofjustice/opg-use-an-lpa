@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-27 14:51+0000\n"
+"PO-Revision-Date: 2026-07-27 15:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -88,11 +88,11 @@ msgstr "Gwirio codau mynediad"
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:63
 #: src/Actor/templates/actor/partials/lpa-sub-navigation.html.twig:19
 msgid "View LPA summary"
-msgstr "Gweld crynodeb LPA"
+msgstr "Gweld crynodeb o’r LPA"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:69
 msgid "Remove LPA"
-msgstr "Dileu LPA"
+msgstr "Dileu’r LPA o fy nghyfrif"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
@@ -896,12 +896,12 @@ msgstr "Ychwanegu eich LPA cyntaf"
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:62
 msgid "You have %count% LPA in your account"
 msgid_plural "You have %count% LPAs in your account"
-msgstr[0] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[1] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[2] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[3] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[4] "Mae gennych %count% LPA ar eich cyfrif"
-msgstr[5] "Mae gennych %count% LPA ar eich cyfrif"
+msgstr[0] "Mae gennych %count% LPA yn eich cyfrif"
+msgstr[1] "Mae gennych %count% LPA yn eich cyfrif"
+msgstr[2] "Mae gennych %count% LPA yn eich cyfrif"
+msgstr[3] "Mae gennych %count% LPA yn eich cyfrif"
+msgstr[4] "Mae gennych %count% LPA yn eich cyfrif"
+msgstr[5] "Mae gennych %count% LPA yn eich cyfrif"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:78
 msgid "Your account contains duplicate LPAs"
@@ -2297,7 +2297,7 @@ msgstr "Rydych chi’n defnyddio GOV.UK One Login i fewngofnodi i’r gwasanaeth
 
 #: src/Actor/templates/actor/settings.html.twig:20
 msgid "You can change these details in your GOV.UK One Login:"
-msgstr "Gallwch newid y manylion hyn yn eich GOV.UK One Login:"
+msgstr "Gallwch newid y manylion hyn drwy GOV.UK One Login:"
 
 #: src/Actor/templates/actor/settings.html.twig:22
 msgid "e-mail address"
@@ -2313,7 +2313,7 @@ msgstr "sut i gael codau diogelwch i fewngofnodi"
 
 #: src/Actor/templates/actor/settings.html.twig:28
 msgid "Change your sign-in details in your GOV.UK One Login"
-msgstr "Newid eich manylion mewngofnodi yn eich GOV.UK One Login"
+msgstr "Newid eich manylion mewngofnodi drwy GOV.UK One Login"
 
 #: src/Actor/templates/actor/settings.html.twig:36
 msgid "Delete your Use a lasting power of attorney account"
@@ -2321,11 +2321,11 @@ msgstr "Dileu eich cyfrif Defnyddio atwrneiaeth arhosol"
 
 #: src/Actor/templates/actor/settings.html.twig:39
 msgid "If you no longer use your Use a lasting power of attorney account, you can delete it."
-msgstr "Os nad oes arnoch angen eich cyfrif Defnyddio atwrneiaeth arhosol mwyach, gallwch ei ddileu."
+msgstr "Os nad oes angen eich cyfrif Defnyddio atwrneiaeth arhosol arnoch mwyach, gallwch ei ddileu."
 
 #: src/Actor/templates/actor/settings.html.twig:42
 msgid "Find out more about deleting your account"
-msgstr "Rhagor o wybodaeth am ddileu eich cyfrif"
+msgstr "Mwy o wybodaeth am ddileu eich cyfrif"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:16
