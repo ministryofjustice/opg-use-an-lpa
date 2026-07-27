@@ -291,7 +291,7 @@ class ViewerContext implements Context
     public function iCanSeeTheViewerTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
-        $this->ui->assertPageContainsText('Terms of use');
+        $this->ui->assertElementOnPage('h1[data-content-id=terms-of-use]');
     }
 
     #[When('/^I choose to download a document version of the LPA$/')]
