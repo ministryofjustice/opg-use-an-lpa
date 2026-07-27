@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f511915e896396b71a5f5adabb60f3ca",
+    "content-hash": "5a958f30f7665350f8c1fa2ed5e39acb",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -115,16 +115,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.388.8",
+            "version": "3.388.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ff7499bfa2b987c8fbae495fe0e851cfdde6172f"
+                "reference": "45b9e9814f42cdeceb046434d068c9e77fd2a530"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ff7499bfa2b987c8fbae495fe0e851cfdde6172f",
-                "reference": "ff7499bfa2b987c8fbae495fe0e851cfdde6172f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/45b9e9814f42cdeceb046434d068c9e77fd2a530",
+                "reference": "45b9e9814f42cdeceb046434d068c9e77fd2a530",
                 "shasum": ""
             },
             "require": {
@@ -206,9 +206,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.388.8"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.388.13"
             },
-            "time": "2026-07-16T18:07:15+00:00"
+            "time": "2026-07-23T18:06:54+00:00"
         },
         {
             "name": "blazon/psr11-monolog",

@@ -1,0 +1,3 @@
+:flag-wales: :gb: *Use a Lasting Power of Attorney Translation Release Successful* :gb: :flag-wales:
+*User:* {{ gh_actor }}
+*GH Actions build url:* {{ gh_actions_build_url }}
