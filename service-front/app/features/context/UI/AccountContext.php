@@ -240,8 +240,7 @@ class AccountContext implements Context
     public function iCanSeeTheActorTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
-        $this->ui->assertPageContainsText('Terms of use');
-        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
+        $this->ui->assertElementOnPage('h1[data-label=terms-of-use]');
     }
 
     #[When('/^I click the (.*) link on the page$/')]
