@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-27 10:51+0000\n"
+"PO-Revision-Date: 2026-07-27 10:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -117,7 +117,7 @@ msgstr "Efallai y bydd angen i chi ddangos LPA papur i sefydliadau."
 #: src/Actor/templates/actor/partials/new-use-service.html.twig:5
 #: src/Viewer/templates/viewer/new-view-service.html.twig:5
 msgid "Your <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">feedback<span class=\"govuk-visually-hidden\">(opens in new tab)</span></a> will help us to improve"
-msgstr "Bydd eich <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">adborth<span class=\"govuk-visually-hidden\">(yn agor mewn tab newydd)</span></a> yn ein helpu wella"
+msgstr "Bydd eich <a class=\"govuk-link\" href=\"{link}\" target=\"_blank\">adborth<span class=\"govuk-visually-hidden\">(yn agor mewn tab newydd)</span></a> yn ein helpu i wella"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:12
 msgid "VIEWED"
