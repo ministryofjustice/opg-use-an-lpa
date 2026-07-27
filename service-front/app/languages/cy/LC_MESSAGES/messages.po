@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-27 10:54+0000\n"
+"PO-Revision-Date: 2026-07-27 14:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -14,11 +14,11 @@ msgstr ""
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
 msgid "This LPA has restrictions and conditions.<br>"
-msgstr "Mae gan yr LPA hon cyfyngiadau ac amodau.<br>"
+msgstr "Mae’r LPA hon yn cynnwys cyfyngiadau ac amodau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:12
 msgid "This LPA has instructions.<br>"
-msgstr "Mae gan yr LPA hon gyfarwyddiadau.<br>"
+msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:61
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:26
@@ -27,23 +27,23 @@ msgstr "Darllen mwy"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:27
 msgid "This LPA has preferences.<br>"
-msgstr "Mae gan yr LPA hon ddymuniadau.<br>"
+msgstr "Mae’r LPA hon yn cynnwys dymuniadau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:40
 msgid "This LPA has preferences and instructions.<br>"
-msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau.<br>"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a chyfarwyddiadau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:53
 msgid "This LPA has preferences and/or instructions.<br>"
-msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau.<br>"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a/neu gyfarwyddiadau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:10
 msgid "LPA reference number:"
-msgstr "Cyfeirnod LPA:"
+msgstr "Cyfeirnod yr LPA:"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:16
 msgid "Added by:"
-msgstr "ychwanegwyd gan:"
+msgstr "Ychwanegwyd gan:"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:20
 msgid "You are not an attorney on this <abbr title=\"lasting power of attorney\">LPA</abbr> anymore."
@@ -60,12 +60,12 @@ msgstr "dilëwyd"
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:39
 msgid "%count% active access code"
 msgid_plural "%count% active access codes"
-msgstr[0] "%count% codau mynediad gweithredol"
-msgstr[1] "%count% cod i’w ddefnyddio"
-msgstr[2] "%count% codau i’w defnyddio"
-msgstr[3] "%count% codau i’w defnyddio"
-msgstr[4] "%count% codau i’w defnyddio"
-msgstr[5] "%count% codau i’w defnyddio"
+msgstr[0] "%count% cod mynediad actif"
+msgstr[1] "%count% cod mynediad actif"
+msgstr[2] "%count% god mynediad actif"
+msgstr[3] "%count% cod mynediad actif"
+msgstr[4] "%count% o godau mynediad actif"
+msgstr[5] "%count% o godau mynediad actif"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "No active access codes"
@@ -96,19 +96,19 @@ msgstr "Dileu LPA"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:2
 msgid "This LPA has preferences or instructions. You might need to show organisations the paper LPA."
-msgstr "Mae gan yr LPA hon gyfarwyddiadau neu ddymuniadau. Efallai y bydd angen i chi ddangos LPA papur i sefydliadau."
+msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau neu ddymuniadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:6
 msgid "This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr "Mae gan yr LPA hon gyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA papur i sefydliadau."
+msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:10
 msgid "This LPA has preferences. You might need to show organisations the paper LPA."
-msgstr "Mae gan yr LPA hon ddymuniadau. Efallai y bydd angen i chi ddangos LPA papur i sefydliadau."
+msgstr "Mae’r LPA hon yn cynnwys dymuniadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:14
 msgid "This LPA has preferences and instructions."
-msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau."
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a chyfarwyddiadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:17
 msgid "You might need to show organisations the paper LPA."
@@ -858,7 +858,7 @@ msgstr "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:24
 msgid "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
-msgstr "Dysgwch fwy am <a href=\"%link1%\" class=\"govuk-link\">sut i reoli LPAs</a> a sut dylai atwrneiod gefnogi rhoddwyr i <a href=\"%link2%\" class=\"govuk-link\">wneud penderfyniadau</a>."
+msgstr "Dysgwch fwy am <a href=\"%link1%\" class=\"govuk-link\">sut i reoli LPAs</a> a <a href=\"%link2%\" class=\"govuk-link\">sut dylai atwrneiod gefnogi rhoddwyr i wneud penderfyniadau</a>."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "What can I do with this service?"
@@ -3560,20 +3560,24 @@ msgid "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as 
 msgstr "Gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon cyn gynted ag y bydd wedi’i chofrestru heblaw bod y cyfarwyddiadau yn dweud fel arall"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:50
+#, fuzzy
 msgid "This LPA has preferences and/or instructions (sometimes known as “restrictions and conditions”)"
-msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau. (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau)"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a chyfarwyddiadau (neu ‘gyfyngiadau ac amodau’ fel y’u gelwir weithiau)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:52
+#, fuzzy
 msgid "This LPA has preferences and instructions (sometimes known as “restrictions and conditions”)"
 msgstr "Mae cyfyngiadau ac amodau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau) ar yr LPA hon"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:54
+#, fuzzy
 msgid "This LPA has preferences (sometimes known as “restrictions and conditions”)"
-msgstr "Mae gan yr LPA hon ddymuniadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau)."
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau (neu ‘gyfyngiadau ac amodau’ fel y’u gelwir weithiau)."
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:56
+#, fuzzy
 msgid "This LPA has instructions (sometimes known as “restrictions and conditions”)"
-msgstr "Mae gan yr LPA hon gyfarwyddiadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau)."
+msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau)."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
@@ -3637,19 +3641,19 @@ msgstr "Swyddfa’r Gwarcheidwad Cyhoeddus<br> Blwch Post 16185<br> Birmingham<b
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:50
 msgid "This LPA has preferences and/or instructions"
-msgstr "Mae gan yr LPA hon gyfarwyddiadau a/neu ddymuniadau"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a/neu gyfarwyddiadau"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:52
 msgid "This LPA has preferences and instructions"
-msgstr "Mae gan yr LPA hon dewisiadau a chyfarwyddiadau"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau a chyfarwyddiadau"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:54
 msgid "This LPA has preferences"
-msgstr "Mae gan yr atwrneiaeth arhosol hon ddewisiadau"
+msgstr "Mae’r LPA hon yn cynnwys dewisiadau"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:56
 msgid "This LPA has instructions"
-msgstr "Mae gan yr atwrneiaeth arhosol hon gyfarwyddiadau"
+msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau"
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:123
 #: src/Common/templates/partials/header/one-login.html.twig:50
