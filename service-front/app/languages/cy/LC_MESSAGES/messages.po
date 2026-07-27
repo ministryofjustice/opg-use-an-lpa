@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-24 14:23+0000\n"
+"PO-Revision-Date: 2026-07-27 10:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -858,11 +858,11 @@ msgstr "Bydd unrhyw atwrneiaeth arhosol (LPA) y byddwch yn ei hychwanegu at eich
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:24
 msgid "Find out about <a href=\"%link1%\" class=\"govuk-link\">managing LPAs</a> and how attorneys should support donors <a href=\"%link2%\" class=\"govuk-link\">to make decisions</a>."
-msgstr "Gwybodaeth am <a href=\"%link1%\" class=\"govuk-link\">sut i reoli LPAs</a> a sut y dylai atwrneiod gefnogi rhoddwyr i <a href=\"%link2%\" class=\"govuk-link\">wneud penderfyniadau</a>."
+msgstr "Dysgwch fwy am <a href=\"%link1%\" class=\"govuk-link\">sut i reoli LPAs</a> a sut dylai atwrneiod gefnogi rhoddwyr i <a href=\"%link2%\" class=\"govuk-link\">wneud penderfyniadau</a>."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:34
 msgid "What can I do with this service?"
-msgstr "Beth alla’i wneud gyda’r gwasanaeth hwn?"
+msgstr "Beth galla i ei wneud gyda’r gwasanaeth hwn?"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:38
 msgid "Use this service to:"
@@ -870,15 +870,15 @@ msgstr "Defnyddiwch y gwasanaeth hwn i:"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:40
 msgid "give organisations access to an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr> by making a secure access code"
-msgstr "roi mynediad i sefydliadau at grynodeb ar-lein o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> drwy greu cod diogel"
+msgstr "greu codau mynediad i alluogi sefydliadau i weld crynodeb o’r <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:41
 msgid "keep track of the organisations that have online access to an <abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr "cadw golwg ar y sefydliadau sydd â mynediad ar-lein at <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+msgstr "gweld pa sefydliadau sy’n gallu agor crynodeb o’r <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:42
 msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, including a scanned image of any restrictions and conditions (can also be known as “preferences and instructions” depending on when the LPA was made)"
-msgstr "gweld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, gan gynnwys delwedd wedi’i sganio o unrhyw gyfyngiadau ac amodau (neu ‘ddewisiadau a chyfarwyddiadau’ yn dibynnu pryd cafodd yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ei gwneud)"
+msgstr "gweld crynodeb o <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein eich hun"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
 #, fuzzy
@@ -2885,6 +2885,7 @@ msgid "The Use a lasting power of attorney (LPA) service lets you create ‘acce
 msgstr "Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluogi i greu ‘codau mynediad’ i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb ar-lein o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:18
+#, fuzzy
 msgid "The service is for donors and attorneys on an <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr "Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod ar <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
@@ -3658,7 +3659,7 @@ msgstr "Llywio ategol"
 #: src/Common/templates/partials/header/default.html.twig:31
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:128
 msgid "Last signed in:"
-msgstr "Mewngofnodwyd diwethaf:"
+msgstr "Mewngofnodwyd ddiwethaf:"
 
 # More like \"never logged in\"
 #: src/Common/templates/partials/header/default.html.twig:33
