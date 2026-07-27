@@ -130,12 +130,6 @@ class AccountContext implements Context
         $this->iRequestToDeleteMyAccount();
     }
 
-    #[Given('/^I am on the stats page$/')]
-    public function iAmOnTheStatsPage(): void
-    {
-        $this->ui->visit('/stats');
-    }
-
     #[Given('/^I am on the triage page$/')]
     public function iAmOnTheTriagePage(): void
     {
@@ -246,15 +240,7 @@ class AccountContext implements Context
     public function iCanSeeTheActorTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
-        $this->ui->assertPageContainsText('Terms of use');
-        $this->ui->assertPageContainsText('The service is for donors and attorneys on an LPA.');
-    }
-
-    #[Then('/^I can see user accounts table$/')]
-    public function iCanSeeUserAccountsTable(): void
-    {
-        $this->ui->assertPageAddress('/stats');
-        $this->ui->assertPageContainsText('Number of user accounts created and deleted');
+        $this->ui->assertElementOnPage('h1[data-content-id=terms-of-use]');
     }
 
     #[When('/^I click the (.*) link on the page$/')]
