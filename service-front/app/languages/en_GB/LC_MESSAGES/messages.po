@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-27 10:51+0000\n"
+"PO-Revision-Date: 2026-07-27 14:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -3539,19 +3539,19 @@ msgstr "This <abbr title=\"lasting power of attorney\">LPA</abbr> can be used as
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:50
 msgid "This LPA has preferences and/or instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences and/or instructions (sometimes known as “restrictions and conditions”)"
+msgstr "This LPA has preferences and/or instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:52
 msgid "This LPA has preferences and instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences and instructions (sometimes known as “restrictions and conditions”)"
+msgstr "This LPA has preferences and instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:54
 msgid "This LPA has preferences (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has preferences (sometimes known as “restrictions and conditions”)"
+msgstr "This LPA has preferences (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:56
 msgid "This LPA has instructions (sometimes known as “restrictions and conditions”)"
-msgstr "This LPA has instructions (sometimes known as “restrictions and conditions”)"
+msgstr "This LPA has instructions (sometimes known as ‘restrictions and conditions’)"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
