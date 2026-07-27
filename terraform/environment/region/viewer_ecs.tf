@@ -184,6 +184,8 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}@${data.aws_ecr_image.use_an_lpa_front_web.image_digest}",
       mountPoints = [],
       name        = "web",
+      user        = "nginx",
+      privileged  = false,
       portMappings = [
         {
           containerPort = 80,
@@ -253,6 +255,8 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}@${data.aws_ecr_image.use_an_lpa_front_app.image_digest}",
       mountPoints = [],
       name        = "app",
+      user        = "www-data",
+      privileged  = false,
       portMappings = [
         {
           containerPort = 9000,
