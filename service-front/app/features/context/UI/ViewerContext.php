@@ -101,12 +101,6 @@ class ViewerContext implements Context
         $this->ui->assertPageContainsText('Enter the LPA access code');
     }
 
-    #[Given('/^I am on the stats page$/')]
-    public function iAmOnTheStatsPage(): void
-    {
-        $this->ui->visit('/stats');
-    }
-
     #[Given('/^I am on the viewer privacy notice page$/')]
     public function iAmOnTheViewerPrivacyNoticePage(): void
     {
@@ -297,14 +291,7 @@ class ViewerContext implements Context
     public function iCanSeeTheViewerTermsOfUse(): void
     {
         $this->ui->assertPageAddress('/terms-of-use');
-        $this->ui->assertPageContainsText('Terms of use');
-    }
-
-    #[Then('/^I can see user LPA codes table$/')]
-    public function iCanSeeUserLPACodesTable(): void
-    {
-        $this->ui->assertPageAddress('/stats');
-        $this->ui->assertPageContainsText('Number of LPA codes viewed');
+        $this->ui->assertElementOnPage('h1[data-content-id=terms-of-use]');
     }
 
     #[When('/^I choose to download a document version of the LPA$/')]
