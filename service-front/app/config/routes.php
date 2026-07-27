@@ -40,7 +40,6 @@ $viewerRoutes = function (Application $app): void {
     $app->get('/download-lpa', Viewer\Handler\DownloadLpaHandler::class, 'download-lpa');
     $app->get('/terms-of-use', Viewer\Handler\ViewerTermsOfUseHandler::class, 'terms-of-use');
     $app->get('/privacy-notice', Viewer\Handler\ViewerPrivacyNoticeHandler::class, 'privacy-notice');
-    $app->get('/stats', Viewer\Handler\StatsPageHandler::class, 'viewer-stats');
     $app->get('/session-expired', Viewer\Handler\ViewerSessionExpiredHandler::class, 'session-expired');
     $app->get('/session-check', Common\Handler\SessionCheckHandler::class, 'session-check');
     $app->get('/session-refresh', Common\Handler\SessionRefreshHandler::class, 'session-refresh');
@@ -102,7 +101,6 @@ $viewerRoutes = function (Application $app): void {
 $actorRoutes = function (Application $app): void {
     $app->route('/home', Actor\Handler\AuthenticateOneLoginHandler::class, ['GET', 'POST'], 'home');
     $app->get('/healthcheck', Common\Handler\HealthcheckHandler::class, 'healthcheck');
-    $app->get('/stats', Actor\Handler\StatsPageHandler::class, 'actor-stats');
 
     $app->route('/cookies', Common\Handler\CookiesPageHandler::class, ['GET', 'POST'], 'cookies');
     $app->get('/terms-of-use', [Actor\Handler\ActorTermsOfUseHandler::class], 'terms-of-use');
