@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-27 14:51+0000\n"
+"PO-Revision-Date: 2026-07-28 10:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2236,7 +2236,7 @@ msgstr "What is your activation key?"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:25
 msgid "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA."
-msgstr "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else - even if it’s for the same LPA."
+msgstr "Make sure this is the activation key in the letter we sent you. We will not be able to find the LPA if you enter an activation key we sent to someone else – even if it’s for the same LPA."
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
 msgid "Your activation key:"
@@ -2248,7 +2248,7 @@ msgstr "can only be used once"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
 msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
+msgstr "will expire one year after the date on the letter – you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
