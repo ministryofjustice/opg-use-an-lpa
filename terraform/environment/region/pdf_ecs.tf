@@ -155,6 +155,8 @@ locals {
     image       = "${data.aws_ecr_repository.use_an_lpa_pdf.repository_url}@${data.aws_ecr_image.pdf_service.image_digest}",
     mountPoints = [],
     name        = "pdf",
+    privileged  = false,
+    user        = "node",
     portMappings = [
       {
         containerPort = 8000,
