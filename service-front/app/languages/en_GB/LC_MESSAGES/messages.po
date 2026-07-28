@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-28 10:55+0000\n"
+"PO-Revision-Date: 2026-07-28 14:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2240,7 +2240,7 @@ msgstr "Make sure this is the activation key in the letter we sent you. We will 
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
 msgid "Your activation key:"
-msgstr "Your activation key:"
+msgstr "Activation keys:"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:31
 msgid "can only be used once"
@@ -2248,11 +2248,11 @@ msgstr "can only be used once"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
 msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "will expire one year after the date on the letter – you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
+msgstr "expire one year after the date on the letter – you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
-msgstr "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
+msgstr "For example, C-AB12 CD34 EF56"
 
 #: src/Actor/templates/actor/settings.html.twig:12
 #: src/Common/templates/partials/header/default.html.twig:39
