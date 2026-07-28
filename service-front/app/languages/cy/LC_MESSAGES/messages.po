@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-28 10:55+0000\n"
+"PO-Revision-Date: 2026-07-28 14:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2255,7 +2255,7 @@ msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
 msgid "Your activation key"
-msgstr "Eich allwedd cadarnhau cyfrif"
+msgstr "Eich cod actifadu"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:19
 msgid "What is your activation key?"
@@ -2266,21 +2266,21 @@ msgid "Make sure this is the activation key in the letter we sent you. We will n
 msgstr "Gwnewch yn siŵr mai dyma’r cod actifadu sydd yn y llythyr a anfonwyd atoch. Ni fyddwn yn gallu dod o hyd i’r atwrneiaeth arhosol (LPA) os byddwch yn rhoi cod actifadu a anfonwyd at rywun arall – hyd yn oed os yw ar gyfer yr un LPA."
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:27
+#, fuzzy
 msgid "Your activation key:"
-msgstr "O ran eich allwedd cadarnhau:"
+msgstr "Mae codau actifadu:"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:31
 msgid "can only be used once"
-msgstr "dim ond unwaith gellir ei defnyddio"
+msgstr "i’w defnyddio unwaith yn unig"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:34
-#, fuzzy
 msgid "expired one year after the date on the letter you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "mae eich allwedd yn dod i ben flwyddyn ar ôl y dyddiad ar y llythyr. Os yw eich allwedd wedi dod i ben, gallwch <a href=\"%link%\" class=\"govuk-link\">ofyn am allwedd newydd</a>"
+msgstr "yn dod i ben flwyddyn ar ôl y dyddiad ar y llythyr – gallwch wneud <a href=\"%link%\" class=\"govuk-link\">cais am god actifadu newydd</a>"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:42
 msgid "Activation keys are 13 letters and numbers long and start with a C<br/>For example, C-AB12 CD34 EF56 <br/><br/> You do not need to enter the C-"
-msgstr "Mae allweddi cadarnhau cyfrif yn gyfuniad o 13 llythyren a rhifau ac yn dechrau gyda C.<br/>Er enghraifft, C-AB12 CD34 EF56 <br/><br/> Nid oes angen ichi nodi’r C-"
+msgstr "Er enghraifft, C-AB12 CD34 EF56"
 
 #: src/Actor/templates/actor/settings.html.twig:12
 #: src/Common/templates/partials/header/default.html.twig:39
