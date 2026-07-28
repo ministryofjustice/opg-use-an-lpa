@@ -510,19 +510,19 @@ msgstr "mae’r rhoddwr wedi eich dileu fel atwrnai"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:23
 msgid "Do you have an activation key to add an LPA?"
-msgstr "A oes gennych chi god i ychwanegu LPA?"
+msgstr "A oes gennych chi god actifadu i ychwanegu LPA?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
-msgstr "Hyd allweddi cadarnhau yw 12 llythyren a rhif ac yn dechrau gydag C, er enghraifft: C-AB12 CD34 EF56."
+msgstr "Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:49
 msgid "Yes, I have an activation key"
-msgstr "Oes, mae gen i allwedd cadarnhau"
+msgstr "Oes, mae gen i god actifadu"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:53
 msgid "No, I need to request an activation key"
-msgstr "Na, mae angen i mi ofyn am allwedd cadarnhau"
+msgstr "Nac oes, mae angen i mi ofyn am god actifadu"
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
@@ -881,9 +881,8 @@ msgid "view an <abbr title=\"lasting power of attorney\">LPA</abbr> summary, inc
 msgstr "gweld crynodeb o <abbr title=\"lasting power of attorney\">LPA</abbr> ar-lein eich hun"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:43
-#, fuzzy
 msgid "ask for an activation key if you have not been given one - or it has expired"
-msgstr "ofyn am allwedd cadarnhau cyfrif os nad ydych wedi cael un – neu os ydyw wedi dod i ben"
+msgstr "gofyn am god actifadu os nad ydych wedi cael un, neu os ydy wedi dod i ben"
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:50
 msgid "Add another LPA"
@@ -3249,7 +3248,7 @@ msgstr "Arbed newidiadau"
 #: src/Common/templates/common/contact-us.html.twig:13
 #: src/Common/templates/partials/footer.html.twig:61
 msgid "Contact us"
-msgstr "Cysylltwch â ni"
+msgstr "Cysylltu â ni"
 
 #: src/Common/templates/common/contact-us.html.twig:15
 msgid "If you need help with this service you can get in touch by telephone or email."
@@ -3694,11 +3693,11 @@ msgstr "Dolenni cymorth"
 
 #: src/Common/templates/partials/footer.html.twig:66
 msgid "Built by OPG Digital"
-msgstr "Adeiladwyd gan OPG Digidol"
+msgstr "Adeiladwyd gan OPG Digital"
 
 #: src/Common/templates/partials/footer.html.twig:76
 msgid "All content is available under the <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, except where otherwise stated"
-msgstr "Mae’r holl gynnwys ar gael o dan <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Trwydded Llywodraeth Agored v3.0</a>, oni nodir yn wahanol"
+msgstr "Mae’r holl gynnwys ar gael o dan <a class=\"govuk-footer__link\" href=\"https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/\" rel=\"license\">Open Government Licence v3.0</a>, oni nodir yn wahanol"
 
 #: src/Common/templates/partials/footer.html.twig:80
 msgid "© Crown copyright"
@@ -4607,11 +4606,11 @@ msgstr "Mae’r dudalen hon wedi rhewi gan nad ydych wedi defnyddio’r gwasanae
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:28
 msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
-msgstr "Mae angen eich allwedd cadarnhau unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol at eich cyfrif. Mae’r rhain yn cael eu hanfon atoch pan fydd yr LPA wedi’i gofrestru a bydd yn dod i ben ar ôl 12 mis."
+msgstr "Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (LPA) at eich cyfrif. Bydd y cod yn cael ei anfon atoch pan fydd yr LPA wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:41
 msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
-msgstr "Os ydych chi wedi colli eich allwedd cadarnhau, neu os nad ydych wedi cael un o’r blaen, gallwch ofyn am un newydd."
+msgstr "Os ydych chi wedi colli eich cod actifadu, os ydy wedi dod i ben, neu os nad ydych wedi derbyn un o’r blaen, gallwch ofyn am un newydd."
 
 #: src/Common/templates/error/409.html.twig:12
 msgid "Your information is safe and any LPAs you’ve already added to this account are still there."
@@ -4683,7 +4682,7 @@ msgstr "Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:13
 msgid "If the activation key has not arrived by %dueDate%, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
-msgstr "Os nad yw’r allwedd actifadu wedi cyrraedd erbyn %dueDate%, <a class=\"govuk-link\" href=\"%link%\">cysylltwch â ni</a> i wneud yn siŵr bod eich cyfeiriad cywir gennym cyn i chi ofyn am allwedd newydd."
+msgstr "Os nad yw’r cod actifadu wedi cyrraedd erbyn %dueDate%, <a class=\"govuk-link\" href=\"%link%\">cysylltwch â ni</a> i wneud yn siŵr bod eich cyfeiriad cywir gennym cyn i chi ofyn am god newydd."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:52
 msgid "The code I’ve been given does not begin with a V"
