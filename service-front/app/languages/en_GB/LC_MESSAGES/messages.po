@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-28 14:01+0000\n"
+"PO-Revision-Date: 2026-07-28 16:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -505,7 +505,7 @@ msgstr "Do you have an activation key to add an LPA?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
-msgstr "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
+msgstr "Activation keys are 12 characters long. They include letters and numbers and always start with a C. For example, C-AB12 CD34 EF56."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:49
 msgid "Yes, I have an activation key"
@@ -4572,7 +4572,7 @@ msgstr "As you have not used this service for over 20 minutes, the page has time
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:28
 msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
-msgstr "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
+msgstr "You need your own unique activation key to add an LPA to your account. An activation key will be sent to you when the LPA is registered. The key will expire after 12 months."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:41
 msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
