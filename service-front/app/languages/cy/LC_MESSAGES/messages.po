@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-28 16:20+0000\n"
+"PO-Revision-Date: 2026-07-29 10:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -513,7 +513,6 @@ msgid "Do you have an activation key to add an LPA?"
 msgstr "A oes gennych chi god actifadu i ychwanegu LPA?"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:35
-#, fuzzy
 msgid "Activation keys are 12 letters and numbers long and start with a C, for example: C-AB12 CD34 EF56."
 msgstr "Mae codau actifadu yn gyfuniad o 12 llythyren a rhif ac yn dechrau gydag C. Er enghraifft, C-AB12 CD34 EF56."
 
