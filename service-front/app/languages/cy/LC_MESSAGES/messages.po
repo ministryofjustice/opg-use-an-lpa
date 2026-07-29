@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-28 14:01+0000\n"
+"PO-Revision-Date: 2026-07-28 16:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2344,7 +2344,7 @@ msgstr "Nodwch allwedd cadarnhau cyfrif yn y fformat cywir"
 #: src/Actor/templates/actor/form-error-messages.html.twig:18
 msgctxt "error"
 msgid "The activation key you entered is too long. Check that you only entered the 12 letters and numbers that follow the C-"
-msgstr "Mae’r allwedd cadarnhau cyfrif a gofnodwyd gennych yn rhy hir. Gwiriwch mai dim ond y 12 llythyren a rhifau sy’n dilyn C-"
+msgstr "Mae’r cod actifadu a gofnodwyd gennych yn rhy hir. Gwiriwch mai dim ond y 12 llythyren a rhifau sy’n dilyn C-"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:19
@@ -4607,9 +4607,8 @@ msgid "As you have not used this service for over 20 minutes, the page has timed
 msgstr "Mae’r dudalen hon wedi rhewi gan nad ydych wedi defnyddio’r gwasanaeth hwn am dros 20 munud"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:28
-#, fuzzy
 msgid "You need your own unique activation key to add an LPA to your account. These are sent to you when the LPA is registered and expire after 12 months."
-msgstr "Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (LPA) at eich cyfrif. Bydd y cod yn cael ei anfon atoch pan fydd yr LPA wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis."
+msgstr "Mae angen eich cod actifadu unigryw eich hun arnoch i ychwanegu atwrneiaeth arhosol (LPA) at eich cyfrif. Bydd cod actifadu yn cael ei anfon atoch pan fydd yr LPA wedi’i chofrestru. Bydd y cod yn dod i ben ar ôl 12 mis."
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:41
 msgid "If you’ve lost your activation key, it’s expired, or you’ve not had one before, you can request a new one."
