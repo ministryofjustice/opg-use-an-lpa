@@ -17,7 +17,7 @@ resource "aws_ecs_service" "viewer" {
   load_balancer {
     target_group_arn = aws_lb_target_group.viewer.arn
     container_name   = "web"
-    container_port   = 80
+    container_port   = 8080
   }
 
   capacity_provider_strategy {
@@ -65,12 +65,12 @@ resource "aws_security_group" "viewer_ecs_service" {
   provider = aws.region
 }
 
-// 80 in from the ELB
+// 8080 in from the ELB
 resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
-  description              = "Allow Port 80 ingress from the application load balancer"
+  description              = "Allow Port 8080 ingress from the application load balancer"
   type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.viewer_ecs_service.id
   source_security_group_id = aws_security_group.viewer_loadbalancer.id
@@ -184,10 +184,12 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_front_web.repository_url}@${data.aws_ecr_image.use_an_lpa_front_web.image_digest}",
       mountPoints = [],
       name        = "web",
+      user        = "nginx",
+      privileged  = false,
       portMappings = [
         {
-          containerPort = 80,
-          hostPort      = 80,
+          containerPort = 8080,
+          hostPort      = 8080,
           protocol      = "tcp"
         }
       ],
@@ -253,6 +255,8 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_front_app.repository_url}@${data.aws_ecr_image.use_an_lpa_front_app.image_digest}",
       mountPoints = [],
       name        = "app",
+      user        = "www-data",
+      privileged  = false,
       portMappings = [
         {
           containerPort = 9000,

@@ -7,8 +7,8 @@ resource "aws_shield_application_layer_automatic_response" "use" {
 }
 
 resource "aws_lb_target_group" "use" {
-  name                 = "${var.environment_name}-actor"
-  port                 = 80
+  name                 = "${var.environment_name}-act"
+  port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.main.id
