@@ -1163,6 +1163,7 @@ msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisation
 msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter wybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan fyddwn yn gofyn am eich gwybodaeth bersonol, ei defnyddio neu ei rhannu"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:36
+#, fuzzy
 msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/opg-privacy-notice-lasting-and-enduring-powers-of-attorney\"> OPG’s lasting power of attorney privacy notice </a>, which explains how we use and protect your data when you’re named on an <abbr title=\"lasting power of attorney\">LPA</abbr>"
 msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/opg-privacy-notice-lasting-and-enduring-powers-of-attorney.cy\">hysbysiad preifatrwydd atwrneiaeth arhosol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n egluro sut rydym yn defnyddio ac yn diogelu eich data pan fyddwch wedi’ch enwi ar LPA"
 
@@ -1781,6 +1782,7 @@ msgid "your LPA was registered on or after 1 September 2019"
 msgstr "os cofrestrwyd eich LPA rhwng 1 Medi 2019 a 16 Gorffennaf 2020"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:21
+#, fuzzy
 msgid "you're a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr "os ydych yn rhoddwr neu’n atwrnai ar yr LPA (nid yn atwrnai cyfnewid)"
 
@@ -1948,7 +1950,7 @@ msgstr "Dyddiad geni’r rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
 msgid "Request an activation key"
-msgstr "Gofynnwch am allwedd actifadu"
+msgstr "Gofyn am god actifadu"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
@@ -4710,10 +4712,12 @@ msgid "Details you’ll need to give us"
 msgstr "Manylion bydd angen i chi eu rhoi i ni"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
+#, fuzzy
 msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
 msgstr "ble rydych yn byw ar hyn o bryd – caiff allweddi actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+#, fuzzy
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
 msgstr "cyfeirnod yr atwrneiaeth arhosol - fe welwch hwn ar yr atwrneiaeth arhosol bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
 
