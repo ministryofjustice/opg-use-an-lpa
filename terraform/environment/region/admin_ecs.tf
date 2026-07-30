@@ -247,6 +247,8 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_admin_app.repository_url}@${data.aws_ecr_image.use_an_lpa_admin_app.image_digest}",
       mountPoints = [],
       name        = "app",
+      user        = "appuser",
+      privileged  = false,
       portMappings = [
         {
           containerPort = 8080,
