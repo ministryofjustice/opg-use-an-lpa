@@ -17,12 +17,11 @@ variable "account_mapping" {
 variable "accounts" {
   type = map(
     object({
-      account_id                   = string
-      is_production                = bool
-      retention_in_days            = number
-      pagerduty_service_name       = string
-      pagerduty_service_id         = string
-      permissions_boundary_enabled = optional(bool, false)
+      account_id             = string
+      is_production          = bool
+      retention_in_days      = number
+      pagerduty_service_name = string
+      pagerduty_service_id   = string
       opg_metrics = optional(object({
         enabled                     = bool
         api_key_secretsmanager_name = string

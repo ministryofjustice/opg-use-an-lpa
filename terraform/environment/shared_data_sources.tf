@@ -48,6 +48,5 @@ data "aws_ecr_image" "duplicate_accounts" {
 }
 
 data "aws_iam_policy" "default_boundary" {
-  count = local.environment.permissions_boundary_enabled ? 1 : 0
-  name  = "opg-use-an-lpa-non-ci-boundary"
+  name = "opg-use-an-lpa-non-ci-boundary"
 }

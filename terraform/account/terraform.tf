@@ -23,8 +23,10 @@ variable "management_role" {
   description = "The role to assume for the management AWS provider"
 }
 
-locals {
-  default_role = local.account.permissions_boundary_enabled ? "opg-use-an-lpa-ci-boundary" : "opg-use-an-lpa-ci"
+variable "default_role" {
+  default     = "opg-use-an-lpa-ci-boundary"
+  type        = string
+  description = "The default role to assume"
 }
 
 provider "aws" {
@@ -34,7 +36,7 @@ provider "aws" {
   }
 
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${local.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
@@ -47,7 +49,7 @@ provider "aws" {
   }
 
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${local.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
@@ -60,7 +62,7 @@ provider "aws" {
   }
 
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${local.default_role}"
+    role_arn     = "arn:aws:iam::${local.account.account_id}:role/${var.default_role}"
     session_name = "terraform-session"
   }
 }
