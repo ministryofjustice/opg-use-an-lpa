@@ -14,7 +14,7 @@ final class Equals
     private static function normaliseFirstNames(string $s): string
     {
         // only take the first of the firstnames for comparison
-        return self::turnUnicodeCharToAscii(strtolower(explode(' ', trim($s))[0]));
+        return self::turnUnicodeCharToAscii(mb_strtolower(explode(' ', trim($s))[0]));
     }
 
     public static function lastName(string $a, string $b): bool
@@ -24,7 +24,7 @@ final class Equals
 
     private static function normaliseLastName(string $s): string
     {
-        return self::turnUnicodeCharToAscii(preg_replace('/\s+/', ' ', strtolower(trim($s))));
+        return self::turnUnicodeCharToAscii(preg_replace('/\s+/', ' ', mb_strtolower(trim($s))));
     }
 
     public static function postcode(string $a, string $b): bool
