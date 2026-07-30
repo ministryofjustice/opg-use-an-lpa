@@ -301,7 +301,7 @@ locals {
       },
       {
         name  = "API_SERVICE_URL",
-        value = "http://${local.api_service_fqdn}"
+        value = "http://${local.api_service_fqdn}:8080"
       },
       {
         name  = "PDF_SERVICE_URL",
