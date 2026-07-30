@@ -9,17 +9,11 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 final class Equals
 {
-    /**
-     * @throws EqualsNormalisationException
-     */
     public static function firstNames(string $a, string $b): bool
     {
         return self::normaliseFirstNames($a) === self::normaliseFirstNames($b);
     }
 
-    /**
-     * @throws EqualsNormalisationException
-     */
     private static function normaliseFirstNames(string $s): string
     {
         // only take the first of the firstnames for comparison
