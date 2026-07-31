@@ -34,10 +34,6 @@ variable "default_role" {
   default = "opg-use-an-lpa-ci-boundary"
 }
 
-# locals {
-#   default_role = local.environment.permissions_boundary_enabled ? "opg-use-an-lpa-ci-boundary" : "opg-use-an-lpa-ci"
-# }
-
 provider "aws" {
   region = "eu-west-1"
   default_tags {
