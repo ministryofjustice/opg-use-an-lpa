@@ -19,7 +19,6 @@ services:
   # Viewer Front
 
   viewer-web:
-    container_name: viewer-web
     build:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
@@ -34,7 +33,6 @@ services:
       - viewer-app
 
   viewer-app:
-    container_name: viewer-app
     build:
       target: development
       context: .
@@ -71,7 +69,6 @@ services:
   # Actor Front
 
   actor-web:
-    container_name: actor-web
     build:
       context: .
       dockerfile: service-front/docker/web/Dockerfile
@@ -86,7 +83,6 @@ services:
       - actor-app
 
   actor-app:
-    container_name: actor-app
     build:
       target: development
       context: .
@@ -156,7 +152,6 @@ services:
   # API
 
   api-web:
-    container_name: api-web
     build:
       context: .
       dockerfile: service-api/docker/web/Dockerfile
@@ -171,7 +166,6 @@ services:
       - api-app
 
   api-app:
-    container_name: api-app
     build:
       target: development
       context: .
@@ -241,7 +235,6 @@ services:
       - --optimize-autoloader
 
   api-seeding:
-    container_name: api-seeding
     build:
       context: .
       dockerfile: service-api/docker/seeding/Dockerfile
@@ -261,7 +254,6 @@ services:
   # Lambda to upload stats
 
   upload-stats-lambda:
-    container_name: upload-statistics
     build:
       context: ./lambda-functions/upload-statistics
       dockerfile: Dockerfile
@@ -279,7 +271,6 @@ services:
     command: [ "upload_statistics.lambda_handler" ]
 
   duplicate-accounts-lambda:
-    container_name: duplicate-accounts
     build:
       context: ./lambda-functions/duplicate-accounts
       dockerfile: Dockerfile
@@ -306,7 +297,6 @@ services:
     command: []
 
   proxy:
-    container_name: proxy
     image: traefik:3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e
     ports:
       - "9001:9001"
