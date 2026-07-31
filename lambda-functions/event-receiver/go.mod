@@ -9,7 +9,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.53
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.61.0
 	github.com/google/uuid v1.6.0
-	github.com/ministryofjustice/opg-go-common v1.165.22
+	github.com/ministryofjustice/opg-go-common v1.165.25
 	github.com/stretchr/testify v1.11.1
 )
 
