@@ -19,20 +19,9 @@ resource "aws_dynamodb_table" "use_codes_table" {
     enabled = true
   }
 
-  # For each region in the environment that is not the primary_region, create a DynamoDB replica.
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-      point_in_time_recovery      = true
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
@@ -61,19 +50,9 @@ resource "aws_dynamodb_table" "stats_table" {
     enabled = true
   }
 
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-      point_in_time_recovery      = true
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
@@ -125,19 +104,9 @@ resource "aws_dynamodb_table" "use_users_table" {
     enabled = true
   }
 
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-      point_in_time_recovery      = true
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
@@ -181,19 +150,9 @@ resource "aws_dynamodb_table" "viewer_codes_table" {
     enabled = true
   }
 
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-      point_in_time_recovery      = true
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
@@ -227,19 +186,9 @@ resource "aws_dynamodb_table" "viewer_activity_table" {
     enabled = true
   }
 
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      point_in_time_recovery      = true
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
@@ -305,19 +254,9 @@ resource "aws_dynamodb_table" "user_lpa_actor_map" {
     enabled = true
   }
 
-  dynamic "replica" {
-    for_each = [
-      for region in local.environment.regions : region
-      if region.is_primary != true
-    ]
-
-    content {
-      region_name                 = replica.value.name
-      propagate_tags              = true
-      deletion_protection_enabled = local.environment.dynamodb_tables.deletion_protection_enabled
-      kms_key_arn                 = local.environment.dynamodb_tables.cmk_encryption_enabled ? data.aws_kms_alias.dynamodb_cmk_eu_west_2.target_key_arn : null
-      point_in_time_recovery      = true
-    }
+  # Replicas are managed as standalone aws_dynamodb_table_replica resources in dynamodb_replicas.tf.
+  lifecycle {
+    ignore_changes = [replica]
   }
 
   provider = aws.eu_west_1
