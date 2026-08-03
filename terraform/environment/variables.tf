@@ -99,8 +99,9 @@ variable "environments" {
         vault_lock_max_retention_days   = number
       })
       dynamodb_tables = object({
-        cmk_encryption_enabled      = bool
-        deletion_protection_enabled = bool
+        cmk_encryption_enabled              = bool
+        deletion_protection_enabled         = bool
+        replica_deletion_protection_enabled = bool
         actor_codes = object({
           name = string
         })
