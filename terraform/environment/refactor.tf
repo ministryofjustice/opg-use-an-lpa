@@ -922,32 +922,32 @@ moved {
   to   = module.eu_west_1.aws_service_discovery_private_dns_namespace.internal_ecs
 }
 
-# import {
-#   to = aws_dynamodb_table_replica.use_codes_table
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.use_codes_table
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.actor_codes.name}:eu-west-1"
+}
 
-# import {
-#   to = aws_dynamodb_table_replica.stats_table
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.stats_table
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.stats.name}:eu-west-1"
+}
 
-# import {
-#   to = aws_dynamodb_table_replica.use_users_table
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.use_users_table
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.actor_users.name}:eu-west-1"
+}
 
-# import {
-#   to = aws_dynamodb_table_replica.viewer_codes_table
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.viewer_codes_table
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_codes.name}:eu-west-1"
+}
 
-# import {
-#   to = aws_dynamodb_table_replica.viewer_activity_table
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_activity.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.viewer_activity_table
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.viewer_activity.name}:eu-west-1"
+}
 
-# import {
-#   to = aws_dynamodb_table_replica.user_lpa_actor_map
-#   id = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}:eu-west-1"
-# }
+import {
+  to = aws_dynamodb_table_replica.user_lpa_actor_map
+  id = "${local.environment_name}-${local.environment.dynamodb_tables.user_lpa_actor_map.name}:eu-west-1"
+}
