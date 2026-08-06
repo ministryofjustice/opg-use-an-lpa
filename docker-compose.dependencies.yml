@@ -94,7 +94,7 @@ services:
       - ./mock-integrations/image-request-handler/mocked-images:/var/www/html:ro
 
   mock-data-lpa:
-    image: docker.io/stoplight/prism:5@sha256:fab47aee53c3007facd5d23e7957b1fc312b30dddad27bf570c2cb4a51c5f959
+    image: docker.io/stoplight/prism:5@sha256:3f6d29e31bfe0b99587f0f6f79c423858dd6a2ea7e1e4658273ed930a78a9acf
     command:
       - "mock"
       - "-h"
@@ -106,7 +106,7 @@ services:
       - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
 
   mock-image-request-handler:
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -118,7 +118,7 @@ services:
       - ./mock-integrations/image-request-handler:/opt/imposter/config:ro
 
   mock-lpa-data-store:
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
@@ -130,7 +130,7 @@ services:
       - ./mock-integrations/lpa-data-store:/opt/imposter/config:ro
 
   mock-lpa-codes:
-    image: docker.io/outofcoffee/imposter:4.7.0@sha256:2a2f964e6ee7bea2f9a54eac6d976441351d0805833117fc2e45c541b8d58ae9
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
       - "-c"
       - "/opt/imposter/config"
