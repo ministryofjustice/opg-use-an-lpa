@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Exception\EqualsNormalisationException;
+use SebastianBergmann\CodeCoverage\CodeCoverage;
+
 final class Equals
 {
     public static function firstNames(string $a, string $b): bool
@@ -14,17 +17,32 @@ final class Equals
     private static function normaliseFirstNames(string $s): string
     {
         // only take the first of the firstnames for comparison
-        return self::turnUnicodeCharToAscii(strtolower(explode(' ', trim($s))[0]));
+        return self::turnUnicodeCharToAscii(mb_strtolower(explode(' ', trim($s))[0]));
     }
 
+    /**
+     * @throws EqualsNormalisationException
+     */
     public static function lastName(string $a, string $b): bool
     {
         return self::normaliseLastName($a) === self::normaliseLastName($b);
     }
 
+    /**
+     * @throws EqualsNormalisationException
+     */
     private static function normaliseLastName(string $s): string
     {
-        return self::turnUnicodeCharToAscii(preg_replace('/\s+/', ' ', strtolower(trim($s))));
+        $name = preg_replace('/\s+/', ' ', mb_strtolower(trim($s)));
+
+        // @codeCoverageIgnoreStart
+        // Not possible to force preg_replace to return a null.
+        if ($name === null) {
+            throw new EqualsNormalisationException('Failed to normalise last name.');
+        }
+        // @codeCoverageIgnoreEnd
+
+        return self::turnUnicodeCharToAscii($name);
     }
 
     public static function postcode(string $a, string $b): bool

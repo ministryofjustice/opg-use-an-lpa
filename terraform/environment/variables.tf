@@ -67,7 +67,6 @@ variable "environments" {
       mock_onelogin_enabled                            = bool
       pagerduty_service_name                           = string
       pagerduty_service_id                             = string
-      permissions_boundary_enabled                     = optional(bool, false)
       session_expires_use                              = number
       session_expires_view                             = number
       session_expires_admin                            = number
@@ -100,8 +99,9 @@ variable "environments" {
         vault_lock_max_retention_days   = number
       })
       dynamodb_tables = object({
-        cmk_encryption_enabled      = bool
-        deletion_protection_enabled = bool
+        cmk_encryption_enabled              = bool
+        deletion_protection_enabled         = bool
+        replica_deletion_protection_enabled = bool
         actor_codes = object({
           name = string
         })

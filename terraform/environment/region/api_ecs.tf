@@ -94,13 +94,13 @@ resource "aws_security_group" "api_ecs_service" {
 }
 
 //----------------------------------
-// 80 in from Viewer ECS service
+// 8080 in from Viewer ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
-  description              = "Allow Port 80 ingress from the View service"
+  description              = "Allow Port 8080 ingress from the View service"
   type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.viewer_ecs_service.id
@@ -112,13 +112,13 @@ resource "aws_security_group_rule" "api_ecs_service_viewer_ingress" {
 }
 
 //----------------------------------
-// 80 in from Actor ECS service
+// 8080 in from Actor ECS service
 
 resource "aws_security_group_rule" "api_ecs_service_use_ingress" {
-  description              = "Allow Port 80 ingress from the Use service"
+  description              = "Allow Port 8080 ingress from the Use service"
   type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.api_ecs_service.id
   source_security_group_id = aws_security_group.use_ecs_service.id
@@ -400,10 +400,12 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_api_web.repository_url}@${data.aws_ecr_image.use_an_lpa_api_web.image_digest}",
       mountPoints = [],
       name        = "web",
+      user        = "nginx",
+      privileged  = false,
       portMappings = [
         {
-          containerPort = 80,
-          hostPort      = 80,
+          containerPort = 8080,
+          hostPort      = 8080,
           protocol      = "tcp"
         }
       ],
@@ -469,6 +471,8 @@ locals {
       image       = "${data.aws_ecr_repository.use_an_lpa_api_app.repository_url}@${data.aws_ecr_image.use_an_lpa_api_app.image_digest}",
       mountPoints = [],
       name        = "app",
+      user        = "www-data",
+      privileged  = false,
       portMappings = [
         {
           containerPort = 9000,

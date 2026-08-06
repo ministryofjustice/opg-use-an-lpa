@@ -23,36 +23,41 @@ class EqualsTest extends TestCase
     public static function firstNamesProvider(): array
     {
         return [
-            [
+            "doesn't match"                           => [
                 false,
                 'John',
                 'Gohn',
             ],
-            [
+            'easy'                                    => [
                 true,
                 'John',
                 'John',
-            ], // easy
-            [
+            ],
+            'trimmed'                                 => [
                 true,
                 'John',
                 '  John  ',
-            ], // trimmed
-            [
+            ],
+            'only first of firstnames checked'        => [
                 true,
                 'John',
                 'John James',
-            ], // only first of firstnames checked
-            [
+            ],
+            "normalises quotes and dashes to ' and -" => [
                 true,
                 'O\'j\'o-h-n-a-t-h',
                 "O’j‘o\u{2010}h\u{2011}n\u{2012}a\u{2013}t\u{2014}h",
-            ], // normalises quotes and dashes to ' and -
-            [
+            ],
+            'ignores case'                            => [
                 true,
                 'JOHN',
                 'jOhn',
-            ], // ignores case
+            ],
+            'handles diacritics and casing'           => [
+                true,
+                'SIÂN',
+                'Siân',
+            ],
         ];
     }
 
@@ -66,41 +71,46 @@ class EqualsTest extends TestCase
     public static function lastNameProvider(): array
     {
         return [
-            [
+            "doesn't match"                                    => [
                 false,
                 'John',
                 'Gohn',
             ],
-            [
+            'easy'                                             => [
                 true,
                 'John',
                 'John',
-            ], // easy
-            [
+            ],
+            'trimmed'                                          => [
                 true,
                 'John',
                 '  John  ',
-            ], // trimmed
-            [
+            ],
+            'all names checked'                                => [
                 false,
                 'John',
                 'John James',
-            ], // all names checked
-            [
+            ],
+            'all names checked with multiple spaces collapsed' => [
                 true,
                 'John James Gary',
                 'John    James   	  Gary',
-            ], // all names checked with multiple spaces collapsed
-            [
+            ],
+            "normalises ’ to '"                                => [
                 true,
                 'O\'john',
                 'O’john',
-            ], // normalises ’ to '
-            [
+            ],
+            'ignores case'                                     => [
                 true,
                 'JOHN',
                 'jOhn',
-            ], // ignores case
+            ],
+            'handles diacritics and casing'                    => [
+                true,
+                'GARCÍA',
+                'García',
+            ],
         ];
     }
 
@@ -114,26 +124,26 @@ class EqualsTest extends TestCase
     public static function postcodeProvider(): array
     {
         return [
-            [
+            "doesn't match"  => [
                 false,
                 'F11FF',
                 'F12FF',
             ],
-            [
+            'easy'           => [
                 true,
                 'F11FF',
                 'F11FF',
-            ], // easy
-            [
+            ],
+            'ignores spaces' => [
                 true,
                 'F11FF',
                 '  F1 1FF  ',
-            ], // ignores spaces
-            [
+            ],
+            'ignores case'   => [
                 true,
                 'F11FF',
                 'f11ff',
-            ], // ignores case
+            ],
         ];
     }
 }

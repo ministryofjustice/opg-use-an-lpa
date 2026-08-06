@@ -5,8 +5,8 @@ resource "aws_shield_application_layer_automatic_response" "viewer" {
 }
 
 resource "aws_lb_target_group" "viewer" {
-  name                 = "${var.environment_name}-viewer"
-  port                 = 80
+  name                 = "${var.environment_name}-view"
+  port                 = 8080
   protocol             = "HTTP"
   target_type          = "ip"
   vpc_id               = data.aws_vpc.main.id
