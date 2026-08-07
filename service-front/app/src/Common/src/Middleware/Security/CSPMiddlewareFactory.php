@@ -11,12 +11,15 @@ use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
- * Configuration for setting a default locale should look like the following:
+ * Configuration for setting an appropriate CSP policy would be:
  *
  * <code>
- * 'i18n' => [
- *     'default_locale' => 'en_GB',
- * ]
+ * 'csp' => [
+ *     'enforce'               => true,
+ *     'report_uri'            => 'https://my-reoprt-uri',
+ *     'authentication_domain' => 'https://*.my-auth-provider',
+ *     'iap_domain'            => 'https://the-iap-bucket',
+ * ],
  * </code>
  */
 class CSPMiddlewareFactory
