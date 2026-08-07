@@ -70,6 +70,22 @@ variable "create_onelogin_dashboard" {
   default     = false
 }
 
+variable "csp_enforce" {
+  description = "Whether or not enforce CSP decisions made by the users browser, or report (false)."
+  type        = bool
+  default     = false
+}
+
+variable "csp_auth_domain" {
+  description = "The domain that user will be directed to for authentication."
+  type        = string
+}
+
+variable "csp_iap_domain" {
+  description = "The domain that the user will be directed to do download/view I&P images."
+  type        = string
+}
+
 variable "dns_namespace_env" {
   description = "The environment to use for the DNS namespace."
   type        = string

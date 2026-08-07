@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>{% block html_title %}{% trans %}GOV.UK{% endtrans %}{% endblock %}</title>
     <link rel="preload" href="{{ asset('stylesheets/main.css') }}" as="style" />
-    <link rel="preload" href="{{ asset('index.js') }}" as="script" />
+    <link rel="preload" href="{{ asset('index.js') }}" as="script" crossorigin />
     <link rel="preconnect" href="//www.google-analytics.com" />
     <link rel="preconnect" href="//www.googletagmanager.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1">

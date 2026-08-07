@@ -39,13 +39,6 @@ map $http_x_amzn_trace_id $trace_id {
     default   "Root=1-$msec-$connection$connection_requests";
 }
 
-# grap the nonce value returned from the app and make it available to add
-# to our own headers
-map $upstream_http_x_csp_nonce $CSP_nonce {
-    "~*nonce-" $upstream_http_x_csp_nonce;
-    default   "nonce-ApplicationFailedToGenerateNonce";
-}
-
 # UML-3581 - regex to pull out all the problematic UserAgents in the logs. It's not by any means exhaustive but
 # absolutely covers all the ones impacted by webkit's none === strict problem.
 map $http_user_agent $samesite_strip {
@@ -66,15 +59,7 @@ server {
     gzip_vary       on;
     gzip_types      text/plain text/css application/json application/javascript text/xml application/xml text/javascript image/svg+xml;
 
-    set $CSP_image   "img-src     'self' https://*.google-analytics.com https://*.googletagmanager.com data:";
-    set $CSP_script  "script-src  'self' https://www.googletagmanager.com https://www.google-analytics.com";
-    set $CSP_style   "style-src   'self'";
-    set $CSP_font    "font-src    'self'";
-    set $CSP_form    "form-action 'self'";
-    set $CSP_connect "connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com";
-    set $CSP_report  "report-uri ${WEB_DOMAIN}/_csp";
-
-    add_header Content-Security-Policy-Report-Only "default-src 'none'; ${CSP_image}; ${CSP_font}; ${CSP_connect}; ${CSP_script} '${CSP_nonce}'; ${CSP_style} '${CSP_nonce}'; ${CSP_form}; ${CSP_report};";
+    # CSP headers handled by app in Middleware/Security/CSPMiddleware.php
 
     # add CORS headers
     add_header Access-Control-Allow-Origin ${WEB_DOMAIN} always;
