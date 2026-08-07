@@ -4,9 +4,10 @@ services:
   # Service overrides for dependency startup ordering
   viewer-app:
     environment:
-      API_SERVICE_URL: http://api-web
+      API_SERVICE_URL: http://api-web:8080
       PDF_SERVICE_URL: http://service-pdf
       AWS_ENDPOINT_KMS: http://localstack:4566
+      CSP_IAP_DOMAIN: http://localhost:4010
     depends_on:
       redis:
         condition: service_started
@@ -17,8 +18,10 @@ services:
 
   actor-app:
     environment:
-      API_SERVICE_URL: http://api-web
+      API_SERVICE_URL: http://api-web:8080
       AWS_ENDPOINT_KMS: http://localstack:4566
+      CSP_AUTH_DOMAIN: http://localhost:4013
+      CSP_IAP_DOMAIN: http://localhost:4010
     depends_on:
       redis:
         condition: service_started

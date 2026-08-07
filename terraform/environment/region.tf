@@ -15,6 +15,9 @@ module "eu_west_1" {
   cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
+  csp_enforce                                      = local.environment.csp_enforce
+  csp_auth_domain                                  = local.environment.csp_auth_domain
+  csp_iap_domain                                   = local.environment.csp_iap_domain
   dns_namespace_env                                = local.dns_namespace_env
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
@@ -106,6 +109,9 @@ module "eu_west_2" {
   cloudwatch_application_insights_enabled          = local.environment.cloudwatch_application_insights_enabled
   create_onelogin_dashboard                        = local.environment.create_onelogin_dashboard
   create_dashboard                                 = local.environment.create_dashboard
+  csp_enforce                                      = local.environment.csp_enforce
+  csp_auth_domain                                  = local.environment.csp_auth_domain
+  csp_iap_domain                                   = local.environment.csp_iap_domain
   dns_namespace_env                                = local.dns_namespace_env
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
