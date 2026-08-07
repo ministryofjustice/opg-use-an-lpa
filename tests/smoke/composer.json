@@ -15,7 +15,7 @@
     },
     "require-dev": {
         "vimeo/psalm": "^6.0",
-        "squizlabs/php_codesniffer": "^4.0.0",
+        "squizlabs/php_codesniffer": "4.0.1",
         "slevomat/coding-standard": "^8.9",
         "psalm/plugin-phpunit": "^0.19",
         "rector/rector": "^2.0"
