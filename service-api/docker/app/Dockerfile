@@ -3,9 +3,9 @@
 #
 FROM docker.io/composer/composer:2.9-bin@sha256:2cde59fd0009d0b4f0fa8532a189290352d9fe3d80fbcc3a887ac69b9eeeef27 AS composer
 
-FROM docker.io/mlocati/php-extension-installer:2.11@sha256:bd9ea77afcbc8e55e58d55ca9a39153925367e972827d2f648c949fd0e44aaca AS php-extension-installer
+FROM docker.io/mlocati/php-extension-installer:2.11@sha256:b6d3fa381b9ba5cf051117c1c601d6a523b590e534bf3d56eb4fbe352949c138 AS php-extension-installer
 
-FROM docker.io/php:8.4-fpm-alpine3.22@sha256:61c706e3d8096ca75ec75549c175690807f83149b10a0ac7795a787738590785 AS php-base
+FROM docker.io/php:8.5-fpm-alpine3.22@sha256:95588bfaf1b890e3fc1f308a0a23539c4f03ce28a4fc770473ae3899d6669777 AS php-base
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
