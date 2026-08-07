@@ -4,18 +4,77 @@ declare(strict_types=1);
 
 namespace Common;
 
-use Acpr\I18n\TranslationExtension;
-use Acpr\I18n\TranslatorInterface;
+use Acpr\I18n\{TranslationExtension, TranslatorInterface};
 use Aws\Kms\KmsClient;
 use Aws\Sdk;
 use Aws\SecretsManager\SecretsManagerClient;
-use Common\Middleware\Session\{SessionExpiryMiddleware, SessionExpiryMiddlewareFactory};
-use Common\Service\{Cache\RedisAdapterPluginManagerDelegatorFactory,
+use Common\Entity\UserFactory;
+use Common\Handler\{
+    CookiesPageHandler,
+    Factory\CookiesPageHandlerFactory,
+    Factory\HealthcheckHandlerFactory,
+    HealthcheckHandler
+};
+use Common\I18n\TranslatorFactory;
+use Common\Middleware\{
+    I18n\SetLocaleMiddleware,
+    I18n\SetLocaleMiddlewareFactory,
+    Security\CSPMiddleware,
+    Security\CSPMiddlewareFactory,
+    Session\SessionExpiryMiddleware,
+    Session\SessionExpiryMiddlewareFactory
+};
+use Common\Service\{
+    ApiClient\Client,
+    ApiClient\ClientFactory,
+    ApiClient\GuzzleClientFactory,
+    Aws\KmsFactory,
+    Aws\SdkFactory,
+    Aws\SecretsManagerFactory,
+    Cache\RedisAdapterPluginManagerDelegatorFactory,
+    Container\ModifiableContainerInterface,
+    Container\PhpDiModifiableContainer,
+    Csrf\SessionCsrfGuardFactory,
+    Features\FeatureEnabled,
+    Features\FeatureEnabledFactory,
+    Log\LogStderrListenerDelegatorFactory,
+    Lpa\InstAndPrefImagesFactory,
+    Lpa\LpaFactory,
+    OneLogin\OneLoginService,
+    OneLogin\OneLoginServiceFactory,
+    Pdf\PdfService,
+    Pdf\PdfServiceFactory,
+    Session\EncryptedCookiePersistence,
+    Session\EncryptedCookiePersistenceFactory,
     SystemMessage\SystemMessageService,
-    SystemMessage\SystemMessageServiceFactory};
-use Gettext\Generator\{GeneratorInterface, PoGenerator};
-use Gettext\Loader\{LoaderInterface, PoLoader};
-use GuzzleHttp\Client;
+    SystemMessage\SystemMessageServiceFactory,
+    User\UserService,
+    User\UserServiceFactory
+};
+use Common\Service\Lpa\{Factory\InstAndPrefImages, Factory\Sirius};
+use Common\Service\Session\{
+    Encryption\EncryptInterface,
+    Encryption\EncryptionFallbackCookie,
+    Encryption\EncryptionFallbackCookieFactory,
+    KeyManager\KeyManagerInterface,
+    KeyManager\KmsManager,
+    KeyManager\KmsManagerFactory
+};
+use Common\View\Twig\{
+    FeatureFlagExtension,
+    GenericGlobalVariableExtension,
+    GenericGlobalVariableExtensionFactory,
+    GovUKLaminasFormErrorsExtension,
+    GovUKLaminasFormExtension,
+    JavascriptVariablesExtension,
+    JavascriptVariablesExtensionFactory,
+    LpaExtension,
+    OrdinalNumberExtension,
+    TranslationExtensionFactory,
+    TranslationSwitchExtension
+};
+use Gettext\{Generator\GeneratorInterface, Generator\PoGenerator, Loader\LoaderInterface, Loader\PoLoader};
+use GuzzleHttp\Client as GuzzleClient;
 use Laminas\Cache\Storage\Adapter\Memory\AdapterPluginManagerDelegatorFactory;
 use Laminas\Cache\Storage\AdapterPluginManager;
 use Laminas\Stratigility\Middleware\ErrorHandler;
@@ -56,66 +115,61 @@ class ConfigProvider
     {
         return [
             'aliases'    => [
-                ClientInterface::class => Client::class,
-                Service\Session\Encryption\EncryptInterface::class
-                    => Service\Session\Encryption\EncryptionFallbackCookie::class,
-                SessionPersistenceInterface::class => Service\Session\EncryptedCookiePersistence::class,
+                ClientInterface::class              => GuzzleClient::class,
+                EncryptInterface::class             => EncryptionFallbackCookie::class,
+                SessionPersistenceInterface::class  => EncryptedCookiePersistence::class,
 
                 // Custom Guard factory to handle multiple forms per page
-                CsrfGuardFactoryInterface::class => Service\Csrf\SessionCsrfGuardFactory::class,
+                CsrfGuardFactoryInterface::class    => SessionCsrfGuardFactory::class,
 
                 // The Session Key Manager to use
-                Service\Session\KeyManager\KeyManagerInterface::class => Service\Session\KeyManager\KmsManager::class,
+                KeyManagerInterface::class          => KmsManager::class,
 
                 // allows value setting on the container at runtime.
-                Service\Container\ModifiableContainerInterface::class
-                    => Service\Container\PhpDiModifiableContainer::class,
-                Service\Lpa\LpaFactory::class               => Service\Lpa\Factory\Sirius::class,
-                Service\Lpa\InstAndPrefImagesFactory::class => Service\Lpa\Factory\InstAndPrefImages::class,
+                ModifiableContainerInterface::class => PhpDiModifiableContainer::class,
+                LpaFactory::class                   => Sirius::class,
+                InstAndPrefImagesFactory::class     => InstAndPrefImages::class,
 
                 // Language extraction
-                LoaderInterface::class    => PoLoader::class,
-                GeneratorInterface::class => PoGenerator::class,
+                LoaderInterface::class              => PoLoader::class,
+                GeneratorInterface::class           => PoGenerator::class,
             ],
             'factories'  => [
                 // Services
-                Service\ApiClient\Client::class => Service\ApiClient\ClientFactory::class,
-                Service\Pdf\PdfService::class   => Service\Pdf\PdfServiceFactory::class,
-                Service\Session\EncryptedCookiePersistence::class
-                    => Service\Session\EncryptedCookiePersistenceFactory::class,
-                Service\Session\KeyManager\KmsManager::class => Service\Session\KeyManager\KmsManagerFactory::class,
-                Service\User\UserService::class              => Service\User\UserServiceFactory::class,
-                Service\Features\FeatureEnabled::class       => Service\Features\FeatureEnabledFactory::class,
-                Service\Session\Encryption\EncryptionFallbackCookie::class
-                    => Service\Session\Encryption\EncryptionFallbackCookieFactory::class,
-                Sdk::class                  => Service\Aws\SdkFactory::class,
-                KmsClient::class            => Service\Aws\KmsFactory::class,
-                SecretsManagerClient::class => Service\Aws\SecretsManagerFactory::class,
-                Client::class               => Service\ApiClient\GuzzleClientFactory::class,
-                SystemMessageService::class => SystemMessageServiceFactory::class,
+                Client::class                         => ClientFactory::class,
+                PdfService::class                     => PdfServiceFactory::class,
+                EncryptedCookiePersistence::class     => EncryptedCookiePersistenceFactory::class,
+                KmsManager::class                     => KmsManagerFactory::class,
+                UserService::class                    => UserServiceFactory::class,
+                FeatureEnabled::class                 => FeatureEnabledFactory::class,
+                EncryptionFallbackCookie::class       => EncryptionFallbackCookieFactory::class,
+                Sdk::class                            => SdkFactory::class,
+                KmsClient::class                      => KmsFactory::class,
+                SecretsManagerClient::class           => SecretsManagerFactory::class,
+                GuzzleClient::class                   => GuzzleClientFactory::class,
+                SystemMessageService::class           => SystemMessageServiceFactory::class,
 
                 // Middleware
-                SessionMiddleware::class                   => SessionMiddlewareFactory::class,
-                SessionExpiryMiddleware::class             => SessionExpiryMiddlewareFactory::class,
-                Middleware\I18n\SetLocaleMiddleware::class => Middleware\I18n\SetLocaleMiddlewareFactory::class,
+                SessionMiddleware::class              => SessionMiddlewareFactory::class,
+                SessionExpiryMiddleware::class        => SessionExpiryMiddlewareFactory::class,
+                SetLocaleMiddleware::class            => SetLocaleMiddlewareFactory::class,
+                CSPMiddleware::class                  => CSPMiddlewareFactory::class,
 
                 // Auth
-                UserInterface::class                    => Entity\UserFactory::class,
-                Service\OneLogin\OneLoginService::class => Service\OneLogin\OneLoginServiceFactory::class,
+                UserInterface::class                  => UserFactory::class,
+                OneLoginService::class                => OneLoginServiceFactory::class,
 
                 // Handlers
-                Handler\CookiesPageHandler::class => Handler\Factory\CookiesPageHandlerFactory::class,
-                Handler\HealthcheckHandler::class => Handler\Factory\HealthcheckHandlerFactory::class,
-                TranslatorInterface::class        => I18n\TranslatorFactory::class,
-                TranslationExtension::class
-                    => View\Twig\TranslationExtensionFactory::class,
-                View\Twig\JavascriptVariablesExtension::class => View\Twig\JavascriptVariablesExtensionFactory::class,
-                View\Twig\GenericGlobalVariableExtension::class
-                    => View\Twig\GenericGlobalVariableExtensionFactory::class,
+                CookiesPageHandler::class             => CookiesPageHandlerFactory::class,
+                HealthcheckHandler::class             => HealthcheckHandlerFactory::class,
+                TranslatorInterface::class            => TranslatorFactory::class,
+                TranslationExtension::class           => TranslationExtensionFactory::class,
+                JavascriptVariablesExtension::class   => JavascriptVariablesExtensionFactory::class,
+                GenericGlobalVariableExtension::class => GenericGlobalVariableExtensionFactory::class,
             ],
             'delegators' => [
                 ErrorHandler::class         => [
-                    Service\Log\LogStderrListenerDelegatorFactory::class,
+                    LogStderrListenerDelegatorFactory::class,
                 ],
                 AdapterPluginManager::class => [
                     AdapterPluginManagerDelegatorFactory::class,
@@ -145,14 +199,14 @@ class ConfigProvider
         return [
             'extensions'      => [
                 TranslationExtension::class,
-                View\Twig\LpaExtension::class,
-                View\Twig\OrdinalNumberExtension::class,
-                View\Twig\GovUKLaminasFormErrorsExtension::class,
-                View\Twig\GovUKLaminasFormExtension::class,
-                View\Twig\JavascriptVariablesExtension::class,
-                View\Twig\GenericGlobalVariableExtension::class,
-                View\Twig\TranslationSwitchExtension::class,
-                View\Twig\FeatureFlagExtension::class,
+                LpaExtension::class,
+                OrdinalNumberExtension::class,
+                GovUKLaminasFormErrorsExtension::class,
+                GovUKLaminasFormExtension::class,
+                JavascriptVariablesExtension::class,
+                GenericGlobalVariableExtension::class,
+                TranslationSwitchExtension::class,
+                FeatureFlagExtension::class,
             ],
             'runtime_loaders' => [
                 ContainerRuntimeLoader::class,

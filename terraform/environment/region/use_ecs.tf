@@ -362,6 +362,22 @@ locals {
           value = "60"
         },
         {
+          name  = "CSP_ENFORCE",
+          value = tostring(var.csp_enforce)
+        },
+        {
+          name  = "CSP_REPORT_URI",
+          value = "https://${local.route53_fqdns.public_facing_use}"
+        },
+        {
+          name  = "CSP_AUTH_DOMAIN",
+          value = tostring(var.csp_auth_domain)
+        },
+        {
+          name  = "CSP_IAP_DOMAIN",
+          value = tostring(var.csp_iap_domain)
+        },
+        {
           name  = "ALLOW_MERIS_LPAS",
           value = tostring(var.feature_flags.allow_meris_lpas)
         },
