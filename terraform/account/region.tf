@@ -9,6 +9,8 @@ module "eu_west_1" {
   # lambda_container_version = var.lambda_container_version
   network_cidr_block   = "10.162.0.0/16"
   permitted_s3_buckets = local.account.permitted_s3_buckets
+  region               = "eu-west-1"
+  default_tags         = local.default_tags
 
   depends_on = [
     module.cloudwatch_mrk,
@@ -36,6 +38,8 @@ module "eu_west_2" {
   # lambda_container_version = var.lambda_container_version
   network_cidr_block   = "10.162.0.0/16"
   permitted_s3_buckets = local.account.permitted_s3_buckets
+  region               = "eu-west-2"
+  default_tags         = local.default_tags
 
   depends_on = [
     module.cloudwatch_mrk,
