@@ -16,7 +16,7 @@ use RuntimeException;
  * <code>
  * 'csp' => [
  *     'enforce'               => true,
- *     'report_uri'            => 'https://my-reoprt-uri',
+ *     'report_uri'            => 'https://my-report-uri',
  *     'authentication_domain' => 'https://*.my-auth-provider',
  *     'iap_domain'            => 'https://the-iap-bucket',
  * ],
