@@ -14,11 +14,11 @@ data "aws_service" "services" {
 data "aws_vpc" "main" {
   filter {
     name   = "tag:application"
-    values = [var.default_tags["application"]]
+    values = [var.default_tags.application]
   }
   filter {
     name   = "tag:Name"
-    values = ["${var.default_tags["application"]}-${var.default_tags["environment-name"]}-vpc"]
+    values = ["${var.default_tags.application}-${var.default_tags.environment-name}-vpc"]
   }
   provider = aws.region
 }

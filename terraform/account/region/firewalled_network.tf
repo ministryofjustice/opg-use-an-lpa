@@ -36,9 +36,9 @@ resource "aws_networkfirewall_firewall_policy" "main" {
 
 resource "aws_networkfirewall_rule_group" "rule_file" {
   capacity = 100
-  name     = "main-${replace(filebase64sha256("${path.module}/network_firewall_rules_${var.default_tags["environment-name"]}.rules"), "/[^[:alnum:]]/", "")}"
+  name     = "main-${replace(filebase64sha256("${path.module}/network_firewall_rules_${var.default_tags.environment-name}.rules"), "/[^[:alnum:]]/", "")}"
   type     = "STATEFUL"
-  rules    = file("${path.module}/network_firewall_rules_${var.default_tags["environment-name"]}.rules")
+  rules    = file("${path.module}/network_firewall_rules_${var.default_tags.environment-name}.rules")
   lifecycle {
     create_before_destroy = true
   }

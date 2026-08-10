@@ -3,9 +3,21 @@ variable "kms_key_arn" {
   type        = string
 }
 
+# variable "default_tags" {
+#   description = "Default tags to apply to all resources"
+#   type        = map(string)
+# }
+
 variable "default_tags" {
-  description = "Default tags to apply to all resources"
-  type        = map(string)
+  type = object({
+    business-unit          = string
+    application            = string
+    environment-name       = string
+    owner                  = string
+    is-production          = string
+    service-area           = string
+    infrastructure-support = string
+  })
 }
 
 variable "domains_allowed" {
