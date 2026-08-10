@@ -48,6 +48,7 @@ class CSPMiddlewareFactory
             $config['csp']['enforce'],
             $config['csp']['report_uri'],
             $container->get(CSPNonce::class),
+            $config['application'],
             $config['csp']['authentication_domain'],
             $config['csp']['iap_domain'],
         );

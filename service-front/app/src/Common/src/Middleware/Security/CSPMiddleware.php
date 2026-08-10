@@ -20,6 +20,7 @@ class CSPMiddleware implements MiddlewareInterface
         private bool $enforce,
         private string $reportUri,
         private CSPNonce $nonce,
+        private string $application,
         private string $authenticationDomain,
         private string $iapDomain,
     ) {
@@ -27,20 +28,18 @@ class CSPMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $csp  = "default-src  'none';";
-        $csp .= "script-src   'self' " .
+        $csp  = "default-src 'none';";
+        $csp .= "script-src 'self' " .
             "https://www.googletagmanager.com https://www.google-analytics.com 'nonce-" . $this->nonce . "';";
-        $csp .= "style-src    'self' 'nonce-" . $this->nonce . "';";
-        $csp .= "font-src     'self';";
+        $csp .= "style-src 'self' 'nonce-" . $this->nonce . "';";
+        $csp .= "font-src 'self';";
         $csp .= "manifest-src 'self';";
-        $csp .= "connect-src  'self' " .
+        $csp .= "connect-src 'self' " .
             'https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;';
 
-        $iapSrc = '';
-        if (
-            $request->getAttribute(RouteResult::class)->getMatchedRouteName() === 'lpa.view'
-            || $request->getAttribute(RouteResult::class)->getMatchedRouteName() === 'view-lpa'
-        ) {
+        $iapSrc  = '';
+        $iapView = $this->application === 'actor' ? 'lpa.view' : 'view-lpa';
+        if ($request->getAttribute(RouteResult::class)->getMatchedRouteName() === $iapView) {
             $iapSrc = 'data: ' . $this->iapDomain;
         }
         $csp .= "img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com " . $iapSrc . ';';
@@ -48,7 +47,10 @@ class CSPMiddleware implements MiddlewareInterface
         // instead of setting form-action to null to work around inconsistant Chrome/Firefox implementations
         // lets just work out if we need to add the OIDC domain for this request.
         $authenticationSrc = '';
-        if ($request->getAttribute(RouteResult::class)->getMatchedRouteName() === 'home') {
+        if (
+            $this->application === 'actor' &&
+            $request->getAttribute(RouteResult::class)->getMatchedRouteName() === 'home'
+        ) {
             $authenticationSrc = $this->authenticationDomain;
         }
         $csp .= "form-action 'self' " . $authenticationSrc . ';';
