@@ -74,7 +74,7 @@ variable "permitted_s3_buckets" {
   description = "S3 buckets permitted through the S3 VPC endpoint"
 }
 
-variable "region" {
+variable "region_name" {
   description = "The aws region"
   type        = string
 }

@@ -79,7 +79,7 @@ module "vpc_endpoints" {
   public_subnets_cidr_blocks      = module.network.public_subnets[*].cidr_block
   application_route_tables        = data.aws_route_tables.firewalled_network_application
   permitted_s3_buckets            = var.permitted_s3_buckets
-  region                          = var.region
+  region_name                     = var.region_name
   providers = {
     aws.region = aws.region
   }

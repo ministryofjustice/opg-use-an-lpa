@@ -41,7 +41,7 @@ variable "brute_force_cache_primary_endpoint_address" {
   type        = string
 }
 
-variable "region" {
+variable "region_name" {
   description = "The aws region"
   type        = string
 }

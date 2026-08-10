@@ -5,7 +5,7 @@ module "dns_firewall" {
   domains_allowed                            = var.account.dns_firewall.domains_allowed
   domains_blocked                            = var.account.dns_firewall.domains_blocked
   brute_force_cache_primary_endpoint_address = aws_elasticache_replication_group.brute_force_cache_replication_group.primary_endpoint_address
-  region                                     = var.region
+  region_name                                = var.region_name
   default_tags                               = var.default_tags
 
   providers = {

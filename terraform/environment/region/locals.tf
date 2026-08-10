@@ -1,10 +1,10 @@
 locals {
-  policy_region_prefix = lower(replace(var.region, "-", ""))
+  policy_region_prefix = lower(replace(var.region_name, "-", ""))
 
   # The primary region is the region where the DynamoDB tables are created and replicated to the secondary region. This should not be changed once the environment is created.
   # The active region is the region where the ECS services are running. The is also the region where users will access the application.
   primary_region   = keys({ for region, region_data in var.regions : region => region_data if region_data.is_primary })[0]
-  is_active_region = var.regions[var.region].is_active
+  is_active_region = var.regions[var.region_name].is_active
 
   # Desired count of the ECS services. Only an active region will have a desired count greater than 0.
   use_desired_count           = local.is_active_region ? var.autoscaling.use.minimum : 0
@@ -19,12 +19,12 @@ locals {
   # Replace the region in the ARN of the DynamoDB tables with the region of the current stack as the tables are created in the primary region
   # and replicated to the secondary region. This allows use to grant access to the tables in the secondary region for applications running in the secondary region.
   dynamodb_tables_arns = {
-    use_codes_table_arn       = replace(var.dynamodb_tables.use_codes_table.arn, local.primary_region, var.region)
-    stats_table_arn           = replace(var.dynamodb_tables.stats_table.arn, local.primary_region, var.region)
-    use_users_table_arn       = replace(var.dynamodb_tables.use_users_table.arn, local.primary_region, var.region)
-    viewer_codes_table_arn    = replace(var.dynamodb_tables.viewer_codes_table.arn, local.primary_region, var.region)
-    viewer_activity_table_arn = replace(var.dynamodb_tables.viewer_activity_table.arn, local.primary_region, var.region)
-    user_lpa_actor_map_arn    = replace(var.dynamodb_tables.user_lpa_actor_map.arn, local.primary_region, var.region)
+    use_codes_table_arn       = replace(var.dynamodb_tables.use_codes_table.arn, local.primary_region, var.region_name)
+    stats_table_arn           = replace(var.dynamodb_tables.stats_table.arn, local.primary_region, var.region_name)
+    use_users_table_arn       = replace(var.dynamodb_tables.use_users_table.arn, local.primary_region, var.region_name)
+    viewer_codes_table_arn    = replace(var.dynamodb_tables.viewer_codes_table.arn, local.primary_region, var.region_name)
+    viewer_activity_table_arn = replace(var.dynamodb_tables.viewer_activity_table.arn, local.primary_region, var.region_name)
+    user_lpa_actor_map_arn    = replace(var.dynamodb_tables.user_lpa_actor_map.arn, local.primary_region, var.region_name)
   }
 
   route53_fqdns = {

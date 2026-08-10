@@ -26,7 +26,7 @@ variable "default_boundary" {
   type        = string
 }
 
-variable "region" {
+variable "region_name" {
   description = "The AWS region"
   type        = string
 }

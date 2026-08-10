@@ -97,7 +97,7 @@ variable "vault_lock_max_retention_days" {
   }
 }
 
-variable "region" {
+variable "region_name" {
   description = "The AWS region"
   type        = string
 }

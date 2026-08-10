@@ -2,7 +2,7 @@
 #
 # data "aws_lambda_function" "clsf_to_sqs" {
 #   count         = var.ship_metrics_queue_enabled ? 1 : 0
-#   function_name = "clsf-to-sqs-${var.region}"
+#   function_name = "clsf-to-sqs-${var.region_name}"
 #
 #   provider = aws.region
 # }
@@ -23,7 +23,7 @@
 #   statement_id  = "${var.environment_name}-AllowExecutionFromCloudWatch"
 #   action        = "lambda:InvokeFunction"
 #   function_name = data.aws_lambda_function.clsf_to_sqs[0].function_name
-#   principal     = "logs.${var.region}.amazonaws.com"
+#   principal     = "logs.${var.region_name}.amazonaws.com"
 #   source_arn    = "${aws_cloudwatch_log_group.application_logs.arn}:*"
 #
 #   provider = aws.region

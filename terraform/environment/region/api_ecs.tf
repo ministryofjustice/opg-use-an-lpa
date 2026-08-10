@@ -240,8 +240,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/use-an-lpa/lpas/requestCode"
     ]
   }
 
@@ -252,12 +252,12 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/revoke",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/validate",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/exists",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/paper-verification-code/expire",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/paper-verification-code/validate",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/revoke",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/validate",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/paper-verification-code/expire",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/paper-verification-code/validate",
     ]
   }
 
@@ -330,9 +330,9 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.lpa_store_account_id}:*/*/POST/lpas",
-      "arn:aws:execute-api:${var.region}:${var.lpa_store_account_id}:*/*/GET/lpas/*",
-      "arn:aws:execute-api:${var.region}:${var.lpa_store_account_id}:*/*/GET/health-check",
+      "arn:aws:execute-api:${var.region_name}:${var.lpa_store_account_id}:*/*/POST/lpas",
+      "arn:aws:execute-api:${var.region_name}:${var.lpa_store_account_id}:*/*/GET/lpas/*",
+      "arn:aws:execute-api:${var.region_name}:${var.lpa_store_account_id}:*/*/GET/health-check",
     ]
   }
 
@@ -343,8 +343,8 @@ data "aws_iam_policy_document" "api_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/image-request/*",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/image-request/*",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/healthcheck",
     ]
   }
 
@@ -414,7 +414,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = var.region,
+          awslogs-region        = var.region_name,
           awslogs-stream-prefix = "${var.environment_name}.api-web.use-an-lpa"
         }
       },
@@ -457,7 +457,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = var.region,
+          awslogs-region        = var.region_name,
           awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
         }
       },
@@ -492,7 +492,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = var.region,
+          awslogs-region        = var.region_name,
           awslogs-stream-prefix = "${var.environment_name}.api-app.use-an-lpa"
         }
       },

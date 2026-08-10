@@ -43,9 +43,9 @@ locals {
   aws_service_dns_name = [for service in data.aws_service.services : "${service.dns_name}."]
   interpolated_dns = [
     "${replace(var.brute_force_cache_primary_endpoint_address, "master", "*")}.",
-    "prod-${var.region}-starport-layer-bucket.s3.${var.region}.amazonaws.com.",
-    "public-keys.auth.elb.${var.region}.amazonaws.com.",
-    "311462405659.dkr.ecr.${var.region}.amazonaws.com.",
+    "prod-${var.region_name}-starport-layer-bucket.s3.${var.region_name}.amazonaws.com.",
+    "public-keys.auth.elb.${var.region_name}.amazonaws.com.",
+    "311462405659.dkr.ecr.${var.region_name}.amazonaws.com.",
     "*.ual.internal.ecs.",
   ]
 }

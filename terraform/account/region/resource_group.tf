@@ -1,5 +1,5 @@
 resource "aws_resourcegroups_group" "account" {
-  name        = "${var.default_tags.environment-name}-account-${var.region}"
+  name        = "${var.default_tags.environment-name}-account-${var.region_name}"
   description = "Environment level eu-west-1 resources"
 
   resource_query {

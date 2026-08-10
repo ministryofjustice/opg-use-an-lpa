@@ -11,7 +11,7 @@ module "dynamodb_backup" {
   key_alias                     = data.aws_kms_alias.backup_key_alias.name
   monthly_backup_cold_storage   = local.environment.dynamodb_backups.monthly_cold_storage_in_days
   monthly_backup_deletion       = local.environment.dynamodb_backups.monthly_backup_deletion_in_days
-  region                        = local.region
+  region_name                   = local.region
   region_replication_enabled    = local.environment.dynamodb_backups.region_replication_enabled
   vault_lock_min_retention_days = local.environment.dynamodb_backups.vault_lock_min_retention_days
   vault_lock_max_retention_days = local.environment.dynamodb_backups.vault_lock_max_retention_days

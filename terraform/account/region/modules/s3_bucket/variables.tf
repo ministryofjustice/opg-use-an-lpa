@@ -74,7 +74,7 @@ variable "object_ownership" {
   }
 }
 
-variable "region" {
+variable "region_name" {
   description = "The aws region"
   type        = string
 }

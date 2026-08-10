@@ -219,7 +219,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = var.region,
+          awslogs-region        = var.region_name,
           awslogs-stream-prefix = "${var.environment_name}.mock-onelogin-app.use-an-lpa"
         }
       },

@@ -5,7 +5,7 @@ data "aws_vpc" "default" {
 
 data "aws_service" "services" {
   for_each   = toset(local.service_id)
-  region     = var.region
+  region     = var.region_name
   service_id = each.value
 
   provider = aws.region

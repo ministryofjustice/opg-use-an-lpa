@@ -3,5 +3,5 @@ locals {
 }
 
 data "aws_s3_bucket" "access_logging" {
-  bucket = "s3-access-logs-opg-opg-use-an-lpa-${local.access_account_name}-${var.region}"
+  bucket = "s3-access-logs-opg-opg-use-an-lpa-${local.access_account_name}-${var.region_name}"
 }

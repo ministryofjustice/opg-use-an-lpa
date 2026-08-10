@@ -5,7 +5,7 @@ data "aws_caller_identity" "backup" {
 }
 
 data "aws_kms_key" "source_key" {
-  key_id = "arn:aws:kms:${var.region}:${data.aws_caller_identity.current.account_id}:${var.key_alias}"
+  key_id = "arn:aws:kms:${var.region_name}:${data.aws_caller_identity.current.account_id}:${var.key_alias}"
 }
 
 data "aws_kms_key" "source_key_replica" {
@@ -14,6 +14,6 @@ data "aws_kms_key" "source_key_replica" {
 }
 
 data "aws_kms_key" "cross_account_key" {
-  key_id   = "arn:aws:kms:${var.region}:${data.aws_caller_identity.backup.account_id}:alias/opg-use-an-lpa-${var.account_name}-aws-backup-key"
+  key_id   = "arn:aws:kms:${var.region_name}:${data.aws_caller_identity.backup.account_id}:alias/opg-use-an-lpa-${var.account_name}-aws-backup-key"
   provider = aws.backup
 }

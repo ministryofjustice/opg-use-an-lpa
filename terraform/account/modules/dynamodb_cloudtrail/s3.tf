@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "cloudtrail" {
-  bucket = "ddb.cloudtrail.${var.region}.${var.bucket_name_suffix}"
+  bucket = "ddb.cloudtrail.${var.region_name}.${var.bucket_name_suffix}"
 }
 
 resource "aws_s3_bucket_acl" "cloudtrail" {
@@ -10,7 +10,7 @@ resource "aws_s3_bucket_acl" "cloudtrail" {
 resource "aws_s3_bucket_logging" "cloudtrail" {
   bucket        = aws_s3_bucket.cloudtrail.id
   target_bucket = var.s3_access_logging_bucket_name
-  target_prefix = "log/${"ddb-cloudtrail-${var.region}-${var.trail_name_suffix}"}/"
+  target_prefix = "log/${"ddb-cloudtrail-${var.region_name}-${var.trail_name_suffix}"}/"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail" {

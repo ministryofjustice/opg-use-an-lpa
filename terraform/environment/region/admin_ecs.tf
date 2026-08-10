@@ -192,7 +192,7 @@ data "aws_iam_policy_document" "admin_permissions_role" {
     ]
 
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/use-an-lpa/*",
     ]
   }
 
@@ -203,9 +203,9 @@ data "aws_iam_policy_document" "admin_permissions_role" {
       "execute-api:Invoke",
     ]
     resources = [
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/GET/healthcheck",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/exists",
-      "arn:aws:execute-api:${var.region}:${var.sirius_account_id}:*/*/POST/code",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/GET/healthcheck",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/exists",
+      "arn:aws:execute-api:${var.region_name}:${var.sirius_account_id}:*/*/POST/code",
     ]
   }
 
@@ -261,7 +261,7 @@ locals {
         logDriver = "awslogs",
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
-          awslogs-region        = var.region,
+          awslogs-region        = var.region_name,
           awslogs-stream-prefix = "${var.environment_name}.admin-app.use-an-lpa"
         }
       },
@@ -284,7 +284,7 @@ locals {
         },
         {
           name  = "ADMIN_JWT_SIGNING_KEY_URL",
-          value = "https://public-keys.auth.elb.${var.region}.amazonaws.com"
+          value = "https://public-keys.auth.elb.${var.region_name}.amazonaws.com"
         },
         {
           name  = "ADMIN_CLIENT_ID",

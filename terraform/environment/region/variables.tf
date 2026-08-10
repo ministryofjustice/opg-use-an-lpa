@@ -288,7 +288,7 @@ variable "lpa_store_account_id" {
   type        = string
 }
 
-variable "region" {
+variable "region_name" {
   description = "The AWS region"
   type        = string
 }

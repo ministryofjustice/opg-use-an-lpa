@@ -1,5 +1,5 @@
 resource "aws_backup_vault" "primary" {
-  name        = "${var.environment_name}_${var.region}_dynamodb_vault"
+  name        = "${var.environment_name}_${var.region_name}_dynamodb_vault"
   kms_key_arn = data.aws_kms_key.source_key.arn
 }
 
@@ -11,7 +11,7 @@ resource "aws_backup_vault" "replica" {
 }
 
 resource "aws_backup_vault" "cross_account" {
-  name        = "opg_use_an_lpa_${var.environment_name}_${var.region}_backup"
+  name        = "opg_use_an_lpa_${var.environment_name}_${var.region_name}_backup"
   kms_key_arn = data.aws_kms_key.cross_account_key.arn
   provider    = aws.backup
 }
