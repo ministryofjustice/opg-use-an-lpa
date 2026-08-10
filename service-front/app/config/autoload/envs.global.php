@@ -4,38 +4,47 @@ declare(strict_types=1);
 
 use Laminas\Cache\Storage\Adapter\Redis as RedisCache;
 
+function getValidEnv(string $envName, mixed $default = null): mixed
+{
+    $var = getenv($envName);
+    if ($var === false) {
+        return $default;
+    }
+    return $var;
+}
+
 return [
-    'application' => getenv('CONTEXT') ?: null,
-    'version'     => getenv('CONTAINER_VERSION') ?: 'dev',
+    'application' => getValidEnv('CONTEXT'),
+    'version'     => getValidEnv('CONTAINER_VERSION', 'dev'),
     'api'         => [
-        'uri' => getenv('API_SERVICE_URL') ?: null,
+        'uri' => getValidEnv('API_SERVICE_URL'),
     ],
     'pdf'         => [
-        'uri' => getenv('PDF_SERVICE_URL') ?: null,
+        'uri' => getValidEnv('PDF_SERVICE_URL'),
     ],
     'aws'         => [
-        'region'  => getenv('AWS_REGION') ?: 'eu-west-1',
+        'region'  => getValidEnv('AWS_REGION', 'eu-west-1'),
         'version' => 'latest',
         'Kms'     => [
-            'endpoint' => getenv('AWS_ENDPOINT_KMS') ?: null,
+            'endpoint' => getValidEnv('AWS_ENDPOINT_KMS'),
         ],
     ],
     'notify'      => [
         'api' => [
-            'key' => getenv('NOTIFY_API_KEY') ?: null,
+            'key' => getValidEnv('NOTIFY_API_KEY'),
         ],
     ],
     'session'     => [
         // Time in seconds after which a session will expire.
-        'expires'          => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
+        'expires'          => 60 * getValidEnv('SESSION_EXPIRES', 1200), // default to 20 minutes
 
         // Time in seconds before a users session will expire
         // whereby a popup window will appear to warn them
-        'expiry_warning'   => 60 * getenv('SESSION_EXPIRY_WARNING') ?: 300,  // default to 5 minutes
-        'cookie_ttl'       => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
+        'expiry_warning'   => 60 * getValidEnv('SESSION_EXPIRY_WARNING', 300), // default to 5 minutes
+        'cookie_ttl'       => 60 * getValidEnv('SESSION_COOKIE_LIFETIME', 86400), // default to one day
         'key'              => [
             // KMS alias to use for data key generation.
-            'alias' => getenv('KMS_SESSION_CMK_ALIAS') ?: null,
+            'alias' => getValidEnv('KMS_SESSION_CMK_ALIAS'),
         ],
 
         // The name of the session cookie. This name must comply with
@@ -57,7 +66,10 @@ return [
         // Indicates that the cookie should only be transmitted over a
         // secure HTTPS connection from the client. When set to TRUE, the
         // cookie will only be set if a secure connection exists.
-        'cookie_secure'    => getenv('COOKIE_SECURE') === 'false' ? false : true,
+        'cookie_secure'    => filter_var(
+            getValidEnv('COOKIE_SECURE', true),
+            FILTER_VALIDATE_BOOLEAN
+        ),
 
         // When TRUE the cookie will be made accessible only through the
         // HTTP protocol. This means that the cookie won't be accessible
@@ -92,7 +104,7 @@ return [
         'persistent'       => false,
     ],
     'analytics'   => [
-        'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: '',
+        'uaid' => getValidEnv('GOOGLE_ANALYTICS_ID', ''),
     ],
     'i18n'        => [
         'default_locale' => 'en_GB',
@@ -101,12 +113,12 @@ return [
     ],
     'csp'         => [
         'enforce'               => filter_var(
-            getenv('CSP_ENFORCE'),
+            getValidEnv('CSP_ENFORCE', true),
             FILTER_VALIDATE_BOOLEAN
-        ) ?: true,
-        'report_uri'            => getenv('CSP_REPORT_URI') ?: '',
-        'authentication_domain' => getenv('CSP_AUTH_DOMAIN') ?: '',
-        'iap_domain'            => getenv('CSP_IAP_DOMAIN') ?: '',
+        ),
+        'report_uri'            => getValidEnv('CSP_REPORT_URI', ''),
+        'authentication_domain' => getValidEnv('CSP_AUTH_DOMAIN', ''),
+        'iap_domain'            => getValidEnv('CSP_IAP_DOMAIN', ''),
     ],
     'ratelimits'  => [
         'viewer_code_failure' => [
@@ -116,9 +128,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
@@ -138,9 +150,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
@@ -160,9 +172,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
