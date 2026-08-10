@@ -4,15 +4,6 @@ declare(strict_types=1);
 
 use Laminas\Cache\Storage\Adapter\Redis as RedisCache;
 
-function getValidEnv(string $envName, mixed $default = null): mixed
-{
-    $var = getenv($envName);
-    if ($var === false) {
-        return $default;
-    }
-    return $var;
-}
-
 return [
     'application' => getValidEnv('CONTEXT'),
     'version'     => getValidEnv('CONTAINER_VERSION', 'dev'),
@@ -36,12 +27,12 @@ return [
     ],
     'session'     => [
         // Time in seconds after which a session will expire.
-        'expires'          => 60 * getValidEnv('SESSION_EXPIRES', 1200), // default to 20 minutes
+        'expires'          => 60 * intval(getValidEnv('SESSION_EXPIRES', 20)),  // minutes
 
         // Time in seconds before a users session will expire
         // whereby a popup window will appear to warn them
-        'expiry_warning'   => 60 * getValidEnv('SESSION_EXPIRY_WARNING', 300), // default to 5 minutes
-        'cookie_ttl'       => 60 * getValidEnv('SESSION_COOKIE_LIFETIME', 86400), // default to one day
+        'expiry_warning'   => 60 * intval(getValidEnv('SESSION_EXPIRY_WARNING', 5)), // minutes
+        'cookie_ttl'       => 60 * intval(getValidEnv('SESSION_COOKIE_LIFETIME', 1440)), // one day
         'key'              => [
             // KMS alias to use for data key generation.
             'alias' => getValidEnv('KMS_SESSION_CMK_ALIAS'),
