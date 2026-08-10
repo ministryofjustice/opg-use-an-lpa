@@ -5,37 +5,37 @@ declare(strict_types=1);
 use Laminas\Cache\Storage\Adapter\Redis as RedisCache;
 
 return [
-    'application' => getValidEnv('CONTEXT'),
-    'version'     => getValidEnv('CONTAINER_VERSION', 'dev'),
+    'application' => get_defaulted_env('CONTEXT'),
+    'version'     => get_defaulted_env('CONTAINER_VERSION', 'dev'),
     'api'         => [
-        'uri' => getValidEnv('API_SERVICE_URL'),
+        'uri' => get_defaulted_env('API_SERVICE_URL'),
     ],
     'pdf'         => [
-        'uri' => getValidEnv('PDF_SERVICE_URL'),
+        'uri' => get_defaulted_env('PDF_SERVICE_URL'),
     ],
     'aws'         => [
-        'region'  => getValidEnv('AWS_REGION', 'eu-west-1'),
+        'region'  => get_defaulted_env('AWS_REGION', 'eu-west-1'),
         'version' => 'latest',
         'Kms'     => [
-            'endpoint' => getValidEnv('AWS_ENDPOINT_KMS'),
+            'endpoint' => get_defaulted_env('AWS_ENDPOINT_KMS'),
         ],
     ],
     'notify'      => [
         'api' => [
-            'key' => getValidEnv('NOTIFY_API_KEY'),
+            'key' => get_defaulted_env('NOTIFY_API_KEY'),
         ],
     ],
     'session'     => [
         // Time in seconds after which a session will expire.
-        'expires'          => 60 * intval(getValidEnv('SESSION_EXPIRES', 20)),  // minutes
+        'expires'          => 60 * intval(get_defaulted_env('SESSION_EXPIRES', 20)),  // minutes
 
         // Time in seconds before a users session will expire
         // whereby a popup window will appear to warn them
-        'expiry_warning'   => 60 * intval(getValidEnv('SESSION_EXPIRY_WARNING', 5)), // minutes
-        'cookie_ttl'       => 60 * intval(getValidEnv('SESSION_COOKIE_LIFETIME', 1440)), // one day
+        'expiry_warning'   => 60 * intval(get_defaulted_env('SESSION_EXPIRY_WARNING', 5)), // minutes
+        'cookie_ttl'       => 60 * intval(get_defaulted_env('SESSION_COOKIE_LIFETIME', 1440)), // one day
         'key'              => [
             // KMS alias to use for data key generation.
-            'alias' => getValidEnv('KMS_SESSION_CMK_ALIAS'),
+            'alias' => get_defaulted_env('KMS_SESSION_CMK_ALIAS'),
         ],
 
         // The name of the session cookie. This name must comply with
@@ -58,7 +58,7 @@ return [
         // secure HTTPS connection from the client. When set to TRUE, the
         // cookie will only be set if a secure connection exists.
         'cookie_secure'    => filter_var(
-            getValidEnv('COOKIE_SECURE', true),
+            get_defaulted_env('COOKIE_SECURE', true),
             FILTER_VALIDATE_BOOLEAN
         ),
 
@@ -95,7 +95,7 @@ return [
         'persistent'       => false,
     ],
     'analytics'   => [
-        'uaid' => getValidEnv('GOOGLE_ANALYTICS_ID', ''),
+        'uaid' => get_defaulted_env('GOOGLE_ANALYTICS_ID', ''),
     ],
     'i18n'        => [
         'default_locale' => 'en_GB',
@@ -104,12 +104,12 @@ return [
     ],
     'csp'         => [
         'enforce'               => filter_var(
-            getValidEnv('CSP_ENFORCE', true),
+            get_defaulted_env('CSP_ENFORCE', true),
             FILTER_VALIDATE_BOOLEAN
         ),
-        'report_uri'            => getValidEnv('CSP_REPORT_URI', ''),
-        'authentication_domain' => getValidEnv('CSP_AUTH_DOMAIN', ''),
-        'iap_domain'            => getValidEnv('CSP_IAP_DOMAIN', ''),
+        'report_uri'            => get_defaulted_env('CSP_REPORT_URI', ''),
+        'authentication_domain' => get_defaulted_env('CSP_AUTH_DOMAIN', ''),
+        'iap_domain'            => get_defaulted_env('CSP_IAP_DOMAIN', ''),
     ],
     'ratelimits'  => [
         'viewer_code_failure' => [
@@ -119,9 +119,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
-                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
-                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
+                        'host'    => get_defaulted_env('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(get_defaulted_env('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(get_defaulted_env('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
@@ -141,9 +141,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
-                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
-                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
+                        'host'    => get_defaulted_env('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(get_defaulted_env('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(get_defaulted_env('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
@@ -163,9 +163,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getValidEnv('BRUTE_FORCE_CACHE_URL', 'redis'),
-                        'port'    => intval(getValidEnv('BRUTE_FORCE_CACHE_PORT', 6379)),
-                        'timeout' => intval(getValidEnv('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
+                        'host'    => get_defaulted_env('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(get_defaulted_env('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(get_defaulted_env('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
