@@ -36,21 +36,9 @@ variable "account_name" {
   type        = string
 }
 
-# variable "default_tags" {
-#   description = "default tags to apply to all resources"
-#   type        = map(string)
-# }
-
 variable "default_tags" {
-  type = object({
-    business-unit          = string
-    application            = string
-    environment-name       = string
-    owner                  = string
-    is-production          = string
-    service-area           = string
-    infrastructure-support = string
-  })
+  description = "default tags to apply to all resources"
+  type        = map(string)
 }
 
 variable "environment_name" {

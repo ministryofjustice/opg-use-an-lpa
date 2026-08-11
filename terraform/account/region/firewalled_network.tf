@@ -1,5 +1,5 @@
 module "network" {
-  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=5e887a1ee7e6cdfc52ed3e923cd8951319dd556a"
+  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=v1.3.2"
   cidr                                = var.network_cidr_block
   enable_dns_hostnames                = true
   enable_dns_support                  = true
