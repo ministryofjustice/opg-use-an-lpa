@@ -30,8 +30,8 @@ class CSPMiddleware implements MiddlewareInterface
     {
         $csp  = "default-src 'none';";
         $csp .= "script-src 'self' " .
-            "https://www.googletagmanager.com https://www.google-analytics.com 'nonce-" . $this->nonce . "';";
-        $csp .= "style-src 'self' 'nonce-" . $this->nonce . "';";
+            "https://www.googletagmanager.com https://www.google-analytics.com 'nonce-" . (string) $this->nonce . "';";
+        $csp .= "style-src 'self' 'nonce-" . (string) $this->nonce . "';";
         $csp .= "font-src 'self';";
         $csp .= "manifest-src 'self';";
         $csp .= "connect-src 'self' " .
