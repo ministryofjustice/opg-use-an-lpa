@@ -78,3 +78,8 @@ variable "region_name" {
   description = "The aws region"
   type        = string
 }
+
+variable "availability_zones" {
+  description = "List of availability zones to use for the regional network"
+  type        = list(string)
+}

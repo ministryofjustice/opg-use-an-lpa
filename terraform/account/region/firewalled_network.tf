@@ -1,5 +1,5 @@
 module "network" {
-  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=add-region-input"
+  source                              = "github.com/ministryofjustice/opg-terraform-aws-firewalled-network?ref=5e887a1ee7e6cdfc52ed3e923cd8951319dd556a"
   cidr                                = var.network_cidr_block
   enable_dns_hostnames                = true
   enable_dns_support                  = true
@@ -11,7 +11,8 @@ module "network" {
     account_id   = var.account.shared_firewall_configuration.account_id
     account_name = var.account.shared_firewall_configuration.account_name
   }
-  aws_region = var.region_name
+  aws_availability_zones = var.availability_zones
+  aws_region             = var.region_name
   providers = {
     aws = aws.region
   }
