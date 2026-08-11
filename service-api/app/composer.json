@@ -84,7 +84,7 @@
         "rector/rector": "^2.1.2",
         "roave/security-advisories": "dev-master",
         "slevomat/coding-standard": "^8.19.1",
-        "squizlabs/php_codesniffer": "^4.0.0",
+        "squizlabs/php_codesniffer": "4.0.1",
         "vimeo/psalm": "^6.0.0"
     },
     "replace": {
