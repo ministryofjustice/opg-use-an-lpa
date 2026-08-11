@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-10 12:48+0000\n"
+"PO-Revision-Date: 2026-08-11 08:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1620,7 +1620,7 @@ msgstr "Dylech gael y llythyr erbyn %date%"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:23
 msgid "If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call."
-msgstr "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen ichi roi cyfeirnod yr LPA inni pan fyddwch yn ffonio."
+msgstr "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen i chi roi cyfeirnod yr LPA i ni pan fyddwch yn ffonio."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:27
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
@@ -3255,7 +3255,7 @@ msgstr "Cysylltu â ni"
 
 #: src/Common/templates/common/contact-us.html.twig:15
 msgid "If you need help with this service you can get in touch by telephone or email."
-msgstr "Os ydych angen help efo’r gwasanaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost."
+msgstr "Os oes angen help arnoch gyda’r gwasanaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost."
 
 #: src/Common/templates/error/410.html.twig:10
 msgid "Gone"
@@ -3623,11 +3623,12 @@ msgstr "Gweld y cwcis"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
-msgstr "Ffonio"
+msgstr "Ffôn"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
+#, fuzzy
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
-msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r DU: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
+msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r Deyrnas Unedig: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
@@ -4709,7 +4710,7 @@ msgstr "Manylion bydd angen i chi eu rhoi i ni"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
 msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
-msgstr "ble rydych yn byw ar hyn o bryd – caiff allweddi actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
+msgstr "ble rydych yn byw ar hyn o bryd – caiff codau actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
