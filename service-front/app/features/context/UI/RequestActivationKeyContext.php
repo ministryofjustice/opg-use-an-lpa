@@ -12,10 +12,8 @@ use BehatTest\Context\ActorContextTrait as ActorContext;
 use BehatTest\Context\BaseUiContextTrait;
 use BehatTest\Context\ContextUtilities;
 use DateTime;
-use DateTimeInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * @psalm-ignore UndefinedThisPropertyFetch
@@ -26,32 +24,20 @@ class RequestActivationKeyContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
-    private const ADD_OLDER_LPA_CONFIRM  = 'AddOlderLpa::confirm';
-    private const CLEANSE_LPA_CLEANSE    = 'CleanseLpa::cleanse';
+    private const string ADD_OLDER_LPA_VALIDATE = 'AddOlderLpa::validate';
+    private const string ADD_OLDER_LPA_CONFIRM  = 'AddOlderLpa::confirm';
+    private const string CLEANSE_LPA_CLEANSE    = 'CleanseLpa::cleanse';
 
-    /**
-     * @var RequestInterface Used to store external requests made to a mocked handler for
-     *                       subsequent "Then" step verification.
-     */
-    private RequestInterface $requestBody;
-    private mixed $lpa;
-    private string $userLpaActorToken;
-    private int $actorId;
-    private string $actorUId;
-    private mixed $lpaData;
-    private ?string $activationCode;
-    private string $codeCreatedDate;
-    private string $live_in_uk;
+    private mixed $lpa                = null;
+    private string $userLpaActorToken = '';
+    private int $actorId              = 0;
+    private string $actorUId          = '';
+    private mixed $lpaData            = null;
+    private ?string $activationCode   = null;
+    private string $codeCreatedDate   = '';
+    private string $live_in_uk        = '';
 
-    #[Then('/^I am taken to the check answers page$/')]
-    public function iAmTakenToTheCheckAnswersPage(): void
-    {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-    }
-
-    #[Given('/^I am told that I have already requested an activation key for this LPA$/')]
-    public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA(): void
+    private function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA(): void
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
         $this->ui->assertElementContainsText('h1', "You've already asked for an activation key for this LPA");
@@ -128,7 +114,6 @@ class RequestActivationKeyContext implements Context
         $this->ui->assertPageContainsText('ABC123');
     }
 
-    #[Then('/^I am asked to check my answers$/')]
     #[Given('/^I am on the check your answers page$/')]
     public function iAmAskedToCheckMyAnswers(): void
     {
@@ -249,8 +234,7 @@ class RequestActivationKeyContext implements Context
         $this->iPressTheContinueButton();
     }
 
-    #[When('/^I press the continue button$/')]
-    public function iPressTheContinueButton(): void
+    private function iPressTheContinueButton(): void
     {
         $this->ui->pressButton('Continue');
     }
@@ -285,14 +269,7 @@ class RequestActivationKeyContext implements Context
     public function iAmInformedThatAnLPACouldNotBeFoundWithTheseDetails(): void
     {
         $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find a lasting power of attorney');
-    }
-
-    #[Then('/^I am informed that an LPA could not be found with this reference number$/')]
-    public function iAmInformedThatAnLPACouldNotBeFoundWithThisReferenceNumber(): void
-    {
-        $this->ui->assertPageAddress('/lpa/request-code/check-answers');
-        $this->ui->assertElementContainsText('h1', 'We could not find an LPA with that reference number');
+        $this->ui->assertElementOnPage('h1[data-content-id="h.cannot-find-lpa"]');
     }
 
     #[Then('/^I am not shown a warning that my details must match the information on record$/')]
@@ -367,14 +344,6 @@ class RequestActivationKeyContext implements Context
     public function iAmRedirectedToTheActivationKeyPage(): void
     {
         $this->ui->assertPageAddress('/lpa/request-code/lpa-reference-number');
-    }
-
-    #[Then('/^I am shown a warning that my details must match the information on record$/')]
-    public function iAmShownAWarningThatMyDetailsMustMatchTheInformationOnRecord(): void
-    {
-        $this->ui->assertPageContainsText(
-            'These details must match the information we have about you on our records.'
-        );
     }
 
     #[Then('/^I am taken back to the consent and check details page$/')]
