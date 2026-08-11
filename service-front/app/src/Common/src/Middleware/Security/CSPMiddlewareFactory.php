@@ -22,7 +22,7 @@ use RuntimeException;
  * ],
  * </code>
  */
-class CSPMiddlewareFactory
+final class CSPMiddlewareFactory
 {
     public function __invoke(ContainerInterface $container): CSPMiddleware
     {

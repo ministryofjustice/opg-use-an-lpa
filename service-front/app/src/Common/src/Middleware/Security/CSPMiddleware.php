@@ -12,7 +12,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class CSPMiddleware implements MiddlewareInterface
+final class CSPMiddleware implements MiddlewareInterface
 {
     public const string NONCE_ATTRIBUTE = 'csp-nonce';
 
