@@ -32,3 +32,8 @@ variable "permitted_s3_buckets" {
   default     = []
   description = "S3 buckets permitted through the S3 VPC endpoint"
 }
+
+variable "region_name" {
+  description = "The aws region"
+  type        = string
+}
