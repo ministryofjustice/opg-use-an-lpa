@@ -6,11 +6,11 @@ data "aws_availability_zones" "available" {
 data "aws_vpc" "main" {
   filter {
     name   = "tag:application"
-    values = [data.aws_default_tags.current.tags.application]
+    values = [var.default_tags["application"]]
   }
   filter {
     name   = "tag:Name"
-    values = ["${data.aws_default_tags.current.tags.application}-${data.aws_default_tags.current.tags.account-name}-vpc"]
+    values = ["${var.default_tags["application"]}-${var.default_tags["account-name"]}-vpc"]
   }
   provider = aws.region
 }
