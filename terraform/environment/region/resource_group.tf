@@ -1,5 +1,5 @@
 resource "aws_resourcegroups_group" "environment" {
-  name        = "${data.aws_default_tags.current.tags.environment-name}-environment-${data.aws_region.current.region}"
+  name        = "${var.default_tags["environment-name"]}-environment-${var.region_name}"
   description = "Environment level eu-west-1 resources"
 
   resource_query {
@@ -17,7 +17,7 @@ locals {
     TagFilters = [
       {
         Key    = "environment-name",
-        Values = [data.aws_default_tags.current.tags.environment-name]
+        Values = [var.default_tags["environment-name"]]
       }
     ]
   })

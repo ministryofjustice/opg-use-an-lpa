@@ -287,3 +287,13 @@ variable "lpa_store_account_id" {
   description = "The AWS ID of the LPA store account"
   type        = string
 }
+
+variable "region_name" {
+  description = "The AWS region"
+  type        = string
+}
+
+variable "default_tags" {
+  description = "Default tags to apply to all resources"
+  type        = map(string)
+}

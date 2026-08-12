@@ -4,7 +4,7 @@ module "lambda_update_statistics" {
   lambda_name = "update-statistics"
   environment_variables = {
     ENVIRONMENT = local.environment_name
-    REGION      = data.aws_region.current.region
+    REGION      = local.region
   }
   image_uri        = "${data.aws_ecr_repository.use_an_lpa_upload_statistics.repository_url}:${var.container_version}"
   ecr_arn          = data.aws_ecr_repository.use_an_lpa_upload_statistics.arn
@@ -108,7 +108,7 @@ module "event_receiver" {
   lambda_name = "event-receiver"
   environment_variables = {
     ENVIRONMENT              = local.environment_name
-    REGION                   = data.aws_region.current.region
+    REGION                   = local.region
     USER_LPA_ACTOR_MAP_TABLE = "${local.environment_name}-UserLpaActorMap"
     ACTOR_USERS_TABLE        = "${local.environment_name}-ActorUsers"
   }
