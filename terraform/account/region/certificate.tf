@@ -35,6 +35,10 @@ resource "aws_route53_record" "certificate_validation_view" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_view" {
@@ -42,6 +46,10 @@ resource "aws_acm_certificate_validation" "certificate_view" {
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_view : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_view" {
@@ -67,6 +75,10 @@ resource "aws_route53_record" "certificate_validation_public_facing_view" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_public_facing_view" {
@@ -74,6 +86,10 @@ resource "aws_acm_certificate_validation" "certificate_public_facing_view" {
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_public_facing_view : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_public_facing_view" {
@@ -102,6 +118,10 @@ resource "aws_route53_record" "certificate_validation_use" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_validation_use" {
@@ -109,6 +129,10 @@ resource "aws_acm_certificate_validation" "certificate_validation_use" {
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_use : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_use" {
@@ -134,6 +158,10 @@ resource "aws_route53_record" "certificate_validation_public_facing_use" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_public_facing_use" {
@@ -141,6 +169,10 @@ resource "aws_acm_certificate_validation" "certificate_public_facing_use" {
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_public_facing_use : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_public_facing_use" {
@@ -170,6 +202,10 @@ resource "aws_route53_record" "certificate_validation_admin" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_validation_admin" {
@@ -177,6 +213,10 @@ resource "aws_acm_certificate_validation" "certificate_validation_admin" {
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_admin : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_admin" {
@@ -206,6 +246,10 @@ resource "aws_route53_record" "certificate_validation_mock_onelogin" {
   ttl             = 60
   type            = each.value.type
   zone_id         = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate_validation" "certificate_validation_mock_onelogin" {
@@ -213,6 +257,10 @@ resource "aws_acm_certificate_validation" "certificate_validation_mock_onelogin"
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation_mock_onelogin : record.fqdn]
 
   provider = aws.region
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_acm_certificate" "certificate_mock_onelogin" {
