@@ -108,6 +108,12 @@ data "aws_ecr_image" "use_an_lpa_admin_app" {
   provider        = aws.management
 }
 
+data "aws_ecr_repository" "mock_onelogin" {
+  name     = "mock-onelogin"
+  provider = aws.management
+  region   = var.region_name
+}
+
 
 // Secrets
 data "aws_secretsmanager_secret" "notify_api_key" {

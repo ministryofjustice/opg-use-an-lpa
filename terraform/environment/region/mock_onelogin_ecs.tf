@@ -203,9 +203,9 @@ locals {
     {
       cpu                    = 1,
       essential              = true,
-      image                  = "${var.mock_onelogin_service_repository_url}:${var.mock_onelogin_service_container_version}",
+      image                  = "${data.aws_ecr_repository.mock_onelogin.repository_url}:${var.mock_onelogin_service_container_version}",
       mountPoints            = [],
-      readonlyRootFilesystem = true
+      readonlyRootFilesystem = true,
       name                   = "mock_onelogin",
       portMappings = [
         {
