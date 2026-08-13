@@ -2851,15 +2851,15 @@ class LpaContext implements Context
         $foundRole = null;
         foreach ($summary as $row) {
             $key     = $row->find('css', '.govuk-summary-list__key');
-            $keyText = trim($key->getText());
+            $keyText = $key->getAttribute('data-content-id');
             $value   = $row->find('css', '.govuk-summary-list__value');
 
-            if ($keyText === 'Your role on this LPA') {
+            if ($keyText === 'dt.your-role-on-lpa') {
                 $foundRole = $value->getText();
                 assertStringContainsString($role, $foundRole);
             }
 
-            if ($keyText === 'Your name') {
+            if ($keyText === 'dt.your-name') {
                 $foundName = $value->getText();
                 assertStringContainsString($firstName, $foundName);
                 assertStringContainsString($lastName, $foundName);
@@ -2980,7 +2980,7 @@ class LpaContext implements Context
     public function theLPAIsNotFound(): void
     {
         $this->ui->assertPageAddress('/lpa/check');
-        $this->ui->assertPageContainsText('We could not find a lasting power of attorney');
+        $this->ui->assertElementOnPage('h1[data-content-id="h.cannot-find-lpa"]');
     }
 
     #[Given('/^The LPA is successfully added$/')]
