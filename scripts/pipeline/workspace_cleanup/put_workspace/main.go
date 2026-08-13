@@ -39,7 +39,7 @@ func main() {
 	}
 	RoleArn := ""
 	if len(os.Getenv("CI")) > 0 {
-		RoleArn = "arn:aws:iam::367815980639:role/opg-use-an-lpa-ci"
+		RoleArn = "arn:aws:iam::367815980639:role/opg-use-an-lpa-ci-boundary"
 	} else {
 		RoleArn = "arn:aws:iam::367815980639:role/operator"
 	}

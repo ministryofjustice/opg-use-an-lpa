@@ -660,7 +660,7 @@ class UserLpaActorMapTest extends TestCase
         $testAdded     = gmdate('c');
 
         $now    = new DateTimeImmutable();
-        $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
+        $expiry = $now->add(new DateInterval('P1Y'))->getTimestamp();
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
             $this->assertArrayHasKey('TableName', $data);
@@ -674,7 +674,7 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
-            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+            $this->assertEqualsWithDelta($expiry, (int) $data['ExpressionAttributeValues'][':a']['N'], 5);
 
             $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
@@ -732,7 +732,7 @@ class UserLpaActorMapTest extends TestCase
         $testAdded     = gmdate('c');
 
         $now    = new DateTimeImmutable();
-        $expiry = (string) $now->add(new DateInterval('P1Y'))->getTimestamp();
+        $expiry = $now->add(new DateInterval('P1Y'))->getTimestamp();
 
         $this->dynamoDbClientProphecy->updateItem(Argument::that(function (array $data) use ($testToken, $expiry) {
             $this->assertArrayHasKey('TableName', $data);
@@ -746,7 +746,7 @@ class UserLpaActorMapTest extends TestCase
 
             $this->assertArrayHasKey(':a', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('N', $data['ExpressionAttributeValues'][':a']);
-            $this->assertEqualsWithDelta($expiry, $data['ExpressionAttributeValues'][':a']['N'], 5);
+            $this->assertEqualsWithDelta($expiry, (int) $data['ExpressionAttributeValues'][':a']['N'], 5);
 
             $this->assertArrayHasKey(':b', $data['ExpressionAttributeValues']);
             $this->assertArrayHasKey('S', $data['ExpressionAttributeValues'][':b']);
