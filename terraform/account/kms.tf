@@ -228,7 +228,6 @@ module "dynamodb_encryption_key" {
     [
       aws_iam_role.aws_backup_role.arn,
       "-api-task-role",
-      "-opg-use-an-lpa-ci-boundary",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
       "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
@@ -239,7 +238,6 @@ module "dynamodb_encryption_key" {
     [
       aws_iam_role.aws_backup_role.arn,
       "-api-task-role",
-      "-opg-use-an-lpa-ci-boundary",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
       "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
