@@ -208,11 +208,6 @@ variable "mock_onelogin_service_container_version" {
   type        = string
 }
 
-variable "mock_onelogin_service_repository_url" {
-  description = "Repository URL for the mock-onelogin service"
-  type        = string
-}
-
 variable "moj_sites" {
   description = "A list of MOJ IP addresses used by security groups to allow access to the admin interface and non-production environments."
   type        = list(string)
