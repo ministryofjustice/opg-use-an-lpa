@@ -95,7 +95,6 @@ data "aws_ecr_image" "pdf_service" {
   provider        = aws.management
 }
 
-
 data "aws_ecr_repository" "use_an_lpa_admin_app" {
   provider = aws.management
   name     = "use_an_lpa/admin_app"
@@ -105,6 +104,18 @@ data "aws_ecr_repository" "use_an_lpa_admin_app" {
 data "aws_ecr_image" "use_an_lpa_admin_app" {
   repository_name = "use_an_lpa/admin_app"
   image_tag       = var.admin_container_version
+  provider        = aws.management
+}
+
+data "aws_ecr_repository" "mock_onelogin" {
+  name     = "mock-onelogin"
+  provider = aws.management
+  region   = var.region_name
+}
+
+data "aws_ecr_image" "mock_onelogin" {
+  repository_name = "mock-onelogin"
+  image_tag       = var.mock_onelogin_service_container_version
   provider        = aws.management
 }
 
