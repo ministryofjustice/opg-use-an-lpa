@@ -213,7 +213,7 @@ module "dynamodb_encryption_key" {
 
   administrator_roles = [
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci-boundary",
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/opg-use-an-lpa-ci"
   ]
   decryption_roles = ["*"]
@@ -228,7 +228,6 @@ module "dynamodb_encryption_key" {
     [
       aws_iam_role.aws_backup_role.arn,
       "-api-task-role",
-      "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
       "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
@@ -239,7 +238,6 @@ module "dynamodb_encryption_key" {
     [
       aws_iam_role.aws_backup_role.arn,
       "-api-task-role",
-      "-opg-use-an-lpa-ci",
       "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
       "-admin-task-role",
       "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup",
@@ -267,7 +265,7 @@ module "aws_backup_source_account_key" {
 
   administrator_roles = [
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci-boundary",
   ]
   decryption_roles = [
     aws_iam_role.aws_backup_role.arn,
@@ -299,7 +297,7 @@ module "aws_backup_cross_account_key" {
 
   administrator_roles = [
     "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/breakglass",
-    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci",
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci-boundary",
   ]
   decryption_roles = [
     aws_iam_role.aws_backup_role.arn,
