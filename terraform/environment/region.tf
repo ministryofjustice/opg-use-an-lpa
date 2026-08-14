@@ -38,7 +38,6 @@ module "eu_west_1" {
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
-  mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
   parameter_store_arns                             = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
@@ -130,7 +129,6 @@ module "eu_west_2" {
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
-  mock_onelogin_service_repository_url             = data.aws_ecr_repository.mock_onelogin.repository_url
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
   parameter_store_arns                             = [aws_ssm_parameter.system_message_view_en.arn, aws_ssm_parameter.system_message_view_cy.arn, aws_ssm_parameter.system_message_use_en.arn, aws_ssm_parameter.system_message_use_cy.arn]
