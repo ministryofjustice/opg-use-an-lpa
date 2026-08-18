@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 13:18+0000\n"
+"PO-Revision-Date: 2026-08-18 13:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1958,7 +1958,7 @@ msgstr "Where do you currently live?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
 msgid "We will send your activation key to you by post."
-msgstr "We will send your activation key to you by post."
+msgstr "We’ll send your activation key to you by post."
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:29
 msgid "I live in the UK"
