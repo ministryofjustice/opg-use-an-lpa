@@ -50,7 +50,7 @@ Once you're happy, use the command `aws-vault exec identity -- terraform apply`.
 
 ## Via Pipeline
 
-Alternatively, you can let the pipeline do this. Commit the changes on a PR branch and push create a pull request. Once the pull request pipeline has passed and the PR has the relevant approvals, merge this into the main branch.
+Alternatively, you can let the pipeline do this. Commit the changes on a PR branch and create a pull request. Once the pull request pipeline has passed and the PR has the relevant approvals, merge this into the main branch.
 
 The pipeline will run and update the DNS records to point to the secondary region.
 
