@@ -38,13 +38,15 @@ Ensure that the `is_primary` flag is **NOT** changed. This is used to determine 
 
 ## Via Terraform
 
-If you are running the disaster recovery locally via Terraform, you need to assume the breakglass role. To do this, open the `terraform/environment/.envrc` file.
+If you are running the disaster recovery locally via Terraform, you need to select the production workspace and then assume the breakglass role.
 
-Change `TF_VAR_default_role=operator` to `TF_VAR_default_role=breakglass` and then run either `source .envrc` or `direnv allow` from the `terraform/environment/` directory within your terminal. The other roles do not need to be changed.
+Navigate to `terraform/environment/` in your terminal and use the command `aws-vault exec identity -- terraform workspace select production`.
 
-Next, use the command `aws-vault exec ual-production -- terraform plan` and inspect the plan output and ensure resources are being created in eu-west-2.
+Open the `terraform/environment/.envrc` file. Change `TF_VAR_default_role=operator` to `TF_VAR_default_role=breakglass` and then run either `source .envrc` or `direnv allow` from the `terraform/environment/` directory within your terminal. The other roles do not need to be changed.
 
-Once you're happy, use the command `aws-vault exec ual-production -- terraform apply`.
+Next, use the command `aws-vault exec identity -- terraform plan` and inspect the plan output and ensure resources are being created in eu-west-2.
+
+Once you're happy, use the command `aws-vault exec identity -- terraform apply`.
 
 ## Via Pipeline
 
