@@ -146,12 +146,6 @@ jobs:
           terraform plan -input=false -parallelism=30 -lock-timeout=5m -out=terraform.plan ${{ inputs.extra_vars }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
-      - name: add TTL to dynamodb for environment
-        if: inputs.apply == 'true' && inputs.add_ttl == 'true'
-        env:
-          TF_WORKSPACE: ${{ inputs.workspace }}
-        run: scripts/pipeline/workspace_cleanup/put_workspace_linux -workspace=${TF_WORKSPACE}
-
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply == 'true'
         env:
