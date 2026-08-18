@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 13:58+0000\n"
+"PO-Revision-Date: 2026-08-18 18:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2540,7 +2540,7 @@ msgstr "Most people hear from us or get the activation key within 2 weeks of req
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:15
 msgid "Preferences and Instructions"
-msgstr "Preferences and Instructions"
+msgstr "Preferences and instructions"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:21
 msgid "If an <abbr title=\"lasting power of attorney\">LPA</abbr> has preferences or instructions (also known as restrictions and conditions), we show a scanned image in the LPA summary. The scanned image is also shown to anyone you give an access code to."
@@ -2572,7 +2572,7 @@ msgstr "I do not have the paper LPA"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:63
 msgid "When an LPA is registered, we post the LPA to either:"
-msgstr "When an LPA is registered, we post the LPA to either:"
+msgstr "When an LPA is registered, we post it to either:"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:66
 msgid "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is for)"
@@ -2592,7 +2592,7 @@ msgstr "Check with these people to see who has the <abbr title=\"lasting power o
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
-msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
+msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a>."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
