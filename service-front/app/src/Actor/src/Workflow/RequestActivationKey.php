@@ -7,21 +7,13 @@ namespace Actor\Workflow;
 use Common\Workflow\Traits\JsonSerializable;
 use Common\Workflow\WorkflowState;
 use DateTimeImmutable;
-use RuntimeException;
 
 class RequestActivationKey implements WorkflowState
 {
     use JsonSerializable;
 
-    // TODO replace with enums at PHP 8.1
-    public const string ACTOR_TYPE_DONOR    = 'donor';
-    public const string ACTOR_TYPE_ATTORNEY = 'attorney';
-
-    public const string ACTOR_ADDRESS_SELECTION_YES      = 'Yes';
-    public const string ACTOR_ADDRESS_SELECTION_NO       = 'No';
-    public const string ACTOR_ADDRESS_SELECTION_NOT_SURE = 'Not sure';
-
-    private ?string $actorType = null;
+    private ?ActorType $actorType                       = null;
+    private ?ActorAddressResponse $actorAddressResponse = null;
     public ?DateTimeImmutable $dob;
     public ?DateTimeImmutable $donorDob;
     public ?DateTimeImmutable $attorneyDob;
@@ -54,15 +46,15 @@ class RequestActivationKey implements WorkflowState
         // not used for entered data but to track workflow path
         public ?string $actorUid = null,
         public ?bool $needsCleansing = null,
-        public ?string $actorAddressResponse = null,
+        ?string $actorAddressResponse = null,
         public ?string $liveInUK = null,
         public ?string $actorAbroadAddress = null,
     ) {
-        if ($actorType !== null) { // TODO replace with enums at PHP 8.1
+        if ($actorType !== null) {
             $this->setActorRole($actorType);
         }
 
-        if ($actorAddressResponse !== null) { // TODO replace with enums at PHP 8.1
+        if ($actorAddressResponse !== null) {
             $this->setActorAddressResponse($actorAddressResponse);
         }
 
@@ -107,64 +99,23 @@ class RequestActivationKey implements WorkflowState
         $this->postcode   = null;
     }
 
-    /**
-     * TODO replace with enums at PHP 8.1
-     *
-     * @return string|null
-     */
-    public function getActorRole(): ?string
+    public function getActorRole(): ?ActorType
     {
         return $this->actorType;
     }
 
-    /**
-     * TODO replace with enums at PHP 8.1
-     *
-     * @param string $role
-     * @psalm-param self::ACTOR_TYPE_* $role
-     * @throws RuntimeException
-     */
     public function setActorRole(string $role): void
     {
-        if (!in_array($role, [self::ACTOR_TYPE_ATTORNEY, self::ACTOR_TYPE_DONOR])) {
-            throw new RuntimeException(sprintf("Actor type '%s' not recognised", $role));
-        }
-
-        $this->actorType = $role;
+        $this->actorType = ActorType::from($role);
     }
 
-    /**
-     * TODO replace with enums at PHP 8.1
-     *
-     * @return string|null
-     */
-    public function getActorAddressCheckResponse(): ?string
+    public function getActorAddressResponse(): ?ActorAddressResponse
     {
         return $this->actorAddressResponse;
     }
 
-    /**
-     * TODO replace with enums at PHP 8.1
-     *
-     * @param string $addressResponse
-     * @psalm-param self::ACTOR_ADDRESS_SELECTION_* $addressResponse
-     * @throws RuntimeException
-     */
     public function setActorAddressResponse(string $addressResponse): void
     {
-        if (
-            !in_array(
-                $addressResponse,
-                [
-                    self::ACTOR_ADDRESS_SELECTION_YES,
-                    self::ACTOR_ADDRESS_SELECTION_NO,
-                    self::ACTOR_ADDRESS_SELECTION_NOT_SURE,
-                ]
-            )
-        ) {
-            throw new RuntimeException(sprintf("Actor address response '%s' not recognised", $addressResponse));
-        }
-
-        $this->actorAddressResponse = $addressResponse;
+        $this->actorAddressResponse = ActorAddressResponse::from($addressResponse);
     }
 }
