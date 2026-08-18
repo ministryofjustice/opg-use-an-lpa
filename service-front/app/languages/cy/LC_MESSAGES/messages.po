@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 15:50+0000\n"
+"PO-Revision-Date: 2026-08-18 18:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2567,6 +2567,7 @@ msgid "Most people hear from us or get the activation key within 2 weeks of requ
 msgstr "Bydd y rhan fwyaf o bobl yn clywed gennym neu’n cael allwedd cadarnhau cyfrif o fewn 2 wythnos i wneud cais. Fodd bynnag, weithiau bydd yn cymryd mwy o amser. Os na fyddwch wedi clywed gennym mewn %date%, cysylltwch â ni."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:15
+#, fuzzy
 msgid "Preferences and Instructions"
 msgstr "Dewisiadau a chyfarwyddiadau"
 
@@ -2599,6 +2600,7 @@ msgid "I do not have the paper LPA"
 msgstr "Nid oes gen i’r copi papur o’r LPA"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:63
+#, fuzzy
 msgid "When an LPA is registered, we post the LPA to either:"
 msgstr "Pan fydd LPA yn cael ei chofrestru, rydym yn postio’r LPA papur un ai at:"
 
@@ -2619,6 +2621,7 @@ msgid "Check with these people to see who has the <abbr title=\"lasting power of
 msgstr "Gwiriwch â’r bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
+#, fuzzy
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
 msgstr "Os oes arnoch angen mwy nac un copi o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur, gall y rhoddwr neu gyfreithiwr wneud <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">copïau wedi’u hardystio</a></strong>."
 
