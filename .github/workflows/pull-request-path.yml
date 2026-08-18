@@ -24,12 +24,6 @@ permissions:
   id-token: write
 
 jobs:
-  cleanup_pr_workspaces:
-    name: cleanup pr workspaces
-    uses: ./.github/workflows/scheduled-workspace-cleanup.yml
-    secrets:
-      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
@@ -265,7 +259,6 @@ jobs:
       - phpcs_analysis
       - psalm_analysis
     with:
-      add_ttl: true
       apply: true
       container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
