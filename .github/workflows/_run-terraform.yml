@@ -24,11 +24,6 @@ on:
         required: false
         default: "all"
         type: string
-      add_ttl:
-        description: "Build on a specific path"
-        required: false
-        default: "false"
-        type: string
       extra_vars:
         description: "Extra vars to pass to terraform (-var foo=bar)"
         required: false
