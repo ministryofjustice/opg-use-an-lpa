@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\RequestContactDetails;
+use Actor\Workflow\ActorType;
 use Actor\Workflow\RequestActivationKey;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -79,7 +80,7 @@ class ContactDetailsHandler extends AbstractCleansingDetailsHandler
             || ($this->state($request)->actorAddress1 === null && $this->state($request)->actorAbroadAddress === null)
             || $this->state($request)->getActorRole() === null;
 
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
+        if ($this->state($request)->getActorRole() === ActorType::ATTORNEY) {
             return $required
                 || $this->state($request)->donorFirstNames === null
                 || $this->state($request)->donorLastName === null

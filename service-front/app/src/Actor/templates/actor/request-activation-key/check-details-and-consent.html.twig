@@ -33,7 +33,7 @@
                                     {% trans %}Address on paper LPA{% endtrans %}
                                 </dt>
                                 <dd class="govuk-summary-list__value">
-                                    {% if data.actor_address_response == 'Not sure' %}
+                                    {% if data.actor_address_response == enum('Actor\\Workflow\\ActorAddressResponse').NOT_SURE %}
                                         {% trans %}Not sure{% endtrans %}
                                     {% elseif data.address_on_paper is defined %}
                                         <pre class="govuk-body">{{ data.address_on_paper }}</pre>
@@ -42,7 +42,7 @@
                                     {% endif %}
                                 </dd>
                                 <dd class="govuk-summary-list__actions">
-                                    <a class="govuk-link" id="change-address-on-paper" href="{{ data.actor_address_response == 'No' ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
+                                    <a class="govuk-link" id="change-address-on-paper" href="{{ data.actor_address_response == enum('Actor\\Workflow\\ActorAddressResponse').NO ? path('lpa.add.address-on-paper') : path('lpa.add.actor-address') }}">
                                         {% if data.address_on_paper is defined %}
                                             {% trans %}Change<span class="govuk-visually-hidden"> address on paper LPA</span>{% endtrans %}
                                         {% else %}
@@ -57,7 +57,7 @@
                                 <dt class="govuk-summary-list__key">
                                     {% trans %}Your role{% endtrans %}
                                 </dt>
-                                {% if data.actor_role|lower == 'donor' %}
+                                {% if data.actor_role == enum('Actor\\Workflow\\ActorType').DONOR %}
                                     <dd class="govuk-summary-list__value">
                                         {% trans %}Donor{% endtrans %}
                                     </dd>
@@ -72,7 +72,7 @@
                                     </a>
                                 </dd>
                             </div>
-                            {% if data.actor_role|lower == 'attorney' %}
+                            {% if data.actor_role == enum('Actor\\Workflow\\ActorType').ATTORNEY %}
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         {% trans %}Donor's name{% endtrans %}
@@ -100,7 +100,7 @@
                                     </dd>
                                 </div>
                             {% endif %}
-                            {% if data.actor_role|lower == 'donor' %}
+                            {% if data.actor_role == enum('Actor\\Workflow\\ActorType').DONOR %}
                                 <div class="govuk-summary-list__row">
                                     <dt class="govuk-summary-list__key">
                                         {% trans %}Attorney's name{% endtrans %}

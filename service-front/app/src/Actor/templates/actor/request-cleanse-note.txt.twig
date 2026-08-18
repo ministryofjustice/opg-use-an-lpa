@@ -18,9 +18,9 @@ Address on LPA: {{ data.address_on_paper | split('\n') | map(i => "#{i}" | trim(
 Phone: {{ data.telephone }}
 {% endif %}
 Email: {{ data.email }}
-{% if data.actor_role is defined and data.actor_role == 'attorney' %}
+{% if data.actor_role is defined and data.actor_role == enum('Actor\\Workflow\\ActorType').ATTORNEY %}
 Donor: {{ data.donor_first_names }} {{ data.donor_last_name }} {{ data.donor_dob.format('d/m/Y') }}
 {% endif %}
-{% if data.actor_role is defined and data.actor_role == 'donor' %}
+{% if data.actor_role is defined and data.actor_role == enum('Actor\\Workflow\\ActorType').DONOR %}
 Attorney: {{ data.attorney_first_names }} {{ data.attorney_last_name }} {{ data.attorney_dob.format('d/m/Y') }}
 {% endif %}

@@ -6,7 +6,7 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorAbroadAddress;
 use Actor\Form\RequestActivationKey\ActorAddress;
-use Actor\Workflow\RequestActivationKey;
+use Actor\Workflow\ActorAddressResponse;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -47,10 +47,10 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             );
         }
 
-        if ($this->state($request)->getActorAddressCheckResponse() !== null) {
+        if ($this->state($request)->getActorAddressResponse() !== null) {
             $this->form->setData(
                 [
-                    'actor_address_check_radio' => $this->state($request)->getActorAddressCheckResponse(),
+                    'actor_address_check_radio' => $this->state($request)->getActorAddressResponse()?->value,
                 ]
             );
         }
@@ -91,8 +91,9 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             } else {
                 $this->state($request)->actorAbroadAddress = $postData['actor_abroad_address'];
             }
-            $this->state($request)->actorAddressResponse = $postData['actor_address_check_radio'];
-            $nextPageName                                = $this->nextPage($this->state($request));
+            $this->state($request)->setActorAddressResponse($postData['actor_address_check_radio']);
+
+            $nextPageName = $this->nextPage($this->state($request));
             return $this->redirectToRoute($nextPageName);
         }
 
@@ -114,7 +115,7 @@ class ActorAddressHandler extends AbstractCleansingDetailsHandler
             return 'lpa.add.check-details-and-consent';
         }
 
-        return $state->getActorAddressCheckResponse() === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO
+        return $state->getActorAddressResponse() === ActorAddressResponse::NO
             ? 'lpa.add.address-on-paper'
             : 'lpa.add.actor-role';
     }
