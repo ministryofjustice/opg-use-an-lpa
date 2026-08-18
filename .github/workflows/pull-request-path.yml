@@ -259,7 +259,6 @@ jobs:
       - phpcs_analysis
       - psalm_analysis
     with:
-      add_ttl: true
       apply: true
       container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
