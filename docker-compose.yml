@@ -158,7 +158,7 @@ services:
     volumes:
       - ./service-api/web/dist:/web
     ports:
-      - 9010:80
+      - 9010:8080
     environment:
       APP_HOST: api-app
       APP_PORT: 9000
