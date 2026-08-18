@@ -37,7 +37,7 @@ final class CSPMiddlewareFactory
                         'authentication_domain',
                         'iap_domain',
                     ],
-                    array_keys($config['csp'])
+                    array_keys($config['csp'] ?? [])
                 )
             )
         ) {
