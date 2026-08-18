@@ -207,8 +207,8 @@ jobs:
           elif [ ${SVC_PREFIX} == 'stats_upload' ]; then
             mkdir -p build/service-${SVC_PREFIX}
             cd lambda-functions/upload-statistics/app
-            uv sync --directory .. --frozen --group test
-            uv run python -m unittest -v
+            uv sync --directory .. --locked --group test
+                uv run python -m unittest -v
           elif [ ${SVC_PREFIX} == 'event' ]; then
             mkdir -p build/service-${SVC_PREFIX}
             cd lambda-functions/${SVC_PREFIX}-receiver/app
