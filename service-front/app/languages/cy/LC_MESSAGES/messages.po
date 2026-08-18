@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-29 11:58+0000\n"
+"PO-Revision-Date: 2026-08-11 08:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -304,7 +304,7 @@ msgstr "Os ydych yn cael unrhyw broblemau wrth fewngofnodi i’r gwasanaeth hwn,
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:14
 #: src/Actor/templates/actor/check-lpa.html.twig:14
 msgid "Confirm this is the correct LPA"
-msgstr "Cadarnhewch mai dyma yw’r LPA gyw"
+msgstr "Cadarnhau mai dyma’r LPA gywir"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:9
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:8
@@ -410,8 +410,9 @@ msgstr "(Corfforaeth Ymddiriedolaeth)"
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:50
 #: src/Actor/templates/actor/check-lpa.html.twig:54
+#, fuzzy
 msgid "Your role on this LPA"
-msgstr "Eich swyddogaeth yn yr LPA hon"
+msgstr "Eich rôl yn yr LPA hon"
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:54
 #: src/Actor/templates/actor/check-lpa.html.twig:58
@@ -1483,8 +1484,9 @@ msgstr "Nid oedd modd cael hyd i LPA"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:12
+#, fuzzy
 msgid "We could not find a lasting power of attorney"
-msgstr "Dydyn ni ddim yn gallu dod o hyd i atwrneiaeth arhosol (LPA)"
+msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:15
@@ -1562,7 +1564,7 @@ msgstr "Os ydych chi’n siŵr bod yr wybodaeth rydych chi wedi’i rhoi yn gywi
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:73
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:65
 msgid "Try again"
-msgstr "Rhowch gynnig arall arni"
+msgstr "Rhoi cynnig arall arni"
 
 # Translation different: ‘We cannot send a code for that LPA’
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:3
@@ -1618,7 +1620,7 @@ msgstr "Dylech gael y llythyr erbyn %date%"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:23
 msgid "If you do not get it by this date, please contact us. You'll need to give us the LPA reference number when you call."
-msgstr "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen ichi roi cyfeirnod yr LPA inni pan fyddwch yn ffonio."
+msgstr "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen i chi roi cyfeirnod yr LPA i ni pan fyddwch yn ffonio."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:27
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
@@ -1741,7 +1743,7 @@ msgstr "Er enghraifft, 31 03 1980"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
-msgstr "Beth yw cyfeirnod atwrneiaeth arhosol?"
+msgstr "Beth yw cyfeirnod yr atwrneiaeth arhosol (LPA)?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
@@ -1761,6 +1763,7 @@ msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau LPA yn dechrau gyda M, er enghraifft M-1111-2222-3333."
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
+#, fuzzy
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
 msgstr "Mae cyfeirnodau ACLl yn 12 rhif o hyd,<br>er enghraifft: 7000-0000-0000."
 
@@ -2101,16 +2104,17 @@ msgid "Confirm and submit request"
 msgstr "Cadarnhau a chyflwyno’r cais"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:3
+#, fuzzy
 msgid "You've already added this LPA to your account"
 msgstr "Rydym wedi dileu LPA o’ch cyfrif"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
-msgstr "Rydych eisoes wedi ychwanegu’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hwn at eich cyfrif"
+msgstr "Rydych eisoes wedi ychwanegu’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon at eich cyfrif"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 msgid "You can <a href=\"%view-lpa%\" class=\"govuk-link\">see this LPA</a> now or <a href=\"%add-lpa%\" class=\"govuk-link\">add another LPA</a> to your account."
-msgstr "Gallwch <a href=\"%view-lpa%\" class=\"govuk-link\">weld yr LPA hwn nawr</a> neu <a href=\"%add-lpa%\" class=\"govuk-link\">ychwanegu LPA arall</a> at eich cyfrif."
+msgstr "Gallwch <a href=\"%view-lpa%\" class=\"govuk-link\">weld yr LPA hon</a> nawr neu <a href=\"%add-lpa%\" class=\"govuk-link\">ychwanegu LPA arall</a> at eich cyfrif."
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:3
@@ -2244,11 +2248,11 @@ msgstr "Rhagor o wybodaeth am beth i’w wneud <a class=\"govuk-link\" href=\"%l
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:20
 msgid "The reference number is in the same letter that has your activation key."
-msgstr "Mae’r cyfeirnod yn yr un llythyr sydd â’ch allwedd cadarnhau."
+msgstr "Mae’r cyfeirnod yn cynnwys 12 rhif ac i’w weld yn y llythyr sy’n cynnwys eich cod actifadu."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
-msgstr "Mae cyfeirnodau LPA yn 12 rhif o hyd, er enghraifft, 7000-0000-0000."
+msgstr "Er enghraifft, 7000-0000-0000"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
 msgid "Your activation key"
@@ -2814,27 +2818,28 @@ msgstr "Nid oedd modd cael hyd i LPA"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:13
 msgid "This could be because the:"
-msgstr "Dyma’r rhesymau posibl:"
+msgstr "Dyma’r rhesymau posibl dros hyn:"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:17
 msgid "activation key you entered is incorrect"
-msgstr "mae’r allwedd cadarnhau rydych chi wedi’i roi yn anghywir"
+msgstr "mae’r cod actifadu rydych chi wedi’i roi yn anghywir"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:21
+#, fuzzy
 msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "mae’r allwedd cadarnhau wedi did i ben neu wedi cael ei defnyddio’n barod - gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am allwedd newydd</a>"
+msgstr "mae’r cod actifadu wedi dod i ben neu wedi cael ei ddefnyddio’n barod – gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am god newydd</a>"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:26
 msgid "date of birth you entered does not match our records"
-msgstr "dydy’r dyddiad geni rydych chi wedi’i roi ddim yn cyfatb i’n cofnodion ni"
+msgstr "nid yw’r dyddiad geni rydych chi wedi’i roi yn cyfateb i’n cofnodion ni"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:30
 msgid "LPA reference number you entered is incorrect or for a different LPA"
-msgstr "mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod yn ymwneud ag atwrneiaeth arhosol wahanol"
+msgstr "mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod ar gyfer LPA wahanol"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:43
 msgid "Activation Key"
-msgstr "Allwedd cadarnhau"
+msgstr "Cod actifadu"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:61
 #: src/Common/templates/partials/contact-details/email.html.twig:1
@@ -3250,7 +3255,7 @@ msgstr "Cysylltu â ni"
 
 #: src/Common/templates/common/contact-us.html.twig:15
 msgid "If you need help with this service you can get in touch by telephone or email."
-msgstr "Os ydych angen help efo’r gwasanaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost."
+msgstr "Os oes angen help arnoch gyda’r gwasanaeth hwn gallwch gysylltu â ni dros y ffôn neu drwy e-bost."
 
 #: src/Common/templates/error/410.html.twig:10
 msgid "Gone"
@@ -3618,11 +3623,12 @@ msgstr "Gweld y cwcis"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:1
 msgid "Telephone"
-msgstr "Ffonio"
+msgstr "Ffôn"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
+#, fuzzy
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
-msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r DU: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9.00am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
+msgstr "Ffôn (yn Saesneg): <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Ffonio o’r tu allan i’r Deyrnas Unedig: +44 (0)203 518 9639 <br> Relay UK (os na allwch glywed neu siarad ar y ffôn): 18001 0300 123 1300<br> Dydd Llun i ddydd Gwener, 9am tan 5pm, heblaw bob dydd Mercher 10am tan 5pm"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
@@ -4704,7 +4710,7 @@ msgstr "Manylion bydd angen i chi eu rhoi i ni"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
 msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
-msgstr "ble rydych yn byw ar hyn o bryd – caiff allweddi actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
+msgstr "ble rydych yn byw ar hyn o bryd – caiff codau actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
