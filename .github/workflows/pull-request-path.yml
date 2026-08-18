@@ -24,12 +24,6 @@ permissions:
   id-token: write
 
 jobs:
-  cleanup_pr_workspaces:
-    name: cleanup pr workspaces
-    uses: ./.github/workflows/scheduled-workspace-cleanup.yml
-    secrets:
-      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
-
   workflow_variables:
     runs-on: ubuntu-latest
     name: output workflow variables
