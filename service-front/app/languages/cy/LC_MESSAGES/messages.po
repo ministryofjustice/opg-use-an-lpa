@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 12:37+0000\n"
+"PO-Revision-Date: 2026-08-18 13:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1774,7 +1774,7 @@ msgstr "Gofyn am allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:17
 msgid "You can only ask for an activation key if:"
-msgstr "Ni allwch ond gofyn am allwedd cadarnhau:"
+msgstr "Gallwch ofyn am god actifadu os:"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:20
 msgid "your LPA was registered on or after 1 September 2019"
@@ -1952,23 +1952,23 @@ msgstr "Gofyn am god actifadu"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
-msgstr "gwnaed yr atwrneiaeth arhosol i’w defnyddio yng Nghymru a Lloegr"
+msgstr "gwnaed yr LPA i’w defnyddio yng Nghymru a Lloegr"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
 msgid "You cannot ask for a key for:"
-msgstr "Ni allwch ofyn am allwedd ar gyfer:"
+msgstr "Ni chewch ofyn am god ar gyfer:"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:30
 msgid "LPAs registered by the Office of the Public Guardian Scotland"
-msgstr "atwrneiaethau arhosol a gofrestrwyd gan Swyddfa’r Gwarcheidwad Cyhoeddus yn yr Alban"
+msgstr "LPAs a gofrestrwyd gan Swyddfa’r Gwarcheidwad Cyhoeddus yn yr Alban"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:48
 msgid "I do not know the LPA reference number"
-msgstr "Dydw i ddim yn gwybod beth yw’r cyfeirnod LPA"
+msgstr "Dydw i ddim yn gwybod cyfeirnod yr LPA"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:52
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
-msgstr "Os nad yw’r atwrneiaeth arhosol bapur gennych chi nac unrhyw lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus, holwch bobl eraill sydd wedi’u henwi ar yr atwrneiaeth arhosol."
+msgstr "Os nad yw’r atwrneiaeth arhosol bapur gennych chi nac unrhyw lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus, holwch bobl eraill sydd wedi’u henwi yn yr LPA."
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
 msgid "What is your address on the paper LPA?"
@@ -4700,19 +4700,19 @@ msgstr "Na, rhoi cynnig arall arni"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 msgid "you’re a donor or an attorney on the LPA (not a replacement attorney)"
-msgstr "os ydych yn rhoddwr neu’n atwrnai ar yr LPA (nid yn atwrnai cyfnewid)"
+msgstr "os ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr LPA (nid yn atwrnai wrth gefn)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
 msgid "Details you’ll need to give us"
-msgstr "Manylion bydd angen i chi eu rhoi i ni"
+msgstr "Dyma’r manylion bydd angen i chi eu rhoi"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
 msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
-msgstr "ble rydych yn byw ar hyn o bryd – caiff codau actifadu eu hanfon yn y post. Os ydych wedi symud a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn parhau fel y gallwn ddiweddaru eich cofnodion"
+msgstr "ble rydych yn byw ar hyn o bryd – caiff codau actifadu eu hanfon yn y post. Os ydych wedi symud cartref a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn clicio parhau fel y gallwn ddiweddaru ein cofnodion"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
-msgstr "cyfeirnod yr LPA – fe welwch hwn ar yr atwrneiaeth arhosol bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
+msgstr "cyfeirnod yr LPA – fe welwch hwn ar yr LPA bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
 msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
