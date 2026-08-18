@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-07-29 11:49+0000\n"
+"PO-Revision-Date: 2026-08-11 08:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -402,7 +402,7 @@ msgstr "(Trust corporation)"
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:50
 #: src/Actor/templates/actor/check-lpa.html.twig:54
 msgid "Your role on this LPA"
-msgstr "Your role on this LPA"
+msgstr "Your role in this LPA"
 
 #: src/Actor/templates/actor/check-combined-lpa.html.twig:54
 #: src/Actor/templates/actor/check-lpa.html.twig:58
@@ -1470,7 +1470,7 @@ msgstr "Cannot find LPA"
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:12
 msgid "We could not find a lasting power of attorney"
-msgstr "We could not find a lasting power of attorney"
+msgstr "Lasting power of attorney not found"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:15
@@ -1747,7 +1747,7 @@ msgstr "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<b
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
-msgstr "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
+msgstr "<br>For example, 7000-0000-0000"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:15
 msgid "Check if you can ask for an activation key"
@@ -2078,7 +2078,7 @@ msgstr "Confirm and submit request"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:3
 msgid "You've already added this LPA to your account"
-msgstr "You've already added this LPA to your account"
+msgstr "You’ve already added this LPA to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
@@ -2220,11 +2220,11 @@ msgstr "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:20
 msgid "The reference number is in the same letter that has your activation key."
-msgstr "The reference number is in the same letter that has your activation key."
+msgstr "The reference number contains 12 numbers and can be found in the same letter that has your activation key."
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
-msgstr "LPA reference numbers are 12 numbers long, for example 7000-0000-0000."
+msgstr "For example, 7000-0000-0000"
 
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:40
 msgid "Your activation key"
@@ -2797,7 +2797,7 @@ msgstr "activation key you entered is incorrect"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:21
 msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
+msgstr "activation key has expired or has already been used – you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:26
 msgid "date of birth you entered does not match our records"
@@ -3603,7 +3603,7 @@ msgstr "Telephone"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:3
 msgid "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
-msgstr "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9:00am to 5pm, except Wednesday, 10am to 5pm"
+msgstr "Telephone: <a class=\"govuk-link\" href=\"tel:03004560300\">0300 456 0300</a><br> Calling from outside the UK: +44 (0)203 518 9639<br> Relay UK (if you cannot hear or speak on the phone): 18001 0300 123 1300<br> Monday to Friday, 9am to 5pm, except Wednesday, 10am to 5pm"
 
 #: src/Common/templates/partials/contact-details/telephone.html.twig:11
 msgid "Find out about call charges"
