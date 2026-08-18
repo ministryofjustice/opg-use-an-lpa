@@ -57,7 +57,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     use User;
 
     private CheckYourAnswers $form;
-    private ?SessionInterface $session;
     private ?UserInterface $user;
 
     public function __construct(
@@ -79,9 +78,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
-
-        $this->user    = $this->getUser($request);
-        $this->session = $this->getSession($request, 'session');
+        $this->user = $this->getUser($request);
 
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-paper');
