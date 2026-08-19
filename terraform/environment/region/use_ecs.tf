@@ -371,7 +371,7 @@ locals {
         },
         {
           name  = "CSP_AUTH_DOMAIN",
-          value = tostring(var.csp_auth_domain)
+          value = tostring(local.onelogin_csp_domain)
         },
         {
           name  = "CSP_IAP_DOMAIN",
