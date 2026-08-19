@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 18:05+0000\n"
+"PO-Revision-Date: 2026-08-19 13:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1278,7 +1278,7 @@ msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn weithredol 
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
 msgid "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used (property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo a materion ariannol yn unig)"
+msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:108
 msgid "whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment (health and welfare <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
@@ -1483,9 +1483,8 @@ msgstr "Nid oedd modd cael hyd i LPA"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:12
-#, fuzzy
 msgid "We could not find a lasting power of attorney"
-msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol"
+msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol (LPA)"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:15
@@ -1925,9 +1924,7 @@ msgstr "wedi colli galluedd meddyliol"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:47
 msgid "have been declared bankrupt or have a debt relief order (property and finance attorneys only)"
-msgstr ""
-"wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion (atwrneiod eiddo\n"
-"a chyllid yn unig)"
+msgstr "wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion (atwrneiod eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:52
 msgid "were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the LPA)"
@@ -1983,7 +1980,6 @@ msgid "Where do you currently live?"
 msgstr "Ble rydych chi’n byw ar hyn o bryd?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
-#, fuzzy
 msgid "We will send your activation key to you by post."
 msgstr "Byddwn yn anfon eich cod actifadu atoch chi yn y post."
 
@@ -2434,7 +2430,7 @@ msgstr "Dewiswch os oes gennych allwedd cadarnhau cyfrif i ychwanegu LPA"
 #: src/Actor/templates/actor/form-error-messages.html.twig:33
 msgctxt "error"
 msgid "The LPA reference number provided is not correct"
-msgstr "Nid yw’r cyfeirnod LPA a ddarparwyd yn gywir"
+msgstr "Nid yw’r cyfeirnod a roddwyd ar gyfer yr LPA yn gywir"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:39
@@ -2828,7 +2824,6 @@ msgid "activation key you entered is incorrect"
 msgstr "mae’r cod actifadu rydych chi wedi’i roi yn anghywir"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:21
-#, fuzzy
 msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 msgstr "mae’r cod actifadu wedi dod i ben neu wedi cael ei ddefnyddio’n barod – gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am god newydd</a>"
 
@@ -2838,7 +2833,7 @@ msgstr "nid yw’r dyddiad geni rydych chi wedi’i roi yn cyfateb i’n cofnodi
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:30
 msgid "LPA reference number you entered is incorrect or for a different LPA"
-msgstr "Mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod ar gyfer LPA wahanol"
+msgstr "mae cyfeirnod yr LPA rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod ar gyfer LPA wahanol"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:43
 msgid "Activation Key"
@@ -2854,7 +2849,7 @@ msgstr "E-bost"
 #: src/Actor/templates/actor/flash-messages.html.twig:4
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
-msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
+msgstr "Rydych wedi ychwanegu LPA %lpaType% %donor%"
 
 #. Cancelling viewer code
 #: src/Actor/src/Handler/CancelCodeHandler.php:74
@@ -4533,7 +4528,7 @@ msgstr "iechyd a lles"
 #: src/Actor/src/Handler/RemoveLpaHandler.php:120
 msgctxt "flashMessage"
 msgid "property and finance"
-msgstr "eiddo a materion ariannol"
+msgstr "eiddo ac arian"
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
@@ -4598,7 +4593,7 @@ msgstr "eiddo a materion ariannol"
 
 #: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
-msgstr "eiddo a materion ariannol"
+msgstr "eiddo ac arian"
 
 #. Global
 #: src/Actor/templates/actor/form-error-messages.html.twig:4
