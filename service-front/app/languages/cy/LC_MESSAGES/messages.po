@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 18:05+0000\n"
+"PO-Revision-Date: 2026-08-19 13:02+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1483,9 +1483,8 @@ msgstr "Nid oedd modd cael hyd i LPA"
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:12
-#, fuzzy
 msgid "We could not find a lasting power of attorney"
-msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol"
+msgstr "Nid oeddem yn gallu dod o hyd i’r atwrneiaeth arhosol (LPA)"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:15
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:15
@@ -1983,7 +1982,6 @@ msgid "Where do you currently live?"
 msgstr "Ble rydych chi’n byw ar hyn o bryd?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:20
-#, fuzzy
 msgid "We will send your activation key to you by post."
 msgstr "Byddwn yn anfon eich cod actifadu atoch chi yn y post."
 
@@ -2434,7 +2432,7 @@ msgstr "Dewiswch os oes gennych allwedd cadarnhau cyfrif i ychwanegu LPA"
 #: src/Actor/templates/actor/form-error-messages.html.twig:33
 msgctxt "error"
 msgid "The LPA reference number provided is not correct"
-msgstr "Nid yw’r cyfeirnod LPA a ddarparwyd yn gywir"
+msgstr "Nid yw’r cyfeirnod a roddwyd ar gyfer yr LPA yn gywir"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:39
@@ -2828,7 +2826,6 @@ msgid "activation key you entered is incorrect"
 msgstr "mae’r cod actifadu rydych chi wedi’i roi yn anghywir"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:21
-#, fuzzy
 msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
 msgstr "mae’r cod actifadu wedi dod i ben neu wedi cael ei ddefnyddio’n barod – gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am god newydd</a>"
 
@@ -2838,7 +2835,7 @@ msgstr "nid yw’r dyddiad geni rydych chi wedi’i roi yn cyfateb i’n cofnodi
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:30
 msgid "LPA reference number you entered is incorrect or for a different LPA"
-msgstr "Mae cyfeirnod yr atwrneiaeth arhosol (LPA) rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod ar gyfer LPA wahanol"
+msgstr "mae cyfeirnod yr LPA rydych wedi’i roi yn anghywir, neu mae’r cyfeirnod ar gyfer LPA wahanol"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:43
 msgid "Activation Key"
