@@ -74,10 +74,10 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->$key);
                     break;
                 case 'actorType':
-                    Assert::assertEquals($data['actorType'], $sut->getActorRole());
+                    Assert::assertEquals($data['actorType'], $sut->getActorRole()->value);
                     break;
                 case 'actorAddressResponse':
-                    Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressCheckResponse());
+                    Assert::assertEquals($data['actorAddressResponse'], $sut->getActorAddressResponse()->value);
                     break;
                 default:
                     Assert::assertEquals($value, $sut->$key);
@@ -107,7 +107,7 @@ class RequestActivationKeyTest extends TestCase
                     Assert::assertNull($sut->getActorRole());
                     break;
                 case 'actorAddressResponse':
-                    Assert::assertNull($sut->getActorAddressCheckResponse());
+                    Assert::assertNull($sut->getActorAddressResponse());
                     break;
                 case 'needsCleansing':
                     Assert::assertFalse($sut->$key);

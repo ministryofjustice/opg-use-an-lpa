@@ -6,6 +6,8 @@ namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\ActorRole;
 use Actor\Workflow\RequestActivationKey;
+use Actor\Workflow\ActorAddressResponse;
+use Actor\Workflow\ActorType;
 use Common\Service\Log\EventCodes;
 use Common\Workflow\WorkflowState;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -28,9 +30,9 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
 
     public function handleGet(ServerRequestInterface $request): ResponseInterface
     {
-        if ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
+        if ($this->state($request)->getActorRole() === ActorType::DONOR) {
             $this->form->setData(['actor_role_radio' => 'Donor']);
-        } elseif ($this->state($request)->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
+        } elseif ($this->state($request)->getActorRole() === ActorType::ATTORNEY) {
             $this->form->setData(['actor_role_radio' => 'Attorney']);
         }
 
@@ -80,7 +82,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
             return 'lpa.add.check-details-and-consent';
         }
 
-        return $state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY
+        return $state->getActorRole() === ActorType::ATTORNEY
             ? 'lpa.add.donor-details'
             : 'lpa.add.attorney-details';
     }
@@ -91,7 +93,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
         return $this->hasFutureAnswersInState($state)
             ? 'lpa.add.check-details-and-consent'
             : $this->lastPageByPreviousAnswers(
-                $state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO
+                $state->getActorAddressResponse() === ActorAddressResponse::NO
             );
     }
 
@@ -104,7 +106,7 @@ class ActorRoleHandler extends AbstractCleansingDetailsHandler
     {
         $this->state($request)->setActorRole(
             $selected === 'Donor' ?
-                RequestActivationKey::ACTOR_TYPE_DONOR : RequestActivationKey::ACTOR_TYPE_ATTORNEY
+                ActorType::DONOR->value : ActorType::ATTORNEY->value
         );
         return $this->redirectToRoute($this->nextPage($this->state($request)));
     }
