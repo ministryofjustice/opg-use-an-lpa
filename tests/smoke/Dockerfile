@@ -7,6 +7,8 @@ FROM docker.io/php:8.4-cli-alpine@sha256:4f4fc56fe4ba7b7d241c371eda011b27ca4f3b2
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /composer /usr/bin/
 
+WORKDIR /app
+
 RUN set -xe \
   && apk add --update --no-cache chromium autoconf \
   && ln -s /usr/bin/chromium-browser /usr/bin/google-chrome-stable \
@@ -14,4 +16,8 @@ RUN set -xe \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
   && apk del autoconf
 
-WORKDIR /app
+COPY tests/smoke/composer.json tests/smoke/composer.lock /app/
+
+RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
+    composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --no-dev && \
+    composer check-platform-reqs

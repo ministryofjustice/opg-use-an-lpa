@@ -336,6 +336,18 @@ locals {
         value = "60"
       },
       {
+        name  = "CSP_ENFORCE",
+        value = tostring(var.csp_enforce)
+      },
+      {
+        name  = "CSP_REPORT_URI",
+        value = "https://${local.route53_fqdns.public_facing_view}"
+      },
+      {
+        name  = "CSP_IAP_DOMAIN",
+        value = tostring(var.csp_iap_domain)
+      },
+      {
         name  = "SUPPORT_DATASTORE_LPAS",
         value = tostring(var.feature_flags.support_datastore_lpas)
       },

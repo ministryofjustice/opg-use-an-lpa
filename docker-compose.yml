@@ -47,6 +47,7 @@ services:
       CONTEXT: "viewer"
       GOOGLE_ANALYTICS_ID: "UA-170469426-2"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
+      CSP_ENFORCE: "true"
 
       # Local only
       API_SERVICE_URL:
@@ -54,6 +55,9 @@ services:
       AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
+      CSP_REPORT_URI: http://localhost:9041
+      CSP_AUTH_DOMAIN:
+      CSP_IAP_DOMAIN:
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       PHP_IDE_CONFIG: serverName=viewer-app
       XDEBUG_CONFIG: client_host=host.docker.internal
@@ -97,6 +101,7 @@ services:
       CONTEXT: "actor"
       GOOGLE_ANALYTICS_ID: "UA-170469426-1"
       KMS_SESSION_CMK_ALIAS: "alias/viewer-sessions-cmk-alias"
+      CSP_ENFORCE: "true"
 
       # Feature flags
       ALLOW_MERIS_LPAS: "false"
@@ -108,6 +113,9 @@ services:
       AWS_ENDPOINT_KMS:
       AWS_ACCESS_KEY_ID: "devkey"
       AWS_SECRET_ACCESS_KEY: "secretdevkey"
+      CSP_REPORT_URI: http://localhost:9042
+      CSP_AUTH_DOMAIN:
+      CSP_IAP_DOMAIN:
       LOGGING_LEVEL: "100" # \Monolog\Logger::DEBUG
       PHP_IDE_CONFIG: serverName=actor-app
       XDEBUG_CONFIG: client_host=host.docker.internal
