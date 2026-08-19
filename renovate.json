@@ -271,6 +271,9 @@
     },
     {
       "description": "Disable psalm/plugin-phpunit >= 0.20.* (revisit when Psalm 7 comes out of beta)",
+      "matchManagers": [
+        "composer"
+      ],
       "matchPackageNames": [
         "psalm/plugin-phpunit"
       ],
