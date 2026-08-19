@@ -4,7 +4,8 @@
     "config:recommended",
     "schedule:earlyMondays",
     "helpers:pinGitHubActionDigests",
-    "docker:pinDigests"
+    "docker:pinDigests",
+    ":preserveSemverRanges"
   ],
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
