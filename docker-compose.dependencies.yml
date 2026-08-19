@@ -4,7 +4,7 @@ services:
   # Service overrides for dependency startup ordering
   viewer-app:
     environment:
-      API_SERVICE_URL: http://api-web
+      API_SERVICE_URL: http://api-web:8080
       PDF_SERVICE_URL: http://service-pdf
       AWS_ENDPOINT_KMS: http://localstack:4566
     depends_on:
@@ -17,7 +17,7 @@ services:
 
   actor-app:
     environment:
-      API_SERVICE_URL: http://api-web
+      API_SERVICE_URL: http://api-web:8080
       AWS_ENDPOINT_KMS: http://localstack:4566
     depends_on:
       redis:
