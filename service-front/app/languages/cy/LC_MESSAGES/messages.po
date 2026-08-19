@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-19 13:02+0000\n"
+"PO-Revision-Date: 2026-08-19 13:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1278,7 +1278,7 @@ msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn weithredol 
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
 msgid "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used (property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo a materion ariannol yn unig)"
+msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:108
 msgid "whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment (health and welfare <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
@@ -1924,9 +1924,7 @@ msgstr "wedi colli galluedd meddyliol"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:47
 msgid "have been declared bankrupt or have a debt relief order (property and finance attorneys only)"
-msgstr ""
-"wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion (atwrneiod eiddo\n"
-"a chyllid yn unig)"
+msgstr "wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion (atwrneiod eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:52
 msgid "were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the LPA)"
@@ -2851,7 +2849,7 @@ msgstr "E-bost"
 #: src/Actor/templates/actor/flash-messages.html.twig:4
 msgctxt "flashMessage"
 msgid "You've added %donor%'s %lpaType% LPA"
-msgstr "Rydych wedi ychwanegu atwrneiaeth arhosol %lpaType% %donor%"
+msgstr "Rydych wedi ychwanegu LPA %lpaType% %donor%"
 
 #. Cancelling viewer code
 #: src/Actor/src/Handler/CancelCodeHandler.php:74
@@ -4530,7 +4528,7 @@ msgstr "iechyd a lles"
 #: src/Actor/src/Handler/RemoveLpaHandler.php:120
 msgctxt "flashMessage"
 msgid "property and finance"
-msgstr "eiddo a materion ariannol"
+msgstr "eiddo ac arian"
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:129
 msgctxt "flashMessage"
@@ -4595,7 +4593,7 @@ msgstr "eiddo a materion ariannol"
 
 #: src/Actor/src/Handler/ResolveLpaTypeTrait/LpaTypeResolver.php:26
 msgid "property and finance"
-msgstr "eiddo a materion ariannol"
+msgstr "eiddo ac arian"
 
 #. Global
 #: src/Actor/templates/actor/form-error-messages.html.twig:4
