@@ -89,7 +89,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "!php"
+        "!docker.io/php"
       ]
     },
     {
@@ -110,7 +110,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "php"
+        "docker.io/php"
       ]
     },
     {
@@ -195,10 +195,7 @@
       "matchFileNames": [
         "service-front/app/composer.json"
       ],
-      "prPriority": 4,
-      "matchPackageNames": [
-        "!facile-it/php-openid-client"
-      ]
+      "prPriority": 4
     },
     {
       "description": [
@@ -221,10 +218,7 @@
       "matchFileNames": [
         "service-api/app/composer.json"
       ],
-      "prPriority": 4,
-      "matchPackageNames": [
-        "!facile-it/php-openid-client"
-      ]
+      "prPriority": 4
     },
     {
       "description": [
