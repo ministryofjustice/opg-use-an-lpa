@@ -28,21 +28,21 @@ final class CSPMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        // Analytics urls sourced from https://developers.google.com/tag-platform/security/guides/csp#google_analytics
         $csp  = "default-src 'none';";
-        $csp .= "script-src 'self' " .
-            "https://www.googletagmanager.com https://www.google-analytics.com 'nonce-" . (string) $this->nonce . "';";
+        $csp .= "script-src-elem 'self' https://www.googletagmanager.com 'nonce-" . (string) $this->nonce . "';";
         $csp .= "style-src 'self' 'nonce-" . (string) $this->nonce . "';";
         $csp .= "font-src 'self';";
         $csp .= "manifest-src 'self';";
         $csp .= "connect-src 'self' " .
-            'https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com;';
+            'https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com;';
 
         $iapSrc  = '';
         $iapView = $this->application === 'actor' ? 'lpa.view' : 'view-lpa';
         if ($request->getAttribute(RouteResult::class)->getMatchedRouteName() === $iapView) {
             $iapSrc = 'data: ' . $this->iapDomain;
         }
-        $csp .= "img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com " . $iapSrc . ';';
+        $csp .= "img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com " . $iapSrc . ';';
 
         // instead of setting form-action to null to work around inconsistant Chrome/Firefox implementations
         // lets just work out if we need to add the OIDC domain for this request.
