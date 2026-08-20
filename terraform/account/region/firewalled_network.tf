@@ -60,21 +60,7 @@ data "aws_route_tables" "firewalled_network_application" {
 }
 
 module "vpc_endpoints" {
-  source = "./modules/vpc_endpoints"
-  interface_endpoint_names = [
-    "ec2",
-    "ecr.api",
-    "ecr.dkr",
-    "execute-api",
-    "events",
-    "logs",
-    "rum",
-    "secretsmanager",
-    "ssm",
-    "xray",
-    "kms",
-    "monitoring",
-  ]
+  source                          = "./modules/vpc_endpoints"
   vpc_id                          = module.network.vpc.id
   application_subnets_cidr_blocks = module.network.application_subnets[*].cidr_block
   application_subnets_id          = module.network.application_subnets[*].id
