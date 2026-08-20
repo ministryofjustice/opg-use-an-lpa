@@ -55,8 +55,12 @@ export default class IapContainer extends HTMLElement {
     }
 
     _displayWait() {
-        const waitTmpl = document.getElementById(this.WAIT_TEMPLATE).content
+        const waitEle = document.getElementById(this.WAIT_TEMPLATE)
+        if (waitEle === null) {
+            return
+        }
 
+        const waitTmpl         = waitEle.content
         const spinner = this.querySelector('.iap-wait')
 
         if (spinner !== null) {
