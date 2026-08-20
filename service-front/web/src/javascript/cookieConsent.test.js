@@ -1,6 +1,7 @@
 import cookieConsent from './cookieConsent';
 import '@testing-library/jest-dom';
 import { getCookie, setConsentCookie } from './cookieHelper';
+
 const cookieBannerHtml = `
 <div class="govuk-cookie-banner " data-nosnippet="" role="region" aria-label="Cookies on Use a lasting power of attorney" hidden>
         <div class="govuk-cookie-banner__message govuk-width-container">
@@ -61,6 +62,9 @@ describe('When the cookie banner is initiated', () => {
   });
   describe('and the accept button has been clicked', () => {
     beforeEach(() => {
+      window.gaConfig = {
+        uaID: 'UA-12345',
+      };
       getCookie.mockReturnValueOnce(null);
       getCookie.mockReturnValueOnce(null);
     });
@@ -117,7 +121,7 @@ describe('When the cookie banner is initiated', () => {
       getCookie.mockReturnValueOnce('{ "essential": true, "usage": true }');
       getCookie.mockReturnValueOnce('true');
     });
-    test('it should setup useAnaltics', () => {
+    test('it should setup useAnalytics', () => {
       expect(window.useAnalytics).toBeUndefined();
       document.body.innerHTML = cookieBannerHtml;
       new cookieConsent(document.querySelector('.govuk-cookie-banner'));
@@ -125,13 +129,20 @@ describe('When the cookie banner is initiated', () => {
     });
   });
   afterEach(() => {
+    window.useAnalytics = undefined;
+    window.gaConfig = undefined;
     jest.clearAllMocks();
   });
 });
 
 describe('When the cookie banner is initiated on the cookies page', () => {
   describe('and I am on the cookies page but have not seen the message', () => {
-    test('it should setup useAnaltics', () => {
+    beforeEach(() => {
+      window.gaConfig = {
+        uaID: 'UA-12345',
+      };
+    });
+    test('it should setup useAnalytics', () => {
 
       getCookie.mockReturnValueOnce(null);
       getCookie.mockReturnValueOnce(null);
@@ -157,6 +168,8 @@ describe('When the cookie banner is initiated on the cookies page', () => {
     });
   });
   afterEach(() => {
+    window.useAnalytics = undefined;
+    window.gaConfig = undefined;
     jest.clearAllMocks();
   });
 });
