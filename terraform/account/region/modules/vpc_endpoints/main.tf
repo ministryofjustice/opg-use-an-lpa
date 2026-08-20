@@ -27,3 +27,22 @@ resource "aws_security_group_rule" "vpc_endpoints_public_subnet_ingress" {
   cidr_blocks       = var.public_subnets_cidr_blocks
   description       = "Allow Services in Public Subnets of ${var.region_name} to connect to VPC Interface Endpoints"
 }
+
+data "aws_iam_policy_document" "allow_account_access" {
+  provider = aws.region
+  statement {
+    sid       = "Allow-callers-from-specific-account"
+    effect    = "Allow"
+    actions   = ["*"]
+    resources = ["*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:PrincipalAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
+}
