@@ -11,7 +11,7 @@ export default class CookieConsent {
 
     this._toggleCookieMessage(!isAnalyticsCookieSet && !isInCookiesPath);
 
-    if (!isAnalyticsCookieSet && isInCookiesPath) { 
+    if (!isAnalyticsCookieSet && isInCookiesPath) {
       setConsentCookie(false);
     }
 
@@ -31,6 +31,9 @@ export default class CookieConsent {
         if (e.target.value === 'accept') {
           this._toggleCookieMessage(false);
           setConsentCookie(true);
+
+          // start analytics if they've agreed
+          this._setupAnalytics();
         }
         if (e.target.value === 'reject') {
           this._toggleCookieMessage(false);
