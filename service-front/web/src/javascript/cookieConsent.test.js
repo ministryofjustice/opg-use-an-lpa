@@ -129,12 +129,19 @@ describe('When the cookie banner is initiated', () => {
     });
   });
   afterEach(() => {
+    window.useAnalytics = undefined;
+    window.gaConfig = undefined;
     jest.clearAllMocks();
   });
 });
 
 describe('When the cookie banner is initiated on the cookies page', () => {
   describe('and I am on the cookies page but have not seen the message', () => {
+    beforeEach(() => {
+      window.gaConfig = {
+        uaID: 'UA-12345',
+      };
+    });
     test('it should setup useAnalytics', () => {
 
       getCookie.mockReturnValueOnce(null);
@@ -161,6 +168,8 @@ describe('When the cookie banner is initiated on the cookies page', () => {
     });
   });
   afterEach(() => {
+    window.useAnalytics = undefined;
+    window.gaConfig = undefined;
     jest.clearAllMocks();
   });
 });
