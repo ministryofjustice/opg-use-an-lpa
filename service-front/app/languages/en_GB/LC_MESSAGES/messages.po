@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 18:05+0000\n"
+"PO-Revision-Date: 2026-08-21 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1622,11 +1622,11 @@ msgstr "Request another activation key"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:3
 msgid "Are you sure you want to remove this LPA?"
-msgstr "Are you sure you want to remove this LPA?"
+msgstr "Are you sure you want to remove this <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:12
 msgid "Are you sure you want to remove %firstname% %surname%'s LPA?"
-msgstr "Are you sure you want to remove %firstname% %surname%'s LPA?"
+msgstr "Are you sure you want to remove %firstname% %surname%’s <abbr title=\"lasting power of attorney\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:18
 msgid "LPA type:"
@@ -1648,11 +1648,11 @@ msgstr "all access codes you’ve created for this LPA will be valid until they 
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
-msgstr "you will not be able to see how the LPA is being used or has been used"
+msgstr "you will not be able to see how the <abbr title=\"lasting power of attorney\">LPA</abbr> is being used or has been used"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
-msgstr "you will need to request a new activation key if you want to add the LPA back to your account"
+msgstr "you’ll need to request a new activation key if you want to add the <abbr title=\"lasting power of attorney\">LPA</abbr> back to your account"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:49
 msgid "Yes, remove LPA"
@@ -2082,7 +2082,7 @@ msgstr "You’ve already added this LPA to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
-msgstr "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
+msgstr "You’ve already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 msgid "You can <a href=\"%view-lpa%\" class=\"govuk-link\">see this LPA</a> now or <a href=\"%add-lpa%\" class=\"govuk-link\">add another LPA</a> to your account."
@@ -2592,7 +2592,7 @@ msgstr "Check with these people to see who has the <abbr title=\"lasting power o
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
-msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a>."
+msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or a solicitor can make <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a>."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
@@ -2655,7 +2655,7 @@ msgstr "your name"
 
 #: src/Actor/templates/actor/deleted-account-confirmation.html.twig:13
 msgid "We've deleted your account"
-msgstr "We've deleted your account"
+msgstr "We’ve deleted your account"
 
 #: src/Actor/templates/actor/deleted-account-confirmation.html.twig:15
 msgid "To use a lasting power of attorney online in future, you’ll need to create a new account."
@@ -2836,11 +2836,11 @@ msgstr "We’ve signed you out"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:10
 msgid "We've signed you out"
-msgstr "We've signed you out"
+msgstr "We’ve signed you out"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:11
 msgid "For your security, we've signed you out of this service because you did not use it for 20 minutes."
-msgstr "For your security, we've signed you out of this service because you did not use it for 20 minutes."
+msgstr "We’ve signed you out of the service for security reasons, because you did not use it for 20 minutes."
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:12
 msgid "Sign in"
