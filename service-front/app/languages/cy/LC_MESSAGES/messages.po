@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 13:59+0000\n"
+"PO-Revision-Date: 2026-08-21 14:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2864,10 +2864,12 @@ msgid "We’ve signed you out"
 msgstr "Rydym wedi eich allgofnodi"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:10
+#, fuzzy
 msgid "We've signed you out"
 msgstr "Rydym wedi eich allgofnodi"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:11
+#, fuzzy
 msgid "For your security, we've signed you out of this service because you did not use it for 20 minutes."
 msgstr "Rydym wedi eich allgofnodi o’r gwasanaeth am resymau diogelwch, oherwydd ni wnaethoch ei ddefnyddio am 20 munud."
 
