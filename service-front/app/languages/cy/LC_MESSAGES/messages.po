@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 10:09+0000\n"
+"PO-Revision-Date: 2026-08-21 10:16+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2335,7 +2335,7 @@ msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
 #: src/Actor/templates/actor/form-error-messages.html.twig:17
 msgctxt "error"
 msgid "Enter an activation key in the correct format"
-msgstr "Nodwch allwedd cadarnhau cyfrif yn y fformat cywir"
+msgstr "Nodwch y cod actifadu yn y fformat cywir"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:18
@@ -2377,7 +2377,7 @@ msgstr "Mae cyfeirnod yr LPA a roesoch yn rhy hir"
 #: src/Actor/templates/actor/form-error-messages.html.twig:24
 msgctxt "error"
 msgid "Enter the LPA reference number in the correct format"
-msgstr "Nodwch y cyfeirnod LPA yn y fformat cywir"
+msgstr "Nodwch gyfeirnod yr LPA yn y fformat cywir"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:25
@@ -2419,7 +2419,7 @@ msgstr "Rhaid i’r dyddiad geni fod yn y gorffennol"
 #: src/Actor/templates/actor/form-error-messages.html.twig:31
 msgctxt "error"
 msgid "Check your date of birth is correct - you cannot be an attorney or donor if you’re under 18"
-msgstr "Gwnewch yn si_r bod eich dyddiad geni yn gywir - ni allwch fod yn atwrnai neu’n rhoddwr os ydych o dan 18 oed"
+msgstr "Gwnewch yn siŵr bod eich dyddiad geni yn gywir – ni chewch fod yn atwrnai neu’n rhoddwr os ydych o dan 18 oed"
 
 #. Triage page
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
@@ -3267,7 +3267,7 @@ msgstr "Nid yw’r dudalen hon ar gael mwyach ac mae wedi’i dileu’n barhaol.
 #: src/Common/templates/error/404.html.twig:15
 #: src/Common/templates/error/410.html.twig:15
 msgid "If you entered a web address, check it's correct."
-msgstr "Os bu ichi nodi cyfeiriad gwe, gwiriwch eich bod wedi’i nodi’n gywir."
+msgstr "Os gwnaethoch nodi cyfeiriad gwe, gwiriwch eich bod wedi’i nodi’n gywir."
 
 #: src/Common/templates/error/404.html.twig:18
 #: src/Common/templates/error/410.html.twig:18
