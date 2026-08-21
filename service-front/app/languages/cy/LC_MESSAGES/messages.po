@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-19 13:44+0000\n"
+"PO-Revision-Date: 2026-08-21 10:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2105,6 +2105,7 @@ msgid "You've already added this LPA to your account"
 msgstr "Rydym wedi dileu LPA o’ch cyfrif"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
+#, fuzzy
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 msgstr "Rydych eisoes wedi ychwanegu’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon at eich cyfrif"
 
@@ -2340,13 +2341,13 @@ msgstr "Nodwch allwedd cadarnhau cyfrif yn y fformat cywir"
 #: src/Actor/templates/actor/form-error-messages.html.twig:18
 msgctxt "error"
 msgid "The activation key you entered is too long. Check that you only entered the 12 letters and numbers that follow the C-"
-msgstr "Mae’r cod actifadu a gofnodwyd gennych yn rhy hir. Gwiriwch mai dim ond y 12 llythyren a rhifau sy’n dilyn C-"
+msgstr "Mae’r cod actifadu a roesoch yn rhy hir. Gwiriwch mai dim ond y 12 llythyren a rhifau sy’n dilyn C-"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:19
 msgctxt "error"
 msgid "The activation key you entered is too long"
-msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy hir"
+msgstr "Mae’r cod actifadu a roesoch yn rhy hir"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:20
@@ -2370,7 +2371,7 @@ msgstr "Mae’r cyfeirnod LPA y bu i chi ei nodi yn rhy fyr"
 #: src/Actor/templates/actor/form-error-messages.html.twig:37
 msgctxt "error"
 msgid "The LPA reference number you entered is too long"
-msgstr "Mae’r cyfeirnod LPA y bu i chi ei nodi yn rhy hir"
+msgstr "Mae cyfeirnod yr LPA a roesoch yn rhy hir"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:24
@@ -4161,7 +4162,7 @@ msgstr "Rhowch eich cod mynediad LPA"
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:8
 msgctxt "error"
 msgid "The LPA access code you entered is too long"
-msgstr "Mae’r cod mynediad LPA rydych wedi’i nodi yn rhy hir"
+msgstr "Mae cod mynediad yr LPA a roesoch yn rhy hir"
 
 #. ShareCode
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:9
@@ -4699,7 +4700,7 @@ msgstr "Na, rhoi cynnig arall arni"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
 msgid "you’re a donor or an attorney on the LPA (not a replacement attorney)"
-msgstr "os ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr LPA (nid yn atwrnai wrth gefn)"
+msgstr "ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr LPA (nid yn atwrnai wrth gefn)"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
 msgid "Details you’ll need to give us"
