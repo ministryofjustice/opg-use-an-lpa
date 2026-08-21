@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-18 18:05+0000\n"
+"PO-Revision-Date: 2026-08-21 10:09+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2082,7 +2082,7 @@ msgstr "You’ve already added this LPA to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
-msgstr "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
+msgstr "You’ve already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:38
 msgid "You can <a href=\"%view-lpa%\" class=\"govuk-link\">see this LPA</a> now or <a href=\"%add-lpa%\" class=\"govuk-link\">add another LPA</a> to your account."
