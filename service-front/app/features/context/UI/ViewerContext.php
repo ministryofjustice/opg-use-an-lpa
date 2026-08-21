@@ -337,12 +337,16 @@ class ViewerContext implements Context
         Assert::assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
     }
 
-    #[When('/^I choose to download a document version of the LPA again$/')]
-    public function iChooseToDownloadADocumentVersionOfTheLPAAgain(): void
+    #[When('/^I choose to download a document version of the LPA second time$/')]
+    public function iChooseToDownloadADocumentVersionOfTheLPASecondTime(): void
     {
-        $this->ui->visit('/view-lpa');
-        $this->ui->assertPageAddress('/view-lpa');
-        $this->ui->pressButton('Download this LPA summary');
+        $this->ui->visit('/download-lpa');
+    }
+
+    #[When('/^I choose to download a document version of the LPA third time$/')]
+    public function iChooseToDownloadADocumentVersionOfTheLPAThirdTime(): void
+    {
+        $this->ui->visit('/download-lpa');
     }
 
     #[When('/^I click the (.*) link on the page$/')]

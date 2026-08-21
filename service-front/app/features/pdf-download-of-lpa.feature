@@ -17,9 +17,9 @@ Feature: PDF download
     Then a PDF is downloaded
 
   @ui
-  Scenario: The user cannot download the LPA more than twice within 15 seconds
+  Scenario: The user is rate limited after downloading the LPA twice within 15 seconds
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
-    And I choose to download a document version of the LPA again
-    And I choose to download a document version of the LPA again
+    And I choose to download a document version of the LPA second time
+    And I choose to download a document version of the LPA third time
     Then I am rate limited from downloading the LPA
