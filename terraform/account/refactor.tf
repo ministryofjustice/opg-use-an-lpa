@@ -109,8 +109,223 @@ moved {
 }
 
 moved {
-  from = aws_vpc_endpoint.private["ec2"]
-  to   = module.eu_west_1.aws_vpc_endpoint.private["ec2"]
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ec2"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ec2"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ecr.api"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ecr["api"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ecr.api"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ecr["api"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ecr.dkr"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ecr["dkr"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ecr.dkr"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ecr["dkr"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["execute-api"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.execute_api
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["execute-api"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.execute_api
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["events"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.events
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["events"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.events
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["logs"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.logs
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["logs"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.logs
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["secretsmanager"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.secretsmanager
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["secretsmanager"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.secretsmanager
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ssm"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ssm["ssm"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ssm"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm["ssm"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["xray"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.xray
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["xray"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.xray
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["kms"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.kms
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["kms"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.kms
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["monitoring"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.monitoring
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["monitoring"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.monitoring
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ec2"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ec2"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ecr.api"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ecr["api"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ecr.api"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ecr["api"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ecr.dkr"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ecr["dkr"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ecr.dkr"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ecr["dkr"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["execute-api"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.execute_api
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["execute-api"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.execute_api
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["events"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.events
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["events"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.events
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["logs"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.logs
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["logs"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.logs
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["secretsmanager"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.secretsmanager
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["secretsmanager"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.secretsmanager
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ssm"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ssm["ssm"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ssm"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm["ssm"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["xray"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.xray
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["xray"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.xray
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["kms"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.kms
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["kms"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.kms
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["monitoring"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.monitoring
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["monitoring"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.monitoring
 }
 
 moved {

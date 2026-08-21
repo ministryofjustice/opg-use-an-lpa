@@ -1,8 +1,3 @@
-variable "interface_endpoint_names" {
-  description = "a list of the interfaces to create VPC endpoints for"
-  type        = list(string)
-}
-
 variable "vpc_id" {
   description = "id of the VPC to create interface endpoints in"
   type        = string
@@ -25,6 +20,15 @@ variable "public_subnets_cidr_blocks" {
 
 variable "application_route_tables" {
   type = any
+}
+
+variable "management_account_id" {
+  type = string
+}
+
+variable "execute_api_account_ids" {
+  description = "AWS account IDs whose API Gateway resources may be called through the execute-api VPC endpoint"
+  type        = list(string)
 }
 
 variable "permitted_s3_buckets" {
