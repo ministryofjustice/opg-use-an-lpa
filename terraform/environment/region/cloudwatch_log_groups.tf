@@ -37,3 +37,21 @@ EOF
 
   provider = aws.region
 }
+
+resource "aws_cloudwatch_query_definition" "csp_reports" {
+  name            = "Application Logs/${var.environment_name} CSP reports"
+  log_group_names = [aws_cloudwatch_log_group.application_logs.name]
+
+  query_string = <<EOF
+fields @timestamp, jsonParse(request_body) as report,
+    report.`csp-report`.`violated-directive` as violated,
+    report.`csp-report`.`blocked-uri` as blocked,
+    report.`csp-report`.`document-uri` as document,
+    report.`csp-report`.`source-file` as source
+| display @timestamp, violated, blocked, document, source
+| filter type == "csp_report"
+| sort @timestamp desc
+EOF
+
+  provider = aws.region
+}
