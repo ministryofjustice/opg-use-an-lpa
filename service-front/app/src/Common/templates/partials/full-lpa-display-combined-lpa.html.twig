@@ -29,7 +29,7 @@
                     <div class="govuk-panel__body">
                         <p class="govuk-!-font-size-24">
                             {% if lpa.lpaType.propertyAndAffairs %}
-                                {% if lpa.whenTheLpaCanBeUsed.whenCapacityLost %}
+                                {% if lpa.whenTheLpaCanBeUsed.whenHasLostCapacity %}
                                     {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can only be used when the donor has lost capacity{% endtrans %}
                                 {% elseif lpa.whenTheLpaCanBeUsed.unknown %}
                                     {% trans %}This <abbr title="lasting power of attorney">LPA</abbr> can be used as soon as it's registered unless instructions say otherwise{% endtrans %}
