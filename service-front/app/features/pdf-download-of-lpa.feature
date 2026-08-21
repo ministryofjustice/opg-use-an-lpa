@@ -15,3 +15,10 @@ Feature: PDF download
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
     Then a PDF is downloaded
+
+  @ui
+  Scenario: The user cannot download the LPA more than once within 60 seconds
+    Given I am viewing a valid LPA
+    When I choose to download a document version of the LPA
+    And I choose to download a document version of the LPA again
+    Then I am rate limited from downloading the LPA

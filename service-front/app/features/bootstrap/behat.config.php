@@ -123,6 +123,23 @@ return [
                 'requests_per_interval' => 4,
             ],
         ],
+        'download_lpa'        => [
+            'type'    => 'keyed',
+            'storage' => [
+                'adapter' => Memory::class,
+                'options' => [
+                    'memory_limit'  => '96M',
+                    'ttl'           => 60,
+                    'persistent_id' => new MergeRemoveKey(),
+                    'server'        => new MergeRemoveKey(),
+                    'lib_options'   => new MergeRemoveKey(),
+                ],
+            ],
+            'options' => [
+                'interval'              => 60,
+                'requests_per_interval' => 1,
+            ],
+        ],
     ],
     'twig'                                   => [
         'strict_variables' => true,

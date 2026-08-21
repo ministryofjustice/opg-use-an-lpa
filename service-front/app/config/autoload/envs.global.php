@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Laminas\Cache\Storage\Adapter\Redis as RedisAdapter;
+
 return [
     'application' => getenv('CONTEXT') ?: null,
     'version'     => getenv('CONTAINER_VERSION') ?: 'dev',
@@ -26,20 +28,20 @@ return [
     'session'     => [
 
         // Time in seconds after which a session will expire.
-        'expires' => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
+        'expires'          => 60 * getenv('SESSION_EXPIRES') ?: 1200,             // default to 20 minutes
 
         // Time in seconds before a users session will expire
         // whereby a popup window will appear to warn them
-        'expiry_warning' => 60 * getenv('SESSION_EXPIRY_WARNING') ?: 300,  // default to 5 minutes
-        'cookie_ttl'     => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
-        'key'            => [
+        'expiry_warning'   => 60 * getenv('SESSION_EXPIRY_WARNING') ?: 300,  // default to 5 minutes
+        'cookie_ttl'       => 60 * getenv('SESSION_COOKIE_LIFETIME') ?: 86400, // default to one day
+        'key'              => [
             // KMS alias to use for data key generation.
             'alias' => getenv('KMS_SESSION_CMK_ALIAS') ?: null,
         ],
 
         // The name of the session cookie. This name must comply with
         // the syntax outlined in https://tools.ietf.org/html/rfc6265.html
-        'cookie_name' => '__Host-session',
+        'cookie_name'      => '__Host-session',
 
         // The (sub)domain that the cookie is available to. Setting this
         // to a subdomain (such as 'www.example.com') will make the cookie
@@ -48,15 +50,15 @@ return [
         // whole domain (including all subdomains of it), simply set the
         // value to the domain name ('example.com', in this case).
         // Leave this null to use browser default (current hostname).
-        'cookie_domain' => null,
+        'cookie_domain'    => null,
 
         // The path prefix of the cookie domain to which it applies.
-        'cookie_path' => '/',
+        'cookie_path'      => '/',
 
         // Indicates that the cookie should only be transmitted over a
         // secure HTTPS connection from the client. When set to TRUE, the
         // cookie will only be set if a secure connection exists.
-        'cookie_secure' => getenv('COOKIE_SECURE') === 'false' ? false : true,
+        'cookie_secure'    => getenv('COOKIE_SECURE') === 'false' ? false : true,
 
         // When TRUE the cookie will be made accessible only through the
         // HTTP protocol. This means that the cookie won't be accessible
@@ -68,7 +70,7 @@ return [
         // of "nocache", "public", "private", or "private_no_expire";
         // semantics are the same as outlined in
         // http://php.net/session_cache_limiter
-        'cache_limiter' => 'nocache',
+        'cache_limiter'    => 'nocache',
 
         // An integer value indicating when the resource to which the session
         // applies was last modified. If not provided, it uses the last
@@ -76,7 +78,7 @@ return [
         // - the public/index.php file of the current working directory
         // - the index.php file of the current working directory
         // - the current working directory
-        'last_modified' => null,
+        'last_modified'    => null,
 
         // A boolean value indicating whether or not the session cookie
         // should persist. By default, this is disabled (false); passing
@@ -88,7 +90,7 @@ return [
         // session instance's `persistSessionFor(int $duration)` method. When
         // that method has been called, the engine will use that value even if
         // the below flag is toggled off.
-        'persistent' => false,
+        'persistent'       => false,
     ],
     'analytics'   => [
         'uaid' => getenv('GOOGLE_ANALYTICS_ID') ?: '',
@@ -102,7 +104,7 @@ return [
         'viewer_code_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'adapter' => RedisAdapter::class,
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
@@ -124,7 +126,7 @@ return [
         'actor_code_failure'  => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'adapter' => RedisAdapter::class,
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
@@ -146,7 +148,7 @@ return [
         'actor_login_failure' => [
             'type'    => 'keyed',
             'storage' => [
-                'adapter' => \Laminas\Cache\Storage\Adapter\Redis::class,
+                'adapter' => RedisAdapter::class,
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
@@ -163,6 +165,28 @@ return [
             'options' => [
                 'interval'              => 60,
                 'requests_per_interval' => 4,
+            ],
+        ],
+        'download_lpa'        => [
+            'type'    => 'keyed',
+            'storage' => [
+                'adapter' => RedisAdapter::class,
+                'options' => [
+                    'ttl'           => 60,
+                    'server'        => [
+                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                    ],
+                    'persistent_id' => 'brute-force-cache-replication-group',
+                    'lib_options'   => [
+                        Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval'              => 60,
+                'requests_per_interval' => 1,
             ],
         ],
     ],

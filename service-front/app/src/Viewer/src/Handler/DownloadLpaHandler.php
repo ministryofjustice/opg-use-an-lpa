@@ -11,6 +11,8 @@ use Common\Service\Features\FeatureEnabled;
 use Common\Service\Lpa\LpaService;
 use Common\Service\Pdf\PdfResponse;
 use Common\Service\Pdf\PdfService;
+use Common\Service\Security\RateLimitService;
+use Common\Middleware\Security\UserIdentificationMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -28,6 +30,7 @@ class DownloadLpaHandler implements RequestHandlerInterface, SessionAware
         private FeatureEnabled $featureEnabled,
         private LpaService $lpaService,
         private PdfService $pdfService,
+        private RateLimitService $downloadRateLimiter,
     ) {
     }
 
@@ -46,6 +49,10 @@ class DownloadLpaHandler implements RequestHandlerInterface, SessionAware
 
             throw new SessionTimeoutException();
         }
+
+        $this->downloadRateLimiter->limit(
+            $request->getAttribute(UserIdentificationMiddleware::IDENTIFY_ATTRIBUTE)
+        );
 
         $lpa    = $this->lpaService->getLpaByCode($code, $surname, null);
         $images = null;
