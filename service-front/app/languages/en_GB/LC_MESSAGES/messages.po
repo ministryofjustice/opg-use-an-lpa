@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 13:59+0000\n"
+"PO-Revision-Date: 2026-08-21 14:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2836,11 +2836,11 @@ msgstr "We’ve signed you out"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:10
 msgid "We've signed you out"
-msgstr "We've signed you out"
+msgstr "We’ve signed you out"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:11
 msgid "For your security, we've signed you out of this service because you did not use it for 20 minutes."
-msgstr "For your security, we've signed you out of this service because you did not use it for 20 minutes."
+msgstr "We’ve logged you out of the service for security reasons, because you did not use it for 20 minutes."
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:12
 msgid "Sign in"
