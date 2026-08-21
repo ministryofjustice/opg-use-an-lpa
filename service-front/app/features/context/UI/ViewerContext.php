@@ -340,8 +340,8 @@ class ViewerContext implements Context
     #[When('/^I choose to download a document version of the LPA again$/')]
     public function iChooseToDownloadADocumentVersionOfTheLPAAgain(): void
     {
+        $this->ui->visit('/view-lpa');
         $this->ui->assertPageAddress('/view-lpa');
-
         $this->ui->pressButton('Download this LPA summary');
     }
 

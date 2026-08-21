@@ -136,8 +136,8 @@ return [
                 ],
             ],
             'options' => [
-                'interval'              => 60,
-                'requests_per_interval' => 1,
+                'interval'              => 15,
+                'requests_per_interval' => 2,
             ],
         ],
     ],

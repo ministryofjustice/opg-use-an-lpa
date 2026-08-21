@@ -1,4 +1,4 @@
-@viewer @pdfdownload
+@viewer @pdfdownload @PDF
 Feature: PDF download
   As a viewer of a LPA
   I can download that LPA as PDF document
@@ -17,8 +17,9 @@ Feature: PDF download
     Then a PDF is downloaded
 
   @ui
-  Scenario: The user cannot download the LPA more than once within 60 seconds
+  Scenario: The user cannot download the LPA more than twice within 15 seconds
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
+    And I choose to download a document version of the LPA again
     And I choose to download a document version of the LPA again
     Then I am rate limited from downloading the LPA
