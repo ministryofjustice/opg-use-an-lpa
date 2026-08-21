@@ -29,7 +29,23 @@ resource "aws_vpc_endpoint_policy" "ecr" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["ecr:*"],
-        "Resource" : "*"
+        "Resource" : [
+          "arn:aws:ecr:${var.region_name}:${data.aws_caller_identity.current.account_id}:*",
+          "arn:aws:ecr:${var.region_name}:${var.management_account_id}:*"
+        ]
+      },
+      {
+        "Sid" : "AllowGetAuthToken",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        },
+        "Action" : [
+          "ecr:GetAuthorizationToken"
+        ],
+        "Resource" : [
+          "*",
+        ]
       }
     ]
   })

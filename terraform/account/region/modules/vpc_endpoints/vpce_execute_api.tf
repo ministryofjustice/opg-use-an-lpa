@@ -22,7 +22,7 @@ resource "aws_vpc_endpoint_policy" "execute_api" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["execute-api:*"],
-        "Resource" : "*"
+        "Resource" : [for account_id in var.execute_api_account_ids : "arn:aws:execute-api:${var.region_name}:${account_id}:*"]
       }
     ]
   })

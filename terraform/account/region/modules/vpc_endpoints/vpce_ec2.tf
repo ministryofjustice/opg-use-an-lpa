@@ -1,10 +1,10 @@
 locals {
-  ssm_endpoints = toset(["ssm", "ssm-contacts", "ssm-incidents"])
+  ec2_endpoints = toset(["ec2", "ec2messages"])
 }
 
-resource "aws_vpc_endpoint" "ssm" {
+resource "aws_vpc_endpoint" "ec2" {
   provider = aws.region
-  for_each = local.ssm_endpoints
+  for_each = local.ec2_endpoints
 
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${var.region_name}.${each.value}"
@@ -15,11 +15,11 @@ resource "aws_vpc_endpoint" "ssm" {
   tags                = { Name = "${each.value}-private" }
 }
 
-resource "aws_vpc_endpoint_policy" "ssm" {
+resource "aws_vpc_endpoint_policy" "ec2" {
   provider = aws.region
-  for_each = local.ssm_endpoints
+  for_each = local.ec2_endpoints
 
-  vpc_endpoint_id = aws_vpc_endpoint.ssm[each.value].id
+  vpc_endpoint_id = aws_vpc_endpoint.ec2[each.value].id
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
@@ -30,7 +30,7 @@ resource "aws_vpc_endpoint_policy" "ssm" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["${each.value}:*"],
-        "Resource" : "arn:aws:${each.value}:${var.region_name}:${data.aws_caller_identity.current.account_id}:*"
+        "Resource" : "*"
       }
     ]
   })

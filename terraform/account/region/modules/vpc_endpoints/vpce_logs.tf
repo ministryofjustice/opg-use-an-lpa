@@ -22,7 +22,7 @@ resource "aws_vpc_endpoint_policy" "logs" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["logs:*"],
-        "Resource" : "*"
+        "Resource" : "arn:aws:logs:${var.region_name}:${data.aws_caller_identity.current.account_id}:*"
       }
     ]
   })

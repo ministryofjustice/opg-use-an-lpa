@@ -21,8 +21,7 @@ resource "aws_vpc_endpoint_policy" "monitoring" {
         "Principal" : {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
-        # the "monitoring" VPC endpoint serves the cloudwatch API namespace
-        "Action" : ["monitoring:*", "cloudwatch:*"],
+        "Action" : ["cloudwatch:*"],
         "Resource" : "*"
       }
     ]

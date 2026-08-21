@@ -22,7 +22,9 @@ resource "aws_vpc_endpoint_policy" "events" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["events:*"],
-        "Resource" : "*"
+        "Resource" : [
+          "arn:aws:events:${var.region_name}:${data.aws_caller_identity.current.account_id}:*",
+        ]
       }
     ]
   })

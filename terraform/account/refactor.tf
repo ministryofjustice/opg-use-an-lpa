@@ -109,6 +109,16 @@ moved {
 }
 
 moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ec2"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ec2"]
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ec2["ec2"]
+}
+
+moved {
   from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ecr.api"]
   to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ecr["api"]
 }
@@ -170,12 +180,12 @@ moved {
 
 moved {
   from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.private["ssm"]
-  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ssm
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint.ssm["ssm"]
 }
 
 moved {
   from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ssm"]
-  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm
+  to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm["ssm"]
 }
 
 moved {
@@ -206,6 +216,16 @@ moved {
 moved {
   from = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["monitoring"]
   to   = module.eu_west_1[0].module.vpc_endpoints.aws_vpc_endpoint_policy.monitoring
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ec2"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ec2["ec2"]
+}
+
+moved {
+  from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ec2"]
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ec2["ec2"]
 }
 
 moved {
@@ -270,12 +290,12 @@ moved {
 
 moved {
   from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.private["ssm"]
-  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ssm
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint.ssm["ssm"]
 }
 
 moved {
   from = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.private["ssm"]
-  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm
+  to   = module.eu_west_2[0].module.vpc_endpoints.aws_vpc_endpoint_policy.ssm["ssm"]
 }
 
 moved {

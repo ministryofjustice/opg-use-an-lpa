@@ -22,7 +22,7 @@ resource "aws_vpc_endpoint_policy" "kms" {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["kms:*"],
-        "Resource" : "*"
+        "Resource" : "arn:aws:kms:${var.region_name}:${data.aws_caller_identity.current.account_id}:*"
       }
     ]
   })

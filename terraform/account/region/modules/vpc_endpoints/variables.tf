@@ -22,6 +22,15 @@ variable "application_route_tables" {
   type = any
 }
 
+variable "management_account_id" {
+  type = string
+}
+
+variable "execute_api_account_ids" {
+  description = "AWS account IDs whose API Gateway resources may be called through the execute-api VPC endpoint"
+  type        = list(string)
+}
+
 variable "permitted_s3_buckets" {
   type        = list(string)
   default     = []

@@ -10,5 +10,26 @@ resource "aws_vpc_endpoint" "dynamodb" {
 resource "aws_vpc_endpoint_policy" "dynamodb" {
   provider        = aws.region
   vpc_endpoint_id = aws_vpc_endpoint.dynamodb.id
-  policy          = data.aws_iam_policy_document.allow_account_access.json
+  policy          = data.aws_iam_policy_document.dynamodb_gateway_endpoint.json
+}
+
+data "aws_iam_policy_document" "dynamodb_gateway_endpoint" {
+  provider = aws.region
+  statement {
+    sid     = "Allow-callers-from-specific-account"
+    effect  = "Allow"
+    actions = ["dynamodb:*"]
+    resources = [
+      "arn:aws:dynamodb:${var.region_name}:${data.aws_caller_identity.current.account_id}:table/*"
+    ]
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "aws:PrincipalAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
 }

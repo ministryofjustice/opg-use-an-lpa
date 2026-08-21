@@ -21,7 +21,13 @@ resource "aws_vpc_endpoint_policy" "xray" {
         "Principal" : {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
-        "Action" : ["xray:*"],
+        "Action" : [
+          "xray:GetSamplingRules",
+          "xray:GetSamplingStatisticSummaries",
+          "xray:GetSamplingTargets",
+          "xray:PutTelemetryRecords",
+          "xray:PutTraceSegments"
+        ],
         "Resource" : "*"
       }
     ]
