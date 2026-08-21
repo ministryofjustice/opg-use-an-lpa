@@ -178,5 +178,27 @@ return [
                 'requests_per_interval' => 4,
             ],
         ],
+        'download_lpa'        => [
+            'type'    => 'keyed',
+            'storage' => [
+                'adapter' => RedisCache::class,
+                'options' => [
+                    'ttl'           => 60,
+                    'server'        => [
+                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
+                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
+                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                    ],
+                    'persistent_id' => 'brute-force-cache-replication-group',
+                    'lib_options'   => [
+                        Redis::OPT_SERIALIZER => Redis::SERIALIZER_PHP,
+                    ],
+                ],
+            ],
+            'options' => [
+                'interval'              => 15,
+                'requests_per_interval' => 2,
+            ],
+        ],
     ],
 ];
