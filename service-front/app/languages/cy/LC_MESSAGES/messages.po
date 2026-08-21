@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 10:16+0000\n"
+"PO-Revision-Date: 2026-08-21 10:39+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1745,7 +1745,7 @@ msgstr "Beth yw cyfeirnod yr atwrneiaeth arhosol (LPA)?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
-msgstr "Cael hyd i’ch cyfeirnod LPA"
+msgstr "Ble i ddod o hyd i gyfeirnod yr LPA"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
 msgid "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
@@ -1761,9 +1761,8 @@ msgid "LPA reference numbers are 12 numbers long, for example 7000-0000-0000.<br
 msgstr "Mae cyfeirnodau LPA yn cynnwys 12 rhif, er enghraifft 7000-0000-0000.<br>Mae rhai cyfeirnodau LPA yn dechrau gyda M, er enghraifft M-1111-2222-3333."
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
-#, fuzzy
 msgid "LPA reference numbers are 12 numbers long,<br>for example: 7000-0000-0000."
-msgstr "Mae cyfeirnodau ACLl yn 12 rhif o hyd,<br>er enghraifft: 7000-0000-0000."
+msgstr "<br>Er enghraifft, 7000-0000-0000"
 
 # Welsh is currently: Ask for an activation key
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:15
@@ -2100,12 +2099,10 @@ msgid "Confirm and submit request"
 msgstr "Cadarnhau a chyflwyno’r cais"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:3
-#, fuzzy
 msgid "You've already added this LPA to your account"
-msgstr "Rydym wedi dileu LPA o’ch cyfrif"
+msgstr "Rydych eisoes wedi ychwanegu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon at eich cyfrif"
 
 #: src/Actor/templates/actor/lpa-already-added.html.twig:16
-#, fuzzy
 msgid "You've already added this <abbr title=\"lasting power of attorney\">LPA</abbr> to your account"
 msgstr "Rydych eisoes wedi ychwanegu’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> hon at eich cyfrif"
 
@@ -2205,7 +2202,7 @@ msgstr "Pan fyddwch yn cysylltu, bydd angen i chi ddweud y canlynol wrthym:"
 #: src/Actor/templates/actor/change-details.html.twig:51
 #: src/Actor/templates/actor/change-lpa-details.html.twig:41
 msgid "the LPA reference number"
-msgstr "cyfeirnod yr awtrneiaeth arhosol"
+msgstr "cyfeirnod yr LPA"
 
 #: src/Actor/templates/actor/change-details.html.twig:52
 msgid "your name and address"
@@ -2359,13 +2356,13 @@ msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy fyr"
 #: src/Actor/templates/actor/form-error-messages.html.twig:36
 msgctxt "error"
 msgid "Enter the LPA reference number"
-msgstr "Nodwch y cyfeirnod LPA"
+msgstr "Rhowch gyfeirnod yr LPA"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:38
 msgctxt "error"
 msgid "The LPA reference number you entered is too short"
-msgstr "Mae’r cyfeirnod LPA y bu i chi ei nodi yn rhy fyr"
+msgstr "Mae cyfeirnod yr LPA a roesoch yn rhy fyr"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:37
@@ -2437,7 +2434,7 @@ msgstr "Nid yw’r cyfeirnod a roddwyd ar gyfer yr LPA yn gywir"
 #: src/Actor/templates/actor/form-error-messages.html.twig:39
 msgctxt "error"
 msgid "Enter the 12 numbers of the LPA reference number. Do not include letters or other characters"
-msgstr "Nodwch 12 rhif y cyfernod LPA. Peidiwch â chynnwys llythrennau neu nodau eraill"
+msgstr "Nodwch gyfeirnod 12 rhif yr LPA. Peidiwch â chynnwys llythrennau neu nodau eraill"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:40
@@ -2597,9 +2594,8 @@ msgid "I do not have the paper LPA"
 msgstr "Nid oes gen i’r copi papur o’r LPA"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:63
-#, fuzzy
 msgid "When an LPA is registered, we post the LPA to either:"
-msgstr "Pan fydd LPA yn cael ei chofrestru, rydym yn postio’r LPA papur un ai at:"
+msgstr "Pan fydd <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei chofrestru, rydym yn postio’r LPA bapur un ai at:"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:66
 msgid "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is for)"
@@ -2618,9 +2614,8 @@ msgid "Check with these people to see who has the <abbr title=\"lasting power of
 msgstr "Gwiriwch â’r bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
-#, fuzzy
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
-msgstr "Os oes arnoch angen mwy nac un copi o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur, gall y rhoddwr neu gyfreithiwr wneud <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">copïau wedi’u hardystio</a></strong>."
+msgstr "Os oes angen mwy nac un copi o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur arnoch, gall y rhoddwr neu gyfreithiwr wneud <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">copïau wedi’u hardystio</a>."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
@@ -2630,7 +2625,7 @@ msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:29
 msgid "Change<span class=\"govuk-visually-hidden\"> reference number</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> Cyfeirnod LPA</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeirnod yr LPA</span>"
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:42
 #: src/Viewer/templates/viewer/paper-verification/check-answers.html.twig:26
@@ -2886,9 +2881,8 @@ msgid "The Use a lasting power of attorney (LPA) service lets you create ‘acce
 msgstr "Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluogi i greu ‘codau mynediad’ i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb ar-lein o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:18
-#, fuzzy
 msgid "The service is for donors and attorneys on an <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod ar <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod wedi’u henwi mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Nid yw ar gyfer atwrneiod wrth gefn."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:21
 msgid "You should be able to use this service instead of showing someone the original paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -3378,7 +3372,7 @@ msgstr "Rhaid i atwrneiod wneud rhai penderfyniadau ar y cyd (gyda’i gilydd) a
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:307
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr "Y Dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+msgstr "Y dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:313
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
@@ -4106,7 +4100,7 @@ msgstr "Os oes angen i chi weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:50
 #: src/Viewer/templates/viewer/check-code-found.html.twig:50
 msgid "You can see an online summary of this <abbr title='lasting power of attorney'> LPA </abbr>until %date%. After this date, the access code will expire."
-msgstr "Gallwch weld crynodeb ar-lein o’r <abbr title=‘atwrneiaethau arhosol’> LPA </abbr> tan yr %date%. Ar ôl y dyddiad hwn bydd y cod mynediad yn dod i ben."
+msgstr "Gallwch weld crynodeb ar-lein o’r <abbr title=‘atwrneiaethau arhosol’> LPA </abbr> tan %date%. Ar ôl y dyddiad hwn bydd y cod mynediad yn dod i ben."
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:52
 #: src/Viewer/templates/viewer/check-code-found.html.twig:52
