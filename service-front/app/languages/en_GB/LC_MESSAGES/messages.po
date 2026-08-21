@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 10:09+0000\n"
+"PO-Revision-Date: 2026-08-21 13:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2592,7 +2592,7 @@ msgstr "Check with these people to see who has the <abbr title=\"lasting power o
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
-msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a>."
+msgstr "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or a solicitor can make <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a>."
 
 #: src/Actor/templates/actor/check-your-answers.html.twig:17
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:20
