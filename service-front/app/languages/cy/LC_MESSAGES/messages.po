@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 13:25+0000\n"
+"PO-Revision-Date: 2026-08-21 13:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1788,7 +1788,7 @@ msgstr "Lle i ddod o hyd i ddyddiad cofrestru’r LPA"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA."
-msgstr "Mae’r dyddiad cofrestru i’w weld ar y llythyr a oedd yn dweud bod yr LPA wedi cael ei chofrestru, neu ar y stamp ar dudalen gyntaf yr LPA papur."
+msgstr "Mae’r dyddiad cofrestru i’w weld ar y llythyr a oedd yn dweud bod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> wedi cael ei chofrestru, neu ar y stamp ar dudalen gyntaf yr LPA bapur."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:32
 msgid "If you’re not sure when the LPA was registered, you can continue and we’ll check for you."
@@ -2586,15 +2586,15 @@ msgstr "bod y dymuniadau a chyfarwyddiadau ar gael i’w darllen yn llawn"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:49
 msgid "any continuation sheets you used are not missing"
-msgstr "nid yw unrhyw daflenni parhad a ddefnyddiwyd gennych ar goll"
+msgstr "nad yw unrhyw daflenni parhad a ddefnyddiwyd gennych ar goll"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:59
 msgid "I do not have the paper LPA"
-msgstr "Nid oes gen i’r copi papur o’r LPA"
+msgstr "Nid oes gen i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:63
 msgid "When an LPA is registered, we post the LPA to either:"
-msgstr "Pan fydd <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei chofrestru, rydym yn postio’r LPA bapur un ai at:"
+msgstr "Pan fydd <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei chofrestru, byddwn yn ei phostio un ai at:"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:66
 msgid "the donor (the person the <abbr title=\"lasting power of attorney\">LPA</abbr> is for)"
@@ -2606,13 +2606,14 @@ msgstr "un o’r atwrneiod"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:76
 msgid "someone else, like a solicitor, who helped to fill in the <abbr title=\"lasting power of attorney\">LPA</abbr> form"
-msgstr "rhywun arall, fel cyfreithiwr, a wnaeth gynorthwyo i lenwi’r ffurflen <abbr title=\"lasting power of attorney\">LPA</abbr>"
+msgstr "rhywun arall, fel cyfreithiwr, a wnaeth gynorthwyo i gwblhau ffurflen yr <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:83
 msgid "Check with these people to see who has the <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Gwiriwch â’r bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur."
+msgstr "Holwch y bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
+#, fuzzy
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
 msgstr "Os oes angen mwy nac un copi o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur arnoch, gall y rhoddwr neu gyfreithiwr wneud <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">copïau wedi’u hardystio</a>."
 
