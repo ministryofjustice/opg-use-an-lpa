@@ -50,8 +50,7 @@ build_frontend_assets:
 .PHONY: build_frontend_assets
 
 rebuild:
-	$(COMPOSE) build --no-cache $(filter-out $@,$(MAKECMDGOALS))
-	$(COMPOSE) --profile tools build --no-cache
+	$(COMPOSE) --profile "*" build --no-cache $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: rebuild
 
 reset:
@@ -127,7 +126,7 @@ development_mode: enable_development_mode clear_config_cache
 composer_install:
 	$(COMPOSE) run --rm front-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 	$(COMPOSE) run --rm api-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests -- composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 .PHONY: composer_install
 
 run_front_composer:
@@ -139,7 +138,7 @@ run_api_composer:
 .PHONY: run_api_composer
 
 run_smoke_composer:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests composer -- $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_smoke_composer
 
 run_front_composer_update:
@@ -173,12 +172,6 @@ clear_config_cache:
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
-
-service-front/app/languages/%/LC_MESSAGES/messages.mo: service-front/app/languages/%/LC_MESSAGES/messages.po
-	msgfmt -o $@ $^
-
-.PHONY: msgfmt
-msgfmt: service-front/app/languages/cy/LC_MESSAGES/messages.mo service-front/app/languages/en_GB/LC_MESSAGES/messages.mo
 
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048

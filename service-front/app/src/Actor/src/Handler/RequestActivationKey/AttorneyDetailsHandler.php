@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Actor\Handler\RequestActivationKey;
 
 use Actor\Form\RequestActivationKey\AttorneyDetails;
+use Actor\Workflow\ActorType;
 use Common\Handler\Traits\CsrfGuard;
 use Common\Handler\Traits\Session as SessionTrait;
 use Common\Handler\Traits\User;
@@ -93,7 +94,7 @@ class AttorneyDetailsHandler extends AbstractCleansingDetailsHandler
     {
         return parent::isMissingPrerequisite($request)
             || $this->state($request)->getActorRole() === null
-            || $this->state($request)->getActorRole() !== 'donor';
+            || $this->state($request)->getActorRole() !== ActorType::DONOR;
     }
 
     public function nextPage(WorkflowState $state): string

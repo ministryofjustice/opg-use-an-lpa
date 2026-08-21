@@ -25,7 +25,6 @@ use Common\Service\Lpa\Response\ActivationKeyAlreadyRequested;
 use Common\Service\Lpa\Response\ActivationKeyExists;
 use Common\Service\Lpa\Response\LpaAlreadyAdded;
 use Common\Service\Lpa\Response\LpaMatch;
-use Common\Service\Session\RemoveAccessForAllSessionValues;
 use Common\Workflow\State;
 use Common\Workflow\StateNotInitialisedException;
 use Common\Workflow\WorkflowState;
@@ -58,7 +57,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     use User;
 
     private CheckYourAnswers $form;
-    private ?SessionInterface $session;
     private ?UserInterface $user;
 
     public function __construct(
@@ -68,7 +66,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
         private AddAccessForAllLpa $addAccessForAllLpa,
         private LocalisedDate $localisedDate,
         private FeatureEnabled $featureEnabled,
-        private RemoveAccessForAllSessionValues $removeAccessForAllSessionValues,
     ) {
         parent::__construct($renderer, $urlHelper, $logger);
     }
@@ -81,9 +78,7 @@ class CheckYourAnswersHandler extends AbstractHandler implements
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->form = new CheckYourAnswers($this->getCsrfGuard($request));
-
-        $this->user    = $this->getUser($request);
-        $this->session = $this->getSession($request, 'session');
+        $this->user = $this->getUser($request);
 
         if ($this->isMissingPrerequisite($request)) {
             return $this->redirectToRoute('lpa.add-by-paper');
@@ -130,9 +125,6 @@ class CheckYourAnswersHandler extends AbstractHandler implements
      */
     public function handlePost(ServerRequestInterface $request): ResponseInterface
     {
-        // TODO UML-2817 this clearing step should be handled by workflow (maybe already is)
-        $this->removeAccessForAllSessionValues->removePostLPAMatchSessionValues($this->session);
-
         $this->form->setData($request->getParsedBody());
 
         if ($this->form->isValid()) {

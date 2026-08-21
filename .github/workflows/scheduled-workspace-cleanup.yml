@@ -1,76 +1,63 @@
-name: "[Scheduled] Cleanup PR Workspaces"
+name: "[Workflow] Cleanup PR Workspaces"
 
 on:
   schedule:
-    # 6am and 6pm every day except Sundays
-    - cron: '0 6,18 * * 0-6'
-  workflow_call:
-    secrets:
-      OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
-        required: true
+    # Run Hourly
+    - cron: "0 * * * *"
 
 permissions:
-  contents: read
-  security-events: none
-  pull-requests: none
   actions: none
   checks: none
+  contents: read
   deployments: none
+  id-token: write
   issues: none
   packages: none
+  pull-requests: none
   repository-projects: none
+  security-events: none
   statuses: none
-  id-token: write
 
 jobs:
   terraform_environment_cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
-      - name: "Set terraform version"
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - name: Get terraform version
         id: set-terraform-version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
-          terraform_directory: ./terraform/environment
-
+          terraform_directory: "./terraform/environment"
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: ${{ steps.set-terraform-version.outputs.version }}
           terraform_wrapper: false
 
+      - name: Configure AWS Credentials For Terraform
+        uses: aws-actions/configure-aws-credentials@8df5847569e6427dd6c4fb1cf565c83acfa8afa7 # v6.0.0
+        with:
+          aws-region: eu-west-1
+          role-duration-seconds: 3600
+          role-session-name: OPGLPATerraformGithubAction
+          role-to-assume: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+
       - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
-      - name: configure AWS credentials for getting pagerduty token
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          role-to-assume: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
-          aws-region: eu-west-1
-          role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPADevAssumeGithubAction
-
-      - name: set pagerduty token
+      - name: Install Terraform Workspace Manager
         run: |
-          export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
-            shared/pagerduty-token --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
-          echo "::add-mask::$TF_VAR_pagerduty_token"
-          echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
+          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.13/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/terraform-workspace-manager
 
-      - name: configure AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          role-to-assume: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
-          aws-region: eu-west-1
-          role-duration-seconds: 3600
-          role-session-name: OPGUseAnLPATerraformGithubAction
-
-      - name: terraform init
-        working-directory: ./terraform/environment
+      - name: Terraform Init
         run: terraform init -input=false
-
-      - name: clean up ephemeral environments
         working-directory: ./terraform/environment
+
+      - name: Destroy PR Terraform Workspaces
+        working-directory: ./terraform/environment
+        env:
+          TF_VAR_pagerduty_token: ${{ secrets.PAGERDUTY_TOKEN }}
         run: |
-          ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(../../scripts/pipeline/workspace_cleanup/get_workspaces_linux)
+          ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=367815980639 -aws-iam-role=opg-use-an-lpa-ci-boundary)

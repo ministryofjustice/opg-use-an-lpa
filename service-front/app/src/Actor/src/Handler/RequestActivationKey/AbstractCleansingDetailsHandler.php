@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Actor\Handler\RequestActivationKey;
 
+use Actor\Workflow\ActorAddressResponse;
+use Actor\Workflow\ActorType;
 use Actor\Workflow\RequestActivationKey;
 use Common\Handler\AbstractHandler;
 use Common\Handler\CsrfGuardAware;
@@ -85,20 +87,20 @@ abstract class AbstractCleansingDetailsHandler extends AbstractHandler implement
         // address 1 is a required field on it's page so only need to check that.
         $alwaysRequired = $state->actorAddress1 !== null || $state->actorAbroadAddress !== null;
 
-        if ($state->actorAddressResponse === RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO) {
+        if ($state->getActorAddressResponse() === ActorAddressResponse::NO) {
             $alwaysRequired = $alwaysRequired && $state->addressOnPaper !== null;
         }
 
         $alwaysRequired = $alwaysRequired && $state->getActorRole() !== null;
 
-        if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_ATTORNEY) {
+        if ($state->getActorRole() === ActorType::ATTORNEY) {
             $alwaysRequired =  $alwaysRequired &&
                 $state->donorFirstNames !== null &&
                 $state->donorLastName !== null &&
                 $state->donorDob !== null;
         }
 
-        if ($state->getActorRole() === RequestActivationKey::ACTOR_TYPE_DONOR) {
+        if ($state->getActorRole() === ActorType::DONOR) {
             $alwaysRequired =  $alwaysRequired &&
                 $state->attorneyFirstNames !== null &&
                 $state->attorneyLastName !== null &&

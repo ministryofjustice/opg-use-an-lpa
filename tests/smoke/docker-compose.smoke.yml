@@ -40,11 +40,18 @@ services:
     build:
       context: .
       dockerfile: tests/smoke/Dockerfile
+      secrets:
+        - composer-auth
     volumes:
       - ./tests/smoke:/app
       - ./tests/features:/app/features
-    entrypoint:
-      - /usr/bin/composer
+    secrets:
+      - composer-auth
+    entrypoint: >
+      /bin/sh -c "
+        ln -sf /run/secrets/composer-auth auth.json \
+        /usr/bin/composer $${@}
+      "
     command:
       - install
       - --prefer-dist

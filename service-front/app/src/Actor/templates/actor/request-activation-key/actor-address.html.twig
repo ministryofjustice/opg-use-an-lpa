@@ -48,10 +48,6 @@
 
                     {% endif %}
 
-                    {% set value_yes =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_YES') %}
-                    {% set value_no =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NO') %}
-                    {% set value_not_sure =  constant('Actor\\Workflow\\RequestActivationKey::ACTOR_ADDRESS_SELECTION_NOT_SURE') %}
-
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset">
 
@@ -65,15 +61,15 @@
                                 [
                                     {
                                         'label': 'Yes, it is the same as my address on the paper LPA'|trans,
-                                        'value':  value_yes
+                                        'value': enum('Actor\\Workflow\\ActorAddressResponse').YES.value
                                     },
                                     {
                                         'label': 'No, it is different to my address on the paper LPA'|trans,
-                                        'value': value_no
+                                        'value': enum('Actor\\Workflow\\ActorAddressResponse').NO.value
                                     },
                                     {
                                         'label': 'I am not sure if it\'s the same address on the paper LPA'|trans,
-                                        'value': value_not_sure
+                                        'value': enum('Actor\\Workflow\\ActorAddressResponse').NOT_SURE.value
                                     }
                                 ]}
                             ) }}

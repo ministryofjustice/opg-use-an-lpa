@@ -1,10 +1,14 @@
 <?php
 
+/**
+ * Setup middleware pipeline
+ */
+
 declare(strict_types=1);
 
 use Common\Middleware\I18n\SetLocaleMiddleware;
 use Common\Middleware\Logging\RequestTracingMiddleware;
-use Common\Middleware\Security\CSPNonceMiddleware;
+use Common\Middleware\Security\CSPMiddleware;
 use Common\Middleware\Security\RateLimitMiddleware;
 use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
@@ -26,10 +30,6 @@ use Mezzio\Router\Middleware\MethodNotAllowedMiddleware;
 use Mezzio\Router\Middleware\RouteMiddleware;
 use Mezzio\Session\SessionMiddleware;
 use Psr\Container\ContainerInterface;
-
-/**
- * Setup middleware pipeline:
- */
 
 return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     // The error handler should be the first (most outer) middleware to catch
@@ -79,7 +79,7 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     $app->pipe(CsrfMiddleware::class);
 
-    $app->pipe(CSPNonceMiddleware::class);
+    $app->pipe(CSPMiddleware::class);
 
     $app->pipe(StatePersistenceMiddleware::class);
 

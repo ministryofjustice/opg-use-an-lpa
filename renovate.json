@@ -4,7 +4,8 @@
     "config:recommended",
     "schedule:earlyMondays",
     "helpers:pinGitHubActionDigests",
-    "docker:pinDigests"
+    "docker:pinDigests",
+    ":preserveSemverRanges"
   ],
   "branchPrefix": "renovate-",
   "commitMessageAction": "Renovate Update",
@@ -88,7 +89,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "!php"
+        "!docker.io/php"
       ]
     },
     {
@@ -109,7 +110,7 @@
         "dockerfile"
       ],
       "matchPackageNames": [
-        "php"
+        "docker.io/php"
       ]
     },
     {
@@ -194,10 +195,7 @@
       "matchFileNames": [
         "service-front/app/composer.json"
       ],
-      "prPriority": 4,
-      "matchPackageNames": [
-        "!facile-it/php-openid-client"
-      ]
+      "prPriority": 4
     },
     {
       "description": [
@@ -220,10 +218,7 @@
       "matchFileNames": [
         "service-api/app/composer.json"
       ],
-      "prPriority": 4,
-      "matchPackageNames": [
-        "!facile-it/php-openid-client"
-      ]
+      "prPriority": 4
     },
     {
       "description": [
@@ -273,6 +268,16 @@
       "extends": [
         "schedule:monthly"
       ]
+    },
+    {
+      "description": "Disable psalm/plugin-phpunit >= 0.20.* (revisit when Psalm 7 comes out of beta)",
+      "matchManagers": [
+        "composer"
+      ],
+      "matchPackageNames": [
+        "psalm/plugin-phpunit"
+      ],
+      "allowedVersions": "< 0.20.0"
     }
   ],
   "major": {

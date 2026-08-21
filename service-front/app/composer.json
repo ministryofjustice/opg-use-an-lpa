@@ -112,7 +112,10 @@
             "Viewer\\": "src/Viewer/src/",
             "Common\\": "src/Common/src/",
             "Actor\\": "src/Actor/src/"
-        }
+        },
+        "files": [
+            "config/functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

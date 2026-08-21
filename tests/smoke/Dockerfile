@@ -1,11 +1,13 @@
-FROM docker.io/composer/composer:2.9-bin@sha256:2cde59fd0009d0b4f0fa8532a189290352d9fe3d80fbcc3a887ac69b9eeeef27 AS composer
+FROM docker.io/composer/composer:2.10-bin@sha256:ae894813776e18b7ae0fa8f9f2a63bf1aa624e287cd4c23a6d64f56fe999d8f9 AS composer
 
-FROM docker.io/mlocati/php-extension-installer:2.11@sha256:bd9ea77afcbc8e55e58d55ca9a39153925367e972827d2f648c949fd0e44aaca AS php-extension-installer
+FROM docker.io/mlocati/php-extension-installer:2.11@sha256:b6d3fa381b9ba5cf051117c1c601d6a523b590e534bf3d56eb4fbe352949c138 AS php-extension-installer
 
-FROM docker.io/php:8.4-cli-alpine@sha256:4f4fc56fe4ba7b7d241c371eda011b27ca4f3b25bf2a37956ee06e966777d696
+FROM docker.io/php:8.4-cli-alpine@sha256:26e3f1de7f6aa3e8ea15584d803c5e088c57df89ff02a3ecf2dc855a4282d8d7
 
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /composer /usr/bin/
+
+WORKDIR /app
 
 RUN set -xe \
   && apk add --update --no-cache chromium autoconf \
@@ -14,4 +16,8 @@ RUN set -xe \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
   && apk del autoconf
 
-WORKDIR /app
+COPY tests/smoke/composer.json tests/smoke/composer.lock /app/
+
+RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
+    composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --no-dev && \
+    composer check-platform-reqs
