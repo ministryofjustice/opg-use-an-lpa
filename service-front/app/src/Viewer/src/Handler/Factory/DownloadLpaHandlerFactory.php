@@ -12,7 +12,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Viewer\Handler\DownloadLpaHandler;
 
-class DownloadLpaHandlerFactory
+final class DownloadLpaHandlerFactory
 {
     public function __invoke(ContainerInterface $container)
     {
