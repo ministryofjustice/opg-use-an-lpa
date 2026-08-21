@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-21 14:01+0000\n"
+"PO-Revision-Date: 2026-08-21 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2646,7 +2646,7 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> Cod post</span>"
 
 #: src/Actor/templates/actor/one-login-error.html.twig:13
 msgid "You’ve been signed out"
-msgstr "Rydych wedi’ch allgofnodi"
+msgstr "Rydych wedi cael eich allgofnodi"
 
 #: src/Actor/templates/actor/one-login-error.html.twig:14
 msgid "This happened because of a technical issue. Your information is safe. Sign in again to continue."
@@ -2864,14 +2864,12 @@ msgid "We’ve signed you out"
 msgstr "Rydym wedi eich allgofnodi"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:10
-#, fuzzy
 msgid "We've signed you out"
 msgstr "Rydym wedi eich allgofnodi"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:11
-#, fuzzy
 msgid "For your security, we've signed you out of this service because you did not use it for 20 minutes."
-msgstr "Rydym wedi eich allgofnodi o’r gwasanaeth am resymau diogelwch, oherwydd ni wnaethoch ei ddefnyddio am 20 munud."
+msgstr "Gan nad ydych wedi defnyddio’r gwasanaeth am 20 munud rydym wedi eich allgofnodi am resymau diogelwch."
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:12
 msgid "Sign in"
