@@ -148,17 +148,17 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
     }
 
-    #[Then('/^I am taken to the remove an LPA confirmation page for (.*) lpa$/')]
-    public function iAmTakenToTheRemoveAnLPAConfirmationPage($status): void
+    #[Then('I am taken to the remove an LPA confirmation page for :status lpa')]
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage(string $status): void
     {
         $this->ui->assertPageAddress('/lpa/remove-lpa');
-        $this->ui->assertPageContainsText('Are you sure you want to remove this LPA?');
+        $this->assertPageContainsTranslatedText('Are you sure you want to remove this LPA?');
 
         if ($status === 'Registered') {
-            $this->ui->assertPageContainsText('LPA is registered');
+            $this->assertPageContainsTranslatedText('LPA is registered');
         }
         if ($status === 'Cancelled') {
-            $this->ui->assertPageNotContainsText(
+            $this->assertPageNotContainsTranslatedText(
                 'you will need to request a new activation key if you want to add the LPA back to your account'
             );
         }
@@ -2721,7 +2721,7 @@ class LpaContext implements Context
     #[Then('/^I should be told that I have already added this LPA$/')]
     public function iShouldBeToldThatIHaveAlreadyAddedThisLPA(): void
     {
-        $this->ui->assertPageContainsText("You've already added this LPA to your account");
+        $this->assertPageContainsTranslatedText("You've already added this LPA to your account");
     }
 
     #[Then('/^I should be told that I have not created any access codes yet$/')]
