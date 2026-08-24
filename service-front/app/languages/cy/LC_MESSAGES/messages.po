@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 14:26+0000\n"
+"PO-Revision-Date: 2026-08-24 14:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -918,6 +918,7 @@ msgid "Removing duplicate LPAs is optional."
 msgstr "Mae dileu LPAs dyblyg yn ddewisol."
 
 #: src/Actor/templates/actor/contact-details.html.twig:18
+#, fuzzy
 msgid "Your contact details"
 msgstr "Eich manylion cyswllt"
 
@@ -926,6 +927,7 @@ msgid "We may need to contact you to ask for more information"
 msgstr "Efallai y bydd angen i ni gysylltu â chi i ofyn am ragor o wybodaeth"
 
 #: src/Actor/templates/actor/contact-details.html.twig:26
+#, fuzzy
 msgid "Your telephone number"
 msgstr "Eich rhif ffôn"
 
@@ -1940,6 +1942,7 @@ msgid "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have 
 msgstr "Rhaid i chi <a href=\"%link%\" class=\"govuk-link\">roi gwybod i ni os ydych chi wedi dod yn atwrnai gweithredol</a>. Ar ôl i ni ddiweddaru ein cofnodion i ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am allwedd cadarnhau cyfrif."
 
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
+#, fuzzy
 msgid "The donor's details"
 msgstr "Manylion y rhoddwr"
 
@@ -2005,6 +2008,7 @@ msgid "What is your role on the LPA?"
 msgstr "Eich swyddogaeth yn yr LPA hon?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
+#, fuzzy
 msgid "I am the 'donor'"
 msgstr "Fi yw’r ‘rhoddwr’"
 
@@ -2013,6 +2017,7 @@ msgid "The donor is the person the LPA is made for. They appoint attorneys to ma
 msgstr "Y rhoddwr yw’r unigolyn y gwneir yr LPA ar ei gyfer. Mae’n penodi atwrneiod i wneud penderfyniadau ar ei ran."
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
+#, fuzzy
 msgid "I am an 'attorney'"
 msgstr "Rwy’n ‘atwrnai’"
 
@@ -2021,6 +2026,7 @@ msgid "An attorney is appointed by the donor to make decisions on the donor's be
 msgstr "Mae atwrnai yn cael ei benodi gan y rhoddwr i wneud penderfyniadau ar ran y rhoddwr."
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:44
+#, fuzzy
 msgid "I am a 'replacement attorney'"
 msgstr "Rwy’n ‘atwrnai newydd’"
 
