@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 12:25+0000\n"
+"PO-Revision-Date: 2026-08-24 14:26+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1694,7 +1694,7 @@ msgstr "Tell us the details of an attorney named on the LPA."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:25
 msgid "If you only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them."
-msgstr "If you only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them."
+msgstr "If you have more than one attorney, it doesn’t matter whose details you choose to enter."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:106
@@ -1704,7 +1704,7 @@ msgstr "Attorney's name"
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:46
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:119
 msgid "Attorney's date of birth"
-msgstr "Attorney's date of birth"
+msgstr "Attorney’s date of birth"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:47
 msgid "For example, 08 04 2004"
@@ -1861,15 +1861,15 @@ msgstr "Is this the same address as your address on the paper LPA?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Yes, it is the same as my address on the paper LPA"
+msgstr "Yes, it’s the same as my address in the paper LPA"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
 msgid "No, it is different to my address on the paper LPA"
-msgstr "No, it is different to my address on the paper LPA"
+msgstr "No, it’s different to my address in the paper LPA"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "I am not sure if it's the same address on the paper LPA"
+msgstr "I’m not sure if it’s the same address in the paper LPA"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -1909,7 +1909,7 @@ msgstr "were married to, or in a civil partnership with, the donor, and the rela
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:59
 msgid "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
-msgstr "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
+msgstr "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you think you need to step in as an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
 
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
 msgid "The donor's details"
@@ -2054,7 +2054,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:126
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
-msgstr "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
+msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s date of birth</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
@@ -2508,7 +2508,7 @@ msgstr "Enter the attorney's last name"
 #: src/Actor/templates/actor/form-error-messages.html.twig:55
 msgctxt "error"
 msgid "Enter the attorney's date of birth"
-msgstr "Enter the attorney's date of birth"
+msgstr "Enter the attorney’s date of birth"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:56
