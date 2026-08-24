@@ -14,15 +14,23 @@ resource "aws_vpc_endpoint_policy" "s3" {
     "Version" : "2012-10-17",
     "Statement" : [
       {
+        # Fargate pulls platform image layers from this bucket using an AWS-managed principal, not one in this account
+        "Sid" : "Allow-fargate-starport-layer-bucket",
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : "*"
+        },
+        "Action" : ["s3:GetObject"],
+        "Resource" : ["arn:aws:s3:::prod-${var.region_name}-starport-layer-bucket/*"]
+      },
+      {
         "Sid" : "Access-to-specific-bucket-only",
         "Effect" : "Allow",
         "Principal" : {
           "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         },
         "Action" : ["s3:GetObject"],
-        "Resource" : concat([
-          "arn:aws:s3:::prod-${var.region_name}-starport-layer-bucket/*",
-        ], var.permitted_s3_buckets)
+        "Resource" : var.permitted_s3_buckets
       }
     ]
   })
