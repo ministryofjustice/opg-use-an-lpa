@@ -89,6 +89,8 @@ trait BaseUiContextTrait
      * behaviour of gettext it to return the key if no translation is found.
      *
      * @param string $text The full translation key of a piece of text
+     * @param array  $replacements An array of replacement tokens to be substituted into the translation
+     * @param int    $count The number items to pluralise the translation with
      * @return void
      * @throws ExpectationException
      */
@@ -100,6 +102,27 @@ trait BaseUiContextTrait
         $tt = $this->base->translator->translate($text, $replacements, count: $count);
 
         $this->ui->assertSession()->pageTextContains($tt);
+    }
+
+    /**
+     * The inverse of {@see assertPageContainsTranslatedText}.
+     *
+     * With all the same conditions and downsides.
+     *
+     * @param string $text The full translation key of a piece of text
+     * @param array $replacements An array of replacement tokens to be substituted into the translation
+     * @param int $count The number items to pluralise the translation with
+     * @return void
+     * @throws ExpectationException
+ */
+    public function assertPageNotContainsTranslatedText(
+        string $text,
+        array $replacements = [],
+        ?int $count = null,
+    ): void {
+        $tt = $this->base->translator->translate($text, $replacements, count: $count);
+
+        $this->ui->assertSession()->pageTextNotContains($tt);
     }
 
     /**

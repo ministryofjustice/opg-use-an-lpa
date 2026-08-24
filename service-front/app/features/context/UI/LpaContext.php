@@ -158,7 +158,7 @@ class LpaContext implements Context
             $this->assertPageContainsTranslatedText('LPA is registered');
         }
         if ($status === 'Cancelled') {
-            $this->assertPageContainsTranslatedText(
+            $this->assertPageNotContainsTranslatedText(
                 'you will need to request a new activation key if you want to add the LPA back to your account'
             );
         }
