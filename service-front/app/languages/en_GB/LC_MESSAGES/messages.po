@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 14:26+0000\n"
+"PO-Revision-Date: 2026-08-24 14:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -906,7 +906,7 @@ msgstr "Removing duplicate LPAs is optional."
 
 #: src/Actor/templates/actor/contact-details.html.twig:18
 msgid "Your contact details"
-msgstr "Your contact details"
+msgstr "What is your phone number?"
 
 #: src/Actor/templates/actor/contact-details.html.twig:19
 msgid "We may need to contact you to ask for more information"
@@ -914,7 +914,7 @@ msgstr "We may need to contact you to ask for more information"
 
 #: src/Actor/templates/actor/contact-details.html.twig:26
 msgid "Your telephone number"
-msgstr "Your telephone number"
+msgstr "For example, 01632 960 001, 07700 900 982 or +44 808 157 0982"
 
 #: src/Actor/templates/actor/contact-details.html.twig:32
 msgid "or"
@@ -1913,7 +1913,7 @@ msgstr "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you thin
 
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
 msgid "The donor's details"
-msgstr "The donor's details"
+msgstr "The donor’s details"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:91
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:33
@@ -1978,7 +1978,7 @@ msgstr "What is your role on the LPA?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
 msgid "I am the 'donor'"
-msgstr "I am the 'donor'"
+msgstr "I am the donor"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
 msgid "The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf."
@@ -1986,7 +1986,7 @@ msgstr "The donor is the person the LPA is made for. They appoint attorneys to m
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
 msgid "I am an 'attorney'"
-msgstr "I am an 'attorney'"
+msgstr "I am an attorney"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:40
 msgid "An attorney is appointed by the donor to make decisions on the donor's behalf."
@@ -1994,7 +1994,7 @@ msgstr "An attorney is appointed by the donor to make decisions on the donor's b
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:44
 msgid "I am a 'replacement attorney'"
-msgstr "I am a 'replacement attorney'"
+msgstr "I am a replacement attorney"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:45
 msgid "A replacement attorney is appointed by the donor to step in for an attorney if they can no longer act on the donor's behalf."
