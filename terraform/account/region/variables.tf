@@ -16,6 +16,8 @@ variable "account" {
       domains_allowed = list(string)
       domains_blocked = list(string)
     })
+    sirius_account_id    = string
+    lpa_store_account_id = string
     dynamodb_cloudtrail = object({
       enabled            = bool
       trail_name_suffix  = string
