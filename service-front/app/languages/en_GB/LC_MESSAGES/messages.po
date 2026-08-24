@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 10:11+0000\n"
+"PO-Revision-Date: 2026-08-24 12:25+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -751,7 +751,7 @@ msgstr "What to do if you cannot access parts of this service"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:47
 msgid "If you cannot use this service, you can use the paper version of the LPA."
-msgstr "If you cannot use this service, you can use the paper version of the LPA."
+msgstr "If you cannot use this service, you can use the paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:50
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:54
