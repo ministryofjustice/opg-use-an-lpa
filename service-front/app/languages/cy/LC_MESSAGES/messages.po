@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 12:44+0000\n"
+"PO-Revision-Date: 2026-08-24 13:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1549,7 +1549,7 @@ msgstr "Ydych chi’n byw yn y Deyrnas Unedig?"
 #: src/Actor/templates/actor/check-your-answers.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:136
 msgid "No"
-msgstr "Nac oes"
+msgstr "Nac ydw"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:69
 #: src/Actor/templates/actor/lpa-not-found.html.twig:59
