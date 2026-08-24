@@ -148,17 +148,17 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
     }
 
-    #[Then('/^I am taken to the remove an LPA confirmation page for (.*) lpa$/')]
-    public function iAmTakenToTheRemoveAnLPAConfirmationPage($status): void
+    #[Then('I am taken to the remove an LPA confirmation page for :status lpa')]
+    public function iAmTakenToTheRemoveAnLPAConfirmationPage(string $status): void
     {
         $this->ui->assertPageAddress('/lpa/remove-lpa');
         $this->assertPageContainsTranslatedText('Are you sure you want to remove this LPA?');
 
         if ($status === 'Registered') {
-            $this->ui->assertPageContainsTranslatedText('LPA is registered');
+            $this->assertPageContainsTranslatedText('LPA is registered');
         }
         if ($status === 'Cancelled') {
-            $this->ui->assertPageContainsTranslatedText(
+            $this->assertPageContainsTranslatedText(
                 'you will need to request a new activation key if you want to add the LPA back to your account'
             );
         }
