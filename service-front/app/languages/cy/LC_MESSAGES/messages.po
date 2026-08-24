@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 14:44+0000\n"
+"PO-Revision-Date: 2026-08-24 15:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -918,18 +918,16 @@ msgid "Removing duplicate LPAs is optional."
 msgstr "Mae dileu LPAs dyblyg yn ddewisol."
 
 #: src/Actor/templates/actor/contact-details.html.twig:18
-#, fuzzy
 msgid "Your contact details"
-msgstr "Eich manylion cyswllt"
+msgstr "Beth yw eich rhif ffôn?"
 
 #: src/Actor/templates/actor/contact-details.html.twig:19
 msgid "We may need to contact you to ask for more information"
 msgstr "Efallai y bydd angen i ni gysylltu â chi i ofyn am ragor o wybodaeth"
 
 #: src/Actor/templates/actor/contact-details.html.twig:26
-#, fuzzy
 msgid "Your telephone number"
-msgstr "Eich rhif ffôn"
+msgstr "Er enghraifft, 01632 960 001, 07700 900 982 or +44 808 157 0982"
 
 #: src/Actor/templates/actor/contact-details.html.twig:32
 msgid "or"
@@ -941,7 +939,7 @@ msgstr "Does gen i ddim ffôn neu alla i ddim defnyddio ffôn i dderbyn galwadau
 
 #: src/Actor/templates/actor/contact-details.html.twig:38
 msgid "We may also contact you by email on"
-msgstr "Mae’n bosib y byddwn hefyd yn cysylltu â chi dros yr e-bost ar"
+msgstr "Mae’n bosib y byddwn hefyd yn cysylltu â chi dros e-bost at"
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/check-access-codes.html.twig:3
@@ -1703,16 +1701,15 @@ msgstr "Cyfenw"
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:3
 #: src/Viewer/templates/viewer/paper-verification/attorney-details.html.twig:19
 msgid "Attorney details"
-msgstr "Manylion yr atwrnai"
+msgstr "Manylion atwrnai"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:20
 msgid "Tell us the details of an attorney named on the LPA."
-msgstr "Dywedwch wrthym fanylion yr atwrnai a enwir ar yr LPA."
+msgstr "Rhowch fanylion atwrnai a enwir yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:25
-#, fuzzy
 msgid "If you only have one attorney, enter their details here. If you have more than one attorney, enter the details of any one of them."
-msgstr "Os mai dim ond un atwrnai sydd gennych, rhowch ei fanylion yma. Os oes gennych fwy nag un atwrnai, nodwch eu manylion."
+msgstr "Os oes gennych fwy nag un atwrnai, nid oes ots pa atwrnai a ddewiswch yma."
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:34
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:106
@@ -1721,7 +1718,6 @@ msgstr "Enw’r atwrnai"
 
 #: src/Actor/templates/actor/request-activation-key/attorney-details.html.twig:46
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:119
-#, fuzzy
 msgid "Attorney's date of birth"
 msgstr "Dyddiad geni’r atwrnai"
 
@@ -1848,7 +1844,7 @@ msgstr "Beth yw eich cyfeiriad ar hyn o bryd?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:20
 msgid "We need a few extra details to make sure we have the right LPA for your activation key request."
-msgstr "Mae angen ychydig o fanylion ychwanegol arnom i wneud yn siŵr bod gennym yr atwrneiaeth arhosol gywir ar gyfer eich cais i gael allwedd cadarnhau cyfrif."
+msgstr "Mae angen ychydig o fanylion ychwanegol arnom i wneud yn siŵr bod gennym yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gywir ar gyfer eich cais am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:24
 #: src/Common/templates/partials/contact-details/address.html.twig:1
@@ -1881,22 +1877,19 @@ msgstr "Sir (dewisol)"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:60
 msgid "Is this the same address as your address on the paper LPA?"
-msgstr "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr atwrneiaeth arhosol bapur?"
+msgstr "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
-#, fuzzy
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Ydy, mae’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol bapur"
+msgstr "Ie, mae’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
-#, fuzzy
 msgid "No, it is different to my address on the paper LPA"
-msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr atwrneiaeth arhosol bapur"
+msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
-#, fuzzy
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr atwrneiaeth arhosol bapur"
+msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -1937,12 +1930,10 @@ msgid "were married to, or in a civil partnership with, the donor, and the relat
 msgstr "yn briod efo’r rhoddwr neu mewn partneriaeth sifil efo’r rhoddwr, ac mae’r berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel arall yn y cyfarwyddiadau a roesant ar yr LPA)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:59
-#, fuzzy
 msgid "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
-msgstr "Rhaid i chi <a href=\"%link%\" class=\"govuk-link\">roi gwybod i ni os ydych chi wedi dod yn atwrnai gweithredol</a>. Ar ôl i ni ddiweddaru ein cofnodion i ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am allwedd cadarnhau cyfrif."
+msgstr "Rhaid i chi <a href=\"%link%\" class=\"govuk-link\">roi gwybod i ni os ydych yn credu bod angen i chi gamu i mewn fel atwrnai gweithredol</a>. Ar ôl i ni ddiweddaru ein cofnodion i ddangos eich bod yn atwrnai gweithredol, byddwch yn gallu gofyn am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/donor-details.html.twig:18
-#, fuzzy
 msgid "The donor's details"
 msgstr "Manylion y rhoddwr"
 
@@ -1977,7 +1968,7 @@ msgstr "Os nad yw’r atwrneiaeth arhosol bapur gennych chi nac unrhyw lythyrau 
 
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:18
 msgid "What is your address on the paper LPA?"
-msgstr "Beth yw eich cyfeiriad ar yr atwrneiaeth arhosol bapur?"
+msgstr "Beth yw eich cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur?"
 
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:3
 msgid "What is your current postcode?"
@@ -2005,30 +1996,27 @@ msgstr "Nid wyf yn byw yn y Deyrnas Unedig"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:27
 msgid "What is your role on the LPA?"
-msgstr "Eich swyddogaeth yn yr LPA hon?"
+msgstr "Beth yw eich rôl yn yr LPA hon?"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:34
-#, fuzzy
 msgid "I am the 'donor'"
-msgstr "Fi yw’r ‘rhoddwr’"
+msgstr "Fi yw’r rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:35
 msgid "The donor is the person the LPA is made for. They appoint attorneys to make decisions on their behalf."
 msgstr "Y rhoddwr yw’r unigolyn y gwneir yr LPA ar ei gyfer. Mae’n penodi atwrneiod i wneud penderfyniadau ar ei ran."
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:39
-#, fuzzy
 msgid "I am an 'attorney'"
-msgstr "Rwy’n ‘atwrnai’"
+msgstr "Rwy’n atwrnai"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:40
 msgid "An attorney is appointed by the donor to make decisions on the donor's behalf."
 msgstr "Mae atwrnai yn cael ei benodi gan y rhoddwr i wneud penderfyniadau ar ran y rhoddwr."
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:44
-#, fuzzy
 msgid "I am a 'replacement attorney'"
-msgstr "Rwy’n ‘atwrnai newydd’"
+msgstr "Rwy’n atwrnai wrth gefn"
 
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:45
 msgid "A replacement attorney is appointed by the donor to step in for an attorney if they can no longer act on the donor's behalf."
@@ -2087,9 +2075,8 @@ msgid "Change<span class=\"govuk-visually-hidden\"> attorney's name</span>"
 msgstr "Newid<span class=\"govuk-visually-hidden\"> enw’r atwrnai</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:126
-#, fuzzy
 msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</span>"
-msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni’r atwrnai</span>"
+msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni atwrnai</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
@@ -2541,7 +2528,6 @@ msgstr "Rhowch gyfenw’r atwrnai"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:55
-#, fuzzy
 msgctxt "error"
 msgid "Enter the attorney's date of birth"
 msgstr "Rhowch ddyddiad geni’r atwrnai"
