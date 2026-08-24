@@ -6,6 +6,7 @@ namespace BehatTest\Context\UI;
 
 use Acpr\Behat\Psr\Context\Psr11MinkAwareContext;
 use Acpr\Behat\Psr\Context\RuntimeMinkContext;
+use Acpr\I18n\TranslatorInterface;
 use Aws\MockHandler as AwsMockHandler;
 use Aws\Result;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
@@ -17,7 +18,6 @@ use Common\Service\Pdf\StylesService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use Laminas\Stratigility\Middleware\ErrorHandler;
 use Psr\Container\ContainerInterface;
 
 use function random_bytes;
@@ -31,9 +31,11 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
     public ContainerInterface $container;
     public MockHandler $apiFixtures;
     public AwsMockHandler $awsFixtures;
-    private ErrorHandler $errorHandler;
-    public array $mockClientHistoryContainer = [];
+    public TranslatorInterface $translator;
     public MinkContext $ui;
+
+    /** @var array<int, array{}> */
+    public array $mockClientHistoryContainer = [];
 
     public function setContainer(ContainerInterface $container): void
     {
@@ -50,6 +52,8 @@ class BaseUiContext extends RawMinkContext implements Psr11MinkAwareContext
 
         $this->apiFixtures = $mockHandler;
         $this->awsFixtures = $container->get(AwsMockHandler::class);
+
+        $this->translator = $container->get(TranslatorInterface::class);
 
         $container->set(
             StylesService::class,
