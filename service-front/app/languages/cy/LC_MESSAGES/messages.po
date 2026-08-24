@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 10:11+0000\n"
+"PO-Revision-Date: 2026-08-24 10:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -840,9 +840,8 @@ msgstr "Paratoi’r datganiad hygyrchedd hwn"
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:105
 #: src/Viewer/templates/viewer/viewer-accessibility-statement.html.twig:87
-#, fuzzy
 msgid "This statement was prepared on %date%"
-msgstr "Paratowyd y datganiad hwn ar %date%"
+msgstr "Paratowyd y datganiad hwn ar %date%."
 
 #: src/Actor/templates/actor/actor-accessibility-statement.html.twig:109
 msgid "This service was last tested on 22 April 2022. The test was carried out by Digital Accessibility Centre (DAC)."
@@ -1215,9 +1214,8 @@ msgid "your computer’s IP address while you use this service"
 msgstr "cyfeiriad IP eich cyfrifiadur tra byddwch yn defnyddio’r gwasanaeth hwn"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:70
-#, fuzzy
 msgid "We use the data to find the <abbr title=\"Lasting power of attorney\">LPA</abbr> you’re named on and to create your account."
-msgstr "Rydym yn defnyddio’r data i ddod o hyd i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rydych wedi’ch henwi arni ac i greu eich cyfrif."
+msgstr "Rydym yn defnyddio’r data i ddod o hyd i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rydych wedi’ch henwi ynddi ac i greu eich cyfrif."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:73
 msgid "The service also keeps a record of the <abbr title=\"lasting power of attorney\">LPA</abbr> access codes you’ve made and which organisations you made them for."
@@ -1638,14 +1636,12 @@ msgid "Request another activation key"
 msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:3
-#, fuzzy
 msgid "Are you sure you want to remove this LPA?"
-msgstr "A ydych yn siŵr eich bod am ddileu’r LPA hon?"
+msgstr "A ydych yn siŵr eich bod am ddileu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:12
-#, fuzzy
 msgid "Are you sure you want to remove %firstname% %surname%'s LPA?"
-msgstr "Ydych chi’n siŵr eich bod eisiau dileu LPA %firstname% %surname%?"
+msgstr "Ydych chi’n siŵr eich bod am ddileu LPA <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> %firstname% %surname%?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:18
 msgid "LPA type:"
@@ -1666,14 +1662,12 @@ msgid "all access codes you’ve created for this LPA will be valid until they a
 msgstr "bydd pob cod mynediad yr ydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes y byddant yn dod i ben neu yn cael eu dileu"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
-#, fuzzy
 msgid "you’ll not be able to see how the LPA is being used or has been used"
-msgstr "ni fyddwch yn gallu gweld sut y mae’r LPA yn cael ei defnyddio na sut y mae wedi cael ei defnyddio"
+msgstr "ni fyddwch yn gallu gweld sut y mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei defnyddio na sut mae wedi cael ei defnyddio"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
-#, fuzzy
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
-msgstr "bydd rhaid ichi gysylltu â ni i gael allweddair newydd os byddwch am roi’r LPA ar y cyfrif eto"
+msgstr "bydd rhaid i chi gysylltu â ni i gael cod actifadu newydd os byddwch am ychwanegu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> at y cyfrif eto"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:49
 msgid "Yes, remove LPA"
@@ -2619,7 +2613,6 @@ msgid "Check with these people to see who has the <abbr title=\"lasting power of
 msgstr "Holwch y bobl hyn i weld pwy sydd â’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:88
-#, fuzzy
 msgid "If you need more than one copy of the paper <abbr title=\"lasting power of attorney\">LPA</abbr>, the donor or solicitor can make <strong><a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">certified copies</a></strong>."
 msgstr "Os oes angen mwy nac un copi o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur arnoch, gall y rhoddwr neu gyfreithiwr wneud <a href=\"https://www.gov.uk/power-of-attorney/certify\" class=\"govuk-link\">copïau wedi’u hardystio</a>."
 
@@ -2683,7 +2676,6 @@ msgid "your name"
 msgstr "eich enw"
 
 #: src/Actor/templates/actor/deleted-account-confirmation.html.twig:13
-#, fuzzy
 msgid "We've deleted your account"
 msgstr "Rydym wedi dileu eich cyfrif"
 
@@ -2884,23 +2876,20 @@ msgid "Terms of use"
 msgstr "Telerau defnyddio"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:12
-#, fuzzy
 msgid "The Use a lasting power of attorney (LPA) service lets you create ‘access codes’ to give to professionals or organisations so they can view an online summary of an <abbr title=\"lasting power of attorney\">LPA</abbr>. For example, financial institutions, medical professionals, and care organisations."
-msgstr "Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluogi i greu ‘codau mynediad’ i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb ar-lein o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal."
+msgstr "Mae’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA) yn eich galluogi i greu codau mynediad i’w rhoi i bobl broffesiynol neu sefydliadau fel y gallant weld crynodeb o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein. Er enghraifft, sefydliadau ariannol, gweithwyr proffesiynol meddygol a sefydliadau gofal."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:18
 msgid "The service is for donors and attorneys on an <abbr title=\"lasting power of attorney\">LPA</abbr>."
 msgstr "Mae’r gwasanaeth ar gyfer rhoddwyr ac atwrneiod wedi’u henwi mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Nid yw ar gyfer atwrneiod wrth gefn."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:21
-#, fuzzy
 msgid "You should be able to use this service instead of showing someone the original paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Dylech allu defnyddio’r gwasanaeth hwn yn lle gorfod dangos fersiwn papur y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun."
+msgstr "Dylech allu defnyddio’r gwasanaeth hwn yn lle dangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn i rywun."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:29
-#, fuzzy
 msgid "You cannot use a download or print out of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code"
-msgstr "Ni allwch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r crynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein yn lle fersiwn papur y <abbr title=\"latwrneiaeth arhosol\">LPA</abbr> neu yn lle rhoi cod mynediad i rywun"
+msgstr "Ni chewch ddefnyddio copi wedi’i lawrlwytho neu gopi wedi’i argraffu o’r crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein yn lle’r <abbr title=\"latwrneiaeth arhosol\">LPA</abbr> bapur lawn neu gopi swyddogol ohoni"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:37
 msgid "By using this service you agree to these terms of use and the <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">GOV.UK terms and conditions</a>."
@@ -2911,9 +2900,8 @@ msgid "Your responsibilities as an attorney"
 msgstr "Eich cyfrifoldebau fel atwrnai"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:43
-#, fuzzy
 msgid "If you’re an attorney, remember that using this service to give someone access to a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>, is the same as using the original paper <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Os ydych yn atwrnai, cofiwch bod defnyddio’r gwasanaeth hwn i roi mynediad i rywun i grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, yr un fath â defnyddio fersiwn papur y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Os ydych yn atwrnai, cofiwch bod defnyddio’r gwasanaeth hwn i roi mynediad i rywun i grynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr un fath â defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur lawn."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:48
 msgid "When using an <abbr title=\"lasting power of attorney\">LPA</abbr> you must always follow the legal responsibilities you agreed to when you signed the <abbr title=\"lasting power of attorney\">LPA</abbr>. For example, you must always:"
@@ -2960,9 +2948,8 @@ msgid "Use access codes responsibly"
 msgstr "Defnyddio codau mynediad yn gyfrifol"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:97
-#, fuzzy
 msgid "When you give someone an <abbr title=\"lasting power of attorney\">LPA</abbr> access code, you’re giving them access to personal information about the donor and attorneys on an <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn rhoi mynediad iddynt i wybodaeth bersonol am y rhoddwr a’r atwrneiod ar y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn gadael iddynt weld gwybodaeth bersonol am y rhoddwr a’r atwrneiod yn y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:103
 msgid "Keep access codes secure. Only give access codes to professionals and organisations you trust and who have an appropriate need to view the <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -2982,7 +2969,6 @@ msgstr "Defnyddio’r gwasanaeth yn ddiogel"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:120
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:53
-#, fuzzy
 msgid "You’re responsible for accessing the service securely. You should not access it using a computer or network that may leave personal information accessible to others or you think may be insecure. For example, you should not:"
 msgstr "Rydych chi’n gyfrifol am ddefnyddio’r gwasanaeth yn ddiogel. Ni ddylech ddefnyddio’r gwasanaeth ar gyfrifiadur neu rwydwaith a allai adael gwybodaeth bersonol yn hygyrch i eraill neu a allai fod yn anniogel. Er enghraifft, ni ddylid:"
 
@@ -3001,7 +2987,6 @@ msgid "Keeping your information safe"
 msgstr "Cadw eich gwybodaeth yn ddiogel"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:132
-#, fuzzy
 msgid "Any information you submit will be stored securely and used inline with our <a class=\"govuk-link\" href=\"%privacy-notice%\">privacy notice</a> and <a class=\"govuk-link\" href=\"%cookie%\">cookie policy</a>."
 msgstr "Bydd unrhyw wybodaeth a roddir gennych yn cael ei storio’n ddiogel a’i defnyddio yn unol â’n <a class=\"govuk-link\" href=\"%privacy-notice%\">hysbysiad preifatrwydd</a> a’n <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis</a>."
 
