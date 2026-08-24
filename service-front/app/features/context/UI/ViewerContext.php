@@ -338,13 +338,8 @@ class ViewerContext implements Context
     }
 
     #[When('/^I choose to download a document version of the LPA second time$/')]
-    public function iChooseToDownloadADocumentVersionOfTheLPASecondTime(): void
-    {
-        $this->ui->visit('/download-lpa');
-    }
-
     #[When('/^I choose to download a document version of the LPA third time$/')]
-    public function iChooseToDownloadADocumentVersionOfTheLPAThirdTime(): void
+    public function iChooseToDownloadADocumentVersionOfTheLPASecondTime(): void
     {
         $this->ui->visit('/download-lpa');
     }
