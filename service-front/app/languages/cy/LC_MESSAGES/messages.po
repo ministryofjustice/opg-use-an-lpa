@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 12:28+0000\n"
+"PO-Revision-Date: 2026-08-25 12:44+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1592,11 +1592,11 @@ msgstr "Defnyddio atwrneiaeth arhosol"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:3
 msgid "Sending an activation key"
-msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
+msgstr "Anfon cod actifadu"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:12
 msgid "We're posting you an activation key"
-msgstr "Rydym yn anfon allwedd cadarnhau cyfrif atoch drwy’r post"
+msgstr "Rydym yn anfon cod actifadu atoch drwy’r post"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:18
 msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
@@ -1767,7 +1767,7 @@ msgstr "<br>Er enghraifft, 7000-0000-0000"
 # Welsh is currently: Ask for an activation key
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:15
 msgid "Check if you can ask for an activation key"
-msgstr "Gofyn am allwedd cadarnhau cyfrif"
+msgstr "Gwirio a chewch ofyn am god actifadu"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:17
@@ -1801,7 +1801,7 @@ msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:43
 msgid "If the LPA was registered before 1 September 2019, you cannot get an activation key for it. If organisations want to see the LPA, show them the paper copy."
-msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019, ni allwch gael allwedd cadarnhau ar ei chyfer.  Os oes sefydliadau eisiau gweld yr LPA, dangoswch y copi papur iddynt."
+msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019, ni chewch dderbyn god actifadu ar ei chyfer. Os yw sefydliadau am weld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, dangoswch y copi papur iddynt."
 
 # Welsh says ‘Please let us know if a donor or attorney's details change’
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:47
@@ -1810,7 +1810,7 @@ msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:49
 msgid "If we do not have your correct details, you will not be able to get an activation key."
-msgstr "Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu cael allwedd cadarnhau."
+msgstr "Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu derbyn cod actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:50
 msgid "<a class=\"govuk-link\" href=\"%link%\">Let us know if your details have changed</a> and you’ve not told us."
@@ -1822,7 +1822,7 @@ msgstr "Mae arnom angen gwybod:"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:54
 msgid "you’ve moved house - so we can post the key to the right address"
-msgstr "os ydych wedi symud tŷ – er mwyn inni allu postio’r allwedd i’r cyfeiriad iawn"
+msgstr "os ydych wedi symud tŷ – er mwyn i ni allu postio’r cod i’r cyfeiriad cywir"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:55
 msgid "you’ve changed your name"
@@ -1893,11 +1893,11 @@ msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr <abbr titl
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
-msgstr "Ni allwch wneud cais am allwedd actifadu os ydych yn gweithredu fel atwrnai wrth gefn"
+msgstr "Ni chewch wneud cais am god actifadu os ydych yn atwrnai wrth gefn"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:22
 msgid "Only the donor or an active attorney can request an activation key."
-msgstr "Dim ond y rhoddwr neu’r atwrnai gweithredol all ofyn am allwedd cadarnhau cyfrif."
+msgstr "Dim ond y rhoddwr neu atwrnai gweithredol gaiff ofyn am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:27
 msgid "You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:"
@@ -2092,7 +2092,7 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> rhif ffôn</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:155
 msgid "I understand that the information I've given will be stored securely and used to process my activation key request."
-msgstr "Rwy’n deall y bydd y wybodaeth a roddais yn cael ei storio’n ddiogel a’i defnyddio i brosesu fy nghais am allwedd cadarnhau cyfrif."
+msgstr "Rwy’n deall y bydd yr wybodaeth a roddais yn cael ei storio’n ddiogel a’i defnyddio i brosesu fy nghais am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:163
 msgid "Confirm and submit request"
@@ -2326,7 +2326,7 @@ msgstr "Mwy o wybodaeth am ddileu eich cyfrif"
 #: src/Actor/templates/actor/form-error-messages.html.twig:16
 msgctxt "error"
 msgid "Enter your activation key"
-msgstr "Teipiwch eich allwedd cadarnhau cyfrif"
+msgstr "Rhowch eich cod actifadu"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:17
@@ -2350,7 +2350,7 @@ msgstr "Mae’r cod actifadu a roesoch yn rhy hir"
 #: src/Actor/templates/actor/form-error-messages.html.twig:20
 msgctxt "error"
 msgid "The activation key you entered is too short"
-msgstr "Mae’r allwedd cadarnhau cyfrif rydych wedi’i nodi yn rhy fyr"
+msgstr "Mae’r cod actifadu rydych wedi’i nodi yn rhy fyr"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:36
@@ -2422,7 +2422,7 @@ msgstr "Gwnewch yn siŵr bod eich dyddiad geni yn gywir – ni chewch fod yn atw
 #: src/Actor/templates/actor/form-error-messages.html.twig:32
 msgctxt "error"
 msgid "Select if you have an activation key to add an LPA"
-msgstr "Dewiswch os oes gennych allwedd cadarnhau cyfrif i ychwanegu LPA"
+msgstr "Dewiswch os oes gennych god actifadu i ychwanegu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:33
@@ -2689,17 +2689,17 @@ msgstr "Yn ôl i GOV.UK"
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:10
 msgid "We've already sent you an activation key for this LPA"
-msgstr "Rydym eisoes wedi anfon allwedd cadarnhau cyfrif atoch ar gyfer yr LPA yma"
+msgstr "Rydym eisoes wedi anfon cod actifadu atoch ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma"
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:14
 msgid "If you've lost the letter, you can ask for a new key. This will cancel the key we sent you before."
-msgstr "Os ydych wedi colli’r llythyr, gallwch ofyn am allwedd newydd. Bydd hyn yn canslo’r allwedd a anfonwyd atoch o’r blaen."
+msgstr "Os ydych wedi colli’r llythyr, gallwch ofyn am god newydd. Bydd hwn yn canslo’r cod a anfonwyd atoch o’r blaen."
 
 # Welsh is currently: Ask for an activation key
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:24
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:30
 msgid "Continue and ask for a new key"
-msgstr "Gofyn am allwedd cadarnhau cyfrif"
+msgstr "Parhau a gofyn am god newydd"
 
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:3
@@ -3096,7 +3096,7 @@ msgstr "Enw’r rhoddwr"
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:11
 msgid "You've already asked for an activation key for this LPA"
-msgstr "Rydych chi eisoes wedi gofyn am allwedd cadarnhau cyfrif ar gyfer yr LPA yma"
+msgstr "Rydych chi eisoes wedi gofyn am god actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma"
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:13
 msgid "Once we've finished checking all the details, we'll post you a letter with your activation key for this LPA. We'll contact you if we need any more information."
@@ -3104,12 +3104,12 @@ msgstr "Ar ôl i ni orffen gwirio’r holl fanylion, byddwn yn anfon llythyr ato
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:14
 msgid "The letter will be sent to the address we have for you on our records. We send the key by post because its more secure."
-msgstr "Bydd y llythyr yn cael ei anfon i’r cyfeiriad sydd gennym ar eich cyfer yn ein cofnodion. Rydym yn anfon yr allwedd drwy’r post oherwydd bod hynny’n fwy diogel."
+msgstr "Bydd y llythyr yn cael ei anfon i’r cyfeiriad sydd gennym ar eich cyfer yn ein cofnodion. Rydym yn anfon y cod drwy’r post am fod hynny’n fwy diogel."
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:25
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:15
 msgid "You should hear from us or get the activation key letter by %dueDate%. If not, please contact us."
-msgstr "Fe ddylech chi glywed gennym ni neu dylai’r llythyr sy’n cynnwys yr allwedd cadarnhau cyfrif eich cyrraedd erbyn %dueDate%. Os na fydd hynny wedi digwydd, cysylltwch â ni."
+msgstr "Dylech chi glywed gennym ni neu dylai’r llythyr gyda’r cod actifadu eich cyrraedd erbyn %dueDate%. Os na fydd hynny wedi digwydd, cysylltwch â ni."
 
 #: src/Common/templates/common/cookies.html.twig:17
 #: src/Common/templates/partials/footer.html.twig:51
@@ -4492,7 +4492,7 @@ msgstr "Ni ddylid ei gymysgu â:"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:59
 msgid "an LPA activation key - normally sent to donors and attorneys when the LPA is registered"
-msgstr "allwedd cadarnhau cyfrif - a anfonir fel arfer at roddwyr ac atwrneiod pan fydd yr LPA wedi’i chofrestru"
+msgstr "cod actifadu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> – a anfonir fel arfer at roddwyr ac atwrneiod pan fydd yr LPA wedi’i chofrestru"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:60
 msgid "the LPA reference number - a unique number we give to each LPA"
@@ -4512,7 +4512,7 @@ msgstr "Gall atwrneiod neu roddwyr sydd am weld crynodeb o LPA, neu sy’n rhoi 
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:75
 msgid "To do this you will need your own unique LPA activation key. This is normally found on the letter that told you the LPA had been registered."
-msgstr "I wneud hyn, bydd angen eich allwedd cadarnhau cyfrif LPA unigryw eich hun arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA wedi’i chofrestru."
+msgstr "I wneud hyn, bydd angen eich cod actifadu LPA unigryw eich hun arnoch. Mae hwn fel arfer i’w weld yn y llythyr yn dweud wrthych fod yr LPA wedi’i chofrestru."
 
 #: src/Actor/src/Handler/RemoveLpaHandler.php:119
 msgctxt "flashMessage"
@@ -4657,7 +4657,7 @@ msgstr "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:10
 msgid "You’ve already asked for an activation key for this LPA today"
-msgstr "Rydych eisoes wedi gofyn am allwedd cadarnhau cyfrif ar gyfer yr LPA hwn heddiw"
+msgstr "Rydych eisoes wedi gofyn am god actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon heddiw"
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:18
 msgid "LPA type"
@@ -4669,7 +4669,7 @@ msgstr "Byddwn yn anfon llythyr atoch gyda’r cod actifadu ar gyfer yr <abbr ti
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:12
 msgid "We posted an activation key to the address we have for you on our records."
-msgstr "Rydym wedi anfon allwedd cadarnhau cyfrif i’r cyfeiriad sydd gennym ar eich cyfer yn ein cofnodion."
+msgstr "Rydym wedi anfon cod actifadu i’r cyfeiriad sydd gennym ar eich cyfer yn ein cofnodion."
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:13
 msgid "If the activation key has not arrived by %dueDate%, <a class=\"govuk-link\" href=\"%link%\">contact us</a> to check we have your correct address before you ask for a new key."
