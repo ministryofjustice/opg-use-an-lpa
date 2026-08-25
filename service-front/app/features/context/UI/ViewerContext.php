@@ -254,8 +254,9 @@ class ViewerContext implements Context
     public function iAmViewingAValidLPA(): void
     {
         $this->ui->assertPageAddress('/view-lpa');
+        $firstName = $this->lpaData['donor']['firstname'] ?? $this->lpaData['donor']['firstnames'];
         $this->ui->assertPageContainsText(
-            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+            $firstName . ' ' . $this->lpaData['donor']['surname']
         );
         $this->ui->assertPageContainsText('LPA is valid');
     }
@@ -456,13 +457,17 @@ class ViewerContext implements Context
 
         $this->ui->assertPageAddress('/check-code');
         $this->ui->assertPageContainsText('Ask the donor or attorney for a new access code if your organisation:');
+
+        // firstname is pre-combined format. firstnames going forward
+        $firstName = $this->lpaData['donor']['firstname'] ?? $this->lpaData['donor']['firstnames'];
         $this->ui->assertPageContainsText(
-            $this->lpaData['donor']['firstname'] . ' ' . $this->lpaData['donor']['surname']
+            $firstName . ' ' . $this->lpaData['donor']['surname']
         );
 
         $data = [
-            'lpa'     => $this->lpaData,
+            'date'    => (new DateTime())->format('c'),
             'expires' => (new DateTime('+50 days'))->format('c'),
+            'lpa'     => $this->lpaData,
         ];
 
         if (
@@ -792,6 +797,84 @@ class ViewerContext implements Context
         $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
     }
 
+    #[Given('/^I have been given access to a digital LPA via share code$/')]
+    public function iHaveBeenGivenAccessToADigitalLPAViaShareCode(): void
+    {
+        $this->lpaSurname    = 'Seakrest';
+        $this->lpaShareCode  = '1111-1111-1111';
+        $this->lpaStoredCode = '111111111111';
+        $this->lpaViewedBy   = 'Santander';
+        $this->lpaData       = [
+            'applicationHasGuidance'                 => false,
+            'applicationHasRestrictions'             => false,
+            'applicationType'                        => 'property-and-financial-affairs',
+            'attorneys'                              => [
+                [
+                    'addressLine1'             => null,
+                    'addressLine2'             => null,
+                    'addressLine3'             => null,
+                    'cannotMakeJointDecisions' => null,
+                    'country'                  => null,
+                    'county'                   => null,
+                    'dob'                      => '1982-07-24',
+                    'email'                    => null,
+                    'firstnames'               => 'Herman',
+                    'name'                     => null,
+                    'otherNames'               => null,
+                    'postcode'                 => null,
+                    'surname'                  => 'Seakrest',
+                    'systemStatus'             => 'active',
+                    'town'                     => null,
+                    'uId'                      => null,
+                ],
+            ],
+            'caseSubtype'                            => 'pfa',
+            'channel'                                => null,
+            'dispatchDate'                           => null,
+            'donor'                                  => [
+                'addressLine1'             => null,
+                'addressLine2'             => null,
+                'addressLine3'             => null,
+                'cannotMakeJointDecisions' => null,
+                'country'                  => null,
+                'county'                   => null,
+                'dob'                      => '1982-07-24',
+                'email'                    => null,
+                'firstnames'               => 'John',
+                'name'                     => null,
+                'otherNames'               => null,
+                'postcode'                 => null,
+                'surname'                  => 'Smith',
+                'systemStatus'             => null,
+                'town'                     => null,
+                'uId'                      => null,
+            ],
+            'hasSeveranceWarning'                    => null,
+            'howAttorneysMakeDecisions'              => 'jointly-for-some-severally-for-others',
+            'howAttorneysMakeDecisionsDetails'       => 'This is test data on how decisions are made',
+            'howAttorneysMakeDecisionsDetailsImages' => null,
+            'invalidDate'                            => null,
+            'lifeSustainingTreatment'                => null,
+            'lpaDonorSignatureDate'                  => '2026-01-10T23:00:00Z',
+            'lpaIsCleansed'                          => null,
+            'onlineLpaId'                            => null,
+            'receiptDate'                            => null,
+            'registrationDate'                       => '2026-01-19T00:00:00Z',
+            'rejectedDate'                           => null,
+            'replacementAttorneys'                   => [],
+            'restrictionsAndConditions'              => '',
+            'restrictionsAndConditionsImages'        => null,
+            'status'                                 => 'registered',
+            'statusDate'                             => '2026-01-19T23:00:00Z',
+            'trustCorporations'                      => null,
+            'uId'                                    => 'M-7890-0400-4000',
+            'whenTheLpaCanBeUsed'                    => 'when-has-capacity',
+            'withdrawnDate'                          => null,
+        ];
+
+        $this->imageCollectionStatus = 'COLLECTION_COMPLETE';
+    }
+
     #[When('/^I leave the organisation name blank and confirm the LPA is correct$/')]
     public function iLeaveTheOrganisationNameBlankAndConfirmTheLPAIsCorrect(): void
     {
@@ -1019,8 +1102,9 @@ class ViewerContext implements Context
                 StatusCodeInterface::STATUS_OK,
                 json_encode(
                     [
-                        'lpa'     => $this->lpaData,
+                        'date'    => (new DateTime())->format('c'),
                         'expires' => (new DateTime('+50 days'))->format('c'),
+                        'lpa'     => $this->lpaData,
                     ]
                 ),
                 self::LPA_SERVICE_GET_LPA_BY_CODE
