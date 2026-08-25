@@ -1,0 +1,15 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+ignore:
+  SNYK-CC-TF-215:
+    - "*":
+        reason: "Cache stores only rate-limit counters, data is not sensitive so auth token unnecessary"
+        expires: 2027-08-25T00:00:00.000Z
+  SNYK-CC-AWS-428:
+    - "*":
+        reason: "CodeCatalyst VPC endpoints only support the AWS-managed full-access policy"
+        expires: 2027-08-25T00:00:00.000Z
+  SNYK-CC-TF-125:
+    - "*":
+        reason: "Point in time replication unnecessary for WorkspaceCleanup table"
+        expires: 2027-08-25T00:00:00.000Z

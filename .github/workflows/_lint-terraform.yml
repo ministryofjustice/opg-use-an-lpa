@@ -15,12 +15,20 @@ on:
         description: "OIDC terraform role to assume"
         required: true
         type: string
+      oidc_docker_role:
+        description: "OIDC role to assume for ECR access"
+        required: true
+        type: string
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
+      SNYK_OPG_ORG_TOKEN:
+        required: true
 
 permissions:
+  contents: read
   id-token: write
+  security-events: write
 
 jobs:
   lint-terraform:
@@ -47,13 +55,44 @@ jobs:
       - uses: terraform-linters/setup-tflint@ae78205cfffec9e8d93fd2b3115c7e9d3166d4b6 # v5.0.0
         name: Setup TFLint
 
+      - name: configure AWS credentials for ECR
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: ${{ inputs.oidc_docker_role }}
+          aws-region: eu-west-1
+          role-duration-seconds: 900
+          role-session-name: OPGUseAnLPASnykECRLogin
+
+      - name: ECR Login
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@d539f0932e70871a027e9d5a9d8fc38589180a64 # v2.1.6
+        with:
+          registries: 311462405659
+
+      - name: Snyk IaC scan ${{ matrix.folder }}
+        id: snyk_iac
+        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
+        with:
+          iac_test_directory: "./terraform/${{ matrix.folder }}"
+          sarif_filename: "terraform-${{ matrix.folder }}-snyk.sarif"
+          SNYK_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
+          snyk_policy_path: "./terraform/${{ matrix.folder }}/.snyk"
+          snyk_test_args: "--severity-threshold=medium"
+
+      - name: Upload Snyk IaC results
+        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        if: always()
+        with:
+          category: "Terraform-${{ matrix.folder }}"
+          sarif_file: "test-results/terraform-${{ matrix.folder }}-snyk.sarif"
+
       - name: configure AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
           role-to-assume: ${{ inputs.oidc_terraform_role }}
           aws-region: eu-west-1
           role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPAECRGithubAction
+          role-session-name: OPGUseAnLPATerraformLintGithubAction
 
       - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
