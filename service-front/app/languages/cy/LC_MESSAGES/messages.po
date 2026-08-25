@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 11:12+0000\n"
+"PO-Revision-Date: 2026-08-25 12:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1054,7 +1054,7 @@ msgstr "Os bydd atwrnai neu atwrnai newydd yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:44
 msgid "The LPA will end if your attorney dies and there is not a replacement attorney."
-msgstr "Bydd eich LPA yn dod i ben os bydd eich atwrnai’n marw ac os nad oes gennych chi unrhyw atwrneiod newydd."
+msgstr "Bydd eich LPA yn dod i ben os bydd eich atwrnai’n marw ac os nad oes gennych chi unrhyw atwrneiod wrth gefn."
 
 #: src/Actor/templates/actor/death-notification.html.twig:46
 msgid "The LPA can continue if:"
@@ -1478,7 +1478,7 @@ msgstr "Diweddarwyd ddiwethaf: 30 Mawrth 2020"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:3
 msgid "Cannot find LPA"
-msgstr "Nid oedd modd cael hyd i LPA"
+msgstr "Nid oedd modd dod o hyd i LPA"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:14
 #: src/Actor/templates/actor/lpa-not-found.html.twig:11
@@ -1600,12 +1600,12 @@ msgstr "Rydym yn anfon allwedd cadarnhau cyfrif atoch drwy’r post"
 
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:18
 msgid "We'll send you a letter with your activation key for this LPA. We'll post it to the address we have for you. We send it by post because it's more secure."
-msgstr "Byddwn yn anfon llythyr atoch gyda’ch allwedd cadarnhau cyfrif ar gyfer yr atwrneiaeth arhosol hon. Byddwn yn ei phostio i’r cyfeiriad sydd gennym ar eich cyfer chi. Byddwn yn ei hanfon drwy’r post oherwydd bod hynny’n fwy diogel."
+msgstr "Byddwn yn anfon llythyr atoch gyda’ch cod actifadu ar gyfer yr atwrneiaeth arhosol <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei bostio i’r cyfeiriad sydd gennym ar eich cyfer chi. Byddwn yn ei anfon drwy’r post am fod hynny’n fwy diogel."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:20
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:19
 msgid "Once you've got the activation key, you'll be able to use it to add the LPA to your account."
-msgstr "Ar ôl i chi gael yr allwedd cadarnhau cyfrif, byddwch yn gallu ei defnyddio i ychwanegu'r atwrneiaeth arhosol at eich cyfrif."
+msgstr "Ar ôl i chi dderbyn y cod actifadu, byddwch yn gallu ei ddefnyddio i ychwanegu’r atwrneiaeth arhosol at eich cyfrif."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:21
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:20
@@ -1623,17 +1623,17 @@ msgstr "Os nad yw’n cyrraedd erbyn y dyddiad hwn, cysylltwch â ni. Bydd angen
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:27
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:27
 msgid "Have more than one LPA?"
-msgstr "Oes gennych chi fwy nag un LPA?"
+msgstr "A oes gennych chi fwy nag un LPA?"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:28
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:28
 msgid "You'll need an activation key for each LPA that you'd like to add to your account."
-msgstr "Bydd angen allwedd cadarnhau cyfrif arnoch ar gyfer pob atwrneiaeth arhosol yr hoffech ei hychwanegu at eich cyfrif."
+msgstr "Bydd angen cod actifadu arnoch ar gyfer pob <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yr hoffech ei hychwanegu at eich cyfrif."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:34
 #: src/Actor/templates/actor/send-activation-key-confirmation.html.twig:34
 msgid "Request another activation key"
-msgstr "Cael hyd i’ch allwedd cadarnhau cyfrif"
+msgstr "Gofyn am god actifadu arall"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:3
 msgid "Are you sure you want to remove this LPA?"
@@ -2023,9 +2023,8 @@ msgid "A replacement attorney is appointed by the donor to step in for an attorn
 msgstr "Mae atwrnai wrth gefn yn cael ei benodi gan y rhoddwr i gymryd lle atwrnai os nad yw’n gallu gweithredu ar ran y rhoddwr mwyach."
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:12
-#, fuzzy
 msgid "Check your details"
-msgstr "Gwiriwch eich manylion"
+msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Current address"
@@ -2080,7 +2079,6 @@ msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</sp
 msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni atwrnai</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
-#, fuzzy
 msgid "Telephone number"
 msgstr "Rhif ffôn"
 
@@ -2552,7 +2550,7 @@ msgstr "Rydym wedi derbyn eich cais am god actifadu"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:18
 msgid "Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure."
-msgstr "Ar ôl i ni wirio’r holl fanylion, byddwn yn anfon llythyr atoch gyda'ch cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei anfon drwy’r post am fod hynny'n fwy diogel."
+msgstr "Ar ôl i ni wirio’r holl fanylion, byddwn yn anfon llythyr atoch gyda’ch cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei anfon drwy’r post am fod hynny’n fwy diogel."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:19
 msgid "We'll contact you if we need any more information."
@@ -2560,7 +2558,7 @@ msgstr "Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:22
 msgid "Most people hear from us or get the activation key within 2 weeks of requesting it. However, sometimes it can take a bit longer. If you have not heard from us by %date%, please get in touch."
-msgstr "Bydd y rhan fwyaf o bobl yn clywed gennym neu’n cael allwedd cadarnhau cyfrif o fewn 2 wythnos i wneud cais. Fodd bynnag, weithiau bydd yn cymryd mwy o amser. Os na fyddwch wedi clywed gennym mewn %date%, cysylltwch â ni."
+msgstr "Bydd y rhan fwyaf o bobl yn clywed gennym neu’n derbyn cod actifadu o fewn 2 wythnos i wneud cais. Fodd bynnag, weithiau bydd yn cymryd mwy o amser. Os na fyddwch wedi clywed gennym erbyn %date%, cysylltwch â ni."
 
 #: src/Actor/templates/actor/instructions-preferences.html.twig:15
 msgid "Preferences and Instructions"
@@ -2810,7 +2808,7 @@ msgstr "Ni allwch ddefnyddio fersiwn wedi’i lawrlwytho nac allbrint o’r duda
 #: src/Actor/templates/actor/lpa-not-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:3
 msgid "We could not find an LPA"
-msgstr "Nid oedd modd cael hyd i LPA"
+msgstr "Nid oedd modd dod o hyd i LPA"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:13
 msgid "This could be because the:"
@@ -3102,7 +3100,7 @@ msgstr "Rydych chi eisoes wedi gofyn am allwedd cadarnhau cyfrif ar gyfer yr LPA
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:13
 msgid "Once we've finished checking all the details, we'll post you a letter with your activation key for this LPA. We'll contact you if we need any more information."
-msgstr "Ar ôl i ni orffen gwirio’r holl fanylion, byddwn yn anfon llythyr atoch gyda’ch allwedd cadarnhau cyfrif ar gyfer yr atwrneiaeth arhosol hon. Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
+msgstr "Ar ôl i ni orffen gwirio’r holl fanylion, byddwn yn anfon llythyr atoch gyda’ch cod actifadu ar gyfer yr atwrneiaeth arhosol <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn cysylltu â chi os bydd angen rhagor o wybodaeth arnom."
 
 #: src/Actor/templates/actor/already-requested-activation-key.html.twig:14
 msgid "The letter will be sent to the address we have for you on our records. We send the key by post because its more secure."
@@ -4667,7 +4665,7 @@ msgstr "Math o atwrneiaeth arhosol:"
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:24
 msgid "We’ll post you a letter with your activation key for this LPA. It will be sent to the address we have for you on our records. We send the key by post because it’s more secure."
-msgstr "Byddwn yn anfon llythyr atoch gyda’r allwedd cadarnhau cyfrif ar gyfer yr LPA hwn. Bydd yn cael ei hanfon i’r cyfeiriad sydd gennym yn ein cofnodion. Rydym yn anfon yr allwedd drwy’r post oherwydd ei fod yn fwy diogel."
+msgstr "Byddwn yn anfon llythyr atoch gyda’r cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Bydd yn cael ei anfon i’r cyfeiriad sydd gennym yn ein cofnodion. Rydym yn anfon y cod drwy’r post am ei fod yn fwy diogel."
 
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:12
 msgid "We posted an activation key to the address we have for you on our records."
