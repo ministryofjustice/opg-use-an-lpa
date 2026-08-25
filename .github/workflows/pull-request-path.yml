@@ -124,6 +124,7 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.workspace_name }}
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      SNYK_OPG_ORG_TOKEN: ${{secrets.SNYK_OPG_ORG_TOKEN}}
     if: |
       needs.workflow_variables.outputs.specific_path != 'docs'
 
