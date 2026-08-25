@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 09:53+0000\n"
+"PO-Revision-Date: 2026-08-25 10:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1278,11 +1278,11 @@ msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn ddilys ar h
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
 msgid "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used (property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar gyfer eiddo ac arian yn unig)"
+msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:108
 msgid "whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment (health and welfare <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "a roddodd y rhoddwr ganiatâd i’w atwrneiod wneud penderfyniadau ar driniaeth cynnal bywyd (<abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> ar gyfer iechyd a lles yn unig)"
+msgstr "a roddodd y rhoddwr ganiatâd i’w atwrneiod wneud penderfyniadau ynghylch triniaeth cynnal bywyd (<abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> ar gyfer iechyd a lles yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:112
 msgid "Third parties can download and keep a copy of the summary."
@@ -1295,7 +1295,7 @@ msgstr "Nid ydym yn gyfrifol am sut y defnyddir, y rhennir neu y cedwir data per
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:117
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:96
 msgid "How we store data"
-msgstr "Sut yr ydym yn storio data"
+msgstr "Sut rydym yn storio data"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:119
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:100
@@ -1304,7 +1304,7 @@ msgstr "Bydd gwybodaeth y byddwch yn ei rhoi wrth ddefnyddio’r gwasanaeth yn c
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:124
 msgid "It may sometimes be necessary to transfer personal information overseas. Any transfers will fully comply with all aspects of data protection law."
-msgstr "Weithiau, efallai y bydd angen trosglwyddo gwybodaeth bersonol dramor. Bydd unrhyw drosglwyddiadau a wneir yn cydymffurfio’n llwyr â phob agwedd o’r gyfraith diogelu data."
+msgstr "Weithiau, efallai y bydd angen trosglwyddo gwybodaeth bersonol dramor. Bydd unrhyw drosglwyddiadau a wneir yn cydymffurfio’n llwyr â phob agwedd ar y gyfraith diogelu data."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:127
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:105
@@ -1314,7 +1314,7 @@ msgstr "Pwy sydd â mynediad i ddata yn y gwasanaeth hwn"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:129
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:107
 msgid "MOJ staff are responsible for supporting the service and have access to the secure database."
-msgstr "Staff <abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> sy’n gyfrifol am gefnogi’r gwasanaeth ac mae ganddynt fynediad at y gronfa ddata ddiogel."
+msgstr "Staff y Weinyddiaeth Gyfiawnder (MOJ) sy’n gyfrifol am gefnogi’r gwasanaeth ac mae ganddynt fynediad at y gronfa ddata ddiogel."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:132
 msgid "All OPG staff who have access to the database have MOJ security clearance."
@@ -1322,7 +1322,7 @@ msgstr "Mae gan holl staff <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OP
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:135
 msgid "Our hosting provider (Amazon Web Services) is not allowed to routinely access the secure data. If they need to do so for operational purposes, their access is strictly controlled and approved by OPG."
-msgstr "Fel rheol, ni chaniateir i’n darparwr (Amazon Web Services) gael mynediad i’r data diogel. Os oes angen mynediad arnynt am resymau gweithredol, rheolir a chymeradwyir eu mynediad yn gadarn gan <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
+msgstr "Fel rheol, ni chaniateir i’n darparwr (Amazon Web Services) gael mynediad i’r data diogel. Os oes angen mynediad arnynt am resymau gweithredu, rheolir a chymeradwyir eu mynediad yn gadarn gan <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:139
 msgid "You can find out more about how we store and use this data in our <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> personal information charter </a>."
@@ -1354,12 +1354,12 @@ msgstr "Sut i gael copi o’ch gwybodaeth"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:160
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:132
 msgid "You can find out what personal data we hold about you in the service by making a subject access request."
-msgstr "Gallwch ganfod pa ddata personol rydym yn ei gadw amdanoch yn y gwasanaeth drwy wneud ‘cais gwrthrych am wybodaeth’."
+msgstr "Gallwch ganfod pa ddata personol rydym yn ei gadw amdanoch yn y gwasanaeth drwy wneud ‘cais am fynediad at ddata gan y testun’ (SAR)."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:164
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:135
 msgid "Find out more about subject access requests"
-msgstr "Darganfyddwch mwy am geisiadau gwrthrych am wybodaeth"
+msgstr "Dysgu mwy am geisiadau am fynediad at ddata gan y testun (SAR)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:167
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:137
@@ -3872,7 +3872,7 @@ msgstr "Os oes angen iddynt wneud hynny at ddibenion gweithredol, mae eu mynedia
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:117
 msgid "You can find out more about how we store and use this data in <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s <a class=\"govuk-link\" href=\"%link%\"> personal information charter </a>."
-msgstr "Gellir darganfod mwy am sut yr ydym yn storio ac yn defnyddio’r data hwn yn <a class=\"govuk-link\" href=\"%link%\">siarter wybodaeth bersonol</a> yr <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
+msgstr "Gellir darganfod mwy am sut rydym yn storio ac yn defnyddio’r data hwn yn <a class=\"govuk-link\" href=\"%link%\">siarter gwybodaeth bersonol</a> <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:126
 msgid "We will keep your personal data inline with our <a class=\"govuk-link\" href=\"%link%\">retention policy</a>."
