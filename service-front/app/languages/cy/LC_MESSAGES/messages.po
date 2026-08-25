@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 12:44+0000\n"
+"PO-Revision-Date: 2026-08-25 13:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1857,7 +1857,7 @@ msgstr "Cyfeiriad"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
 msgid "You've already given your postcode as %postcode%"
-msgstr "Rydych chi eisoes wedi rhoi eich cod post fel %postcode%"
+msgstr "Rydych chi eisoes wedi rhoi %postcode% fel eich cod post."
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
 msgid "Address line 1"
@@ -3319,7 +3319,7 @@ msgstr "Ewch yn ôl i’r dudalen yr oeddech yn edrych arni"
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:7
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:6
 msgid "When can the <abbr title=\"lasting power of attorney\">LPA</abbr> be used?"
-msgstr "Pa bryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
+msgstr "Pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:33
 #: src/Common/templates/partials/full-lpa-display.html.twig:33
@@ -3371,7 +3371,7 @@ msgstr "Rhaid i atwrneiod wneud rhai penderfyniadau ar y cyd (gyda’i gilydd) a
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:307
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
 msgid "Date donor signed <abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr "Y dyddiad y llofnododd y rhoddwr yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
+msgstr "Y dyddiad gwnaeth y rhoddwr lofnodi’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:313
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:68
@@ -3382,7 +3382,7 @@ msgstr "Dyddiad cofrestru"
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:73
 #: src/Viewer/templates/viewer/paper-verification/cannot-show-lpa.html.twig:15
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
-msgstr "Cyfeirnod <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
+msgstr "Cyfeirnod yr <abbr title=\"atwrneiaethau arhosol\">LPA</abbr>"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:215
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:86
@@ -4379,7 +4379,7 @@ msgstr "Oherwydd mai cod gwirio papur yw’r cod rydych chi wedi’i roi, mae an
 
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:25
 msgid "<abbr title=\"lasting power of attorney\">LPA</abbr> reference number - this will be on any letters we’ve sent to the donor or attorneys"
-msgstr "cyfeirnod yr atwrneiaeth arhosol – bydd hwn i’w weld ar unrhyw lythyrau rydym wedi’u hanfon at y rhoddwr neu’r atwrneiod"
+msgstr "Cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> – bydd hwn i’w weld ar unrhyw lythyrau rydym wedi’u hanfon at y rhoddwr neu’r atwrneiod"
 
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:36
 msgid "LPA reference numbers start with an M followed by 12 numbers.<br>For example, M-1234-1234-1234."
