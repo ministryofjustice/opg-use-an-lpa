@@ -150,12 +150,14 @@ class UserLpaActorMapTest extends TestCase
         $testUserId    = 'test-user-id';
         $testActorId   = 1;
         $testCode      = 'test-code';
+        $testSource    = 'test-source';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
             $testUserId,
             $testActorId,
             $testCode,
+            $testSource,
         ) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -179,6 +181,7 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['S' => $testCode], $data['Item']['ActivationCode']);
             $this->assertIsString($data['Item']['ActivationCode']['S']);
             $this->assertEquals(['BOOL' => true], $data['Item']['HasPaperVerificationCode']);
+            $this->assertEquals(['S' => $testSource], $data['Item']['Source']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
@@ -192,7 +195,7 @@ class UserLpaActorMapTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode, true);
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode, true, $testSource);
     }
 
     #[Test]
