@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 15:05+0000\n"
+"PO-Revision-Date: 2026-08-25 11:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2002,7 +2002,7 @@ msgstr "A replacement attorney is appointed by the donor to step in for an attor
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:12
 msgid "Check your details"
-msgstr "Check your details"
+msgstr "Check your answers"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Current address"
@@ -2058,7 +2058,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s date of birth<
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
-msgstr "Telephone number"
+msgstr "Phone number"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:140
 msgid "Not provided"
