@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 11:12+0000\n"
+"PO-Revision-Date: 2026-08-25 13:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -1837,7 +1837,7 @@ msgstr "Address"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:28
 msgid "You've already given your postcode as %postcode%"
-msgstr "You've already given your postcode as %postcode%"
+msgstr "You’ve already given your postcode as %postcode%."
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:30
 msgid "Address line 1"
