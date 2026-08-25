@@ -50,6 +50,7 @@ class UserLpaActorMapTest extends TestCase
         $testUserId    = 'test-user-id';
         $testActorId   = 1;
         $testAdded     = gmdate('c');
+        $testSource    = 'test-source';
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -81,6 +82,9 @@ class UserLpaActorMapTest extends TestCase
                     'Added'     => [
                         'S' => $testAdded,
                     ],
+                    'Source'    => [
+                        'S' => $testSource,
+                    ],
                 ],
             ]))->shouldBeCalled();
 
@@ -98,6 +102,7 @@ class UserLpaActorMapTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $result['Added']);
         $this->assertEquals($testAdded, $result['Added']->format('c'));
         $this->assertEquals($testActorId, $result['ActorId']);
+        $this->assertEquals($testSource, $result['Source']);
     }
 
     #[Test]

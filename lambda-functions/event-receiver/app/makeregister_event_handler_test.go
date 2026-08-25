@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 func TestMakeRegisterEventHandler_Success(t *testing.T) {
@@ -53,9 +54,13 @@ func TestMakeRegisterEventHandler_Success(t *testing.T) {
 			return err == nil
 		}), "urn:fdc:gov.uk:2022:XXXX-XXXXXX").
 		Return(nil)
-	mockDynamo.EXPECT().
-		Put(ctx, "UserLpaActorMap", mock.Anything).
-		Return(nil)
+    mockDynamo.EXPECT().
+        Put(ctx, "UserLpaActorMap", mock.MatchedBy(func(item map[string]types.AttributeValue) bool {
+            source, ok := item["Source"].(*types.AttributeValueMemberS)
+
+            return ok && source.Value == cloudWatchEvent.Source
+        })).
+        Return(nil)
 	mockDynamo.EXPECT().
 		ExistsLpaIDAndUserID(ctx, lpaUID, mock.MatchedBy(func(id string) bool {
 			return len(id) > 0
@@ -150,6 +155,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
+	source = "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -162,7 +168,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaUID)
+	err := handleLpas(ctx, mockDynamo, actor, lpaUID, source)
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Failed to find existing LPA")
@@ -173,6 +179,7 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
+	source = "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -188,7 +195,7 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaUID)
+	err := handleLpas(ctx, mockDynamo, actor, lpaUID, source)
 
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "Failed to insert LPA mapping")
@@ -199,6 +206,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
+	source = "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -211,7 +219,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaUID)
+	err := handleLpas(ctx, mockDynamo, actor, lpaUID, source)
 	assert.NoError(t, err)
 }
 
@@ -220,6 +228,7 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
+	source = "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -235,7 +244,7 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 		Id:        userId,
 	}
 
-	err := handleLpas(ctx, mockDynamo, actor, lpaUID)
+	err := handleLpas(ctx, mockDynamo, actor, lpaUID, source)
 
 	assert.NoError(t, err)
 	assert.Nil(t, err)

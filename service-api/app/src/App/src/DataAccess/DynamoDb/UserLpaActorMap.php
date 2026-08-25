@@ -73,6 +73,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         ?DateInterval $intervalTillDue = null,
         ?string $code = null,
         ?bool $hasPaperVerificationCode = null,
+        ?string $source = null,
     ): string {
         $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
@@ -81,6 +82,10 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'SiriusUid' => ['S' => $siriusUid],
             'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)],
         ];
+
+        if ($source !== null) {
+            $array['Source'] = ['S' => $source];
+        }
 
         if ($actorId !== null) {
             $array['ActorId'] = is_numeric($actorId) ? ['N' => $actorId] : ['S' => $actorId];
