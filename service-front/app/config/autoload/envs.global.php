@@ -185,9 +185,9 @@ return [
                 'options' => [
                     'ttl'           => 60,
                     'server'        => [
-                        'host'    => getenv('BRUTE_FORCE_CACHE_URL') ?: 'redis',
-                        'port'    => getenv('BRUTE_FORCE_CACHE_PORT') ?: 6379,
-                        'timeout' => getenv('BRUTE_FORCE_CACHE_TIMEOUT') ?: 60,
+                        'host'    => get_defaulted_env('BRUTE_FORCE_CACHE_URL', 'redis'),
+                        'port'    => intval(get_defaulted_env('BRUTE_FORCE_CACHE_PORT', 6379)),
+                        'timeout' => intval(get_defaulted_env('BRUTE_FORCE_CACHE_TIMEOUT', 60)),
                     ],
                     'persistent_id' => 'brute-force-cache-replication-group',
                     'lib_options'   => [
