@@ -24,14 +24,14 @@ class AccountContext implements Context
     use ActorContext;
     use BaseUiContextTrait;
 
-    private const USER_SERVICE_AUTHENTICATE           = 'UserService::authenticate';
-    private const LPA_SERVICE_GET_LPAS                = 'LpaService::getLpas';
-    private const USER_SERVICE_DELETE_ACCOUNT         = 'UserService::deleteAccount';
-    private const ONE_LOGIN_SERVICE_AUTHENTICATE      = 'OneLoginService::authenticate';
-    private const ONE_LOGIN_SERVICE_CALLBACK          = 'OneLoginService::callback';
-    private const ONE_LOGIN_SERVICE_LOGOUT            = 'OneLoginService::logout';
-    private const VIEWER_CODE_SERVICE_GET_SHARE_CODES = 'ViewerCodeService::getShareCodes';
-    private const SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
+    private const string USER_SERVICE_AUTHENTICATE           = 'UserService::authenticate';
+    private const string LPA_SERVICE_GET_LPAS                = 'LpaService::getLpas';
+    private const string USER_SERVICE_DELETE_ACCOUNT         = 'UserService::deleteAccount';
+    private const string ONE_LOGIN_SERVICE_AUTHENTICATE      = 'OneLoginService::authenticate';
+    private const string ONE_LOGIN_SERVICE_CALLBACK          = 'OneLoginService::callback';
+    private const string ONE_LOGIN_SERVICE_LOGOUT            = 'OneLoginService::logout';
+    private const string VIEWER_CODE_SERVICE_GET_SHARE_CODES = 'ViewerCodeService::getShareCodes';
+    private const string SYSTEM_MESSAGE_SERVICE_GET_MESSAGES = 'SystemMessageService::getMessages';
 
     private string $userEmail;
     private string $userPassword;
@@ -106,7 +106,7 @@ class AccountContext implements Context
     public function iAmLoggedOutOfTheServiceAndTakenToTheDeletedAccountConfirmationPage(): void
     {
         $this->ui->assertPageAddress('/delete-account');
-        $this->ui->assertPageContainsText("We've deleted your account");
+        $this->assertPageContainsTranslatedText("We've deleted your account");
     }
 
     #[Given('/^I am on the actor privacy notice page$/')]
@@ -220,7 +220,7 @@ class AccountContext implements Context
     public function iAmTakenToTheSessionExpiredPage(): void
     {
         $this->ui->assertPageAddress('/session-expired');
-        $this->ui->assertPageContainsText("We've signed you out");
+        $this->assertPageContainsTranslatedText("We've signed you out");
     }
 
     #[Then('/^I can see the accessibility statement for the Use service$/')]
@@ -556,12 +556,14 @@ class AccountContext implements Context
         $this->ui->visit('/home/login?error=' . $errorType . '&state=fakestate');
     }
 
-    #[Then('/^I am redirected to the login page with a "(.*)" error and "(.*)"$/')]
-    public function iAmRedirectedToTheLanguageErrorPage(string $errorType, $errorMessage): void
+    #[Then('I am redirected to the login page with a :errorType error and :errorMessage')]
+    public function iAmRedirectedToTheLanguageErrorPage(string $errorType, string $errorMessage): void
     {
         $basePath = $this->language === 'cy' ? '/cy' : '';
         $this->ui->assertPageAddress($basePath . '/home?error=' . $errorType);
-        $this->ui->assertPageContainsText($errorMessage);
+
+        $this->ui->assertElementOnPage('div[data-content-id="alert.one-login-error"]');
+        $this->assertPageContainsTranslatedText($errorMessage);
     }
 
     #[Then('/^I have an account whose sub matches a local account$/')]

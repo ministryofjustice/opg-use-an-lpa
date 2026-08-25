@@ -1,0 +1,7 @@
+# Snyk (https://snyk.io) policy file
+version: v1.25.0
+ignore:
+  SNYK-CC-TF-37:
+    - "*":
+        reason: "Public internet access is intentional for these load balancers"
+        expires: 2027-08-25T00:00:00.000Z

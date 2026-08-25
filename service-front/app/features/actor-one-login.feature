@@ -23,12 +23,13 @@ Feature: Authenticate One Login
     When One Login returns a "<error_type>" error
     Then I am redirected to the login page with a "<error_type>" error and "<error_message>"
 
+  # error_message is the translation key
   Examples:
-    | language | error_type              | error_message             |
-    | English  | access_denied           | You’ve been signed out    |
-    | English  | temporarily_unavailable | You’ve been signed out    |
-    | Welsh    | access_denied           | Rydych wedi’ch allgofnodi |
-    | Welsh    | temporarily_unavailable | Rydych wedi’ch allgofnodi |
+    | language | error_type              | error_message          |
+    | English  | access_denied           | You’ve been signed out |
+    | English  | temporarily_unavailable | You’ve been signed out |
+    | Welsh    | access_denied           | You’ve been signed out |
+    | Welsh    | temporarily_unavailable | You’ve been signed out |
 
   @ui
   Scenario Outline: One Login returns a system error

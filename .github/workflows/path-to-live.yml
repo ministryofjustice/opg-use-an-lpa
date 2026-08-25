@@ -92,9 +92,11 @@ jobs:
       - workflow_variables
     with:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
       workspace: development
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
+      SNYK_OPG_ORG_TOKEN: ${{secrets.SNYK_OPG_ORG_TOKEN}}
     if: |
       always() &&
       needs.workflow_variables.result == 'success' &&
