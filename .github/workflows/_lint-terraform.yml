@@ -15,6 +15,10 @@ on:
         description: "OIDC terraform role to assume"
         required: true
         type: string
+      oidc_docker_role:
+        description: "OIDC role to assume for ECR access"
+        required: true
+        type: string
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY:
         required: true
@@ -51,13 +55,13 @@ jobs:
       - uses: terraform-linters/setup-tflint@ae78205cfffec9e8d93fd2b3115c7e9d3166d4b6 # v5.0.0
         name: Setup TFLint
 
-      - name: configure AWS credentials for terraform
+      - name: configure AWS credentials for ECR
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
-          role-to-assume: ${{ inputs.oidc_terraform_role }}
+          role-to-assume: ${{ inputs.oidc_docker_role }}
           aws-region: eu-west-1
-          role-duration-seconds: 1800
-          role-session-name: OPGUseAnLPAECRGithubAction
+          role-duration-seconds: 900
+          role-session-name: OPGUseAnLPASnykECRLogin
 
       - name: ECR Login
         id: login-ecr
@@ -81,6 +85,14 @@ jobs:
         with:
           category: "Terraform-${{ matrix.folder }}"
           sarif_file: "test-results/terraform-${{ matrix.folder }}-snyk.sarif"
+
+      - name: configure AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: ${{ inputs.oidc_terraform_role }}
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPATerraformLintGithubAction
 
       - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:

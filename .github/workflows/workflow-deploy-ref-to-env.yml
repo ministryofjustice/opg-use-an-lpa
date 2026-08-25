@@ -98,6 +98,7 @@ jobs:
       - workflow_variables
     with:
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
+      oidc_docker_role: ${{ vars.OIDC_DOCKER_ROLE }}
       workspace: ${{ inputs.terraform_workspace }}
     secrets:
       OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
