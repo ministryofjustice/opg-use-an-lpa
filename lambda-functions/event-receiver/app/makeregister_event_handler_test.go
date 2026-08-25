@@ -155,7 +155,7 @@ func TestHandleCloudWatchEvent_FailedToFindUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
-	source = "opg.poas.makeregister"
+	source := "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -179,7 +179,7 @@ func TestHandleCloudWatchEvent_FailedToPutUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
-	source = "opg.poas.makeregister"
+	source := "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -206,7 +206,7 @@ func TestHandleCloudWatchEvent_SuccessToFindUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
-	source = "opg.poas.makeregister"
+	source := "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
@@ -228,7 +228,7 @@ func TestHandleCloudWatchEvent_SuccessToPutUserLpaMap(t *testing.T) {
 	logger = slog.New(slog.DiscardHandler)
 	userId := uuid.New().String()
 	lpaUID := "M-1234-5678-9012"
-	source = "opg.poas.makeregister"
+	source := "opg.poas.makeregister"
 
 	mockDynamo := newMockDynamodbClient(t)
 	mockDynamo.EXPECT().
