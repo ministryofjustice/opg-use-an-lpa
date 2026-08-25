@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-24 15:51+0000\n"
+"PO-Revision-Date: 2026-08-25 09:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1126,7 +1126,7 @@ msgstr "Hysbysiad preifatrwydd"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:12
 msgid "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service."
-msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
+msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:17
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:19
@@ -1146,12 +1146,12 @@ msgstr "beth rydym yn ei wneud gyda’ch data"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:22
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:27
 msgid "how you can get a copy of the data we have about you"
-msgstr "sut y gallwch gael copi o’r data sydd gennym amdanoch"
+msgstr "sut gallwch gael copi o’r data sydd gennym amdanoch"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:23
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:29
 msgid "how you can complain if you think we’ve done something wrong"
-msgstr "sut y gallwch wneud cwyn os ydych yn credu ein bod wedi gwneud rhywbeth o’i le"
+msgstr "sut gallwch wneud cwyn os ydych yn credu ein bod wedi gwneud rhywbeth o’i le"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:26
 msgid "You should read this privacy notice alongside:"
@@ -1159,7 +1159,7 @@ msgstr "Dylech ddarllen yr hysbysiad preifatrwydd hwn ochr yn ochr â:"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:29
 msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a>, which sets out the standards you can expect when we ask for, use or share your personal information"
-msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter wybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan fyddwn yn gofyn am eich gwybodaeth bersonol, ei defnyddio neu ei rhannu"
+msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan fyddwn yn gofyn am eich gwybodaeth bersonol, yn ei defnyddio neu’n ei rhannu"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:36
 msgid "<a class=\"govuk-link\" href=\"https://www.gov.uk/government/publications/opg-privacy-notice-lasting-and-enduring-powers-of-attorney\"> OPG’s lasting power of attorney privacy notice </a>, which explains how we use and protect your data when you’re named on an <abbr title=\"lasting power of attorney\">LPA</abbr>"
@@ -1180,7 +1180,7 @@ msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
 msgid "You can find more information about using the Use a lasting power of attorney service in our <a class=\"govuk-link\" href=\"%terms-of-use%\">terms of use</a> and <a class=\"govuk-link\" href=\"%cookie%\">cookie policy."
-msgstr "Mae rhagor o wybodaeth am y gwasanaeth Gweld atwrneiaeth arhosol yn ein <a class=\"govuk-link\" href=\"%terms-of-use%\">telerau defnyddio</a> a’r <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis."
+msgstr "Mae rhagor o wybodaeth am y gwasanaeth Defnyddio atwrneiaeth arhosol i’w gweld yn ein <a class=\"govuk-link\" href=\"%terms-of-use%\">telerau defnyddio</a> a’r <a class=\"govuk-link\" href=\"%cookie%\">polisi cwcis."
 
 # What data we collect and how we use it
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:59
@@ -3811,7 +3811,7 @@ msgstr "<abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sy’n rhe
 # Link is hard coded to the welsh version
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:44
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
-msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">Mae siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
+msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
 
 # What data we collect and how we use it
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:55
