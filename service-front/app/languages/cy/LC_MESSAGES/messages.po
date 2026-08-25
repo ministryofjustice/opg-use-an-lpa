@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 09:31+0000\n"
+"PO-Revision-Date: 2026-08-25 09:53+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1211,7 +1211,7 @@ msgstr "eich enw a’ch dyddiad geni"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:66
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:70
 msgid "your computer’s IP address while you use this service"
-msgstr "cyfeiriad IP eich cyfrifiadur tra byddwch yn defnyddio’r gwasanaeth hwn"
+msgstr "cyfeiriad IP eich cyfrifiadur wrth ddefnyddio’r gwasanaeth hwn"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:70
 msgid "We use the data to find the <abbr title=\"Lasting power of attorney\">LPA</abbr> you’re named on and to create your account."
@@ -1223,7 +1223,7 @@ msgstr "Mae’r gwasanaeth hefyd yn cadw cofnod o’r codau mynediad <abbr title
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:76
 msgid "If other people named on the <abbr title=\"lasting power of attorney\">LPA</abbr> (the donor or attorneys) are also using the service, they can see which organisations you’ve made access codes for."
-msgstr "Os bydd pobl eraill sydd wedi’u henwi ar y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, gallant weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
+msgstr "Os bydd pobl eraill sydd wedi’u henwi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, gallant weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:79
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:75
@@ -1233,7 +1233,7 @@ msgstr "Cwcis a data am y defnydd a wneir o’r gwasanaeth"
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:81
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:79
 msgid "We collect site usage information from this service. This allows us to see how the service is being used so we can improve it. This information does not contain any personal data and is stored separately from the information you enter when using this service."
-msgstr "Rydym yn casglu gwybodaeth am y defnydd a wneir o’r gwasanaeth hwn. Mae hyn yn ein galluogi i weld sut y defnyddir y gwasanaeth fel y gallwn ei wella Nid yw’r wybodaeth hon yn cynnwys unrhyw ddata personol ac fe’i cedwir ar wahân i’r wybodaeth y byddwch yn ei rhoi wrth ddefnyddio’r gwasanaeth hwn."
+msgstr "Rydym yn casglu gwybodaeth am y defnydd a wneir o’r gwasanaeth hwn. Mae hyn yn ein galluogi i weld sut y defnyddir y gwasanaeth fel y gallwn ei wella. Nid yw’r wybodaeth hon yn cynnwys unrhyw ddata personol ac fe’i cedwir ar wahân i’r wybodaeth y byddwch yn ei rhoi wrth ddefnyddio’r gwasanaeth hwn."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:85
 msgid "Find out more about <a class=\"govuk-link\" href=\"https://www.gov.uk/help/cookies\">cookies</a>."
@@ -1250,7 +1250,7 @@ msgstr "Nid oes rhaid i chi ddefnyddio’r gwasanaeth ar-lein hwn. Os byddai’n
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:93
 msgid "We operate the Use a lasting power of attorney service as part of our legal responsibilities under the Mental Capacity Act 2005."
-msgstr "Rydym yn cynnig y gwasanaeth Defnyddio atwrneiaeth arhosol fel rhan o’n cyfrifoldebau cyfreithiol dan Ddeddf Galluedd Meddyliol 2005."
+msgstr "Rydym yn cynnig y gwasanaeth Defnyddio atwrneiaeth arhosol fel rhan o’n cyfrifoldebau cyfreithiol o dan Ddeddf Galluedd Meddyliol 2005."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:95
 msgid "Personal data and the online summary"
@@ -1274,7 +1274,7 @@ msgstr "enw unrhyw atwrnai anweithredol"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:106
 msgid "whether the <abbr title=\"lasting power of attorney\">LPA</abbr> is currently valid"
-msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn weithredol ar hyn o bryd"
+msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn ddilys ar hyn o bryd"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
 msgid "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used (property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
