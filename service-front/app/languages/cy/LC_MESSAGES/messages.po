@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 10:49+0000\n"
+"PO-Revision-Date: 2026-08-25 11:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1474,7 +1474,7 @@ msgstr "Ffôn (yn Saesneg): 0303 123 1113<br> Ffôn testun: 01625 545860<br> Dyd
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:238
 msgid "Last updated: 30 March 2020"
-msgstr "Diweddarwyd diwethaf: 30 Mawrth 2020"
+msgstr "Diweddarwyd ddiwethaf: 30 Mawrth 2020"
 
 #: src/Actor/templates/actor/cannot-find-lpa.html.twig:3
 msgid "Cannot find LPA"
@@ -2023,6 +2023,7 @@ msgid "A replacement attorney is appointed by the donor to step in for an attorn
 msgstr "Mae atwrnai wrth gefn yn cael ei benodi gan y rhoddwr i gymryd lle atwrnai os nad yw’n gallu gweithredu ar ran y rhoddwr mwyach."
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:12
+#, fuzzy
 msgid "Check your details"
 msgstr "Gwiriwch eich manylion"
 
@@ -2079,6 +2080,7 @@ msgid "Change<span class=\"govuk-visually-hidden\"> attorney's date of birth</sp
 msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni atwrnai</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
+#, fuzzy
 msgid "Telephone number"
 msgstr "Rhif ffôn"
 
@@ -2546,11 +2548,11 @@ msgstr "Nodwch enw sefydliad"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:12
 msgid "We've got your activation key request"
-msgstr "Mae eich cais am allwedd cadarnhau cyfrif wedi ein cyrraedd"
+msgstr "Rydym wedi derbyn eich cais am god actifadu"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:18
 msgid "Once we've checked all the details, we'll post you a letter with your activation key for this LPA. We send it by post because it's more secure."
-msgstr "Ar ôl i ni wirio'r holl fanylion, byddwn yn anfon llythyr atoch gyda'ch allwedd cadarnhau cyfrif ar gyfer yr atwrneiaeth arhosol hon. Byddwn yn ei hanfon drwy'r post oherwydd bod hynny'n fwy diogel."
+msgstr "Ar ôl i ni wirio’r holl fanylion, byddwn yn anfon llythyr atoch gyda'ch cod actifadu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon. Byddwn yn ei anfon drwy’r post am fod hynny'n fwy diogel."
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:19
 msgid "We'll contact you if we need any more information."
