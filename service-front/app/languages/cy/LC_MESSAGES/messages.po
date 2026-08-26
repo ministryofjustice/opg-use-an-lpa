@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-26 10:30+0000\n"
+"PO-Revision-Date: 2026-08-26 10:58+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -69,7 +69,7 @@ msgstr[5] "%count% o godau mynediad actif"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:44
 msgid "No active access codes"
-msgstr "Dim codau mynediad gweithredol"
+msgstr "Dim codau mynediad actif"
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:39
 #: src/Actor/templates/actor/check-access-codes.html.twig:36
@@ -125,7 +125,7 @@ msgstr "GWELD"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:14
 msgid "NOT VIEWED"
-msgstr "HEB WELD LPA"
+msgstr "HEB WELD YR LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:21
 msgid "Access code expires in %count% day"
@@ -147,7 +147,7 @@ msgstr "Daeth eich cod mynediad i ben ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "Access code"
-msgstr "Cod mynediad LPA"
+msgstr "Cod mynediad"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:38
 msgid "Created by"
@@ -155,7 +155,7 @@ msgstr "Crëwyd gan"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:49
 msgid "LPA viewed"
-msgstr "Wedi gweld LPA"
+msgstr "Wedi gweld yr LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:61
 msgid "Viewed"
@@ -167,7 +167,7 @@ msgstr "%organisation% ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:71
 msgid "Not viewed"
-msgstr "Heb weld LPA"
+msgstr "Heb weld yr LPA"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:79
 #: src/Common/templates/common/cookies.html.twig:105
@@ -527,7 +527,7 @@ msgstr "Nac oes, mae angen i mi ofyn am god actifadu"
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:3
 msgid "Your new access code"
-msgstr "Ailosod eich cyfrinair"
+msgstr "Eich cod mynediad newydd"
 
 #: src/Actor/templates/actor/activation-key-request-received.html.twig:39
 #: src/Actor/templates/actor/already-have-activation-key.html.twig:22
@@ -959,7 +959,7 @@ msgstr "Pan fydd sefydliad wedi cael mynediad at LPA, gallwch weld y <br> codau 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:57
 #: src/Actor/templates/actor/check-access-codes.html.twig:54
 msgid "Active codes"
-msgstr "Codau i’w defnyddio"
+msgstr "Codau actif"
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:59
 #: src/Actor/templates/actor/check-access-codes.html.twig:56
@@ -1583,7 +1583,7 @@ msgstr "Os cofrestrwyd yr LPA cyn y dyddiad hwn, bydd angen i chi ddangos yr LPA
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:15
 msgid "If the paper LPA has been lost or destroyed, you can ask OPG for an office copy by calling 0300 456 0300 - office copies cost £35."
-msgstr "Os yw’r LPA papur wedi’i cholli neu ei dinistrio, gallwch ofyn i’r OPG am gopi swyddfa drwy ffonio 0300 456 0300 - mae copi swyddfa o LPA yn costio £35."
+msgstr "Os yw’r LPA bapur wedi’i cholli neu ei dinistrio, gallwch ofyn i OPG am gopi swyddfa drwy ffonio 0300 456 0300 – mae copi swyddfa o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn costio £35."
 
 #: src/Actor/templates/actor/service-names.html.twig:1
 #: src/Common/src/View/Twig/GenericGlobalVariableExtension.php:23
@@ -3740,7 +3740,7 @@ msgstr "Bydd yn rhaid i chi ddechrau eto"
 
 #: src/Viewer/templates/viewer/viewer-session-expired.html.twig:12
 msgid "As you have not used the service for 30 minutes, we've cleared any information you entered."
-msgstr "Gan nad ydych wedi defnyddio’r gwasanaeth ers 30 munud, rydym wedi clirio unrhyw wybodaeth a roddwyd gennych."
+msgstr "Gan nad ydych wedi defnyddio’r gwasanaeth am 30 munud, rydym wedi clirio unrhyw wybodaeth a roddwyd gennych."
 
 #: src/Viewer/templates/viewer/viewer-session-expired.html.twig:14
 msgid "To view an LPA, you'll need to start again."
