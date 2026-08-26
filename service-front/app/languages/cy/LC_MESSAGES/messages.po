@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-26 09:51+0000\n"
+"PO-Revision-Date: 2026-08-26 10:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -911,7 +911,7 @@ msgstr "Efallai y byddwch chi'n ei chael hi'n haws rheoli eich cyfrif trwy gael 
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:82
 msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
-msgstr "Does dim ots pa LPA rydych chi’n ei ddileu ond gallai fod yn fwy cywir cadw’r rhai sy’n dangos fel y’u hychwanegwyd gennych chi, yn enwedig wrth greu codau mynediad ar gyfer sefydliadau."
+msgstr "Does dim ots pa LPA rydych chi’n ei ddileu ond gallai fod yn fwy cywir cadw’r rhai sy’n dangos eu bod wedi cael eu hychwanegu gennych chi, yn enwedig wrth greu codau mynediad ar gyfer sefydliadau."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:83
 msgid "Removing duplicate LPAs is optional."
@@ -1223,7 +1223,7 @@ msgstr "Mae’r gwasanaeth hefyd yn cadw cofnod o’r codau mynediad <abbr title
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:76
 msgid "If other people named on the <abbr title=\"lasting power of attorney\">LPA</abbr> (the donor or attorneys) are also using the service, they can see which organisations you’ve made access codes for."
-msgstr "Os bydd pobl eraill sydd wedi’u henwi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, gallant weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
+msgstr "Os bydd pobl eraill sydd wedi’u henwi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, byddant yn gallu weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:79
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:75
@@ -2113,12 +2113,12 @@ msgstr "Gallwch <a href=\"%view-lpa%\" class=\"govuk-link\">weld yr LPA hon</a> 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:3
 msgid "Which organisation do you want to give access to"
-msgstr "Pa sefydliad ydych chi eisiau rhoi mynediad iddo"
+msgstr "Pa sefydliad hoffech chi ganiatáu mynediad iddo"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:23
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:20
 msgid "Which organisation do you want to give access to?"
-msgstr "Pa sefydliad ydych chi eisiau rhoi mynediad iddo?"
+msgstr "Pa sefydliad hoffech chi ganiatáu mynediad iddo?"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:36
