@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-25 13:58+0000\n"
+"PO-Revision-Date: 2026-08-26 09:51+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1745,7 +1745,7 @@ msgstr "Beth yw cyfeirnod yr atwrneiaeth arhosol (LPA)?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
-msgstr "Ble i ddod o hyd i gyfeirnod yr LPA"
+msgstr "Ble i ddod o hyd i'r cyfeirnod"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
 msgid "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
@@ -1784,7 +1784,7 @@ msgstr "ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr LPA (nid yn atwrna
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:27
 msgid "Where to find the LPA registration date"
-msgstr "Lle i ddod o hyd i ddyddiad cofrestru’r LPA"
+msgstr "Ble i ddod o hyd i ddyddiad cofrestru’r LPA"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:31
 msgid "You can find the registration date on the letter that told you the LPA had been registered, or on the stamp on the first page of the paper LPA."
@@ -1960,7 +1960,7 @@ msgstr "LPAs a gofrestrwyd gan Swyddfa’r Gwarcheidwad Cyhoeddus yn yr Alban"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:48
 msgid "I do not know the LPA reference number"
-msgstr "Dydw i ddim yn gwybod cyfeirnod yr LPA"
+msgstr "Ble i ddod o hyd i gyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:52
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
@@ -3760,7 +3760,7 @@ msgstr "Rhowch god mynediad LPA"
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:27
 msgid "An <abbr title=\"lasting power of attorney\">LPA</abbr> access code is a unique code given to you by the donor or an attorney named on a lasting power of attorney."
-msgstr "Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a roir i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol."
+msgstr "Cod unigryw yw cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> a gaiff ei roi i chi gan y rhoddwr neu atwrnai a enwir mewn atwrneiaeth arhosol. Mae codau mynediad yn gymysgedd o 13 llythyren a rhif ac yn dechrau gyda V."
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:34
 msgid "Donor's last name"
