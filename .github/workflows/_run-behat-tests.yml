@@ -97,6 +97,11 @@ jobs:
           path: tests/smoke/failed_step_screenshots
         if: always()
 
+      - name: Attach Axe test results to summary
+        run: |
+          cat $PWD/tests/smoke/axe-results.md >> $GITHUB_STEP_SUMMARY
+        if: success()
+
       - name: remove gh actions ingress to environment
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}

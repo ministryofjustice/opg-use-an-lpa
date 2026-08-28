@@ -59,8 +59,15 @@ services:
       - --no-scripts
       - --optimize-autoloader
 
+  actor-app:
+    environment:
+      CSP_AUTH_DOMAIN: http://mock-one-login:8080
+      #CSP_AUTH_DOMAIN: http://localhost:4013
+      CSP_REPORT_URI: https://proxy:9042
+
   mock-one-login:
     environment:
       PUBLIC_URL: http://mock-one-login:8080
+      #PUBLIC_URL: http://localhost:4013
       INTERNAL_URL: http://mock-one-login:8080
       REDIRECT_URL: https://proxy:9042/home/login
