@@ -17,6 +17,7 @@ RUN set -xe \
   && apk del autoconf
 
 COPY tests/smoke/composer.json tests/smoke/composer.lock /app/
+COPY tests/smoke/packages/ /app/packages/
 
 RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
     composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --no-dev && \
