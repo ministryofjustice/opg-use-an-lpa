@@ -51,6 +51,7 @@ class AxeChromeDriver extends DriverDecorator
                         }
                     );'
             );
+            print_r($this->driver->getConsoleMessages() ?? '');
             $this->wait(5000, 'window.__axeResults !== "undefined"');
             if ($this->evaluateScript('window.__axeResults !== "undefined"')) {
                 $output = $this->evaluateScript('window.__axeResults;');
