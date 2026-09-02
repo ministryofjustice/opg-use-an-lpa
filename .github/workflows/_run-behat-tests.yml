@@ -99,8 +99,7 @@ jobs:
 
       - name: Attach Axe test results to summary
         run: |
-          cat tests/smoke/behat.yml
-          [[ -f "tests/smoke/axe_results.md" ]] && cat tests/smoke/axe_results.md >> $GITHUB_STEP_SUMMARY
+          [[ -f "$PWD/tests/smoke/axe_results.md" ]] && cat $PWD/tests/smoke/axe_results.md >> $GITHUB_STEP_SUMMARY
         if: success()
 
       - name: remove gh actions ingress to environment
