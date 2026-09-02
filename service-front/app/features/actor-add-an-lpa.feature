@@ -175,3 +175,12 @@ Feature: Add an LPA
     Then The LPA is not found
     And I click Back to your LPAs
     And I return to the dashboard
+
+  @ui @integration
+  Scenario: The user is able to add a LPA to account with existing LPA
+    Given I have an existing LPA in my account
+    When I am on the add an LPA page
+    And I request to add a different modernised LPA using E9YRUTPM6RLK
+    Then The correct newly added LPA is found and I can confirm to add it
+    And The new LPA is successfully added
+    And I can see a flash message for the added LPA
