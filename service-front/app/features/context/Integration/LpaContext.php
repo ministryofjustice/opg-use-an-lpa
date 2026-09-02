@@ -1967,12 +1967,8 @@ class LpaContext extends BaseIntegrationContext
             $this->userDob
         );
 
-        Assert::assertInstanceOf(
-            AddLpaApiResult::class,
-            $this->addLpaResult
-        );
-
         Assert::assertInstanceOf(AddLpaApiResult::class, $response);
+
         Assert::assertEquals(
             AddLpaApiResult::ADD_LPA_FOUND,
             $response->getResponse()
@@ -1988,28 +1984,6 @@ class LpaContext extends BaseIntegrationContext
     {
         $this->actorLpaToken = '12345';
         $this->actorId       = 1;
-
-        // Existing LPA already associated with the user.
-        $this->apiFixtures->append(
-            ContextUtilities::newResponse(
-                StatusCodeInterface::STATUS_OK,
-                json_encode(
-                    [
-                        $this->actorLpaToken => [
-                            'user-lpa-actor-token' => $this->actorLpaToken,
-                            'date'                 => 'today',
-                            'lpa'                  => [
-                                'uId' => 'EXISTING-LPA-UID',
-                            ],
-                            'actor'                => [
-                                'id' => $this->actorId,
-                            ],
-                        ],
-                    ]
-                ),
-                self::LPA_SERVICE_GET_LPAS
-            )
-        );
     }
 
     #[Then('/^The correct newly added LPA is found and I can confirm to add it$/')]
