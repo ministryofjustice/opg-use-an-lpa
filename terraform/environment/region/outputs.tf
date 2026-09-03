@@ -31,7 +31,7 @@ output "security_group_names" {
     actor_loadbalancer  = aws_security_group.use_loadbalancer.name
     viewer_loadbalancer = aws_security_group.viewer_loadbalancer.name
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
-      var.is_ephemeral
+      var.shared_mock_onelogin_load_balancer_enabled
       ? data.aws_security_group.shared_mock_onelogin_loadbalancer[0].name
       : aws_security_group.mock_onelogin_loadbalancer[0].name
     ) : null
@@ -44,7 +44,7 @@ output "security_group_ids" {
     actor_loadbalancer  = aws_security_group.use_loadbalancer.id
     viewer_loadbalancer = aws_security_group.viewer_loadbalancer.id
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
-      var.is_ephemeral
+      var.shared_mock_onelogin_load_balancer_enabled
       ? tolist(data.aws_lb.shared_mock_onelogin[0].security_groups)[0]
       : aws_security_group.mock_onelogin_loadbalancer[0].id
     ) : null

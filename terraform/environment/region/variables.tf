@@ -224,8 +224,8 @@ variable "mock_onelogin_service_container_version" {
   type        = string
 }
 
-variable "is_ephemeral" {
-  description = "Whether this is an ephemeral (pull request) environment."
+variable "shared_mock_onelogin_load_balancer_enabled" {
+  description = "Whether to use the shared mock onelogin load balancer."
   type        = bool
 }
 

@@ -1,12 +1,12 @@
 data "aws_lb" "shared_mock_onelogin" {
-  count = var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count = var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   name  = "shared-mock-onelogin"
 
   provider = aws.region
 }
 
 data "aws_lb_listener" "shared_mock_onelogin_https" {
-  count             = var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   load_balancer_arn = data.aws_lb.shared_mock_onelogin[0].arn
   port              = 443
 
@@ -14,7 +14,7 @@ data "aws_lb_listener" "shared_mock_onelogin_https" {
 }
 
 data "aws_security_group" "shared_mock_onelogin_loadbalancer" {
-  count = var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count = var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   id    = tolist(data.aws_lb.shared_mock_onelogin[0].security_groups)[0]
 
   provider = aws.region
@@ -42,7 +42,7 @@ resource "aws_lb_target_group" "mock_onelogin" {
 }
 
 resource "aws_lb" "mock_onelogin" {
-  count                      = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count                      = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   name                       = "${var.environment_name}-mock-onelogin"
   internal                   = false
   load_balancer_type         = "application"
@@ -64,7 +64,7 @@ resource "aws_lb" "mock_onelogin" {
 }
 
 resource "aws_lb_listener" "mock_onelogin_loadbalancer_http_redirect" {
-  count             = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   load_balancer_arn = aws_lb.mock_onelogin[0].arn
   port              = "80"
   protocol          = "HTTP"
@@ -83,7 +83,7 @@ resource "aws_lb_listener" "mock_onelogin_loadbalancer_http_redirect" {
 }
 
 resource "aws_lb_listener" "mock_onelogin_loadbalancer" {
-  count             = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   load_balancer_arn = aws_lb.mock_onelogin[0].arn
   port              = "443"
   protocol          = "HTTPS"
@@ -100,7 +100,7 @@ resource "aws_lb_listener" "mock_onelogin_loadbalancer" {
 }
 
 resource "aws_lb_listener_rule" "shared_mock_onelogin" {
-  count        = var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count        = var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   listener_arn = data.aws_lb_listener.shared_mock_onelogin_https[0].arn
   priority     = local.mock_onelogin_listener_priority
 
@@ -126,7 +126,7 @@ resource "aws_lb_listener_rule" "shared_mock_onelogin" {
 }
 
 resource "aws_security_group" "mock_onelogin_loadbalancer" {
-  count       = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count       = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-mock-onelogin-loadbalancer"
   description = "Mock One Login application load balancer"
   vpc_id      = data.aws_vpc.main.id
@@ -138,7 +138,7 @@ resource "aws_security_group" "mock_onelogin_loadbalancer" {
 }
 
 resource "aws_security_group_rule" "mock_onelogin_loadbalancer_port_80_redirect_ingress" {
-  count             = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   description       = "Port 80 ingress for redirection to port 443"
   type              = "ingress"
   from_port         = 80
@@ -151,7 +151,7 @@ resource "aws_security_group_rule" "mock_onelogin_loadbalancer_port_80_redirect_
 }
 
 resource "aws_security_group_rule" "mock_onelogin_loadbalancer_ingress" {
-  count             = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
@@ -164,7 +164,7 @@ resource "aws_security_group_rule" "mock_onelogin_loadbalancer_ingress" {
 }
 
 resource "aws_security_group_rule" "mock_onelogin_loadbalancer_egress" {
-  count             = !var.is_ephemeral && var.mock_onelogin_enabled ? 1 : 0
+  count             = !var.shared_mock_onelogin_load_balancer_enabled && var.mock_onelogin_enabled ? 1 : 0
   description       = "Allow any egress from Mock One Login load balancer"
   type              = "egress"
   from_port         = 0
