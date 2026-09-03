@@ -83,10 +83,6 @@ class UserLpaActorMap implements UserLpaActorMapInterface
             'Added'     => ['S' => $added->format(DateTimeInterface::ATOM)],
         ];
 
-        if ($source !== null) {
-            $array['Source'] = ['S' => $source];
-        }
-
         if ($actorId !== null) {
             $array['ActorId'] = is_numeric($actorId) ? ['N' => $actorId] : ['S' => $actorId];
         }

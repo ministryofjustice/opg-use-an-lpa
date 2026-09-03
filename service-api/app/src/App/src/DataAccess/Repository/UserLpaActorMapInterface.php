@@ -21,8 +21,7 @@ use DateInterval;
  *     ActivateBy?: int,
  *     DueBy?: string,
  *     ActivatedOn?: string,
- *     HasPaperVerificationCode?: bool,
- *     Source?: string,
+ *     HasPaperVerificationCode?: bool
  * }
  */
 interface UserLpaActorMapInterface
@@ -49,7 +48,6 @@ interface UserLpaActorMapInterface
         ?DateInterval $intervalTillDue = null,
         ?string $code = null,
         ?bool $hasPaperVerificationCode = null,
-        ?string $source = null,
     ): string;
 
     /**

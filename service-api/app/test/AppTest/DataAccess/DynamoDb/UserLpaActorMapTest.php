@@ -50,7 +50,6 @@ class UserLpaActorMapTest extends TestCase
         $testUserId    = 'test-user-id';
         $testActorId   = 1;
         $testAdded     = gmdate('c');
-        $testSource    = 'test-source';
 
         $this->dynamoDbClientProphecy->getItem(Argument::that(function (array $data) use ($testToken) {
             $this->assertArrayHasKey('TableName', $data);
@@ -82,9 +81,6 @@ class UserLpaActorMapTest extends TestCase
                     'Added'     => [
                         'S' => $testAdded,
                     ],
-                    'Source'    => [
-                        'S' => $testSource,
-                    ],
                 ],
             ]))->shouldBeCalled();
 
@@ -102,7 +98,6 @@ class UserLpaActorMapTest extends TestCase
         $this->assertInstanceOf(DateTime::class, $result['Added']);
         $this->assertEquals($testAdded, $result['Added']->format('c'));
         $this->assertEquals($testActorId, $result['ActorId']);
-        $this->assertEquals($testSource, $result['Source']);
     }
 
     #[Test]
@@ -150,14 +145,12 @@ class UserLpaActorMapTest extends TestCase
         $testUserId    = 'test-user-id';
         $testActorId   = 1;
         $testCode      = 'test-code';
-        $testSource    = 'test-source';
 
         $this->dynamoDbClientProphecy->putItem(Argument::that(function (array $data) use (
             $testSiriusUid,
             $testUserId,
             $testActorId,
             $testCode,
-            $testSource,
         ) {
             $this->assertArrayHasKey('TableName', $data);
             $this->assertEquals(self::TABLE_NAME, $data['TableName']);
@@ -181,7 +174,6 @@ class UserLpaActorMapTest extends TestCase
             $this->assertEquals(['S' => $testCode], $data['Item']['ActivationCode']);
             $this->assertIsString($data['Item']['ActivationCode']['S']);
             $this->assertEquals(['BOOL' => true], $data['Item']['HasPaperVerificationCode']);
-            $this->assertEquals(['S' => $testSource], $data['Item']['Source']);
 
             // Checks 'now' is correct, we a little bit of leeway
             $this->assertEqualsWithDelta(time(), strtotime($data['Item']['Added']['S']), 5);
@@ -195,7 +187,7 @@ class UserLpaActorMapTest extends TestCase
             $this->prophesize(LoggerInterface::class)->reveal(),
         );
 
-        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode, true, $testSource);
+        $repo->create($testUserId, $testSiriusUid, (string)$testActorId, null, null, $testCode, true);
     }
 
     #[Test]
