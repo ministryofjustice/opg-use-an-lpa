@@ -224,6 +224,11 @@ variable "mock_onelogin_service_container_version" {
   type        = string
 }
 
+variable "is_ephemeral" {
+  description = "Whether this is an ephemeral (pull request) environment."
+  type        = bool
+}
+
 variable "moj_sites" {
   description = "A list of MOJ IP addresses used by security groups to allow access to the admin interface and non-production environments."
   type        = list(string)

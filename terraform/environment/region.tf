@@ -22,6 +22,7 @@ module "eu_west_1" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
+  is_ephemeral                                     = local.is_ephemeral
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
   google_analytics_id_use                          = local.environment.google_analytics_id_use
@@ -116,6 +117,7 @@ module "eu_west_2" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
+  is_ephemeral                                     = local.is_ephemeral
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
   google_analytics_id_use                          = local.environment.google_analytics_id_use

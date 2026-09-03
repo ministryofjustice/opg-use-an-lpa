@@ -103,7 +103,7 @@ resource "aws_security_group_rule" "mock_onelogin_ecs_service_ingress" {
   to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.mock_onelogin_ecs_service[0].id
-  source_security_group_id = aws_security_group.mock_onelogin_loadbalancer[0].id
+  source_security_group_id = var.is_ephemeral ? tolist(data.aws_lb.shared_mock_onelogin[0].security_groups)[0] : aws_security_group.mock_onelogin_loadbalancer[0].id
   lifecycle {
     create_before_destroy = true
   }
