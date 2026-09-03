@@ -71,6 +71,8 @@ class LpaContext extends BaseIntegrationContext
     private string $userSurname;
     private string $codeCreatedDate;
 
+    private ?AddLpaApiResult $addLpaResult;
+
     #[Given('/^I am told that I have already requested an activation key for this LPA$/')]
     public function iAmToldThatIHaveAlreadyRequestedAnActivationKeyForThisLPA(): void
     {
@@ -1937,6 +1939,87 @@ class LpaContext extends BaseIntegrationContext
                     ]
                 )
             )
+        );
+    }
+
+    #[When('/^I request to add a different modernised LPA using (.*)$/')]
+    public function iRequestToAddADifferentModernisedLpaUsing(string $code): void
+    {
+        $this->iHaveAModernisedLpa();
+
+        $this->activation_key = $code;
+
+        // API call for checking the LPA
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_OK,
+                json_encode($this->lpaData),
+                self::ADD_LPA_VALIDATE
+            )
+        );
+
+        $addLpa = $this->container->get(AddLpa::class);
+
+        $response = $addLpa->validate(
+            $this->userIdentity,
+            $this->activation_key,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        Assert::assertInstanceOf(AddLpaApiResult::class, $response);
+
+        Assert::assertEquals(
+            AddLpaApiResult::ADD_LPA_FOUND,
+            $response->getResponse()
+        );
+        Assert::assertEquals(
+            $this->lpa['uId'],
+            $response->getData()['lpa']->getUId()
+        );
+    }
+
+    #[Given('/^I have an existing LPA in my account$/')]
+    public function iHaveAnExistingLPAInMyAccount(): void
+    {
+        $this->actorLpaToken = '12345';
+        $this->actorId       = 1;
+    }
+
+    #[Then('/^The correct newly added LPA is found and I can confirm to add it$/')]
+    public function theCorrectNewlyAddedLPAIsFoundAndICanConfirmToAddIt(): void
+    {
+        // Not needed for this context
+    }
+
+    #[Then('The new LPA is successfully added')]
+    public function theNewLPAIsSuccessfullyAdded(): void
+    {
+        $this->actorLpaToken = '24680';
+        $this->actorId       = 9;
+
+        $this->apiFixtures->append(
+            ContextUtilities::newResponse(
+                StatusCodeInterface::STATUS_CREATED,
+                json_encode([
+                    'user-lpa-actor-token' => $this->actorLpaToken,
+                ]),
+                self::ADD_LPA_CONFIRM
+            )
+        );
+
+        $addLpa = $this->container->get(AddLpa::class);
+
+        $response = $addLpa->confirm(
+            $this->userIdentity,
+            $this->activation_key,
+            $this->referenceNo,
+            $this->userDob
+        );
+
+        Assert::assertEquals(
+            AddLpaApiResult::ADD_LPA_SUCCESS,
+            $response->getResponse()
         );
     }
 }
