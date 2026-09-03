@@ -2856,6 +2856,8 @@ class LpaContext implements Context
             file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json')
         );
 
+        $newLpa->uId = 'M-7890-0400-4000';
+
         $newLpaData                         = $this->lpaData;
         $newLpaData['user-lpa-actor-token'] = $newUserLpaActorToken;
         $newLpaData['lpa']                  = $newLpa;
@@ -3602,6 +3604,7 @@ class LpaContext implements Context
             file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json')
         );
 
+        $newLpa->uId          = 'M-7890-0400-4000';
         $newUserLpaActorToken = '987654322';
 
         $newLpaData = [
