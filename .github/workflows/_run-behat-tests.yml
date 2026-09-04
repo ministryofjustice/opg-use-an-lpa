@@ -55,6 +55,7 @@ jobs:
 
       - name: allow gh actions ingress to environment
         env:
+          CI_INGRESS_RULE_DESCRIPTION: ci ingress ${{ github.run_id }}-${{ github.run_attempt }}
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}
@@ -99,6 +100,7 @@ jobs:
 
       - name: remove gh actions ingress to environment
         env:
+          CI_INGRESS_RULE_DESCRIPTION: ci ingress ${{ github.run_id }}-${{ github.run_attempt }}
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}

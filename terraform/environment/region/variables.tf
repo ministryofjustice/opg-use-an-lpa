@@ -224,6 +224,11 @@ variable "mock_onelogin_service_container_version" {
   type        = string
 }
 
+variable "shared_mock_onelogin_load_balancer_enabled" {
+  description = "Whether to use the shared mock onelogin load balancer."
+  type        = bool
+}
+
 variable "moj_sites" {
   description = "A list of MOJ IP addresses used by security groups to allow access to the admin interface and non-production environments."
   type        = list(string)
