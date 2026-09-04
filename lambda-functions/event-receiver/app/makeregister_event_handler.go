@@ -59,7 +59,7 @@ func (h *MakeRegisterEventHandler) EventHandler(ctx context.Context, factory Fac
 			return err
 		}
 
-		if err := handleLpas(ctx, dynamodbClient, actor, data.UID); err != nil {
+		if err := handleLpas(ctx, dynamodbClient, actor, data.UID, record.Source); err != nil {
 			return err
 		}
 	}
@@ -88,7 +88,7 @@ func handleUsers(ctx context.Context, dynamoClient DynamodbClient, actor *Actor)
 	return nil
 }
 
-func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, lpaUID string) error {
+func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, lpaUID string, source string) error {
 	lpaExists, err := dynamoClient.ExistsLpaIDAndUserID(ctx, lpaUID, actor.Id)
 	if err == nil && lpaExists == true {
 		return nil
@@ -105,6 +105,7 @@ func handleLpas(ctx context.Context, dynamoClient DynamodbClient, actor Actor, l
 		"Added":   &types.AttributeValueMemberS{Value: time.Now().Format(time.RFC3339)},
 		"UserId":  &types.AttributeValueMemberS{Value: actor.Id},
 		"Comment": &types.AttributeValueMemberS{Value: "LPA added by Event Receiver"},
+		"Source":  &types.AttributeValueMemberS{Value: source},
 	}
 	if err := dynamoClient.Put(ctx, actorMapTable, newLPA); err != nil {
 		return fmt.Errorf("Failed to insert LPA mapping for user %s: %w", lpaUID, err)
