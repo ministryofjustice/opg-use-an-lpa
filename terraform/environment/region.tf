@@ -22,7 +22,6 @@ module "eu_west_1" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
-  shared_mock_onelogin_load_balancer_enabled       = local.shared_mock_onelogin_load_balancer_enabled
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
   google_analytics_id_use                          = local.environment.google_analytics_id_use
@@ -41,6 +40,7 @@ module "eu_west_1" {
   lpa_data_store_secret_name                       = local.environment.lpa_data_store_secret_name
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
+  shared_mock_onelogin_load_balancer_enabled       = local.shared_mock_onelogin_load_balancer_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
@@ -117,7 +117,6 @@ module "eu_west_2" {
   ecs_execution_role                               = module.iam.ecs_execution_role
   ecs_task_roles                                   = module.iam.ecs_task_roles
   environment_name                                 = local.environment_name
-  shared_mock_onelogin_load_balancer_enabled       = local.shared_mock_onelogin_load_balancer_enabled
   event_bus_enabled                                = local.environment.event_bus_enabled
   event_reciever_kms_key_arn                       = data.aws_kms_alias.event_receiver.target_key_arn
   google_analytics_id_use                          = local.environment.google_analytics_id_use
@@ -136,6 +135,7 @@ module "eu_west_2" {
   lpa_data_store_secret_name                       = local.environment.lpa_data_store_secret_name
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
+  shared_mock_onelogin_load_balancer_enabled       = local.environment.shared_mock_onelogin_load_balancer_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
