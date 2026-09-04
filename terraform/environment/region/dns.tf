@@ -125,7 +125,7 @@ module "mock_onelogin_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = aws_lb.mock_onelogin[0]
+  loadbalancer               = var.shared_mock_onelogin_load_balancer_enabled ? data.aws_lb.shared_mock_onelogin[0] : aws_lb.mock_onelogin[0]
   service_name               = "mock-onelogin"
   dns_name                   = "mol.lastingpowerofattorney"
   environment_name           = var.environment_name
