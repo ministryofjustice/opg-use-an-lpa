@@ -12,4 +12,9 @@ ignore:
         reason: Base image vuln in acl/libacl1 - very new CVE with no available fix, acceptable risk for Lambda function
         expires: 2027-07-13T23:59:59.000Z
         created: 2026-06-30T00:00:00.000Z
+  SNYK-DEBIAN13-ZLIB-19520500:
+    - '*':
+        reason: Base image vuln in zlib/zlib1g - very new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2026-11-04T23:59:59.000Z
+        created: 2026-09-04T00:00:00.000Z
 patch: {}
