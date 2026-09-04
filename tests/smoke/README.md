@@ -17,17 +17,17 @@ The smoke tests are designed to be run against a running environment, either the
 # use PHPStorm or a method devised in the top level README
 
 # run tests when wanted
-$ composer behat
+$ composer run behat
 
 # alternatively, using the top level Makefile (prompt to be at project root)
 $ make smoke_tests
 
 # create feature step definitions (output to CLI)
-$ composer behat -- --snippets-for
+$ composer run behat -- --snippets-for
 
 # create feature step definitions (append to specified context class)
 # please note that the class namespaces must be escaped with double '\\'
-$ composer behat -- --snippets-for Test\\Context\\AccountContext --append-snippets
+$ composer run behat -- --snippets-for Test\\Context\\AccountContext --append-snippets
 ```
 
 ## Feature Flags
@@ -47,7 +47,7 @@ It's also possible, though maybe slightly less useful in the context of ephemera
 @ff:my_tag_name:false
 ```
 
-Setting the flag value is a case of editing the `.github/workflows/_run-behat-tests.yml` file to ensure the value is available. _There will probably be a whole other list of things you'll need to do in Terraform to expose the flag setting to the CI system_. When running the suite locally you'll be adding your value to the `tests/smoke/.env` file. 
+Setting the flag value is a case of editing the `.github/workflows/_run-behat-tests.yml` file to ensure the value is available. _There will probably be a whole other list of things you'll need to do in Terraform to expose the flag setting to the CI system_. When running the suite locally you'll be adding your value to the `tests/smoke/.env` file.
 
 > ### Environment variable naming
 > Your tag name needs some transformation to become an environment variable the system will use.
@@ -58,9 +58,9 @@ Setting the flag value is a case of editing the `.github/workflows/_run-behat-te
 
 > ### TLDR
 > The smoke test suite needs a fresh, unused (and so uncached) environment to function. Ensure you bring the whole stack down first before bringing it up to run the test suite. You MUST NOT use the environment before running the suite.
-> 
+>
 > Additionally, after you're done with testing you'll need to repeat this process to make the environment good for local usage again.
 
-One Login is an OIDC login provider at it's core and is a service provided by someone else, so we have little control over its workings. Because of this we use a mock service to drive local development and the test suites. 
+One Login is an OIDC login provider at it's core and is a service provided by someone else, so we have little control over its workings. Because of this we use a mock service to drive local development and the test suites.
 
 The tests that we need to run require that we are signed in and so there are some special things that need setting up when running the tests locally and in the CI environments that mean subtly breaking the local environment. Namely, the Mock service that we run needs to be configured differently for local dev then it does for running the tests and because the app caches things that the mock provides it all falls over if you try to switch between the two.

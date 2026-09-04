@@ -1,0 +1,23 @@
+{
+    "name": "ministryofjustice/behat-axe-extension",
+    "description": "Tests Axe accessibility on visited pages using Javascript injection",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "BehatAxeExtension\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Cooper",
+            "email": "adam.cooper@publicguardian.gov.uk"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "behat/behat": "^3.6",
+        "dmore/chrome-mink-driver": "^2.7",
+        "symfony/dependency-injection": "^7.0"
+    }
+}
