@@ -20,7 +20,7 @@ output "albs" {
   value = {
     actor         = aws_lb.use
     admin         = aws_lb.admin
-    viewer        = aws_lb.viewer
+    viewer        = var.shared_viewer_load_balancer_enabled ? data.aws_lb.shared_viewer : aws_lb.viewer
     mock_onelogin = aws_lb.mock_onelogin
   }
 }
@@ -28,8 +28,12 @@ output "albs" {
 output "security_group_names" {
   description = "Security group names"
   value = {
-    actor_loadbalancer  = aws_security_group.use_loadbalancer.name
-    viewer_loadbalancer = aws_security_group.viewer_loadbalancer.name
+    actor_loadbalancer = aws_security_group.use_loadbalancer.name
+    viewer_loadbalancer = (
+      var.shared_viewer_load_balancer_enabled
+      ? data.aws_security_group.shared_viewer_loadbalancer[0].name
+      : aws_security_group.viewer_loadbalancer[0].name
+    )
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
       var.shared_mock_onelogin_load_balancer_enabled
       ? data.aws_security_group.shared_mock_onelogin_loadbalancer[0].name
@@ -41,8 +45,12 @@ output "security_group_names" {
 output "security_group_ids" {
   description = "Security group ids"
   value = {
-    actor_loadbalancer  = aws_security_group.use_loadbalancer.id
-    viewer_loadbalancer = aws_security_group.viewer_loadbalancer.id
+    actor_loadbalancer = aws_security_group.use_loadbalancer.id
+    viewer_loadbalancer = (
+      var.shared_viewer_load_balancer_enabled
+      ? tolist(data.aws_lb.shared_viewer[0].security_groups)[0]
+      : aws_security_group.viewer_loadbalancer[0].id
+    )
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
       var.shared_mock_onelogin_load_balancer_enabled
       ? tolist(data.aws_lb.shared_mock_onelogin[0].security_groups)[0]
