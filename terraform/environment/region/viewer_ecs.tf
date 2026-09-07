@@ -73,7 +73,7 @@ resource "aws_security_group_rule" "viewer_ecs_service_ingress" {
   to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.viewer_ecs_service.id
-  source_security_group_id = aws_security_group.viewer_loadbalancer.id
+  source_security_group_id = var.shared_viewer_load_balancer_enabled ? tolist(data.aws_lb.shared_viewer[0].security_groups)[0] : aws_security_group.viewer_loadbalancer[0].id
   lifecycle {
     create_before_destroy = true
   }

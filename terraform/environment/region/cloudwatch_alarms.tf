@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
+  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "5XX Errors returned to viewer users for ${var.environment_name}"
@@ -6,7 +7,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
   comparison_operator = "GreaterThanThreshold"
   datapoints_to_alarm = 2
   dimensions = {
-    "LoadBalancer" = trimprefix(split(":", aws_lb.viewer.arn)[5], "loadbalancer/")
+    "LoadBalancer" = trimprefix(split(":", aws_lb.viewer[0].arn)[5], "loadbalancer/")
   }
   evaluation_periods        = 2
   insufficient_data_actions = []
@@ -48,6 +49,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
 
 # 4XX anomaly alarms
 resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
+  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
   actions_enabled     = false
   alarm_description   = "Anomaly detection for 4XX Errors returned to viewer users in ${var.environment_name}"
   alarm_name          = "${var.environment_name} viewer 4XX anomaly"
@@ -76,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
       period      = 60
       stat        = "Sum"
       dimensions = {
-        "LoadBalancer" = trimprefix(split(":", aws_lb.viewer.arn)[5], "loadbalancer/")
+        "LoadBalancer" = trimprefix(split(":", aws_lb.viewer[0].arn)[5], "loadbalancer/")
       }
     }
   }
@@ -191,6 +193,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
+  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
   alarm_name          = "${var.environment_name}_ViewerDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
@@ -203,7 +206,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = aws_lb.viewer.arn
+    ResourceArn = aws_lb.viewer[0].arn
   }
 
   provider = aws.region
