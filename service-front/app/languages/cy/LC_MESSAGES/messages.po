@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-08 13:37+0000\n"
+"PO-Revision-Date: 2026-09-08 15:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -3563,11 +3563,11 @@ msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cy
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:54
 msgid "This LPA has preferences (sometimes known as “restrictions and conditions”)"
-msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau (neu ‘gyfyngiadau ac amodau’ fel y’u gelwir weithiau)."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dymuniadau (neu ‘gyfyngiadau ac amodau’ fel y’u gelwir weithiau)"
 
 #: src/Common/templates/partials/full-lpa-display.html.twig:56
 msgid "This LPA has instructions (sometimes known as “restrictions and conditions”)"
-msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau (neu ‘ddewisiadau a chyfarwyddiadau’ fel y’u gelwir weithiau)."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau (neu ‘ddymuniadau a chyfarwyddiadau’ fel y’u gelwir weithiau)"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
