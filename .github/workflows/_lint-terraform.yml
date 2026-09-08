@@ -40,11 +40,11 @@ jobs:
           - folder: "environment"
           - folder: "account"
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       - name: "Set terraform version [${{ matrix.folder }}]"
         id: set-terraform-version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 #v4.5.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           terraform_directory: ./terraform/${{ matrix.folder }}
 
@@ -65,7 +65,7 @@ jobs:
 
       - name: ECR Login
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@d539f0932e70871a027e9d5a9d8fc38589180a64 # v2.1.6
+        uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
         with:
           registries: 311462405659
 
@@ -80,7 +80,7 @@ jobs:
           snyk_test_args: "--severity-threshold=medium"
 
       - name: Upload Snyk IaC results
-        uses: github/codeql-action/upload-sarif@5595ccaf912efad79be6eef63a5619ff05969be3 # v4.37.6
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
         if: always()
         with:
           category: "Terraform-${{ matrix.folder }}"
@@ -94,7 +94,7 @@ jobs:
           role-duration-seconds: 1800
           role-session-name: OPGUseAnLPATerraformLintGithubAction
 
-      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 
