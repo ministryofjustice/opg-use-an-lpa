@@ -32,7 +32,7 @@
     "es6-promise": "^4.2.8",
     "esbuild": "0.28.2",
     "esbuild-sass-plugin": "^3.2.0",
-    "eslint": "^9.0.0",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "jest": "^30.0.0",
