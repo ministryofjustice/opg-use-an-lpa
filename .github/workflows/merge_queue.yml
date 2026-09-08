@@ -35,14 +35,14 @@ jobs:
       semver_tag: ${{ steps.semver_tag.outputs.tag }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
           fetch-tags: true
 
       - name: get changed docs files in any folder
         id: changed-files-docs
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           paths: |
             **/*.md
@@ -58,7 +58,7 @@ jobs:
           fi
 
       - name: Bump version and push tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@b8868247a908f74fafe1905701391580575a6d35 # v4.3.10
+        uses: ministryofjustice/opg-github-actions/actions/semver@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         id: semver_tag
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
