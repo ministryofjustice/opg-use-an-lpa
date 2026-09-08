@@ -70,6 +70,7 @@ variable "environments" {
       mock_onelogin_enabled                            = bool
       shared_mock_onelogin_load_balancer_enabled       = bool
       shared_viewer_load_balancer_enabled              = bool
+      shared_actor_load_balancer_enabled               = bool
       pagerduty_service_name                           = string
       pagerduty_service_id                             = string
       session_expires_use                              = number
