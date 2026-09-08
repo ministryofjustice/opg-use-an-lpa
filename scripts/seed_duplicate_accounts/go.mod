@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/config v1.32.33
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.20.56
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.62.2
-	github.com/go-faker/faker/v4 v4.10.1
+	github.com/go-faker/faker/v4 v4.11.0
 	github.com/google/uuid v1.6.0
 )
 
