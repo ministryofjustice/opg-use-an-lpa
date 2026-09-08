@@ -10,7 +10,7 @@ OPG Use My LPA: Managed by opg-org-infra &amp; Terraform
 
 ## Setup
 
-Clone the following repositories into the same base directory:
+Clone the following repositories into the same base directory: 
 
 - [https://github.com/ministryofjustice/opg-use-an-lpa](https://github.com/ministryofjustice/opg-use-an-lpa)
 - [https://github.com/ministryofjustice/opg-data-lpa](https://github.com/ministryofjustice/opg-data-lpa)
