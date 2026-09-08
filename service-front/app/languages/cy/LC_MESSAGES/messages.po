@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-08-26 10:58+0000\n"
+"PO-Revision-Date: 2026-09-08 11:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1096,7 +1096,7 @@ msgstr "cyfeiriad dychwelyd ar gyfer anfon eich dogfennau’n ôl atoch"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:3
 msgid "Cancel LPA access code"
-msgstr "Canclo cod mynediad LPA"
+msgstr "Canslo cod mynediad LPA"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:12
 msgid "Are you sure you want to cancel this code?"
@@ -1108,7 +1108,7 @@ msgstr "Rydych ar fin canslo cod mynediad"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:15
 msgid "Doing this will stop the organisation from accessing the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can give access again by creating a new code."
-msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gallu cael mynediad at y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> .  Gallwch roi mynediad i’r sefydliad eto yn y dyfodol drwy greu cod newydd."
+msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gallu cael mynediad at y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> . Gallwch roi mynediad i’r sefydliad eto yn y dyfodol drwy greu cod newydd."
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:25
 msgid "No, return to access codes"
@@ -1567,11 +1567,11 @@ msgstr "Rhoi cynnig arall arni"
 # Translation different: ‘We cannot send a code for that LPA’
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:3
 msgid "Cannot send an activation key"
-msgstr "Ni allwn anfon cod ar gyfer yr LPA honno"
+msgstr "Ni allwn anfon cod actifadu"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:11
 msgid "We cannot send an activation key for that LPA"
-msgstr "Ni allwn anfon cod ar gyfer yr LPA honno"
+msgstr "Ni allwn anfon cod actifadu ar gyfer yr LPA honno"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:13
 msgid "You cannot add an LPA registered before September 2019."
@@ -1806,7 +1806,7 @@ msgstr "Os cofrestrwyd yr LPA cyn 1 Medi 2019, ni chewch dderbyn god actifadu ar
 # Welsh says ‘Please let us know if a donor or attorney's details change’
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:47
 msgid "Let us know if your details have changed"
-msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
+msgstr "Rhowch wybod i ni os yw eich manylion wedi newid"
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:49
 msgid "If we do not have your correct details, you will not be able to get an activation key."
@@ -2146,11 +2146,11 @@ msgstr "Mae creu cod mynediad yn golygu y bydd y cod dilysu papur ar gyfer yr <a
 
 #: src/Actor/templates/actor/change-details.html.twig:3
 msgid "Let us know if a donor or attorney’s details change"
-msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
+msgstr "Rhowch wybod i ni os bydd manylion rhoddwr neu atwrnai yn newid"
 
 #: src/Actor/templates/actor/change-details.html.twig:22
 msgid "Let us know if a donor or attorney's details change"
-msgstr "Rhowch wybod inni os bydd manylion rhoddwr neu atwrnai yn newid"
+msgstr "Rhowch wybod i ni os bydd manylion rhoddwr neu atwrnai yn newid"
 
 #: src/Actor/templates/actor/change-details.html.twig:23
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because the first time you show an <abbr title=\"lasting power of attorney\">LPA</abbr> to an organisation, they might ask you to confirm that your name and address match what’s on the <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -3066,7 +3066,7 @@ msgstr "Rheoliadau Diogelu Data Cyffredinol 2018"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:186
 msgid "Data Protection Act 2018"
-msgstr "Bil Diogelu Data 2018"
+msgstr "Deddf Diogelu Data 2018"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:187
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:95
@@ -4661,7 +4661,7 @@ msgstr "Rydych eisoes wedi gofyn am god actifadu ar gyfer yr <abbr title=\"atwrn
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:18
 msgid "LPA type"
-msgstr "Math o atwrneiaeth arhosol:"
+msgstr "Math o LPA"
 
 #: src/Actor/templates/actor/already-requested-activation-key-today.html.twig:24
 msgid "We’ll post you a letter with your activation key for this LPA. It will be sent to the address we have for you on our records. We send the key by post because it’s more secure."
