@@ -12,8 +12,8 @@ resource "aws_cloudwatch_dashboard" "main" {
 }
 
 locals {
-  viewer_alb_arn = trimprefix(aws_lb.viewer.arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/")
-  use_alb_arn    = trimprefix(aws_lb.use.arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/")
+  viewer_alb_arn = var.shared_viewer_load_balancer_enabled ? trimprefix(data.aws_lb.shared_viewer[0].arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/") : trimprefix(aws_lb.viewer[0].arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/")
+  use_alb_arn    = var.shared_actor_load_balancer_enabled ? trimprefix(data.aws_lb.shared_actor[0].arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/") : trimprefix(aws_lb.use[0].arn, "arn:aws:elasticloadbalancing:${var.region_name}:${data.aws_caller_identity.current.account_id}:loadbalancer/")
 }
 
 resource "aws_cloudwatch_dashboard" "onelogin" {

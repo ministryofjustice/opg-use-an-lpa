@@ -229,6 +229,21 @@ variable "shared_mock_onelogin_load_balancer_enabled" {
   type        = bool
 }
 
+variable "shared_viewer_load_balancer_enabled" {
+  description = "Whether to use the shared viewer load balancer."
+  type        = bool
+}
+
+variable "shared_actor_load_balancer_enabled" {
+  description = "Whether to use the shared actor load balancer."
+  type        = bool
+}
+
+variable "shared_admin_load_balancer_enabled" {
+  description = "Whether to use the shared admin load balancer."
+  type        = bool
+}
+
 variable "moj_sites" {
   description = "A list of MOJ IP addresses used by security groups to allow access to the admin interface and non-production environments."
   type        = list(string)

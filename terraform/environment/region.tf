@@ -41,6 +41,9 @@ module "eu_west_1" {
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
   shared_mock_onelogin_load_balancer_enabled       = local.shared_mock_onelogin_load_balancer_enabled
+  shared_viewer_load_balancer_enabled              = local.shared_viewer_load_balancer_enabled
+  shared_actor_load_balancer_enabled               = local.shared_actor_load_balancer_enabled
+  shared_admin_load_balancer_enabled               = local.shared_admin_load_balancer_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
@@ -135,7 +138,10 @@ module "eu_west_2" {
   lpa_data_store_secret_name                       = local.environment.lpa_data_store_secret_name
   receive_account_ids                              = local.environment.receive_account_ids
   mock_onelogin_enabled                            = local.environment.mock_onelogin_enabled
-  shared_mock_onelogin_load_balancer_enabled       = local.environment.shared_mock_onelogin_load_balancer_enabled
+  shared_mock_onelogin_load_balancer_enabled       = local.shared_mock_onelogin_load_balancer_enabled
+  shared_viewer_load_balancer_enabled              = local.shared_viewer_load_balancer_enabled
+  shared_actor_load_balancer_enabled               = local.shared_actor_load_balancer_enabled
+  shared_admin_load_balancer_enabled               = local.shared_admin_load_balancer_enabled
   mock_onelogin_service_container_version          = local.mock_onelogin_version
   moj_sites                                        = module.allow_list.moj_sites
   notify_key_secret_name                           = local.environment.notify_key_secret_name
