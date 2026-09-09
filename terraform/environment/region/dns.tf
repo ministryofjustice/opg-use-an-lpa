@@ -105,7 +105,7 @@ module "admin_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = aws_lb.admin
+  loadbalancer               = var.shared_admin_load_balancer_enabled ? data.aws_lb.shared_admin[0] : aws_lb.admin[0]
   service_name               = "admin"
   dns_name                   = "admin.lastingpowerofattorney"
   environment_name           = var.environment_name

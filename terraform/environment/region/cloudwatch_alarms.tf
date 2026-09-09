@@ -217,6 +217,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
 
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
+  count               = !var.shared_admin_load_balancer_enabled ? 1 : 0
   alarm_name          = "${var.environment_name}_AdminDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
@@ -229,15 +230,10 @@ resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
   treat_missing_data  = "notBreaching"
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   dimensions = {
-    ResourceArn = aws_lb.admin.arn
+    ResourceArn = aws_lb.admin[0].arn
   }
 
   provider = aws.region
-}
-
-moved {
-  from = aws_cloudwatch_metric_alarm.admin_ddos_attack_external[0]
-  to   = aws_cloudwatch_metric_alarm.admin_ddos_attack_external
 }
 
 # ECS Task Monitoring Alarms - PDF Service

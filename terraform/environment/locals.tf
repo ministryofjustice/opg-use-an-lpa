@@ -4,6 +4,7 @@ locals {
   shared_mock_onelogin_load_balancer_enabled = local.environment_name == "development" ? false : local.environment.shared_mock_onelogin_load_balancer_enabled
   shared_viewer_load_balancer_enabled        = local.environment_name == "development" ? false : local.environment.shared_viewer_load_balancer_enabled
   shared_actor_load_balancer_enabled         = local.environment_name == "development" ? false : local.environment.shared_actor_load_balancer_enabled
+  shared_admin_load_balancer_enabled         = local.environment_name == "development" ? false : local.environment.shared_admin_load_balancer_enabled
   dns_namespace_env                          = local.environment.account_name == "production" ? "" : "${local.environment_name}."
   capacity_provider                          = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
   region                                     = data.aws_region.current.region
