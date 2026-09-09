@@ -1,9 +1,9 @@
 [project]
 name = "query-scripts"
 version = "0.1.0"
-requires-python = "==3.14.6"
+requires-python = "==3.14.7"
 dependencies = [
-    "boto3==1.43.64",
+    "boto3==1.43.86",
     "json-lines==0.5.0",
 ]
 
