@@ -19,7 +19,7 @@ output "albs" {
   description = "Objects containing the ALBs"
   value = {
     actor         = var.shared_actor_load_balancer_enabled ? data.aws_lb.shared_actor : aws_lb.use
-    admin         = aws_lb.admin
+    admin         = var.shared_admin_load_balancer_enabled ? data.aws_lb.shared_admin : aws_lb.admin
     viewer        = var.shared_viewer_load_balancer_enabled ? data.aws_lb.shared_viewer : aws_lb.viewer
     mock_onelogin = aws_lb.mock_onelogin
   }
