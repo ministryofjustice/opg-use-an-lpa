@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
-  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "5XX Errors returned to viewer users for ${var.environment_name}"
@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_5xx_errors" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
-  count               = !var.shared_actor_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = true
   alarm_actions       = [aws_sns_topic.cloudwatch_to_pagerduty.arn]
   alarm_description   = "5XX Errors returned to actor users for ${var.environment_name}"
@@ -50,7 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_5xx_errors" {
 
 # 4XX anomaly alarms
 resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
-  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = false
   alarm_description   = "Anomaly detection for 4XX Errors returned to viewer users in ${var.environment_name}"
   alarm_name          = "${var.environment_name} viewer 4XX anomaly"
@@ -86,7 +86,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_4xx_anomaly" {
   provider = aws.region
 }
 resource "aws_cloudwatch_metric_alarm" "actor_4xx_anomaly" {
-  count               = !var.shared_actor_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   actions_enabled     = false
   alarm_description   = "Anomaly detection for 4XX Errors returned to actor users in ${var.environment_name}"
   alarm_name          = "${var.environment_name} actor 4XX anomaly"
@@ -176,7 +176,7 @@ resource "aws_cloudwatch_metric_alarm" "onelogin_reported_unavailable" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
-  count               = !var.shared_actor_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   alarm_name          = "${var.environment_name}_ActorDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
@@ -196,7 +196,7 @@ resource "aws_cloudwatch_metric_alarm" "actor_ddos_attack_external" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
-  count               = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   alarm_name          = "${var.environment_name}_ViewerDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
@@ -217,7 +217,7 @@ resource "aws_cloudwatch_metric_alarm" "viewer_ddos_attack_external" {
 
 
 resource "aws_cloudwatch_metric_alarm" "admin_ddos_attack_external" {
-  count               = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count               = !var.shared_load_balancers_enabled ? 1 : 0
   alarm_name          = "${var.environment_name}_AdminDDoSDetected"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "3"
