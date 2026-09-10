@@ -48,8 +48,8 @@ github.com/mattn/go-colorable v0.1.14 h1:9A9LHSqF/7dyVVX6g0U9cwm9pG3kP9gSzcuIPHP
 github.com/mattn/go-colorable v0.1.14/go.mod h1:6LmQG8QLFO4G5z1gPvYEzlUgJ2wF+stgPZH1UqBm1s8=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/ministryofjustice/opg-go-common v1.165.26 h1:2Bw3WQt6bQ4uCMpzlNJs8guA2cJo2vdFspk9/Jv9iPI=
-github.com/ministryofjustice/opg-go-common v1.165.26/go.mod h1:T//N92zOuykkXQJafierGTEtuQhBbgXMjp+dwOdq5E4=
+github.com/ministryofjustice/opg-go-common v1.165.27 h1:ddTVcRlP+Acob9W1FmjRd/t5gFbJWTS0NbmdAMaATgM=
+github.com/ministryofjustice/opg-go-common v1.165.27/go.mod h1:/IEvmzXksy7x2gxwLeEFqOplUCyLljAjWjhq//wGpqg=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
 github.com/pkg/errors v0.9.1/go.mod h1:bwawxfHBFNV+L2hUp1rHADufV3IMtnDRdf1r5NINEl0=
 github.com/rs/xid v1.6.0 h1:fV591PaemRlL6JfRxGDEPl69wICngIQ3shQtzfy2gxU=
