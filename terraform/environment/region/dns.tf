@@ -27,7 +27,7 @@ module "public_facing_view_lasting_power_of_attorney" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.zone_id
-  loadbalancer               = var.shared_viewer_load_balancer_enabled ? data.aws_lb.shared_viewer[0] : aws_lb.viewer[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_viewer[0] : aws_lb.viewer[0]
   dns_name                   = data.aws_route53_zone.live_service_view_lasting_power_of_attorney.name
   environment_name           = var.environment_name
   create_block_email_records = true
@@ -45,11 +45,11 @@ module "viewer_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = var.shared_viewer_load_balancer_enabled ? data.aws_lb.shared_viewer[0] : aws_lb.viewer[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_viewer[0] : aws_lb.viewer[0]
   dns_name                   = "view.lastingpowerofattorney"
   service_name               = "viewer"
-  create_alarm               = !var.shared_viewer_load_balancer_enabled
-  create_health_check        = !var.shared_viewer_load_balancer_enabled
+  create_alarm               = !var.shared_load_balancers_enabled
+  create_health_check        = !var.shared_load_balancers_enabled
   environment_name           = var.environment_name
   create_block_email_records = true
 
@@ -67,7 +67,7 @@ module "public_facing_use_lasting_power_of_attorney" {
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.zone_id
   dns_name                   = data.aws_route53_zone.live_service_use_lasting_power_of_attorney.name
-  loadbalancer               = var.shared_actor_load_balancer_enabled ? data.aws_lb.shared_actor[0] : aws_lb.use[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_actor[0] : aws_lb.use[0]
   environment_name           = var.environment_name
   create_block_email_records = true
 
@@ -84,11 +84,11 @@ module "actor_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = var.shared_actor_load_balancer_enabled ? data.aws_lb.shared_actor[0] : aws_lb.use[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_actor[0] : aws_lb.use[0]
   dns_name                   = "use.lastingpowerofattorney"
   service_name               = "actor"
-  create_alarm               = !var.shared_actor_load_balancer_enabled
-  create_health_check        = !var.shared_actor_load_balancer_enabled
+  create_alarm               = !var.shared_load_balancers_enabled
+  create_health_check        = !var.shared_load_balancers_enabled
   environment_name           = var.environment_name
   create_block_email_records = true
 
@@ -105,7 +105,7 @@ module "admin_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = var.shared_admin_load_balancer_enabled ? data.aws_lb.shared_admin[0] : aws_lb.admin[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_admin[0] : aws_lb.admin[0]
   service_name               = "admin"
   dns_name                   = "admin.lastingpowerofattorney"
   environment_name           = var.environment_name
@@ -125,7 +125,7 @@ module "mock_onelogin_use_my_lpa" {
   is_active_region           = local.is_active_region
   current_region             = var.region_name
   zone_id                    = data.aws_route53_zone.opg_service_justice_gov_uk.zone_id
-  loadbalancer               = var.shared_mock_onelogin_load_balancer_enabled ? data.aws_lb.shared_mock_onelogin[0] : aws_lb.mock_onelogin[0]
+  loadbalancer               = var.shared_load_balancers_enabled ? data.aws_lb.shared_mock_onelogin[0] : aws_lb.mock_onelogin[0]
   service_name               = "mock-onelogin"
   dns_name                   = "mol.lastingpowerofattorney"
   environment_name           = var.environment_name
