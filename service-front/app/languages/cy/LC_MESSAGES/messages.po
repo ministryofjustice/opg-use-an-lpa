@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-08 15:05+0000\n"
+"PO-Revision-Date: 2026-09-10 09:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1108,11 +1108,11 @@ msgstr "Rydych ar fin canslo cod mynediad"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:15
 msgid "Doing this will stop the organisation from accessing the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You can give access again by creating a new code."
-msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gallu cael mynediad at y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> . Gallwch roi mynediad i’r sefydliad eto yn y dyfodol drwy greu cod newydd."
+msgstr "Bydd gwneud hyn yn atal y sefydliad rhag gweld y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> . Gallwch roi mynediad unwaith eto i’r sefydliad drwy greu cod newydd."
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:25
 msgid "No, return to access codes"
-msgstr "Nac ydw, hoffwn ddychwelyd i codau mynediad LPA"
+msgstr "Nac ydw, nôl i’r codau mynediad"
 
 #: src/Actor/templates/actor/confirm-cancel-code.html.twig:27
 msgid "Yes, cancel code"
@@ -2851,7 +2851,7 @@ msgstr "Rydych wedi ychwanegu LPA %lpaType% %donor%"
 #: src/Actor/templates/actor/flash-messages.html.twig:7
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
-msgstr "Gwnaethoch ganslo’r cod mynediad ar gyfer %organisation%: %code%"
+msgstr "Rydych wedi canslo’r cod mynediad %organisation%: %code%"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:3
 msgid "We’ve signed you out"
