@@ -2,8 +2,8 @@ name: "[Workflow] Cleanup PR Workspaces"
 
 on:
   schedule:
-    # Run Hourly
-    - cron: "0 * * * *"
+    # Run nightly at 22:00 UTC
+    - cron: "0 22 * * *"
 
 permissions:
   actions: none
@@ -33,6 +33,21 @@ jobs:
           terraform_version: ${{ steps.set-terraform-version.outputs.version }}
           terraform_wrapper: false
 
+      - name: configure AWS credentials for getting pagerduty token
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
+        with:
+          aws-region: eu-west-1
+          role-duration-seconds: 1800
+          role-session-name: OPGUseAnLPADevAssumeGithubAction
+          role-to-assume: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
+
+      - name: set pagerduty token
+        run: |
+          export TF_VAR_pagerduty_token=$(aws secretsmanager get-secret-value --secret-id \
+            shared/pagerduty-token --region eu-west-1 | jq -r '.SecretString' 2>/dev/null)
+          echo "::add-mask::$TF_VAR_pagerduty_token"
+          echo TF_VAR_pagerduty_token=$TF_VAR_pagerduty_token >> $GITHUB_ENV
+
       - name: Configure AWS Credentials For Terraform
         uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
         with:
@@ -57,7 +72,5 @@ jobs:
 
       - name: Destroy PR Terraform Workspaces
         working-directory: ./terraform/environment
-        env:
-          TF_VAR_pagerduty_token: ${{ secrets.PAGERDUTY_TOKEN }}
         run: |
           ../../scripts/pipeline/workspace_cleanup/workspace_cleanup.sh $(terraform-workspace-manager -protected-workspaces=true -aws-account-id=367815980639 -aws-iam-role=opg-use-an-lpa-ci-boundary)
