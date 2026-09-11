@@ -27,12 +27,12 @@ jobs:
   run_behat:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       - name: Install uv
-        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39  # v8.2.0
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990  # v8.3.2
         with:
-          version: "0.11.24"
+          version: "0.12.8"
           python-version: "3.14.6"
 
       - name: Install dependencies
@@ -55,6 +55,7 @@ jobs:
 
       - name: allow gh actions ingress to environment
         env:
+          CI_INGRESS_RULE_DESCRIPTION: ci ingress ${{ github.run_id }}-${{ github.run_attempt }}
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}
@@ -99,6 +100,7 @@ jobs:
 
       - name: remove gh actions ingress to environment
         env:
+          CI_INGRESS_RULE_DESCRIPTION: ci ingress ${{ github.run_id }}-${{ github.run_attempt }}
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           echo ${TF_WORKSPACE}

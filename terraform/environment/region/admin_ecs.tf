@@ -81,7 +81,7 @@ resource "aws_security_group_rule" "admin_ecs_service_ingress" {
   to_port                  = 8080
   protocol                 = "tcp"
   security_group_id        = aws_security_group.admin_ecs_service.id
-  source_security_group_id = aws_security_group.admin_loadbalancer.id
+  source_security_group_id = var.shared_load_balancers_enabled ? tolist(data.aws_lb.shared_admin[0].security_groups)[0] : aws_security_group.admin_loadbalancer[0].id
   lifecycle {
     create_before_destroy = true
   }
