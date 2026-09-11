@@ -1949,11 +1949,18 @@ class LpaContext extends BaseIntegrationContext
 
         $this->activation_key = $code;
 
-        // API call for checking the LPA
+        // createLpaFromData() expects the internal LPA representation
+        // with a uId, whereas the modernised LPA fixture uses uid.
+        $lpaData        = $this->lpa;
+        $lpaData['uId'] = $lpaData['uid'];
+
+        $apiResponse        = $this->lpaData;
+        $apiResponse['lpa'] = $lpaData;
+
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
                 StatusCodeInterface::STATUS_OK,
-                json_encode($this->lpaData),
+                json_encode($apiResponse),
                 self::ADD_LPA_VALIDATE
             )
         );
