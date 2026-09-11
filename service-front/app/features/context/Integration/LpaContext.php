@@ -1949,10 +1949,37 @@ class LpaContext extends BaseIntegrationContext
 
         $this->activation_key = $code;
 
-        // createLpaFromData() expects the internal LPA representation
-        // with a uId, whereas the modernised LPA fixture uses uid.
-        $lpaData        = $this->lpa;
+        // The modernised LPA fixture uses "uid", whereas the
+        // Sirius Lpa factory expects "uId".
+        $lpaData = $this->lpa;
+
         $lpaData['uId'] = $lpaData['uid'];
+
+        // Convert donor from modernised LPA format to Sirius CaseActor format
+        if (isset($lpaData['donor'])) {
+            $lpaData['donor']['uId']       = $lpaData['donor']['uid'];
+            $lpaData['donor']['firstname'] = $lpaData['donor']['firstNames'];
+            $lpaData['donor']['surname']   = $lpaData['donor']['lastName'];
+            $lpaData['donor']['dob']       = $lpaData['donor']['dateOfBirth'];
+        }
+
+        // Convert attorneys from modernised LPA format to Sirius CaseActor format
+        if (isset($lpaData['attorneys'])) {
+            foreach ($lpaData['attorneys'] as &$attorney) {
+                $attorney['uId']       = $attorney['uid'];
+                $attorney['firstname'] = $attorney['firstNames'];
+                $attorney['surname']   = $attorney['lastName'];
+                $attorney['dob']       = $attorney['dateOfBirth'];
+            }
+            unset($attorney);
+        }
+
+        if (isset($lpaData['trustCorporations'])) {
+            foreach ($lpaData['trustCorporations'] as &$corporation) {
+                $corporation['uId'] = $corporation['uid'];
+            }
+            unset($corporation);
+        }
 
         $apiResponse        = $this->lpaData;
         $apiResponse['lpa'] = $lpaData;
@@ -1980,8 +2007,9 @@ class LpaContext extends BaseIntegrationContext
             AddLpaApiResult::ADD_LPA_FOUND,
             $response->getResponse()
         );
+
         Assert::assertEquals(
-            $this->lpa['uId'],
+            $this->lpa['uid'],
             $response->getData()['lpa']->getUId()
         );
     }
