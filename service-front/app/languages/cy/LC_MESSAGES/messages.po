@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-10 09:12+0000\n"
+"PO-Revision-Date: 2026-09-11 09:10+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -637,7 +637,7 @@ msgstr "Os byddwch yn dileu eich cyfrif Defnyddio atwrneiaeth arhosol:"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:18
 msgid "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will be permanently removed"
-msgstr "bydd unrhyw atwrneiaethau arhosol yr ydych wedi’u hychwanegu yn cael eu dileu’n barhaol"
+msgstr "bydd unrhyw atwrneiaethau arhosol (LPAs) yr ydych wedi’u hychwanegu yn cael eu dileu’n barhaol o’ch cyfrif"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:19
 msgid "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
@@ -645,19 +645,19 @@ msgstr "ni fyddwch yn gallu gweld sut mae’r <abbr title=\"atwrneiaethau arhoso
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid "You can still use paper versions of these <abbr title=\"lasting powers of attorney\">LPAs</abbr> if:"
-msgstr "Gallwch dal ddefnyddio fersiynau papur o’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> hyn:"
+msgstr "Gallwch barhau i ddefnyddio fersiynau papur o’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> hyn os:"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:24
 msgid "the <abbr title=\"lasting powers of attorney\">LPAs</abbr> are still valid"
-msgstr "os yw’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yn dal i fod yn ddilys"
+msgstr "yw’r <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr> yn parhau i fod yn ddilys"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:25
 msgid "you have not been removed as an attorney"
-msgstr "os nad ydych wedi eich disodli fel atwrnai"
+msgstr "nad yw eich new wedi ei dynnu oddi ar rhestr atwrneiod yr LPA"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:28
 msgid "Return to settings"
-msgstr "Dychwelyd i gosodiadau"
+msgstr "Yn ôl i’r gosodiadau"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:31
 msgid "Delete my account"
