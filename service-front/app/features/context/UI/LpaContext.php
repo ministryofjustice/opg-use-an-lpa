@@ -3663,10 +3663,8 @@ class LpaContext implements Context
 
         $request = $this->apiFixtures->getLastRequest();
 
-        dump($request->getUri());
-        dump($request->getBody()->getContents());
-
-        $params = json_decode($request->getBody()->getContents(), true);
+        $body   = (string) $request->getBody();
+        $params = json_decode($body, true);
 
         Assert::assertNotNull($params);
         Assert::assertArrayHasKey('actor-code', $params);
