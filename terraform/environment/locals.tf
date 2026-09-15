@@ -1,9 +1,10 @@
 locals {
-  environment_name  = lower(replace(terraform.workspace, "_", "-"))
-  environment       = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
-  dns_namespace_env = local.environment.account_name == "production" ? "" : "${local.environment_name}."
-  capacity_provider = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
-  region            = data.aws_region.current.region
+  environment_name              = lower(replace(terraform.workspace, "_", "-"))
+  environment                   = contains(keys(var.environments), local.environment_name) ? var.environments[local.environment_name] : var.environments["default"]
+  shared_load_balancers_enabled = local.environment_name != "development" && !contains(keys(var.environments), local.environment_name)
+  dns_namespace_env             = local.environment.account_name == "production" ? "" : "${local.environment_name}."
+  capacity_provider             = local.environment.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  region                        = data.aws_region.current.region
 
   mandatory_moj_tags = {
     business-unit    = "OPG"

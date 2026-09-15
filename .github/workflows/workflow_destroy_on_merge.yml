@@ -37,7 +37,7 @@ jobs:
     steps:
       - name: Set safe branch name
         id: safe_branch_name
-        uses: ministryofjustice/opg-github-actions/actions/branch-name@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
+        uses: ministryofjustice/opg-github-actions/actions/branch-name@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
 
       - name: Set workspace name
         id: set_workspace_name
@@ -53,11 +53,11 @@ jobs:
       - workspace_name
     steps:
       - name: Checkout
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
       - name: Set terraform version
         id: set-terraform-version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           terraform_directory: "./terraform/environment"
 
@@ -67,7 +67,7 @@ jobs:
           terraform_version: ${{ steps.set-terraform-version.outputs.version }}
           terraform_wrapper: false
 
-      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+      - uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           deploy_key: ${{ secrets.OPG_USE_A_LPA_DEPLOY_KEY_PRIVATE_KEY }}
 

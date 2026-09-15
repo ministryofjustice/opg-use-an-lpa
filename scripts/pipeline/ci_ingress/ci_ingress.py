@@ -41,6 +41,7 @@ class IngressManager:
             parameters['viewer_load_balancer_security_group_id'],
             parameters['actor_load_balancer_security_group_id'],
             parameters['mock_onelogin_load_balancer_security_group_id']]
+        self.rule_description = os.getenv('CI_INGRESS_RULE_DESCRIPTION')
 
     def set_iam_role_session(self):
         if os.getenv('CI'):
@@ -73,12 +74,12 @@ class IngressManager:
             ],
         )
 
-    def clear_all_ci_ingress_rules_from_sg(self):
+    def remove_ci_ingress_rules_from_sg(self):
         for sg_id in self.security_groups:
             for ip_permissions in self.get_security_group(sg_id)[
                     'SecurityGroups'][0]['IpPermissions']:
                 for rule in ip_permissions['IpRanges']:
-                    if 'Description' in rule and rule['Description'] == "ci ingress":
+                    if 'Description' in rule and rule['Description'] == self.rule_description:
                         print("found ci ingress rule in " + sg_id)
                         try:
                             logger.info(
@@ -109,12 +110,11 @@ class IngressManager:
 
         for sg_rule in sg_rules:
             if 'Description' in sg_rule and sg_rule[
-                    'Description'] == "ci ingress":
+                    'Description'] == self.rule_description:
                 logger.info(sg_rule)
                 return True
 
     def add_ci_ingress_rule_to_sg(self, ingress_cidr):
-        self.clear_all_ci_ingress_rules_from_sg()
         try:
             for sg_id in self.security_groups:
                 logger.info("Adding SG rule to %s", sg_id)
@@ -127,7 +127,7 @@ class IngressManager:
                             'IpRanges': [
                                 {
                                     'CidrIp': ingress_cidr,
-                                    'Description': 'ci ingress'
+                                    'Description': self.rule_description
                                 },
                             ],
                             'ToPort': 443,
@@ -149,7 +149,7 @@ def main():
                         help="Environment config for script")
     parser.add_argument('--add', dest='action_flag', action='store_const',
                         const=True, default=False,
-                        help='add host IP address to security group ci ingress rule (default: remove all ci ingress rules)')
+                        help='add host IP address to security group ci ingress rule')
 
     args = parser.parse_args()
 
@@ -158,7 +158,7 @@ def main():
     if args.action_flag:
         work.add_ci_ingress_rule_to_sg(ingress_cidr)
     else:
-        work.clear_all_ci_ingress_rules_from_sg()
+        work.remove_ci_ingress_rules_from_sg()
 
 
 if __name__ == "__main__":

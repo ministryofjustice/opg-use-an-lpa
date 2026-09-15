@@ -53,20 +53,20 @@ jobs:
       short_sha: ${{ steps.variables.outputs.short_sha }}
       specific_path: ${{ steps.variables.outputs.path }}
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 2
           ref: ${{ inputs.git_ref }}
 
       - name: get changed files in the admin folder
         id: changed-files-admin
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           paths: |
             service-admin/**
       - name: get changed files in the terraform folder
         id: changed-files-terraform
-        uses: ministryofjustice/opg-github-actions/actions/detect-changes@2ad72748485e27f590599a7e9768b9fc0d5b8e03 # v4.8.7
+        uses: ministryofjustice/opg-github-actions/actions/detect-changes@722a5f955424aaba01e9ca43d68390cd4048d6e1 # v4.10.2
         with:
           paths: |
             terraform/**

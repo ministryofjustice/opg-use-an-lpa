@@ -338,6 +338,13 @@ class ViewerContext implements Context
         Assert::assertStringStartsWith('<!DOCTYPE html>', $request->getBody()->getContents());
     }
 
+    #[When('/^I choose to download a document version of the LPA second time$/')]
+    #[When('/^I choose to download a document version of the LPA third time$/')]
+    public function iChooseToDownloadADocumentVersionOfTheLPASecondTime(): void
+    {
+        $this->ui->visit('/download-lpa');
+    }
+
     #[When('/^I click the (.*) link on the page$/')]
     public function iClickTheBackLinkOnThePage($backLink): void
     {
@@ -1437,5 +1444,14 @@ class ViewerContext implements Context
 
         $link->click();
         $this->ui->assertPageAddress('/paper-verification/number-of-attorneys');
+    }
+
+    #[Then('/^I am rate limited from downloading the LPA$/')]
+    public function iAmRateLimitedFromDownloadingTheLpa(): void
+    {
+        Assert::assertSame(
+            StatusCodeInterface::STATUS_TOO_MANY_REQUESTS,
+            $this->ui->getSession()->getStatusCode()
+        );
     }
 }

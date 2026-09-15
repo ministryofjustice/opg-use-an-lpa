@@ -10,6 +10,8 @@ use Viewer\Handler\CheckCodeHandler;
 use Viewer\Handler\Factory\CheckCodeHandlerFactory;
 use Viewer\Handler\Factory\ViewerSessionCheckHandlerFactory;
 use Viewer\Handler\ViewerSessionCheckHandler;
+use Viewer\Handler\DownloadLpaHandler;
+use Viewer\Handler\Factory\DownloadLpaHandlerFactory;
 
 /**
  * The configuration provider for the App module
@@ -44,6 +46,7 @@ class ConfigProvider
                 // Handlers
                 HealthcheckHandler::class => HealthcheckHandlerFactory::class,
                 CheckCodeHandler::class   => CheckCodeHandlerFactory::class,
+                DownloadLpaHandler::class => DownloadLpaHandlerFactory::class,
             ],
         ];
     }

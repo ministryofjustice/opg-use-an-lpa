@@ -1,4 +1,4 @@
-@viewer @pdfdownload
+@viewer @pdfdownload @PDF
 Feature: PDF download
   As a viewer of a LPA
   I can download that LPA as PDF document
@@ -15,3 +15,11 @@ Feature: PDF download
     Given I am viewing a valid LPA
     When I choose to download a document version of the LPA
     Then a PDF is downloaded
+
+  @ui
+  Scenario: The user is rate limited after downloading the LPA twice within 15 seconds
+    Given I am viewing a valid LPA
+    When I choose to download a document version of the LPA
+    And I choose to download a document version of the LPA second time
+    And I choose to download a document version of the LPA third time
+    Then I am rate limited from downloading the LPA

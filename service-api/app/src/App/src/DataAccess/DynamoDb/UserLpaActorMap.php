@@ -73,6 +73,7 @@ class UserLpaActorMap implements UserLpaActorMapInterface
         ?DateInterval $intervalTillDue = null,
         ?string $code = null,
         ?bool $hasPaperVerificationCode = null,
+        ?string $source = null,
     ): string {
         $added = new DateTimeImmutable('now', new DateTimeZone('Etc/UTC'));
 
