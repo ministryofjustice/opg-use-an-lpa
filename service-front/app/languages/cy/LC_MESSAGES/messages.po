@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-15 14:05+0000\n"
+"PO-Revision-Date: 2026-09-15 15:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2112,27 +2112,23 @@ msgstr "Gallwch <a href=\"%view-lpa%\" class=\"govuk-link\">weld yr LPA hon</a> 
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:3
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:3
-#, fuzzy
 msgid "Which organisation do you want to give access to"
-msgstr "Pa sefydliad hoffech chi ganiatáu mynediad iddo"
+msgstr "Pa sefydliad hoffai gael mynediad i’r LPA?"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:23
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:20
-#, fuzzy
 msgid "Which organisation do you want to give access to?"
-msgstr "Pa sefydliad hoffech chi ganiatáu mynediad iddo?"
+msgstr "Pa sefydliad hoffai gael mynediad i’r LPA?"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:36
-#, fuzzy
 msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
-msgstr "Gallai’r sefydliad fod yn ysbyty, yn gartref gofal neu’n ddarparwr gofal iechyd arall."
+msgstr "Er enghraifft ysbyty, cartref gofal neu ddarparwr gofal iechyd."
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:38
-#, fuzzy
 msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
-msgstr "Gallai’r sefydliad fod yn fanc, yn ddarparwr ynni, neu’n fusnes arall."
+msgstr "Er enghraifft banc, darparwr ynni, neu fusnes arall."
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:45
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:43
