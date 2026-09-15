@@ -98,6 +98,11 @@ jobs:
           path: tests/smoke/failed_step_screenshots
         if: always()
 
+      - name: Attach Axe test results to summary
+        run: |
+          [[ -f "$PWD/tests/smoke/axe_results.md" ]] && cat $PWD/tests/smoke/axe_results.md >> $GITHUB_STEP_SUMMARY
+        if: success()
+
       - name: remove gh actions ingress to environment
         env:
           CI_INGRESS_RULE_DESCRIPTION: ci ingress ${{ github.run_id }}-${{ github.run_attempt }}

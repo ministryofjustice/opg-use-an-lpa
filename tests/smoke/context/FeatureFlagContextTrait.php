@@ -34,7 +34,10 @@ trait FeatureFlagContextTrait
 
         if (($tc = count($this->featureFlags)) > 0) {
             printf("Found %d feature flag/s\n", $tc);
-            array_walk($this->featureFlags, fn ($v, $k): int => printf('  %s: %s', $k, $v));
+            array_walk(
+                $this->featureFlags,
+                fn ($v, $k): int => printf('  %s: %s', $k, $v ? 'true' : 'false')
+            );
         }
     }
 
