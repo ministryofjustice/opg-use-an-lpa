@@ -15,6 +15,7 @@ const fs = fsWithCallbacks.promises;
             './src/images': 'assets/images',
             './node_modules/govuk-frontend/dist/govuk/assets': 'assets',
             './node_modules/@ministryofjustice/frontend/moj/assets': 'assets',
+            './node_modules/axe-core/axe.min.js': 'javascript/axe.min.js',
         },
         out_dir: './dist',
     };

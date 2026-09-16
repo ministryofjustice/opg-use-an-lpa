@@ -1,3 +1,4 @@
 vendor/
 failed_step_screenshots/*
 !failed_step_screenshots/.gitkeep
+axe_results.md

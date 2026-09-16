@@ -8,7 +8,7 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ExpectationException;
 use Behat\Step\Given;
 use Behat\Step\Then;
-use DMore\ChromeDriver\ChromeDriver;
+use BehatAxeExtension\Driver\AxeChromeDriver;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\Assert;
 
@@ -236,7 +236,7 @@ class CommonContext implements Context
         $this->ui->assertSession()->cookieExists('__Host-session');
 
         // could be moved to an assertion function in BaseContext but this is the *only* place this code will be used.
-        /** @var ChromeDriver $driver */
+        /** @var AxeChromeDriver $driver */
         $driver  = $this->ui->getSession()->getDriver();
         $cookies = $driver->getCookies();
 
