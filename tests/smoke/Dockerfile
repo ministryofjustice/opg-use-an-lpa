@@ -15,9 +15,3 @@ RUN set -xe \
   && install-php-extensions xdebug \
   && rm /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
   && apk del autoconf
-
-COPY tests/smoke/composer.json tests/smoke/composer.lock /app/
-
-RUN --mount=type=secret,id=composer-auth COMPOSER_AUTH=$(cat /run/secrets/composer-auth) \
-    composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader --no-dev && \
-    composer check-platform-reqs

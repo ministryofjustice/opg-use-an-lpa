@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02f7a6fca8c4091f631017e9db2d83fc",
+    "content-hash": "b6dc50967521bf681a3fb4f9866c1f5f",
     "packages": [
         {
             "name": "behat/behat",
@@ -700,6 +700,39 @@
                 "source": "https://github.com/FriendsOfBehat/MinkExtension/tree/v2.7.5"
             },
             "time": "2024-01-11T09:12:02+00:00"
+        },
+        {
+            "name": "ministryofjustice/behat-axe-extension",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "packages/behat-axe-extension",
+                "reference": "81a9dec5edd4cda3c2098382ead3c604190d014e"
+            },
+            "require": {
+                "behat/behat": "^3.6",
+                "dmore/chrome-mink-driver": "^2.7",
+                "php": "^8.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BehatAxeExtension\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Cooper",
+                    "email": "adam.cooper@publicguardian.gov.uk"
+                }
+            ],
+            "description": "Tests Axe accessibility on visited pages using Javascript injection",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "myclabs/deep-copy",
@@ -7255,7 +7288,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "ministryofjustice/behat-axe-extension": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
