@@ -69,11 +69,15 @@ e.g.
 git checkout UML-4540 && git pull
 ```
 
-In the `<project root>/terraform/environment` folder, you will need to do the following:
-
-Run Terraform as the `identity` profile. Terraform assumes the required roles for the environment and management accounts.
+In the `<project root>/terraform/environment` folder, load the Terraform environment configuration before running the commands below. This requires `direnv` and sets the Terraform role variables and PagerDuty token.
 
 **Note:** for production and preproduction, consult with a WebOps Engineer as this will require `breakglass` access.
+
+```bash
+direnv allow
+```
+
+Run Terraform as the `identity` profile. Terraform assumes the required roles for the environment and management accounts.
 
 ```bash
 # Select the appropriate workspace in terraform.
@@ -162,11 +166,13 @@ Check out the release tag. For example:
 git checkout v1.275.213
 ```
 
-If the release included changes in `terraform/account`, roll those changes back before the environment changes.
+If the release included changes in `terraform/account`, roll those changes back before the environment changes:
 
-In the `<project root>/terraform/account` folder, select the appropriate workspace and plan the rollback:
+In the `<project root>/terraform/account` folder, load the Terraform environment configuration, select the appropriate workspace and plan the rollback:
 
 ```bash
+direnv allow
+
 aws-vault exec identity -- \
 terraform workspace select <workspace-name>
 
@@ -184,9 +190,11 @@ aws-vault exec identity -- \
 terraform apply
 ```
 
-In the `<project root>/terraform/environment` folder, select the workspace to roll back and initialise Terraform.
+In the `<project root>/terraform/environment` folder, load the Terraform environment configuration, select the workspace to roll back and initialise Terraform.
 
 ```bash
+direnv allow
+
 aws-vault exec identity -- \
 terraform workspace select <workspace-name>
 
