@@ -2896,4 +2896,32 @@ class LpaContext extends BaseIntegrationContext
     {
         // Not needed for this context
     }
+
+    #[Given('/^I have an existing LPA in my account$/')]
+    public function iHaveAnExistingLPAInMyAccount(): void
+    {
+        $now = (new DateTime())->format('Y-m-d\TH:i:s.u\Z');
+
+        $existingLpaUid            = 'EXISTING-LPA-UID';
+        $existingActorId           = 'EXISTING-ACTOR-ID';
+        $existingUserLpaActorToken = '24680';
+
+        $this->awsFixtures->append(
+            new Result(
+                [
+                    'Item' => [
+                        $this->marshalAwsResultData(
+                            [
+                                'Id'        => $existingUserLpaActorToken,
+                                'UserId'    => $this->userId,
+                                'SiriusUid' => $existingLpaUid,
+                                'ActorId'   => $existingActorId,
+                                'Added'     => $now,
+                            ]
+                        ),
+                    ],
+                ]
+            )
+        );
+    }
 }
