@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-15 15:04+0000\n"
+"PO-Revision-Date: 2026-09-18 08:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -260,7 +260,7 @@ msgstr "Os gwnaethoch greu cyfrif Defnyddio atwrneiaeth arhosol cyn 13 Awst 2024
 
 #: src/Actor/templates/actor/one-login.html.twig:73
 msgid "By continuing, you are agreeing to the <a href=\"%link%\" class=\"govuk-link\">terms of the Use a lasting power of attorney service.</a>"
-msgstr "Trwy barhau, rydych yn cytuno i <a href=\"%link%\" class=\"govuk-link\"> delerau’r gwasanaeth Defnyddio atwrneiaeth arhosol.</a>"
+msgstr "Trwy barhau, rydych yn cytuno i <a href=\"%link%\" class=\"govuk-link\">delerau’r gwasanaeth Defnyddio atwrneiaeth arhosol.</a>"
 
 #: src/Actor/templates/actor/add-lpa-triage.html.twig:62
 #: src/Actor/templates/actor/add-lpa/activation-key.html.twig:45
