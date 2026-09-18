@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-18 08:23+0000\n"
+"PO-Revision-Date: 2026-09-18 13:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -637,7 +637,7 @@ msgstr "Os byddwch yn dileu eich cyfrif Defnyddio atwrneiaeth arhosol:"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:18
 msgid "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added will be permanently removed"
-msgstr "bydd unrhyw atwrneiaethau arhosol (LPAs) yr ydych wedi’u hychwanegu yn cael eu dileu’n barhaol o’ch cyfrif"
+msgstr "bydd unrhyw <abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> yr ydych wedi’u hychwanegu yn cael eu dileu’n barhaol o’ch cyfrif"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:19
 msgid "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
