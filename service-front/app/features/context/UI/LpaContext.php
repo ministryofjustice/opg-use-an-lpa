@@ -277,7 +277,7 @@ class LpaContext implements Context
     public function iAmGivenAUniqueAccessCode(): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
-        $this->ui->assertPageContainsText('XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageContainsText('Give this access code to ' . $this->organisation);
     }
 
