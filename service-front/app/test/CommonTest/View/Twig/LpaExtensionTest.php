@@ -482,7 +482,7 @@ class LpaExtensionTest extends TestCase
 
         $viewerCode = $extension->formatViewerCode('111122223333');
 
-        $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
+        $this->assertEquals('V-1111-2222-3333', $viewerCode);
     }
 
      #[Test]

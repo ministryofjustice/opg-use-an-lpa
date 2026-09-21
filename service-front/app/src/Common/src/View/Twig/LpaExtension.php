@@ -210,7 +210,7 @@ class LpaExtension extends AbstractExtension
         $viewerCodeParts = str_split($viewerCode, 4);
         array_unshift($viewerCodeParts, 'V');
 
-        return implode(' - ', $viewerCodeParts);
+        return implode('-', $viewerCodeParts);
     }
 
     public function isLPACancelled(Lpa|CombinedLpa $lpa): bool
