@@ -26,6 +26,7 @@ WORKDIR /app
 # Update openssl to non-vulnerable version
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        libpcre2-8-0=10.46-1~deb13u2 \
         openssl=3.5.6-1~deb13u2 \
         libssl3t64=3.5.6-1~deb13u2 \
         openssl-provider-legacy=3.5.6-1~deb13u2 \
