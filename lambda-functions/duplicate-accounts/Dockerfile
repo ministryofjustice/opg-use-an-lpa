@@ -23,13 +23,10 @@ FROM python:3.14.7-slim@sha256:cad9a2c871761c413caa6fdd6441c783451e740a48aaeba60
 
 WORKDIR /app
 
-# Update openssl to non-vulnerable version
+# Updates to non-vulnerable version
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         libpcre2-8-0=10.46-1~deb13u2 \
-        openssl=3.5.6-1~deb13u2 \
-        libssl3t64=3.5.6-1~deb13u2 \
-        openssl-provider-legacy=3.5.6-1~deb13u2 \
         libcap2=1:2.75-10+deb13u1+b1 \
         libsqlite3-0=3.46.1-7+deb13u2 \
         perl-base=5.40.1-6+deb13u1 \
