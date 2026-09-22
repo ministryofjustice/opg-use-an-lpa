@@ -149,7 +149,10 @@ data "aws_iam_policy_document" "lambda_event_receiver" {
       "kms:Decrypt",
       "kms:DescribeKey"
     ]
-    resources = [data.aws_kms_alias.event_receiver.target_key_arn]
+    resources = [
+      data.aws_kms_alias.event_receiver.target_key_arn,
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn
+    ]
   }
 
   statement {
