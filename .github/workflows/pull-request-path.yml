@@ -262,6 +262,7 @@ jobs:
       - psalm_analysis
     with:
       apply: true
+      add_ttl: true
       container_version: ${{ needs.resolve_docker_tag.outputs.docker_tag }}
       oidc_pagerduty_token_role: ${{ vars.OIDC_PAGERDUTY_TOKEN_ROLE }}
       oidc_terraform_role: ${{ vars.OIDC_TERRAFORM_ROLE_DEVELOPMENT }}
