@@ -43,22 +43,22 @@ class LpaExtensionTest extends TestCase
         $functions = $extension->getFunctions();
 
         $expectedFunctions = [
-            'actor_address'                   => 'actorAddress',
-            'actor_name'                      => 'actorName',
-            'lpa_date'                        => 'lpaDate',
-            'code_date'                       => 'formatDate',
-            'days_remaining_to_expiry'        => 'daysRemaining',
-            'check_if_code_has_expired'       => 'hasCodeExpired',
-            'add_hyphen_to_viewer_code'       => 'formatViewerCode',
+            'actor_address'                        => 'actorAddress',
+            'actor_name'                           => 'actorName',
+            'lpa_date'                             => 'lpaDate',
+            'code_date'                            => 'formatDate',
+            'days_remaining_to_expiry'             => 'daysRemaining',
+            'check_if_code_has_expired'            => 'hasCodeExpired',
+            'add_hyphen_to_viewer_code'            => 'formatViewerCode',
             'add_hyphen_to_viewer_code_with_spans' => 'formatViewerCodeWithSpans',
-            'check_if_code_is_cancelled'      => 'isCodeCancelled',
-            'is_lpa_cancelled'                => 'isLpaCancelled',
-            'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
-            'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
-            'is_sirius_lpa'                   => 'isSiriusLpa',
-            'is_online_channel'               => 'isOnlineChannel',
-            'is_english'                      => 'isEnglish',
-            'lpa_display_type_from_values'    => 'lpaDisplayTypeFromValues',
+            'check_if_code_is_cancelled'           => 'isCodeCancelled',
+            'is_lpa_cancelled'                     => 'isLpaCancelled',
+            'donor_name_with_dob_removed'          => 'donorNameWithDobRemoved',
+            'is_donor_signature_date_too_old'      => 'isDonorSignatureDateOld',
+            'is_sirius_lpa'                        => 'isSiriusLpa',
+            'is_online_channel'                    => 'isOnlineChannel',
+            'is_english'                           => 'isEnglish',
+            'lpa_display_type_from_values'         => 'lpaDisplayTypeFromValues',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
