@@ -100,7 +100,10 @@ class RequestActivationKeyContext implements Context
     public function iAmAskedForMyContactDetails(): void
     {
         $this->ui->assertPageAddress('/lpa/add/contact-details');
-        $this->ui->assertPageContainsText('Your contact details');
+
+        # This should likely be replaced with a more obvious key on when the template gets reworked.
+        # Something like $this->assertPageContainsTranslatedText('requestkey.contact-details.heading');
+        $this->assertPageContainsTranslatedText('Your contact details');
     }
 
     #[Then('/^I am asked to check my answers before requesting an activation key$/')]
@@ -243,7 +246,7 @@ class RequestActivationKeyContext implements Context
     public function iAmAskedToProvideTheDonorSDetailsToVerifyThatIAmTheAttorney(): void
     {
         $this->ui->assertPageAddress('/lpa/add/donor-details');
-        $this->ui->assertPageContainsText("The donor's details");
+        $this->assertPageContainsTranslatedText("The donor's details");
     }
 
     #[Given('/^I am asked for my role on the LPA$/')]
@@ -693,7 +696,7 @@ class RequestActivationKeyContext implements Context
     #[When('/^I enter both a telephone number and select that I cannot take calls$/')]
     public function iEnterBothATelephoneNumberAndSelectThatICannotTakeCalls(): void
     {
-        $this->ui->fillField('telephone', '0123456789');
+        $this->ui->fillField('telephone_option[telephone]', '0123456789');
         $this->ui->fillField('telephone_option[no_phone]', 'yes');
         $this->ui->pressButton('Continue');
     }
@@ -1286,7 +1289,7 @@ class RequestActivationKeyContext implements Context
     public function whenIEnterMyTelephoneNumber(): void
     {
         $this->ui->assertPageAddress('/lpa/add/contact-details');
-        $this->ui->fillField('telephone', '0123456789');
+        $this->ui->fillField('telephone_option[telephone]', '0123456789');
         $this->ui->pressButton('Continue');
     }
 
@@ -1656,8 +1659,10 @@ class RequestActivationKeyContext implements Context
             'queuedForCleansing' => true,
         ];
 
-        $this->ui->assertPageContainsText('Check your details');
-        $this->ui->assertPageContainsText('Confirm and submit request');
+        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
+        $this->ui->assertElementOnPage('form[name="check_details_and_consent"]');
+
+        $this->assertPageContainsTranslatedText('Check your details');
 
         $this->apiFixtures->append(
             ContextUtilities::newResponse(
@@ -1670,8 +1675,7 @@ class RequestActivationKeyContext implements Context
         // API call for Notify
         $this->apiFixtures->append(ContextUtilities::newResponse(StatusCodeInterface::STATUS_OK, json_encode([])));
 
-        $this->ui->assertPageAddress('/lpa/add/check-details-and-consent');
-        $this->ui->pressButton('Confirm and submit request');
+        $this->ui->pressButton('workflow_submit');
     }
 
     #[Then('/^I should expect it within (.*) time$/')]

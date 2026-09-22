@@ -26,10 +26,15 @@ WORKDIR /app
 # Update openssl to non-vulnerable version
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        libpcre2-8-0=10.46-1~deb13u2 \
         openssl=3.5.6-1~deb13u2 \
         libssl3t64=3.5.6-1~deb13u2 \
         openssl-provider-legacy=3.5.6-1~deb13u2 \
         libcap2=1:2.75-10+deb13u1+b1 \
+        libsqlite3-0=3.46.1-7+deb13u2 \
+        libpcre2-8-0=10.46-1~deb13u2 \
+        perl-base=5.40.1-6+deb13u1 \
+        gzip=1.13-1+deb13u1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the runtime dependencies from the builder stage.
