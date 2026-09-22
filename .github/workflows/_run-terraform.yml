@@ -24,6 +24,11 @@ on:
         required: false
         default: "all"
         type: string
+      add_ttl:
+        description: "Register the workspace for protected, time-limited deletion"
+        required: false
+        default: "false"
+        type: string
       extra_vars:
         description: "Extra vars to pass to terraform (-var foo=bar)"
         required: false
@@ -151,6 +156,18 @@ jobs:
         run: |
           terraform apply -lock-timeout=500s -input=false -auto-approve -parallelism=30 ${{ inputs.extra_vars }} terraform.plan
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: install terraform workspace manager
+        if: inputs.apply == 'true' && inputs.add_ttl == 'true'
+        run: |
+          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.13/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
+          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/terraform-workspace-manager
+
+      - name: register workspace for protected deletion
+        if: inputs.apply == 'true' && inputs.add_ttl == 'true'
+        run: |
+          terraform-workspace-manager -register-workspace=${{ inputs.workspace }} -time-to-protect=24 -aws-account-id=367815980639 -aws-iam-role=opg-use-an-lpa-ci-boundary
 
       - name: upload environment cluster config file
         if: inputs.terraform_path == 'environment'
