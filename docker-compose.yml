@@ -305,7 +305,7 @@ services:
     command: []
 
   proxy:
-    image: traefik:3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e
+    image: traefik:v3.6@sha256:31267173a15b4944e797a76ffd9c419707c8d8b32fe5b610f80cd0cfa05f372d
     ports:
       - "9001:9001"
       - "9041:9041"
@@ -320,7 +320,7 @@ services:
       - viewer-web
 
   golang:
-    image: golang:1.25.11-alpine@sha256:c05ba4b73604069d376c4f41346b05374335b5ca0c46fb6dfede5a59f5196931
+    image: golang:1.27.0-alpine@sha256:4c9fe60190a2a3350ddc51de80d0224b8a6698d12bdfc999fee45ea9d6c46dbc
 
 secrets:
   composer-auth:
