@@ -224,23 +224,8 @@ variable "mock_onelogin_service_container_version" {
   type        = string
 }
 
-variable "shared_mock_onelogin_load_balancer_enabled" {
-  description = "Whether to use the shared mock onelogin load balancer."
-  type        = bool
-}
-
-variable "shared_viewer_load_balancer_enabled" {
-  description = "Whether to use the shared viewer load balancer."
-  type        = bool
-}
-
-variable "shared_actor_load_balancer_enabled" {
-  description = "Whether to use the shared actor load balancer."
-  type        = bool
-}
-
-variable "shared_admin_load_balancer_enabled" {
-  description = "Whether to use the shared admin load balancer."
+variable "shared_load_balancers_enabled" {
+  description = "Whether to use the shared account-level load balancers."
   type        = bool
 }
 

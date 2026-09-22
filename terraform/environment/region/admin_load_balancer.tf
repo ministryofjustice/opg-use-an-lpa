@@ -1,12 +1,12 @@
 data "aws_lb" "shared_admin" {
-  count = var.shared_admin_load_balancer_enabled ? 1 : 0
+  count = var.shared_load_balancers_enabled ? 1 : 0
   name  = "shared-admin"
 
   provider = aws.region
 }
 
 data "aws_lb_listener" "shared_admin_https" {
-  count             = var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = data.aws_lb.shared_admin[0].arn
   port              = 443
 
@@ -39,7 +39,7 @@ moved {
 }
 
 resource "aws_lb" "admin" {
-  count                      = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count                      = !var.shared_load_balancers_enabled ? 1 : 0
   name                       = "${var.environment_name}-admin"
   internal                   = false
   load_balancer_type         = "application"
@@ -61,7 +61,7 @@ resource "aws_lb" "admin" {
 }
 
 resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
-  count             = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
   port              = "80"
   protocol          = "HTTP"
@@ -80,7 +80,7 @@ resource "aws_lb_listener" "admin_loadbalancer_http_redirect" {
 }
 
 resource "aws_lb_listener" "admin_loadbalancer" {
-  count             = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = aws_lb.admin[0].arn
   port              = "443"
   protocol          = "HTTPS"
@@ -114,7 +114,7 @@ resource "aws_lb_listener" "admin_loadbalancer" {
 }
 
 resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certificate" {
-  count           = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count           = !var.shared_load_balancers_enabled ? 1 : 0
   listener_arn    = aws_lb_listener.admin_loadbalancer[0].arn
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_use.arn
 
@@ -122,7 +122,7 @@ resource "aws_lb_listener_certificate" "admin_loadbalancer_live_service_certific
 }
 
 resource "aws_security_group" "admin_loadbalancer" {
-  count       = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count       = !var.shared_load_balancers_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-admin-loadbalancer"
   description = "Admin service application load balancer"
   vpc_id      = data.aws_vpc.main.id
@@ -134,7 +134,7 @@ resource "aws_security_group" "admin_loadbalancer" {
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress" {
-  count             = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Port 80 ingress for redirection to port 443"
   type              = "ingress"
   from_port         = 80
@@ -147,7 +147,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_port_80_redirect_ingress"
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
-  count             = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
@@ -160,7 +160,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_ingress" {
 }
 
 resource "aws_security_group_rule" "admin_loadbalancer_egress" {
-  count             = !var.shared_admin_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Allow any egress from Use service load balancer"
   type              = "egress"
   from_port         = 0
@@ -173,7 +173,7 @@ resource "aws_security_group_rule" "admin_loadbalancer_egress" {
 }
 
 resource "aws_lb_listener_rule" "shared_admin" {
-  count        = var.shared_admin_load_balancer_enabled ? 1 : 0
+  count        = var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = data.aws_lb_listener.shared_admin_https[0].arn
   priority     = local.admin_listener_priority
 
@@ -213,44 +213,4 @@ resource "aws_lb_listener_rule" "shared_admin" {
   }
 
   provider = aws.region
-}
-
-moved {
-  from = aws_lb.admin
-  to   = aws_lb.admin[0]
-}
-
-moved {
-  from = aws_lb_listener.admin_loadbalancer_http_redirect
-  to   = aws_lb_listener.admin_loadbalancer_http_redirect[0]
-}
-
-moved {
-  from = aws_lb_listener.admin_loadbalancer
-  to   = aws_lb_listener.admin_loadbalancer[0]
-}
-
-moved {
-  from = aws_lb_listener_certificate.admin_loadbalancer_live_service_certificate
-  to   = aws_lb_listener_certificate.admin_loadbalancer_live_service_certificate[0]
-}
-
-moved {
-  from = aws_security_group.admin_loadbalancer
-  to   = aws_security_group.admin_loadbalancer[0]
-}
-
-moved {
-  from = aws_security_group_rule.admin_loadbalancer_port_80_redirect_ingress
-  to   = aws_security_group_rule.admin_loadbalancer_port_80_redirect_ingress[0]
-}
-
-moved {
-  from = aws_security_group_rule.admin_loadbalancer_ingress
-  to   = aws_security_group_rule.admin_loadbalancer_ingress[0]
-}
-
-moved {
-  from = aws_security_group_rule.admin_loadbalancer_egress
-  to   = aws_security_group_rule.admin_loadbalancer_egress[0]
 }

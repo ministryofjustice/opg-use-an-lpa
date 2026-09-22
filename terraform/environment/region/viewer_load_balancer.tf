@@ -1,12 +1,12 @@
 data "aws_lb" "shared_viewer" {
-  count = var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count = var.shared_load_balancers_enabled ? 1 : 0
   name  = "shared-viewer"
 
   provider = aws.region
 }
 
 data "aws_lb_listener" "shared_viewer_https" {
-  count             = var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = data.aws_lb.shared_viewer[0].arn
   port              = 443
 
@@ -14,7 +14,7 @@ data "aws_lb_listener" "shared_viewer_https" {
 }
 
 data "aws_security_group" "shared_viewer_loadbalancer" {
-  count = var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count = var.shared_load_balancers_enabled ? 1 : 0
   id    = tolist(data.aws_lb.shared_viewer[0].security_groups)[0]
 
   provider = aws.region
@@ -26,7 +26,7 @@ locals {
 }
 
 resource "aws_shield_application_layer_automatic_response" "viewer" {
-  count        = !var.shared_viewer_load_balancer_enabled && var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
+  count        = !var.shared_load_balancers_enabled && var.associate_alb_with_waf_web_acl_enabled ? 1 : 0
   resource_arn = aws_lb.viewer[0].arn
   action       = "BLOCK"
 }
@@ -47,7 +47,7 @@ resource "aws_lb_target_group" "viewer" {
 }
 
 resource "aws_lb" "viewer" {
-  count                      = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count                      = !var.shared_load_balancers_enabled ? 1 : 0
   name                       = "${var.environment_name}-viewer"
   internal                   = false
   load_balancer_type         = "application"
@@ -70,7 +70,7 @@ resource "aws_lb" "viewer" {
 }
 
 resource "aws_lb_listener" "viewer_loadbalancer_http_redirect" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = aws_lb.viewer[0].arn
   port              = "80"
   protocol          = "HTTP"
@@ -89,7 +89,7 @@ resource "aws_lb_listener" "viewer_loadbalancer_http_redirect" {
 }
 
 resource "aws_lb_listener" "viewer_loadbalancer" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   load_balancer_arn = aws_lb.viewer[0].arn
   port              = "443"
   protocol          = "HTTPS"
@@ -106,7 +106,7 @@ resource "aws_lb_listener" "viewer_loadbalancer" {
 }
 
 resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certificate" {
-  count           = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count           = !var.shared_load_balancers_enabled ? 1 : 0
   listener_arn    = aws_lb_listener.viewer_loadbalancer[0].arn
   certificate_arn = data.aws_acm_certificate.public_facing_certificate_view.arn
 
@@ -115,7 +115,7 @@ resource "aws_lb_listener_certificate" "viewer_loadbalancer_live_service_certifi
 
 # redirect root to gov.uk
 resource "aws_lb_listener_rule" "redirect_view_root_to_gov" {
-  count        = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count        = !var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = aws_lb_listener.viewer_loadbalancer[0].arn
   priority     = 1
   action {
@@ -143,7 +143,7 @@ resource "aws_lb_listener_rule" "redirect_view_root_to_gov" {
 
 # rewrite to live service url
 resource "aws_lb_listener_rule" "rewrite_view_to_live_service_url" {
-  count = !var.shared_viewer_load_balancer_enabled && local.is_active_region ? 1 : 0
+  count = !var.shared_load_balancers_enabled && local.is_active_region ? 1 : 0
 
   listener_arn = aws_lb_listener.viewer_loadbalancer[0].arn
   priority     = 2
@@ -191,7 +191,7 @@ resource "aws_ssm_parameter" "viewer_maintenance_switch" {
 }
 
 resource "aws_lb_listener_rule" "viewer_maintenance" {
-  count        = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count        = !var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = aws_lb_listener.viewer_loadbalancer[0].arn
   priority     = 101 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
@@ -224,7 +224,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance" {
 
 
 resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
-  count        = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count        = !var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = aws_lb_listener.viewer_loadbalancer[0].arn
   priority     = 100 # Specifically set so that maintenance mode scripts can locate the correct rule to modify
   action {
@@ -257,7 +257,7 @@ resource "aws_lb_listener_rule" "viewer_maintenance_welsh" {
 
 
 resource "aws_security_group" "viewer_loadbalancer" {
-  count       = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count       = !var.shared_load_balancers_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-viewer-loadbalancer"
   description = "View service application load balancer"
   vpc_id      = data.aws_vpc.main.id
@@ -269,7 +269,7 @@ resource "aws_security_group" "viewer_loadbalancer" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_http" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Port 80 ingress from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 80
@@ -282,7 +282,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_http" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Port 443 ingress from the allow list to the application load balancer"
   type              = "ingress"
   from_port         = 443
@@ -295,7 +295,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_public_access" {
-  count             = !var.shared_viewer_load_balancer_enabled && var.public_access_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled && var.public_access_enabled ? 1 : 0
   description       = "Port 443 ingress for production from the internet to the application load balancer"
   type              = "ingress"
   from_port         = 443
@@ -308,7 +308,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_public_access" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Allow any egress from View service load balancer"
   type              = "egress"
   from_port         = 0
@@ -324,7 +324,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_egress" {
 }
 
 resource "aws_security_group" "viewer_loadbalancer_route53" {
-  count       = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count       = !var.shared_load_balancers_enabled ? 1 : 0
   name_prefix = "${var.environment_name}-viewer-loadbalancer-route53"
   description = "View service Route53 healthchecks"
   vpc_id      = data.aws_vpc.main.id
@@ -333,7 +333,7 @@ resource "aws_security_group" "viewer_loadbalancer_route53" {
 }
 
 resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthchecks" {
-  count             = !var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count             = !var.shared_load_balancers_enabled ? 1 : 0
   description       = "Loadbalancer ingresss from Route53 healthchecks"
   type              = "ingress"
   protocol          = "tcp"
@@ -346,7 +346,7 @@ resource "aws_security_group_rule" "viewer_loadbalancer_ingress_route53_healthch
 }
 
 resource "aws_lb_listener_rule" "shared_viewer_root_redirect" {
-  count        = var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count        = var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = data.aws_lb_listener.shared_viewer_https[0].arn
   priority     = local.viewer_listener_priority
 
@@ -385,7 +385,7 @@ resource "aws_lb_listener_rule" "shared_viewer_root_redirect" {
 }
 
 resource "aws_lb_listener_rule" "shared_viewer" {
-  count        = var.shared_viewer_load_balancer_enabled ? 1 : 0
+  count        = var.shared_load_balancers_enabled ? 1 : 0
   listener_arn = data.aws_lb_listener.shared_viewer_https[0].arn
   priority     = local.viewer_forward_listener_priority
 
@@ -408,74 +408,4 @@ resource "aws_lb_listener_rule" "shared_viewer" {
   }
 
   provider = aws.region
-}
-
-moved {
-  from = aws_lb.viewer
-  to   = aws_lb.viewer[0]
-}
-
-moved {
-  from = aws_lb_listener.viewer_loadbalancer_http_redirect
-  to   = aws_lb_listener.viewer_loadbalancer_http_redirect[0]
-}
-
-moved {
-  from = aws_lb_listener.viewer_loadbalancer
-  to   = aws_lb_listener.viewer_loadbalancer[0]
-}
-
-moved {
-  from = aws_lb_listener_certificate.viewer_loadbalancer_live_service_certificate
-  to   = aws_lb_listener_certificate.viewer_loadbalancer_live_service_certificate[0]
-}
-
-moved {
-  from = aws_lb_listener_rule.redirect_view_root_to_gov
-  to   = aws_lb_listener_rule.redirect_view_root_to_gov[0]
-}
-
-moved {
-  from = aws_lb_listener_rule.viewer_maintenance
-  to   = aws_lb_listener_rule.viewer_maintenance[0]
-}
-
-moved {
-  from = aws_lb_listener_rule.viewer_maintenance_welsh
-  to   = aws_lb_listener_rule.viewer_maintenance_welsh[0]
-}
-
-moved {
-  from = aws_security_group.viewer_loadbalancer
-  to   = aws_security_group.viewer_loadbalancer[0]
-}
-
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_ingress_http
-  to   = aws_security_group_rule.viewer_loadbalancer_ingress_http[0]
-}
-
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_ingress
-  to   = aws_security_group_rule.viewer_loadbalancer_ingress[0]
-}
-
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_ingress_public_access
-  to   = aws_security_group_rule.viewer_loadbalancer_ingress_public_access[0]
-}
-
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_egress
-  to   = aws_security_group_rule.viewer_loadbalancer_egress[0]
-}
-
-moved {
-  from = aws_security_group.viewer_loadbalancer_route53
-  to   = aws_security_group.viewer_loadbalancer_route53[0]
-}
-
-moved {
-  from = aws_security_group_rule.viewer_loadbalancer_ingress_route53_healthchecks
-  to   = aws_security_group_rule.viewer_loadbalancer_ingress_route53_healthchecks[0]
 }

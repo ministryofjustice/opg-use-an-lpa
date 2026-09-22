@@ -18,9 +18,9 @@ output "ecs_services" {
 output "albs" {
   description = "Objects containing the ALBs"
   value = {
-    actor         = var.shared_actor_load_balancer_enabled ? data.aws_lb.shared_actor : aws_lb.use
-    admin         = var.shared_admin_load_balancer_enabled ? data.aws_lb.shared_admin : aws_lb.admin
-    viewer        = var.shared_viewer_load_balancer_enabled ? data.aws_lb.shared_viewer : aws_lb.viewer
+    actor         = var.shared_load_balancers_enabled ? data.aws_lb.shared_actor : aws_lb.use
+    admin         = var.shared_load_balancers_enabled ? data.aws_lb.shared_admin : aws_lb.admin
+    viewer        = var.shared_load_balancers_enabled ? data.aws_lb.shared_viewer : aws_lb.viewer
     mock_onelogin = aws_lb.mock_onelogin
   }
 }
@@ -29,17 +29,17 @@ output "security_group_names" {
   description = "Security group names"
   value = {
     actor_loadbalancer = (
-      var.shared_actor_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? data.aws_security_group.shared_actor_loadbalancer[0].name
       : aws_security_group.use_loadbalancer[0].name
     )
     viewer_loadbalancer = (
-      var.shared_viewer_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? data.aws_security_group.shared_viewer_loadbalancer[0].name
       : aws_security_group.viewer_loadbalancer[0].name
     )
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
-      var.shared_mock_onelogin_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? data.aws_security_group.shared_mock_onelogin_loadbalancer[0].name
       : aws_security_group.mock_onelogin_loadbalancer[0].name
     ) : null
@@ -50,17 +50,17 @@ output "security_group_ids" {
   description = "Security group ids"
   value = {
     actor_loadbalancer = (
-      var.shared_actor_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? tolist(data.aws_lb.shared_actor[0].security_groups)[0]
       : aws_security_group.use_loadbalancer[0].id
     )
     viewer_loadbalancer = (
-      var.shared_viewer_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? tolist(data.aws_lb.shared_viewer[0].security_groups)[0]
       : aws_security_group.viewer_loadbalancer[0].id
     )
     mock_onelogin_loadbalancer = var.mock_onelogin_enabled ? (
-      var.shared_mock_onelogin_load_balancer_enabled
+      var.shared_load_balancers_enabled
       ? tolist(data.aws_lb.shared_mock_onelogin[0].security_groups)[0]
       : aws_security_group.mock_onelogin_loadbalancer[0].id
     ) : null
