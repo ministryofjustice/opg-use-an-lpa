@@ -50,6 +50,7 @@ class LpaExtensionTest extends TestCase
             'days_remaining_to_expiry'        => 'daysRemaining',
             'check_if_code_has_expired'       => 'hasCodeExpired',
             'add_hyphen_to_viewer_code'       => 'formatViewerCode',
+            'add_hyphen_to_viewer_code_with_spans' => 'formatViewerCodeWithSpans',
             'check_if_code_is_cancelled'      => 'isCodeCancelled',
             'is_lpa_cancelled'                => 'isLpaCancelled',
             'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
@@ -70,6 +71,17 @@ class LpaExtensionTest extends TestCase
             $this->assertInstanceOf(LpaExtension::class, $functionCallable[0]);
             $this->assertEquals($expectedFunctions[$function->getName()], $functionCallable[1]);
         }
+    }
+
+    #[Test]
+    public function it_formats_a_viewer_code_with_individual_spans_for_visual_spacing(): void
+    {
+        $extension = new LpaExtension($this->translator);
+
+        $this->assertSame(
+            '<span class="lpa-access-code__part">V</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">AB12</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">CD34</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">EF56</span>',
+            $extension->formatViewerCodeWithSpans('AB12CD34EF56')
+        );
     }
 
     #[DataProvider('addressDataProvider')]

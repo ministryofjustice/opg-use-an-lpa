@@ -38,6 +38,7 @@ class LpaExtension extends AbstractExtension
             new TwigFunction('days_remaining_to_expiry', [$this, 'daysRemaining']),
             new TwigFunction('check_if_code_has_expired', [$this, 'hasCodeExpired']),
             new TwigFunction('add_hyphen_to_viewer_code', [$this, 'formatViewerCode']),
+            new TwigFunction('add_hyphen_to_viewer_code_with_spans', [$this, 'formatViewerCodeWithSpans']),
             new TwigFunction('check_if_code_is_cancelled', [$this, 'isCodeCancelled']),
             new TwigFunction('is_lpa_cancelled', [$this, 'isLpaCancelled']),
             new TwigFunction('donor_name_with_dob_removed', [$this, 'donorNameWithDobRemoved']),
@@ -211,6 +212,23 @@ class LpaExtension extends AbstractExtension
         array_unshift($viewerCodeParts, 'V');
 
         return implode('-', $viewerCodeParts);
+    }
+
+    public function formatViewerCodeWithSpans(string $viewerCode): string
+    {
+        $viewerCodeParts = str_split($viewerCode, 4);
+        array_unshift($viewerCodeParts, 'V');
+
+        $parts = [];
+        foreach ($viewerCodeParts as $index => $part) {
+            $parts[] = sprintf('<span class="lpa-access-code__part">%s</span>', htmlspecialchars($part, ENT_QUOTES, 'UTF-8'));
+
+            if ($index < count($viewerCodeParts) - 1) {
+                $parts[] = '<span class="lpa-access-code__separator" aria-hidden="true">-</span>';
+            }
+        }
+
+        return implode('', $parts);
     }
 
     public function isLPACancelled(Lpa|CombinedLpa $lpa): bool

@@ -15,3 +15,15 @@
     width: 100%;
   }
 }
+
+.lpa-access-code {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25ch;
+  white-space: nowrap;
+}
+
+.lpa-access-code__part,
+.lpa-access-code__separator {
+  display: inline-block;
+}
