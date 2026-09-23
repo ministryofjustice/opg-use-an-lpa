@@ -15,29 +15,19 @@
 
                     <h1 class="govuk-heading-xl">{% trans %}activation-key-request.start.heading.page.title{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}activation-key-request.start.content.can-only-ask-for{% endtrans %}</p>
+                    {% trans %}
+                        activation-key-request.start.content.block.can-only-ask-for
+                    {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}activation-key-request.start.condition.donor-or-attorney{% endtrans %}</li>
-                        <li>{% trans %}activation-key-request.start.condition.england-and-wales{% endtrans %}</li>
-                    </ul>
-
-                    <p class="govuk-body">{% trans %}activation-key-request.start.content.cannot-ask-for{% endtrans %}</p>
-
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}activation-key-request.start.restriction.pre-2016{% endtrans %}</li>
-                        <li>{% trans %}activation-key-request.start.restriction.epa{% endtrans %}</li>
-                        <li>{% trans %}activation-key-request.start.restriction.scotland{% endtrans %}</li>
-                    </ul>
+                    {% trans %}
+                        activation-key-request.start.content.block.cannot-ask-for
+                    {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                     <h2 class="govuk-heading-m">{% trans %}activation-key-request.start.heading.details.title{% endtrans %}</h2>
 
-                    <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}activation-key-request.start.details.name-and-date-of-birth{{% endtrans %}</li>
-                        <li>{% trans with {'%link%': path('contact-us')} %}activation-key-request.start.details.current-address{% endtrans %}</li>
-                        <li>{% trans %}activation-key-request.start.details.reference-number{% endtrans %}</li>
-                    </ul>
-
+                    {% trans with {'%link%': path('contact-us')} %}
+                        activation-key-request.start.details.content
+                    {% context %}html-link{% notes %}Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.{% endtrans %}
 
                     <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details"
                              data-gaEventType="onClick" data-gaAction="Details"
@@ -48,11 +38,13 @@
                                 {% trans %}activation-key-request.reveal.start.heading.title{% endtrans %}
                             </span>
                         </summary>
+
                         <div class="govuk-details__text">
-                            <p>{% trans %}activation-key-request.reveal.start.summary.content.block.first{% endtrans %}</p>
-                            <p>{% trans %}ctivation-key-request.reveal.start.summary.content.block.second{% endtrans %}</p>
-                            <p>{% trans with {'%link%': path('contact-us')} %}ctivation-key-request.reveal.start.summary.content.block.third{% endtrans %}</p>
+                            {% trans with {'%link%': path('contact-us')} %}
+                                activation-key-request.reveal.content
+                            {% context %}html-link{% notes %}Contains a contact-us link using the %link% placeholder.{% endtrans %}
                         </div>
+
                     </details>
                     <div class="moj-button-menu">
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
