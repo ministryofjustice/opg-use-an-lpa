@@ -145,9 +145,9 @@ services:
       - composer-auth
     entrypoint: >
       /bin/sh -c "
-        ln -sf /run/secrets/composer-auth auth.json \
-        /usr/bin/composer $${@}
-      "
+        ln -sf /run/secrets/composer-auth auth.json &&
+        exec /usr/bin/composer \"$$@\"
+      " --
     command:
       - install
       - --prefer-dist
@@ -232,9 +232,9 @@ services:
       - composer-auth
     entrypoint: >
       /bin/sh -c "
-        ln -sf /run/secrets/composer-auth auth.json \
-        /usr/bin/composer $${@}
-      "
+        ln -sf /run/secrets/composer-auth auth.json &&
+        exec /usr/bin/composer \"$$@\"
+      " --
     command:
       - install
       - --prefer-dist
