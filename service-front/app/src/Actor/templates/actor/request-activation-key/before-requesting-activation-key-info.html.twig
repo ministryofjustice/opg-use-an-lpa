@@ -1,41 +1,41 @@
 {% extends '@actor/layout.html.twig' %}
 
-{% block html_title %}{% trans %}Request an activation key{% endtrans %} - {{ parent() }}{% endblock %}
+{% block html_title %}{% trans %}activation-key-request.start.title{% endtrans %} - {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.add') }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}Back{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}activation-key-request.start.link.back{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}Request an activation key{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}activation-key-request.start.heading.page.title{% endtrans %}</h1>
 
-                    <p class="govuk-body">{% trans %}You can only ask for an activation key if:{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}activation-key-request.start.content.can-only-ask-for{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}you’re a donor or an attorney on the LPA (not a replacement attorney){% endtrans %}</li>
-                        <li>{% trans %}the LPA was made for use in England and Wales{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.condition.donor-or-attorney{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.condition.england-and-wales{% endtrans %}</li>
                     </ul>
 
-                    <p class="govuk-body">{% trans %}You cannot ask for a key for:{% endtrans %}</p>
+                    <p class="govuk-body">{% trans %}activation-key-request.start.content.cannot-ask-for{% endtrans %}</p>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}LPAs with reference numbers fewer than 12 digits and registered before January 2016{% endtrans %}</li>
-                        <li>{% trans %}enduring powers of attorney (EPAs){% endtrans %}</li>
-                        <li>{% trans %}LPAs registered by the Office of the Public Guardian Scotland{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.restriction.pre-2016{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.restriction.epa{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.restriction.scotland{% endtrans %}</li>
                     </ul>
 
-                    <h2 class="govuk-heading-m">{% trans %}Details you’ll need to give us{% endtrans %}</h2>
+                    <h2 class="govuk-heading-m">{% trans %}activation-key-request.start.heading.details.title{% endtrans %}</h2>
 
                     <ul class="govuk-list govuk-list--bullet">
-                        <li>{% trans %}your name and date of birth{% endtrans %}</li>
-                        <li>{% trans with {'%link%': path('contact-us')} %}where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class="govuk-link" href="%link%">contact us</a> before continuing so we can update your records{% endtrans %}</li>
-                        <li>{% trans %}the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG){% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.details.name-and-date-of-birth{{% endtrans %}</li>
+                        <li>{% trans with {'%link%': path('contact-us')} %}activation-key-request.start.details.current-address{% endtrans %}</li>
+                        <li>{% trans %}activation-key-request.start.details.reference-number{% endtrans %}</li>
                     </ul>
 
 
@@ -45,24 +45,25 @@
                              data-gaLabel="I do not know the LPA reference number">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                {% trans %}I do not know the LPA reference number{% endtrans %}
+                                {% trans %}activation-key-request.reveal.start.heading.title{% endtrans %}
                             </span>
                         </summary>
                         <div class="govuk-details__text">
-                            <p>{% trans %}If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA.{% endtrans %}</p>
-                            <p>{% trans %}If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number.{% endtrans %}</p>
+                            <p>{% trans %}activation-key-request.reveal.start.summary.content.block.first{% endtrans %}</p>
+                            <p>{% trans %}ctivation-key-request.reveal.start.summary.content.block.second{% endtrans %}</p>
+                            <p>{% trans with {'%link%': path('contact-us')} %}ctivation-key-request.reveal.start.summary.content.block.third{% endtrans %}</p>
                         </div>
                     </details>
                     <div class="moj-button-menu">
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
-                            {% trans %}Continue{% endtrans %}
+                            {% trans %}activation-key-request.start.continue.button{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                            class="govuk-button moj-button-menu__item govuk-button--secondary "
                            data-module="govuk-button">
-                            {% trans %}Cancel{% endtrans %}
+                            {% trans %}activation-key-request.start.cancel.button{% endtrans %}
                         </a>
                     </div>
                 </div>
