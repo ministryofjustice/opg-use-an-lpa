@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-09-23T15:27:27+00:00\n"
+"POT-Creation-Date: 2026-09-24T13:49:04+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -252,6 +252,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:75
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:62
 #: src/Actor/templates/actor/one-login.html.twig:87
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:60
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:81
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:54
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:30
@@ -302,6 +303,7 @@ msgstr ""
 #: src/Actor/templates/actor/death-notification.html.twig:14
 #: src/Actor/templates/actor/lpa-already-added.html.twig:8
 #: src/Actor/templates/actor/lpa-removed.html.twig:9
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:9
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:9
 #: src/Actor/templates/actor/request-activation-key/actor-role.html.twig:10
 #: src/Actor/templates/actor/request-activation-key/address-on-paper.html.twig:8
@@ -449,6 +451,7 @@ msgstr ""
 #: src/Actor/templates/actor/check-lpa.html.twig:104
 #: src/Actor/templates/actor/check-your-answers.html.twig:99
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:43
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:65
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:62
 #: src/Actor/templates/actor/request-activation-key/postcode.html.twig:47
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:54
@@ -1176,6 +1179,7 @@ msgid "your email address"
 msgstr ""
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:65
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:36
 msgid "your name and date of birth"
 msgstr ""
 
@@ -1738,6 +1742,7 @@ msgstr ""
 msgid "Check if you can ask for an activation key"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:18
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:17
 msgid "You can only ask for an activation key if:"
 msgstr ""
@@ -1904,27 +1909,27 @@ msgstr ""
 msgid "Donor's date of birth"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:16
 msgid "Request an activation key"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:22
 msgid "the LPA was made for use in England and Wales"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:25
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:25
 msgid "You cannot ask for a key for:"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:30
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:30
 msgid "LPAs registered by the Office of the Public Guardian Scotland"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:48
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:48
 msgid "I do not know the LPA reference number"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:52
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:52
 msgid "If you do not have the paper LPA or any letters from OPG, check with other people named on the LPA."
 msgstr ""
 
@@ -4560,11 +4565,11 @@ msgstr ""
 msgid "Opening hours are Monday to Friday, 9am to 5pm, except Wednesdays, 10am to 5pm."
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:28
 msgid "LPAs with reference numbers fewer than 12 digits and registered before January 2016"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:29
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:29
 msgid "enduring powers of attorney (EPAs)"
 msgstr ""
 
@@ -4630,23 +4635,23 @@ msgstr ""
 msgid "No, try again"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:21
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:21
 msgid "you’re a donor or an attorney on the LPA (not a replacement attorney)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:33
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:33
 msgid "Details you’ll need to give us"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:37
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:37
 msgid "where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:38
 msgid "the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
+#: src/Actor/templates/actor/request-activation-key/Ex-before-requesting-activation-key-info.html.twig:53
 msgid "If a professional helped you make the LPA, such as a solicitor, they should be able to give you the reference number."
 msgstr ""
 
@@ -4664,23 +4669,23 @@ msgid "activation-key-request.start.title"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
-msgid "activation-key-request.start.link.back"
+msgid "activation-key-request.start.back-link"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
-msgid "activation-key-request.start.heading.page.title"
+msgid "activation-key-request.start.heading-page"
 msgstr ""
 
 #. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
 msgctxt "html"
-msgid "activation-key-request.start.content.block.can-only-ask-for"
+msgid "activation-key-request.start.content.can-only-ask-for"
 msgstr ""
 
 #. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
 msgctxt "html"
-msgid "activation-key-request.start.content.block.cannot-ask-for"
+msgid "activation-key-request.start.content.cannot-ask-for"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
@@ -4690,23 +4695,23 @@ msgstr ""
 #. Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
 msgctxt "html-link"
-msgid "activation-key-request.start.details.content"
+msgid "activation-key-request.start.content.details-need-to-give"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
-msgid "activation-key-request.reveal.start.heading.title"
+msgid "activation-key-request.start.reveal-title"
 msgstr ""
 
 #. Contains a contact-us link using the %link% placeholder.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
 msgctxt "html-link"
-msgid "activation-key-request.reveal.content"
+msgid "activation-key-request.start.reveal-content"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
-msgid "activation-key-request.start.continue.button"
+msgid "activation-key-request.start.button-continue"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:58
-msgid "activation-key-request.start.cancel.button"
+msgid "activation-key-request.start.button-cancel"
 msgstr ""

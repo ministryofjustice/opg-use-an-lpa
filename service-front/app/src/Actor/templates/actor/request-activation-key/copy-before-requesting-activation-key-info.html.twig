@@ -6,27 +6,27 @@
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.add') }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}activation-key-request.start.link.back{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}activation-key-request.start.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
 
-                    <h1 class="govuk-heading-xl">{% trans %}activation-key-request.start.heading.page.title{% endtrans %}</h1>
+                    <h1 class="govuk-heading-xl">{% trans %}activation-key-request.start.heading-page{% endtrans %}</h1>
 
                     {% trans %}
-                        activation-key-request.start.content.block.can-only-ask-for
+                        activation-key-request.start.content.can-only-ask-for
                     {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                     {% trans %}
-                        activation-key-request.start.content.block.cannot-ask-for
+                        activation-key-request.start.content.cannot-ask-for
                     {% context %}html{% notes %}Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.{% endtrans %}
 
                     <h2 class="govuk-heading-m">{% trans %}activation-key-request.start.heading.details.title{% endtrans %}</h2>
 
                     {% trans with {'%link%': path('contact-us')} %}
-                        activation-key-request.start.details.content
+                        activation-key-request.start.content.details-need-to-give
                     {% context %}html-link{% notes %}Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.{% endtrans %}
 
                     <details class="govuk-details govuk-!-margin-bottom-7" data-module="govuk-details"
@@ -35,13 +35,13 @@
                              data-gaLabel="I do not know the LPA reference number">
                         <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
-                                {% trans %}activation-key-request.reveal.start.heading.title{% endtrans %}
+                                {% trans %}activation-key-request.start.reveal-title{% endtrans %}
                             </span>
                         </summary>
 
                         <div class="govuk-details__text">
                             {% trans with {'%link%': path('contact-us')} %}
-                                activation-key-request.reveal.content
+                                activation-key-request.start.reveal-content
                             {% context %}html-link{% notes %}Contains a contact-us link using the %link% placeholder.{% endtrans %}
                         </div>
 
@@ -50,12 +50,12 @@
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
-                            {% trans %}activation-key-request.start.continue.button{% endtrans %}
+                            {% trans %}activation-key-request.start.button-continue{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                            class="govuk-button moj-button-menu__item govuk-button--secondary "
                            data-module="govuk-button">
-                            {% trans %}activation-key-request.start.cancel.button{% endtrans %}
+                            {% trans %}activation-key-request.start.button-cancel{% endtrans %}
                         </a>
                     </div>
                 </div>
