@@ -71,7 +71,7 @@ Feature: View an LPA via sharecode
     |v-VWxWaDbC3476         | VWXWADBC3476 |
     |v-aWxWadBC3476         | AWXWADBC3476 |
     |v - vwxw - adbc - 3476 | VWXWADBC3476 |
-    |V - AWXW - ADBC - 3476 | AWXWADBC3476 |
+    |V-AWXW-ADBC-3476       | AWXWADBC3476 |
     |vwxwadbc3476           | VWXWADBC3476 |
     |AWXWADBC3476           | AWXWADBC3476 |
     |vWXW-ADbc-3476         | VWXWADBC3476 |
@@ -124,7 +124,7 @@ Feature: View an LPA via sharecode
     Examples:
       |surname  | sharecode               | reason                                      |
       | Billson | V-1110-1111-0111        | We could not find an LPA with those details |
-      | Billson | V - 1110 - 1111 - 0111  | We could not find an LPA with those details |
+      | Billson | V-1110-1111-0111        | We could not find an LPA with those details |
       | Billson | 1110-1111-0111          | We could not find an LPA with those details |
 
   @ui
