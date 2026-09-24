@@ -43,21 +43,22 @@ class LpaExtensionTest extends TestCase
         $functions = $extension->getFunctions();
 
         $expectedFunctions = [
-            'actor_address'                   => 'actorAddress',
-            'actor_name'                      => 'actorName',
-            'lpa_date'                        => 'lpaDate',
-            'code_date'                       => 'formatDate',
-            'days_remaining_to_expiry'        => 'daysRemaining',
-            'check_if_code_has_expired'       => 'hasCodeExpired',
-            'add_hyphen_to_viewer_code'       => 'formatViewerCode',
-            'check_if_code_is_cancelled'      => 'isCodeCancelled',
-            'is_lpa_cancelled'                => 'isLpaCancelled',
-            'donor_name_with_dob_removed'     => 'donorNameWithDobRemoved',
-            'is_donor_signature_date_too_old' => 'isDonorSignatureDateOld',
-            'is_sirius_lpa'                   => 'isSiriusLpa',
-            'is_online_channel'               => 'isOnlineChannel',
-            'is_english'                      => 'isEnglish',
-            'lpa_display_type_from_values'    => 'lpaDisplayTypeFromValues',
+            'actor_address'                        => 'actorAddress',
+            'actor_name'                           => 'actorName',
+            'lpa_date'                             => 'lpaDate',
+            'code_date'                            => 'formatDate',
+            'days_remaining_to_expiry'             => 'daysRemaining',
+            'check_if_code_has_expired'            => 'hasCodeExpired',
+            'add_hyphen_to_viewer_code'            => 'formatViewerCode',
+            'add_hyphen_to_viewer_code_with_spans' => 'formatViewerCodeWithSpans',
+            'check_if_code_is_cancelled'           => 'isCodeCancelled',
+            'is_lpa_cancelled'                     => 'isLpaCancelled',
+            'donor_name_with_dob_removed'          => 'donorNameWithDobRemoved',
+            'is_donor_signature_date_too_old'      => 'isDonorSignatureDateOld',
+            'is_sirius_lpa'                        => 'isSiriusLpa',
+            'is_online_channel'                    => 'isOnlineChannel',
+            'is_english'                           => 'isEnglish',
+            'lpa_display_type_from_values'         => 'lpaDisplayTypeFromValues',
         ];
         $this->assertEquals(count($expectedFunctions), count($functions));
 
@@ -70,6 +71,17 @@ class LpaExtensionTest extends TestCase
             $this->assertInstanceOf(LpaExtension::class, $functionCallable[0]);
             $this->assertEquals($expectedFunctions[$function->getName()], $functionCallable[1]);
         }
+    }
+
+    #[Test]
+    public function it_formats_a_viewer_code_with_individual_spans_for_visual_spacing(): void
+    {
+        $extension = new LpaExtension($this->translator);
+
+        $this->assertSame(
+            '<span class="lpa-access-code__part">V</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">AB12</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">CD34</span><span class="lpa-access-code__separator" aria-hidden="true">-</span><span class="lpa-access-code__part">EF56</span>',
+            $extension->formatViewerCodeWithSpans('AB12CD34EF56')
+        );
     }
 
     #[DataProvider('addressDataProvider')]
@@ -482,7 +494,7 @@ class LpaExtensionTest extends TestCase
 
         $viewerCode = $extension->formatViewerCode('111122223333');
 
-        $this->assertEquals('V - 1111 - 2222 - 3333', $viewerCode);
+        $this->assertEquals('V-1111-2222-3333', $viewerCode);
     }
 
      #[Test]

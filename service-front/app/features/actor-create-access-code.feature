@@ -30,9 +30,9 @@ Feature: The user is able to create access codes for organisations
     When I request to give an organisation access for my <lpaType> LPA
     Then I should see relevant <orgDescription> of organisations
     Examples:
-      | lpaType | orgDescription                                                                 |
-      | hw      | The organisation could be a hospital, care home, or other health care provider.|
-      | pfa     | The organisation could be a bank, energy provider, or another business.        |
+      | lpaType | orgDescription                                                                                                  |
+      | hw      | The organisation could be a hospital, care home, or other health care provider. This is for your reference only |
+      | pfa     | The organisation could be a bank, energy provider, or another business. This is for your reference only         |
 
   @ui @integration
   Scenario: As a user I can generate an access code for an organisation
