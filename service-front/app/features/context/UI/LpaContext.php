@@ -1782,7 +1782,7 @@ class LpaContext implements Context
     #[When('/^I have not provided required information for creating access code such as (.*)$/')]
     public function iHaveNotProvidedRequiredInformationForCreatingAccessCodeSuchAs($organisationname): void
     {
-        $this->ui->assertPageContainsText('Which organisation do you want to give access to?');
+        $this->assertPageContainsTranslatedText('Which organisation do you want to give access to?');
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
@@ -2654,7 +2654,7 @@ class LpaContext implements Context
 
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
-        $this->ui->assertPageContainsText('Which organisation do you want to give access to');
+        $this->assertPageContainsTranslatedText('Which organisation do you want to give access to?');
     }
 
     #[Then('/^I should be shown the details of the cancelled viewer code with cancelled status/')]
@@ -2758,7 +2758,7 @@ class LpaContext implements Context
     public function iShouldSeeRelevantOfOrganisations($orgDescription): void
     {
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
-        $this->ui->assertPageContainsText($orgDescription);
+        $this->assertPageContainsTranslatedText($orgDescription);
     }
 
     #[Then('/^I want to be asked for confirmation prior to cancellation/')]
