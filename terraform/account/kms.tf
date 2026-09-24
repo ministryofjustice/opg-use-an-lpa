@@ -214,7 +214,7 @@ module "dynamodb_encryption_key" {
   administrator_roles = [
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/opg-use-an-lpa-ci-boundary",
-    "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/opg-use-an-lpa-ci"
+    "arn:aws:iam::${data.aws_caller_identity.backup.account_id}:role/opg-use-an-lpa-ci-boundary"
   ]
   decryption_roles = ["*"]
   encryption_roles = ["*"]
