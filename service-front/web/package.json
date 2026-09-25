@@ -7,8 +7,7 @@
   "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
     "test": "CI=true jest --coverage",
-    "jest": "node jest",
-    "test:watch": "jest --watch",
+    "test:watch": "jest --watchAll",
     "install-and-build": "npm ci --ignore-scripts && npm run build",
     "build": " npm run build-scss && node build.js",
     "accessibility-check": "node ./pa11y.js",
@@ -18,6 +17,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/runtime-corejs3": "^8.0.6",
+    "@jest/globals": "^30.0.0",
     "@swc/core": "^1.16.2",
     "@swc/jest": "^0.2.39",
     "@testing-library/dom": "^10.0.0",
@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@govuk-one-login/service-header": "^6.0.0",
-    "@jest/globals": "^30.0.0",
     "@ministryofjustice/frontend": "^9.0.0",
     "govuk-frontend": "^6.0.0",
     "perfume.js": "^6.4.0"
