@@ -21,7 +21,7 @@ We will use translation keys rather than English user-facing text as translation
 ### Translation key convention
 The general convention will be:
 
-   <feature>.<page>.<type>.<name>
+   <feature>.<page>.<type>.<name>[-<suffix>]
 
 Examples:
 
