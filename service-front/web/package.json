@@ -6,7 +6,8 @@
   "main": "index.js",
   "repository": "git@github.com:ministryofjustice/opg-use-an-lpa.git",
   "scripts": {
-    "test": "CI=true jest --coverage",
+    "test": "jest --ci --coverage",
+    "jest": "jest",
     "test:watch": "jest --watchAll",
     "install-and-build": "npm ci --ignore-scripts && npm run build",
     "build": " npm run build-scss && node build.js",
