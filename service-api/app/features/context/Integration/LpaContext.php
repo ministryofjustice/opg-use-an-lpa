@@ -565,10 +565,19 @@ class LpaContext extends BaseIntegrationContext
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
         try {
-            $response = $actorCodeService->confirmDetails(
+            $validatedDetails = $actorCodeService->validateDetails(
                 $this->oneTimeCode,
-                $this->actorLpaId,
-                $this->userDob,
+                new LpaUid($this->lpaUid),
+                $this->userDob
+            );
+
+            if (!$validatedDetails) {
+                throw new Exception('Code validation failed');
+            }
+
+            $response = $actorCodeService->confirmDetails(
+                $validatedDetails,
+                $this->oneTimeCode,
                 $this->userId
             );
         } catch (Exception) {
@@ -2279,10 +2288,19 @@ class LpaContext extends BaseIntegrationContext
         $actorCodeService = $this->container->get(ActorCodeService::class);
 
         try {
-            $response = $actorCodeService->confirmDetails(
+            $validatedDetails = $actorCodeService->validateDetails(
                 $this->oneTimeCode,
-                $this->lpaUid,
-                $this->userDob,
+                new LpaUid($this->lpaUid),
+                $this->userDob
+            );
+
+            if (!$validatedDetails) {
+                throw new Exception('Code validation failed');
+            }
+
+            $response = $actorCodeService->confirmDetails(
+                $validatedDetails,
+                $this->oneTimeCode,
                 $this->actorLpaId
             );
         } catch (Exception) {
