@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-28 13:29+0000\n"
+"PO-Revision-Date: 2026-09-28 14:14+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1814,7 +1814,7 @@ msgstr "Os nad yw eich manylion cywir gennym, ni fyddwch yn gallu derbyn cod act
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:50
 msgid "<a class=\"govuk-link\" href=\"%link%\">Let us know if your details have changed</a> and you’ve not told us."
-msgstr "<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod inni os yw eich manylion wedi newid</a> ac nad ydych wedi dweud wrthym."
+msgstr "<a class=\"govuk-link\" href=\"%link%\">Rhowch wybod i ni os yw eich manylion wedi newid</a> a chithau heb ddweud wrthym."
 
 #: src/Actor/templates/actor/request-activation-key/info.html.twig:51
 msgid "We need to know if:"
@@ -1901,9 +1901,7 @@ msgstr "Dim ond y rhoddwr neu atwrnai gweithredol gaiff ofyn am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:27
 msgid "You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:"
-msgstr ""
-"Dim ond os yw un o’r atwrneiod wedi rhoi’r gorau i gyflawni ei rôl y gallwch ddod yn atwrnai\n"
-"gweithredol. Bydd hyn yn digwydd os ydyw:"
+msgstr "Dim ond os yw un o’r atwrneiod wedi rhoi’r gorau i gyflawni ei rôl y gallwch ddod yn atwrnai gweithredol. Bydd hyn yn digwydd os yw:"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:33
 msgid "have died"
@@ -2949,7 +2947,7 @@ msgstr "Defnyddio codau mynediad yn gyfrifol"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:97
 msgid "When you give someone an <abbr title=\"lasting power of attorney\">LPA</abbr> access code, you’re giving them access to personal information about the donor and attorneys on an <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn gadael iddynt weld gwybodaeth bersonol am y rhoddwr a’r atwrneiod yn y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Pan fyddwch yn rhoi cod mynediad <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i rywun, rydych yn gadael iddynt weld gwybodaeth bersonol am y rhoddwr a’r atwrneiod yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:103
 msgid "Keep access codes secure. Only give access codes to professionals and organisations you trust and who have an appropriate need to view the <abbr title=\"lasting power of attorney\">LPA</abbr>."
@@ -3004,29 +3002,29 @@ msgstr "Gadewch i’r Swyddfa Gwarcheidwad Cyhoeddus (OPG) wybod os oes <a class
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:154
 msgid "For example, you should let us know us if:"
-msgstr "Er enghraifft, dylech adael i ni wybod:"
+msgstr "Er enghraifft, dylech roi gwybod i ni os yw:"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:156
 msgid "the donor or an attorney changes their name or address"
-msgstr "os yw’r rhoddwr neu atwrnai wedi newid ei enw neu ei gyfeiriad"
+msgstr "y rhoddwr neu atwrnai wedi newid ei enw neu ei gyfeiriad"
 
 # More like:
 # The donor wants to remove an attorneys name from the LPA
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:157
 msgid "the donor wants to remove an attorney"
-msgstr "os yw’r rhoddwr eisiau tynnu enw atwrnai oddi ar yr LPA"
+msgstr "y rhoddwr eisiau tynnu enw atwrnai oddi ar yr LPA"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:158
 msgid "an attorney dies or can no longer act"
-msgstr "os bu farw atwrnai neu os nad yw’n gallu parhau i weithredu fel atwrnai"
+msgstr "atwrnai wedi marw neu os nad yw’n gallu parhau i weithredu fel atwrnai"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:159
 msgid "the donor wants to cancel their <abbr title=\"lasting power of attorney\">LPA</abbr>"
-msgstr "os yw’r rhoddwr eisiau canslo eu <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr>"
+msgstr "y rhoddwr eisiau canslo ei <abbr title=\"atwrneiaethau arhosol\">LPAs</abbr>"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:162
 msgid "Once you’ve let us know about a change, it may be a few days before this shows on the online service."
-msgstr "Unwaith y byddwch wedi gadael i ni wybod am newid, fe all gymryd ychydig o ddyddiau cyn iddo ddangos ar y gwasanaeth ar-lein."
+msgstr "Wedi i chi roi gwybod i ni am newid, fe all gymryd ychydig o ddyddiau cyn iddo ddangos ar y gwasanaeth ar-lein."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:164
 msgid "Please let us know if changes need to be made as soon as you can."
@@ -3034,7 +3032,7 @@ msgstr "Gadewch i ni wybod am newidiadau sydd angen eu gwneud cyn gynted â phos
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:166
 msgid "<b>Only the Court of Protection can change a registered <abbr title=\"lasting power of attorney\">LPA</abbr></b>. You must not make changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> with a pen, correction fluid or in any other way. This applies to all changes, even small things like correcting a spelling mistake in someone’s name. If you change the <abbr title=\"lasting power of attorney\">LPA</abbr>, you may not be able to use it anymore."
-msgstr "<b>Dim ond y Llys Gwarchod all newid <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></b> cofrestredig. Ni ddylech wneud newidiadau i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></b> papur gyda beiro, hylif cywiro neu mewn unrhyw ffordd arall. Mae hyn yn wir am bob newid, hyd yn oed pethau bychan megis cywiro gwall sillafu yn enw unigolyn. Os byddwch yn newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></b>, mae’n bosib na fyddwch yn gallu ei ddefnyddio mwyach."
+msgstr "<b>Dim ond y Llys Gwarchod all newid <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gofrestredig </b>. Ni ddylech wneud newidiadau i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></b> bapur gyda beiro, hylif cywiro neu mewn unrhyw ffordd arall. Mae hyn yn wir am bob newid, hyd yn oed pethau bychan megis cywiro gwall sillafu yn enw unigolyn. Os byddwch yn newid yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr></b>, mae’n bosib na fyddwch yn gallu ei defnyddio mwyach."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:173
 msgid "The online summary"
@@ -3042,7 +3040,7 @@ msgstr "Y crynodeb ar-lein"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:175
 msgid "Screenshots, downloads or print outs of the online <abbr title=\"lasting power of attorney\">LPA</abbr> summary are not proof of an <abbr title=\"lasting power of attorney\">LPA</abbr> and may not show the latest status of an <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Nid yw cipluniau, copi wedi’i lawrlwytho neu gopi wedi’i argraffu o grynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>ar-lein yn brawf o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ac mae’n bosib na fydd yn dangos statws diweddaraf <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Nid yw sgrinluniau, copi wedi’i lawrlwytho neu gopi wedi’i argraffu o grynodeb <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ar-lein yn brawf o <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ac mae’n bosib na fydd yn dangos statws diweddaraf <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:181
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:87
@@ -3062,7 +3060,7 @@ msgstr "Deddf Camddefnyddio Cyfrifiaduron 1990"
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:185
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:93
 msgid "General Data Protection Regulation 2018"
-msgstr "Rheoliadau Diogelu Data Cyffredinol 2018"
+msgstr "Y Rheoliad Cyffredinol ar Ddiogelu Data 2018"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:186
 msgid "Data Protection Act 2018"
@@ -3075,7 +3073,7 @@ msgstr "Deddf Galluedd Meddyliol 2005"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:190
 msgid "Any dispute you have about these terms of use, or your use of OPG services (whether it be contractual or non-contractual), will be dealt with by the courts of England and Wales."
-msgstr "Fe ymdrinnir ag unrhyw anghydfod sydd gennych ynghylch y telerau defnyddio hyn, neu eich defnydd o wasanaethau <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> (boed dan gontract neu beidio), gan lysoedd Cymru a Lloegr."
+msgstr "Bydd llysoedd Cymru a Lloegr yn delio ag unrhyw anghydfod a gyfyd o’r telerau defnyddio hyn, neu eich defnydd o wasanaethau <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> (boed dan gontract neu beidio)."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:195
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:100
@@ -3084,7 +3082,7 @@ msgstr "Ynghylch y telerau defnyddio hyn"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:197
 msgid "Please check these terms of use regularly. We may update them without notice. This might happen if there’s a change in the law or to the way the service works. You’ll agree to any changes if you continue to use the service after the terms of use have been updated."
-msgstr "Gwiriwch y telerau defnyddio hyn yn rheolaidd. Efallai y byddwn yn eu diweddaru heb rybudd. Gall hyn ddigwydd os oes newid yn y gyfraith neu yn sut mae’r gwasanaeth yn gweithio. Byddwch yn cytuno i unrhyw newidiadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru."
+msgstr "Gwiriwch y telerau defnyddio hyn yn rheolaidd. Efallai y byddwn yn eu diweddaru heb rybudd. Gall hyn ddigwydd os oes newid yn y gyfraith neu i sut mae’r gwasanaeth yn gweithio. Byddwch yn cytuno i unrhyw newidiadau os byddwch yn parhau i ddefnyddio’r gwasanaeth ar ôl i’r telerau defnyddio gael eu diweddaru."
 
 #: src/Actor/templates/actor/confirm-lpa-for-key-request.html.twig:28
 msgid "Your role on the LPA"
