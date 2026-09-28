@@ -30,7 +30,7 @@ services:
 
   api-app:
     depends_on:
-      api-gateway:
+      mock-s3-iap:
         condition: service_started
       mock-lpa-codes:
         condition: service_started
@@ -41,9 +41,9 @@ services:
       localstack:
         condition: service_healthy
     environment:
-      SIRIUS_API_ENDPOINT: http://api-gateway:5000
+      SIRIUS_API_ENDPOINT: http://mock-data-lpa:4011
       LPA_CODES_API_ENDPOINT: http://mock-lpa-codes:4015
-      IAP_IMAGES_API_ENDPOINT: http://api-gateway:5000
+      IAP_IMAGES_API_ENDPOINT: http://mock-s3-iap:5000
       LPA_DATA_STORE_API_ENDPOINT: http://mock-lpa-data-store:4014
       ONE_LOGIN_DISCOVERY_URL: http://mock-one-login:8080/.well-known/openid-configuration
       AWS_ENDPOINT_DYNAMODB: http://localstack:4566
@@ -83,12 +83,9 @@ services:
     ports:
       - 9004:80
 
-  # ---------------------------
-  # Sirius gateway mock
-  api-gateway:
+  mock-s3-iap:
     image: docker.io/nginx:stable-alpine@sha256:94da95f06ada2ac33a9016770c45ad4c3037805ed54ec8dbf2d9d2f83f3f462f
     depends_on:
-      - mock-data-lpa
       - mock-image-request-handler
     ports:
       - "4010:5000"
@@ -97,16 +94,16 @@ services:
       - ./mock-integrations/image-request-handler/mocked-images:/var/www/html:ro
 
   mock-data-lpa:
-    image: docker.io/stoplight/prism:5@sha256:3f6d29e31bfe0b99587f0f6f79c423858dd6a2ea7e1e4658273ed930a78a9acf
+    image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb
     command:
-      - "mock"
-      - "-h"
-      - "0.0.0.0"
-      - "/tmp/openapi.yaml"
+      - "-c"
+      - "/opt/imposter/config"
+      - "-l"
+      - "4011"
     ports:
-      - "4011:4010"
+      - "4011:4011"
     volumes:
-      - ./mock-integrations/opg-data-lpa/mock-openapi.yaml:/tmp/openapi.yaml:ro
+      - ./mock-integrations/opg-data-lpa:/opt/imposter/config:ro
 
   mock-image-request-handler:
     image: docker.io/outofcoffee/imposter:4.9.3@sha256:ff25c8708944ec81a1992cd33433bbd032f12d64ded32ec1e6825810a5f2d5cb

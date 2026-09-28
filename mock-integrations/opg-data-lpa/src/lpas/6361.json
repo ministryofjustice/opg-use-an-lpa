@@ -1,0 +1,169 @@
+{
+    "applicationHasGuidance": true,
+    "applicationHasRestrictions": true,
+    "applicationType": "Classic",
+    "attorneyActDecisions": null,
+    "attorneys": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "1 Usebury Street",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 2824,
+                    "postcode": "B92 1SS",
+                    "town": "Birmingham",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": "",
+            "dob": "2000-06-09",
+            "email": "",
+            "firstname": "Jessica",
+            "id": 3037,
+            "middlenames": "",
+            "otherNames": null,
+            "salutation": "Mrs",
+            "surname": "Test",
+            "systemStatus": true,
+            "uId": "7000-0013-6908"
+        },
+        {
+            "addresses": [
+                {
+                    "addressLine1": "7 The Low Street",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 3063,
+                    "postcode": "WR1 1EK",
+                    "town": "Worcester",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1981-06-14",
+            "email": null,
+            "firstname": "John",
+            "id": 3318,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": "Mr",
+            "surname": "Doe",
+            "systemStatus": true,
+            "uId": "7000-0014-5909"
+        }
+    ],
+    "cancellationDate": null,
+    "caseAttorneyJointly": false,
+    "caseAttorneyJointlyAndJointlyAndSeverally": false,
+    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneySingular": false,
+    "caseSubtype": "hw",
+    "certificateProviders": [],
+    "dispatchDate": null,
+    "donor": {
+        "addresses": [
+            {
+                "addressLine1": "1 Usebury Street",
+                "addressLine2": "",
+                "addressLine3": "",
+                "country": "",
+                "county": "",
+                "id": 2810,
+                "postcode": "B92 1SS",
+                "town": "Birmingham",
+                "type": "Primary"
+            }
+        ],
+        "companyName": null,
+        "dob": "1990-01-01",
+        "email": "",
+        "firstname": "Donor",
+        "id": 3024,
+        "linked": [
+            {
+                "id": 3024,
+                "uId": "7000-0013-6270"
+            }
+        ],
+        "middlenames": "",
+        "otherNames": "",
+        "salutation": "Mr",
+        "surname": "Two",
+        "uId": "7000-0013-6270"
+    },
+    "hasSeveranceWarning": true,
+    "id": 1732,
+    "invalidDate": null,
+    "lifeSustainingTreatment": "Option A",
+    "lpaDonorSignatureDate": "2020-10-01",
+    "lpaIsCleansed": false,
+    "onlineLpaId": null,
+    "receiptDate": null,
+    "registrationDate": "2020-06-28",
+    "rejectedDate": null,
+    "replacementAttorneys": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "1",
+                    "addressLine2": "1",
+                    "addressLine3": "1",
+                    "country": "1",
+                    "county": "1",
+                    "id": 2825,
+                    "postcode": "1",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1990-01-01",
+            "email": null,
+            "firstname": "Replacement",
+            "id": 3039,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": "Mr",
+            "surname": "Attorney",
+            "systemStatus": true,
+            "uId": "7000-0013-6965"
+        }
+    ],
+    "status": "Registered",
+    "statusDate": null,
+    "trustCorporations": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 3409,
+                    "postcode": "",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": "jdoe org",
+            "dob": null,
+            "email": null,
+            "firstname": "julie",
+            "id": 3692,
+            "middlenames": "",
+            "otherNames": null,
+            "salutation": null,
+            "surname": "doe org",
+            "systemStatus": true,
+            "uId": "7000-0016-0361"
+        }
+    ],
+    "uId": "7000-0013-6361",
+    "withdrawnDate": null
+}
