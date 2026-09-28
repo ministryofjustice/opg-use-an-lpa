@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-28 09:37+0000\n"
+"PO-Revision-Date: 2026-09-28 11:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1175,7 +1175,7 @@ msgstr "<abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr> sy’n rhe
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:47
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> OPG’s personal information charter </a> explains how we process personal data."
-msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">Mae siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
+msgstr "<abbr title=\"Weinyddiaeth Gyfiawnder\">MOJ</abbr> yw’r rheolydd data ar gyfer y data personol a gedwir gennym. Mae <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter.cy\">siarter gwybodaeth bersonol <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a> yn egluro sut rydym yn prosesu data personol."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:56
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:52
@@ -1185,7 +1185,7 @@ msgstr "Mae rhagor o wybodaeth am y gwasanaeth Defnyddio atwrneiaeth arhosol i�
 # What data we collect and how we use it
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:59
 msgid "Why we collect personal data and how we use it"
-msgstr "Pa ddata rydym ni’n ei gasglu a sut rydym yn ei ddefnyddio"
+msgstr "Pam rydym yn casglu data personol a sut rydym yn ei ddefnyddio"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:60
 msgid "We only collect the personal data that is relevant for the services we are providing to you."
@@ -1193,7 +1193,7 @@ msgstr "Rydym ond yn casglu’r data personol sy’n berthnasol i’r gwasanaeth
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:61
 msgid "In order to use this service, you need to enter some personal data and create an account"
-msgstr "Er mwyn gallu defnyddio’r gwasanaeth hwn, bydd angen i chi roi data personol i ni a chreu cyfrif"
+msgstr "Er mwyn gallu defnyddio’r gwasanaeth hwn, bydd angen i chi roi peth data personol i ni a chreu cyfrif"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:62
 msgid "The personal data we collect includes:"
@@ -1223,7 +1223,7 @@ msgstr "Mae’r gwasanaeth hefyd yn cadw cofnod o’r codau mynediad <abbr title
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:76
 msgid "If other people named on the <abbr title=\"lasting power of attorney\">LPA</abbr> (the donor or attorneys) are also using the service, they can see which organisations you’ve made access codes for."
-msgstr "Os bydd pobl eraill sydd wedi’u henwi ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, byddant yn gallu weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
+msgstr "Os bydd pobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (y rhoddwr neu atwrneiod) hefyd yn defnyddio’r gwasanaeth, byddant yn gallu weld pa sefydliadau rydych wedi creu codau mynediad ar eu cyfer."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:79
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:75
@@ -1258,7 +1258,7 @@ msgstr "Data personol a’r crynodeb ar-lein"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:97
 msgid "The donor or an attorney named on an <abbr title=\"lasting power of attorney\">LPA</abbr> can use this service to give a third party access to an online summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Gall rhoddwr neu atwrnai sydd wedi’i enwi ar <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ddefnyddio’r gwasanaeth hwn i roi mynediad i drydydd parti at grynodeb ar-lein o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Gall rhoddwr neu atwrnai sydd wedi’i enwi mewn <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> ddefnyddio’r gwasanaeth hwn i roi mynediad i drydydd parti at grynodeb ar-lein o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:101
 msgid "This summary includes:"
@@ -1278,11 +1278,11 @@ msgstr "a yw’r <abbr title=\"atwrneiaethau arhosol\">LPA</abbr> yn ddilys ar h
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:107
 msgid "when the <abbr title=\"lasting power of attorney\">LPA</abbr> can be used (property and finance <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> eiddo ac arian yn unig)"
+msgstr "pryd y gellir defnyddio’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (<abbr title=\"atwrneiaeth arhosol\">LPA</abbr> eiddo a materion ariannol yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:108
 msgid "whether the donor chose to allow their attorneys to make decisions on life-sustaining treatment (health and welfare <abbr title=\"lasting powers of attorney\">LPAs</abbr> only)"
-msgstr "a roddodd y rhoddwr ganiatâd i’w atwrneiod wneud penderfyniadau ynghylch triniaeth cynnal bywyd (<abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> ar gyfer iechyd a lles yn unig)"
+msgstr "a roddodd y rhoddwr ganiatâd i’w atwrneiod wneud penderfyniadau ynghylch triniaeth cynnal bywyd (<abbr title=\"atwrneiaeth arhosol\">LPAs</abbr> iechyd a lles yn unig)"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:112
 msgid "Third parties can download and keep a copy of the summary."
@@ -3798,7 +3798,7 @@ msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarch
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:32
 msgid "You should read this privacy notice alongside <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information."
-msgstr "Dylech ddarllen yr hysbysiad preifatrwydd hwn ochr yn ochr â <a class=\"govuk-link\" href=\"%link%\">siarter wybodaeth bersonol yr <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan ofynnwn am eich gwybodaeth bersonol, pan fyddwn yn ei defnyddio a phan fyddwn yn ei rhannu."
+msgstr "Dylech ddarllen yr hysbysiad preifatrwydd hwn ochr yn ochr â <a class=\"govuk-link\" href=\"%link%\">siarter gwybodaeth bersonol yr <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr></a>, sy’n nodi’r safonau y gallwch eu disgwyl pan ofynnwn am eich gwybodaeth bersonol, pan fyddwn yn ei defnyddio a phan fyddwn yn ei rhannu."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:37
 msgid "Who manages the View a lasting power of attorney service"
