@@ -7,6 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Value\LpaUid;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -41,7 +42,7 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
 
         $validatedDetails = $this->actorCodeService->validateDetails(
             $data['actor-code'],
-            $data['uid'],
+            new LpaUid($data['uid']),
             $data['dob'],
         );
 
