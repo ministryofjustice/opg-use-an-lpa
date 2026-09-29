@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 09:29+0000\n"
+"PO-Revision-Date: 2026-09-29 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -597,17 +597,17 @@ msgstr "%organisation% may ask you for other information, such as %donorFirstNam
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:98
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
-msgstr "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
+msgstr "%organisation% may ask you for other information, such as your customer account details or your attorney's contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:106
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:104
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
-msgstr "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
+msgstr "%organisation% may ask you for other information, such as %donorFirstName%’s NHS number or your contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:113
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:111
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
-msgstr "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
+msgstr "%organisation% may ask you for other information, such as your NHS number or your attorney’s contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:122
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:120
