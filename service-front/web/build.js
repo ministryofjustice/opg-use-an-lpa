@@ -1,5 +1,6 @@
 import esbuild from 'esbuild';
 import { default as fsWithCallbacks } from 'fs';
+import { es5Plugin } from 'esbuild-plugin-es5';
 
 const fs = fsWithCallbacks.promises;
 
@@ -8,7 +9,7 @@ const fs = fsWithCallbacks.promises;
     const hr = '\r\n'.padStart(width / 1.5, '-');
 
     let config = {
-        entrypoints: ['./dist/index.js'],
+        entrypoints: ['./src/index.js'],
         copy_files: {
             './src/robots.txt': 'robots.txt',
             './src/budget.json': 'budget.json',
@@ -40,8 +41,8 @@ const fs = fsWithCallbacks.promises;
             outdir: config.out_dir,
             minify: true,
             sourcemap: true,
-            plugins: [],
-            target: ['es2018'],
+            plugins: [es5Plugin()],
+            target: "es5",
             platform: 'browser',
             metafile: true,
             supported: {
