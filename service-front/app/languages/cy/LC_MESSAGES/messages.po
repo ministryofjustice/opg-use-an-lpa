@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-28 14:14+0000\n"
+"PO-Revision-Date: 2026-09-29 09:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1022,7 +1022,7 @@ msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrnei
 #: src/Actor/templates/actor/change-lpa-details.html.twig:26
 #: src/Actor/templates/actor/death-notification.html.twig:28
 msgid "You should contact us if:"
-msgstr "Dylech gysylltu â ni os bydd:"
+msgstr "Dylech gysylltu â ni os:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:30
 msgid "the donor dies"
@@ -2209,7 +2209,7 @@ msgstr "eich enw a chyfeiriad"
 #: src/Actor/templates/actor/change-details.html.twig:53
 #: src/Actor/templates/actor/change-lpa-details.html.twig:43
 msgid "your role (ie, whether you are the donor or an attorney)"
-msgstr "eich rôl (p’un ai ydych chi’n rhoddwr neu’n atwrnai)"
+msgstr "eich rôl (er enghraifft, a ydych chi’n rhoddwr neu’n atwrnai)"
 
 #: src/Actor/templates/actor/change-details.html.twig:54
 #: src/Actor/templates/actor/change-lpa-details.html.twig:44
@@ -2647,7 +2647,7 @@ msgstr "Mae hyn wedi digwydd am resymau technegol. Mae eich gwybodaeth yn ddioge
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:22
 msgid "Let us know if something is incorrect on the LPA"
-msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir ar yr LPA"
+msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir yn yr LPA"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:24
 msgid "It's important that the information on the LPA summary is correct."
@@ -2655,19 +2655,19 @@ msgstr "Mae’n bwysig bod yr wybodaeth ar y crynodeb o’r LPA yn gywir."
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:29
 msgid "we say you added restrictions and conditions (sometimes known as \"preferences and instructions\") when you did not"
-msgstr "rydym ni’n dweud eich bod wedi ychwanegu cyfyngiadau ac amodau (neu ‘ddymuniadau a chyfarwyddiadau’ fel y’u gelwir weithiau) ond nid ydych chi wedi gwneud hynny"
+msgstr "ydym ni’n dweud eich bod wedi ychwanegu cyfyngiadau ac amodau (neu ‘ddymuniadau a chyfarwyddiadau’ fel y’u gelwir weithiau) ond nid ydych chi wedi gwneud hynny"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:30
 msgid "we say you did not add restrictions and conditions when you did"
-msgstr "rydym ni’n dweud na wnaethoch chi ychwanegu cyfyngiadau ac amodau ond rydych chi wedi gwneud hynny"
+msgstr "ydym ni’n dweud na wnaethoch chi ychwanegu cyfyngiadau ac amodau ond rydych chi wedi gwneud hynny"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid "information about life-sustaining treatment is incorrect"
-msgstr "gwybodaeth am driniaeth cynnal bywyd yn anghywir"
+msgstr "yw gwybodaeth am driniaeth cynnal bywyd yn anghywir"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:32
 msgid "the registration date or the date the donor signed the LPA are incorrect"
-msgstr "y dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r LPA yn anghywir"
+msgstr "yw’r dyddiad cofrestru neu’r dyddiad y gwnaeth y rhoddwr lofnodi’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn anghywir"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:42
 msgid "your name"
