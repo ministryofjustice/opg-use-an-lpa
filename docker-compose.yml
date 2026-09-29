@@ -66,6 +66,7 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       SUPPORT_DATASTORE_LPAS: "true"
       PAPER_VERIFICATION: "true"
+      # OTEL_TRACES_EXPORTER: console # OpenTelemetry - uncomment to output traces locally
     depends_on:
       - api-web
 
@@ -124,6 +125,7 @@ services:
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       NOTIFY_API_KEY:
+      # OTEL_TRACES_EXPORTER: console # OpenTelemetry - uncomment to output traces locally
     depends_on:
       - api-web
 

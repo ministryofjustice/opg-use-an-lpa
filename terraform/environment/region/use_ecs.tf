@@ -256,7 +256,7 @@ locals {
     {
       cpu         = 0,
       essential   = true,
-      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      image       = "${data.aws_ecr_repository.otel_collector.repository_url}:v0.40.2",
       mountPoints = [],
       name        = "aws-otel-collector",
       command = [
@@ -388,7 +388,19 @@ locals {
         {
           name  = "PAPER_VERIFICATION",
           value = tostring(var.feature_flags.paper_verification)
-        }
+        },
+        {
+          name  = "OTEL_SERVICE_NAME",
+          value = "${var.environment_name}-actor"
+        },
+        {
+          name  = "OTEL_TRACES_EXPORTER",
+          value = var.feature_flags.deploy_opentelemetry_sidecar ? "otlp" : "none"
+        },
+        {
+          name  = "OTEL_EXPORTER_OTLP_ENDPOINT",
+          value = "http://127.0.0.1:4318"
+        },
       ]
   })
 }
