@@ -39,30 +39,21 @@ class ActorCodeService
     }
 
     /**
-     * Confirms adding an LPA into a user's account.
+     * Confirms adding a pre-validated LPA into a user's account.
      *
      * Transaction:
-     *  1 - Validate the code's details
-     *  2 - Add a mapping into our DB for the code
-     *  3 - Mark the code as used
-     *  4 - Undo 2 if 3 fails.
+     *  1 - Add a mapping into our DB for the code
+     *  2 - Mark the code as used
+     *  3 - Undo 1 if 2 fails.
      *
-     * @param string $code
-     * @param string $uid
-     * @param string $dob
-     * @param string $userId
+     * @param ValidatedActorCode $details Pre-validated actor code details (must have been validated via validateDetails first)
+     * @param string $code The activation code to mark as used
+     * @param string $userId The user ID to associate with the LPA
      * @return string|null
      * @throws \Exception
      */
-    public function confirmDetails(string $code, string $uid, string $dob, string $userId): ?string
+    public function confirmDetails(ValidatedActorCode $details, string $code, string $userId): ?string
     {
-        $details = $this->validateDetails($code, new LpaUid($uid), $dob);
-
-        // If the details don't validate, stop here.
-        if (is_null($details)) {
-            return null;
-        }
-
         $lpaId = $details->lpa->getUid();
 
         $lpas = $this->userLpaActorMapRepository->getByUserId($userId);

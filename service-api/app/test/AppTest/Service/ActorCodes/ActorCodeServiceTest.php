@@ -52,34 +52,33 @@ class ActorCodeServiceTest extends TestCase
     }
 
     #[Test]
-    public function confirmation_fails_with_invalid_details(): void
-    {
-        $this->codeValidatorProphecy->validateCode('test-code', 'test-uid', '1982-10-28')
-            ->shouldBeCalled()
-            ->willThrow(new ActorCodeValidationException());
-
-        $service = $this->getActorCodeService();
-
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
-
-        $this->assertNull($result);
-    }
-
-    #[Test]
     public function confirmation_succeeds_with_valid_details(): void
     {
-        $this->initValidParameterSet();
+        [
+            $testCode,
+            $testUidObj,
+            $testCombinedUidObj,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockCombinedLpa,
+            $mockActor,
+            $mockCombinedActor,
+        ] = $this->initValidParameterSet();
 
-        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+        $testUid = $testUidObj->getLpaUid();
+
+        $this->codeValidatorProphecy->flagCodeAsUsed($testCode)
             ->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
-            'test-uid',
-            $this->testActorUid,
+            $testUid,
+            $testActorUid,
             null,
             null,
-            'test-code',
+            $testCode,
             true,
         )
             ->willReturn('00000000-0000-4000-A000-000000000000')
@@ -89,7 +88,9 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
+        $validatedDetails = $service->validateDetails($testCode, $testUidObj, $testDob);
+
+        $result = $service->confirmDetails($validatedDetails, $testCode, 'test-user');
 
         $this->assertEquals('00000000-0000-4000-A000-000000000000', $result);
     }
@@ -97,26 +98,39 @@ class ActorCodeServiceTest extends TestCase
     #[Test]
     public function confirmation_succeeds_with_valid_details_ttl_removed(): void
     {
-        $this->initValidParameterSet();
+        [
+            $testCode,
+            $testUidObj,
+            $testCombinedUidObj,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockCombinedLpa,
+            $mockActor,
+            $mockCombinedActor,
+        ] = $this->initValidParameterSet();
 
-        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+        $testUid = $testUidObj->getLpaUid();
+
+        $this->codeValidatorProphecy->flagCodeAsUsed($testCode)
             ->shouldBeCalled();
 
         $this->userLpaActorMapInterfaceProphecy->activateRecord(
             'token-3',
-            $this->testActorUid,
-            'test-code',
+            $testActorUid,
+            $testCode,
             true,
         )->willReturn([]);
 
         $mapResults = [
             [
                 'Id'             => 'token-3',
-                'SiriusUid'      => 'test-uid',
+                'SiriusUid'      => $testUid,
                 'ActorId'        => 3,
                 'ActivateBy'     => (new DateTime('now'))->add(new DateInterval('P1Y'))->getTimeStamp(),
                 'Added'          => new DateTime('now'),
-                'ActivationCode' => 'test-code',
+                'ActivationCode' => $testCode,
             ],
         ];
 
@@ -124,7 +138,9 @@ class ActorCodeServiceTest extends TestCase
 
         $service = $this->getActorCodeService();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
+        $validatedDetails = $service->validateDetails($testCode, $testUidObj, $testDob);
+
+        $result = $service->confirmDetails($validatedDetails, $testCode, 'test-user');
 
         // We expect a uuid4 back.
         $this->assertEquals('token-3', $result);
@@ -133,31 +149,44 @@ class ActorCodeServiceTest extends TestCase
     #[Test]
     public function confirmation_with_valid_details_fails_flag_as_used(): void
     {
-        $this->initValidParameterSet();
+        [
+            $testCode,
+            $testUidObj,
+            $testCombinedUidObj,
+            $testDob,
+            $testActorId,
+            $testActorUid,
+            $mockLpa,
+            $mockCombinedLpa,
+            $mockActor,
+            $mockCombinedActor,
+        ] = $this->initValidParameterSet();
 
-        $this->codeValidatorProphecy->flagCodeAsUsed('test-code')
+        $testUid = $testUidObj->getLpaUid();
+
+        $this->codeValidatorProphecy->flagCodeAsUsed($testCode)
             ->willThrow(new ActorCodeMarkAsUsedException());
 
         $this->userLpaActorMapInterfaceProphecy->create(
             'test-user',
-            'test-uid',
-            $this->testActorUid,
+            $testUid,
+            $testActorUid,
             null,
             null,
-            'test-code',
+            $testCode,
             true,
         )->willReturn('00000000-0000-4000-A000-000000000000');
 
         $this->userLpaActorMapInterfaceProphecy->delete('00000000-0000-4000-A000-000000000000')
             ->shouldBeCalled();
 
-        //---
-
         $service = $this->getActorCodeService();
 
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
-        $result = $service->confirmDetails('test-code', 'test-uid', '1982-10-28', 'test-user');
+        $validatedDetails = $service->validateDetails($testCode, $testUidObj, $testDob);
+
+        $result = $service->confirmDetails($validatedDetails, $testCode, 'test-user');
     }
 
     #[Test]

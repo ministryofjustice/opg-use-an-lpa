@@ -7,6 +7,7 @@ namespace App\Handler;
 use App\Exception\BadRequestException;
 use App\Exception\NotFoundException;
 use App\Service\ActorCodes\ActorCodeService;
+use App\Value\LpaUid;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
@@ -39,14 +40,23 @@ class AddLpaConfirmationHandler implements RequestHandlerInterface
             throw new BadRequestException("'actor-code', 'uid' and 'dob' are required fields");
         }
 
-        $response = $this->actorCodeService->confirmDetails(
+        $validatedDetails = $this->actorCodeService->validateDetails(
             $data['actor-code'],
-            $data['uid'],
+            new LpaUid($data['uid']),
             $data['dob'],
-            $userId,
         );
 
         // We deliberately don't return details of why the (validated) code was not found.
+        if (!$validatedDetails) {
+            throw new NotFoundException();
+        }
+
+        $response = $this->actorCodeService->confirmDetails(
+            $validatedDetails,
+            $data['actor-code'],
+            $userId,
+        );
+
         if (!is_string($response)) {
             throw new NotFoundException();
         }
