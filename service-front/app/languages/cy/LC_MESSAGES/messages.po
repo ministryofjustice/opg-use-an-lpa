@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 10:04+0000\n"
+"PO-Revision-Date: 2026-09-29 10:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -143,7 +143,7 @@ msgstr "Canslwyd eich cod mynediad ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:25
 msgid "Access code expired %date%"
-msgstr "Daeth eich cod mynediad i ben ar %date%"
+msgstr "Daeth y cod mynediad i ben ar %date%"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:33
 msgid "Access code"
@@ -556,7 +556,7 @@ msgstr "Eich cod mynediad"
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:37
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:35
 msgid "Copy code"
-msgstr "Cod copi"
+msgstr "Copïo’r cod"
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:38
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:36
@@ -571,7 +571,7 @@ msgstr "Rhowch y cod mynediad hwn i %organisation%"
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:46
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:44
 msgid "This code expires in 50 days, on %date%."
-msgstr "Daw’r cod hwn i ben ymhen 50 diwrnod, ar yr %date%."
+msgstr "Daw’r cod hwn i ben ymhen 50 diwrnod, ar %date%."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:55
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:53
@@ -581,7 +581,7 @@ msgstr "Beth i’w wneud nesaf"
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:58
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:56
 msgid "Give %organisation% this access code. They should go to <a href=\"%link_en%\" class=\"govuk-link\">www.gov.uk/view-lpa</a> to enter the access code and see a summary of the <abbr title=\"lasting power of attorney\">LPA</abbr>. %organisation% may still ask to see the paper LPA."
-msgstr "Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i <a href=\"%link_cy%\" class=\"govuk-link\">www.gov.uk/gweld-atwrneiaeth-arhosol</a> i roi’r cod mynediad a gweld crynodeb o’r atwrneiaeth. Efallai y bydd %organisation% yn dal i ofyn am weld yr LPA bapur."
+msgstr "Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i <a href=\"%link_cy%\" class=\"govuk-link\">www.gov.uk/gweld-atwrneiaeth-arhosol</a> i roi’r cod mynediad a gweld crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Efallai y bydd %organisation% yn gofyn am gael gweld yr LPA bapur o hyd."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:71
@@ -596,27 +596,27 @@ msgstr "Bydd copïau o ddymuniadau’r rhoddwr i’w gweld yn y crynodeb o’r <
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:81
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
 msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Wedi eu sganio o gyfarwyddiadau’r rhoddwr yn y crynodeb o’r Atwrneiaeth Arhosol. Dylech wirio’r ddelwedd sydd wedi ei sganio - os nad yw hi’n glir, gallai sefydliadau ofyn am gael gweld y fersiwn papur o’r Atwrneiaeth Arhosol."
+msgstr "Bydd copïau wedi eu sganio o gyfarwyddiadau’r rhoddwr i’w gweld yn y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Os bydd unrhyw ran o’r rhain yn aneglur ac yn anodd ei darllen bydd rhaid i chi ddangos <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:91
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:89
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s account details, and your name and contact details. They may also ask you to confirm your identity. This is to protect %donorFirstName% and prevent fraud."
-msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion cyfrif %donorFirstName%, eich manylion cyswllt ac ati. Efallai y byddant yn gofyn i chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% ac atal twyll."
+msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion cyfrif %donorFirstName%, a’ch enw a’ch manylion cyswllt. Efallai y byddant yn gofyn i chi gadarhau pwy ydych chi. Mae hyn er mwyn diogelu %donorFirstName% ac atal twyll."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:98
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
-msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion eich cyfrif cwsmer, manylion cyswllt eich twrnai ac ati."
+msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel manylion eich cyfrif cwsmer neu fanylion cyswllt eich atwrnai."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:106
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:104
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
-msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG %donorFirstName%, eich manylion cyswllt ac ati."
+msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel rhif GIG %donorFirstName% neu eich manylion cyswllt."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:113
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:111
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
-msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel eich rhif GIG, manylion cyswllt eich atwrnai ac ati."
+msgstr "Efallai bydd %organisation% yn gofyn am wybodaeth arall, fel eich rhif GIG neu fanylion cyswllt eich atwrnai."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:122
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:120
@@ -992,12 +992,12 @@ msgstr "Codau sydd wedi dod i ben"
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:75
 #: src/Actor/templates/actor/check-access-codes.html.twig:72
 msgid "The following codes will no longer work."
-msgstr "Nid yw’r codau canlynol yn gweithio bellach."
+msgstr "Nid yw’r codau hyn yn gweithio bellach."
 
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:76
 #: src/Actor/templates/actor/check-access-codes.html.twig:73
 msgid "If an organisation asks to see this <abbr title=\"lasting power of attorney\">LPA</abbr> again, you can <a href=\"%create-code-link%\" class=\"govuk-link\">make them a new code</a>."
-msgstr "Os bydd sefydliad yn gofyn am gael gweld y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon eto, yna gallwch <a href=\"%create-code-link%\" class=\"govuk-link\">greu cod newydd iddynt</a>."
+msgstr "Os bydd sefydliad yn gofyn am gael gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon eto, yna gallwch <a href=\"%create-code-link%\" class=\"govuk-link\">greu cod newydd iddynt</a>."
 
 #. Accordion label
 #: src/Actor/templates/actor/check-access-codes-combined-lpa.html.twig:79
@@ -2426,7 +2426,7 @@ msgstr "Dewiswch os oes gennych god actifadu i ychwanegu <abbr title=\"atwrneiae
 #: src/Actor/templates/actor/form-error-messages.html.twig:33
 msgctxt "error"
 msgid "The LPA reference number provided is not correct"
-msgstr "Nid yw’r cyfeirnod a roddwyd ar gyfer yr LPA yn gywir"
+msgstr "Mae cyfeirnod yr LPA a roesoch yn anghywir"
 
 #. Add Older LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:39
@@ -2818,7 +2818,7 @@ msgstr "mae’r cod actifadu rydych chi wedi’i roi yn anghywir"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:21
 msgid "activation key has expired or has already been used - you can <a href=\"%link%\" class=\"govuk-link\">request a new key</a>"
-msgstr "mae’r cod actifadu wedi dod i ben neu wedi cael ei ddefnyddio’n barod – gallwch chi <a href=\"%link%\" class=\"govuk-link\">ofyn am god newydd</a>"
+msgstr "mae’r cod actifadu wedi dod i ben neu eisoes wedi cael ei ddefnyddio – gallwch <a href=\"%link%\" class=\"govuk-link\">wneud cais am god newydd</a>"
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:26
 msgid "date of birth you entered does not match our records"
