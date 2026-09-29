@@ -13,9 +13,9 @@ use function OpenTelemetry\Instrumentation\hook;
 /**
  * Prevents the telemetry exporters' own HTTP calls (made via Guzzle) from being traced.
  */
-class Exporter
+final class Exporter
 {
-    public const NAME = 'exporter';
+    public const string NAME = 'exporter';
 
     public static function register(): void
     {

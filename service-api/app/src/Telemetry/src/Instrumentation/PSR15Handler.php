@@ -32,12 +32,12 @@ use function OpenTelemetry\Instrumentation\hook;
  * Creates the root server span for an incoming request (continuing any propagated X-Ray/W3C trace) along
  * with internal spans for each application middleware and request handler executed.
  */
-class PSR15Handler
+final class PSR15Handler
 {
-    public const NAME = 'psr15';
+    public const string NAME = 'psr15';
 
-    private const MIDDLEWARE_HOOK = self::NAME . '.middleware';
-    private const HANDLER_HOOK    = self::NAME . '.handler';
+    private const string MIDDLEWARE_HOOK = self::NAME . '.middleware';
+    private const string HANDLER_HOOK    = self::NAME . '.handler';
 
     private static CachedInstrumentation $instrumentation;
 

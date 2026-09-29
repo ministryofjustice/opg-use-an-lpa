@@ -29,9 +29,9 @@ use function OpenTelemetry\Instrumentation\hook;
  * service. Client::transfer() is the single point that send(), sendAsync(), sendRequest() and request pools
  * all pass through.
  */
-class Guzzle
+final class Guzzle
 {
-    public const NAME = 'guzzle';
+    public const string NAME = 'guzzle';
 
     private static CachedInstrumentation $instrumentation;
 

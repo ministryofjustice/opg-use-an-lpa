@@ -21,9 +21,9 @@ use function OpenTelemetry\Instrumentation\hook;
 /**
  * Creates a client span for every AWS SDK operation, e.g. DynamoDbClient::getItem().
  */
-class Aws
+final class Aws
 {
-    public const NAME = 'aws';
+    public const string NAME = 'aws';
 
     private static CachedInstrumentation $instrumentation;
 
