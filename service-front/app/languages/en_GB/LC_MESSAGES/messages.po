@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-28 13:29+0000\n"
+"PO-Revision-Date: 2026-09-29 09:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -2189,7 +2189,7 @@ msgstr "your name and address"
 #: src/Actor/templates/actor/change-details.html.twig:53
 #: src/Actor/templates/actor/change-lpa-details.html.twig:43
 msgid "your role (ie, whether you are the donor or an attorney)"
-msgstr "your role (ie, whether you are the donor or an attorney)"
+msgstr "your role (for example, whether you are the donor or an attorney)"
 
 #: src/Actor/templates/actor/change-details.html.twig:54
 #: src/Actor/templates/actor/change-lpa-details.html.twig:44
@@ -2627,7 +2627,7 @@ msgstr "This happened because of a technical issue. Your information is safe. Si
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:22
 msgid "Let us know if something is incorrect on the LPA"
-msgstr "Let us know if something is incorrect on the LPA"
+msgstr "Let us know if something is incorrect in the LPA"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:24
 msgid "It's important that the information on the LPA summary is correct."
