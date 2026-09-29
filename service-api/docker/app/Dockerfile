@@ -9,7 +9,7 @@ FROM docker.io/php:8.4-fpm-alpine3.22@sha256:e0f1ffe8bd43a137facdccdcac41cabdfc2
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
-# OpenTelemetry defaults. Tracing is instrumented (see App\Telemetry\Tracer) but not exported unless
+# OpenTelemetry defaults. Tracing is instrumented (see Telemetry\Tracer) but not exported unless
 # OTEL_TRACES_EXPORTER is overridden at runtime, e.g. "otlp" when the collector sidecar is deployed.
 ENV OTEL_PHP_AUTOLOAD_ENABLED=true \
     OTEL_SERVICE_NAME=api.use-an-lpa \
