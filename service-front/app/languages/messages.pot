@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2026-09-24T13:49:04+00:00\n"
+"POT-Creation-Date: 2026-09-29T14:30:19+00:00\n"
 "X-Domain: messages\n"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:4
@@ -346,7 +346,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
-#: src/Common/src/View/Twig/LpaExtension.php:267
+#: src/Common/src/View/Twig/LpaExtension.php:285
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 msgid "Property and finance"
@@ -359,7 +359,7 @@ msgstr ""
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:19
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:17
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:17
-#: src/Common/src/View/Twig/LpaExtension.php:272
+#: src/Common/src/View/Twig/LpaExtension.php:290
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:25
 #: src/Viewer/templates/viewer/check-code-found.html.twig:25
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
@@ -4403,7 +4403,7 @@ msgstr ""
 msgid "The LPA is ready to view"
 msgstr ""
 
-#: src/Common/src/View/Twig/LpaExtension.php:268
+#: src/Common/src/View/Twig/LpaExtension.php:286
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:33
 msgid "Property and affairs"
 msgstr ""
@@ -4515,7 +4515,7 @@ msgstr ""
 msgid "The joint decisions for this LPA can now only be made, and must be agreed, by:"
 msgstr ""
 
-#: src/Common/src/View/Twig/LpaExtension.php:273
+#: src/Common/src/View/Twig/LpaExtension.php:291
 msgid "Personal welfare"
 msgstr ""
 
@@ -4668,10 +4668,6 @@ msgstr ""
 msgid "activation-key-request.start.title"
 msgstr ""
 
-#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
-msgid "activation-key-request.start.back-link"
-msgstr ""
-
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
 msgid "activation-key-request.start.heading-page"
 msgstr ""
@@ -4708,10 +4704,14 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+msgid "common.back-link"
+msgstr ""
+
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
-msgid "activation-key-request.start.button-continue"
+msgid "common.button-continue"
 msgstr ""
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:58
-msgid "activation-key-request.start.button-cancel"
+msgid "common.button-cancel"
 msgstr ""
