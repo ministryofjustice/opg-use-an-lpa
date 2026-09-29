@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 10:36+0000\n"
+"PO-Revision-Date: 2026-09-29 13:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -3767,7 +3767,7 @@ msgstr "Cyfenw’r rhoddwr"
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:32
 #: src/Viewer/templates/viewer/enter-code.html.twig:42
 msgid "LPA access code"
-msgstr "Cod mynediad yr LPA"
+msgstr "Cod mynediad LPA"
 
 #: src/Viewer/templates/viewer/enter-code.html.twig:44
 msgid "Access codes are 13 characters long and start with a V<br/>For example, V-AB12-CD34-EF56"
@@ -4087,7 +4087,7 @@ msgstr[5] "mewn %count% o ddiwrnodau, ar %date%"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:38
 #: src/Viewer/templates/viewer/check-code-found.html.twig:38
 msgid "If this is not the right LPA, ask the donor or attorney to check the access code."
-msgstr "Os nad dyma’r LPA iawn, gofynnwch i’r rhoddwr neu atwrnai wirio’r cod mynediad LPA."
+msgstr "Os nad dyma’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gywir, gofynnwch i’r rhoddwr neu atwrnai wirio’r cod mynediad."
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:45
 #: src/Viewer/templates/viewer/check-code-found.html.twig:45
@@ -4102,17 +4102,17 @@ msgstr "Gallwch weld crynodeb ar-lein o’r <abbr title=‘atwrneiaethau arhosol
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:52
 #: src/Viewer/templates/viewer/check-code-found.html.twig:52
 msgid "Ask the donor or attorney for a new access code if your organisation:"
-msgstr "Gofynnwch i’r rhoddwr neu’r atwrnai am god mynediad newydd os oes ar eich sefydliad angen:"
+msgstr "Gofynnwch i’r rhoddwr neu atwrnai am god mynediad newydd os oes ar eich sefydliad angen:"
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:54
 #: src/Viewer/templates/viewer/check-code-found.html.twig:54
 msgid "needs more time to process this LPA"
-msgstr "rhagor o amser i brosesu’r LPA"
+msgstr "rhagor o amser i brosesu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:55
 #: src/Viewer/templates/viewer/check-code-found.html.twig:55
 msgid "need to see this LPA at a later date"
-msgstr "gweld yr LPA ymhellach ymlaen"
+msgstr "gweld yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> rhywbryd yn y dyfodol"
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:65
 #: src/Viewer/templates/viewer/check-code-found.html.twig:65
@@ -4124,7 +4124,7 @@ msgstr "Enw eich sefydliad"
 #: src/Viewer/templates/viewer/check-code-found.html.twig:66
 #: src/Viewer/templates/viewer/paper-verification/lpa-ready-to-view.html.twig:43
 msgid "This will be displayed to the attorneys and donor on the LPA"
-msgstr "Dangosir hwn i’r rhoddwr a’r atwrneiod ar yr LPA"
+msgstr "Bydd y rhoddwr a’r atwrneiod yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn gweld hwn"
 
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:70
 #: src/Viewer/templates/viewer/check-code-found.html.twig:70
@@ -4135,7 +4135,7 @@ msgstr "Gweld yr LPA"
 #: src/Viewer/templates/viewer/check-code-found-combined-lpa.html.twig:73
 #: src/Viewer/templates/viewer/check-code-found.html.twig:73
 msgid "Try another access code"
-msgstr "Ceisio defnyddio cod mynediad arall"
+msgstr "Rhoi cynnig ar ddefnyddio cod mynediad arall"
 
 #. Global
 #: src/Viewer/templates/viewer/form-error-messages.html.twig:4
@@ -4462,7 +4462,7 @@ msgstr "Eiddo a materion ariannol"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:12
 msgid "We could not find an LPA with those details"
-msgstr "Ni lwyddwyd i ddod o hyd i LPA gyda’r manylion hynny"
+msgstr "Ni ddaethom o hyd i <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> gyda’r manylion una"
 
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:15
 msgid "Although we could not find this LPA, it does not mean it does not exist, or is not able to be viewed somewhere else."
