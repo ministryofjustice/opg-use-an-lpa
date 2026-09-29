@@ -445,7 +445,7 @@ locals {
     {
       cpu         = 0,
       essential   = true,
-      image       = "${data.aws_ecr_repository.otel_collector.repository_url}:v0.40.2",
+      image       = "${data.aws_ecr_repository.otel_collector.repository_url}:v0.47.0",
       mountPoints = [],
       name        = "aws-otel-collector",
       command = [
