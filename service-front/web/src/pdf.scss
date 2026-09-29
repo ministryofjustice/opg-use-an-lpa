@@ -1,5 +1,9 @@
 @import './stylesheets/gds.css';
 
+@import "../node_modules/govuk-frontend/dist/govuk/settings/index";
+@import "../node_modules/govuk-frontend/dist/govuk/tools/index";
+@import "../node_modules/govuk-frontend/dist/govuk/helpers/index";
+
 @font-face {
   font-family: 'GDS Transport';
   src: url('../node_modules/govuk-frontend/dist/govuk/assets/fonts/light-94a07e06a1-v2.woff2')
@@ -32,16 +36,21 @@
   }
 }
 
+.opg-lpa__document-extract {
+  box-sizing: border-box;
+  border: govuk-spacing(1) solid govuk-colour('mid-grey');
+  margin: govuk-spacing(0) govuk-spacing(0) govuk-spacing(6) govuk-spacing(0);
+}
+
 .opg-ip {
   .govuk-summary-list + & {
     margin-top: -0.5rem;
   }
 
   &__image {
-    border: 2px dashed #0b0c0c;
     max-width: 990px;
-    width: calc(100% - 30px);
+    width: calc(100%);
     height: auto;
-    margin-bottom: 10px;
+    display: block;
   }
 }
