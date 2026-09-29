@@ -87,7 +87,7 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn([])->shouldBeCalled();
 
         $service = $this->getActorCodeService();
-        
+
         $validatedDetails = $service->validateDetails($testCode, $testUidObj, $testDob);
 
         $result = $service->confirmDetails($validatedDetails, $testCode, 'test-user');
@@ -137,7 +137,7 @@ class ActorCodeServiceTest extends TestCase
         $this->userLpaActorMapInterfaceProphecy->getByUserId('test-user')->willReturn($mapResults)->shouldBeCalled();
 
         $service = $this->getActorCodeService();
-        
+
         $validatedDetails = $service->validateDetails($testCode, $testUidObj, $testDob);
 
         $result = $service->confirmDetails($validatedDetails, $testCode, 'test-user');
