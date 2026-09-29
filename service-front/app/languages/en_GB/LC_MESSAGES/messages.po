@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 15:05+0000\n"
+"PO-Revision-Date: 2026-09-29 17:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -5709,3 +5709,17 @@ msgstr "The donor has said that this <abbr title=\"lasting power of attorney\">L
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:3
 msgid "activation-key-request.start.title"
 msgstr "Request an activation key"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+msgid "activation-key-request.start.back-link"
+msgstr "Back"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "activation-key-request.start.heading-page"
+msgstr "Request an activation key"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
+msgctxt "html"
+msgid "activation-key-request.start.content.can-only-ask-for"
+msgstr "You can only ask for an activation key if:"
