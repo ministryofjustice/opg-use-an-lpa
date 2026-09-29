@@ -107,6 +107,12 @@ data "aws_ecr_image" "use_an_lpa_admin_app" {
   provider        = aws.management
 }
 
+data "aws_ecr_repository" "otel_collector" {
+  name     = "sirius-public-ecr/aws-observability/aws-otel-collector"
+  provider = aws.management
+  region   = var.region_name
+}
+
 data "aws_ecr_repository" "mock_onelogin" {
   name     = "mock-onelogin"
   provider = aws.management

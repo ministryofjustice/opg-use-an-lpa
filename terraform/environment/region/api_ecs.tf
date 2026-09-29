@@ -445,7 +445,7 @@ locals {
     {
       cpu         = 0,
       essential   = true,
-      image       = "public.ecr.aws/aws-observability/aws-otel-collector:v0.14.1",
+      image       = "${data.aws_ecr_repository.otel_collector.repository_url}:v0.40.2",
       mountPoints = [],
       name        = "aws-otel-collector",
       command = [
@@ -458,7 +458,7 @@ locals {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.application_logs.name,
           awslogs-region        = var.region_name,
-          awslogs-stream-prefix = "${var.environment_name}.actor-otel.use-an-lpa"
+          awslogs-stream-prefix = "${var.environment_name}.api-otel.use-an-lpa"
         }
       },
       environment = []
@@ -599,6 +599,18 @@ locals {
         {
           name  = "LPA_STORE_JWT_SECRET",
           value = data.aws_secretsmanager_secret.lpa_store_jwt_key.arn
+        },
+        {
+          name  = "OTEL_SERVICE_NAME",
+          value = "${var.environment_name}-api"
+        },
+        {
+          name  = "OTEL_TRACES_EXPORTER",
+          value = var.feature_flags.deploy_opentelemetry_sidecar ? "otlp" : "none"
+        },
+        {
+          name  = "OTEL_EXPORTER_OTLP_ENDPOINT"
+          value = "http://127.0.0.1:4318"
         },
       ]
   })
