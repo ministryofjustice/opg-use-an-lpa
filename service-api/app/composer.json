@@ -10,7 +10,8 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "laminas/laminas-component-installer": false,
             "pact-foundation/composer-downloads-plugin": true,
-            "php-http/discovery": false
+            "php-http/discovery": false,
+            "tbachert/spi": false
         },
         "platform": {
             "php": "8.4.21"
@@ -62,6 +63,10 @@
         "mezzio/mezzio": "^3.21.0",
         "mezzio/mezzio-fastroute": "^3.13",
         "mezzio/mezzio-helpers": "^5.17",
+        "open-telemetry/contrib-aws": "^1.0@beta",
+        "open-telemetry/exporter-otlp": "^1.0",
+        "open-telemetry/sdk": "^1.0",
+        "open-telemetry/sem-conv": "^1.0",
         "paragonie/constant_time_encoding": "^2.7",
         "paragonie/hidden-string": "^1.1",
         "psr/clock": "^1.0",
@@ -105,7 +110,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/App/src/"
+            "App\\": "src/App/src/",
+            "Telemetry\\": "src/Telemetry/src/"
         }
     },
     "autoload-dev": {
