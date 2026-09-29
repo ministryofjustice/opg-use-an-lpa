@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 09:29+0000\n"
+"PO-Revision-Date: 2026-09-29 10:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1016,7 +1016,7 @@ msgstr "Rhowch wybod i ni os bydd rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:25
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because an LPA will end when the donor dies, and they can end if an attorney dies."
-msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Y rheswm am hyn yw y bydd yr LPA yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
+msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrneiod. Y rheswm dros hyn yw y bydd yr LPA yn dod i ben pan fydd y rhoddwr yn marw, a gall ddod i ben os bydd atwrnai’n marw."
 
 #: src/Actor/templates/actor/change-details.html.twig:27
 #: src/Actor/templates/actor/change-lpa-details.html.twig:26
@@ -1026,15 +1026,15 @@ msgstr "Dylech gysylltu â ni os:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:30
 msgid "the donor dies"
-msgstr "rhoddwr yn marw"
+msgstr "bydd y rhoddwr yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:31
 msgid "an attorney dies"
-msgstr "atwrnai yn marw"
+msgstr "bydd atwrnai yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:32
 msgid "a replacement attorney dies"
-msgstr "atwrnai newydd yn marw"
+msgstr "bydd atwrnai wrth gefn yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:35
 msgid "We'll update the online LPA summary and our records"
@@ -2152,23 +2152,23 @@ msgstr "Rhowch wybod i ni os bydd manylion rhoddwr neu atwrnai yn newid"
 
 #: src/Actor/templates/actor/change-details.html.twig:23
 msgid "It's important that we hold up-to-date information about donors and attorneys. This is because the first time you show an <abbr title=\"lasting power of attorney\">LPA</abbr> to an organisation, they might ask you to confirm that your name and address match what’s on the <abbr title=\"lasting power of attorney\">LPA</abbr>."
-msgstr "Mae’n bwysig bod gennym yr wybodaeth ddiweddaraf am roddwyr ac atwrneiod. Mae hyn oherwydd y tro cyntaf y byddwch yn dangos <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i sefydliad, efallai y byddant yn gofyn i chi gadarnhau bod eich enw a’ch cyfeiriad yn cyfateb i’r hyn sydd ar y <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
+msgstr "Mae’n bwysig bod gennym yr wybodaeth ddiweddaraf am roddwyr ac atwrneiod. Mae hyn oherwydd y tro cyntaf y byddwch yn dangos <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i sefydliad, efallai y byddant yn gofyn i chi gadarnhau bod eich enw a’ch cyfeiriad yn cyfateb i’r hyn sydd yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Actor/templates/actor/change-details.html.twig:30
 msgid "the donor or an attorney has moved house"
-msgstr "os yw’r rhoddwr neu atwrnai wedi symud tŷ"
+msgstr "yw’r rhoddwr neu atwrnai wedi symud tŷ"
 
 #: src/Actor/templates/actor/change-details.html.twig:31
 msgid "the donor or an attorney has changed their name"
-msgstr "os yw’r rhoddwr neu atwrnai wedi newid ei enw"
+msgstr "yw’r rhoddwr neu atwrnai wedi newid ei enw"
 
 #: src/Actor/templates/actor/change-details.html.twig:32
 msgid "the donor's or an attorney's name or address is misspelt"
-msgstr "os yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
+msgstr "yw enw neu gyfeiriad y rhoddwr neu atwrnai wedi ei gamsillafu"
 
 #: src/Actor/templates/actor/change-details.html.twig:33
 msgid "an attorneys date of birth is wrong"
-msgstr "mae dyddiad geni atwrnai yn anghywir"
+msgstr "yw dyddiad geni atwrnai yn anghywir"
 
 #: src/Actor/templates/actor/change-details.html.twig:37
 msgid "the donor or an attorney dies"
@@ -2185,7 +2185,7 @@ msgstr "Os mai chi yw’r rhoddwr, gallwch ddweud wrthym am unrhyw newid i’ch 
 
 #: src/Actor/templates/actor/change-details.html.twig:45
 msgid "If you’re an attorney, you can tell us about changes to the donor’s details and your details. You cannot update another attorney’s details."
-msgstr "Os ydych yn atwrnai, gallwch ddweud wrthym am unrhyw newid i fanylion y rhoddwr a’ch manylion chi. Ni allwch ddiweddaru manylion atwrnai arall."
+msgstr "Os ydych yn atwrnai, gallwch ddweud wrthym am unrhyw newid i fanylion y rhoddwr a’ch manylion chi. Ni chewch ddiweddaru manylion atwrnai arall."
 
 #: src/Actor/templates/actor/change-details.html.twig:48
 #: src/Actor/templates/actor/change-lpa-details.html.twig:38
@@ -2204,7 +2204,7 @@ msgstr "cyfeirnod yr LPA"
 
 #: src/Actor/templates/actor/change-details.html.twig:52
 msgid "your name and address"
-msgstr "eich enw a chyfeiriad"
+msgstr "eich enw a’ch cyfeiriad"
 
 #: src/Actor/templates/actor/change-details.html.twig:53
 #: src/Actor/templates/actor/change-lpa-details.html.twig:43
@@ -2236,7 +2236,7 @@ msgstr "Mae’n bwysig ein bod yn cadw gwybodaeth gyfredol am roddwyr ac atwrnei
 
 #: src/Actor/templates/actor/change-details.html.twig:74
 msgid "Find out more about what to do if <a class=\"govuk-link\" href=\"%link%\"> the donor or an attorney dies</a>"
-msgstr "Rhagor o wybodaeth am beth i’w wneud <a class=\"govuk-link\" href=\"%link%\">os bydd y rhoddwr neu’r atwrnai yn marw</a>"
+msgstr "Rhagor o wybodaeth am beth i’w wneud os <a class=\"govuk-link\" href=\"%link%\">bydd y rhoddwr neu atwrnai yn marw</a>"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:20
 msgid "The reference number is in the same letter that has your activation key."
@@ -4332,7 +4332,7 @@ msgstr "Efallai fod y rhoddwr neu’r atwrnai wedi rhoi’r cod anghywir i chi. 
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:20
 msgid "the donor’s name you entered does not match our records"
-msgstr "dydy enw’r rhoddwr rydych chi wedi’i roi ddim yn cyfateb i’n cofnodion ni"
+msgstr "nid yw’r enw’r rhoddwr rydych chi wedi’i roi yn cyfateb i’n cofnodion ni"
 
 #: src/Viewer/templates/viewer/paper-verification/could-not-find-lpa.html.twig:21
 msgid "the LPA paper verification code you entered is incorrect"
