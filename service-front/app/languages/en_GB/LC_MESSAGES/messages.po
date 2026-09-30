@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-30 14:39+0000\n"
+"PO-Revision-Date: 2026-09-30 15:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -4716,8 +4716,8 @@ msgstr ""
 "<p class=\"govuk-body\">You can only ask for an activation key if:</p>\n"
 "\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
-"    <li>you’re a donor or an attorney on the LPA (not a replacement attorney)</li>\n"
-"    <li>the LPA was made for use in England and Wales</li>\n"
+"    <li>you’re a donor or an attorney on the <abbr title=\"lasting power of attorney\">LPA</abbr> (not a replacement attorney)</li>\n"
+"    <li>the <abbr title=\"lasting power of attorney\">LPA</abbr> was made for use in England and Wales</li>\n"
 "</ul>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
@@ -4731,22 +4731,22 @@ msgid "activation-key-request.start.content.details-need-to-give"
 msgstr ""
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "    <li>your name and date of birth</li>\n"
-"    <li>where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records</li>\n"
-"    <li>the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)</li>\n"
+"    <li>where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update our records</li>\n"
+"    <li>the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number – you’ll find this on the paper <abbr title=\"lasting power of attorney\">LPA</abbr> and on letters from the Office of the Public Guardian (OPG)</li>\n"
 "</ul>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "activation-key-request.start.reveal-title"
-msgstr "Where to find the LPA reference number"
+msgstr "Where to find the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
 
 #. Contains a contact-us link using the %link% placeholder.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
 msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
-"<p>You can find this on the first page of the LPA or any related letters from the Office of the Public Guardian (OPG). It may also be referred to as ‘LPA reference number’, ‘Our ref.’ or ‘Case number’.</p>\n"
-"<p>If you do not have the paper LPA or any letters from OPG, check with other people named in the LPA. If a professional helped you with the LPA, such as a solicitor, they should be able to give you the reference number.</p>\n"
-"<p>If you still don’t know the LPA reference number or can’t find it, please <a class=\"govuk-link\" href=\"%link%\">contact us</a> by phone.</p>"
+"<p>You can find this on the first page of the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian (OPG). It may also be referred to as ‘LPA reference number’, ‘Our ref.’ or ‘Case number’.</p>\n"
+"<p>If you do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or any letters from OPG, check with other people named in the <abbr title=\"lasting power of attorney\">LPA</abbr>. If a professional helped you with the <abbr title=\"lasting power of attorney\">LPA</abbr>, such as a solicitor, they should be able to give you the reference number.</p>\n"
+"<p>If you still don’t know the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number or can’t find it, please <a class=\"govuk-link\" href=\"%link%\">contact us</a>.</p>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
 msgid "common.back-link"
