@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 13:05+0000\n"
+"PO-Revision-Date: 2026-09-30 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -4717,3 +4717,11 @@ msgstr "Os ydych yn rhoddwr neu’n atwrnai, gallwch weld yr LPA drwy fewngofnod
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:15
 msgid "The donor has said that this <abbr title=\"lasting power of attorney\">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf"
 msgstr "Dywedodd y rhoddwr y gellir defnyddio’rv <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon nawr. Er bod gan y rhoddwr alluedd meddyliol, gall ofyn i’w atwrneiod weithredu ar ei ran o hyd"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:3
+msgid "activation-key-request.start.title"
+msgstr "Gofyn am god actifadu"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "activation-key-request.start.heading-page"
+msgstr "Gofyn am god actifadu"
