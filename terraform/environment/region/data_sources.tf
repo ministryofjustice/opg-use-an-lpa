@@ -113,6 +113,12 @@ data "aws_ecr_repository" "otel_collector" {
   region   = var.region_name
 }
 
+data "aws_ecr_image" "otel_collector" {
+  repository_name = data.aws_ecr_repository.otel_collector.name
+  image_tag       = "v0.48.0"
+  provider        = aws.management
+}
+
 data "aws_ecr_repository" "mock_onelogin" {
   name     = "mock-onelogin"
   provider = aws.management
