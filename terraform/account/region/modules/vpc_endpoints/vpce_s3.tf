@@ -30,12 +30,7 @@ resource "aws_vpc_endpoint_policy" "s3" {
           "AWS" : "*"
         },
         "Action" : ["s3:GetObject"],
-        "Resource" : var.permitted_s3_buckets,
-        "Condition" : {
-          "StringLike" : {
-            "aws:PrincipalArn" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:*"
-          }
-        }
+        "Resource" : var.permitted_s3_buckets
       }
     ]
   })
