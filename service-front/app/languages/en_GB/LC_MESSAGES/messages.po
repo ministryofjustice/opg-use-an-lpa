@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-29 17:05+0000\n"
+"PO-Revision-Date: 2026-09-30 12:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -5723,3 +5723,22 @@ msgstr "Request an activation key"
 msgctxt "html"
 msgid "activation-key-request.start.content.can-only-ask-for"
 msgstr "You can only ask for an activation key if:"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
+msgid "activation-key-request.start.heading.details.title"
+msgstr "Details you’ll need to give us"
+
+#. Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
+msgctxt "html-link"
+msgid "activation-key-request.start.content.details-need-to-give"
+msgstr ""
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>your name and date of birth</li>\n"
+"    <li>where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update your records</li>\n"
+"    <li>the LPA reference number - you’ll find this on the paper LPA and on letters from the Office of the Public Guardian (OPG)</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+msgid "activation-key-request.start.reveal-title"
+msgstr "Where to find the LPA reference number"
