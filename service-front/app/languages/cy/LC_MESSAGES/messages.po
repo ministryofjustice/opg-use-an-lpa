@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-30 14:27+0000\n"
+"PO-Revision-Date: 2026-09-30 15:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -4734,8 +4734,8 @@ msgstr ""
 "<p class=\"govuk-body\">Gallwch ofyn am god actifadu os:</p>\n"
 "\n"
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
-"    <li>ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr LPA (nid yn atwrnai wrth gefn)</li>\n"
-"    <li>gwnaed yr LPA i’w defnyddio yng Nghymru a Lloegr</li>\n"
+"    <li>ydych yn rhoddwr neu’n atwrnai wedi eich enwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> (nid yn atwrnai wrth gefn)</li>\n"
+"    <li>gwnaed yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> i’w defnyddio yng Nghymru a Lloegr</li>\n"
 "</ul>"
 
 #. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
@@ -4763,21 +4763,21 @@ msgstr ""
 "<ul class=\"govuk-list govuk-list--bullet\">\n"
 "    <li>eich enw a’ch dyddiad geni</li>\n"
 "    <li>ble rydych yn byw ar hyn o bryd – caiff codau actifadu eu hanfon yn y post. Os ydych wedi symud cartref a heb ddweud wrthym, rhaid i chi <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> cyn clicio parhau fel y gallwn ddiweddaru ein cofnodion</li>\n"
-"    <li>cyfeirnod yr LPA – fe welwch hwn ar yr LPA bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)</li>\n"
+"    <li>cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> – fe welwch hwn ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur ac ar lythyrau gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)</li>\n"
 "</ul>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "activation-key-request.start.reveal-title"
-msgstr "Ble i ddod o hyd i gyfeirnod yr <abbr title=\\\"atwrneiaeth arhosol\\\">LPA</abbr>"
+msgstr "Ble i ddod o hyd i gyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #. Contains a contact-us link using the %link% placeholder.
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
 msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
-"<p>Gallwch ddod o hyd iddo ar dudalen gyntaf yr LPA neu unrhyw lythyron perthnasol gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG). Mae’n bosib y caiff ei alw’n ‘Cyfeirnod yr LPA’, yn ‘Ein cyf.’ neu’n 'Rhif achos’.</p>\n"
-"<p>Os nad oes gennych yr LPA bapur nac unrhyw lythyron gan OPG, holwch bobl eraill sydd wedi’u henwi yn yr LPA. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r LPA, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
-"<p>Os nad ydych yn gwybod beth yw cyfeirnod yr LPA o hyd neu’n methu dod o hyd iddo, gallwch <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a> dros y ffôn.</p>"
+"<p>Gallwch ddod o hyd iddo ar dudalen gyntaf yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> neu unrhyw lythyron perthnasol gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG). Mae’n bosib y caiff ei alw’n ‘Cyfeirnod yr LPA’, yn ‘Ein cyf.’ neu’n 'Rhif achos’.</p>\n"
+"<p>Os nad oes gennych yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur nac unrhyw lythyron gan OPG, holwch bobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r LPA, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
+"<p>Os nad ydych yn gwybod beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> o hyd neu’n methu dod o hyd iddo, dylech <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a>.</p>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
 msgid "common.back-link"
