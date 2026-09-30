@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-30 12:05+0000\n"
+"PO-Revision-Date: 2026-09-30 14:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -5722,7 +5722,13 @@ msgstr "Request an activation key"
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
 msgctxt "html"
 msgid "activation-key-request.start.content.can-only-ask-for"
-msgstr "You can only ask for an activation key if:"
+msgstr ""
+"<p class=\"govuk-body\">You can only ask for an activation key if:</p>\n"
+"\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>you’re a donor or an attorney on the LPA (not a replacement attorney)</li>\n"
+"    <li>the LPA was made for use in England and Wales</li>\n"
+"</ul>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
 msgid "activation-key-request.start.heading.details.title"
@@ -5742,3 +5748,37 @@ msgstr ""
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
 msgid "activation-key-request.start.reveal-title"
 msgstr "Where to find the LPA reference number"
+
+#. Contains a contact-us link using the %link% placeholder.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
+msgctxt "html-link"
+msgid "activation-key-request.start.reveal-content"
+msgstr ""
+"<p>You can find this on the first page of the LPA or any related letters from the Office of the Public Guardian (OPG). It may also be referred to as ‘LPA reference number’, ‘Our ref.’ or ‘Case number’.</p>\n"
+"<p>If you do not have the paper LPA or any letters from OPG, check with other people named in the LPA. If a professional helped you with the LPA, such as a solicitor, they should be able to give you the reference number.</p>\n"
+"<p>If you still don’t know the LPA reference number or can’t find it, please <a class=\"govuk-link\" href=\"%link%\">contact us</a> by phone.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+msgid "common.back-link"
+msgstr "Back"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
+msgid "common.button-continue"
+msgstr "Continue"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:58
+msgid "common.button-cancel"
+msgstr "Cancel"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
+msgctxt "html"
+msgid "activation-key-request.start.content.cannot-ask-for"
+msgstr ""
+"<p class=\"govuk-body\">You cannot ask for a key for:</p>\n"
+"\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>LPAs with reference numbers fewer than 12 digits and registered before January 2016</li>\n"
+"    <li>enduring powers of attorney (EPAs)</li>\n"
+"    <li>LPAs registered by the Office of the Public Guardian Scotland</li>\n"
+"</ul>"
