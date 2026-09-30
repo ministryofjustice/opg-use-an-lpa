@@ -108,7 +108,7 @@ data "aws_ecr_image" "use_an_lpa_admin_app" {
 }
 
 data "aws_ecr_repository" "otel_collector" {
-  name     = "sirius-public-ecr/aws-observability/aws-otel-collector"
+  name     = "aws-otel-collector-public-ecr/aws-observability/aws-otel-collector"
   provider = aws.management
   region   = var.region_name
 }
