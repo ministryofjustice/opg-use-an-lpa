@@ -229,7 +229,7 @@ locals {
     {
       cpu         = 0,
       essential   = true,
-      image       = "${data.aws_ecr_repository.otel_collector.repository_url}::${data.aws_ecr_image.otel_collector.image_digest}",
+      image       = "${data.aws_ecr_repository.otel_collector.repository_url}@${data.aws_ecr_image.otel_collector.image_digest}",
       mountPoints = [],
       name        = "aws-otel-collector",
       command = [
