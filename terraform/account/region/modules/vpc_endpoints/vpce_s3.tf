@@ -27,10 +27,15 @@ resource "aws_vpc_endpoint_policy" "s3" {
         "Sid" : "Access-to-specific-bucket-only",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+          "AWS" : "*"
         },
         "Action" : ["s3:GetObject"],
-        "Resource" : var.permitted_s3_buckets
+        "Resource" : var.permitted_s3_buckets,
+        "Condition" : {
+          "StringLike" : {
+            "aws:PrincipalArn" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:*"
+          }
+        }
       }
     ]
   })
