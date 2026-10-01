@@ -108,14 +108,14 @@ jobs:
             artifact_to_dl: ""
             path_to_docker_file: "lambda-functions/event-receiver/Dockerfile"
             snyk_policy_path: "lambda-functions/event-receiver/.snyk"
-          - svc_prefix: "duplicate_accounts"
+          - svc_prefix: "unused_accounts"
             svc_suffix: "lambda"
             build_development_docker: "false"
             run_unit_tests: "false"
             run_integration_tests: "false"
             artifact_to_dl: ""
-            path_to_docker_file: "lambda-functions/duplicate-accounts/Dockerfile"
-            snyk_policy_path: "lambda-functions/duplicate-accounts/.snyk"
+            path_to_docker_file: "lambda-functions/unused-accounts/Dockerfile"
+            snyk_policy_path: "lambda-functions/unused-accounts/.snyk"
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
 
@@ -307,8 +307,8 @@ jobs:
             if [[ "${SVC_SUFFIX}" = "receiver" ]]; then
               docker build --platform linux/amd64 --provenance=false --file lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}/Dockerfile --tag ${SVC_PREFIX}_${SVC_SUFFIX}:latest lambda-functions/${SVC_PREFIX}-${SVC_SUFFIX}
             fi
-          elif [[ "${SVC_PREFIX}" = "duplicate_accounts" ]]; then
-            docker build --platform linux/amd64 --provenance=false --file lambda-functions/duplicate-accounts/Dockerfile --tag duplicate_accounts_lambda:latest lambda-functions/duplicate-accounts
+          elif [[ "${SVC_PREFIX}" = "unused_accounts" ]]; then
+            docker build --platform linux/amd64 --provenance=false --file lambda-functions/unused-accounts/Dockerfile --tag unused_accounts_lambda:latest lambda-functions/unused-accounts
           fi
         if: (inputs.specific_path == 'all' || inputs.specific_path == matrix.svc_prefix)
 
