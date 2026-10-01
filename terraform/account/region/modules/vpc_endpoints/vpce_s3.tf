@@ -30,7 +30,12 @@ resource "aws_vpc_endpoint_policy" "s3" {
           "AWS" : "*"
         },
         "Action" : ["s3:GetObject"],
-        "Resource" : ["*"]
+        "Resource" : var.permitted_s3_buckets,
+        "Condition" : {
+          "StringEquals" : {
+            "aws:PrincipalAccount" : var.s3_principal_account_ids
+          }
+        }
       }
     ]
   })
