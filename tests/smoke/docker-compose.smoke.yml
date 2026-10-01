@@ -49,7 +49,7 @@ services:
       - composer-auth
     entrypoint: >
       /bin/sh -c "
-        ln -sf /run/secrets/composer-auth auth.json &&
+        COMPOSER_AUTH=$(cat /run/secrets/composer-auth)
         exec /usr/bin/composer \"$$@\"
       " --
     command:

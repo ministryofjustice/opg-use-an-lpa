@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Mezzio\Application;
 use Mezzio\MiddlewareFactory;
+use Telemetry\Tracer;
 
 // Delegate static file requests back to the PHP built-in webserver
 if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
@@ -12,6 +13,8 @@ if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
+
+Tracer::initialise();
 
 /**
  * Self-called anonymous function that creates its own scope and keep the global namespace clean.

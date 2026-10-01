@@ -9,11 +9,20 @@ FROM docker.io/php:8.4-fpm-alpine3.22@sha256:e0f1ffe8bd43a137facdccdcac41cabdfc2
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
+# OpenTelemetry defaults. Tracing is instrumented (see Telemetry\Tracer) but not exported unless
+# OTEL_TRACES_EXPORTER is overridden at runtime, e.g. "otlp" when the collector sidecar is deployed.
+ENV OTEL_PHP_AUTOLOAD_ENABLED=true \
+    OTEL_SERVICE_NAME=front.use-an-lpa \
+    OTEL_TRACES_EXPORTER=none \
+    OTEL_METRICS_EXPORTER=none \
+    OTEL_LOGS_EXPORTER=none \
+    OTEL_PROPAGATORS=tracecontext,xray
+
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache icu=76.1-r1 gettext=0.24.1-r0 fcgi=2.4.6-r0 \
-  && install-php-extensions apcu redis-^6 intl gettext opcache \
+  && install-php-extensions apcu redis-^6 intl gettext opcache opentelemetry \
   && rm /usr/bin/install-php-extensions
 
 COPY service-front/docker/app/app-php.ini /usr/local/etc/php/conf.d/
