@@ -1,0 +1,21 @@
+### GET healthcheck endpoint
+GET http://localhost:4011/v1/healthcheck
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+
+### GET lpa
+GET http://localhost:4011/v1/use-an-lpa/lpas/700000000138
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+### POST request letter - valid
+POST http://localhost:4011/v1/use-an-lpa/lpas/requestCode
+Authorization: AWS4-HMAC-SHA256 securesecretstring
+Accept: application/vnd.opg-data.v1+json,application/json
+Content-Type: application/json
+
+{
+  "case_uid": 700000000526,
+  "actor_uid": 700000001111
+}

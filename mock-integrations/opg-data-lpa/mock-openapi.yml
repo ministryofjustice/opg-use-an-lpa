@@ -77,22 +77,6 @@ x-amazon-apigateway-gateway-responses:
     responseTemplates:
       application/json: '{"errors": { "id": "$context.requestId", "code": "OPGDATA-API-WAF_FILTERED", "title":$context.error.messageString, "detail": "", "meta": {"x-ray": "$context.xrayTraceId"} }}'
 
-"x-amazon-apigateway-policy": {
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": {
-              "AWS": []
-            },
-            "Action": "execute-api:Invoke",
-            "Resource": [
-                "arn:aws:execute-api:eu-west-1:${account_id}:*/*/*/*"
-            ]
-        }
-    ]
-}
-
 paths:
   /healthcheck:
     description: opg-data-lpa healthcheck
@@ -103,7 +87,7 @@ paths:
       tags:
         - "opg-data-lpa"
       security:
-        - sigv4: []
+        - sigv4: [ ]
       x-amazon-apigateway-request-validator: "all"
       x-amazon-apigateway-integration:
         uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.flask_app_name}/invocations
@@ -162,11 +146,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error503'
-
   /lpa-online-tool/lpas/{lpa_online_tool_id}:
     get:
       security:
-        - sigv4: []
+        - sigv4: [ ]
       x-amazon-apigateway-request-validator: "all"
       x-amazon-apigateway-integration:
         uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.flask_app_name}/invocations
@@ -185,7 +168,7 @@ paths:
             pattern: '^A\d{11}$'
           required: true
           description: Online Tool ID
-          example: A12345678987
+          example: A12345678987 #pragma: allowlist secret
       responses:
         '200':
           description: LPA details returned for the requested ID
@@ -267,7 +250,7 @@ paths:
                     example: '2018-06-30'
                   status:
                     type: string
-                    enum: [Cancelled, Imperfect, Invalid, Pending, Perfect, Rejected, Revoked, Withdrawn, Registered, Payment Pending, Return - unpaid]
+                    enum: [ Cancelled, Imperfect, Invalid, Pending, Perfect, Rejected, Revoked, Withdrawn, Registered, Payment Pending, Return - unpaid ]
         '404':
           description: An LPA with the passed ID Not Found
         '400':
@@ -289,7 +272,7 @@ paths:
       tags:
         - "use-a-lpa"
       security:
-        - sigv4: []
+        - sigv4: [ ]
       x-amazon-apigateway-request-validator: "all"
       x-amazon-apigateway-integration:
         uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.flask_app_name}/invocations
@@ -306,10 +289,9 @@ paths:
           schema:
             type: string
             pattern: '(^7\d{11}$)'
+            example: "700000000054"
           required: true
           description: Reference Number representing an LPA Uid
-          examples:
-            lpauid: 700000000054
       responses:
         '200':
           description: LPA details returned for the requested ID
@@ -347,7 +329,7 @@ paths:
       tags:
         - "use-a-lpa"
       security:
-        - sigv4: []
+        - sigv4: [ ]
       x-amazon-apigateway-request-validator: "all"
       x-amazon-apigateway-integration:
         uri: arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${region}:${account_id}:function:$${stageVariables.flask_app_name}/invocations
@@ -380,14 +362,16 @@ paths:
       responses:
         '200':
           description: Letter was successfully enqueued or cleanse process started
-          schema:
-            type: object
-            required:
-              - queuedForCleansing
-            properties:
-              queuedForCleansing:
-                type: boolean
-                description: Whether the request was queued for cleansing
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - queuedForCleansing
+                properties:
+                  queuedForCleansing:
+                    type: boolean
+                    description: Whether the request was queued for cleansing
         '204':
           description: Letter was successfully enqueued
         '400':
@@ -507,10 +491,10 @@ components:
           description: e.g. 7000-0000-0054
         applicationType:
           type: string
-          enum: [Online, Classic]
+          enum: [ Online, Classic ]
         caseSubtype:
           type: string
-          enum: [hw, pfa]
+          enum: [ hw, pfa ]
           minLength: 1
           maxLength: 3
         receiptDate:
@@ -557,7 +541,7 @@ components:
           example: '2018-06-30'
         status:
           type: string
-          enum: [Cancelled, Imperfect, Invalid, Pending, Perfect, Rejected, Revoked, Suspended, With COP, Withdrawn, Registered, Payment Pending]
+          enum: [ Cancelled, Imperfect, Invalid, Pending, Perfect, Rejected, Revoked, Suspended, With COP, Withdrawn, Registered, Payment Pending ]
           minLength: 1
           maxLength: 10
         caseAttorneySingular:
@@ -580,14 +564,14 @@ components:
           type: boolean
         lifeSustainingTreatment:
           type: string
-          enum: ['Option A', 'Option B', null]
+          enum: [ 'Option A', 'Option B', null ]
           nullable: true
         onlineLpaId:
           type: string
           example: ABC123
         attorneyActDecisions:
           type: string
-          enum: ['When Registered', 'Loss of capacity', null]
+          enum: [ 'When Registered', 'Loss of capacity', null ]
           nullable: true
         donor:
           $ref: '#/components/schemas/Donor'
@@ -733,7 +717,7 @@ components:
           type: string
           description: Address type
           example: Primary
-          enum: [Primary]
+          enum: [ Primary ]
           maxLength: 7
         addressLine1:
           type: string

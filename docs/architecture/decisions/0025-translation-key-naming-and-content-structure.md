@@ -19,7 +19,7 @@ We will use translation keys rather than English user-facing text as translation
 
 
 ### Translation key convention
-The general convention will be:
+For feature- or page-specific content, the general convention will be:
 
    <feature>.<page>.<type>.<name>[-<suffix>]
 
@@ -30,6 +30,17 @@ Examples:
    activation-key-request.start.content.can-only-ask-for
    activation-key-request.start.content.cannot-ask-for
    activation-key-request.start.button.continue
+
+For common content that is reused across multiple pages or features, the convention will be:
+
+    common.<type>-<name>
+
+Examples:
+
+    common.button-cancel
+    common.button-continue
+
+Common keys should be used where the user-facing text and meaning are generic and are expected to be reused across multiple journeys or pages.
 
 
 ### Content blocks
