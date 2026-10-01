@@ -31,13 +31,13 @@ module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.4.2"
 }
 
-data "aws_ecr_repository" "duplicate_accounts" {
+data "aws_ecr_repository" "unused_accounts" {
   provider = aws.management
-  name     = "use_an_lpa/duplicate_accounts_lambda"
+  name     = "use_an_lpa/unused_accounts_lambda"
 }
 
-data "aws_ecr_image" "duplicate_accounts" {
-  repository_name = data.aws_ecr_repository.duplicate_accounts.name
+data "aws_ecr_image" "unused_accounts" {
+  repository_name = data.aws_ecr_repository.unused_accounts.name
   image_tag       = var.container_version
   provider        = aws.management
 }
