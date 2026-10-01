@@ -68,8 +68,9 @@ module "vpc_endpoints" {
   application_route_tables        = data.aws_route_tables.firewalled_network_application
   management_account_id           = data.aws_caller_identity.management.account_id
   execute_api_account_ids         = [var.account.sirius_account_id, var.account.lpa_store_account_id]
-  # permitted_s3_buckets            = var.permitted_s3_buckets
-  region_name = var.region_name
+  permitted_s3_buckets            = var.permitted_s3_buckets
+  s3_principal_account_ids        = [var.account.account_id, var.account.sirius_account_id]
+  region_name                     = var.region_name
   providers = {
     aws.region = aws.region
   }

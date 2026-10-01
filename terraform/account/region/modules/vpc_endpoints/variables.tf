@@ -31,11 +31,16 @@ variable "execute_api_account_ids" {
   type        = list(string)
 }
 
-# variable "permitted_s3_buckets" {
-#   type        = list(string)
-#   default     = []
-#   description = "S3 buckets permitted through the S3 VPC endpoint"
-# }
+variable "permitted_s3_buckets" {
+  type        = list(string)
+  default     = []
+  description = "S3 buckets permitted through the S3 VPC endpoint"
+}
+
+variable "s3_principal_account_ids" {
+  type        = list(string)
+  description = "AWS accounts whose principals may access permitted S3 buckets through the VPC endpoint"
+}
 
 variable "region_name" {
   description = "The aws region"

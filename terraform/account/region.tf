@@ -7,11 +7,11 @@ module "eu_west_1" {
   account_name     = local.account_name
   environment_name = local.environment
   # lambda_container_version = var.lambda_container_version
-  network_cidr_block = "10.162.0.0/16"
-  # permitted_s3_buckets = local.account.permitted_s3_buckets
-  region_name        = "eu-west-1"
-  availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
-  default_tags       = local.default_tags
+  network_cidr_block   = "10.162.0.0/16"
+  permitted_s3_buckets = local.account.permitted_s3_buckets
+  region_name          = "eu-west-1"
+  availability_zones   = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  default_tags         = local.default_tags
 
   depends_on = [
     module.cloudwatch_mrk,
@@ -37,11 +37,11 @@ module "eu_west_2" {
   account_name     = local.account_name
   environment_name = local.environment
   # lambda_container_version = var.lambda_container_version
-  network_cidr_block = "10.162.0.0/16"
-  # permitted_s3_buckets = local.account.permitted_s3_buckets
-  region_name        = "eu-west-2"
-  availability_zones = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
-  default_tags       = local.default_tags
+  network_cidr_block   = "10.162.0.0/16"
+  permitted_s3_buckets = local.account.permitted_s3_buckets
+  region_name          = "eu-west-2"
+  availability_zones   = ["eu-west-2a", "eu-west-2b", "eu-west-2c"]
+  default_tags         = local.default_tags
 
   depends_on = [
     module.cloudwatch_mrk,
