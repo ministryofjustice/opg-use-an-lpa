@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 08:01+0000\n"
+"PO-Revision-Date: 2026-10-02 11:05+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1126,7 +1126,7 @@ msgstr "Hysbysiad preifatrwydd"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:12
 msgid "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service."
-msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
+msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth Defnyddio atwrneiaeth arhosol (LPA)."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:17
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:19
@@ -3359,12 +3359,12 @@ msgstr "Rhaid i atwrneiod wneud penderfyniadau ar y cyd (gyda’i gilydd)"
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:62
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:53
 msgid "Attorneys can make decisions jointly (together) and severally (separately)"
-msgstr "Gall atwrneiod wneud penderfyniadau ar y cyd (gyda’i gilydd) neu yn annibynnol ar ei gilydd (ar wahân)"
+msgstr "Gall atwrneiod wneud penderfyniadau ar y cyd (gyda’i gilydd) neu yn unigol (ar wahân)"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:66
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:55
 msgid "Attorneys must make some decisions jointly (together) and can make some decisions severally (separately). Check the paper <abbr title=\"lasting power of attorney\">LPA</abbr> to find out what decisions must be made jointly."
-msgstr "Rhaid i atwrneiod wneud rhai penderfyniadau ar y cyd (gyda’i gilydd) ac maent yn gallu gwneud rhai penderfyniadau yn annibynnol ar ei gilydd (ar wahân) Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> papur i gael gwybod pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
+msgstr "Rhaid i atwrneiod wneud rhai penderfyniadau ar y cyd (gyda’i gilydd) ac maent yn gallu gwneud rhai penderfyniadau yn unigol (ar wahân). Gwiriwch yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i gael gwybod pa benderfyniadau y mae’n rhaid eu gwneud ar y cyd."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:307
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:62
@@ -3792,7 +3792,7 @@ msgstr "Drwy barhau rydych yn cytuno i'n <a href=\"%link%\" target=\"_blank\" cl
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:13
 msgid "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘View a lasting power of attorney’ (LPA) service."
-msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth ‘Defnyddio atwrneiaeth arhosol’ (LPA)."
+msgstr "Mae’r hysbysiad preifatrwydd hwn yn esbonio pam bod Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) yn casglu data personol pan fyddwch yn defnyddio’r gwasanaeth Gweld atwrneiaeth arhosol (LPA)."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:32
 msgid "You should read this privacy notice alongside <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information."
@@ -4634,7 +4634,7 @@ msgstr "Os ydych am i’r cod hwn gael ei ganslo, cysylltwch â %createdBy%."
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:265
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:135
 msgid "Yes, the donor entered words in this part of the LPA form."
-msgstr "Do, rhoddodd y rhoddwr eiriau yn y rhan hon o'r ffurflen LPA."
+msgstr "Oes, rhoddodd y rhoddwr eiriau yn y rhan hon o'r ffurflen <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
