@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace AppTest\Service\Lpa;
 
-use App\DataAccess\ApiGateway\DataStoreLpas;
-use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     Response\InstructionsAndPreferencesImages,
     Response\Lpa,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
+use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\LpasInterface;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
@@ -28,50 +27,40 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\Exception\Doubler\DoubleException;
-use Prophecy\Exception\Doubler\InterfaceNotFoundException;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 class CombinedLpaManagerTest extends TestCase
 {
-    use ProphecyTrait;
+    private AuditableLpasInterface&MockObject $dataStoreLpasMock;
+    private FilterActiveActors&MockObject $filterActiveActorsMock;
+    private InstructionsAndPreferencesImagesInterface&MockObject $instructionsAndPreferencesImagesMock;
+    private IsValidLpa&MockObject $isValidLpaMock;
+    private LoggerInterface&MockObject $loggerMock;
+    private RejectInvalidLpa&MockObject $rejectInvalidLpaMock;
+    private ResolveActor&MockObject $resolveActorMock;
+    private ResolveLpaTypes&MockObject $resolveLpaTypesMock;
+    private LpasInterface&MockObject $siriusLpasMock;
+    private UserLpaActorMapInterface&MockObject $userLpaActorMapInterfaceMock;
+    private ViewerCodeActivityInterface&MockObject $viewerCodesActivityMock;
+    private ViewerCodesInterface&MockObject $viewerCodesMock;
 
-    private DataStoreLpas|ObjectProphecy $dataStoreLpasProphecy;
-    private FilterActiveActors|ObjectProphecy $filterActiveActorsProphecy;
-    private ObjectProphecy|InstructionsAndPreferencesImagesInterface $instructionsAndPreferencesImagesProphecy;
-    private IsValidLpa|ObjectProphecy $isValidLpaProphecy;
-    private LoggerInterface|ObjectProphecy $loggerProphecy;
-    private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
-    private ResolveActor|ObjectProphecy $resolveActorProphecy;
-    private ResolveLpaTypes|ObjectProphecy $resolveLpaTypesProphecy;
-    private LpasInterface|ObjectProphecy $siriusLpasProphecy;
-    private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
-    private ObjectProphecy|ViewerCodes $viewerCodesActivityProphecy;
-    private ObjectProphecy|ViewerCodes $viewerCodesProphecy;
-
-    /**
-     * @throws InterfaceNotFoundException
-     * @throws DoubleException
-     */
     public function setUp(): void
     {
-        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->siriusLpasProphecy               = $this->prophesize(LpasInterface::class);
-        $this->dataStoreLpasProphecy            = $this->prophesize(DataStoreLpas::class);
-        $this->viewerCodesProphecy              = $this->prophesize(ViewerCodesInterface::class);
-        $this->viewerCodesActivityProphecy      = $this->prophesize(ViewerCodeActivityInterface::class);
-        $this->instructionsAndPreferencesImagesProphecy
-            = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
-        $this->resolveLpaTypesProphecy    = $this->prophesize(ResolveLpaTypes::class);
-        $this->resolveActorProphecy       = $this->prophesize(ResolveActor::class);
-        $this->isValidLpaProphecy         = $this->prophesize(IsValidLpa::class);
-        $this->filterActiveActorsProphecy = $this->prophesize(FilterActiveActors::class);
-        $this->rejectInvalidLpaProphecy   = $this->prophesize(RejectInvalidLpa::class);
-        $this->loggerProphecy             = $this->prophesize(LoggerInterface::class);
+        $this->userLpaActorMapInterfaceMock = $this->createMock(UserLpaActorMapInterface::class);
+        $this->siriusLpasMock               = $this->createMock(LpasInterface::class);
+        $this->dataStoreLpasMock            = $this->createMock(AuditableLpasInterface::class);
+        $this->viewerCodesMock              = $this->createMock(ViewerCodesInterface::class);
+        $this->viewerCodesActivityMock      = $this->createMock(ViewerCodeActivityInterface::class);
+        $this->instructionsAndPreferencesImagesMock
+            = $this->createMock(InstructionsAndPreferencesImagesInterface::class);
+        $this->resolveLpaTypesMock    = $this->createMock(ResolveLpaTypes::class);
+        $this->resolveActorMock       = $this->createMock(ResolveActor::class);
+        $this->isValidLpaMock         = $this->createMock(IsValidLpa::class);
+        $this->filterActiveActorsMock = $this->createMock(FilterActiveActors::class);
+        $this->rejectInvalidLpaMock   = $this->createMock(RejectInvalidLpa::class);
+        $this->loggerMock             = $this->createMock(LoggerInterface::class);
     }
 
     #[Test]
@@ -105,24 +94,31 @@ class CombinedLpaManagerTest extends TestCase
             ],
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getByUserId($testUserId)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse[0]])
+        $this->userLpaActorMapInterfaceMock
+            ->method('getByUserId')
+            ->with($testUserId)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse[0]])
             ->willReturn(
                 [
                     [],
                     [$dataStoreLpaResponse->getData()->uId],
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId($testUserId)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->lookup([$dataStoreLpaResponse->getData()->uId ?? ''])
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with($testUserId)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->method('lookup')
+            ->with([$dataStoreLpaResponse->getData()->uId ?? ''])
             ->willReturn([$dataStoreLpaResponse]);
-        $this->resolveActorProphecy
-            ->__invoke(
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->with(
                 $dataStoreLpaResponse->getData(),
                 $userLpaActorMapResponse[0]['ActorId'],
             )->willReturn(
@@ -131,7 +127,10 @@ class CombinedLpaManagerTest extends TestCase
                     ResolveActor\ActorType::ATTORNEY
                 )
             );
-        $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->with($dataStoreLpaResponse->getData())
+            ->willReturn(true);
 
         $service = $this->getLpaService();
         $result  = $service->getAllActiveForUser($testUserId);
@@ -173,51 +172,72 @@ class CombinedLpaManagerTest extends TestCase
             ],
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getByUserId($testUserId)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke($userLpaActorMapResponse)
+        $this->userLpaActorMapInterfaceMock
+            ->method('getByUserId')
+            ->with($testUserId)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with($userLpaActorMapResponse)
             ->willReturn(
                 [
                     [$siriusLpaResponse->getData()->uId],
                     [$dataStoreLpaResponse->getData()->uId],
                 ]
             );
-        $this->siriusLpasProphecy
-            ->lookup([$siriusLpaResponse->getData()->uId])
+        $this->siriusLpasMock
+            ->method('lookup')
+            ->with([$siriusLpaResponse->getData()->uId])
             ->willReturn(
                 [
                     $siriusLpaResponse->getData()->uId ?? '' => $siriusLpaResponse,
                 ],
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId($testUserId)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->lookup([$dataStoreLpaResponse->getData()->uId ?? ''])
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with($testUserId)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->method('lookup')
+            ->with([$dataStoreLpaResponse->getData()->uId ?? ''])
             ->willReturn([$dataStoreLpaResponse]);
-        $this->resolveActorProphecy
-            ->__invoke(
-                $siriusLpaResponse->getData(),
-                $userLpaActorMapResponse[0]['ActorId'],
-            )->willReturn(
-                new ResolveActor\LpaActor(
-                    $siriusLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
-                )
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->willReturnMap(
+                [
+                    [
+                        $siriusLpaResponse->getData(),
+                        $userLpaActorMapResponse[0]['ActorId'],
+                        new ResolveActor\LpaActor(
+                            $siriusLpaResponse->getData()->attorneys[0],
+                            ResolveActor\ActorType::ATTORNEY
+                        ),
+                    ],
+                    [
+                        $dataStoreLpaResponse->getData(),
+                        $userLpaActorMapResponse[1]['ActorId'],
+                        new ResolveActor\LpaActor(
+                            $dataStoreLpaResponse->getData()->attorneys[0],
+                            ResolveActor\ActorType::ATTORNEY
+                        ),
+                    ],
+                ]
             );
-        $this->resolveActorProphecy
-            ->__invoke(
-                $dataStoreLpaResponse->getData(),
-                $userLpaActorMapResponse[1]['ActorId'],
-            )->willReturn(
-                new ResolveActor\LpaActor(
-                    $dataStoreLpaResponse->getData()->attorneys[0],
-                    ResolveActor\ActorType::ATTORNEY
-                )
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->willReturnMap(
+                [
+                    [
+                        $siriusLpaResponse->getData(),
+                        true,
+                    ],
+                    [
+                        $dataStoreLpaResponse->getData(),
+                        true,
+                    ],
+                ]
             );
-        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
-        $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
 
         $service = $this->getLpaService();
         $result  = $service->getAllForUser($testUserId);
@@ -245,17 +265,22 @@ class CombinedLpaManagerTest extends TestCase
             ],
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->getByUserId($testUserId)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse[0]])
+        $this->userLpaActorMapInterfaceMock
+            ->method('getByUserId')
+            ->with($testUserId)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse[0]])
             ->willReturn(
                 [
                     ['700000000047'],
                     [],
                 ]
             );
-        $this->siriusLpasProphecy
-            ->lookup(['700000000047'])
+        $this->siriusLpasMock
+            ->method('lookup')
+            ->with(['700000000047'])
             ->willReturn([]);
 
         $service = $this->getLpaService();
@@ -345,9 +370,17 @@ class CombinedLpaManagerTest extends TestCase
             ],
         );
 
-        $this->siriusLpasProphecy->get($testUid)->willReturn($lpaResponse);
-        $this->dataStoreLpasProphecy->get(Argument::any())->shouldNotBeCalled();
-        $this->filterActiveActorsProphecy->__invoke($lpaResponse->getData())->willReturn($filteredLpa);
+        $this->siriusLpasMock
+            ->method('get')
+            ->with($testUid)
+            ->willReturn($lpaResponse);
+        $this->dataStoreLpasMock
+            ->expects($this->never())
+            ->method('get');
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($lpaResponse->getData())
+            ->willReturn($filteredLpa);
 
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid);
@@ -390,13 +423,22 @@ class CombinedLpaManagerTest extends TestCase
         $filteredLpa = $lpaResponse->getData()->withAttorneys($filteredLpa->attorneys);
         $filteredLpa = $lpaResponse->getData()->withTrustCorporations($filteredLpa->trustCorporations);
 
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId($testUserId)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy->get($testUid)->willReturn($lpaResponse);
-        $this->siriusLpasProphecy->get(Argument::any())->shouldNotBeCalled();
-        $this->filterActiveActorsProphecy->__invoke($lpaResponse->getData())->willReturn($filteredLpa);
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with($testUserId)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->method('get')
+            ->with($testUid)
+            ->willReturn($lpaResponse);
+        $this->siriusLpasMock
+            ->expects($this->never())
+            ->method('get');
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($lpaResponse->getData())
+            ->willReturn($filteredLpa);
 
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid, $testUserId);
@@ -409,7 +451,10 @@ class CombinedLpaManagerTest extends TestCase
     {
         $testUid = new LpaUid('700000000047');
 
-        $this->siriusLpasProphecy->get($testUid)->willReturn(null);
+        $this->siriusLpasMock
+            ->method('get')
+            ->with($testUid)
+            ->willReturn(null);
 
         $service = $this->getLpaService();
         $result  = $service->getByUid($testUid);
@@ -438,23 +483,30 @@ class CombinedLpaManagerTest extends TestCase
             'DueBy'      => (new DateTimeImmutable('now +1 month'))->format(DateTimeInterface::ATOM),
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse])
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse])
             ->willReturn(
                 [
                     [$siriusLpaResponse->getData()->uId],
                     [],
                 ]
             );
-        $this->siriusLpasProphecy
-            ->get($siriusLpaResponse->getData()->uId ?? '')
+        $this->siriusLpasMock
+            ->method('get')
+            ->with($siriusLpaResponse->getData()->uId ?? '')
             ->willReturn($siriusLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($siriusLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
             ->willReturn($siriusLpaResponse->getData());
-        $this->resolveActorProphecy
-            ->__invoke(
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->with(
                 $siriusLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(
@@ -463,7 +515,10 @@ class CombinedLpaManagerTest extends TestCase
                     ResolveActor\ActorType::ATTORNEY
                 )
             );
-        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
+            ->willReturn(true);
 
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
@@ -495,27 +550,35 @@ class CombinedLpaManagerTest extends TestCase
             'HasPaperVerificationCode' => true,
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse])
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse])
             ->willReturn(
                 [
                     [],
                     [$dataStoreLpaResponse->getData()->uId],
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId($testUserId)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->get($dataStoreLpaResponse->getData()->uId ?? '')
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with($testUserId)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->method('get')
+            ->with($dataStoreLpaResponse->getData()->uId ?? '')
             ->willReturn($dataStoreLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($dataStoreLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($dataStoreLpaResponse->getData())
             ->willReturn($dataStoreLpaResponse->getData());
-        $this->resolveActorProphecy
-            ->__invoke(
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->with(
                 $dataStoreLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(
@@ -524,7 +587,10 @@ class CombinedLpaManagerTest extends TestCase
                     ResolveActor\ActorType::ATTORNEY
                 )
             );
-        $this->isValidLpaProphecy->__invoke($dataStoreLpaResponse->getData())->willReturn(true);
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->with($dataStoreLpaResponse->getData())
+            ->willReturn(true);
 
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
@@ -561,27 +627,37 @@ class CombinedLpaManagerTest extends TestCase
             'DueBy'      => (new DateTimeImmutable('now +1 month'))->format(DateTimeInterface::ATOM),
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse])
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse])
             ->willReturn(
                 [
                     [$siriusLpaResponse->getData()->uId],
                     [],
                 ]
             );
-        $this->siriusLpasProphecy
-            ->get($siriusLpaResponse->getData()->uId ?? '')
+        $this->siriusLpasMock
+            ->method('get')
+            ->with($siriusLpaResponse->getData()->uId ?? '')
             ->willReturn($siriusLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($siriusLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
             ->willReturn($siriusLpaResponse->getData());
-        $this->resolveActorProphecy
-            ->__invoke(
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->with(
                 $siriusLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(null);
-        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(true);
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
+            ->willReturn(true);
 
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
@@ -607,7 +683,10 @@ class CombinedLpaManagerTest extends TestCase
             'Added'     => new DateTimeImmutable('now'),
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
 
         $service = $this->getLpaService();
 
@@ -629,21 +708,27 @@ class CombinedLpaManagerTest extends TestCase
             'Added'   => new DateTimeImmutable('now'),
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse])
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse])
             ->willReturn(
                 [
                     [],
                     ['M-7890-0400-4000'],
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId($testUserId)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->get('M-7890-0400-4000')
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with($testUserId)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->method('get')
+            ->with('M-7890-0400-4000')
             ->willReturn(null);
 
         $service = $this->getLpaService();
@@ -675,23 +760,30 @@ class CombinedLpaManagerTest extends TestCase
             'Added'     => (new DateTimeImmutable('now'))->format(DateTimeInterface::ATOM),
         ];
 
-        $this->userLpaActorMapInterfaceProphecy->get($testLpaToken)->willReturn($userLpaActorMapResponse);
-        $this->resolveLpaTypesProphecy
-            ->__invoke([$userLpaActorMapResponse])
+        $this->userLpaActorMapInterfaceMock
+            ->method('get')
+            ->with($testLpaToken)
+            ->willReturn($userLpaActorMapResponse);
+        $this->resolveLpaTypesMock
+            ->method('__invoke')
+            ->with([$userLpaActorMapResponse])
             ->willReturn(
                 [
                     [$siriusLpaResponse->getData()->uId],
                     [],
                 ]
             );
-        $this->siriusLpasProphecy
-            ->get($siriusLpaResponse->getData()->uId ?? '')
+        $this->siriusLpasMock
+            ->method('get')
+            ->with($siriusLpaResponse->getData()->uId ?? '')
             ->willReturn($siriusLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($siriusLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
             ->willReturn($siriusLpaResponse->getData());
-        $this->resolveActorProphecy
-            ->__invoke(
+        $this->resolveActorMock
+            ->method('__invoke')
+            ->with(
                 $siriusLpaResponse->getData(),
                 $userLpaActorMapResponse['ActorId'],
             )->willReturn(
@@ -700,7 +792,10 @@ class CombinedLpaManagerTest extends TestCase
                     ResolveActor\ActorType::ATTORNEY
                 )
             );
-        $this->isValidLpaProphecy->__invoke($siriusLpaResponse->getData())->willReturn(false);
+        $this->isValidLpaMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
+            ->willReturn(false);
 
         $service = $this->getLpaService();
         $result  = $service->getByUserLpaActorToken($testLpaToken, $testUserId);
@@ -720,8 +815,9 @@ class CombinedLpaManagerTest extends TestCase
     #[Test]
     public function cannot_get_siriuslpa_by_viewer_code_when_lpa_no_longer_available()
     {
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => 'code',
@@ -731,9 +827,10 @@ class CombinedLpaManagerTest extends TestCase
                 ]
             );
 
-        $this->siriusLpasProphecy
-            ->get('700000000000')
-            ->shouldBeCalled()
+        $this->siriusLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('700000000000')
             ->willReturn(null);
 
         $service = $this->getLpaService();
@@ -747,8 +844,9 @@ class CombinedLpaManagerTest extends TestCase
     {
         $testCode = 'code';
 
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => 'code',
@@ -757,13 +855,15 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId('V-' . $testCode)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->get('M-XXXX-XXXX-XXXX')
-            ->shouldBeCalled()
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with('V-' . $testCode)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with('M-XXXX-XXXX-XXXX')
             ->willReturn(null);
 
         $service = $this->getLpaService();
@@ -780,8 +880,9 @@ class CombinedLpaManagerTest extends TestCase
             new DateTimeImmutable('now'),
         );
 
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => 'code',
@@ -790,21 +891,24 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-        $this->siriusLpasProphecy
-            ->get($siriusLpaResponse->getData()->uId)
-            ->shouldBeCalled()
+        $this->siriusLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($siriusLpaResponse->getData()->uId)
             ->willReturn($siriusLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($siriusLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
             ->willReturn($siriusLpaResponse->getData());
-        $this->rejectInvalidLpaProphecy
-            ->__invoke(
+        $this->rejectInvalidLpaMock
+            ->method('__invoke')
+            ->with(
                 $siriusLpaResponse,
                 'code',
                 $siriusLpaResponse->getData()->getDonor()->getSurname(),
-                Argument::type('array'),
+                $this->isType('array'),
             )
-            ->willThrow(new MissingCodeExpiryException());
+            ->willThrowException(new MissingCodeExpiryException());
 
         $service = $this->getLpaService();
 
@@ -829,8 +933,9 @@ class CombinedLpaManagerTest extends TestCase
             new DateTimeImmutable('now'),
         );
 
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => 'code',
@@ -839,17 +944,20 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-        $this->siriusLpasProphecy
-            ->get($siriusLpaResponse->getData()->uId)
-            ->shouldBeCalled()
+        $this->siriusLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($siriusLpaResponse->getData()->uId)
             ->willReturn($siriusLpaResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($siriusLpaResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($siriusLpaResponse->getData())
             ->willReturn($siriusLpaResponse->getData());
-        $this->instructionsAndPreferencesImagesProphecy
-            ->getInstructionsAndPreferencesImages((int) $siriusLpaResponse->getData()->uId)
-            ->shouldBeCalled()
-            ->willReturn($this->prophesize(InstructionsAndPreferencesImages::class)->reveal());
+        $this->instructionsAndPreferencesImagesMock
+            ->expects($this->once())
+            ->method('getInstructionsAndPreferencesImages')
+            ->with((int) $siriusLpaResponse->getData()->uId)
+            ->willReturn($this->createStub(InstructionsAndPreferencesImages::class));
 
         $service = $this->getLpaService();
 
@@ -872,8 +980,9 @@ class CombinedLpaManagerTest extends TestCase
             new DateTimeImmutable('now'),
         );
 
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => $testCode,
@@ -882,20 +991,24 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId('V-' . $testCode)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->get($lpaStoreResponse->getData()->uId)
-            ->shouldBeCalled()
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with('V-' . $testCode)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($lpaStoreResponse->getData()->uId)
             ->willReturn($lpaStoreResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($lpaStoreResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($lpaStoreResponse->getData())
             ->willReturn($lpaStoreResponse->getData());
-        $this->viewerCodesActivityProphecy
-            ->recordSuccessfulLookupActivity($testCode, 'organisation')
-            ->shouldBeCalled();
+        $this->viewerCodesActivityMock
+            ->expects($this->once())
+            ->method('recordSuccessfulLookupActivity')
+            ->with($testCode, 'organisation');
 
         $service = $this->getLpaService();
 
@@ -916,8 +1029,9 @@ class CombinedLpaManagerTest extends TestCase
             new DateTimeImmutable('now'),
         );
 
-        $this->viewerCodesProphecy
-            ->get('code')
+        $this->viewerCodesMock
+            ->method('get')
+            ->with('code')
             ->willReturn(
                 [
                     'ViewerCode'   => $testCode,
@@ -926,16 +1040,19 @@ class CombinedLpaManagerTest extends TestCase
                     'Organisation' => 'bank',
                 ]
             );
-        $this->dataStoreLpasProphecy
-            ->setOriginatorId('V-' . $testCode)
-            ->shouldBeCalled()
-            ->willReturn($this->dataStoreLpasProphecy->reveal());
-        $this->dataStoreLpasProphecy
-            ->get($lpaStoreResponse->getData()->uId)
-            ->shouldBeCalled()
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('setOriginatorId')
+            ->with('V-' . $testCode)
+            ->willReturnSelf();
+        $this->dataStoreLpasMock
+            ->expects($this->once())
+            ->method('get')
+            ->with($lpaStoreResponse->getData()->uId)
             ->willReturn($lpaStoreResponse);
-        $this->filterActiveActorsProphecy
-            ->__invoke($lpaStoreResponse->getData())
+        $this->filterActiveActorsMock
+            ->method('__invoke')
+            ->with($lpaStoreResponse->getData())
             ->willReturn($lpaStoreResponse->getData());
 
         $service = $this->getLpaService();
@@ -955,18 +1072,18 @@ class CombinedLpaManagerTest extends TestCase
     private function getLpaService(): CombinedLpaManager
     {
         return new CombinedLpaManager(
-            $this->userLpaActorMapInterfaceProphecy->reveal(),
-            $this->siriusLpasProphecy->reveal(),
-            $this->dataStoreLpasProphecy->reveal(),
-            $this->viewerCodesProphecy->reveal(),
-            $this->viewerCodesActivityProphecy->reveal(),
-            $this->instructionsAndPreferencesImagesProphecy->reveal(),
-            $this->resolveLpaTypesProphecy->reveal(),
-            $this->resolveActorProphecy->reveal(),
-            $this->isValidLpaProphecy->reveal(),
-            $this->filterActiveActorsProphecy->reveal(),
-            $this->rejectInvalidLpaProphecy->reveal(),
-            $this->loggerProphecy->reveal(),
+            $this->userLpaActorMapInterfaceMock,
+            $this->siriusLpasMock,
+            $this->dataStoreLpasMock,
+            $this->viewerCodesMock,
+            $this->viewerCodesActivityMock,
+            $this->instructionsAndPreferencesImagesMock,
+            $this->resolveLpaTypesMock,
+            $this->resolveActorMock,
+            $this->isValidLpaMock,
+            $this->filterActiveActorsMock,
+            $this->rejectInvalidLpaMock,
+            $this->loggerMock,
         );
     }
 
