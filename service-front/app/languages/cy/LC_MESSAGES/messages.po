@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 11:30+0000\n"
+"PO-Revision-Date: 2026-10-02 12:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1050,7 +1050,7 @@ msgstr "Daw’r LPA i ben pan fydd y rhoddwr yn marw. Bydd ei ysgutorion neu ei 
 
 #: src/Actor/templates/actor/death-notification.html.twig:43
 msgid "If an attorney or replacement attorney dies"
-msgstr "Os bydd atwrnai neu atwrnai newydd yn marw"
+msgstr "Os bydd atwrnai neu atwrnai wrth gefn yn marw"
 
 #: src/Actor/templates/actor/death-notification.html.twig:44
 msgid "The LPA will end if your attorney dies and there is not a replacement attorney."
@@ -1062,11 +1062,11 @@ msgstr "Caiff eich LPA barhau os:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:49
 msgid "there are other attorneys who can act 'jointly and severally' - but not if they are only allowed to act 'jointly'"
-msgstr "oes atwrneiod eraill sy’n gallu gweithredu ‘ar y cyd ac yn unigol’ - ond nid os mai dim ond ‘ar y cyd’ maent yn cael gweithredu"
+msgstr "oes atwrneiod eraill sy’n gallu gweithredu ‘ar y cyd ac yn unigol’ – ond nid os mai ‘ar y cyd’ yn unig maent yn cael gweithredu"
 
 #: src/Actor/templates/actor/death-notification.html.twig:51
 msgid "there are replacement attorneys"
-msgstr "oes atwrneiod i gymryd eu lle"
+msgstr "oes atwrneiod wrth gefn"
 
 #: src/Actor/templates/actor/change-details.html.twig:47
 #: src/Actor/templates/actor/change-lpa-details.html.twig:37
@@ -1080,7 +1080,7 @@ msgstr "Bydd angen i chi anfon atom:"
 
 #: src/Actor/templates/actor/death-notification.html.twig:58
 msgid "a copy of the death certificate"
-msgstr "copi o’i dystysgrif marwolaeth"
+msgstr "gopi o’r dystysgrif marwolaeth"
 
 #: src/Actor/templates/actor/death-notification.html.twig:59
 msgid "the original LPA"
@@ -2663,7 +2663,7 @@ msgstr "ydym ni’n dweud na wnaethoch chi ychwanegu cyfyngiadau ac amodau ond r
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:31
 msgid "information about life-sustaining treatment is incorrect"
-msgstr "yw gwybodaeth am driniaeth cynnal bywyd yn anghywir"
+msgstr "yw’r wybodaeth am driniaeth cynnal bywyd yn anghywir"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:32
 msgid "the registration date or the date the donor signed the LPA are incorrect"
