@@ -10,6 +10,7 @@ use App\DataAccess\Repository\Response\LpaInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class CachedSiriusLpasTest extends TestCase
 {
@@ -31,7 +32,7 @@ class CachedSiriusLpasTest extends TestCase
             ->with('700000000001')
             ->willReturn($lpa);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas);
+        $sut = new CachedSiriusLpas($this->siriusLpas, $this->createStub(LoggerInterface::class));
 
         $this->assertSame($lpa, $sut->get('700000000001'));
         $this->assertSame($lpa, $sut->get('700000000001'));
@@ -46,7 +47,7 @@ class CachedSiriusLpasTest extends TestCase
             ->with('700000000001')
             ->willReturn(null);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas);
+        $sut = new CachedSiriusLpas($this->siriusLpas, $this->createStub(LoggerInterface::class));
 
         $this->assertNull($sut->get('700000000001'));
         $this->assertNull($sut->get('700000000001'));
@@ -88,7 +89,7 @@ class CachedSiriusLpasTest extends TestCase
                 ]
             );
 
-        $sut = new CachedSiriusLpas($this->siriusLpas);
+        $sut = new CachedSiriusLpas($this->siriusLpas, $this->createStub(LoggerInterface::class));
 
         $sut->get('700000000001');
 
@@ -123,10 +124,22 @@ class CachedSiriusLpasTest extends TestCase
 
         $this->siriusLpas->expects($this->never())->method('lookup');
 
-        $sut = new CachedSiriusLpas($this->siriusLpas);
+        $sut = new CachedSiriusLpas($this->siriusLpas, $this->createStub(LoggerInterface::class));
 
         $sut->get('700000000001');
 
         $this->assertSame(['700000000001' => $lpa], $sut->lookup(['700000000001']));
+    }
+
+    #[Test]
+    public function it_should_log_cache_activity_at_debug_level(): void
+    {
+        $this->siriusLpas->method('get')->willReturn($this->createStub(LpaInterface::class));
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->atLeastOnce())->method('debug');
+
+        $sut = new CachedSiriusLpas($this->siriusLpas, $logger);
+        $sut->get('700000000001');
     }
 }

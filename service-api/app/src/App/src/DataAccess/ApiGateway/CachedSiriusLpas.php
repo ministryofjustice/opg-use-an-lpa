@@ -6,6 +6,7 @@ namespace App\DataAccess\ApiGateway;
 
 use App\DataAccess\Repository\LpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Decorator of SiriusLpas that holds an in-memory cache of fetched LPAs for the lifetime
@@ -16,15 +17,21 @@ class CachedSiriusLpas implements LpasInterface
     /** @var array<string, LpaInterface> */
     private array $cache = [];
 
-    public function __construct(private readonly SiriusLpas $siriusLpas)
-    {
+    public function __construct(
+        private readonly SiriusLpas $siriusLpas,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function get(string $uid): ?LpaInterface
     {
         if (array_key_exists($uid, $this->cache)) {
+            $this->logger->debug('Sirius LPA cache hit for {lpaUid}', ['lpaUid' => $uid]);
+
             return $this->cache[$uid];
         }
+
+        $this->logger->debug('Sirius LPA cache miss for {lpaUid}', ['lpaUid' => $uid]);
 
         $lpa = $this->siriusLpas->get($uid);
         if ($lpa !== null) {
@@ -40,6 +47,16 @@ class CachedSiriusLpas implements LpasInterface
 
         $missing = array_values(
             array_filter($uids, fn (string $uid): bool => !array_key_exists($uid, $this->cache))
+        );
+
+        $this->logger->debug(
+            'Sirius LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
+            [
+                'count'  => count($uids),
+                'hits'   => count($uids) - count($missing),
+                'misses' => count($missing),
+                'missed' => $missing,
+            ],
         );
 
         if ($missing !== []) {
