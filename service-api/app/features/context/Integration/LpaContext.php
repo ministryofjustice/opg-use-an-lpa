@@ -358,7 +358,6 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -456,8 +455,6 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -557,8 +554,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK),
         );
 
@@ -1415,15 +1410,6 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->apiFixtures
-            ->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($lpa)
-                )
-            );
-
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, [
@@ -1833,7 +1819,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
@@ -2271,8 +2256,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK),
         );
 
@@ -2721,7 +2704,6 @@ class LpaContext extends BaseIntegrationContext
 
         // LpaRepository::get
         $this->apiFixtures->append(
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeExists)),
         );

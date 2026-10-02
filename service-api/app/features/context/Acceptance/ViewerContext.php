@@ -78,9 +78,6 @@ class ViewerContext implements Context
         // PaperVerificationCodes::validate
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeData)));
 
-        // CombinedLpaManager::get
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         if ($this->viewerCode === 'P-1234-1234-1234-12') {
             // PaperVerificationCodes::expire
             $this->apiFixtures->append(
