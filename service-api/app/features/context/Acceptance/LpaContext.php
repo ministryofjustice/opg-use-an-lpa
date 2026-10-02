@@ -652,15 +652,6 @@ class LpaContext implements Context
             )
         );
 
-        // check if actor has a code
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(['Created' => $createdDate->format('Y-m-d')])
-            )
-        );
-
         // API call to request an activation key
         $this->apiPost(
             '/v1/older-lpa/validate',
@@ -1669,15 +1660,6 @@ class LpaContext implements Context
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
-
-        // API call for finding all the users added LPAs
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode([])
-            )
-        );
 
         $this->apiGet(
             '/v1/lpas',
@@ -3744,7 +3726,8 @@ class LpaContext implements Context
     #[Then('/^I am told my activation key is being sent$/')]
     public function iConfirmDetailsOfTheFoundLPAAreCorrect(): void
     {
-        $earliestRegDate = '2019-09-01';
+        $earliestRegDate            = '2019-09-01';
+        $isEligibleForActivationKey = $this->lpa->lpaIsCleansed || $this->lpa->registrationDate >= $earliestRegDate;
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -3760,29 +3743,31 @@ class LpaContext implements Context
             )
         );
 
-        // request a code to be generated and letter to be sent
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_NO_CONTENT,
-                []
-            )
-        );
+        if ($isEligibleForActivationKey) {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
 
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'Id'        => $this->userLpaActorToken,
-                            'UserId'    => $this->base->userAccountId,
-                            'SiriusUid' => $this->lpaUid,
-                            'ActorId'   => $this->actorId,
-                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                        ]
-                    ),
-                ]
-            )
-        );
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                                'Id'        => $this->userLpaActorToken,
+                                'UserId'    => $this->base->userAccountId,
+                                'SiriusUid' => $this->lpaUid,
+                                'ActorId'   => $this->actorId,
+                                'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            ]
+                        ),
+                    ]
+                )
+            );
+        }
 
         // API call to request an activation key
         $this->apiPatch(
@@ -3799,7 +3784,7 @@ class LpaContext implements Context
                 'user-token' => $this->userId,
             ]
         );
-        if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
+        if (!$isEligibleForActivationKey) {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
