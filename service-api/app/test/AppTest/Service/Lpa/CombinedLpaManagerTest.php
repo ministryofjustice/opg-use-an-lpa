@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AppTest\Service\Lpa;
 
 use App\DataAccess\ApiGateway\DataStoreLpas;
-use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\DynamoDb\ViewerCodes;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     Response\InstructionsAndPreferencesImages,
@@ -13,6 +12,7 @@ use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
     UserLpaActorMapInterface,
     ViewerCodeActivityInterface,
     ViewerCodesInterface};
+use App\DataAccess\Repository\LpasInterface;
 use App\Entity\LpaStore\LpaStore;
 use App\Entity\Sirius\SiriusLpa;
 use App\Exception\{ApiException, MissingCodeExpiryException, NotFoundException};
@@ -48,7 +48,7 @@ class CombinedLpaManagerTest extends TestCase
     private RejectInvalidLpa|ObjectProphecy $rejectInvalidLpaProphecy;
     private ResolveActor|ObjectProphecy $resolveActorProphecy;
     private ResolveLpaTypes|ObjectProphecy $resolveLpaTypesProphecy;
-    private SiriusLpas|ObjectProphecy $siriusLpasProphecy;
+    private LpasInterface|ObjectProphecy $siriusLpasProphecy;
     private UserLpaActorMapInterface|ObjectProphecy $userLpaActorMapInterfaceProphecy;
     private ObjectProphecy|ViewerCodes $viewerCodesActivityProphecy;
     private ObjectProphecy|ViewerCodes $viewerCodesProphecy;
@@ -59,19 +59,19 @@ class CombinedLpaManagerTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->userLpaActorMapInterfaceProphecy         = $this->prophesize(UserLpaActorMapInterface::class);
-        $this->siriusLpasProphecy                       = $this->prophesize(SiriusLpas::class);
-        $this->dataStoreLpasProphecy                    = $this->prophesize(DataStoreLpas::class);
-        $this->viewerCodesProphecy                      = $this->prophesize(ViewerCodesInterface::class);
-        $this->viewerCodesActivityProphecy              = $this->prophesize(ViewerCodeActivityInterface::class);
+        $this->userLpaActorMapInterfaceProphecy = $this->prophesize(UserLpaActorMapInterface::class);
+        $this->siriusLpasProphecy               = $this->prophesize(LpasInterface::class);
+        $this->dataStoreLpasProphecy            = $this->prophesize(DataStoreLpas::class);
+        $this->viewerCodesProphecy              = $this->prophesize(ViewerCodesInterface::class);
+        $this->viewerCodesActivityProphecy      = $this->prophesize(ViewerCodeActivityInterface::class);
         $this->instructionsAndPreferencesImagesProphecy
             = $this->prophesize(InstructionsAndPreferencesImagesInterface::class);
-        $this->resolveLpaTypesProphecy                  = $this->prophesize(ResolveLpaTypes::class);
-        $this->resolveActorProphecy                     = $this->prophesize(ResolveActor::class);
-        $this->isValidLpaProphecy                       = $this->prophesize(IsValidLpa::class);
-        $this->filterActiveActorsProphecy               = $this->prophesize(FilterActiveActors::class);
-        $this->rejectInvalidLpaProphecy                 = $this->prophesize(RejectInvalidLpa::class);
-        $this->loggerProphecy                           = $this->prophesize(LoggerInterface::class);
+        $this->resolveLpaTypesProphecy    = $this->prophesize(ResolveLpaTypes::class);
+        $this->resolveActorProphecy       = $this->prophesize(ResolveActor::class);
+        $this->isValidLpaProphecy         = $this->prophesize(IsValidLpa::class);
+        $this->filterActiveActorsProphecy = $this->prophesize(FilterActiveActors::class);
+        $this->rejectInvalidLpaProphecy   = $this->prophesize(RejectInvalidLpa::class);
+        $this->loggerProphecy             = $this->prophesize(LoggerInterface::class);
     }
 
     #[Test]
