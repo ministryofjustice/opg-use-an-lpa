@@ -320,9 +320,6 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // AWS Request letter response in Given steps
         $this->awsFixtures->append(
             new Result(
@@ -501,12 +498,6 @@ class LpaContext implements Context
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
@@ -542,12 +533,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         //UserLpaActorMapRepository: getUsersLpas
         $this->awsFixtures->append(
@@ -667,15 +652,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(
             new Response(
@@ -744,8 +720,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -1847,8 +1821,6 @@ class LpaContext implements Context
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
@@ -2292,11 +2264,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // called twice
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
@@ -2916,28 +2883,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // Done twice due to our codes interdependencies
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // CheckLpaCleansed: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -2997,15 +2942,6 @@ class LpaContext implements Context
             new Result([])
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(
             new Response(
@@ -3018,9 +2954,6 @@ class LpaContext implements Context
                 )
             )
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
@@ -3515,9 +3448,6 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -3722,15 +3652,6 @@ class LpaContext implements Context
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
@@ -3838,9 +3759,6 @@ class LpaContext implements Context
                 json_encode($this->lpa)
             )
         );
-
-        // LpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
