@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-30 15:21+0000\n"
+"PO-Revision-Date: 2026-10-02 08:01+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -4035,7 +4035,7 @@ msgstr "Bydd yr wybodaeth yn cael ei storio’n ddiogel a’i defnyddio yn unol 
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:80
 msgid "If you suspect fraud or abuse"
-msgstr "Os ydych chi’n amau bod rhywun yn​​twyllo neu’n camddefnyddio LPA"
+msgstr "Os ydych chi’n amau bod rhywun yn twyllo neu’n camdrin"
 
 # Report concern page will be published in Welsh shortly
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:83
@@ -4044,7 +4044,7 @@ msgstr "<a class=\"govuk-link\" href=\"https://www.gov.uk/report-concern-about-a
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:84
 msgid "If you suspect abuse, a criminal offence, or think someone is in immediate danger, <a class=\"govuk-link\" href=\"https://www.gov.uk/contact-police\">contact the police</a> first"
-msgstr "Os ydych chi’n amau ​​ bod rhywun yn camddefnyddio LPA, neu’n troseddu, neu os ydych yn credu bod rhywun mewn perygl uniongyrchol, <a class=\"govuk-link\" href=\"https://www.gov.uk/contact-police\">cysylltwch â’r heddlu</a> yn gyntaf"
+msgstr "Os ydych chi’n amau camdriniaeth, trosedd, neu os ydych yn credu bod rhywun mewn perygl uniongyrchol, <a class=\"govuk-link\" href=\"https://www.gov.uk/contact-police\">cysylltwch â’r heddlu</a> yn gyntaf"
 
 #: src/Viewer/templates/viewer/viewer-terms-of-use.html.twig:94
 msgid "Data Protection Bill 2018"
@@ -4776,7 +4776,7 @@ msgctxt "html-link"
 msgid "activation-key-request.start.reveal-content"
 msgstr ""
 "<p>Gallwch ddod o hyd iddo ar dudalen gyntaf yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> neu unrhyw lythyron perthnasol gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG). Mae’n bosib y caiff ei alw’n ‘Cyfeirnod yr LPA’, yn ‘Ein cyf.’ neu’n 'Rhif achos’.</p>\n"
-"<p>Os nad oes gennych yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur nac unrhyw lythyron gan OPG, holwch bobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r LPA, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
+"<p>Os nad oes gennych yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur nac unrhyw lythyron gan OPG, holwch bobl eraill sydd wedi’u henwi yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Fe ddylai gweithiwr proffesiynol a fu, o bosib, yn eich helpu gyda’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>, megis cyfreithiwr, allu rhoi’r cyfeirnod i chi.</p>\n"
 "<p>Os nad ydych yn gwybod beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> o hyd neu’n methu dod o hyd iddo, dylech <a class=\"govuk-link\" href=\"%link%\">gysylltu â ni</a>.</p>"
 
 #: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
