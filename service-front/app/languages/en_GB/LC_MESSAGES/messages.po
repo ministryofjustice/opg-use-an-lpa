@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-30 15:21+0000\n"
+"PO-Revision-Date: 2026-10-02 13:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -632,7 +632,7 @@ msgstr "any <abbr title=\"lasting powers of attorney\">LPAs</abbr> you added wil
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:19
 msgid "you‘ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
-msgstr "you’ll not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
+msgstr "you will not be able to see how those <abbr title=\"lasting powers of attorney\">LPAs</abbr> are being used"
 
 #: src/Actor/templates/actor/confirm-delete-account.html.twig:22
 msgid "You can still use paper versions of these <abbr title=\"lasting powers of attorney\">LPAs</abbr> if:"
@@ -1113,7 +1113,7 @@ msgstr "Privacy notice"
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:12
 msgid "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service."
-msgstr "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘Use a lasting power of attorney’ (LPA) service."
+msgstr "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the Use a lasting power of attorney (LPA) service."
 
 #: src/Actor/templates/actor/actor-privacy-notice.html.twig:17
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:19
@@ -1648,7 +1648,7 @@ msgstr "all access codes you’ve created for this LPA will be valid until they 
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
-msgstr "you’ll not be able to see how the <abbr title=\"lasting power of attorney\">LPA</abbr> is being used or has been used"
+msgstr "you will not be able to see how the <abbr title=\"lasting power of attorney\">LPA</abbr> is being used or has been used"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
@@ -2101,12 +2101,12 @@ msgstr "Which organisation needs access to the LPA?"
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:36
 msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
-msgstr "For example a hospital, care home, or health care provider."
+msgstr "For example a hospital, care home, or health care provider"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:38
 msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
-msgstr "For example a bank, energy provider, or another business."
+msgstr "For example a bank, energy provider, or another business"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:45
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:43
@@ -3777,7 +3777,7 @@ msgstr "By continuing you agree to our <a href=\"%link%\" target=\"_blank\" clas
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:13
 msgid "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘View a lasting power of attorney’ (LPA) service."
-msgstr "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the ‘View a lasting power of attorney’ (LPA) service."
+msgstr "This privacy notice explains why the Office of the Public Guardian (OPG) collects personal data when you use the View a lasting power of attorney (LPA) service."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:32
 msgid "You should read this privacy notice alongside <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a>, which sets out the standards you can expect when we ask for, use or share your personal information."
@@ -4609,7 +4609,7 @@ msgstr "If you want this code to be cancelled please contact %createdBy%."
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:265
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:135
 msgid "Yes, the donor entered words in this part of the LPA form."
-msgstr "Yes, the donor entered words in this part of the LPA form."
+msgstr "Yes, the donor entered words in this part of the <abbr title=\"lasting power of attorney\">LPA</abbr> form."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
