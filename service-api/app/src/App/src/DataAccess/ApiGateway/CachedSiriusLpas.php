@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
  * Decorator of SiriusLpas that holds an in-memory cache of fetched LPAs for the lifetime
  * of the instance.
  */
-class CachedSiriusLpas implements LpasInterface
+final class CachedSiriusLpas implements LpasInterface
 {
     /** @var array<string, LpaInterface> */
     private array $cache = [];
