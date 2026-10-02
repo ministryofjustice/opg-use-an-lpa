@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 12:13+0000\n"
+"PO-Revision-Date: 2026-10-02 12:45+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1571,7 +1571,7 @@ msgstr "Ni allwn anfon cod actifadu"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:11
 msgid "We cannot send an activation key for that LPA"
-msgstr "Ni allwn anfon cod actifadu ar gyfer yr LPA honno"
+msgstr "Ni allwn anfon cod actifadu ar gyfer yr LPA yna"
 
 #: src/Actor/templates/actor/cannot-send-activation-key.html.twig:13
 msgid "You cannot add an LPA registered before September 2019."
@@ -2330,7 +2330,7 @@ msgstr "Rhowch eich cod actifadu"
 #: src/Actor/templates/actor/form-error-messages.html.twig:17
 msgctxt "error"
 msgid "Enter an activation key in the correct format"
-msgstr "Nodwch y cod actifadu yn y fformat cywir"
+msgstr "Rhowch y cod actifadu yn y fformat cywir"
 
 #. Add LPA
 #: src/Actor/templates/actor/form-error-messages.html.twig:18
