@@ -17,6 +17,11 @@ ignore:
         reason: Base image vuln in gcc - new CVE with no available fix, acceptable risk for Lambda function
         expires: 2027-10-30T23:59:59.000Z
         created: 2026-09-30T00:00:00.000Z
+  SNYK-DEBIAN13-GCC14-20386241:
+    - '*':
+        reason: Base image vuln in gcc - new CVE with no available fix, acceptable risk for Lambda function
+        expires: 2027-11-2T23:59:59.000Z
+        created: 2026-10-2T00:00:00.000Z
   SNYK-DEBIAN13-ZLIB-19520500:
     - '*':
         reason: Base image vuln in zlib/zlib1g - very new CVE with no available fix, acceptable risk for Lambda function
