@@ -358,7 +358,6 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -456,8 +455,6 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         $addLpaService = $this->container->get(AddLpa::class);
@@ -557,8 +554,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK),
         );
 
@@ -1415,15 +1410,6 @@ class LpaContext extends BaseIntegrationContext
             new Result([])
         );
 
-        $this->apiFixtures
-            ->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode($lpa)
-                )
-            );
-
         $addOlderLpa = $this->container->get(AddAccessForAllLpa::class);
 
         $lpaMatchResponse = $addOlderLpa->validateRequest($this->userId, [
@@ -1494,15 +1480,6 @@ class LpaContext extends BaseIntegrationContext
     {
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
-
-        // API call for finding all the users added LPAs
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode([])
-            )
-        );
     }
 
     #[Given('/^I have 2 codes for one of my LPAs$/')]
@@ -1834,7 +1811,6 @@ class LpaContext extends BaseIntegrationContext
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
         );
 
         /** @var AddLpa $addLpaService */
@@ -1977,7 +1953,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['lpa' => $this->lpa])),
         );
 
         $lpaData = $this->lpaService->getByUserLpaActorToken($this->userLpaActorToken, $this->userId);
@@ -1996,7 +1971,7 @@ class LpaContext extends BaseIntegrationContext
     #[Then('/^I should be able to click a link to go and create the access codes$/')]
     public function iShouldBeAbleToClickALinkToGoAndCreateTheAccessCodes(): void
     {
-        $this->iRequestToGiveAnOrganisationAccessToOneOfMyLPAs();
+        // Not needed for this context
     }
 
     #[Then('/^I should be shown the details of the cancelled viewer code with cancelled status/')]
@@ -2271,8 +2246,6 @@ class LpaContext extends BaseIntegrationContext
 
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorLpaId])),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
             new Response(StatusCodeInterface::STATUS_OK),
         );
 
@@ -2316,11 +2289,6 @@ class LpaContext extends BaseIntegrationContext
     public function theStatusOfTheLPAChangedFromRegisteredToSuspended(): void
     {
         $this->lpa->status = 'Suspended';
-
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result([])
-        );
 
         // LpaService:getLpas
 
@@ -2366,34 +2334,6 @@ class LpaContext extends BaseIntegrationContext
     #[Given('/^An LPA gives an unexpected error$/')]
     public function anLPAGivesAnUnexpectedError(): void
     {
-        //UserLpaActorMap: getAllForUser
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Items' => [
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => $this->lpaUid,
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
-                            ]
-                        ),
-                        $this->marshalAwsResultData(
-                            [
-                                'SiriusUid' => '700000000138',
-                                'Added'     => (new DateTime('2020-01-01'))->format('Y-m-d\TH:i:s.u\Z'),
-                                'Id'        => $this->userLpaActorToken,
-                                'ActorId'   => $this->actorLpaId,
-                                'UserId'    => $this->userId,
-                            ]
-                        ),
-                    ],
-                ]
-            )
-        );
-
         // LpaService:getLpas
 
         // UserLpaActorMap::getUsersLpas
@@ -2715,15 +2655,9 @@ class LpaContext extends BaseIntegrationContext
             )
         );
 
-        $codeExists = new stdClass();
-
-        $codeExists->Created = $createdDate->format('Y-m-d');
-
         // LpaRepository::get
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)),
-            new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeExists)),
         );
 
         $expectedResponse = [
