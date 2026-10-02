@@ -7,6 +7,7 @@ namespace App\DataAccess\ApiGateway;
 use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
+use Psr\Log\LoggerInterface;
 
 /**
  * Decorator of DataStoreLpas that holds an in-memory cache of fetched LPAs for the lifetime
@@ -22,8 +23,10 @@ class CachedDataStoreLpas implements AuditableLpasInterface
     /** @var array<string, array<string, LpaInterface>> */
     private array $cache = [];
 
-    public function __construct(private readonly DataStoreLpas $dataStoreLpas)
-    {
+    public function __construct(
+        private readonly DataStoreLpas $dataStoreLpas,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     public function setOriginatorId(string $originatorId): AuditableLpasInterface
@@ -37,12 +40,21 @@ class CachedDataStoreLpas implements AuditableLpasInterface
     public function get(string $uid): ?LpaInterface
     {
         if ($this->originatorId === null) {
+            $this->logger->debug(
+                'Data store LPA cache bypassed for {lpaUid} as no originator id is set',
+                ['lpaUid' => $uid],
+            );
+
             return $this->dataStoreLpas->get($uid);
         }
 
         if (isset($this->cache[$this->originatorId][$uid])) {
+            $this->logger->debug('Data store LPA cache hit for {lpaUid}', ['lpaUid' => $uid]);
+
             return $this->cache[$this->originatorId][$uid];
         }
+
+        $this->logger->debug('Data store LPA cache miss for {lpaUid}', ['lpaUid' => $uid]);
 
         $lpa = $this->dataStoreLpas->get($uid);
         if ($lpa !== null) {
@@ -55,6 +67,11 @@ class CachedDataStoreLpas implements AuditableLpasInterface
     public function lookup(array $uids): array
     {
         if ($this->originatorId === null) {
+            $this->logger->debug(
+                'Data store LPA cache bypassed for lookup of {count} LPAs as no originator id is set',
+                ['count' => count($uids)],
+            );
+
             return $this->dataStoreLpas->lookup($uids);
         }
 
@@ -63,6 +80,16 @@ class CachedDataStoreLpas implements AuditableLpasInterface
 
         $missing = array_values(
             array_filter($uids, fn (string $uid): bool => !isset($cached[$uid]))
+        );
+
+        $this->logger->debug(
+            'Data store LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
+            [
+                'count'  => count($uids),
+                'hits'   => count($uids) - count($missing),
+                'misses' => count($missing),
+                'missed' => $missing,
+            ],
         );
 
         if ($missing !== []) {
