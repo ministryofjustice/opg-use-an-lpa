@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 11:05+0000\n"
+"PO-Revision-Date: 2026-10-02 11:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -1637,15 +1637,15 @@ msgstr "Gofyn am god actifadu arall"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:3
 msgid "Are you sure you want to remove this LPA?"
-msgstr "A ydych yn siŵr eich bod am ddileu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon?"
+msgstr "Ydych chi'n siŵr eich bod am ddileu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon oddi ar eich cyfrif?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:12
 msgid "Are you sure you want to remove %firstname% %surname%'s LPA?"
-msgstr "Ydych chi’n siŵr eich bod am ddileu LPA <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> %firstname% %surname%?"
+msgstr "Ydych chi’n siŵr eich bod am ddileu <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> %firstname% %surname% oddi ar eich cyfrif?"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:18
 msgid "LPA type:"
-msgstr "LPA math:"
+msgstr "Math o LPA:"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:21
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:49
@@ -1659,19 +1659,19 @@ msgstr "Os byddwch yn dileu LPA oddi ar eich cyfrif Defnyddio atwrneiaeth arhoso
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "all access codes you’ve created for this LPA will be valid until they are cancelled or expire"
-msgstr "bydd pob cod mynediad yr ydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes y byddant yn dod i ben neu yn cael eu dileu"
+msgstr "bydd pob cod mynediad rydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes y byddant yn dod i ben neu yn cael eu canslo"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
-msgstr "ni fyddwch yn gallu gweld sut y mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei defnyddio na sut mae wedi cael ei defnyddio"
+msgstr "ni fyddwch yn gallu gweld sut mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn cael ei defnyddio na sut mae wedi cael ei defnyddio"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:32
 msgid "you will need to request a new activation key if you want to add the LPA back to your account"
-msgstr "bydd rhaid i chi gysylltu â ni i gael cod actifadu newydd os byddwch am ychwanegu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> at y cyfrif eto"
+msgstr "bydd rhaid i chi gysylltu â ni i gael cod actifadu newydd os byddwch am ychwanegu’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yn ôl at y cyfrif"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:49
 msgid "Yes, remove LPA"
-msgstr "Le, dileu LPA"
+msgstr "Ydw, dileu’r LPA oddi ar fy nghyfrif"
 
 #: src/Actor/templates/actor/request-activation-key/your-name.html.twig:16
 msgid "What is your name?"
