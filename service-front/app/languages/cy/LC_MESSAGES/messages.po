@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 11:18+0000\n"
+"PO-Revision-Date: 2026-10-02 11:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -2172,7 +2172,7 @@ msgstr "yw dyddiad geni atwrnai yn anghywir"
 
 #: src/Actor/templates/actor/change-details.html.twig:37
 msgid "the donor or an attorney dies"
-msgstr "rhoddwr neu atwrnai yn marw"
+msgstr "bydd y rhoddwr neu atwrnai yn marw"
 
 #: src/Actor/templates/actor/change-details.html.twig:41
 #: src/Actor/templates/actor/change-lpa-details.html.twig:35
