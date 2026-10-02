@@ -8,30 +8,30 @@ use App\DataAccess\ApiGateway\CachedSiriusLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
 use App\DataAccess\Repository\Response\LpaInterface;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CachedSiriusLpasTest extends TestCase
 {
-    use ProphecyTrait;
-
-    private ObjectProphecy|SiriusLpas $siriusLpas;
+    private SiriusLpas&MockObject $siriusLpas;
 
     public function setUp(): void
     {
-        $this->siriusLpas = $this->prophesize(SiriusLpas::class);
+        $this->siriusLpas = $this->createMock(SiriusLpas::class);
     }
 
     #[Test]
     public function it_should_cache_an_lpa_fetched_by_get(): void
     {
-        $lpa = $this->prophesize(LpaInterface::class)->reveal();
+        $lpa = $this->createStub(LpaInterface::class);
 
-        $this->siriusLpas->get('700000000001')->shouldBeCalledOnce()->willReturn($lpa);
+        $this->siriusLpas
+            ->expects($this->once())
+            ->method('get')
+            ->with('700000000001')
+            ->willReturn($lpa);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas->reveal());
+        $sut = new CachedSiriusLpas($this->siriusLpas);
 
         $this->assertSame($lpa, $sut->get('700000000001'));
         $this->assertSame($lpa, $sut->get('700000000001'));
@@ -40,9 +40,13 @@ class CachedSiriusLpasTest extends TestCase
     #[Test]
     public function it_should_not_cache_an_lpa_that_was_not_found(): void
     {
-        $this->siriusLpas->get('700000000001')->shouldBeCalledTimes(2)->willReturn(null);
+        $this->siriusLpas
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->with('700000000001')
+            ->willReturn(null);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas->reveal());
+        $sut = new CachedSiriusLpas($this->siriusLpas);
 
         $this->assertNull($sut->get('700000000001'));
         $this->assertNull($sut->get('700000000001'));
@@ -51,18 +55,40 @@ class CachedSiriusLpasTest extends TestCase
     #[Test]
     public function it_should_only_lookup_lpas_that_are_not_cached(): void
     {
-        $lpaOne   = $this->prophesize(LpaInterface::class)->reveal();
-        $lpaTwo   = $this->prophesize(LpaInterface::class)->reveal();
-        $lpaThree = $this->prophesize(LpaInterface::class)->reveal();
+        $lpaOne   = $this->createStub(LpaInterface::class);
+        $lpaTwo   = $this->createStub(LpaInterface::class);
+        $lpaThree = $this->createStub(LpaInterface::class);
 
-        $this->siriusLpas->get('700000000001')->shouldBeCalledOnce()->willReturn($lpaOne);
         $this->siriusLpas
-            ->lookup(['700000000002', '700000000003', '700000000004'])
-            ->shouldBeCalledOnce()
-            ->willReturn(['700000000002' => $lpaTwo, '700000000003' => $lpaThree]);
-        $this->siriusLpas->lookup(['700000000004'])->shouldBeCalledOnce()->willReturn([]);
+            ->expects($this->once())
+            ->method('get')
+            ->with('700000000001')
+            ->willReturn($lpaOne);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas->reveal());
+        $this->siriusLpas
+            ->expects($this->exactly(2))
+            ->method('lookup')
+            ->willReturnMap(
+                [
+                    [
+                        [
+                            '700000000002',
+                            '700000000003',
+                            '700000000004',
+                        ],
+                        [
+                            '700000000002' => $lpaTwo,
+                            '700000000003' => $lpaThree,
+                        ],
+                    ],
+                    [
+                        ['700000000004'],
+                        [],
+                    ],
+                ]
+            );
+
+        $sut = new CachedSiriusLpas($this->siriusLpas);
 
         $sut->get('700000000001');
 
@@ -87,12 +113,17 @@ class CachedSiriusLpasTest extends TestCase
     #[Test]
     public function it_should_not_call_sirius_when_all_lpas_are_cached(): void
     {
-        $lpa = $this->prophesize(LpaInterface::class)->reveal();
+        $lpa = $this->createStub(LpaInterface::class);
 
-        $this->siriusLpas->get('700000000001')->shouldBeCalledOnce()->willReturn($lpa);
-        $this->siriusLpas->lookup(Argument::any())->shouldNotBeCalled();
+        $this->siriusLpas
+            ->expects($this->once())
+            ->method('get')
+            ->with('700000000001')
+            ->willReturn($lpa);
 
-        $sut = new CachedSiriusLpas($this->siriusLpas->reveal());
+        $this->siriusLpas->expects($this->never())->method('lookup');
+
+        $sut = new CachedSiriusLpas($this->siriusLpas);
 
         $sut->get('700000000001');
 
