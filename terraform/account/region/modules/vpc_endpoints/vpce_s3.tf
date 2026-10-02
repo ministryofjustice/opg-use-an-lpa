@@ -32,8 +32,8 @@ resource "aws_vpc_endpoint_policy" "s3" {
         "Action" : ["s3:GetObject"],
         "Resource" : var.permitted_s3_buckets,
         "Condition" : {
-          "StringEquals" : {
-            "aws:PrincipalAccount" : var.s3_principal_account_ids
+          "ArnLike" : {
+            "aws:PrincipalArn" : var.s3_principal_arns
           }
         }
       }
