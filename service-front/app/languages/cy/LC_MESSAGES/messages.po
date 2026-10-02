@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 12:45+0000\n"
+"PO-Revision-Date: 2026-10-02 13:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -130,12 +130,12 @@ msgstr "HEB WELD YR LPA"
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:21
 msgid "Access code expires in %count% day"
 msgid_plural "Access code expires in %count% days"
-msgstr[0] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
-msgstr[1] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
-msgstr[2] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
-msgstr[3] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
-msgstr[4] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
-msgstr[5] "Bydd eich cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[0] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[1] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[2] "Bydd y cod mynediad yn dod i ben mewn %count% ddiwrnod"
+msgstr[3] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[4] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
+msgstr[5] "Bydd y cod mynediad yn dod i ben mewn %count% diwrnod"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:23
 msgid "Access code cancelled %date%"
@@ -2121,12 +2121,12 @@ msgstr "Pa sefydliad hoffai gael mynediad i’r LPA?"
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:39
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:36
 msgid "The organisation could be a hospital, care home, or other health care provider. This is for your reference only"
-msgstr "Er enghraifft ysbyty, cartref gofal neu ddarparwr gofal iechyd."
+msgstr "Er enghraifft ysbyty, cartref gofal neu ddarparwr gofal iechyd"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:41
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:38
 msgid "The organisation could be a bank, energy provider, or another business. This is for your reference only"
-msgstr "Er enghraifft banc, darparwr ynni, neu fusnes arall."
+msgstr "Er enghraifft banc, darparwr ynni, neu fusnes arall"
 
 #: src/Actor/templates/actor/lpa-create-viewercode-combined-lpa.html.twig:45
 #: src/Actor/templates/actor/lpa-create-viewercode.html.twig:43
