@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\Lpa;
 
-use App\DataAccess\ApiGateway\{DataStoreLpas, SiriusLpas};
+use App\DataAccess\ApiGateway\DataStoreLpas;
 use DateTimeImmutable;
 use App\DataAccess\Repository\{InstructionsAndPreferencesImagesInterface,
+    LpasInterface,
     Response\Lpa,
     Response\LpaInterface,
     UserLpaActorMapInterface,
@@ -29,7 +30,7 @@ class CombinedLpaManager implements LpaManagerInterface
 {
     public function __construct(
         private readonly UserLpaActorMapInterface $userLpaActorMap,
-        private readonly SiriusLpas $siriusLpas,
+        private readonly LpasInterface $siriusLpas,
         private readonly DataStoreLpas $dataStoreLpas,
         private readonly ViewerCodesInterface $viewerCodes,
         private readonly ViewerCodeActivityInterface $viewerCodeActivity,
