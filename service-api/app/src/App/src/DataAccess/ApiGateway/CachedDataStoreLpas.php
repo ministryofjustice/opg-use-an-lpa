@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
  * The cache is partitioned by originator id so that each distinct originator still results in
  * an auditable request to the data store.
  */
-class CachedDataStoreLpas implements AuditableLpasInterface
+final class CachedDataStoreLpas implements AuditableLpasInterface
 {
     private ?string $originatorId = null;
 
