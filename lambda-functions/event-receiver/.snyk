@@ -1,3 +1,7 @@
 version: v1.25.1
-ignore: {}
+ignore:
+  CVE-2026-95619:
+    - '*':
+        reason: Ignored as per requirements
+        expires: null
 patch: {}
