@@ -2,6 +2,14 @@
 version: v1.25.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
+  CVE-2026-95619:
+    - '*':
+        reason: Ignored as per requirements
+        expires: 2026-11-05T00:00:00.000Z
+  SNYK-DEBIAN13-GCC14-20386241:
+    - '*':
+        reason: Ignored as per requirements
+        expires: 2026-11-05T00:00:00.000Z
   SNYK-DEBIAN13-ATTR-17678182:
     - '*':
         reason: Base image vuln in attr/libattr1 - very new CVE with no available fix, acceptable risk for Lambda function
