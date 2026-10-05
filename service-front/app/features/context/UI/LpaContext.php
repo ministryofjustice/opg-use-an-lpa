@@ -145,7 +145,7 @@ class LpaContext implements Context
     public function iAmTakenToTheChangeLPADetailsPage(): void
     {
         $this->ui->assertPageAddress('/lpa/change-lpa-details');
-        $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
+        $this->assertPageContainsTranslatedText('Let us know if something is incorrect on the LPA');
     }
 
     #[Then('I am taken to the remove an LPA confirmation page for :status lpa')]
