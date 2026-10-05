@@ -4,4 +4,8 @@ ignore:
     - '*':
         reason: Ignored as per requirements
         expires: 2026-11-05T00:00:00.000Z
+  SNYK-DEBIAN13-GCC14-20386241:
+    - '*':
+        reason: Ignored as per requirements
+        expires: 2026-11-05T00:00:00.000Z
 patch: {}
