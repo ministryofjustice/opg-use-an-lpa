@@ -25,6 +25,9 @@
             </errorLevel>
         </PossiblyUnusedMethod>
     </issueHandlers>
+    <stubs>
+        <file name="stubs/opentelemetry.phpstub"/>
+    </stubs>
 
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>

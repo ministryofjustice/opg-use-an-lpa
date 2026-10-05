@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-09-23 11:26+0000\n"
+"PO-Revision-Date: 2026-09-30 15:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -597,17 +597,17 @@ msgstr "%organisation% may ask you for other information, such as %donorFirstNam
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:98
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:96
 msgid "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
-msgstr "%organisation% may ask you for other information, such as your customer account details, your attorney's contact details and so on."
+msgstr "%organisation% may ask you for other information, such as your customer account details or your attorney's contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:106
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:104
 msgid "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
-msgstr "%organisation% may ask you for other information, such as %donorFirstName%'s NHS number, your contact details and so on."
+msgstr "%organisation% may ask you for other information, such as %donorFirstName%’s NHS number or your contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:113
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:111
 msgid "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
-msgstr "%organisation% may ask you for other information, such as your NHS number, your attorney's contact details and so on."
+msgstr "%organisation% may ask you for other information, such as your NHS number or your attorney’s contact details."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:122
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:120
@@ -2189,7 +2189,7 @@ msgstr "your name and address"
 #: src/Actor/templates/actor/change-details.html.twig:53
 #: src/Actor/templates/actor/change-lpa-details.html.twig:43
 msgid "your role (ie, whether you are the donor or an attorney)"
-msgstr "your role (ie, whether you are the donor or an attorney)"
+msgstr "your role (for example, whether you are the donor or an attorney)"
 
 #: src/Actor/templates/actor/change-details.html.twig:54
 #: src/Actor/templates/actor/change-lpa-details.html.twig:44
@@ -2627,7 +2627,7 @@ msgstr "This happened because of a technical issue. Your information is safe. Si
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:22
 msgid "Let us know if something is incorrect on the LPA"
-msgstr "Let us know if something is incorrect on the LPA"
+msgstr "Let us know if something is incorrect in the LPA"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:24
 msgid "It's important that the information on the LPA summary is correct."
@@ -2866,7 +2866,7 @@ msgstr "You should be able to use this service instead of showing someone the fu
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:29
 msgid "You cannot use a download or print out of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code"
-msgstr "You cannot use a download or print out of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original or office copy of the full paper <abbr title=\"lasting power of attorney\">LPA</abbr> or instead of giving someone an access code"
+msgstr "You cannot use a download or print out of the <abbr title=\"lasting power of attorney\">LPA</abbr> summary in place of the original or office copy of the full paper <abbr title=\"lasting power of attorney\">LPA</abbr>, or instead of giving someone an access code"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:37
 msgid "By using this service you agree to these terms of use and the <a class=\"govuk-link\" href=\"https://www.gov.uk/help/terms-conditions\">GOV.UK terms and conditions</a>."
@@ -4695,3 +4695,80 @@ msgstr "If you’re the donor or an attorney, you can view the LPA by signing in
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:15
 msgid "The donor has said that this <abbr title=\"lasting power of attorney\">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf"
 msgstr "The donor has said that this <abbr title=\"lasting power of attorney\">LPA</abbr> can be used now. While the donor has mental capacity, they can still ask their attorneys to act on their behalf"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:3
+msgid "activation-key-request.start.title"
+msgstr "Request an activation key"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+msgid "activation-key-request.start.back-link"
+msgstr "Back"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:16
+msgid "activation-key-request.start.heading-page"
+msgstr "Request an activation key"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:18
+msgctxt "html"
+msgid "activation-key-request.start.content.can-only-ask-for"
+msgstr ""
+"<p class=\"govuk-body\">You can only ask for an activation key if:</p>\n"
+"\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>you’re a donor or an attorney on the <abbr title=\"lasting power of attorney\">LPA</abbr> (not a replacement attorney)</li>\n"
+"    <li>the <abbr title=\"lasting power of attorney\">LPA</abbr> was made for use in England and Wales</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:26
+msgid "activation-key-request.start.heading.details.title"
+msgstr "Details you’ll need to give us"
+
+#. Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:28
+msgctxt "html-link"
+msgid "activation-key-request.start.content.details-need-to-give"
+msgstr ""
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>your name and date of birth</li>\n"
+"    <li>where you currently live – activation keys are sent by post. If you’ve moved and not told us, you must <a class=\"govuk-link\" href=\"%link%\">contact us</a> before continuing so we can update our records</li>\n"
+"    <li>the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number – you’ll find this on the paper <abbr title=\"lasting power of attorney\">LPA</abbr> and on letters from the Office of the Public Guardian (OPG)</li>\n"
+"</ul>"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:38
+msgid "activation-key-request.start.reveal-title"
+msgstr "Where to find the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number"
+
+#. Contains a contact-us link using the %link% placeholder.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:43
+msgctxt "html-link"
+msgid "activation-key-request.start.reveal-content"
+msgstr ""
+"<p>You can find this on the first page of the <abbr title=\"lasting power of attorney\">LPA</abbr> or any related letters from the Office of the Public Guardian (OPG). It may also be referred to as ‘LPA reference number’, ‘Our ref.’ or ‘Case number’.</p>\n"
+"<p>If you do not have the paper <abbr title=\"lasting power of attorney\">LPA</abbr> or any letters from OPG, check with other people named in the <abbr title=\"lasting power of attorney\">LPA</abbr>. If a professional helped you with the <abbr title=\"lasting power of attorney\">LPA</abbr>, such as a solicitor, they should be able to give you the reference number.</p>\n"
+"<p>If you still don’t know the <abbr title=\"lasting power of attorney\">LPA</abbr> reference number or can’t find it, please <a class=\"govuk-link\" href=\"%link%\">contact us</a>.</p>"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:9
+msgid "common.back-link"
+msgstr "Back"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:53
+msgid "common.button-continue"
+msgstr "Continue"
+
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:58
+msgid "common.button-cancel"
+msgstr "Cancel"
+
+#. Contains GOV.UK HTML elements and classes. Preserve the HTML structure and classes when translating.
+#: src/Actor/templates/actor/request-activation-key/before-requesting-activation-key-info.html.twig:22
+msgctxt "html"
+msgid "activation-key-request.start.content.cannot-ask-for"
+msgstr ""
+"<p class=\"govuk-body\">You cannot ask for a key for:</p>\n"
+"\n"
+"<ul class=\"govuk-list govuk-list--bullet\">\n"
+"    <li>LPAs with reference numbers fewer than 12 digits and registered before January 2016</li>\n"
+"    <li>enduring powers of attorney (EPAs)</li>\n"
+"    <li>LPAs registered by the Office of the Public Guardian Scotland</li>\n"
+"</ul>"

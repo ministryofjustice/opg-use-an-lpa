@@ -69,7 +69,11 @@ module "vpc_endpoints" {
   management_account_id           = data.aws_caller_identity.management.account_id
   execute_api_account_ids         = [var.account.sirius_account_id, var.account.lpa_store_account_id]
   permitted_s3_buckets            = var.permitted_s3_buckets
-  region_name                     = var.region_name
+  s3_principal_arns = [
+    "arn:aws:iam::${var.account.account_id}:role/*",
+    "arn:aws:iam::${var.account.sirius_account_id}:role/lpa-iap-request-handler-*",
+  ]
+  region_name = var.region_name
   providers = {
     aws.region = aws.region
   }
