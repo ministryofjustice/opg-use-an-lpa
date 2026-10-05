@@ -281,12 +281,12 @@ services:
     entrypoint: [ "/aws-lambda/aws-lambda-rie", "python", "-m", "awslambdaric" ]
     command: [ "upload_statistics.lambda_handler" ]
 
-  duplicate-accounts-lambda:
+  unused-accounts-lambda:
     build:
-      context: ./lambda-functions/duplicate-accounts
+      context: ./lambda-functions/unused-accounts
       dockerfile: Dockerfile
     environment:
-      BUCKET: duplicate-accounts-bucket
+      BUCKET: unused-accounts-bucket
       REGION: eu-west-1
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'

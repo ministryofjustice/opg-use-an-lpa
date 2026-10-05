@@ -1,4 +1,4 @@
-module seed_duplicate_accounts
+module seed_unused_accounts
 
 go 1.26.0
 

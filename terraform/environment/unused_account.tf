@@ -1,15 +1,15 @@
-module "duplicate_accounts" {
-  count       = local.environment.duplicate_accounts_lambda ? 1 : 0
+module "unused_accounts" {
+  count       = local.environment.unused_accounts_lambda ? 1 : 0
   source      = "./modules/lambda"
-  lambda_name = "duplicate-accounts"
+  lambda_name = "unused-accounts"
   environment_variables = {
     BUCKET           = data.aws_s3_bucket.ual_athena_query_results[0].id,
     ENVIRONMENT_NAME = local.environment_name
     WORK_FILE_PREFIX = "todo"
     PLAN_FILE_PREFIX = "plan"
   }
-  image_uri        = "${data.aws_ecr_repository.duplicate_accounts.repository_url}@${data.aws_ecr_image.duplicate_accounts.image_digest}"
-  ecr_arn          = data.aws_ecr_repository.duplicate_accounts.arn
+  image_uri        = "${data.aws_ecr_repository.unused_accounts.repository_url}@${data.aws_ecr_image.unused_accounts.image_digest}"
+  ecr_arn          = data.aws_ecr_repository.unused_accounts.arn
   environment      = local.environment_name
   kms_key          = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
   default_boundary = data.aws_iam_policy.default_boundary.arn
@@ -18,19 +18,19 @@ module "duplicate_accounts" {
 }
 
 data "aws_s3_bucket" "ual_athena_query_results" {
-  count  = local.environment.duplicate_accounts_lambda ? 1 : 0
+  count  = local.environment.unused_accounts_lambda ? 1 : 0
   bucket = "use-a-lpa-dynamodb-exports-${local.environment.account_name}"
 }
 
-resource "aws_iam_role_policy" "duplicate_accounts" {
-  count  = local.environment.duplicate_accounts_lambda ? 1 : 0
-  name   = "duplicate_accounts-${local.environment_name}"
-  role   = module.duplicate_accounts[0].lambda_role.id
-  policy = data.aws_iam_policy_document.duplicate_accounts_bucket_policy[0].json
+resource "aws_iam_role_policy" "unused_accounts" {
+  count  = local.environment.unused_accounts_lambda ? 1 : 0
+  name   = "unused_accounts-${local.environment_name}"
+  role   = module.unused_accounts[0].lambda_role.id
+  policy = data.aws_iam_policy_document.unused_accounts_bucket_policy[0].json
 }
 
-data "aws_iam_policy_document" "duplicate_accounts_bucket_policy" {
-  count = local.environment.duplicate_accounts_lambda ? 1 : 0
+data "aws_iam_policy_document" "unused_accounts_bucket_policy" {
+  count = local.environment.unused_accounts_lambda ? 1 : 0
   statement {
     sid    = "S3Bucket"
     effect = "Allow"

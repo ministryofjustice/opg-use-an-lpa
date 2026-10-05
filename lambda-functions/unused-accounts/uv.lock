@@ -180,7 +180,7 @@ wheels = [
 ]
 
 [[package]]
-name = "duplicate-accounts"
+name = "unused-accounts"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
