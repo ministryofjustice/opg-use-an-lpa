@@ -498,7 +498,7 @@ class LpaContext implements Context
     #[Then('/^I am told that my input is invalid because (.*)$/')]
     public function iAmToldThatMyInputIsInvalidBecause($reason): void
     {
-        $this->assertPageContainsTranslatedText($reason);
+        $this->assertPageContainsTranslatedText($reason, context: 'error');
     }
 
     #[When('/^I attempt to add the same LPA again$/')]
