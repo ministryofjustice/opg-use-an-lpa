@@ -16,20 +16,12 @@ class DynamoDBExporterAndQuerier:
 
     def __init__(self, environment):
         self.tables = {
-            "Stats": None,
-            "ActorCodes": None,
             "ActorUsers": None,
-            "ViewerCodes": None,
-            "ViewerActivity": None,
             "UserLpaActorMap": None,
         }
 
         self.table_ddl_files = {
-            "tables/stats.ddl": "Stats",
-            "tables/actor_codes.ddl": "ActorCodes",
             "tables/actor_users.ddl": "ActorUsers",
-            "tables/viewer_codes.ddl": "ViewerCodes",
-            "tables/viewer_activity.ddl": "ViewerActivity",
             "tables/user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
@@ -281,70 +273,12 @@ class DynamoDBExporterAndQuerier:
                 print(outputRow)
                 wr.writerow(csvRow)
 
-    def get_expired_viewed_access_codes(self):
-        sql_string = f'SELECT distinct va.item.viewerCode.s as ViewedCode, va.item.viewedby.s as Organisation, vc.item.SiriusUid.s as "LPA Reference Number" FROM "ual"."viewer_activity" as va, "ual"."viewer_codes" as vc WHERE va.item.viewerCode = vc.item.viewerCode AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER by Organisation;'
-        self.run_athena_query(sql_string, outputFileName="ExpiredViewedAccessCodes")
-
-    def get_expired_unviewed_access_codes(self):
-        sql_string = f'SELECT vc.item.viewerCode.s as ViewerCode, vc.item.organisation.s as Organisation, vc.item.SiriusUid.s as "LPA Reference Number" FROM "ual"."viewer_codes" as vc WHERE vc.item.viewerCode.s not in (SELECT va.item.viewerCode.s FROM "ual"."viewer_activity" as va) AND date_add(\'day\', -30, vc.item.expires.s) BETWEEN date(\'{self.start_date}\') AND date(\'{self.end_date}\') ORDER BY vc.item.viewerCode.s'
-        self.run_athena_query(sql_string, outputFileName="ExpiredUnviewedAccessCodes")
-
-    def get_count_of_viewed_access_codes(self):
-        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_activity\" WHERE Item.Viewed.S BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountofViewedAccessCodes",
-        )
-
-    def get_count_of_created_access_codes(self):
-        sql_string = f"SELECT COUNT(*) FROM \"ual\".\"viewer_codes\" WHERE Item.Added.S BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountofCreatedAccessCodes",
-        )
-
-    def get_count_of_expired_access_codes(self):
-        sql_string = f"SELECT COUNT(*) FROM \"viewer_codes\" as vc WHERE date_add('day', -30, vc.item.expires.s) BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountofExpiredAccessCodes",
-        )
-
-    def get_organisations_field(self):
-        sql_string = f"SELECT a.Item.ViewerCode.S as viewercode, a.Item.Organisation.S as organisation, b.Item.ViewedBy.S as viewedby, a.Item.Added.S as dateadded from viewer_codes a left join viewer_activity b on a.Item.ViewerCode.S = b.Item.ViewerCode.S where date_add('day', -30, a.Item.Added.s) BETWEEN date('{self.start_date}') AND date('{self.end_date}');"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="OrganisationsField",
-        )
-
-    def get_count_of_lpas_for_users(self):
-        sql_string = f"SELECT countofLpasForUser as noOfLpas, count(countofLpasForUser) AS noOfUsersWithThisNoOfLpas from (SELECT count(item.userid.s) AS countofLpasForUser, item.userid.s from user_lpa_actor_map group by item.userid.s) as subquery group by countofLpasForUser order by countofLpasForUser"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountOfLpasForUsersWithSomeLpas",
-        )
-
-    def get_count_of_users_with_no_lpas(self):
-        sql_string = f"SELECT COUNT(item.id.s) from actor_users where item.id.s not in (select item.userid.s from user_lpa_actor_map where item.userid is not null)"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountOfUsersWithNoLpas",
-        )
-
     def get_unused_accounts(self):
-        sql_string = f"SELECT a.item.id.s as UserId, a.item.email.s as Email, a.item.lastLogin.s as LastLogin FROM actor_users a WHERE a.item.id.s NOT IN (SELECT item.userid.s FROM user_lpa_actor_map WHERE item.userid IS NOT NULL) AND date_parse(a.item.lastLogin.s, '%Y-%m-%dT%H:%i:%sZ') < date_add('month', -6, current_timestamp) ORDER BY a.item.lastLogin.s"
+        sql_string = f"SELECT a.Item.Id.S as UserId, a.Item.Email.S as Email, a.Item.LastLogin.S as LastLogin FROM actor_users a WHERE a.Item.Id.S NOT IN (SELECT b.Item.UserId.S FROM user_lpa_actor_map b WHERE b.Item.UserId.S IS NOT NULL) AND a.Item.LastLogin.S IS NOT NULL AND a.Item.LastLogin.S < date_add('month', -6, current_date) ORDER BY a.Item.LastLogin.S"
         self.run_athena_query(
             sql_string,
             outputFileName="UnusedAccounts",
         )
-
-    def get_count_of_duplicate_accounts(self):
-        sql_string = f"SELECT COUNT(a.Item.id.S) as Count_Of_Duplicate_Accounts FROM actor_users a LEFT JOIN user_lpa_actor_map b ON a.Item.id.S = b.Item.UserId.S WHERE a.Item.email.S IN (SELECT Item.email.S FROM actor_users GROUP BY Item.email.S HAVING COUNT(*) > 1)"
-        self.run_athena_query(
-            sql_string,
-            outputFileName="CountOfDuplicateAccounts",
-        )
-
 
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
@@ -405,16 +339,7 @@ def main():
         work.check_dynamo_export_status()
         work.create_athena_tables()
 
-    work.get_expired_viewed_access_codes()
-    work.get_expired_unviewed_access_codes()
-    work.get_count_of_viewed_access_codes()
-    work.get_count_of_created_access_codes()
-    work.get_count_of_expired_access_codes()
-    work.get_organisations_field()
-    work.get_count_of_lpas_for_users()
-    work.get_count_of_users_with_no_lpas()
     work.get_unused_accounts()
-    work.get_count_of_duplicate_accounts()
 
 
 if __name__ == "__main__":
