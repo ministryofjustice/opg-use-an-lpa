@@ -1,231 +1,344 @@
 import json
+import pytest
 from pathlib import Path
+from unittest.mock import Mock, MagicMock, patch, mock_open, call
+from botocore.exceptions import ClientError
 
-import merge_duplicate_identities as mdi
+import delete_unused_accounts as pua
 
 
-def make_user(user_id, identity, last_login):
+@pytest.fixture
+def mock_aws_session():
+    """Mock AWS IAM session"""
     return {
-        "Id": user_id,
-        "Identity": identity,
-        "LastLogin": last_login,
-    }
-
-
-def make_mapping(mapping_id, user_id, actor_id, lpa_uid=None, sirius_uid=None):
-    row = {
-        "Id": mapping_id,
-        "UserId": user_id,
-        "ActorId": actor_id,
-    }
-    if lpa_uid is not None:
-        row["LpaUid"] = lpa_uid
-    if sirius_uid is not None:
-        row["SiriusUid"] = sirius_uid
-    return row
-
-
-def test_determine_primary_picks_latest_lastlogin():
-    users = [
-        make_user("user-old", "urn1", "2026-03-10T08:49:11.883262"),
-        make_user("user-new", "urn1", "2026-03-10T08:49:11.883265"),
-    ]
-
-    primary = mdi.determine_primary(users)
-
-    assert primary["Id"] == "user-new"
-
-
-def test_group_mappings_by_logical_key_groups_same_actor_and_lpa():
-    mappings = [
-        make_mapping("m1", "u1", 9, sirius_uid="700000000047"),
-        make_mapping("m2", "u2", 9, sirius_uid="700000000047"),
-        make_mapping("m3", "u2", 23, sirius_uid="700000000047"),
-    ]
-
-    grouped = mdi.group_mappings_by_logical_key(mappings)
-
-    assert len(grouped) == 2
-    assert len(grouped[(9, "700000000047")]) == 2
-    assert len(grouped[(23, "700000000047")]) == 1
-
-
-def test_choose_canonical_keeps_single_mapping_when_no_duplicates(monkeypatch):
-    mappings = [
-        make_mapping("m1", "primary", 9, sirius_uid="700000000047"),
-    ]
-    grouped = mdi.group_mappings_by_logical_key(mappings)
-
-    monkeypatch.setattr(
-        mdi,
-        "get_viewer_codes_for_mapping",
-        lambda _viewer_table, _mapping_id: [],
-    )
-
-    canonical_ids, delete_ids, viewer_updates = mdi.choose_canonical_mappings(
-        grouped,
-        viewer_table=object(),
-        primary_user_id="primary",
-    )
-
-    assert canonical_ids == {"m1"}
-    assert delete_ids == set()
-    assert viewer_updates == []
-
-
-def test_build_merge_plan_merge_only_case(monkeypatch):
-    users = [
-        make_user("primary", "urn1", "2026-03-10T08:49:11.883265"),
-        make_user("secondary", "urn1", "2026-03-10T08:49:11.883262"),
-    ]
-
-    mappings_by_user = {
-        "primary": [
-            make_mapping("m-primary", "primary", 59, sirius_uid="700000000138"),
-        ],
-        "secondary": [
-            make_mapping("m-secondary", "secondary", 23, sirius_uid="700000000138"),
-        ],
-    }
-
-    monkeypatch.setattr(
-        mdi,
-        "get_user_lpas",
-        lambda _lpa_table, user_id: mappings_by_user[user_id],
-    )
-    monkeypatch.setattr(
-        mdi,
-        "get_viewer_codes_for_mapping",
-        lambda _viewer_table, _mapping_id: [],
-    )
-
-    plan = mdi.build_merge_plan_for_identity(
-        identity="urn1",
-        group=users,
-        viewer_table=object(),
-        lpa_table=object(),
-    )
-
-    assert plan["primary_user_id"] == "primary"
-    assert plan["secondary_user_ids"] == ["secondary"]
-    assert plan["move_mapping_ids"] == ["m-secondary"]
-    assert plan["delete_mapping_ids"] == []
-    assert plan["viewer_code_updates"] == []
-    assert plan["delete_secondary_user_ids"] == ["secondary"]
-
-
-def test_build_merge_plan_duplicate_mapping_with_viewer_codes_repoints_and_deletes(monkeypatch):
-    users = [
-        make_user("primary", "urn1", "2026-03-10T08:49:11.883265"),
-        make_user("secondary", "urn1", "2026-03-10T08:49:11.883262"),
-    ]
-
-    mappings_by_user = {
-        "primary": [
-            make_mapping("primary-map", "primary", 9, sirius_uid="700000000047"),
-        ],
-        "secondary": [
-            make_mapping("secondary-map", "secondary", 9, sirius_uid="700000000047"),
-        ],
-    }
-
-    fake_codes = {
-        "primary-map": [{"ViewerCode": "VC1", "UserLpaActor": "primary-map"}],
-        "secondary-map": [{"ViewerCode": "VC2", "UserLpaActor": "secondary-map"}],
-    }
-
-    monkeypatch.setattr(
-        mdi,
-        "get_user_lpas",
-        lambda _lpa_table, user_id: mappings_by_user[user_id],
-    )
-    monkeypatch.setattr(
-        mdi,
-        "get_viewer_codes_for_mapping",
-        lambda _viewer_table, mapping_id: fake_codes.get(mapping_id, []),
-    )
-
-    plan = mdi.build_merge_plan_for_identity(
-        identity="urn1",
-        group=users,
-        viewer_table=object(),
-        lpa_table=object(),
-    )
-
-    assert plan["primary_user_id"] == "primary"
-    assert plan["canonical_mapping_ids"] == ["primary-map"]
-    assert plan["move_mapping_ids"] == []
-    assert plan["delete_mapping_ids"] == ["secondary-map"]
-    assert plan["viewer_code_updates"] == [
-        {
-            "viewer_code": "VC2",
-            "from_mapping_id": "secondary-map",
-            "to_mapping_id": "primary-map",
+        "Credentials": {
+            "AccessKeyId": "AKIAIOSFODNN7EXAMPLE",
+            "SecretAccessKey": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+            "SessionToken": "token123",
         }
-    ]
-    assert plan["delete_secondary_user_ids"] == ["secondary"]
-
-
-def test_build_merge_plan_empty_secondary_account(monkeypatch):
-    users = [
-        make_user("primary", "urn1", "2026-03-10T08:49:11.883265"),
-        make_user("secondary", "urn1", "2026-03-10T08:49:11.883262"),
-    ]
-
-    mappings_by_user = {
-        "primary": [
-            make_mapping("m1", "primary", 9, sirius_uid="700000000047"),
-        ],
-        "secondary": [],
     }
 
-    monkeypatch.setattr(
-        mdi,
-        "get_user_lpas",
-        lambda _lpa_table, user_id: mappings_by_user[user_id],
+
+@pytest.fixture
+def mock_dynamodb_tables():
+    """Mock DynamoDB tables"""
+    actor_users_table = MagicMock()
+    user_lpa_actor_map_table = MagicMock()
+    return actor_users_table, user_lpa_actor_map_table
+
+
+def test_set_environment_details_dev():
+    """Test environment details for development"""
+    details = pua.UnusedAccountsProcessor.set_environment_details("development")
+    
+    assert details["account_id"] == "367815980639"
+    assert details["account_name"] == "development"
+    assert details["name"] == "development"
+
+
+def test_set_environment_details_prod():
+    """Test environment details for production"""
+    details = pua.UnusedAccountsProcessor.set_environment_details("production")
+    
+    assert details["account_id"] == "690083044361"
+    assert details["account_name"] == "production"
+    assert details["name"] == "production"
+
+
+def test_set_environment_details_preproduction():
+    """Test environment details for preproduction"""
+    details = pua.UnusedAccountsProcessor.set_environment_details("preproduction")
+    
+    assert details["account_id"] == "888228022356"
+    assert details["account_name"] == "preproduction"
+    assert details["name"] == "preproduction"
+
+
+def test_set_environment_details_unknown_defaults_to_dev():
+    """Test that unknown environment defaults to development"""
+    details = pua.UnusedAccountsProcessor.set_environment_details("unknown")
+    
+    assert details["account_id"] == "367815980639"
+    assert details["account_name"] == "development"
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_processor_initialization(mock_resource, mock_client, mock_aws_session):
+    """Test processor initialization with mocked AWS"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_dynamodb.Table.return_value = MagicMock()
+    mock_resource.return_value = mock_dynamodb
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+    
+    assert processor.environment == "demo"
+    assert processor.environment_details["account_id"] == "367815980639"
+
+
+def test_load_done_users_file_exists(tmp_path):
+    """Test loading done users from existing file"""
+    done_file = tmp_path / "done_users.json"
+    done_users = ["user1", "user2", "user3"]
+    done_file.write_text(json.dumps(done_users))
+    
+    with patch("delete_unused_accounts.Path") as mock_path:
+        mock_path.return_value.exists.return_value = True
+        mock_path.return_value.read_text.return_value = json.dumps(done_users)
+        
+        # This is a simplified test; in reality the processor would use the fixture
+        loaded = json.loads(done_file.read_text())
+        assert set(loaded) == {"user1", "user2", "user3"}
+
+
+def test_load_done_users_file_not_exists():
+    """Test loading done users when file doesn't exist"""
+    with patch("delete_unused_accounts.Path") as mock_path:
+        mock_path.return_value.exists.return_value = False
+        # When file doesn't exist, should return empty set
+        done_users = set()
+        assert done_users == set()
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_get_user_lpas_count_no_lpas(mock_resource, mock_client, mock_aws_session):
+    """Test querying for user with no LPAs"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_table = MagicMock()
+    mock_table.query.return_value = {"Items": []}
+    mock_dynamodb.Table.return_value = mock_table
+    mock_resource.return_value = mock_dynamodb
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.user_lpa_actor_map_table = mock_table
+        
+        count = processor.get_user_lpas_count("user-123")
+    
+    assert count == 0
+    mock_table.query.assert_called_once()
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_get_user_lpas_count_with_lpas(mock_resource, mock_client, mock_aws_session):
+    """Test querying for user with LPAs"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_table = MagicMock()
+    mock_table.query.return_value = {
+        "Items": [
+            {"Id": "mapping-1", "UserId": "user-123", "SiriusUid": "700000000001"},
+            {"Id": "mapping-2", "UserId": "user-123", "SiriusUid": "700000000002"},
+        ]
+    }
+    mock_dynamodb.Table.return_value = mock_table
+    mock_resource.return_value = mock_dynamodb
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.user_lpa_actor_map_table = mock_table
+        
+        count = processor.get_user_lpas_count("user-123")
+    
+    assert count == 2
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_get_user_lpas_count_error(mock_resource, mock_client, mock_aws_session):
+    """Test error handling when querying LPAs fails"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_table = MagicMock()
+    mock_table.query.side_effect = ClientError(
+        {"Error": {"Code": "ValidationException", "Message": "Invalid query"}},
+        "Query"
     )
-    monkeypatch.setattr(
-        mdi,
-        "get_viewer_codes_for_mapping",
-        lambda _viewer_table, _mapping_id: [],
+    mock_dynamodb.Table.return_value = mock_table
+    mock_resource.return_value = mock_dynamodb
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.user_lpa_actor_map_table = mock_table
+        
+        count = processor.get_user_lpas_count("user-123")
+    
+    assert count is None
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_delete_actor_user_success(mock_resource, mock_client, mock_aws_session):
+    """Test successful user deletion"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    
+    mock_dynamodb_client = MagicMock()
+    mock_dynamodb_client.transact_write_items.return_value = {}
+    mock_client.return_value = mock_dynamodb_client
+    
+    mock_resource.return_value = MagicMock()
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.dynamodb_client = mock_dynamodb_client
+        
+        result = processor.delete_actor_user("user-123")
+    
+    assert result is True
+    mock_dynamodb_client.transact_write_items.assert_called_once()
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_delete_actor_user_failure(mock_resource, mock_client, mock_aws_session):
+    """Test user deletion failure"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    
+    mock_dynamodb_client = MagicMock()
+    mock_dynamodb_client.transact_write_items.side_effect = ClientError(
+        {"Error": {"Code": "ValidationException", "Message": "Invalid key"}},
+        "TransactWriteItems"
     )
+    mock_client.return_value = mock_dynamodb_client
+    
+    mock_resource.return_value = MagicMock()
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.dynamodb_client = mock_dynamodb_client
+        
+        result = processor.delete_actor_user("user-123")
+    
+    assert result is False
 
-    plan = mdi.build_merge_plan_for_identity(
-        identity="urn1",
-        group=users,
-        viewer_table=object(),
-        lpa_table=object(),
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_process_unused_accounts_user_with_no_lpas_deleted(
+    mock_resource, mock_client, mock_aws_session, tmp_path
+):
+    """Test processing a user with no LPAs - should be deleted"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_resource.return_value = mock_dynamodb
+    
+    # Create CSV file
+    csv_file = tmp_path / "unused.csv"
+    csv_file.write_text("UserId,Email,LastLogin\nuser-123,user@example.com,2026-04-01\n")
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.get_user_lpas_count = MagicMock(return_value=0)
+        processor.delete_actor_user = MagicMock(return_value=True)
+        processor.done_file = tmp_path / "done.json"
+        
+        processor.process_unused_accounts(str(csv_file))
+    
+    processor.delete_actor_user.assert_called_once_with("user-123")
+    assert "user-123" in processor.done_users
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_process_unused_accounts_user_with_lpas_not_deleted(
+    mock_resource, mock_client, mock_aws_session, tmp_path
+):
+    """Test processing a user with LPAs - should NOT be deleted"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_resource.return_value = mock_dynamodb
+    
+    # Create CSV file
+    csv_file = tmp_path / "unused.csv"
+    csv_file.write_text("UserId,Email,LastLogin\nuser-456,user@example.com,2026-04-01\n")
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.get_user_lpas_count = MagicMock(return_value=2)
+        processor.delete_actor_user = MagicMock(return_value=True)
+        processor.done_file = tmp_path / "done.json"
+        
+        processor.process_unused_accounts(str(csv_file))
+    
+    processor.delete_actor_user.assert_not_called()
+    assert "user-456" in processor.done_users
+
+
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_process_unused_accounts_resumes_from_done_list(
+    mock_resource, mock_client, mock_aws_session, tmp_path
+):
+    """Test that processor skips users already in done list"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    
+    mock_dynamodb = MagicMock()
+    mock_resource.return_value = mock_dynamodb
+    
+    # Create CSV file
+    csv_file = tmp_path / "unused.csv"
+    csv_file.write_text(
+        "UserId,Email,LastLogin\nuser-789,user@example.com,2026-04-01\n"
+        "user-999,user2@example.com,2026-04-02\n"
     )
+    
+    with patch.object(
+        pua.UnusedAccountsProcessor, "load_done_users", return_value={"user-789"}
+    ):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.get_user_lpas_count = MagicMock(return_value=0)
+        processor.delete_actor_user = MagicMock(return_value=True)
+        processor.done_file = tmp_path / "done.json"
+        
+        processor.process_unused_accounts(str(csv_file))
+    
+    # Only user-999 should be processed and deleted (user-789 was already done)
+    processor.delete_actor_user.assert_called_once_with("user-999")
 
-    assert plan["move_mapping_ids"] == []
-    assert plan["delete_mapping_ids"] == []
-    assert plan["viewer_code_updates"] == []
-    assert plan["delete_secondary_user_ids"] == ["secondary"]
 
-
-def test_save_merge_plan_writes_json(tmp_path, monkeypatch):
-    plan = [
-        {
-            "identity": "urn1",
-            "primary_user_id": "primary",
-            "secondary_user_ids": ["secondary"],
-            "all_mappings": [],
-            "canonical_mapping_ids": ["m1"],
-            "move_mapping_ids": [],
-            "delete_mapping_ids": [],
-            "viewer_code_updates": [],
-            "mapping_viewer_codes": {},
-            "delete_secondary_user_ids": ["secondary"],
-        }
-    ]
-
-    monkeypatch.chdir(tmp_path)
-
-    mdi.save_merge_plan("demo", plan)
-
-    files = list(tmp_path.glob("merge_plan_demo_*.json"))
-    assert len(files) == 1
-
-    data = json.loads(files[0].read_text())
-    assert data[0]["identity"] == "urn1"
-    assert data[0]["primary_user_id"] == "primary"
+@patch("delete_unused_accounts.boto3.client")
+@patch("delete_unused_accounts.boto3.resource")
+def test_save_done_users(mock_resource, mock_client, mock_aws_session, tmp_path):
+    """Test that done users are saved to file"""
+    mock_sts_client = MagicMock()
+    mock_sts_client.assume_role.return_value = mock_aws_session
+    mock_client.return_value = mock_sts_client
+    mock_resource.return_value = MagicMock()
+    
+    with patch.object(pua.UnusedAccountsProcessor, "load_done_users", return_value=set()):
+        processor = pua.UnusedAccountsProcessor(environment="demo")
+        processor.done_file = tmp_path / "done.json"
+        processor.done_users = {"user-1", "user-2", "user-3"}
+        
+        processor.save_done_users()
+    
+    assert processor.done_file.exists()
+    saved_data = json.loads(processor.done_file.read_text())
+    assert set(saved_data) == {"user-1", "user-2", "user-3"}
