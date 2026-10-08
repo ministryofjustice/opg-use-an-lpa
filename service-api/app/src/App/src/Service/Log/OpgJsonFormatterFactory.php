@@ -6,7 +6,6 @@ namespace App\Service\Log;
 
 use Blazon\PSR11MonoLog\FactoryInterface;
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\IgnoreClassForCodeCoverage;
 
 /**
  * @codeCoverageIgnore
