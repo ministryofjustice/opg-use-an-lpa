@@ -63,7 +63,7 @@ services:
       localstack:
         condition: service_healthy
 
-  duplicate-accounts-lambda:
+  unused-accounts-lambda:
     depends_on:
       localstack:
         condition: service_healthy

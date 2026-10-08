@@ -51,6 +51,10 @@ FROM php-base AS app
 COPY service-front/app /app
 COPY --from=dependency /app/vendor /app/vendor
 
+# weblates does not currently put out compatible *.mo files.
+RUN msgfmt -o languages/cy/LC_MESSAGES/messages.mo languages/cy/LC_MESSAGES/messages.po && \
+    msgfmt -o languages/en_GB/LC_MESSAGES/messages.mo languages/en_GB/LC_MESSAGES/messages.po
+
 #
 # Install development dependencies and tools into production image
 #

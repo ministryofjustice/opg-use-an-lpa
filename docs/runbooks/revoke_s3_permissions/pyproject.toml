@@ -1,16 +1,9 @@
 [project]
-name = "duplicate-accounts"
+name = "revoke-s3-permissions"
 version = "0.1.0"
 requires-python = "==3.14.6"
 dependencies = [
-    "awslambdaric==3.1.1",
     "boto3==1.43.64",
 ]
-
-[dependency-groups]
-test = [
-    "moto==5.2.2",
-]
-
 [tool.uv]
 package = false
