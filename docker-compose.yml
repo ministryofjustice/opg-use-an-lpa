@@ -66,6 +66,7 @@ services:
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       SUPPORT_DATASTORE_LPAS: "true"
       PAPER_VERIFICATION: "true"
+      # OTEL_TRACES_EXPORTER: console # OpenTelemetry - uncomment to output traces locally
     depends_on:
       - api-web
 
@@ -124,6 +125,7 @@ services:
       SESSION_EXPIRY_WARNING: 5 # session expiry warning time to trigger popup window.
       COOKIE_EXPIRES: 1440 # cookie expiry for complete logout - initial value to be 24 hours.
       NOTIFY_API_KEY:
+      # OTEL_TRACES_EXPORTER: console # OpenTelemetry - uncomment to output traces locally
     depends_on:
       - api-web
 
@@ -145,9 +147,9 @@ services:
       - composer-auth
     entrypoint: >
       /bin/sh -c "
-        ln -sf /run/secrets/composer-auth auth.json \
-        /usr/bin/composer $${@}
-      "
+        COMPOSER_AUTH=$(cat /run/secrets/composer-auth)
+        exec /usr/bin/composer \"$$@\"
+      " --
     command:
       - install
       - --prefer-dist
@@ -216,6 +218,7 @@ services:
       XDEBUG_MODE: develop,debug,coverage # off # xdebug can be disable by replacing modes with "off"
       XDEBUG_TRIGGER: "true"
       NOTIFY_API_KEY:
+      # OTEL_TRACES_EXPORTER: console # OpenTelemetry - uncomment to output traces locally
 
   api-composer:
     profiles:
@@ -232,9 +235,9 @@ services:
       - composer-auth
     entrypoint: >
       /bin/sh -c "
-        ln -sf /run/secrets/composer-auth auth.json \
-        /usr/bin/composer $${@}
-      "
+        COMPOSER_AUTH=$(cat /run/secrets/composer-auth)
+        exec /usr/bin/composer \"$$@\"
+      " --
     command:
       - install
       - --prefer-dist
@@ -278,12 +281,12 @@ services:
     entrypoint: [ "/aws-lambda/aws-lambda-rie", "python", "-m", "awslambdaric" ]
     command: [ "upload_statistics.lambda_handler" ]
 
-  duplicate-accounts-lambda:
+  unused-accounts-lambda:
     build:
-      context: ./lambda-functions/duplicate-accounts
+      context: ./lambda-functions/unused-accounts
       dockerfile: Dockerfile
     environment:
-      BUCKET: duplicate-accounts-bucket
+      BUCKET: unused-accounts-bucket
       REGION: eu-west-1
       AWS_ACCESS_KEY_ID: 'devkey'
       AWS_SECRET_ACCESS_KEY: 'secretdevkey'
@@ -305,7 +308,7 @@ services:
     command: []
 
   proxy:
-    image: traefik:3.0@sha256:a208c74fd80a566d4ea376053bff73d31616d7af3f1465a7747b8b89ee34d97e
+    image: traefik:v3.6@sha256:31267173a15b4944e797a76ffd9c419707c8d8b32fe5b610f80cd0cfa05f372d
     ports:
       - "9001:9001"
       - "9041:9041"
@@ -320,7 +323,7 @@ services:
       - viewer-web
 
   golang:
-    image: golang:1.25.11-alpine@sha256:c05ba4b73604069d376c4f41346b05374335b5ca0c46fb6dfede5a59f5196931
+    image: golang:1.27.0-alpine@sha256:4c9fe60190a2a3350ddc51de80d0224b8a6698d12bdfc999fee45ea9d6c46dbc
 
 secrets:
   composer-auth:

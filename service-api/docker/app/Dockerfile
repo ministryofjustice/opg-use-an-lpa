@@ -1,7 +1,7 @@
 #
 # Base image containing correct PHP, extensions and configuration
 #
-FROM docker.io/composer/composer:2.10-bin@sha256:ae894813776e18b7ae0fa8f9f2a63bf1aa624e287cd4c23a6d64f56fe999d8f9 AS composer
+FROM docker.io/composer/composer:2.10-bin@sha256:536116acd18cd2d99d0351c1dfded22c83f34cef481d83f2747ff2cbca7587cd AS composer
 
 FROM docker.io/mlocati/php-extension-installer:2.11@sha256:b6d3fa381b9ba5cf051117c1c601d6a523b590e534bf3d56eb4fbe352949c138 AS php-extension-installer
 
@@ -9,11 +9,20 @@ FROM docker.io/php:8.4-fpm-alpine3.22@sha256:e0f1ffe8bd43a137facdccdcac41cabdfc2
 
 ENV OPG_PHP_POOL_CHILDREN_MAX="25"
 
+# OpenTelemetry defaults. Tracing is instrumented (see Telemetry\Tracer) but not exported unless
+# OTEL_TRACES_EXPORTER is overridden at runtime, e.g. "otlp" when the collector sidecar is deployed.
+ENV OTEL_PHP_AUTOLOAD_ENABLED=true \
+    OTEL_SERVICE_NAME=api.use-an-lpa \
+    OTEL_TRACES_EXPORTER=none \
+    OTEL_METRICS_EXPORTER=none \
+    OTEL_LOGS_EXPORTER=none \
+    OTEL_PROPAGATORS=tracecontext,xray
+
 COPY --from=php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
 RUN set -xe \
   && apk add --update --no-cache fcgi=2.4.6-r0 \
-  && install-php-extensions apcu gmp opcache \
+  && install-php-extensions apcu gmp opcache opentelemetry \
   && rm /usr/bin/install-php-extensions
 
 COPY service-api/docker/app/app-php.ini /usr/local/etc/php/conf.d/

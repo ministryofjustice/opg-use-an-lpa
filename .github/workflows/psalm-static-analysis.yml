@@ -38,7 +38,7 @@ jobs:
         run: |
           mkdir -m 0777 ./output
           docker run --rm --volume ./output:/tmp/output $IMAGE:latest \
-          vendor/bin/psalm --output-format=github --long-progress --report=/tmp/output/results.sarif $COMMAND_EXTRA
+          vendor/bin/psalm --disable-extension=opentelemetry --output-format=github --long-progress --report=/tmp/output/results.sarif $COMMAND_EXTRA
         env:
           COMMAND_EXTRA: ${{ matrix.command.command_extra }}
 

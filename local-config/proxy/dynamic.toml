@@ -7,7 +7,7 @@ replacement="https://www.gov.uk/view-lasting-power-of-attorney"
 
 [http.middlewares.actor-gov-redirect.redirectRegex]
 regex="^https://[^/]+/$$"
-replacement="https://www.gov.uk/use-lasting-power-of-attorney"
+replacement="https://www.gov.uk/manage-lasting-power-attorney/use-lasting-power-of-attorney"
 
 [http.middlewares.viewer-web-https.redirectScheme]
 scheme="https"
@@ -47,8 +47,8 @@ service="actor-web"
 [http.services]
 [http.services.actor-web.loadBalancer]
 [[http.services.actor-web.loadBalancer.servers]]
-url="http://actor-web"
+url="http://actor-web:8080"
 
 [http.services.viewer-web.loadBalancer]
 [[http.services.viewer-web.loadBalancer.servers]]
-url="http://viewer-web"
+url="http://viewer-web:8080"

@@ -11,22 +11,22 @@ terraform {
   }
 }
 
+variable "default_role" {
+  default     = "opg-use-an-lpa-ci-boundary"
+  type        = string
+  description = "The default role to assume"
+}
+
 variable "backup_role" {
-  default     = "opg-use-an-lpa-ci"
+  default     = "opg-use-an-lpa-ci-boundary"
   type        = string
   description = "The role to assume for the backup AWS provider"
 }
 
 variable "management_role" {
-  default     = "opg-use-an-lpa-ci"
-  type        = string
-  description = "The role to assume for the management AWS provider"
-}
-
-variable "default_role" {
   default     = "opg-use-an-lpa-ci-boundary"
   type        = string
-  description = "The default role to assume"
+  description = "The role to assume for the management AWS provider"
 }
 
 provider "aws" {

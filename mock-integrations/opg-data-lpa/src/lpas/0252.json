@@ -1,0 +1,114 @@
+{
+    "applicationHasGuidance": true,
+    "applicationHasRestrictions": false,
+    "applicationType": "Classic",
+    "attorneyActDecisions": null,
+    "attorneys": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "29 Wressle Road",
+                    "addressLine2": "PLUSH",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 45,
+                    "postcode": "DT2 2SH",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": "",
+            "dob": "1975-10-05",
+            "email": "TainaRucker@opgtest.com",
+            "firstname": "Taina",
+            "id": 45,
+            "middlenames": "",
+            "otherNames": "",
+            "salutation": "Mr",
+            "surname": "Rucker",
+            "systemStatus": true,
+            "uId": "7000-0000-1235"
+        }
+    ],
+    "cancellationDate": "2020-02-03",
+    "caseAttorneyJointly": false,
+    "caseAttorneyJointlyAndJointlyAndSeverally": false,
+    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneySingular": false,
+    "caseSubtype": "pfa",
+    "certificateProviders": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "65 Moulton Road",
+                    "addressLine2": "GUY'S MARSH",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 47,
+                    "postcode": "SP7 1RD",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "dob": null,
+            "email": null,
+            "firstname": "Desire",
+            "id": 47,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": "Miss",
+            "surname": "Beasley",
+            "uId": "7000-0000-1250"
+        }
+    ],
+    "dispatchDate": null,
+    "donor": {
+        "addresses": [
+            {
+                "addressLine1": "26 Traill Street",
+                "addressLine2": "ROSE GREEN",
+                "addressLine3": "",
+                "country": "",
+                "county": "",
+                "id": 43,
+                "postcode": "CO6 2XT",
+                "town": "",
+                "type": "Primary"
+            }
+        ],
+        "companyName": null,
+        "dob": "1948-11-01",
+        "email": "orethalang@opgtest.com",
+        "firstname": "Babara",
+        "id": 43,
+        "linked": [
+            {
+                "id": 43,
+                "uId": "7000-0000-1219"
+            }
+        ],
+        "middlenames": "Suzanne",
+        "otherNames": "",
+        "salutation": "",
+        "surname": "Gilson",
+        "uId": "7000-0000-1219"
+    },
+    "hasSeveranceWarning": false,
+    "id": 9,
+    "invalidDate": null,
+    "lifeSustainingTreatment": "Option B",
+    "lpaDonorSignatureDate": "2019-10-05",
+    "lpaIsCleansed": false,
+    "onlineLpaId": "A48218451245",
+    "receiptDate": "2014-09-26",
+    "registrationDate": null,
+    "rejectedDate": null,
+    "replacementAttorneys": [],
+    "status": "Cancelled",
+    "statusDate": null,
+    "trustCorporations": [],
+    "uId": "7000-0000-0252",
+    "withdrawnDate": null
+}

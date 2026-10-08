@@ -43,6 +43,10 @@ variable "environments" {
           minimum = number
           maximum = number
         })
+        admin = object({
+          minimum = number
+          maximum = number
+        })
       })
       cookie_expires_use                               = number
       cookie_expires_view                              = number
@@ -83,7 +87,7 @@ variable "environments" {
       associate_alb_with_waf_web_acl_enabled           = bool
       deploy_opentelemetry_sidecar                     = bool
       fargate_spot                                     = bool
-      duplicate_accounts_lambda                        = bool
+      unused_accounts_lambda                           = bool
       application_flags = object({
         allow_meris_lpas       = bool
         support_datastore_lpas = bool

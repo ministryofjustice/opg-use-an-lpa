@@ -1,6 +1,8 @@
 NOTIFY ?= @export NOTIFY_API_KEY=$(shell aws-vault exec ual-dev -- aws secretsmanager get-secret-value --secret-id notify-api-key | jq -r .'SecretString')
 ECR_LOGIN ?= @aws-vault exec management -- aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 311462405659.dkr.ecr.eu-west-1.amazonaws.com
 SM_PATH := mock-integrations/secrets-manager/
+PO_FILES := $(wildcard service-front/app/languages/*/LC_MESSAGES/messages.po)
+MO_FILES := $(PO_FILES:.po=.mo)
 
 COMPOSE_V2 = $(shell docker compose &> /dev/null; echo $$?)
 ifeq ($(COMPOSE_V2),0)
@@ -16,7 +18,7 @@ COMPOSE := $(COMPOSE) -f docker-compose.override.yml
 TEST_COMPOSE := $(TEST_COMPOSE) -f docker-compose.override.yml
 endif
 
-up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem
+up: $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem $(MO_FILES)
 	@echo "Logging into ECR..."
 	$(ECR_LOGIN)
 	@echo "Getting Notify API Key..."
@@ -55,9 +57,11 @@ rebuild:
 
 reset:
 	rm -R service-front/app/vendor service-api/app/vendor tests/smoke/vendor || true
+	rm $(MO_FILES) || true
 	$(MAKE) rebuild
 	$(MAKE) pull
 	$(MAKE) composer_install
+	$(MAKE) compile_translations
 .PHONY: reset
 
 down:
@@ -124,25 +128,25 @@ development_mode: enable_development_mode clear_config_cache
 .PHONY: development_mode
 
 composer_install:
-	$(COMPOSE) run --rm front-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-	$(COMPOSE) run --rm api-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm front-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) run --rm api-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer install --prefer-dist --no-interaction --no-scripts --optimize-autoloader
 .PHONY: composer_install
 
 run_front_composer:
-	$(COMPOSE) run --rm front-composer -- $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm front-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_front_composer
 
 run_api_composer:
-	$(COMPOSE) run --rm api-composer -- $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) run --rm api-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_api_composer
 
 run_smoke_composer:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- $(filter-out $@,$(MAKECMDGOALS))
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer $(filter-out $@,$(MAKECMDGOALS))
 .PHONY: run_smoke_composer
 
 run_front_composer_update:
-	$(COMPOSE) run --rm front-composer -- update
+	$(COMPOSE) run --rm front-composer update
 .PHONY: run_front_composer_update
 
 run_front_npm_update:
@@ -150,11 +154,11 @@ run_front_npm_update:
 .PHONY: run_front_npm_update
 
 run_api_composer_update:
-	$(COMPOSE) run --rm api-composer -- update
+	$(COMPOSE) run --rm api-composer update
 .PHONY: run_api_composer_update
 
 run_smoke_composer_update:
-	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer -- update
+	$(COMPOSE) -f tests/smoke/docker-compose.smoke.yml run --rm smoke-tests-composer update
 .PHONY: run_smoke_composer_update
 
 run_update: run_front_composer_update run_front_npm_update run_api_composer_update run_smoke_composer_update
@@ -172,6 +176,12 @@ clear_config_cache:
 	$(COMPOSE) exec actor-app rm -f /tmp/config-cache.php
 	$(COMPOSE) exec api-app rm -f /tmp/config-cache.php
 .PHONY: clear_config_cache
+
+compile_translations: $(MO_FILES)
+.PHONY: compile_translations
+
+$(MO_FILES): %.mo: %.po
+	@msgfmt -o "$@" "$<"
 
 $(SM_PATH)private_key.pem $(SM_PATH)public_key.pem:
 	@openssl genpkey -algorithm RSA -out $(SM_PATH)private_key.pem -pkeyopt rsa_keygen_bits:2048

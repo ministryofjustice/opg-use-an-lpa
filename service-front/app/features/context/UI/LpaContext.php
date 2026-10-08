@@ -147,7 +147,7 @@ class LpaContext implements Context
     public function iAmTakenToTheChangeLPADetailsPage(): void
     {
         $this->ui->assertPageAddress('/lpa/change-lpa-details');
-        $this->ui->assertPageContainsText('Let us know if something is incorrect on the LPA');
+        $this->assertPageContainsTranslatedText('Let us know if something is incorrect on the LPA');
     }
 
     #[Then('I am taken to the remove an LPA confirmation page for :status lpa')]
@@ -279,7 +279,7 @@ class LpaContext implements Context
     public function iAmGivenAUniqueAccessCode(): void
     {
         $this->ui->assertPageAddress('/lpa/code-make');
-        $this->ui->assertPageContainsText('XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageContainsText('Give this access code to ' . $this->organisation);
     }
 
@@ -500,7 +500,7 @@ class LpaContext implements Context
     #[Then('/^I am told that my input is invalid because (.*)$/')]
     public function iAmToldThatMyInputIsInvalidBecause($reason): void
     {
-        $this->ui->assertPageContainsText($reason);
+        $this->assertPageContainsTranslatedText($reason, context: 'error');
     }
 
     #[When('/^I attempt to add the same LPA again$/')]
@@ -572,7 +572,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
-            'V - XYZ3 - 21AB - C987'
+            'V-XYZ3-21AB-C987'
         );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
@@ -586,13 +586,13 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText($activeTitle);
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
-            'V - XYZ3 - 21AB - C987'
+            'V-XYZ3-21AB-C987'
         );
 
         $this->ui->assertPageContainsText($inactiveTitle);
         $this->ui->assertElementContainsText(
             '#accordion-default-content-2 dl.govuk-summary-list',
-            'V - ABC3 - 21AB - CXYZ'
+            'V-ABC3-21AB-CXYZ'
         );
     }
 
@@ -785,7 +785,7 @@ class LpaContext implements Context
     public function iCanSeeTheCodeHasNotBeenUsedToViewTheLPA(): void
     {
         $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('Not viewed');
     }
@@ -841,7 +841,7 @@ class LpaContext implements Context
     public function iCanSeeTheNameOfTheOrganisationThatViewedTheLPA(): void
     {
         $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageContainsText('LPA Viewed');
         $this->ui->assertPageContainsText('TestOrg');
     }
@@ -1726,7 +1726,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
-            'V - XYZ3 - 21AB - C987'
+            'V-XYZ3-21AB-C987'
         );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-1 dl.govuk-summary-list',
@@ -1734,7 +1734,7 @@ class LpaContext implements Context
         );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-2 dl.govuk-summary-list',
-            'V - ANOT - HER4 - 3125'
+            'V-ANOT-HER4-3125'
         );
         $this->ui->assertElementContainsText(
             '#accordion-default-content-2 dl.govuk-summary-list',
@@ -1790,7 +1790,7 @@ class LpaContext implements Context
     #[When('/^I have not provided required information for creating access code such as (.*)$/')]
     public function iHaveNotProvidedRequiredInformationForCreatingAccessCodeSuchAs($organisationname): void
     {
-        $this->ui->assertPageContainsText('Which organisation do you want to give access to?');
+        $this->assertPageContainsTranslatedText('Which organisation do you want to give access to?');
 
         // API call for get LpaById (when give organisation access is clicked)
         $this->apiFixtures->append(
@@ -2662,7 +2662,7 @@ class LpaContext implements Context
 
         $this->ui->clickLink('Give an organisation access');
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
-        $this->ui->assertPageContainsText('Which organisation do you want to give access to');
+        $this->assertPageContainsTranslatedText('Which organisation do you want to give access to?');
     }
 
     #[Then('/^I should be shown the details of the cancelled viewer code with cancelled status/')]
@@ -2673,7 +2673,7 @@ class LpaContext implements Context
         $this->ui->assertPageContainsText('Check Access Codes');
         $this->ui->assertPageContainsText('Active codes');
         $this->ui->assertPageContainsText('Inactive codes');
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageContainsText('Cancelled');
     }
 
@@ -2693,7 +2693,7 @@ class LpaContext implements Context
             $codeDetails[] = $codeItem->find('css', 'dd')->getText();
         }
 
-        Assert::assertEquals($codeDetails[0], 'V - XYZ3 - 21AB - C987');
+        Assert::assertEquals($codeDetails[0], 'V-XYZ3-21AB-C987');
         Assert::assertEquals($codeDetails[1], 'Ian Deputy');
         Assert::assertEquals($codeDetails[2], 'Not viewed');
         if ($status === 'CANCELLED') {
@@ -2714,7 +2714,7 @@ class LpaContext implements Context
     {
         $this->ui->assertPageContainsText('Check Access Codes');
         $this->ui->assertPageContainsText('Active codes');
-        $this->ui->assertPageContainsText('V - XYZ3 - 21AB - C987');
+        $this->ui->assertPageContainsText('V-XYZ3-21AB-C987');
         $this->ui->assertPageNotContainsText('Cancelled');
     }
 
@@ -2766,7 +2766,7 @@ class LpaContext implements Context
     public function iShouldSeeRelevantOfOrganisations($orgDescription): void
     {
         $this->ui->assertPageAddress('lpa/code-make?lpa=' . $this->userLpaActorToken);
-        $this->ui->assertPageContainsText($orgDescription);
+        $this->assertPageContainsTranslatedText($orgDescription);
     }
 
     #[Then('/^I want to be asked for confirmation prior to cancellation/')]

@@ -34,6 +34,8 @@ pre-commit install
 Configure a [fine grained Github access token](https://github.com/settings/personal-access-tokens) and replace
 the placeholder in the `auth.json` file with it. It *only* needs public access permissions and is purely an
 exercise in allowing better rate limits than unauthenticated Github access allows.
+If you fail to do this step you will get an error that it cannot authenticate against github
+If you make a token that lacks an expiry date a similar error will occur
 
 ### Makefile
 
@@ -50,6 +52,7 @@ To start the service and its dependencies
 ```shell
 make up # start ual and all dependencies then run seeding of local data
 ```
+Note that the very first time you do make up, it may be necessary to first do : mkdir -p mock-integrations/secrets-manager otherwise it will try to write to that dir and be unable to
 
 To stop the service and its dependencies (ordering is important so that the networks are removed last)
 

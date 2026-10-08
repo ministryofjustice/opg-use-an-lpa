@@ -1,0 +1,12 @@
+<?php
+
+// Psalm stub for the function provided by ext-opentelemetry
+// (https://github.com/open-telemetry/opentelemetry-php-instrumentation)
+
+namespace OpenTelemetry\Instrumentation;
+
+use Closure;
+
+function hook(?string $class, string $function, ?Closure $pre = null, ?Closure $post = null): bool
+{
+}

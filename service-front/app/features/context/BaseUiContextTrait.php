@@ -97,9 +97,10 @@ trait BaseUiContextTrait
     public function assertPageContainsTranslatedText(
         string $text,
         array $replacements = [],
+        ?string $context = null,
         ?int $count = null,
     ): void {
-        $tt = $this->base->translator->translate($text, $replacements, count: $count);
+        $tt = $this->base->translator->translate($text, $replacements, context: $context, count: $count);
 
         $this->ui->assertSession()->pageTextContains($tt);
     }

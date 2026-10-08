@@ -1,0 +1,85 @@
+module "unused_accounts" {
+  count       = local.environment.unused_accounts_lambda ? 1 : 0
+  source      = "./modules/lambda"
+  lambda_name = "unused-accounts"
+  environment_variables = {
+    BUCKET           = data.aws_s3_bucket.ual_athena_query_results[0].id,
+    ENVIRONMENT_NAME = local.environment_name
+    WORK_FILE_PREFIX = "todo"
+    PLAN_FILE_PREFIX = "plan"
+  }
+  image_uri        = "${data.aws_ecr_repository.unused_accounts.repository_url}@${data.aws_ecr_image.unused_accounts.image_digest}"
+  ecr_arn          = data.aws_ecr_repository.unused_accounts.arn
+  environment      = local.environment_name
+  kms_key          = data.aws_kms_alias.cloudwatch_encryption.target_key_arn
+  default_boundary = data.aws_iam_policy.default_boundary.arn
+  timeout          = 900
+  memory           = 1024
+}
+
+data "aws_s3_bucket" "ual_athena_query_results" {
+  count  = local.environment.unused_accounts_lambda ? 1 : 0
+  bucket = "use-a-lpa-dynamodb-exports-${local.environment.account_name}"
+}
+
+resource "aws_iam_role_policy" "unused_accounts" {
+  count  = local.environment.unused_accounts_lambda ? 1 : 0
+  name   = "unused_accounts-${local.environment_name}"
+  role   = module.unused_accounts[0].lambda_role.id
+  policy = data.aws_iam_policy_document.unused_accounts_bucket_policy[0].json
+}
+
+data "aws_iam_policy_document" "unused_accounts_bucket_policy" {
+  count = local.environment.unused_accounts_lambda ? 1 : 0
+  statement {
+    sid    = "S3Bucket"
+    effect = "Allow"
+    resources = [
+      data.aws_s3_bucket.ual_athena_query_results[0].arn,
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/plan/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/todo/*",
+      "${data.aws_s3_bucket.ual_athena_query_results[0].arn}/done/*",
+    ]
+    actions = [
+      "s3:ListBucket",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+  }
+
+  statement {
+    sid    = "DynamoTable"
+    effect = "Allow"
+    resources = [
+      aws_dynamodb_table.user_lpa_actor_map.arn,
+      "${aws_dynamodb_table.user_lpa_actor_map.arn}/index/UserIndex",
+      aws_dynamodb_table.viewer_codes_table.arn,
+      "${aws_dynamodb_table.viewer_codes_table.arn}/index/SiriusUidIndex",
+      aws_dynamodb_table.use_users_table.arn,
+    ]
+    actions = [
+      "dynamodb:GetItem",
+      "dynamodb:Query",
+      "dynamodb:UpdateItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:TransactWriteItems",
+    ]
+  }
+
+  statement {
+    sid    = "DynamoKMSAccess"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+      "kms:DescribeKey",
+    ]
+    resources = [
+      data.aws_kms_alias.dynamodb_exports.target_key_arn,
+      data.aws_kms_alias.dynamodb_cmk.target_key_arn,
+    ]
+  }
+}

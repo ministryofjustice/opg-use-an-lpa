@@ -1,0 +1,114 @@
+{
+    "applicationHasGuidance": false,
+    "applicationHasRestrictions": false,
+    "applicationType": "Classic",
+    "attorneyActDecisions": null,
+    "attorneys": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "13 Union Terrace",
+                    "addressLine2": "LOGIE PERT",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 78,
+                    "postcode": "DD10 4TB",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1975-10-05",
+            "email": "AndreaRobinson@opgtest.com",
+            "firstname": "Andrea",
+            "id": 78,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": "Mrs",
+            "surname": "Robinson",
+            "systemStatus": true,
+            "uId": "7000-0000-1599"
+        }
+    ],
+    "cancellationDate": null,
+    "caseAttorneyJointly": false,
+    "caseAttorneyJointlyAndJointlyAndSeverally": false,
+    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneySingular": false,
+    "caseSubtype": "pfa",
+    "certificateProviders": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "81 Front Street",
+                    "addressLine2": "LACEBY",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 80,
+                    "postcode": "DN37 5SH",
+                    "town": "",
+                    "type": "Primary"
+                }
+            ],
+            "dob": null,
+            "email": null,
+            "firstname": "Rachel",
+            "id": 80,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": "Mrs",
+            "surname": "Sanderson",
+            "uId": "7000-0000-1615"
+        }
+    ],
+    "dispatchDate": "2022-02-17",
+    "donor": {
+        "addresses": [
+            {
+                "addressLine1": "16 Wade Lane",
+                "addressLine2": "SALTWICK",
+                "addressLine3": "",
+                "country": "",
+                "county": "",
+                "id": 76,
+                "postcode": "NE20 3PN",
+                "town": "",
+                "type": "Primary"
+            }
+        ],
+        "companyName": null,
+        "dob": "1948-11-01",
+        "email": "demtriceflood@opgtest.com",
+        "firstname": "Demetrice",
+        "id": 76,
+        "linked": [
+            {
+                "id": 76,
+                "uId": "7000-0000-1573"
+            }
+        ],
+        "middlenames": "Ophelia",
+        "otherNames": "",
+        "salutation": "Mrs",
+        "surname": "Flood",
+        "uId": "7000-0000-1573"
+    },
+    "hasSeveranceWarning": false,
+    "id": 15,
+    "invalidDate": null,
+    "lifeSustainingTreatment": null,
+    "lpaDonorSignatureDate": "2019-10-02",
+    "lpaIsCleansed": false,
+    "onlineLpaId": "A26997335988",
+    "receiptDate": "2014-09-26",
+    "registrationDate": "2022-01-17",
+    "rejectedDate": null,
+    "replacementAttorneys": [],
+    "status": "Registered",
+    "statusDate": "2022-01-17",
+    "trustCorporations": [],
+    "uId": "7000-0000-0435",
+    "withdrawnDate": null
+}

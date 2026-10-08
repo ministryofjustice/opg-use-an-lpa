@@ -3,7 +3,7 @@ const config = {
   reporters: ['default', 'jest-junit'],
   resetMocks: true,
   transform: {
-    '\\.[jt]sx?$': 'babel-jest',
+    '^.+\\.(t|j)sx?$': '@swc/jest',
   },
   testMatch: ['**/?(*.)+(test).js'],
   collectCoverageFrom: ['src/**/*.js', '!**/node_modules/**', '!**/vendor/**'],

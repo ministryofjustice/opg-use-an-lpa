@@ -11,7 +11,7 @@ locals {
   pdf_desired_count           = local.is_active_region ? var.autoscaling.pdf.minimum : 0
   view_desired_count          = local.is_active_region ? var.autoscaling.view.minimum : 0
   api_desired_count           = local.is_active_region ? var.autoscaling.api.minimum : 0
-  admin_desired_count         = local.is_active_region ? 1 : 0
+  admin_desired_count         = local.is_active_region ? var.autoscaling.admin.minimum : 0
   mock_onelogin_desired_count = var.environment_name != "production" && var.mock_onelogin_enabled && local.is_active_region ? 1 : 0
 
   queue_visibility_timeout = 900

@@ -14,25 +14,25 @@ terraform {
 
 }
 
-variable "backup_role" {
-  type    = string
-  default = "opg-use-an-lpa-ci"
-}
-
-variable "identity_role" {
-  type    = string
-  default = "opg-use-an-lpa-ci"
-}
-
-variable "management_role" {
-  type    = string
-  default = "opg-use-an-lpa-ci"
-}
-
 variable "default_role" {
   default     = "opg-use-an-lpa-ci-boundary"
   type        = string
   description = "The default role to assume"
+}
+
+variable "backup_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
+}
+
+variable "identity_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
+}
+
+variable "management_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
 }
 
 provider "aws" {

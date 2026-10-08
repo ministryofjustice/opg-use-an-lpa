@@ -1,0 +1,167 @@
+{
+    "applicationHasGuidance": true,
+    "applicationHasRestrictions": true,
+    "applicationType": "Online",
+    "attorneyActDecisions": null,
+    "attorneys": [
+        {
+            "addresses": [
+                {
+                    "addressLine1": "1 test road",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 3214,
+                    "postcode": "b1 1tf",
+                    "town": "birmingham",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1986-09-01",
+            "email": null,
+            "firstname": "bill",
+            "id": 3492,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": null,
+            "surname": "horton",
+            "systemStatus": true,
+            "uId": "7000-0015-2236"
+        },
+        {
+            "addresses": [
+                {
+                    "addressLine1": "1 test street",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 3215,
+                    "postcode": "b1 1tf",
+                    "town": "birmingham",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1982-07-05",
+            "email": null,
+            "firstname": "Julie",
+            "id": 3493,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": null,
+            "surname": "Doe",
+            "systemStatus": true,
+            "uId": "7000-0015-2269"
+        },
+        {
+            "addresses": [
+                {
+                    "addressLine1": "1 test road",
+                    "addressLine2": "",
+                    "addressLine3": "",
+                    "country": "",
+                    "county": "",
+                    "id": 3216,
+                    "postcode": "b25 8dx",
+                    "town": "birmingham",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "1985-09-01",
+            "email": null,
+            "firstname": "sarah",
+            "id": 3494,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": null,
+            "surname": "lewis",
+            "systemStatus": true,
+            "uId": "7000-0015-2293"
+        },
+        {
+            "addresses": [
+                {
+                    "addressLine1": "White Gates",
+                    "addressLine2": "The Street",
+                    "addressLine3": "East Preston",
+                    "country": "",
+                    "county": "West Sussex",
+                    "id": 3340,
+                    "postcode": "BN16 1HZ",
+                    "town": "Littlehampton",
+                    "type": "Primary"
+                }
+            ],
+            "companyName": null,
+            "dob": "2000-12-12",
+            "email": "cris@crisreynolds.com",
+            "firstname": "jane",
+            "id": 3620,
+            "middlenames": null,
+            "otherNames": null,
+            "salutation": null,
+            "surname": "doe",
+            "systemStatus": true,
+            "uId": "7000-0015-8084"
+        }
+    ],
+    "cancellationDate": "2020-07-02",
+    "caseAttorneyJointly": false,
+    "caseAttorneyJointlyAndJointlyAndSeverally": false,
+    "caseAttorneyJointlyAndSeverally": true,
+    "caseAttorneySingular": false,
+    "caseSubtype": "pfa",
+    "certificateProviders": [],
+    "dispatchDate": "2021-03-18",
+    "donor": {
+        "addresses": [
+            {
+                "addressLine1": "",
+                "addressLine2": "",
+                "addressLine3": "",
+                "country": "",
+                "county": "",
+                "id": 2829,
+                "postcode": "",
+                "town": "",
+                "type": "Primary"
+            }
+        ],
+        "companyName": null,
+        "dob": "1990-07-01",
+        "email": "",
+        "firstname": "Status",
+        "id": 3044,
+        "linked": [
+            {
+                "id": 3044,
+                "uId": "7000-0013-7112"
+            }
+        ],
+        "middlenames": "",
+        "otherNames": "",
+        "salutation": "Mr",
+        "surname": "Test",
+        "uId": "7000-0013-7112"
+    },
+    "hasSeveranceWarning": false,
+    "id": 1740,
+    "invalidDate": null,
+    "lifeSustainingTreatment": null,
+    "lpaDonorSignatureDate": null,
+    "lpaIsCleansed": false,
+    "onlineLpaId": null,
+    "receiptDate": null,
+    "registrationDate": "2020-07-02",
+    "rejectedDate": null,
+    "replacementAttorneys": [],
+    "status": "Registered",
+    "statusDate": null,
+    "trustCorporations": [],
+    "uId": "7000-0013-7237",
+    "withdrawnDate": null
+}
