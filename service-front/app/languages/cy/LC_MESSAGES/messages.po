@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-02 13:47+0000\n"
+"PO-Revision-Date: 2026-10-08 14:54+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cy\n"
@@ -51,7 +51,7 @@ msgstr "Nid ydych yn atwrnai ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:21
 msgid "Why is this?"
-msgstr "Beth yw’r rheswm dros hyn?"
+msgstr "Pam?"
 
 #: src/Actor/templates/actor/partials/lpa-details.html.twig:30
 msgid "cancelled"
@@ -184,7 +184,7 @@ msgstr "Statws"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:94
 msgid "CANCELLED"
-msgstr "DILËWYD"
+msgstr "WEDI’I GANSLO"
 
 #: src/Actor/templates/actor/partials/check-code-details.html.twig:101
 msgid "EXPIRED"
@@ -911,7 +911,7 @@ msgstr "Efallai y byddwch chi'n ei chael hi'n haws rheoli eich cyfrif trwy gael 
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:82
 msgid "It doesn’t matter which LPA you remove but it would be more accurate to keep those that show as added by you, especially when creating access codes for organisations."
-msgstr "Does dim ots pa LPA rydych chi’n ei ddileu ond gallai fod yn fwy cywir cadw’r rhai sy’n dangos eu bod wedi cael eu hychwanegu gennych chi, yn enwedig wrth greu codau mynediad ar gyfer sefydliadau."
+msgstr "Does dim ots pa LPA rydych chi’n ei dileu ond gallai fod yn fwy cywir cadw’r rhai sy’n dangos eu bod wedi cael eu hychwanegu gennych chi, yn enwedig wrth greu codau mynediad ar gyfer sefydliadau."
 
 #: src/Actor/templates/actor/lpa-dashboard.html.twig:83
 msgid "Removing duplicate LPAs is optional."
