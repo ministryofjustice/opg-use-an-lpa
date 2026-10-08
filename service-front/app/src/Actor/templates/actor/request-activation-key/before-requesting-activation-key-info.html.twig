@@ -49,7 +49,8 @@
                     <div class="moj-button-menu">
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
-                           data-module="govuk-button">
+                           data-module="govuk-button"
+                           id="continue-button">
                             {% trans %}common.button-continue{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"

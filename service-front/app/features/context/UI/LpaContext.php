@@ -1042,6 +1042,12 @@ class LpaContext implements Context
         $this->ui->clickLink('Continue');
     }
 
+    #[When('/^I click the Continue button on the activation key information page$/')]
+    public function iClickTheContinueButtonOnTheActivationKeyInformationPage(): void
+    {
+        $this->ui->getSession()->getPage()->find('css', '#continue-button')->click();
+    }
+
     #[When('/^I click the (.*) link in the instructions or preference message$/')]
     public function iClickTheReadMoreLinkInTheInstructionsOrPreferenceMessage($readMoreLink): void
     {
