@@ -6,7 +6,7 @@
     <div class="govuk-width-container">
         <div role="navigation" aria-labelledby="back-link-navigation">
             <a href="{{ path('lpa.add') }}" class="govuk-back-link"
-               id="back-link-navigation">{% trans %}activation-key-request.start.back-link{% endtrans %}</a>
+               id="back-link-navigation">{% trans %}common.back-link{% endtrans %}</a>
         </div>
 
         <main class="govuk-main-wrapper" id="main-content" role="main">
@@ -50,12 +50,12 @@
                         <a href="{{ path('lpa.add-by-paper', {}, {'startAgain': 'true'}) }}" role="button"
                            draggable="false" class="govuk-button moj-button-menu__item  "
                            data-module="govuk-button">
-                            {% trans %}activation-key-request.start.button-continue{% endtrans %}
+                            {% trans %}common.button-continue{% endtrans %}
                         </a>
                         <a href="{{ path('lpa.dashboard') }}" role="button" draggable="false"
                            class="govuk-button moj-button-menu__item govuk-button--secondary "
                            data-module="govuk-button">
-                            {% trans %}activation-key-request.start.button-cancel{% endtrans %}
+                            {% trans %}common.button-cancel{% endtrans %}
                         </a>
                     </div>
                 </div>
