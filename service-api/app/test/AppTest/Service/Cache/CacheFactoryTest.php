@@ -6,7 +6,6 @@ namespace AppTest\Service\Cache;
 
 use App\ConfigProvider as AppConfigProvider;
 use App\Service\Cache\CacheFactory;
-use App\Service\Cache\Symfony\ConfigProvider;
 use Elie\PHPDI\Config\Config;
 use Elie\PHPDI\Config\ContainerFactory;
 use Laminas\ServiceManager\ServiceManager;
@@ -77,7 +76,7 @@ final class CacheFactoryTest extends TestCase
             self::markTestSkipped('APCu is not enabled for this runtime');
         }
 
-        $config                               = (new ConfigProvider())();
+        $config                               = (new AppConfigProvider())();
         $environment                          = require __DIR__ . '/../../../../config/autoload/envs.global.php';
         $config                               = array_replace_recursive($config, $environment);
         $config['symfony_cache']['namespace'] = 'migration-test-' . bin2hex(random_bytes(8));
