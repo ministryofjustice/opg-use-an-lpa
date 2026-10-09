@@ -84,7 +84,7 @@ If neither of the above help, you might face more serious issues:
 
 ## Application Development Mode Tool
 
-This skeleton comes with [laminas-development-mode](https://github.com/laminas/laminas-development-mode). 
+This skeleton comes with [laminas-development-mode](https://github.com/laminas/laminas-development-mode).
 It provides a composer script to allow you to enable and disable development mode.
 
 ### To enable development mode
@@ -95,8 +95,8 @@ It provides a composer script to allow you to enable and disable development mod
 $ composer development-enable
 ```
 
-**Note:** Enabling development mode will also clear your configuration cache, to 
-allow safely updating dependencies and ensuring any new configuration is picked 
+**Note:** Enabling development mode will also clear your configuration cache, to
+allow safely updating dependencies and ensuring any new configuration is picked
 up by your application.
 
 ### To disable development mode
@@ -112,6 +112,93 @@ $ composer development-status
 ```
 
 ## Configuration caching
+
+### Opt-in Symfony application cache
+
+`App\Service\Cache\Symfony\ConfigProvider` supplies standalone, lazy cache
+factories compatible with Laminas ServiceManager (and PSR-11 containers using
+the same factory configuration). It is deliberately **not registered** in
+`config/config.php`; existing Laminas cache configuration and consumers are unchanged.
+
+The bootstrap follows [FrameworkBundle's cache services](https://github.com/symfony/symfony/blob/6.4/src/Symfony/Bundle/FrameworkBundle/Resources/config/cache.php):
+
+| Service | Default |
+| --- | --- |
+| `cache.request` | Request-local array pool, shared by the PSR-6 and Symfony Cache contract aliases |
+| `cache.request.taggable` | Tag-aware wrapper around `cache.request`, aliased to the tag-aware contract |
+| `cache.app` | Long-lived APCu application pool, explicitly selected by service name |
+| `cache.app.taggable` | Tag-aware wrapper around the long-lived application pool |
+
+Symfony Cache 6.4 LTS is used because the existing Laminas fork requires
+`psr/cache` v2. Symfony Cache 7.4 requires v3; upgrading that belongs to the
+eventual migration. No PSR-16 alias is registered.
+
+For an isolated bootstrap, without changing the application:
+
+```php
+$config = (new \App\Service\Cache\Symfony\ConfigProvider())();
+$container = new \Laminas\ServiceManager\ServiceManager(
+    $config['dependencies'] + ['services' => ['config' => $config]]
+);
+$cache = $container->get(\Symfony\Contracts\Cache\CacheInterface::class); // cache.request
+$appCache = $container->get('cache.app');
+```
+
+For later opt-in use, add the provider to the config aggregator **before** the
+autoloaded configuration, then override its separate `symfony_cache` section:
+
+```php
+return [
+    'symfony_cache' => [
+        'namespace' => 'use-an-lpa-api-production',
+        'version' => 'release-id',
+        'pools' => [
+            'cache.app' => [
+                'adapter' => 'apcu',
+                'default_lifetime' => 300,
+            ],
+            'cache.example' => [
+                'adapter' => 'array',
+                'default_lifetime' => 60,
+            ],
+        ],
+    ],
+    'dependencies' => [
+        'factories' => [
+            'cache.example' => \App\Service\Cache\Symfony\PoolFactory::class,
+        ],
+    ],
+];
+```
+
+Supported adapters are `array` (the default request cache, serialized and
+instance-local) and `apcu` (the application cache).
+Additional pools require both a pool configuration and a factory
+registration. Lifetimes are non-negative integer seconds; zero means no default
+expiry. A stable namespace seed and the requested service name determine each
+APCu pool's isolated storage namespace. Set a distinct seed per application/environment.
+`version` is a non-empty string (default `1`) which invalidates APCu data when
+changed. Array pools keep their data in their own instances; namespace/version
+settings do not affect their storage. APCu selection fails if APCu is unavailable
+(enable `apc.enable_cli` for CLI usage); there is no automatic fallback.
+No filesystem directory or custom marshaller configuration is needed.
+
+Both default pools have a lifetime of zero. The request pool lasts only as long
+as its container-owned instance; in the usual request-scoped PHP lifecycle its
+data disappears after the request. Long-running workers reusing a container must
+reset the request pool and its tag-aware wrapper between requests (no lifecycle
+hook is installed here). The application pool persists across requests on the
+same APCu instance, without a default TTL, but can still be evicted, cleared,
+invalidated by version changes, or lost when APCu restarts. It is not durable or
+shared across application hosts. Items can specify their own expiry.
+
+If `Psr\Log\LoggerInterface` is registered, factories inject it into the adapters.
+Invalid configuration and invalid logger services raise exceptions.
+This is component bootstrap only: FrameworkBundle's compiler passes, framework
+pools, warmer/clearer commands, Messenger integration and lifecycle reset hooks
+are not installed. Pools expose their own `clear()`/`reset()` operations.
+
+### Container configuration cache
 
 By default, the skeleton will create a configuration cache in
 `data/config-cache.php`. When in development mode, the configuration cache is
