@@ -9,7 +9,7 @@ use Facile\OpenIDClient\Client\ClientInterface as OpenIDClient;
 use Facile\OpenIDClient\Service\AuthorizationService;
 use Facile\OpenIDClient\Session\AuthSession;
 use Facile\OpenIDClient\Token\TokenSetInterface;
-use Laminas\Cache\Psr\SimpleCache\SimpleCacheException;
+use Psr\SimpleCache\CacheException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use RuntimeException;
@@ -119,7 +119,7 @@ class AuthorisationService
      * Ensures each instance of this class only builds a single client instance. In practice this should amount to
      * once per request.
      *
-     * @throws SimpleCacheException
+     * @throws CacheException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws RuntimeException

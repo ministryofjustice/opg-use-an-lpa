@@ -10,6 +10,8 @@ use Facile;
 use GuzzleHttp;
 use Laminas;
 use Psr;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 /**
  * The configuration provider for the App module
@@ -40,6 +42,11 @@ class ConfigProvider
     {
         return [
             'aliases'    => [
+                // PSR6/16
+                Psr\Cache\CacheItemPoolInterface::class                                => 'cache.request',
+                CacheInterface::class                                                  => 'cache.request',
+                TagAwareCacheInterface::class                                          => 'cache.request.taggable',
+
                 // PSR20
                 Psr\Clock\ClockInterface::class                                        => Service\InternalClock::class,
 
@@ -78,6 +85,16 @@ class ConfigProvider
                 Service\Secrets\LpaDataStoreSecretManager::class,
             ],
             'factories'  => [
+                // Cache
+                Psr\SimpleCache\CacheInterface::class                         => Service\Cache\Symfony\SimpleCacheFactory::class,
+                'cache.request'                                               => Service\Cache\Symfony\PoolFactory::class,
+                'cache.request.taggable'                                      => Service\Cache\Symfony\TagAwareFactory::class,
+                'cache.app'                                                   => Service\Cache\Symfony\PoolFactory::class,
+                'cache.app.taggable'                                          => Service\Cache\Symfony\TagAwareFactory::class,
+                'cache.one-login'                                             => Service\Cache\Symfony\PoolFactory::class,
+                'cache.system-message'                                        => Service\Cache\Symfony\PoolFactory::class,
+                'cache.lpa-data-store'                                        => Service\Cache\Symfony\PoolFactory::class,
+
                 // PSR18
                 Psr\Http\Client\ClientInterface::class                        => Service\ApiClient\ClientFactory::class,
 
@@ -121,9 +138,6 @@ class ConfigProvider
             'delegators' => [
                 Laminas\Stratigility\Middleware\ErrorHandler::class   => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
-                ],
-                Laminas\Cache\Storage\AdapterPluginManager::class     => [
-                    Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
                 ],
                 Service\Secrets\LpaDataStoreSecretManager::class      => [
                     Service\Secrets\CachedSecretManagerDelegatorFactory::class,

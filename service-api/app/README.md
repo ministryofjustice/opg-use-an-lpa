@@ -84,7 +84,7 @@ If neither of the above help, you might face more serious issues:
 
 ## Application Development Mode Tool
 
-This skeleton comes with [laminas-development-mode](https://github.com/laminas/laminas-development-mode). 
+This skeleton comes with [laminas-development-mode](https://github.com/laminas/laminas-development-mode).
 It provides a composer script to allow you to enable and disable development mode.
 
 ### To enable development mode
@@ -95,8 +95,8 @@ It provides a composer script to allow you to enable and disable development mod
 $ composer development-enable
 ```
 
-**Note:** Enabling development mode will also clear your configuration cache, to 
-allow safely updating dependencies and ensuring any new configuration is picked 
+**Note:** Enabling development mode will also clear your configuration cache, to
+allow safely updating dependencies and ensuring any new configuration is picked
 up by your application.
 
 ### To disable development mode
