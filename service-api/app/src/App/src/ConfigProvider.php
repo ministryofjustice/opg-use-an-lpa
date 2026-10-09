@@ -63,8 +63,8 @@ class ConfigProvider
                 DataAccess\Repository\ViewerCodeActivityInterface::class               => DataAccess\DynamoDb\ViewerCodeActivity::class,
                 DataAccess\Repository\ViewerCodesInterface::class                      => DataAccess\DynamoDb\ViewerCodes::class,
                 DataAccess\Repository\UserLpaActorMapInterface::class                  => DataAccess\DynamoDb\UserLpaActorMap::class,
-                DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\CachedSiriusLpas::class,
-                DataAccess\Repository\AuditableLpasInterface::class                    => DataAccess\ApiGateway\CachedDataStoreLpas::class,
+                DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\SiriusLpas::class,
+                DataAccess\Repository\AuditableLpasInterface::class                    => DataAccess\ApiGateway\DataStoreLpas::class,
                 DataAccess\Repository\RequestLetterInterface::class                    => DataAccess\ApiGateway\SiriusLpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
                 DataAccess\Repository\PaperVerificationCodesInterface::class           => DataAccess\ApiGateway\PaperVerificationCodes::class,
@@ -147,6 +147,12 @@ class ConfigProvider
                 ],
                 Service\SystemMessage\SystemMessage::class            => [
                     Service\SystemMessage\CachedSystemMessageDelegatorFactory::class,
+                ],
+                DataAccess\ApiGateway\SiriusLpas::class               => [
+                    DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory::class,
+                ],
+                DataAccess\ApiGateway\DataStoreLpas::class            => [
+                    DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory::class,
                 ],
             ],
         ];
