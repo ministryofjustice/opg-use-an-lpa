@@ -9,8 +9,10 @@ use App\DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\CachedSiriusLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\DataStoreLpas;
 use App\DataAccess\ApiGateway\SiriusLpas;
+use App\DataAccess\ApiGateway\SiriusLpasFactory;
 use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\LpasInterface;
+use App\DataAccess\Repository\RequestLetterInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -27,6 +29,11 @@ final class ConfigProviderTest extends TestCase
         self::assertSame(
             DataStoreLpas::class,
             $dependencies['aliases'][AuditableLpasInterface::class],
+        );
+        self::assertArrayNotHasKey(RequestLetterInterface::class, $dependencies['aliases']);
+        self::assertSame(
+            SiriusLpasFactory::class,
+            $dependencies['factories'][RequestLetterInterface::class],
         );
         self::assertContains(
             CachedSiriusLpasDelegatorFactory::class,

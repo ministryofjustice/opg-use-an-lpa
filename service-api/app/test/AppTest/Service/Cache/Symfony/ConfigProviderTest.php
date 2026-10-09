@@ -64,6 +64,10 @@ final class ConfigProviderTest extends TestCase
         self::assertInstanceOf(SimpleCacheInterface::class, $simpleCache);
         self::assertTrue($simpleCache->set('shared', 'request'));
         self::assertSame('request', $request->getItem('shared')->get());
+
+        $requestValue = static fn (): null => null;
+        self::assertTrue($simpleCache->set('request-value', $requestValue));
+        self::assertSame($requestValue, $simpleCache->get('request-value'));
     }
 
     #[Test]

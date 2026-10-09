@@ -65,7 +65,6 @@ class ConfigProvider
                 DataAccess\Repository\UserLpaActorMapInterface::class                  => DataAccess\DynamoDb\UserLpaActorMap::class,
                 DataAccess\Repository\LpasInterface::class                             => DataAccess\ApiGateway\SiriusLpas::class,
                 DataAccess\Repository\AuditableLpasInterface::class                    => DataAccess\ApiGateway\DataStoreLpas::class,
-                DataAccess\Repository\RequestLetterInterface::class                    => DataAccess\ApiGateway\SiriusLpas::class,
                 DataAccess\Repository\InstructionsAndPreferencesImagesInterface::class => DataAccess\ApiGateway\InstructionsAndPreferencesImages::class,
                 DataAccess\Repository\PaperVerificationCodesInterface::class           => DataAccess\ApiGateway\PaperVerificationCodes::class,
 
@@ -115,6 +114,7 @@ class ConfigProvider
                 DataAccess\DynamoDb\ViewerCodes::class                        => DataAccess\DynamoDb\ViewerCodesFactory::class,
                 DataAccess\DynamoDb\UserLpaActorMap::class                    => DataAccess\DynamoDb\UserLpaActorMapFactory::class,
                 DataAccess\ApiGateway\SiriusLpas::class                       => DataAccess\ApiGateway\SiriusLpasFactory::class,
+                DataAccess\Repository\RequestLetterInterface::class           => DataAccess\ApiGateway\SiriusLpasFactory::class,
                 DataAccess\ApiGateway\DataStoreLpas::class                    => DataAccess\ApiGateway\DataStoreLpasFactory::class,
                 DataAccess\ApiGateway\InstructionsAndPreferencesImages::class => DataAccess\ApiGateway\InstructionsAndPreferencesImagesFactory::class,
                 DataAccess\ApiGateway\PaperVerificationCodes::class           => DataAccess\ApiGateway\PaperVerificationCodesFactory::class,
