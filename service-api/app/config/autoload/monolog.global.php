@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-use Psr\Log\LoggerInterface;
+use App\Service\Log\OpgJsonFormatterFactory;
+use App\Service\Log\RequestTracingLogProcessorFactory;
 use Blazon\PSR11MonoLog\MonologFactory;
 use Monolog\Logger;
-use App\Service\Log\RequestTracingLogProcessorFactory;
+use Psr\Log\LoggerInterface;
 
 return [
     'dependencies' => [
@@ -33,8 +34,10 @@ return [
         ],
         'formatters' => [
             'jsonFormatter' => [
-                'type'    => 'json',
-                'options' => [],
+                'type'    => OpgJsonFormatterFactory::class,
+                'options' => [
+                    'serviceName' => 'api-app',
+                ],
             ],
         ],
         'processors' => [
