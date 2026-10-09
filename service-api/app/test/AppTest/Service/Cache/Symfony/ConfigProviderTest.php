@@ -43,7 +43,7 @@ final class ConfigProviderTest extends TestCase
     }
 
     #[Test]
-    public function it_bootstraps_shared_pools_and_contract_aliases_without_replacing_psr16(): void
+    public function it_bootstraps_shared_request_pools_and_contract_aliases(): void
     {
         self::assertSame('apcu', (new ConfigProvider())()['symfony_cache']['pools']['cache.app']['adapter']);
         $container = $this->container();
@@ -60,7 +60,10 @@ final class ConfigProviderTest extends TestCase
             $container->get('cache.request.taggable'),
             $container->get(TagAwareCacheInterface::class)
         );
-        self::assertFalse($container->has(SimpleCacheInterface::class));
+        $simpleCache = $container->get(SimpleCacheInterface::class);
+        self::assertInstanceOf(SimpleCacheInterface::class, $simpleCache);
+        self::assertTrue($simpleCache->set('shared', 'request'));
+        self::assertSame('request', $request->getItem('shared')->get());
     }
 
     #[Test]

@@ -12,7 +12,7 @@ use Facile\OpenIDClient\Client\ClientBuilder;
 use Facile\OpenIDClient\Client\ClientInterface;
 use Facile\OpenIDClient\Client\Metadata\ClientMetadata;
 use Facile\OpenIDClient\Issuer\Metadata\Provider\MetadataProviderBuilder;
-use Laminas\Cache\Psr\SimpleCache\SimpleCacheException;
+use Psr\SimpleCache\CacheException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClientInterface;
@@ -35,7 +35,7 @@ class AuthorisationClientManager
 
     /**
      * @throws NotFoundExceptionInterface
-     * @throws SimpleCacheException
+     * @throws CacheException
      * @throws ContainerExceptionInterface
      * @throws RuntimeException
      */
