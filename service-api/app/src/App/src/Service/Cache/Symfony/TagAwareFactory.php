@@ -6,8 +6,8 @@ namespace App\Service\Cache\Symfony;
 
 use DI\Factory\RequestedEntry;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
 use UnexpectedValueException;
 
@@ -29,8 +29,8 @@ final class TagAwareFactory implements FactoryInterface
         };
         $pool = $container->get($poolName);
 
-        if (!$pool instanceof CacheItemPoolInterface) {
-            throw new UnexpectedValueException($poolName . ' must implement CacheItemPoolInterface');
+        if (!$pool instanceof AdapterInterface) {
+            throw new UnexpectedValueException($poolName . ' must implement AdapterInterface');
         }
 
         return new TagAwareAdapter($pool);
