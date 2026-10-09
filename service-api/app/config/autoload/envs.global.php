@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Service\Cache\Symfony\PoolFactory;
-
 return [
     'version'              => getenv('CONTAINER_VERSION') ?: 'dev',
     'environment_name'     => getenv('ENVIRONMENT_NAME') ?: '',
@@ -62,6 +60,14 @@ return [
         'namespace' => 'opg-use-an-lpa-api-' . (getenv('ENVIRONMENT_NAME') ?: 'local'),
         'version'   => getenv('CONTAINER_VERSION') ?: 'dev',
         'pools'     => [
+            'cache.request'        => [
+                'adapter'          => 'array',
+                'default_lifetime' => 0,
+            ],
+            'cache.app'            => [
+                'adapter'          => 'apcu',
+                'default_lifetime' => 0,
+            ],
             'cache.one-login'      => [
                 'adapter'          => 'apcu',
                 'default_lifetime' => 60,
@@ -74,13 +80,6 @@ return [
                 'adapter'          => 'apcu',
                 'default_lifetime' => 3600,
             ],
-        ],
-    ],
-    'dependencies'         => [
-        'factories' => [
-            'cache.one-login'      => PoolFactory::class,
-            'cache.system-message' => PoolFactory::class,
-            'cache.lpa-data-store' => PoolFactory::class,
         ],
     ],
 ];
