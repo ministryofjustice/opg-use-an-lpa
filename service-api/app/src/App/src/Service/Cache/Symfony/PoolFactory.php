@@ -24,10 +24,6 @@ final class PoolFactory implements FactoryInterface
             $requestedName = $requestedName->getName();
         }
 
-        if (!is_string($requestedName)) {
-            throw new UnexpectedValueException('Symfony cache pool service name must be a string');
-        }
-
         $config = $this->getPoolConfiguration($container, $requestedName);
         $logger = $this->getLogger($container);
 
