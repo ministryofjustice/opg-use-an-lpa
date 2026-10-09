@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Cache\Symfony;
 
+use DI\Factory\RequestedEntry;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -19,6 +20,10 @@ final class PoolFactory implements FactoryInterface
         mixed $requestedName,
         ?array $options = null,
     ): AdapterInterface {
+        if ($requestedName instanceof RequestedEntry) {
+            $requestedName = $requestedName->getName();
+        }
+
         if (!is_string($requestedName)) {
             throw new UnexpectedValueException('Symfony cache pool service name must be a string');
         }

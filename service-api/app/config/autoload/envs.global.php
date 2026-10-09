@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Laminas\Cache\Storage\Adapter\Apcu;
+use App\Service\Cache\Symfony\PoolFactory;
 
 return [
     'version'              => getenv('CONTAINER_VERSION') ?: 'dev',
@@ -58,27 +58,29 @@ return [
             'key' => getenv('NOTIFY_API_KEY') ?: null,
         ],
     ],
-    'cache'                => [
-        'one-login'      => [
-            'adapter' => Apcu::class,
-            'options' => [
-                'ttl'       => 60,
-                'namespace' => 'oneLogin',
+    'symfony_cache'        => [
+        'namespace' => 'opg-use-an-lpa-api-' . (getenv('ENVIRONMENT_NAME') ?: 'local'),
+        'version'   => getenv('CONTAINER_VERSION') ?: 'dev',
+        'pools'     => [
+            'cache.one-login'      => [
+                'adapter'          => 'apcu',
+                'default_lifetime' => 60,
+            ],
+            'cache.system-message' => [
+                'adapter'          => 'apcu',
+                'default_lifetime' => 300,
+            ],
+            'cache.lpa-data-store' => [
+                'adapter'          => 'apcu',
+                'default_lifetime' => 3600,
             ],
         ],
-        'system-message' => [
-            'adapter' => Apcu::class,
-            'options' => [
-                'ttl'       => 300,
-                'namespace' => 'systemMessage',
-            ],
-        ],
-        'lpa-data-store' => [
-            'adapter' => Apcu::class,
-            'options' => [
-                'ttl'       => 3600,
-                'namespace' => 'lpaDataStoreSecretManager',
-            ],
+    ],
+    'dependencies'         => [
+        'factories' => [
+            'cache.one-login'      => PoolFactory::class,
+            'cache.system-message' => PoolFactory::class,
+            'cache.lpa-data-store' => PoolFactory::class,
         ],
     ],
 ];

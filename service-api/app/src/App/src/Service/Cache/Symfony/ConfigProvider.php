@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Cache\Symfony;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
@@ -23,10 +24,11 @@ final class ConfigProvider
                     TagAwareCacheInterface::class => 'cache.request.taggable',
                 ],
                 'factories' => [
-                    'cache.app'              => PoolFactory::class,
-                    'cache.app.taggable'     => TagAwareFactory::class,
-                    'cache.request'          => PoolFactory::class,
-                    'cache.request.taggable' => TagAwareFactory::class,
+                    SimpleCacheInterface::class => SimpleCacheFactory::class,
+                    'cache.app'                 => PoolFactory::class,
+                    'cache.app.taggable'        => TagAwareFactory::class,
+                    'cache.request'             => PoolFactory::class,
+                    'cache.request.taggable'    => TagAwareFactory::class,
                 ],
             ],
             'symfony_cache' => [

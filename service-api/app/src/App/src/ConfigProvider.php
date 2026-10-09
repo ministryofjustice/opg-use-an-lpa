@@ -122,9 +122,6 @@ class ConfigProvider
                 Laminas\Stratigility\Middleware\ErrorHandler::class   => [
                     Service\Log\LogStderrListenerDelegatorFactory::class,
                 ],
-                Laminas\Cache\Storage\AdapterPluginManager::class     => [
-                    Laminas\Cache\Storage\Adapter\Apcu\AdapterPluginManagerDelegatorFactory::class,
-                ],
                 Service\Secrets\LpaDataStoreSecretManager::class      => [
                     Service\Secrets\CachedSecretManagerDelegatorFactory::class,
                 ],

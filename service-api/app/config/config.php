@@ -20,7 +20,7 @@ $aggregator = new ConfigAggregator(
         \Mezzio\Helper\ConfigProvider::class,
         \Mezzio\ConfigProvider::class,
         \Mezzio\Router\ConfigProvider::class,
-        \Laminas\Cache\ConfigProvider::class,
+        \App\Service\Cache\Symfony\ConfigProvider::class,
 
         // Swoole config to overwrite some services (if installed)
         class_exists(\Mezzio\Swoole\ConfigProvider::class)

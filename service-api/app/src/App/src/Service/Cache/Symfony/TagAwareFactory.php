@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Cache\Symfony;
 
+use DI\Factory\RequestedEntry;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
@@ -17,6 +18,10 @@ final class TagAwareFactory implements FactoryInterface
         mixed $requestedName,
         ?array $options = null,
     ): TagAwareAdapter {
+        if ($requestedName instanceof RequestedEntry) {
+            $requestedName = $requestedName->getName();
+        }
+
         $poolName = match ($requestedName) {
             'cache.request.taggable' => 'cache.request',
             'cache.app.taggable' => 'cache.app',
