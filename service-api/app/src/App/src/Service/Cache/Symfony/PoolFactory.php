@@ -86,7 +86,9 @@ final class PoolFactory implements FactoryInterface
     private function createApcuPool(string $namespace, int $lifetime, string $version): ApcuAdapter
     {
         if (!ApcuAdapter::isSupported() || !apcu_enabled()) {
+            // @codeCoverageIgnoreStart
             throw new UnexpectedValueException('APCu cache adapter requires APCu to be enabled for this runtime');
+            // @codeCoverageIgnoreEnd
         }
 
         return new ApcuAdapter($namespace, $lifetime, $version);
