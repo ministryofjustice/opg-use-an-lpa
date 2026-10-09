@@ -7,11 +7,13 @@ namespace AppTest\DataAccess\ApiGateway;
 use App\DataAccess\ApiGateway\CachedDataStoreLpas;
 use App\DataAccess\ApiGateway\CachedDataStoreLpasDelegatorFactory;
 use App\DataAccess\ApiGateway\DataStoreLpas;
+use App\Service\Cache\CacheFactory;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 #[CoversClass(CachedDataStoreLpasDelegatorFactory::class)]
 final class CachedDataStoreLpasDelegatorFactoryTest extends TestCase
@@ -26,13 +28,28 @@ final class CachedDataStoreLpasDelegatorFactoryTest extends TestCase
             ->with('originator')
             ->willReturnSelf();
 
-        $logger    = $this->createStub(LoggerInterface::class);
+        $logger       = $this->createStub(LoggerInterface::class);
+        $cache        = $this->createStub(CacheInterface::class);
+        $cacheFactory = $this->createMock(CacheFactory::class);
+        $cacheFactory
+            ->expects($this->once())
+            ->method('__invoke')
+            ->with('request')
+            ->willReturn($cache);
         $container = $this->createMock(ContainerInterface::class);
         $container
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with(LoggerInterface::class)
-            ->willReturn($logger);
+            ->willReturnMap([
+                [
+                    CacheFactory::class,
+                    $cacheFactory,
+                ],
+                [
+                    LoggerInterface::class,
+                    $logger,
+                ],
+            ]);
 
         $factory = new CachedDataStoreLpasDelegatorFactory();
         $result  = $factory($container, DataStoreLpas::class, fn (): DataStoreLpas => $dataStoreLpas);

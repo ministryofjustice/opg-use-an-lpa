@@ -8,10 +8,10 @@ use App\DataAccess\Repository\AuditableLpasInterface;
 use App\DataAccess\Repository\Response\LpaInterface;
 use App\Entity\Lpa;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 
 /**
- * Decorator of DataStoreLpas that holds an in-memory cache of fetched LPAs for the lifetime
- * of the instance.
+ * Decorator of DataStoreLpas that caches fetched LPAs for the lifetime of the request.
  *
  * The cache is partitioned by originator id so that each distinct originator still results in
  * an auditable request to the data store.
@@ -20,11 +20,9 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
 {
     private ?string $originatorId = null;
 
-    /** @var array<string, array<string, LpaInterface>> */
-    private array $cache = [];
-
     public function __construct(
         private readonly DataStoreLpas $dataStoreLpas,
+        private readonly CacheInterface $cache,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -48,17 +46,20 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
             return $this->dataStoreLpas->get($uid);
         }
 
-        if (isset($this->cache[$this->originatorId][$uid])) {
+        $originatorId = $this->originatorId;
+        $cacheKey     = $this->cacheKey($originatorId, $uid);
+        $cachedLpa    = $this->cache->get($cacheKey);
+        if ($cachedLpa instanceof LpaInterface) {
             $this->logger->debug('Data store LPA cache hit for {lpaUid}', ['lpaUid' => $uid]);
 
-            return $this->cache[$this->originatorId][$uid];
+            return $cachedLpa;
         }
 
         $this->logger->debug('Data store LPA cache miss for {lpaUid}', ['lpaUid' => $uid]);
 
         $lpa = $this->dataStoreLpas->get($uid);
         if ($lpa !== null) {
-            $this->cache[$this->originatorId][$uid] = $lpa;
+            $this->cache->set($cacheKey, $lpa);
         }
 
         return $lpa;
@@ -75,12 +76,17 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
             return $this->dataStoreLpas->lookup($uids);
         }
 
-        $uids   = array_values(array_unique($uids));
-        $cached = $this->cache[$this->originatorId] ?? [];
+        $uids         = array_values(array_unique($uids));
+        $originatorId = $this->originatorId;
+        $cached       = [];
+        foreach ($uids as $uid) {
+            $lpa = $this->cache->get($this->cacheKey($originatorId, $uid));
+            if ($lpa instanceof LpaInterface) {
+                $cached[$uid] = $lpa;
+            }
+        }
 
-        $missing = array_values(
-            array_filter($uids, fn (string $uid): bool => !isset($cached[$uid]))
-        );
+        $missing = array_values(array_diff($uids, array_keys($cached)));
 
         $this->logger->debug(
             'Data store LPA cache lookup of {count} LPAs had {hits} hits and {misses} misses',
@@ -96,18 +102,25 @@ final class CachedDataStoreLpas implements AuditableLpasInterface
             foreach ($this->dataStoreLpas->lookup($missing) as $lpa) {
                 $data = $lpa->getData();
                 if ($data instanceof Lpa) {
-                    $this->cache[$this->originatorId][$data->getUid()] = $lpa;
+                    $uid          = $data->getUid();
+                    $cached[$uid] = $lpa;
+                    $this->cache->set($this->cacheKey($originatorId, $uid), $lpa);
                 }
             }
         }
 
         $results = [];
         foreach ($uids as $uid) {
-            if (isset($this->cache[$this->originatorId][$uid])) {
-                $results[] = $this->cache[$this->originatorId][$uid];
+            if (isset($cached[$uid])) {
+                $results[] = $cached[$uid];
             }
         }
 
         return $results;
+    }
+
+    private function cacheKey(string $originatorId, string $uid): string
+    {
+        return 'data-store-lpa-' . hash('sha256', $originatorId) . '-' . hash('sha256', $uid);
     }
 }
