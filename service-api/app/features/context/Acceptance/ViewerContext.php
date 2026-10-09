@@ -14,7 +14,6 @@ use Behat\Step\When;
 use BehatTest\Context\BaseAcceptanceContextTrait;
 use BehatTest\Context\SetupEnv;
 use DateTime;
-use DateTimeImmutable;
 use Fig\Http\Message\StatusCodeInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Assert;
@@ -77,33 +76,6 @@ class ViewerContext implements Context
 
         // PaperVerificationCodes::validate
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($codeData)));
-
-        // CombinedLpaManager::get
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        if ($this->viewerCode === 'P-1234-1234-1234-12') {
-            // PaperVerificationCodes::expire
-            $this->apiFixtures->append(
-                new Response(
-                    StatusCodeInterface::STATUS_OK,
-                    [],
-                    json_encode(
-                        [
-                            'expiry_date' => (new DateTimeImmutable('now'))->format('Y-m-d'),
-                        ]
-                    )
-                )
-            );
-        }
-
-        $this->awsFixtures->append(
-            function (Command $command): ResultInterface {
-                Assert::assertEquals('GetSecretValue', $command->getName());
-                Assert::assertEquals('lpa-data-store-secret', $command['SecretId']);
-
-                return new Result(['SecretString' => 'secret-value-string-at-least-128-bits-long']);
-            }
-        );
 
         $this->apiPost(
             '/v1/paper-verification/validate',
@@ -384,6 +356,9 @@ class ViewerContext implements Context
 
         // CombinedLpaManager::get
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+
+        // the data store secret is cached in APCu across scenarios so clear it to ensure it's fetched
+        apcu_clear_cache();
 
         $this->awsFixtures->append(
             function (Command $command): ResultInterface {
