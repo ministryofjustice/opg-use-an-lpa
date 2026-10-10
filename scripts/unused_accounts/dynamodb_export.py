@@ -1,6 +1,9 @@
+from datetime import datetime
+import calendar
 import argparse
 import boto3
 import re
+import csv
 from time import sleep
 
 
@@ -13,30 +16,24 @@ class DynamoDBExporterAndQuerier:
 
     def __init__(self, environment):
         self.tables = {
-            "Stats": None,
-            "ActorCodes": None,
             "ActorUsers": None,
-            "ViewerCodes": None,
-            "ViewerActivity": None,
             "UserLpaActorMap": None,
         }
 
         self.table_ddl_files = {
-            "tables/stats.ddl": "Stats",
-            "tables/actor_codes.ddl": "ActorCodes",
             "tables/actor_users.ddl": "ActorUsers",
-            "tables/viewer_codes.ddl": "ViewerCodes",
-            "tables/viewer_activity.ddl": "ViewerActivity",
             "tables/user_lpa_actor_map.ddl": "UserLpaActorMap",
         }
 
         self.environment_details = self.set_environment_details(environment)
 
-        self.aws_dynamodb_client = self.get_aws_client("dynamodb")
+        aws_iam_session = self.set_iam_role_session()
 
-        self.aws_kms_client = self.get_aws_client("kms")
+        self.aws_dynamodb_client = self.get_aws_client("dynamodb", aws_iam_session)
 
-        self.aws_athena_client = self.get_aws_client("athena")
+        self.aws_kms_client = self.get_aws_client("kms", aws_iam_session)
+
+        self.aws_athena_client = self.get_aws_client("athena", aws_iam_session)
 
         self.kms_key_id = self.get_kms_key_id(
             "dynamodb-exports-{}".format(self.environment_details["account_name"])
@@ -45,11 +42,30 @@ class DynamoDBExporterAndQuerier:
             self.environment_details["account_name"]
         )
 
+    def set_date_range(self, start, end):
+        self.start_date = start
+        self.end_date = end
+        print(
+            f"Queries will be run for date range {self.start_date} to {self.end_date}"
+        )
+
+    def set_default_date_range(self):
+        today = datetime.today()
+        days_in_mo = calendar.monthrange(today.year, today.month)
+        self.start_date = f"{today.year}-{today.month}-01"
+        self.end_date = f"{today.year}-{today.month}-{days_in_mo[1]}"
+        print(
+            f"Queries will be run for date range {self.start_date} to {self.end_date}"
+        )
+
     @staticmethod
-    def get_aws_client(client_type, region="eu-west-1"):
+    def get_aws_client(client_type, aws_iam_session, region="eu-west-1"):
         client = boto3.client(
             client_type,
-            region_name=region
+            region_name=region,
+            aws_access_key_id=aws_iam_session["Credentials"]["AccessKeyId"],
+            aws_secret_access_key=aws_iam_session["Credentials"]["SecretAccessKey"],
+            aws_session_token=aws_iam_session["Credentials"]["SessionToken"],
         )
         return client
 
@@ -75,6 +91,28 @@ class DynamoDBExporterAndQuerier:
         }
 
         return response
+
+    def set_iam_role_session(self):
+        if self.environment_details["name"] == "production":
+            role_arn = "arn:aws:iam::{}:role/data-access".format(
+                self.environment_details["account_id"]
+            )
+        else:
+            role_arn = "arn:aws:iam::{}:role/operator".format(
+                self.environment_details["account_id"]
+            )
+
+        sts = boto3.client(
+            "sts",
+            region_name="eu-west-1",
+        )
+
+        session = sts.assume_role(
+            RoleArn=role_arn,
+            RoleSessionName="exporting_dynamodb_tables_to_s3",
+            DurationSeconds=900,
+        )
+        return session
 
     def get_kms_key_id(self, kms_key_alias):
         response = self.aws_kms_client.describe_key(
@@ -210,6 +248,38 @@ class DynamoDBExporterAndQuerier:
             )
             results.extend(response["ResultSet"]["Rows"])
 
+        if outputFileName:
+            self.output_athena_results(results, outputFileName)
+
+    def output_athena_results(self, results, outputFileName):
+        with open(
+            f"results/{outputFileName}-{self.start_date}-{self.end_date}.csv",
+            "w",
+            newline="",
+        ) as outFile:
+            wr = csv.writer(outFile, quoting=csv.QUOTE_ALL)
+            for row in results:
+                outputRow = ""
+                csvRow = []
+                for field in row["Data"]:
+                    cell = (list)(field.values())
+                    if cell:
+                        outputRow = f"{outputRow} | {cell[0]}"
+                        csvRow.append(cell[0])
+                    else:
+                        outputRow = f"{outputRow} | "
+                        csvRow.append("")
+
+                print(outputRow)
+                wr.writerow(csvRow)
+
+    def get_unused_accounts(self):
+        sql_string = f"SELECT a.Item.Id.S as UserId, a.Item.Email.S as Email, a.Item.LastLogin.S as LastLogin FROM actor_users a WHERE a.Item.Id.S NOT IN (SELECT b.Item.UserId.S FROM user_lpa_actor_map b WHERE b.Item.UserId.S IS NOT NULL) AND a.Item.LastLogin.S IS NOT NULL AND a.Item.LastLogin.S < date_add('month', -6, current_date) ORDER BY a.Item.LastLogin.S"
+        self.run_athena_query(
+            sql_string,
+            outputFileName="UnusedAccounts",
+        )
+
 def main():
     parser = argparse.ArgumentParser(description="Exports DynamoDB tables to S3.")
     parser.add_argument(
@@ -225,17 +295,52 @@ def main():
         default=False,
         help="Output json data instead of plaintext to terminal",
     )
+    parser.add_argument(
+        "--reload_athena_and_query",
+        dest="reload_athena_and_query_flag",
+        action="store_const",
+        const=True,
+        default=False,
+        help="Reload Athena and run query, assuming DynamoDb export has already run",
+    )
+    parser.add_argument(
+        "--athena_query_only",
+        dest="athena_query_only_flag",
+        action="store_const",
+        const=True,
+        default=False,
+        help="Only run the Athena query, assuming that DynamoDb export and load into Athena has already run",
+    )
+    parser.add_argument(
+        "--start_date", default="", help="Start date in the form YYYY-MM-DD"
+    )
+    parser.add_argument(
+        "--end_date", default="", help="End date in the form YYYY-MM-DD"
+    )
 
     args = parser.parse_args()
     work = DynamoDBExporterAndQuerier(args.environment)
+
+    if args.start_date and args.end_date:
+        work.set_date_range(args.start_date, args.end_date)
+    else:
+        work.set_default_date_range()
 
     if args.check_only:
         work.check_dynamo_export_status()
         return
 
-    work.export_all_dynamo_tables()
-    work.check_dynamo_export_status()
-    work.create_athena_tables()
+    # do the DynamoDb export, unless we've specified just Athena load and query, or just athena query
+    if not args.reload_athena_and_query_flag and not args.athena_query_only_flag:
+        work.export_all_dynamo_tables()
+
+    # create the Athena tables,  unless we've specified query only
+    if not args.athena_query_only_flag:
+        work.check_dynamo_export_status()
+        work.create_athena_tables()
+
+    work.get_unused_accounts()
+
 
 if __name__ == "__main__":
     main()
