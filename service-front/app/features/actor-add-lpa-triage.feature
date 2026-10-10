@@ -56,5 +56,5 @@ Feature: Add an LPA triage page
   @ui
   Scenario: The user is able to continue after reading information about requesting an activation key
     Given I am on the activation key information page
-    When I click the Continue link
+    When I click the Continue button on the activation key information page
     Then I am taken to request an activation key form
