@@ -4,54 +4,59 @@ declare(strict_types=1);
 
 namespace CommonTest\Middleware\Logging;
 
-use PHPUnit\Framework\Attributes\Test;
 use Common\Middleware\Logging\RequestTracingMiddleware;
 use Common\Service\Container\ModifiableContainerInterface;
+use Laminas\Diactoros\Response;
+use Laminas\Diactoros\ServerRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class RequestTracingMiddlewareTest extends TestCase
+#[CoversClass(RequestTracingMiddleware::class)]
+final class RequestTracingMiddlewareTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
-    public function it_sets_a_trace_attribute_if_set_as_a_header(): void
+    #[DataProvider('tracingHeaders')]
+    public function it_should_store_the_trace_id_and_pass_it_to_the_handler(array $headers, string $traceId): void
     {
-        $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);
-        $containerProphecy->setValue('trace-id', 'Root=1-1-11')->shouldBeCalled();
+        $container = $this->createMock(ModifiableContainerInterface::class);
+        $container->expects(self::once())->method('setValue')->with('trace_id', $traceId);
 
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getHeader('x-amzn-trace-id')->willReturn(['Root=1-1-11']);
-        $requestProphecy->withAttribute('trace-id', 'Root=1-1-11')->willReturn($requestProphecy->reveal());
+        $request  = new ServerRequest(headers: $headers);
+        $response = new Response();
+        $handler  = $this->createMock(RequestHandlerInterface::class);
+        $handler->expects(self::once())->method('handle')
+            ->with(self::callback(
+                static fn (ServerRequestInterface $request): bool => $request->getAttribute('trace_id') === $traceId,
+            ))
+            ->willReturn($response);
 
-        $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
-        $delegateProphecy
-            ->handle($requestProphecy->reveal())
-            ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
-
-        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
-        $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
+        self::assertSame($response, (new RequestTracingMiddleware($container))->process($request, $handler));
     }
 
-    #[Test]
-    public function trace_id_is_blank_if_no_header(): void
+    public static function tracingHeaders(): array
     {
-        $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);
-        $containerProphecy->setValue('trace-id', '')->shouldBeCalled();
-
-        $requestProphecy = $this->prophesize(ServerRequestInterface::class);
-        $requestProphecy->getHeader('x-amzn-trace-id')->willReturn([]);
-        $requestProphecy->withAttribute('trace-id', '')->willReturn($requestProphecy->reveal());
-
-        $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
-        $delegateProphecy
-            ->handle($requestProphecy->reveal())
-            ->willReturn($this->prophesize(ResponseInterface::class)->reveal());
-
-        $rtm      = new RequestTracingMiddleware($containerProphecy->reveal());
-        $response = $rtm->process($requestProphecy->reveal(), $delegateProphecy->reveal());
+        return [
+            'tracing header'    => [
+                ['x-amzn-trace-id' => ['Root=1-1-11']],
+                'Root=1-1-11',
+            ],
+            'no tracing header' => [
+                [],
+                '',
+            ],
+            'multiple values'   => [
+                [
+                    'x-amzn-trace-id' => [
+                        'Root=1-1-11',
+                        'Root=1-1-22',
+                    ],
+                ],
+                'Root=1-1-11',
+            ],
+        ];
     }
 }
