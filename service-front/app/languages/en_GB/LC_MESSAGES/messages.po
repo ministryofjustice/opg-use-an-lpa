@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-12 13:21+0000\n"
+"PO-Revision-Date: 2026-10-12 13:26+0000\n"
 "Last-Translator: Adam Cooper <adam.cooper@digital.justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -3794,7 +3794,7 @@ msgstr "This service is managed by <abbr title=\"Office of the Public Guardian\"
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:44
 msgid "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"%link%\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
-msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"> <abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter </a> explains how we process personal data."
+msgstr "MOJ is the data controller for the personal data we store. <a class=\"govuk-link\" href=\"https://www.gov.uk/government/organisations/office-of-the-public-guardian/about/personal-information-charter\"><abbr title=\"Office of the Public Guardian\">OPG</abbr>’s personal information charter</a> explains how we process personal data."
 
 #: src/Viewer/templates/viewer/viewer-privacy-notice.html.twig:55
 msgid "What data we collect and how we use it"
