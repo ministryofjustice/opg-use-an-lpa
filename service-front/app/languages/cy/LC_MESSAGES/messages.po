@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-12 12:05+0000\n"
+"PO-Revision-Date: 2026-10-12 13:21+0000\n"
 "Last-Translator: Adam Cooper <adam.cooper@digital.justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -4607,9 +4607,7 @@ msgstr "Mae eich gwybodaeth yn ddiogel ac mae unrhyw LPA a ychwanegwyd gennych i
 
 #: src/Common/templates/error/409.html.twig:15
 msgid "This is a rare problem and you’ll need to call our contact centre so our technical team can resolve it for you. Please call 0300 456 0300 and quote the incident number %incidentNumber%."
-msgstr ""
-"Mae hon yn broblem brin a byddwch angen cysylltu gyda’n canolfan gyswllt er mwyn i’n tîm technegol ei datrys ichi.\n"
-"A fyddech cystal â ffonio 0300 456 0300 a dyfynnu’r rhif digwyddiad %incidentNumber%."
+msgstr "Mae hon yn broblem brin a byddwch angen cysylltu gyda’n canolfan gyswllt er mwyn i’n tîm technegol ei datrys ichi. A fyddech cystal â ffonio 0300 456 0300 a dyfynnu’r rhif digwyddiad %incidentNumber%."
 
 #: src/Common/templates/error/409.html.twig:10
 msgid "There’s a problem with your sign-in"
