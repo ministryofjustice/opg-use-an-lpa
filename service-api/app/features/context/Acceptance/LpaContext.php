@@ -320,9 +320,6 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // AWS Request letter response in Given steps
         $this->awsFixtures->append(
             new Result(
@@ -501,12 +498,6 @@ class LpaContext implements Context
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         $this->apiPost(
             '/v1/add-lpa/validate',
             [
@@ -542,12 +533,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         //UserLpaActorMapRepository: getUsersLpas
         $this->awsFixtures->append(
@@ -667,24 +652,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // check if actor has a code
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode(['Created' => $createdDate->format('Y-m-d')])
-            )
-        );
-
         // API call to request an activation key
         $this->apiPost(
             '/v1/older-lpa/validate',
@@ -744,8 +711,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -1696,15 +1661,6 @@ class LpaContext implements Context
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
 
-        // API call for finding all the users added LPAs
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode([])
-            )
-        );
-
         $this->apiGet(
             '/v1/lpas',
             [
@@ -1844,8 +1800,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
@@ -2292,11 +2246,6 @@ class LpaContext implements Context
         $this->apiFixtures->append(
             new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['actor' => $this->actorId]))
         );
-
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
-        // called twice
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // UserLpaActorMap::getUsersLpas
         $this->awsFixtures->append(new Result([]));
@@ -2916,28 +2865,6 @@ class LpaContext implements Context
             )
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // Done twice due to our codes interdependencies
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
-        // CheckLpaCleansed: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -2997,15 +2924,6 @@ class LpaContext implements Context
             new Result([])
         );
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(
             new Response(
@@ -3018,9 +2936,6 @@ class LpaContext implements Context
                 )
             )
         );
-
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
 
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
@@ -3515,9 +3430,6 @@ class LpaContext implements Context
             )
         );
 
-        // lpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
-
         // request a code to be generated and letter to be sent
         $this->apiFixtures->append(
             new Response(
@@ -3722,15 +3634,6 @@ class LpaContext implements Context
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(new Result([]));
 
-        // LpaRepository::get
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_OK,
-                [],
-                json_encode($this->lpa)
-            )
-        );
-
         // check if actor has a code
         $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode(['Created' => null])));
 
@@ -3823,7 +3726,8 @@ class LpaContext implements Context
     #[Then('/^I am told my activation key is being sent$/')]
     public function iConfirmDetailsOfTheFoundLPAAreCorrect(): void
     {
-        $earliestRegDate = '2019-09-01';
+        $earliestRegDate            = '2019-09-01';
+        $isEligibleForActivationKey = $this->lpa->lpaIsCleansed || $this->lpa->registrationDate >= $earliestRegDate;
 
         //UserLpaActorMap: getAllForUser
         $this->awsFixtures->append(
@@ -3839,32 +3743,31 @@ class LpaContext implements Context
             )
         );
 
-        // LpaService: getByUid
-        $this->apiFixtures->append(new Response(StatusCodeInterface::STATUS_OK, [], json_encode($this->lpa)));
+        if ($isEligibleForActivationKey) {
+            // request a code to be generated and letter to be sent
+            $this->apiFixtures->append(
+                new Response(
+                    StatusCodeInterface::STATUS_NO_CONTENT,
+                    []
+                )
+            );
 
-        // request a code to be generated and letter to be sent
-        $this->apiFixtures->append(
-            new Response(
-                StatusCodeInterface::STATUS_NO_CONTENT,
-                []
-            )
-        );
-
-        $this->awsFixtures->append(
-            new Result(
-                [
-                    'Item' => $this->marshalAwsResultData(
-                        [
-                            'Id'        => $this->userLpaActorToken,
-                            'UserId'    => $this->base->userAccountId,
-                            'SiriusUid' => $this->lpaUid,
-                            'ActorId'   => $this->actorId,
-                            'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
-                        ]
-                    ),
-                ]
-            )
-        );
+            $this->awsFixtures->append(
+                new Result(
+                    [
+                        'Item' => $this->marshalAwsResultData(
+                            [
+                                'Id'        => $this->userLpaActorToken,
+                                'UserId'    => $this->base->userAccountId,
+                                'SiriusUid' => $this->lpaUid,
+                                'ActorId'   => $this->actorId,
+                                'Added'     => (new DateTime())->format('Y-m-d\TH:i:s.u\Z'),
+                            ]
+                        ),
+                    ]
+                )
+            );
+        }
 
         // API call to request an activation key
         $this->apiPatch(
@@ -3881,7 +3784,7 @@ class LpaContext implements Context
                 'user-token' => $this->userId,
             ]
         );
-        if (!$this->lpa->lpaIsCleansed && $this->lpa->registrationDate < $earliestRegDate) {
+        if (!$isEligibleForActivationKey) {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_BAD_REQUEST);
         } else {
             $this->ui->assertSession()->statusCodeEquals(StatusCodeInterface::STATUS_NO_CONTENT);
