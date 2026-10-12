@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Blazon\PSR11MonoLog\MonologFactory;
+use Common\Service\Log\OpgJsonFormatterFactory;
 use Common\Service\Log\RequestTracingLogProcessorFactory;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
@@ -21,7 +22,7 @@ return [
                 'type'       => 'stream',
                 'options'    => [
                     'stream' => 'php://stdout',
-                    'level'  => getenv('LOGGING_LEVEL') ?: Logger::NOTICE,
+                    'level'  => get_defaulted_env('LOGGING_LEVEL', Logger::NOTICE),
                 ],
                 'formatter'  => 'jsonFormatter',
                 'processors' => [
@@ -33,8 +34,10 @@ return [
         ],
         'formatters' => [
             'jsonFormatter' => [
-                'type'    => 'json',
-                'options' => [],
+                'type'    => OpgJsonFormatterFactory::class,
+                'options' => [
+                    'serviceName' => get_defaulted_env('CONTEXT', 'front') . '-app',
+                ],
             ],
         ],
         'processors' => [
