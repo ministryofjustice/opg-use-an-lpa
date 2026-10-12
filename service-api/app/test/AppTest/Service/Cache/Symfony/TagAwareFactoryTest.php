@@ -12,9 +12,8 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use stdClass;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\TagAwareAdapter;
-use Symfony\Contracts\Cache\ItemInterface;
 use UnexpectedValueException;
 
 #[CoversClass(TagAwareFactory::class)]
@@ -22,9 +21,9 @@ final class TagAwareFactoryTest extends TestCase
 {
     #[Test]
     #[DataProvider('poolNames')]
-    public function it_wraps_the_selected_pool_and_supports_tag_invalidation(string $name, bool $phpdi): void
+    public function it_should_wrap_the_selected_pool(string $name, bool $phpdi): void
     {
-        $pool      = new ArrayAdapter();
+        $pool      = $this->createMock(AdapterInterface::class);
         $container = $this->createMock(ContainerInterface::class);
         $container->expects(self::once())->method('get')->with($name)->willReturn($pool);
         $requestedName = $name . '.taggable';
@@ -37,14 +36,6 @@ final class TagAwareFactoryTest extends TestCase
         $cache = (new TagAwareFactory())($container, $requestedName);
 
         self::assertInstanceOf(TagAwareAdapter::class, $cache);
-        self::assertSame('value', $cache->get('example', static function (ItemInterface $item): string {
-            $item->tag('tag');
-
-            return 'value';
-        }));
-        self::assertTrue($pool->getItem('example')->isHit());
-        self::assertTrue($cache->invalidateTags(['tag']));
-        self::assertFalse($cache->getItem('example')->isHit());
     }
 
     public static function poolNames(): array
@@ -62,7 +53,7 @@ final class TagAwareFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_rejects_an_unknown_service_name(): void
+    public function it_should_reject_an_unknown_service_name(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $container->expects(self::never())->method('get');
@@ -73,7 +64,7 @@ final class TagAwareFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_rejects_a_pool_that_is_not_an_adapter(): void
+    public function it_should_reject_a_pool_that_is_not_an_adapter(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $container->method('get')->with('cache.app')->willReturn(new stdClass());

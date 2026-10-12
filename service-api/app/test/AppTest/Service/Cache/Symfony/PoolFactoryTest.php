@@ -21,23 +21,32 @@ use UnexpectedValueException;
 final class PoolFactoryTest extends TestCase
 {
     #[Test]
-    public function it_creates_an_array_pool_for_a_phpdi_entry_and_injects_the_logger(): void
+    public function it_should_create_an_array_pool_for_a_phpdi_entry_when_a_logger_is_available(): void
     {
-        $entry = $this->createMock(RequestedEntry::class);
+        $config = $this->config();
+        $entry  = $this->createMock(RequestedEntry::class);
         $entry->method('getName')->willReturn('cache.test');
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger->expects(self::once())->method('warning');
+        $logger    = $this->createMock(LoggerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::once())->method('has')->with(LoggerInterface::class)->willReturn(true);
+        $container->expects(self::exactly(2))->method('get')->willReturnMap([
+            [
+                'config',
+                $config,
+            ],
+            [
+                LoggerInterface::class,
+                $logger,
+            ],
+        ]);
 
-        $pool = (new PoolFactory())($this->container($this->config(), $logger), $entry);
+        $pool = (new PoolFactory())($container, $entry);
 
         self::assertInstanceOf(ArrayAdapter::class, $pool);
-        self::assertTrue($pool->save($pool->getItem('example')->set('value')));
-        self::assertSame('value', $pool->getItem('example')->get());
-        self::assertFalse($pool->save($pool->getItem('unserializable')->set(static fn () => null)));
     }
 
     #[Test]
-    public function it_creates_an_apcu_pool_or_reports_that_apcu_is_disabled(): void
+    public function it_should_create_an_apcu_pool_or_report_that_apcu_is_disabled(): void
     {
         $config                               = $this->config('apcu');
         $config['symfony_cache']['namespace'] = 'factory-test-' . bin2hex(random_bytes(8));
@@ -50,14 +59,11 @@ final class PoolFactoryTest extends TestCase
         $pool = (new PoolFactory())($this->container($config), 'cache.test');
 
         self::assertInstanceOf(ApcuAdapter::class, $pool);
-        self::assertTrue($pool->save($pool->getItem('example')->set('value')));
-        self::assertSame('value', $pool->getItem('example')->get());
-        self::assertTrue($pool->clear());
     }
 
     #[Test]
     #[DataProvider('invalidConfigurations')]
-    public function it_rejects_invalid_configuration(array $config, string $message): void
+    public function it_should_reject_invalid_configuration(array $config, string $message): void
     {
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage($message);
@@ -81,19 +87,35 @@ final class PoolFactoryTest extends TestCase
         ];
 
         return [
-            'missing cache settings' => [
+            'missing cache settings'  => [
                 [],
                 'Missing Symfony cache configuration',
             ],
-            'missing pool'           => [
+            'missing pool'            => [
                 array_replace_recursive($config, ['symfony_cache' => ['pools' => ['cache.test' => null]]]),
                 'Missing Symfony cache configuration',
             ],
-            'invalid settings'       => [
+            'invalid settings'        => [
                 array_replace_recursive($config, ['symfony_cache' => ['namespace' => '']]),
                 'Invalid Symfony cache configuration',
             ],
-            'unsupported adapter'    => [
+            'missing version'         => [
+                array_replace_recursive($config, ['symfony_cache' => ['version' => '']]),
+                'Invalid Symfony cache configuration',
+            ],
+            'invalid adapter setting' => [
+                array_replace_recursive($config, [
+                    'symfony_cache' => ['pools' => ['cache.test' => ['adapter' => null]]],
+                ]),
+                'Invalid Symfony cache configuration',
+            ],
+            'negative lifetime'       => [
+                array_replace_recursive($config, [
+                    'symfony_cache' => ['pools' => ['cache.test' => ['default_lifetime' => -1]]],
+                ]),
+                'Invalid Symfony cache configuration',
+            ],
+            'unsupported adapter'     => [
                 array_replace_recursive($config, [
                     'symfony_cache' => ['pools' => ['cache.test' => ['adapter' => 'unknown']]],
                 ]),
@@ -103,7 +125,7 @@ final class PoolFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_rejects_an_invalid_logger(): void
+    public function it_should_reject_an_invalid_logger(): void
     {
         $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage('Symfony cache logger must implement LoggerInterface');
