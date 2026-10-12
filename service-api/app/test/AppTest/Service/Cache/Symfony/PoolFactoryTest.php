@@ -46,15 +46,10 @@ final class PoolFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_create_an_apcu_pool_or_report_that_apcu_is_disabled(): void
+    public function it_should_create_an_apcu_pool(): void
     {
         $config                               = $this->config('apcu');
         $config['symfony_cache']['namespace'] = 'factory-test-' . bin2hex(random_bytes(8));
-
-        if (!ApcuAdapter::isSupported() || !apcu_enabled()) {
-            $this->expectException(UnexpectedValueException::class);
-            $this->expectExceptionMessage('APCu cache adapter requires APCu to be enabled for this runtime');
-        }
 
         $pool = (new PoolFactory())($this->container($config), 'cache.test');
 
