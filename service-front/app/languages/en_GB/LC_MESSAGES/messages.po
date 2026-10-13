@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-12 13:49+0000\n"
+"PO-Revision-Date: 2026-10-13 14:15+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -1862,15 +1862,15 @@ msgstr "Is this the same address as your address on the paper <abbr title=\"last
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Yes, it’s the same as my address in the paper LPA"
+msgstr "Yes, it’s the same as my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
 msgid "No, it is different to my address on the paper LPA"
-msgstr "No, it’s different to my address in the paper LPA"
+msgstr "No, it’s different to my address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "I’m not sure if it’s the same address in the paper LPA"
+msgstr "I’m not sure if it’s the same address in the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -2515,7 +2515,7 @@ msgstr "Enter the attorney’s date of birth"
 #: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Select whether this is the same address as your address on the paper LPA"
-msgstr "Select whether this is the same address as your address on the paper LPA"
+msgstr "Select whether this is the same address as your address on the paper <abbr title=\"lasting power of attorney\">LPA</abbr>"
 
 #. Create viewer code
 #: src/Actor/templates/actor/form-error-messages.html.twig:59
