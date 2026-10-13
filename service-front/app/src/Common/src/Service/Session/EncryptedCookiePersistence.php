@@ -81,7 +81,7 @@ class EncryptedCookiePersistence implements SessionPersistenceInterface, Initial
         $sessionData = $this->getSessionCookieValueFromRequest($request);
         $data        = $this->encrypter->decodeCookieValue($sessionData);
 
-        return new Session($data, $data[self::SESSION_ID_KEY] ?: '');
+        return new Session($data, $data[self::SESSION_ID_KEY] ?? '');
     }
 
     public function persistSession(SessionInterface $session, ResponseInterface $response): ResponseInterface
