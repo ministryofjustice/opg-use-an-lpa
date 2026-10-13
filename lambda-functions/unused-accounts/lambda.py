@@ -1,7 +1,7 @@
 import os
 import boto3
 import logging
-from merge_duplicate_identities import *
+from delete_unused_accounts import *
 
 # Initialize the logger
 logger = logging.getLogger()
@@ -12,7 +12,9 @@ def lambda_handler(event, context):
         initialise()
 
         # Parse the input event
-        execute = event['Execute']
+        execute = event.get('Execute', 'False')
+        if isinstance(execute, bool):
+            execute = 'True' if execute else 'False'
 
         # Access environment variables
         bucket_name = os.environ.get('BUCKET')
@@ -23,41 +25,35 @@ def lambda_handler(event, context):
         if not environment_name:
             environment_name = ""
 
-        work_file_prefix = os.environ.get('WORK_FILE_PREFIX')
-        if not work_file_prefix:
-            work_file_prefix = "todo"
-
         plan_file_prefix = os.environ.get('PLAN_FILE_PREFIX')
         if not plan_file_prefix:
             plan_file_prefix = "plan"
 
+        months_inactive = int(os.environ.get('MONTHS_INACTIVE', '6'))
 
         if execute == 'True':
-            execute_all_plans(bucket_name, plan_file_prefix, environment_name)
-
+            execute_all_deletion_plans(bucket_name, plan_file_prefix, environment_name)
 
             data = {
                 "statusCode": 200,
-                "message": "Execution of all plans completed successfully",
+                "message": "Execution of all deletion plans completed successfully",
             }
 
         else:
-            build_plans(
+            build_deletion_plans(
                 table_prefix=environment_name,
                 bucket=bucket_name,
-                work_prefix=work_file_prefix,
                 plan_prefix=plan_file_prefix,
-                limit=None,
-                offset=0
+                months_inactive=months_inactive
             )
 
             data = {
                 "statusCode": 200,
-                "message": "Generation of all plans completed successfully"
+                "message": "Generation of all deletion plans completed successfully"
             }
 
         return data
 
     except Exception as e:
-        logger.error(f"Error processing merge plan lambda: {str(e)}")
+        logger.error(f"Error processing unused accounts lambda: {str(e)}")
         raise
