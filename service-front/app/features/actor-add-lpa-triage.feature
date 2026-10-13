@@ -31,7 +31,7 @@ Feature: Add an LPA triage page
     Then I will be taken to the appropriate <page heading> to add an lpa
 
     Examples:
-      | option | page                                       |
+      | option | page heading                                      |
       | Yes    | What is your activation key?               |
       | No     | activation-key-request.start.heading-page  |
 
