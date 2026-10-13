@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-12 13:21+0000\n"
-"Last-Translator: Adam Cooper <adam.cooper@digital.justice.gov.uk>\n"
+"PO-Revision-Date: 2026-10-13 14:15+0000\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -1881,15 +1881,15 @@ msgstr "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr <abbr title=\"atwrn
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Ie, mae’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Ie, mae’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
 msgid "No, it is different to my address on the paper LPA"
-msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Na, mae’n wahanol i’m cyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -2534,7 +2534,7 @@ msgstr "Rhowch ddyddiad geni’r atwrnai"
 #: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Select whether this is the same address as your address on the paper LPA"
-msgstr "Dewiswch ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
+msgstr "Dewiswch ai dyma’r un cyfeiriad â’r cyfeiriad sydd yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #. Create viewer code
 #: src/Actor/templates/actor/form-error-messages.html.twig:59
