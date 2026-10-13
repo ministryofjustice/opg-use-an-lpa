@@ -21,11 +21,11 @@ class RequestTracingMiddlewareTest extends TestCase
     public function it_sets_a_trace_attribute_if_set_as_a_header(): void
     {
         $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);
-        $containerProphecy->setValue('trace-id', 'Root=1-1-11')->shouldBeCalled();
+        $containerProphecy->setValue('trace_id', 'Root=1-1-11')->shouldBeCalled();
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getHeader('x-amzn-trace-id')->willReturn(['Root=1-1-11']);
-        $requestProphecy->withAttribute('trace-id', 'Root=1-1-11')->willReturn($requestProphecy->reveal());
+        $requestProphecy->withAttribute('trace_id', 'Root=1-1-11')->willReturn($requestProphecy->reveal());
 
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $delegateProphecy
@@ -40,11 +40,11 @@ class RequestTracingMiddlewareTest extends TestCase
     public function trace_id_is_blank_if_no_header(): void
     {
         $containerProphecy = $this->prophesize(ModifiableContainerInterface::class);
-        $containerProphecy->setValue('trace-id', '')->shouldBeCalled();
+        $containerProphecy->setValue('trace_id', '')->shouldBeCalled();
 
         $requestProphecy = $this->prophesize(ServerRequestInterface::class);
         $requestProphecy->getHeader('x-amzn-trace-id')->willReturn([]);
-        $requestProphecy->withAttribute('trace-id', '')->willReturn($requestProphecy->reveal());
+        $requestProphecy->withAttribute('trace_id', '')->willReturn($requestProphecy->reveal());
 
         $delegateProphecy = $this->prophesize(RequestHandlerInterface::class);
         $delegateProphecy

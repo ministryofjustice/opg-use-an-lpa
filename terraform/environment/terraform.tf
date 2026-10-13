@@ -20,6 +20,21 @@ variable "default_role" {
   description = "The default role to assume"
 }
 
+variable "backup_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
+}
+
+variable "identity_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
+}
+
+variable "management_role" {
+  type    = string
+  default = "opg-use-an-lpa-ci-boundary"
+}
+
 provider "aws" {
   region = "eu-west-1"
   default_tags {
@@ -75,7 +90,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.management_role}"
     session_name = "terraform-session"
   }
 }
@@ -87,7 +102,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::631181914621:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::631181914621:role/${var.identity_role}"
     session_name = "terraform-session"
   }
 }
@@ -99,7 +114,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::238302996107:role/${var.default_role}"
+    role_arn     = "arn:aws:iam::238302996107:role/${var.backup_role}"
     session_name = "terraform-session"
   }
 }
