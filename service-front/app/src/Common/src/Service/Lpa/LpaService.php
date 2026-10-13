@@ -7,6 +7,7 @@ namespace Common\Service\Lpa;
 use ArrayObject;
 use Common\Exception\ApiException;
 use Common\Service\ApiClient\Client as ApiClient;
+use Common\Service\Context\UserContext;
 use Common\Service\Log\EventCodes;
 use Exception;
 use Fig\Http\Message\StatusCodeInterface;
@@ -32,9 +33,9 @@ class LpaService
      * @return ArrayObject|null
      * @throws Exception
      */
-    public function getLpas(string $userToken, bool $sortAndPopulate = false): ?ArrayObject
+    public function getLpas(UserContext $userContext, bool $sortAndPopulate = false): ?ArrayObject
     {
-        $this->apiClient->setUserTokenHeader($userToken);
+        $this->apiClient->setUserTokenHeader($userContext->userId);
 
         $lpaData = $this->apiClient->httpGet('/v1/lpas');
 
