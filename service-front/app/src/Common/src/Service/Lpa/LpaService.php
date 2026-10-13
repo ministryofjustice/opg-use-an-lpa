@@ -44,7 +44,7 @@ class LpaService
         $this->logger->info(
             'Account with Id {id} retrieved {count} LPA(s)',
             [
-                'id'    => $userToken,
+                'id'    => $userContext->userId,
                 'count' => count($lpaData),
             ]
         );
@@ -52,7 +52,7 @@ class LpaService
         return $sortAndPopulate
             ? ($this->groupLpas)(
                 ($this->sortLpas)(
-                    ($this->populateLpaMetadata)($lpaData, $userToken)
+                    ($this->populateLpaMetadata)($lpaData, $userContext->userId)
                 )
             )
             : $lpaData;
