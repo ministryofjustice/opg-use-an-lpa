@@ -82,7 +82,9 @@ resource "aws_cloudwatch_metric_alarm" "this" {
   count               = local.create_alarm ? 1 : 0
   alarm_description   = "${var.environment_name} ${var.service_name} health check"
   alarm_name          = "${var.environment_name}-${var.service_name}-healthcheck-alarm"
-  actions_enabled     = false
+  actions_enabled     = true
+  alarm_actions       = [var.sns_topic_arn]
+  ok_actions          = [var.sns_topic_arn]
   comparison_operator = "LessThanThreshold"
   datapoints_to_alarm = 1
   evaluation_periods  = 1

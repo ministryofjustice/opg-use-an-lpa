@@ -50,6 +50,7 @@ module "viewer_use_my_lpa" {
   service_name               = "viewer"
   create_alarm               = !var.shared_load_balancers_enabled
   create_health_check        = !var.shared_load_balancers_enabled
+  sns_topic_arn              = aws_sns_topic.cloudwatch_to_pagerduty.arn
   environment_name           = var.environment_name
   create_block_email_records = true
 
@@ -89,6 +90,7 @@ module "actor_use_my_lpa" {
   service_name               = "actor"
   create_alarm               = !var.shared_load_balancers_enabled
   create_health_check        = !var.shared_load_balancers_enabled
+  sns_topic_arn              = aws_sns_topic.cloudwatch_to_pagerduty.arn
   environment_name           = var.environment_name
   create_block_email_records = true
 

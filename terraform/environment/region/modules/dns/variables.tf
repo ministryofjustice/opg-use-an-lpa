@@ -25,6 +25,12 @@ variable "create_alarm" {
   default     = false
 }
 
+variable "sns_topic_arn" {
+  description = "SNS topic ARN to notify when the health check alarm changes state"
+  type        = string
+  default     = null
+}
+
 variable "dns_namespace_env" {
   description = "The environment name of the DNS namespace"
   type        = string
