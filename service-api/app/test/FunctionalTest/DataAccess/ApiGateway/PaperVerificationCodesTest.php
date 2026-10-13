@@ -102,7 +102,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
     #[Test]
     public function it_validates_a_code_that_is_valid_and_used(): void
     {
-        $expiryDate = (new DateTimeImmutable('now'))
+        $expiryDate = (new DateTimeImmutable('2026-01-01'))
             ->add(new DateInterval('P1Y'))
             ->format('Y-m-d');
 
@@ -221,7 +221,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
     #[Test]
     public function it_expires_a_provided_code_with_a_reason(): void
     {
-        $expiryDate = (new DateTimeImmutable('now'))
+        $expiryDate = (new DateTimeImmutable('2026-01-01'))
             ->add(new DateInterval('P1Y'))
             ->format('Y-m-d');
 
@@ -280,7 +280,7 @@ class PaperVerificationCodesTest extends AbstractFunctionalTestCase
     #[Test]
     public function it_transitions_a_code_to_online_usage(): void
     {
-        $expiryDate = (new DateTimeImmutable('now'))
+        $expiryDate = (new DateTimeImmutable('2026-01-01'))
             ->add(new DateInterval('P30D'))
             ->format('Y-m-d');
 

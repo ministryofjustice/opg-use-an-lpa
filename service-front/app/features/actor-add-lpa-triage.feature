@@ -28,7 +28,7 @@ Feature: Add an LPA triage page
   Scenario Outline: A user with an activation key is taken to the add an LPA page
     Given I am on the add an LPA triage page
     When I select <option> whether I have an activation key
-    Then I will be taken to the appropriate <page> to add an lpa
+    Then I will be taken to the appropriate <page heading> to add an lpa
 
     Examples:
       | option | page                                       |
