@@ -14,6 +14,9 @@ final class RequestGlobalsExtension extends AbstractExtension
      */
     public function getFunctions(): array
     {
+        // by making these functions rather than true global variables we gain two benefits
+        //  * we can cache the results of the function call in the runtime class
+        //  * we don't have to worry about twig caching so much
         return [
             new TwigFunction('user', [RequestGlobalsRuntime::class, 'getUser']),
             new TwigFunction('flash', [RequestGlobalsRuntime::class, 'getFlashMessages']),
