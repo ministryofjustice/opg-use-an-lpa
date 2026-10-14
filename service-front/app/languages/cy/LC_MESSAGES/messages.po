@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-14 12:06+0000\n"
+"PO-Revision-Date: 2026-10-14 13:47+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -586,12 +586,12 @@ msgstr "Rhowch y cod mynediad hwn i %organisation%. Dylent fynd i <a href=\"%lin
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:71
 msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Bydd copïau o ddymuniadau a chyfarwyddiadau’r rhoddwr i’w gweld yn y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Bydd angen i chi ddangos yr LPA bapur i sefydliadau os na ellir darllen unrhyw ran o’r rhain."
+msgstr "Bydd copïau wedi’u sganio o ddymuniadau a chyfarwyddiadau’r rhoddwr i’w gweld yn y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau os na ellir darllen unrhyw ran o’r rhain."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:77
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:75
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Bydd copïau o ddymuniadau’r rhoddwr i’w gweld yn y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Bydd angen i chi ddangos yr LPA bapur i sefydliadau os na ellir darllen unrhyw ran o’r rhain."
+msgstr "Bydd copïau wedi’u sganio o ddymuniadau’r rhoddwr i’w gweld yn y crynodeb o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Bydd angen i chi ddangos yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur i sefydliadau os na ellir darllen unrhyw ran o’r rhain."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:81
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
@@ -2082,7 +2082,7 @@ msgstr "Eich rhif ffôn"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:140
 msgid "Not provided"
-msgstr "Heb ei ddarparu"
+msgstr "Heb ei roi"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:145
 msgid "Change<span class=\"govuk-visually-hidden\"> telephone number</span>"
