@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-13 16:14+0000\n"
+"PO-Revision-Date: 2026-10-14 12:06+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -1901,7 +1901,7 @@ msgstr "Dim ond y rhoddwr neu atwrnai gweithredol gaiff ofyn am god actifadu."
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:27
 msgid "You can only become an active attorney if one of the attorneys has stopped carrying out their role. This happens if they:"
-msgstr "Dim ond os yw un o’r atwrneiod wedi rhoi’r gorau i gyflawni ei rôl y gallwch ddod yn atwrnai gweithredol. Bydd hyn yn digwydd os yw:"
+msgstr "Byddwch yn atwrnai gweithredol os bydd un o’r atwrneiod yn rhoi’r gorau i gyflawni ei rôl. Bydd hyn yn digwydd os yw:"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:33
 msgid "have died"
@@ -1909,11 +1909,11 @@ msgstr "wedi marw"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:35
 msgid "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a>(‘disclaimed their appointment’)"
-msgstr "wedi <a href=\"%link%\" class=\"govuk-link\">sefyll i lawr </a>(‘ymwrthod â’i benodiad’)"
+msgstr "wedi <a href=\"%link%\" class=\"govuk-link\">camu i lawr </a> (‘ymwrthod â’i benodiad’)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:41
 msgid "have been <a href=\"%link%\" class=\"govuk-link\">removed from the LPA by the donor</a>"
-msgstr "wedi cael ei <a href=\"%link%\" class=\"govuk-link\">dynnu o’r LPA</a>gan y rhoddwr"
+msgstr "wedi cael ei <a href=\"%link%\" class=\"govuk-link\">dynnu o’r LPA</a> gan y rhoddwr"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:45
 msgid "have lost mental capacity"
@@ -1921,11 +1921,11 @@ msgstr "wedi colli galluedd meddyliol"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:47
 msgid "have been declared bankrupt or have a debt relief order (property and finance attorneys only)"
-msgstr "wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhad rhag dyledion (atwrneiod eiddo ac arian yn unig)"
+msgstr "wedi’i ddatgan yn fethdalwr neu fod ganddo orchymyn rhyddhau o ddyled (atwrneiod eiddo ac arian yn unig)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:52
 msgid "were married to, or in a civil partnership with, the donor, and the relationship has legally ended (unless the donor said otherwise in the instructions they made on the LPA)"
-msgstr "yn briod efo’r rhoddwr neu mewn partneriaeth sifil efo’r rhoddwr, ac mae’r berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel arall yn y cyfarwyddiadau a roesant ar yr LPA)"
+msgstr "yn briod â’r rhoddwr neu mewn partneriaeth sifil â’r rhoddwr, ac mae’r berthynas wedi dod i ben yn gyfreithiol (oni bai bod y rhoddwr wedi dweud fel arall yn y cyfarwyddiadau a roesant ar yr LPA)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:59
 msgid "You must <a href=\"%link%\" class=\"govuk-link\">let us know if you have become an active attorney</a>. Once we’ve updated our records to show you are an active attorney, you’ll be able to request an activation key."
@@ -2026,7 +2026,7 @@ msgstr "Gwiriwch eich atebion"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Current address"
-msgstr "Cyfeiriad presennol"
+msgstr "Eich cyfeiriad presennol"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:49
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
@@ -2034,7 +2034,7 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:33
 msgid "Address on paper LPA"
-msgstr "Cyfeiriad ar yr LPA papur"
+msgstr "Eich cyfeiriad ar yr LPA bapur"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Not sure"
@@ -2078,7 +2078,7 @@ msgstr "Newid<span class=\"govuk-visually-hidden\"> cyfeiriad geni atwrnai</span
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
-msgstr "Rhif ffôn"
+msgstr "Eich rhif ffôn"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:140
 msgid "Not provided"
