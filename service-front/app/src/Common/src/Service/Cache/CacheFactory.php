@@ -10,7 +10,7 @@ use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Cache\Psr16Cache;
 use UnexpectedValueException;
 
-class CacheFactory
+final class CacheFactory
 {
     public function __construct(private ContainerInterface $container)
     {

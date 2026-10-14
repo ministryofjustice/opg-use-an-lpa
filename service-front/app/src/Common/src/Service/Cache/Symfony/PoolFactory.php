@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Common\Service\Cache\Symfony;
 
+use Common\Service\Cache\RedisFactory;
 use DI\Factory\RequestedEntry;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -43,7 +44,12 @@ final class PoolFactory implements FactoryInterface
         $pool = match ($config['adapter']) {
             'apcu' => $this->createApcuPool($config['namespace'], $config['default_lifetime'], $config['version']),
             'array' => new ArrayAdapter($config['default_lifetime'], true),
-            'redis' => $this->createRedisPool($config['namespace'], $config['default_lifetime'], $config['redis']),
+            'redis' => $this->createRedisPool(
+                $container,
+                $config['namespace'],
+                $config['default_lifetime'],
+                $config['redis'],
+            ),
             default => throw new UnexpectedValueException('Unsupported Symfony cache adapter: ' . $config['adapter']),
         };
 
@@ -117,17 +123,30 @@ final class PoolFactory implements FactoryInterface
 
     /**
      * @param array{host: string, port: int, timeout: int, persistent_id: string, serializer: int}|null $redis
-     * @throws \RedisException
-     * @throws UnexpectedValueException
+     * @return RedisAdapter
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @throws RuntimeException
+     * @throws UnexpectedValueException
+     * @throws \RedisException
      */
-    private function createRedisPool(string $namespace, int $lifetime, ?array $redis): RedisAdapter
-    {
+    private function createRedisPool(
+        ContainerInterface $container,
+        string $namespace,
+        int $lifetime,
+        ?array $redis,
+    ): RedisAdapter {
         if ($redis === null) {
             throw new UnexpectedValueException('Missing Redis cache configuration');
         }
 
-        $connection = new Redis();
+        $factory = $container->get(RedisFactory::class);
+
+        if (!$factory instanceof RedisFactory) {
+            throw new UnexpectedValueException('Redis cache factory must be a RedisFactory instance');
+        }
+
+        $connection = $factory();
 
         if (!$connection->connect($redis['host'], $redis['port'], $redis['timeout'], $redis['persistent_id'])) {
             throw new RuntimeException('Unable to connect to Redis cache');

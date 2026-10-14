@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommonTest\Service\Cache\Symfony;
 
+use Common\Service\Cache\RedisFactory;
 use Common\Service\Cache\Symfony\PoolFactory;
 use DI\Factory\RequestedEntry;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -12,9 +13,12 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use Redis;
+use RuntimeException;
 use stdClass;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 use UnexpectedValueException;
 
 #[CoversClass(PoolFactory::class)]
@@ -57,6 +61,69 @@ final class PoolFactoryTest extends TestCase
         $pool = (new PoolFactory())($this->container($config), 'cache.test');
 
         self::assertInstanceOf(ApcuAdapter::class, $pool);
+    }
+
+    #[Test]
+    public function it_should_create_a_redis_pool(): void
+    {
+        $connection = $this->createMock(Redis::class);
+        $connection->expects(self::once())->method('connect')
+            ->with('redis.test', 6379, 5, 'factory-test')->willReturn(true);
+        $connection->expects(self::once())->method('setOption')
+            ->with(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP)->willReturn(true);
+
+        $factory = $this->createMock(RedisFactory::class);
+        $factory->expects(self::once())->method('__invoke')->willReturn($connection);
+
+        $pool = (new PoolFactory())(
+            $this->container($this->redisConfig(), redisFactory: $factory),
+            'cache.test',
+        );
+
+        self::assertInstanceOf(RedisAdapter::class, $pool);
+    }
+
+    #[Test]
+    #[DataProvider('redisFailures')]
+    public function it_should_throw_when_redis_setup_fails(bool $connected, bool $configured, string $message): void
+    {
+        $connection = $this->createMock(Redis::class);
+        $connection->expects(self::once())->method('connect')->willReturn($connected);
+        $connection->expects($connected ? self::once() : self::never())
+            ->method('setOption')->willReturn($configured);
+
+        $factory = $this->createMock(RedisFactory::class);
+        $factory->expects(self::once())->method('__invoke')->willReturn($connection);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage($message);
+
+        (new PoolFactory())($this->container($this->redisConfig(), redisFactory: $factory), 'cache.test');
+    }
+
+    public static function redisFailures(): array
+    {
+        return [
+            'connection failure' => [
+                false,
+                true,
+                'Unable to connect to Redis cache',
+            ],
+            'serializer failure' => [
+                true,
+                false,
+                'Unable to configure Redis cache serializer',
+            ],
+        ];
+    }
+
+    #[Test]
+    public function it_should_reject_an_invalid_redis_factory(): void
+    {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Redis cache factory must be a RedisFactory instance');
+
+        (new PoolFactory())($this->container($this->redisConfig(), redisFactory: new stdClass()), 'cache.test');
     }
 
     #[Test]
@@ -153,8 +220,26 @@ final class PoolFactoryTest extends TestCase
         ];
     }
 
-    private function container(array $config, ?object $logger = null): ContainerInterface
+    private function redisConfig(): array
     {
+        $config = $this->config('redis');
+
+        $config['symfony_cache']['pools']['cache.test']['redis'] = [
+            'host'          => 'redis.test',
+            'port'          => 6379,
+            'timeout'       => 5,
+            'persistent_id' => 'factory-test',
+            'serializer'    => Redis::SERIALIZER_PHP,
+        ];
+
+        return $config;
+    }
+
+    private function container(
+        array $config,
+        ?object $logger = null,
+        ?object $redisFactory = null,
+    ): ContainerInterface {
         $container = $this->createMock(ContainerInterface::class);
         $container->method('has')->with(LoggerInterface::class)->willReturn($logger !== null);
         $container->method('get')->willReturnMap([
@@ -165,6 +250,10 @@ final class PoolFactoryTest extends TestCase
             [
                 LoggerInterface::class,
                 $logger,
+            ],
+            [
+                RedisFactory::class,
+                $redisFactory,
             ],
         ]);
 

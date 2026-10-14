@@ -51,6 +51,7 @@ use Common\Service\{
     User\UserServiceFactory
 };
 use Common\Service\Cache\Symfony\{PoolFactory, SimpleCacheFactory, TagAwareFactory};
+use Common\Service\Cache\RedisFactory;
 use Common\Service\Lpa\{Factory\InstAndPrefImages, Factory\Sirius};
 use Common\Service\Session\{
     Encryption\EncryptInterface,
@@ -139,6 +140,9 @@ class ConfigProvider
                 // Language extraction
                 LoaderInterface::class              => PoLoader::class,
                 GeneratorInterface::class           => PoGenerator::class,
+            ],
+            'invokables' => [
+                RedisFactory::class => RedisFactory::class,
             ],
             'factories'  => [
                 // Cache
