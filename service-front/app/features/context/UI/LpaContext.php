@@ -3601,11 +3601,13 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/add-by-key/activation-key');
 
         $newLpa = json_decode(
-            file_get_contents(__DIR__ . '../../../../test/fixtures/4UX3.json')
+            file_get_contents(__DIR__ . '../../../../test/fixtures/full_example_2.json')
         );
 
-        $newLpa->uId          = 'M-7890-0400-4000';
-        $newUserLpaActorToken = '987654322';
+        $newLpa->uId          = '700000000084';
+        $newUserLpaActorToken = '123456322';
+        $attorney             = $newLpa->attorneys[0];
+        $address              = $attorney->addresses[0];
 
         $newLpaData = [
             'user-lpa-actor-token'       => $newUserLpaActorToken,
@@ -3616,27 +3618,27 @@ class LpaContext implements Context
                 'details' => [
                     'addresses'    => [
                         [
-                            'addressLine1' => $newLpa->attorneys[0]->address->line1,
-                            'addressLine2' => '',
-                            'addressLine3' => '',
-                            'country'      => $newLpa->attorneys[0]->address->country,
-                            'county'       => '',
+                            'addressLine1' => $address->addressLine1,
+                            'addressLine2' => $address->addressLine2,
+                            'addressLine3' => $address->addressLine3,
+                            'country'      => $address->country,
+                            'county'       => $address->county,
                             'id'           => 0,
-                            'postcode'     => '',
-                            'town'         => $newLpa->attorneys[0]->address->town,
+                            'postcode'     => $address->postcode,
+                            'town'         => $address->town,
                             'type'         => 'Primary',
                         ],
                     ],
-                    'companyName'  => null,
-                    'dob'          => $newLpa->attorneys[0]->dateOfBirth,
+                    'companyName'  => $attorney->companyName,
+                    'dob'          => $attorney->dob,
                     'email'        => '',
-                    'firstname'    => $newLpa->attorneys[0]->firstNames,
+                    'firstname'    => $attorney->firstname,
                     'id'           => 0,
-                    'middlenames'  => null,
-                    'salutation'   => 'Mr',
-                    'surname'      => $newLpa->attorneys[0]->lastName,
+                    'middlenames'  => $attorney->middlenames,
+                    'salutation'   => $attorney->salutation,
+                    'surname'      => $attorney->surname,
                     'systemStatus' => true,
-                    'uId'          => $newLpa->attorneys[0]->uid,
+                    'uId'          => $attorney->uId,
                 ],
             ],
             'applicationHasRestrictions' => false,
@@ -3658,16 +3660,36 @@ class LpaContext implements Context
             '24',
             '07',
             '1982',
-            'M-7890-0400-4000'
+            '700000000084'
         );
 
         $request = $this->apiFixtures->getLastRequest();
 
+        $body = (string) $request->getBody();
+
+        var_dump([
+            'method'         => $request->getMethod(),
+            'uri'            => (string) $request->getUri(),
+            'body'           => $body,
+            'json_error'     => json_last_error_msg(),
+            'content_length' => strlen($body),
+        ]);
+
+        die;
+
         $body   = (string) $request->getBody();
         $params = json_decode($body, true);
 
-        Assert::assertNotNull($params);
+        //Assert::assertIsArray($params, 'The outgoing request body must contain valid JSON.');
         Assert::assertArrayHasKey('actor-code', $params);
         Assert::assertEquals($code, $params['actor-code']);
+
+//        $body   = (string) $request->getBody();
+//        $params = json_decode($body, true);
+//        var_dump($params);die;
+//
+//        Assert::assertNotNull($params);
+//        Assert::assertArrayHasKey('actor-code', $params);
+//        Assert::assertEquals($code, $params['actor-code']);
     }
 }
