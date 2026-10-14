@@ -88,6 +88,11 @@ func run(args []string, ctx context.Context) int {
 		return 2
 	}
 
+	if fs.NArg() > 0 {
+		slog.Error("unexpected positional arguments (check flag values are quoted)", slog.Any("args", fs.Args()))
+		return 2
+	}
+
 	if cfg.tablePrefix != "" {
 		cfg.tablePrefix = fmt.Sprintf("%s-", cfg.tablePrefix)
 	}
