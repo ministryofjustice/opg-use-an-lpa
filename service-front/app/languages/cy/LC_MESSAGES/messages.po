@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-12 13:21+0000\n"
-"Last-Translator: Adam Cooper <adam.cooper@digital.justice.gov.uk>\n"
+"PO-Revision-Date: 2026-10-13 16:14+0000\n"
+"Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cy
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:12
 msgid "This LPA has instructions.<br>"
-msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau.<br>"
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau.<br>"
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-important-message.html.twig:61
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:26
@@ -100,7 +100,7 @@ msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dy
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:6
 msgid "This LPA has instructions. You might need to show organisations the paper LPA."
-msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau. Efallai y bydd angen i chi ddangos LPA bapur i sefydliadau."
 
 #: src/Actor/templates/actor/partials/lpa-instructions-preferences-warning-message.html.twig:10
 msgid "This LPA has preferences. You might need to show organisations the paper LPA."
@@ -1659,7 +1659,7 @@ msgstr "Os byddwch yn dileu LPA oddi ar eich cyfrif Defnyddio atwrneiaeth arhoso
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:29
 msgid "all access codes you’ve created for this LPA will be valid until they are cancelled or expire"
-msgstr "bydd pob cod mynediad rydych wedi ei greu ar gyfer yr LPA hon yn ddilys nes y byddant yn dod i ben neu yn cael eu canslo"
+msgstr "bydd pob cod mynediad rydych wedi ei greu ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn ddilys nes y byddant yn dod i ben neu yn cael eu canslo"
 
 #: src/Actor/templates/actor/confirm-remove-lpa.html.twig:30
 msgid "you’ll not be able to see how the LPA is being used or has been used"
@@ -1881,15 +1881,15 @@ msgstr "Ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr <abbr title=\"atwrn
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:67
 msgid "Yes, it is the same as my address on the paper LPA"
-msgstr "Ie, mae’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Ie, mae’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:71
 msgid "No, it is different to my address on the paper LPA"
-msgstr "Na, mae’n wahanol i’m cyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Na, mae’n wahanol i’m cyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/actor-address.html.twig:75
 msgid "I am not sure if it's the same address on the paper LPA"
-msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
+msgstr "Dydw i ddim yn siŵr a yw’r un fath â fy nghyfeiriad yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:17
 msgid "You cannot request an activation key if you are a replacement attorney"
@@ -2534,7 +2534,7 @@ msgstr "Rhowch ddyddiad geni’r atwrnai"
 #: src/Actor/templates/actor/form-error-messages.html.twig:56
 msgctxt "error"
 msgid "Select whether this is the same address as your address on the paper LPA"
-msgstr "Dewiswch ai dyma’r un cyfeiriad â’r cyfeiriad sydd ar yr atwrneiaeth arhosol bapur"
+msgstr "Dewiswch ai dyma’r un cyfeiriad â’r cyfeiriad sydd yn yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> bapur"
 
 #. Create viewer code
 #: src/Actor/templates/actor/form-error-messages.html.twig:59
@@ -3570,12 +3570,12 @@ msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cy
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:75
 #: src/Common/templates/partials/full-lpa-display.html.twig:75
 msgid "You should download and save this LPA summary. You can use it as evidence that you viewed the LPA summary before acting on it."
-msgstr "Dylech lawrlwytho a chadw’r crynodeb LPA hwn. Gallwch ei ddefnyddio fel tystiolaeth eich bod wedi edrych ar y crynodeb LPA cyn gweithredu."
+msgstr "Dylech lawrlwytho a chadw’r crynodeb hwn o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>. Gallwch ei ddefnyddio fel tystiolaeth eich bod wedi edrych ar y crynodeb o’r LPA cyn gweithredu."
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:143
 #: src/Common/templates/partials/full-lpa-display.html.twig:143
 msgid "Download this LPA summary"
-msgstr "Llwytho crynodeb o’r LPA i lawr"
+msgstr "Lawrlwytho’r crynodeb hwn o’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>"
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:119
 #: src/Common/templates/partials/full-lpa-display.html.twig:119
@@ -3641,7 +3641,7 @@ msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys dy
 
 #: src/Common/templates/partials/full-lpa-display-combined-lpa.html.twig:56
 msgid "This LPA has instructions"
-msgstr "Mae’r LPA hon yn cynnwys cyfarwyddiadau"
+msgstr "Mae’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> hon yn cynnwys cyfarwyddiadau"
 
 #: src/Common/templates/partials/header/one-login-logged-in.html.twig:123
 #: src/Common/templates/partials/header/one-login.html.twig:50
@@ -4537,7 +4537,7 @@ msgstr "Dewislen"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:134
 msgid "Who can make the joint decisions on this LPA has changed. This is because an attorney has been removed or replaced."
-msgstr "Mae pwy sy’n gallu gwneud y penderfyniadau ar y cyd ar yr LPA yma wedi newid. Y rheswm am hyn yw bod atwrnai wedi cael ei ddileu neu ei ddisodli."
+msgstr "Mae pwy sy’n gallu gwneud y penderfyniadau ar y cyd ar yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma wedi newid. Y rheswm am hyn yw bod atwrnai wedi cael ei ddileu neu ei ddisodli."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:98
 msgid "There are no longer attorneys who can make the joint decisions on this LPA."
@@ -4553,19 +4553,19 @@ msgstr "Mae’r canlynol yn dal yn gallu gwneud yr holl benderfyniadau eraill ar
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:112
 msgid "The donor and the attorney have been informed of this. They can contact the Office of the Public Guardian (OPG) for advice on how these decisions can be made available again in future. Changes made to this LPA have been checked and processed by OPG."
-msgstr "Mae’r rhoddwr a’r atwrnai wedi cael gwybod am hyn. Gallant gysylltu â Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) i gael cyngor ar sut y gellir sicrhau bod y penderfyniadau hyn ar gael eto yn y dyfodol. Mae newidiadau i’r LPA yma wedi cael eu gwirio a’u prosesu gan OPG."
+msgstr "Mae’r rhoddwr a’r atwrnai wedi cael gwybod am hyn. Gallant gysylltu â Swyddfa’r Gwarcheidwad Cyhoeddus (OPG) i gael cyngor ar sut y gellir sicrhau bod y penderfyniadau hyn ar gael eto yn y dyfodol. Mae newidiadau i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma wedi cael eu gwirio a’u prosesu gan <abbr title=\"Swyddfa’r Gwarcheidwad Cyhoeddus\">OPG</abbr>."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:119
 msgid "The joint decisions for this LPA can now only be made by:"
-msgstr "Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr LPA yma bellach:"
+msgstr "Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma bellach:"
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:147
 msgid "The donor and the attorneys have been informed of this. Changes made to this LPA have been checked and processed by the Office of the Public Guardian."
-msgstr "Mae’r rhoddwr a’r atwrneiod wedi cael gwybod am hyn. Mae newidiadau a wnaed i’r LPA yma wedi cael eu gwirio a’u prosesu gan Swyddfa’r Gwarcheidwad Cyhoeddus."
+msgstr "Mae’r rhoddwr a’r atwrneiod wedi cael gwybod am hyn. Mae newidiadau a wnaed i’r <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma wedi cael eu gwirio a’u prosesu gan Swyddfa’r Gwarcheidwad Cyhoeddus."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:135
 msgid "The joint decisions for this LPA can now only be made, and must be agreed, by:"
-msgstr "Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr LPA yma bellach, a rhaid iddynt gytuno arnynt:"
+msgstr "Dim ond y canlynol sy’n gallu gwneud y penderfyniadau ar y cyd ar gyfer yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr> yma bellach, a rhaid iddynt gytuno arnynt:"
 
 #: src/Common/src/View/Twig/LpaExtension.php:273
 msgid "Personal welfare"
