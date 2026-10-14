@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = "==3.14.8"
 dependencies = [
     "awslambdaric==3.1.1",
-    "boto3==1.43.107",
+    "boto3==1.43.108",
 ]
 
 [dependency-groups]
