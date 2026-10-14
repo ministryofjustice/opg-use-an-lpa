@@ -27,27 +27,21 @@ final class CachingDetector implements ResourceDetectorInterface
     public function getResource(): ResourceInfo
     {
         $cacheKey = self::CACHE_KEY_PREFIX . $this->name;
-        $useCache = function_exists('apcu_enabled') && apcu_enabled();
-
-        if ($useCache) {
-            $cached = apcu_fetch($cacheKey, $success);
-            if ($success && is_array($cached)) {
-                return ResourceInfo::create(Attributes::create($cached['attributes']), $cached['schemaUrl']);
-            }
+        $cached   = apcu_fetch($cacheKey, $success);
+        if ($success && is_array($cached)) {
+            return ResourceInfo::create(Attributes::create($cached['attributes']), $cached['schemaUrl']);
         }
 
         $resource = Suppression::run($this->detector->getResource(...));
 
-        if ($useCache) {
-            apcu_store(
-                $cacheKey,
-                [
-                    'attributes' => $resource->getAttributes()->toArray(),
-                    'schemaUrl'  => $resource->getSchemaUrl(),
-                ],
-                self::CACHE_TTL,
-            );
-        }
+        apcu_store(
+            $cacheKey,
+            [
+                'attributes' => $resource->getAttributes()->toArray(),
+                'schemaUrl'  => $resource->getSchemaUrl(),
+            ],
+            self::CACHE_TTL,
+        );
 
         return $resource;
     }
