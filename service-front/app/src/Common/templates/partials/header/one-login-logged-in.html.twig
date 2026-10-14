@@ -126,9 +126,9 @@
 
         <p class="govuk-body-s">
             {% trans %}Last signed in:{% endtrans %}
-            {{ user.getDetail('LastLogin') is empty
+            {{ user().getDetail('LastLogin') is empty
             ? "Never" | trans
-            : lpa_date(user.getDetail('LastLogin'))
+            : lpa_date(user().getDetail('LastLogin'))
             }}
         </p>
     </div>
