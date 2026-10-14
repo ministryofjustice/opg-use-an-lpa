@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-14 13:47+0000\n"
+"PO-Revision-Date: 2026-10-14 17:10+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: Welsh <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/cy/>\n"
 "Language: cy\n"
@@ -1741,7 +1741,7 @@ msgstr "Er enghraifft, 31 03 1980"
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:18
 #: src/Viewer/templates/viewer/paper-verification/found-lpa.html.twig:35
 msgid "What is the LPA reference number?"
-msgstr "Beth yw cyfeirnod yr atwrneiaeth arhosol (LPA)?"
+msgstr "Beth yw cyfeirnod yr <abbr title=\"atwrneiaeth arhosol\">LPA</abbr>?"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:23
 msgid "Where to find the reference number"
@@ -1749,11 +1749,11 @@ msgstr "Ble i ddod o hyd i'r cyfeirnod"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:29
 msgid "the reference number is on the first page of the LPA or any related letters from the Office of the Public Guardian"
-msgstr "mae’r cyfeirnod ar dudalen gyntaf yr LPA neu unrhyw lythyrau cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus"
+msgstr "mae’r cyfeirnod ar dudalen gyntaf yr LPA neu unrhyw lythyrau cysylltiedig gan Swyddfa’r Gwarcheidwad Cyhoeddus (OPG)"
 
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:30
 msgid "the reference may also be marked as ‘OPG reference number’, ‘Our ref’ or ‘Case number’"
-msgstr "gall y cyfeirnod hefyd gael ei farcio fel “cyfeirnod OPG”, “ein cyf” neu “rhif achos”"
+msgstr "gall y cyfeirnod hefyd gael ei alw yn “gyfeirnod OPG”, yn “ein cyf” neu’n “rhif achos”"
 
 #: src/Actor/templates/actor/add-lpa/lpa-reference-number.html.twig:30
 #: src/Actor/templates/actor/request-activation-key/reference-number.html.twig:41
@@ -2647,7 +2647,7 @@ msgstr "Mae hyn wedi digwydd am resymau technegol. Mae eich gwybodaeth yn ddioge
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:22
 msgid "Let us know if something is incorrect on the LPA"
-msgstr "Gadewch i ni wybod os oes rhywbeth yn anghywir yn yr LPA"
+msgstr "Rhowch wybod i ni os oes rhywbeth yn anghywir yn yr LPA"
 
 #: src/Actor/templates/actor/change-lpa-details.html.twig:24
 msgid "It's important that the information on the LPA summary is correct."
@@ -2801,7 +2801,7 @@ msgstr "Dyddiad gweld y crynodeb"
 #: src/Actor/templates/actor/view-lpa-summary-combined-lpa.html.twig:164
 #: src/Actor/templates/actor/view-lpa-summary.html.twig:161
 msgid "You cannot use a download or printout of this page instead of giving someone an access code."
-msgstr "Ni allwch ddefnyddio fersiwn wedi’i lawrlwytho nac allbrint o’r dudalen hon yn lle rhoi cod mynediad i rywun."
+msgstr "Ni chewch ddefnyddio fersiwn wedi’i lawrlwytho nac allbrint o’r dudalen hon yn lle rhoi cod mynediad i rywun."
 
 #: src/Actor/templates/actor/lpa-not-found.html.twig:3
 #: src/Viewer/templates/viewer/check-code-not-found.html.twig:3
@@ -2849,7 +2849,7 @@ msgstr "Rydych wedi ychwanegu LPA %lpaType% %donor%"
 #: src/Actor/templates/actor/flash-messages.html.twig:7
 msgctxt "flashMessage"
 msgid "You cancelled the access code for %organisation%: %code%"
-msgstr "Rydych wedi canslo’r cod mynediad %organisation%: %code%"
+msgstr "Rydych wedi canslo cod mynediad %organisation%: %code%"
 
 #: src/Actor/templates/actor/actor-session-expired.html.twig:3
 msgid "We’ve signed you out"
@@ -2990,7 +2990,7 @@ msgstr "Bydd unrhyw wybodaeth a roddir gennych yn cael ei storio’n ddiogel a�
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:138
 msgid "Let us know if you want us to change the LPA"
-msgstr "Gadewch i ni wybod os ydych eisiau i ni newid yr LPA"
+msgstr "Rhowch wybod i ni os hoffech chi i ni newid yr LPA"
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:140
 msgid "When professionals and organisations view the <abbr title=\"lasting power of attorney\">LPA</abbr> summary, it’s important they see up to date information."
@@ -3028,7 +3028,7 @@ msgstr "Wedi i chi roi gwybod i ni am newid, fe all gymryd ychydig o ddyddiau cy
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:164
 msgid "Please let us know if changes need to be made as soon as you can."
-msgstr "Gadewch i ni wybod am newidiadau sydd angen eu gwneud cyn gynted â phosibl."
+msgstr "Rhowch wybod i ni am newidiadau sydd angen eu gwneud cyn gynted â phosibl."
 
 #: src/Actor/templates/actor/actor-terms-of-use.html.twig:166
 msgid "<b>Only the Court of Protection can change a registered <abbr title=\"lasting power of attorney\">LPA</abbr></b>. You must not make changes to the paper <abbr title=\"lasting power of attorney\">LPA</abbr> with a pen, correction fluid or in any other way. This applies to all changes, even small things like correcting a spelling mistake in someone’s name. If you change the <abbr title=\"lasting power of attorney\">LPA</abbr>, you may not be able to use it anymore."
@@ -3288,7 +3288,7 @@ msgstr "Rhowch gynnig arall arni yn nes ymlaen."
 
 #: src/Common/templates/error/error.html.twig:13
 msgid "We’ve not saved any information you entered. When the service is available, you’ll have to <a href=\"%link%\" class=\"govuk-link\">start again.</a>"
-msgstr "Nid ydym wedi cadw unrhyw wybodaeth a roddwyd gennych. Pan fydd y gwasanaeth ar gael, bydd rhaid ichi <a href=\"%link%\" class=\"govuk-link\">gychwyn eto.</a>"
+msgstr "Nid ydym wedi cadw unrhyw wybodaeth a roddwyd gennych. Pan fydd y gwasanaeth ar gael, bydd rhaid i chi <a href=\"%link%\" class=\"govuk-link\">gychwyn eto.</a>"
 
 #: src/Common/templates/error/error.html.twig:19
 msgid "You can <a class=\"govuk-link\" href=\"%link%\">contact us</a> if you have any questions."
@@ -3442,7 +3442,7 @@ msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr Atwrneiaeth Arhosol hon. B
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:83
 msgid "We cannot show the instructions for this LPA. Until we can fix this problem, if you need to see these you\"ll need to ask the person who gave you the access code to show you the paper LPA."
-msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer y LPA hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch \" \"angen gweld y rhain, bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad \" \"i chi i ddangos y LPA."
+msgstr "Ni allwn ddangos y cyfarwyddiadau ar gyfer yr LPA hon. Hyd nes y gallwn ddatrys y broblem hon, os byddwch angen gweld y rhain, bydd rhaid i chi ofyn i'r person a roddodd y cod mynediad i chi i ddangos yr LPA bapur i chi."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:91
 msgid ""
@@ -4637,12 +4637,12 @@ msgstr "Oes, rhoddodd y rhoddwr eiriau yn y rhan hon o'r ffurflen <abbr title=\"
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:267
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:137
 msgid "We are unable to show the words entered in this part of this LPA. You’ll need to show the paper LPA to anyone who needs to see them."
-msgstr "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o'r LPA. Bydd angen i chi ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
+msgstr "Ni allwn ddangos y geiriau a roddwyd yn y rhan hon o’r LPA. Bydd angen i chi ddangos yr LPA bapur i unrhyw un sydd angen ei gweld."
 
 #: src/Common/templates/partials/lpa-summary-details/lpa-details-combined-lpa.html.twig:271
 #: src/Common/templates/partials/lpa-summary-details/lpa-details.html.twig:140
 msgid "No, the donor did not enter any words in this part of the LPA form."
-msgstr "Na, ni roddodd y rhoddwr unrhyw eiriau yn y rhan hon o'r ffurflen LPA."
+msgstr "Na, ni wnaeth y rhoddwr roi unrhyw eiriau yn y rhan hon o’r ffurflen LPA."
 
 #: src/Common/templates/partials/lpa-summary-details/iap-macros.html.twig:79
 msgid ""
