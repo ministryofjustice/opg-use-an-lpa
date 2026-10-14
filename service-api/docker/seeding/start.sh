@@ -19,60 +19,60 @@ if [[ -n "${AWS_ENDPOINT_DYNAMODB}" ]]; then
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=Identity,AttributeType=S AttributeName=Email,AttributeType=S \
-    --table-name ActorUsers \
+    --table-name demo-ActorUsers \
     --key-schema AttributeName=Id,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --billing-mode PAY_PER_REQUEST \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT \
     --global-secondary-indexes \
-      IndexName=IdentityIndex,KeySchema=["{AttributeName=Identity,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}" \
-      IndexName=EmailIndex,KeySchema=["{AttributeName=Email,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+      IndexName=IdentityIndex,KeySchema=["{AttributeName=Identity,KeyType=HASH}"],Projection="{ProjectionType=ALL}" \
+      IndexName=EmailIndex,KeySchema=["{AttributeName=Email,KeyType=HASH}"],Projection="{ProjectionType=ALL}"
 
     aws dynamodb update-time-to-live \
-    --table-name ActorUsers \
+    --table-name demo-ActorUsers \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT \
     --time-to-live-specification "Enabled=true, AttributeName=ExpiresTTL"
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=SiriusUid,AttributeType=S AttributeName=Expires,AttributeType=S \
-    --table-name ViewerCodes \
+    --table-name demo-ViewerCodes \
     --key-schema AttributeName=ViewerCode,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --billing-mode PAY_PER_REQUEST \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT \
-    --global-secondary-indexes IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+    --global-secondary-indexes IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}"],Projection="{ProjectionType=ALL}"
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=Viewed,AttributeType=S \
-    --table-name ViewerActivity \
+    --table-name demo-ViewerActivity \
     --key-schema AttributeName=ViewerCode,KeyType=HASH AttributeName=Viewed,KeyType=RANGE \
-    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --billing-mode PAY_PER_REQUEST \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT
 
-   aws dynamodb create-table \
-      --attribute-definitions AttributeName=TimePeriod,AttributeType=S \
-      --table-name Stats \
-      --key-schema AttributeName=TimePeriod,KeyType=HASH \
-      --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
-      --region eu-west-1 \
-      --endpoint $DYNAMODB_ENDPOINT
+    aws dynamodb create-table \
+       --attribute-definitions AttributeName=TimePeriod,AttributeType=S \
+       --table-name demo-Stats \
+       --key-schema AttributeName=TimePeriod,KeyType=HASH \
+       --billing-mode PAY_PER_REQUEST \
+       --region eu-west-1 \
+       --endpoint $DYNAMODB_ENDPOINT
 
     aws dynamodb create-table \
     --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S AttributeName=ActivationCode,AttributeType=S \
      AttributeName=SiriusUid,AttributeType=S \
-    --table-name UserLpaActorMap \
+    --table-name demo-UserLpaActorMap \
     --key-schema AttributeName=Id,KeyType=HASH \
-    --provisioned-throughput ReadCapacityUnits=10,WriteCapacityUnits=10 \
+    --billing-mode PAY_PER_REQUEST \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT \
-    --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
-      IndexName=ActivationCodeIndex,KeySchema=["{AttributeName=ActivationCode,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"\
-      IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH}"],Projection="{ProjectionType=ALL}",ProvisionedThroughput="{ReadCapacityUnits=10,WriteCapacityUnits=10}"
+    --global-secondary-indexes IndexName=UserIndex,KeySchema=["{AttributeName=UserId,KeyType=HASH}"],Projection="{ProjectionType=ALL}"\
+      IndexName=ActivationCodeIndex,KeySchema=["{AttributeName=ActivationCode,KeyType=HASH}"],Projection="{ProjectionType=ALL}"\
+      IndexName=SiriusUidIndex,KeySchema=["{AttributeName=SiriusUid,KeyType=HASH}"],Projection="{ProjectionType=ALL}"
 
      aws dynamodb update-time-to-live \
-    --table-name UserLpaActorMap \
+    --table-name demo-UserLpaActorMap \
     --region eu-west-1 \
     --endpoint $DYNAMODB_ENDPOINT \
     --time-to-live-specification "Enabled=true, AttributeName=ActivateBy"
