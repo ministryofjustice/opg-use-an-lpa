@@ -350,8 +350,8 @@ class LpaContext implements Context
         $this->ui->assertPageAddress('/lpa/check');
     }
 
-    #[Given('/^I am on the dashboard page$/')]
-    public function iAmOnTheDashboardPage(): void
+    #[Given('/^I am on the dashboard page(?: in (Welsh))?$/')]
+    public function iAmOnTheDashboardPage(?string $language = null): void
     {
         if (isset($this->dashboardLPAs)) {
             //API call for getting all the users added LPAs
@@ -382,10 +382,11 @@ class LpaContext implements Context
             )
         );
 
-        $this->ui->visit('/lpa/dashboard');
+        $path = $language === 'Welsh' ? '/cy/lpa/dashboard' : '/lpa/dashboard';
+        $this->ui->visit($path);
 
         $this->ui->assertResponseStatus(StatusCodeInterface::STATUS_OK);
-        $this->ui->assertPageAddress('/lpa/dashboard');
+        $this->ui->assertPageAddress($path);
     }
 
     #[Given('/^I am on the death notification page$/')]
