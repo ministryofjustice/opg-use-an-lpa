@@ -26,17 +26,17 @@ different POT file. It's probably best to stick to the first '_in container_' ru
 
 ## Translation Implementation
 
-To edit the Welsh in poedit, open messages.po , and do `Translation->Update from POT` and select messages.pot. 
+To edit the Welsh in poedit, open messages.po , and do `Translation->Update from POT` and select messages.pot.
 This updates the .po file with any new or modified strings in the pot file.
 Now edit any new or edited translations, then save the file.
 
 The poedit software tries to be helpful and replaces all instances
-of " with the more linguistically correct “ and ”. This is unwanted within html tags. 
+of " with the more linguistically correct “ and ”. This is unwanted within html tags.
 
 This can be fixed by holding ctrl as you type a quote. (or ctrl shift for double quote)
 
-If you fail to do the above when typing quotes used within html tags, the po file 
-will have incorrect quotes, which would break our html output. 
+If you fail to do the above when typing quotes used within html tags, the po file
+will have incorrect quotes, which would break our html output.
 
 You'll need to reset those by hand before moving onto the next step
 
@@ -57,3 +57,71 @@ msgfmt messages.po
 ```
 
 Both these files now need to go in the `LC_MESSAGES` folder of the language these files are for.
+
+
+## Adding and managing translation keys
+
+Translations are managed using translation keys in the application templates, with the English and Welsh content maintained in Weblate.
+When adding or changing translatable content, follow the process below.
+
+1. Add the translation keys to the template
+
+    Replace the hard-coded content in the Twig template with a translation key.
+    Follow the naming and content structure defined in 0025-translation-key-naming-and-content-structure.md
+
+
+    For example:
+
+    {% trans %}activation-key-request.start.title{% endtrans %}
+
+    For content requiring a gettext context (such as the content being "html" or containing a placeholder for a link inclusion "html-link"), include the appropriate context:
+
+    {% trans %}
+        activation-key-request.start.content.details-need-to-give
+    {% context %}html-link{% notes %}Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.{% endtrans %}
+
+
+2. Extract the POT file and update en_devel
+
+   After making the template changes, extract the translation keys into the POT file locally.
+
+   Review the generated messages.pot to ensure that:
+
+    - the new translation keys have been extracted
+    - the correct gettext context has been included where required
+    - placeholders such as %link% are preserved
+
+   Merge the updated POT file into the en_devel PO file using Poedit or msgmerge.
+
+   Add the designed HTML to the relevant translation entries in en_devel.po, using Poedit or a text editor.
+   Ensure that HTML markup, placeholders and quotation marks are preserved correctly.
+
+   Commit both the updated messages.pot and en_devel PO file in the initial PR.
+
+   Do not manually add or edit the English or Welsh translations in the application PO files at this stage.
+
+
+3. Add the English and Welsh translations in Weblate
+
+   Once the initial PR has been merged, the new translation keys will become available in Weblate.
+
+   Content writers and translators can then add or update the translations in Weblate.
+
+   Any required HTML, placeholders, or other translator guidance should be preserved according to the context and notes associated with the translation key.
+
+   Do not manually edit the generated PO/MO files in the repository for these translations.
+
+
+4. Push the translations from Weblate
+
+    Once the English and Welsh translations are complete and have been reviewed, use Weblate to push the translation changes back to the repository.
+
+    Weblate will create a PR containing the updated translation files.
+
+
+5. Fix any test breakages and review
+
+   Fix any test breakages, review the PR and merge it using the normal process.
+
+
+NOTE: Do not manually generate or commit MO files. MO files are generated as part of the application build process.
