@@ -74,7 +74,7 @@ When adding or changing translatable content, follow the process below.
 
     {% trans %}activation-key-request.start.title{% endtrans %}
 
-    For content requiring a gettext context, include the appropriate context:
+    For content requiring a gettext context (such as the content being "html" or containing a placeholder for a link inclusion "html-link"), include the appropriate context:
 
     {% trans %}
         activation-key-request.start.content.details-need-to-give
