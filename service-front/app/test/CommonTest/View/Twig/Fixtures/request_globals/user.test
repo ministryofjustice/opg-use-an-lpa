@@ -1,0 +1,13 @@
+--TEST--
+The user function exposes the bound user in inherited and included templates independently of context variables
+--TEMPLATE--
+{% extends "layout.twig" %}
+{% block content %}{{ user().identity }}{% endblock %}
+--TEMPLATE(layout.twig)--
+{% include "header.twig" %}:{% block content %}{% endblock %}
+--TEMPLATE(header.twig)--
+{{- user().getDetail("Email") -}}
+--DATA--
+return [];
+--EXPECT--
+user@example.com:account-id

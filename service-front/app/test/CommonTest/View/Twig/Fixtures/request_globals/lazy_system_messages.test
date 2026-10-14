@@ -1,0 +1,10 @@
+--TEST--
+Templates using user and flash do not fetch system messages from an unexecuted branch
+--TEMPLATE--
+{{ user().identity }}:{{ flash().getFlash("added") }}
+{% if show_banner %}{{ system_messages()["use/en"] }}{% endif %}
+--DATA--
+$this->systemMessageService->method('getMessages')->willThrowException(new \RuntimeException('Unexpected system message fetch'));
+return ['show_banner' => false];
+--EXPECT--
+account-id:&lt;LPA added&gt;

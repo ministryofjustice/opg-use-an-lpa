@@ -1,0 +1,11 @@
+--TEST--
+The system_messages function exposes messages to included templates and repeated calls
+--TEMPLATE--
+{% set messages = system_messages() %}
+{% include "banner.twig" with {en: messages["use/en"], cy: messages["use/cy"]} only %}|{{ system_messages()["use/en"] }}
+--TEMPLATE(banner.twig)--
+{{ en }}:{{ cy }}
+--DATA--
+return [];
+--EXPECT--
+&lt;English message&gt;:Welsh message|&lt;English message&gt;
