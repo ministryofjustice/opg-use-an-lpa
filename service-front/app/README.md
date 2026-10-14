@@ -80,33 +80,36 @@ When adding or changing translatable content, follow the process below.
         activation-key-request.start.content.details-need-to-give
     {% context %}html-link{% notes %}Contains GOV.UK HTML markup and a contact-us link using the %link% placeholder.{% endtrans %}
 
-    At this stage, do not add or manually edit the English or Welsh translations in the application PO files.
 
-
-2. Extract the POT file and create a PR
+2. Extract the POT file and update en_devel
 
    After making the template changes, extract the translation keys into the POT file locally.
 
-    Review the generated messages.pot to ensure that:
+   Review the generated messages.pot to ensure that:
 
     - the new translation keys have been extracted
     - the correct gettext context has been included where required
     - placeholders such as %link% are preserved
 
-    Create a PR containing only the POT file changes.
+   Merge the updated POT file into the en_devel PO file using Poedit or msgmerge.
 
-    This keeps the addition of the new translation keys separate from the translation content.
+   Add the designed HTML to the relevant translation entries in en_devel.po, using Poedit or a text editor.
+   Ensure that HTML markup, placeholders and quotation marks are preserved correctly.
+
+   Commit both the updated messages.pot and en_devel PO file in the initial PR.
+
+   Do not manually add or edit the English or Welsh translations in the application PO files at this stage.
 
 
-3. Add the English and Welsh content in Weblate
+3. Add the English and Welsh translations in Weblate
 
-    Once the POT changes have been merged, the new translation keys will become available in Weblate.
+   Once the initial PR has been merged, the new translation keys will become available in Weblate.
 
-    Content writers and translators can then add or update the translations in Weblate:
+   Content writers and translators can then add or update the translations in Weblate.
 
-    Any required HTML, placeholders, or other translator guidance should be preserved according to the context and notes associated with the translation key.
+   Any required HTML, placeholders, or other translator guidance should be preserved according to the context and notes associated with the translation key.
 
-    Do not manually edit the generated PO/MO files in the repository for these translations.
+   Do not manually edit the generated PO/MO files in the repository for these translations.
 
 
 4. Push the translations from Weblate
@@ -116,7 +119,9 @@ When adding or changing translatable content, follow the process below.
     Weblate will create a PR containing the updated translation files.
 
 
-5. Fix any test breakages and review the PR and merge it in the normal way.
+5. Fix any test breakages and review
+
+   Fix any test breakages, review the PR and merge it using the normal process.
 
 
 NOTE: Do not manually generate or commit MO files. MO files are generated as part of the application build process.
