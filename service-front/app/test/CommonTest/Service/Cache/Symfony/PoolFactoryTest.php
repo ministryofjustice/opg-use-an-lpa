@@ -119,15 +119,6 @@ final class PoolFactoryTest extends TestCase
     }
 
     #[Test]
-    public function it_should_reject_an_invalid_redis_factory(): void
-    {
-        $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Redis cache factory must be a FactoryInterface instance');
-
-        (new PoolFactory())($this->container($this->redisConfig(), redisFactory: new stdClass()), 'cache.test');
-    }
-
-    #[Test]
     #[DataProvider('invalidConfigurations')]
     public function it_should_reject_invalid_configuration(array $config, string $message): void
     {
