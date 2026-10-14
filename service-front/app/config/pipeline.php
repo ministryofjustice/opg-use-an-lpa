@@ -14,7 +14,7 @@ use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
-use Common\Middleware\Session\TwigRequestGlobalsMiddleware;
+use Common\Middleware\Twig\TwigRequestGlobalsMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;

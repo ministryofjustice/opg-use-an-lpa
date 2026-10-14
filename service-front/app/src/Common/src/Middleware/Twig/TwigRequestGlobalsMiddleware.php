@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Common\Middleware\Session;
+namespace Common\Middleware\Twig;
 
 use Common\Entity\User;
+use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\View\Twig\RequestGlobalsRuntime;
 use Mezzio\Authentication\Session\Exception\MissingSessionContainerException;
 use Mezzio\Authentication\UserInterface;
