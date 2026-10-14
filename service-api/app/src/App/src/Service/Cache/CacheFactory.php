@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service\Cache;
 
-use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
-use Laminas\Cache\Psr\SimpleCache\SimpleCacheException;
-use Laminas\Cache\Service\StorageAdapterFactoryInterface;
-use Psr\Container\ContainerExceptionInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\SimpleCache\CacheInterface;
-use RuntimeException;
+use Symfony\Component\Cache\Psr16Cache;
+use UnexpectedValueException;
 
 class CacheFactory
 {
@@ -19,30 +16,14 @@ class CacheFactory
     {
     }
 
-    /**
-     * @param string $cacheName
-     * @return CacheInterface
-     * @throws RuntimeException
-     * @throws SimpleCacheException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
     public function __invoke(string $cacheName): CacheInterface
     {
-        $config = $this->container->get('config');
+        $pool = $this->container->get('cache.' . $cacheName);
 
-        if (!isset($config['cache'])) {
-            throw new RuntimeException('Missing cache configuration');
-        }
-        if (!isset($config['cache'][$cacheName])) {
-            throw new RuntimeException('Missing cache configuration for ' . $cacheName);
+        if (!$pool instanceof CacheItemPoolInterface) {
+            throw new UnexpectedValueException('cache.' . $cacheName . ' must implement CacheItemPoolInterface');
         }
 
-        /** @var StorageAdapterFactoryInterface $factory */
-        $factory = $this->container->get(StorageAdapterFactoryInterface::class);
-
-        $cacheAdaptor = $factory->createFromArrayConfiguration($config['cache'][$cacheName]);
-
-        return new SimpleCacheDecorator($cacheAdaptor);
+        return new Psr16Cache($pool);
     }
 }
