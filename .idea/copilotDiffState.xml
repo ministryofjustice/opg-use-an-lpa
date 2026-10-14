@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="/tmp/edit_while_running_test.sh">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="/tmp/edit_while_running_test.sh" />
+              <option name="newFile" value="true" />
+              <option name="updatedContent" value="#!/bin/bash&#10;# Reproduce &quot;EOF: command not found&quot; by editing a script in place while it runs.&#10;SRC=/Users/nick.davis/gitrepos/opg-use-an-lpa/test_unused_accounts.sh&#10;&#10;run_case() {&#10;  local label=&quot;$1&quot; file=&quot;$2&quot;&#10;  # Make the 'logs' command slow and harmless&#10;  sed 's/^    make logs unused-accounts-lambda$/    sleep 2/' &quot;$file&quot; &gt; /tmp/t.sh&#10;  bash /tmp/t.sh logs &gt; /tmp/t.out 2&gt;&amp;1 &amp;&#10;  local pid=$!&#10;  sleep 1&#10;  # Rewrite in place (same inode) with 10 extra lines at the top, like an editor save&#10;  { head -1 /tmp/t.sh; for i in $(seq 1 10); do echo &quot;# padding $i&quot;; done; tail -n +2 /tmp/t.sh; } &gt; /tmp/t.new&#10;  cat /tmp/t.new &gt; /tmp/t.sh&#10;  wait $pid&#10;  echo &quot;[$label] exit=$?&quot;&#10;  grep -i &quot;command not found\|syntax error&quot; /tmp/t.out || echo &quot;[$label] no stray errors&quot;&#10;}&#10;&#10;# Old layout (no { ...; exit; } wrapper) for comparison&#10;sed -e '/^# Wrapped in {/d' -e '/^# This makes it safe/d' -e '/^{$/d' -e '/^exit$/d' -e '$d' &quot;$SRC&quot; &gt; /tmp/old_layout.sh&#10;bash -n /tmp/old_layout.sh || { echo &quot;old layout build failed&quot;; exit 1; }&#10;run_case &quot;old&quot; /tmp/old_layout.sh&#10;run_case &quot;new&quot; &quot;$SRC&quot;&#10;rm -f /tmp/t.sh /tmp/t.new /tmp/t.out /tmp/old_layout.sh&#10;&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

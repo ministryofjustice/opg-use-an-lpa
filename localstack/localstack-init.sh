@@ -56,4 +56,36 @@ awslocal lambda create-event-source-mapping \
     --event-source-arn arn:aws:sqs:eu-west-1:000000000000:event-bus-queue \
     --region "eu-west-1"
 
+# DynamoDB tables
+awslocal dynamodb create-table \
+    --table-name ActorUsers \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=Identity,AttributeType=S AttributeName=Email,AttributeType=S \
+    --key-schema AttributeName=Id,KeyType=HASH \
+    --global-secondary-indexes \
+        IndexName=IdentityIndex,Keys=[{AttributeName=Identity,KeyType=HASH}],Projection={ProjectionType=ALL} \
+        IndexName=EmailIndex,Keys=[{AttributeName=Email,KeyType=HASH}],Projection={ProjectionType=ALL} \
+    --billing-mode PAY_PER_REQUEST \
+    --region "eu-west-1"
+
+awslocal dynamodb create-table \
+    --table-name UserLpaActorMap \
+    --attribute-definitions AttributeName=Id,AttributeType=S AttributeName=UserId,AttributeType=S AttributeName=ActivationCode,AttributeType=S AttributeName=SiriusUid,AttributeType=S \
+    --key-schema AttributeName=Id,KeyType=HASH \
+    --global-secondary-indexes \
+        IndexName=ActivationCodeIndex,Keys=[{AttributeName=ActivationCode,KeyType=HASH}],Projection={ProjectionType=ALL} \
+        IndexName=UserIndex,Keys=[{AttributeName=UserId,KeyType=HASH}],Projection={ProjectionType=ALL} \
+        IndexName=SiriusUidIndex,Keys=[{AttributeName=SiriusUid,KeyType=HASH}],Projection={ProjectionType=ALL} \
+    --billing-mode PAY_PER_REQUEST \
+    --region "eu-west-1"
+
+awslocal dynamodb create-table \
+    --table-name ViewerCodes \
+    --attribute-definitions AttributeName=ViewerCode,AttributeType=S AttributeName=SiriusUid,AttributeType=S AttributeName=Expires,AttributeType=S \
+    --key-schema AttributeName=ViewerCode,KeyType=HASH \
+    --global-secondary-indexes \
+        IndexName=SiriusUidIndex,Keys=[{AttributeName=SiriusUid,KeyType=HASH},{AttributeName=Expires,KeyType=RANGE}],Projection={ProjectionType=ALL} \
+    --billing-mode PAY_PER_REQUEST \
+    --region "eu-west-1"
+
+# S3 buckets
 awslocal s3 mb s3://duplicate-accounts-bucket
