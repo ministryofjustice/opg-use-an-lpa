@@ -7,6 +7,7 @@ namespace CommonTest\Service\Cache\Symfony;
 use Common\Service\Cache\RedisFactory;
 use Common\Service\Cache\Symfony\PoolFactory;
 use DI\Factory\RequestedEntry;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -72,7 +73,7 @@ final class PoolFactoryTest extends TestCase
         $connection->expects(self::once())->method('setOption')
             ->with(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP)->willReturn(true);
 
-        $factory = $this->createMock(RedisFactory::class);
+        $factory = $this->createMock(FactoryInterface::class);
         $factory->expects(self::once())->method('__invoke')->willReturn($connection);
 
         $pool = (new PoolFactory())(
@@ -92,7 +93,7 @@ final class PoolFactoryTest extends TestCase
         $connection->expects($connected ? self::once() : self::never())
             ->method('setOption')->willReturn($configured);
 
-        $factory = $this->createMock(RedisFactory::class);
+        $factory = $this->createMock(FactoryInterface::class);
         $factory->expects(self::once())->method('__invoke')->willReturn($connection);
 
         $this->expectException(RuntimeException::class);
@@ -121,7 +122,7 @@ final class PoolFactoryTest extends TestCase
     public function it_should_reject_an_invalid_redis_factory(): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage('Redis cache factory must be a RedisFactory instance');
+        $this->expectExceptionMessage('Redis cache factory must be a FactoryInterface instance');
 
         (new PoolFactory())($this->container($this->redisConfig(), redisFactory: new stdClass()), 'cache.test');
     }

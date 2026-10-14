@@ -142,11 +142,11 @@ final class PoolFactory implements FactoryInterface
 
         $factory = $container->get(RedisFactory::class);
 
-        if (!$factory instanceof RedisFactory) {
-            throw new UnexpectedValueException('Redis cache factory must be a RedisFactory instance');
+        if (!$factory instanceof FactoryInterface) {
+            throw new UnexpectedValueException('Redis cache factory must be a FactoryInterface instance');
         }
 
-        $connection = $factory();
+        $connection = $factory($container, RedisFactory::class);
 
         if (!$connection->connect($redis['host'], $redis['port'], $redis['timeout'], $redis['persistent_id'])) {
             throw new RuntimeException('Unable to connect to Redis cache');
