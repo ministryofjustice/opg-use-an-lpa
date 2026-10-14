@@ -71,9 +71,14 @@ def parse_last_login(last_login_str):
     if not last_login_str:
         return None
     try:
-        return datetime.fromisoformat(last_login_str.replace('Z', '+00:00'))
-    except:
+        parsed = datetime.fromisoformat(last_login_str.replace('Z', '+00:00'))
+    except (ValueError, TypeError):
         return None
+
+    # Some stored values have no offset; assume UTC so comparisons with aware datetimes work
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
 
 
 def is_account_unused(actor, lpa_table, months_inactive):
@@ -218,7 +223,7 @@ def execute_deletion_plan(table_prefix, deletion_plan):
             TransactItems=[
                 {
                     "Delete": {
-                        "TableName": f"{table_prefix}-ActorUsers",
+                        "TableName": get_actor_users_table(table_prefix).name,
                         "Key": {"Id": {"S": account_id}},
                         "ConditionExpression": "attribute_exists(Id)",
                     }
