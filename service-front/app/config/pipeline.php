@@ -14,6 +14,7 @@ use Common\Middleware\Security\UserIdentificationMiddleware;
 use Common\Middleware\Session\SessionAttributeAllowlistMiddleware;
 use Common\Middleware\Session\SessionExpiryMiddleware;
 use Common\Middleware\Session\SessionTimeoutMiddleware;
+use Common\Middleware\Session\TwigRequestGlobalsMiddleware;
 use Common\Middleware\Workflow\StatePersistenceMiddleware;
 use Laminas\Stratigility\Middleware\ErrorHandler;
 use Mezzio\Application;
@@ -95,6 +96,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
 
     // Seed the UrlHelper with the routing results:
     $app->pipe(UrlHelperMiddleware::class);
+
+    // Load up the twig environment with global things like the user details or flash messages
+    $app->pipe(TwigRequestGlobalsMiddleware::class);
 
     // Add more middleware here that needs to introspect the routing results; this
     // might include:
