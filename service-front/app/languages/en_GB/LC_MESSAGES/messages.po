@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-13 16:08+0000\n"
+"PO-Revision-Date: 2026-10-14 12:06+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -1890,7 +1890,7 @@ msgstr "have died"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:35
 msgid "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a>(‘disclaimed their appointment’)"
-msgstr "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a>(‘disclaimed their appointment’)"
+msgstr "have <a href=\"%link%\" class=\"govuk-link\">formally stepped down</a> (‘disclaimed their appointment’)"
 
 #: src/Actor/templates/actor/request-activation-key/stop-replacement-attorney.html.twig:41
 msgid "have been <a href=\"%link%\" class=\"govuk-link\">removed from the LPA by the donor</a>"
@@ -2007,7 +2007,7 @@ msgstr "Check your answers"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:18
 msgid "Current address"
-msgstr "Current address"
+msgstr "Your current address"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:49
 msgid "Change<span class=\"govuk-visually-hidden\"> address</span>"
@@ -2015,7 +2015,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> address</span>"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:33
 msgid "Address on paper LPA"
-msgstr "Address on paper LPA"
+msgstr "Your address on paper LPA"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:37
 msgid "Not sure"
@@ -2059,7 +2059,7 @@ msgstr "Change<span class=\"govuk-visually-hidden\"> attorney’s date of birth<
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:134
 msgid "Telephone number"
-msgstr "Phone number"
+msgstr "Your phone number"
 
 #: src/Actor/templates/actor/request-activation-key/check-details-and-consent.html.twig:140
 msgid "Not provided"
