@@ -5,99 +5,39 @@ declare(strict_types=1);
 namespace AppTest\Service\Cache;
 
 use App\Service\Cache\CacheFactory;
-use Laminas\Cache\Psr\SimpleCache\SimpleCacheDecorator;
-use Laminas\Cache\Service\StorageAdapterFactoryInterface;
-use Laminas\Cache\Storage\Capabilities;
-use Laminas\Cache\Storage\StorageInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
-use Psr\SimpleCache\CacheInterface;
-use RuntimeException;
+use stdClass;
+use Symfony\Component\Cache\Psr16Cache;
+use UnexpectedValueException;
 
-class CacheFactoryTest extends TestCase
+#[CoversClass(CacheFactory::class)]
+final class CacheFactoryTest extends TestCase
 {
-    use ProphecyTrait;
-
     #[Test]
-    public function itRequiresACacheConfiguration(): void
+    public function it_should_wrap_the_named_pool_in_a_psr16_cache(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
+        $container = $this->createMock(ContainerInterface::class);
+        $pool      = $this->createMock(CacheItemPoolInterface::class);
+        $container->expects(self::once())->method('get')->with('cache.one-login')->willReturn($pool);
 
-        $factory = new CacheFactory($containerProphecy->reveal());
-
-        $this->expectException(RuntimeException::class);
-        $factory->__invoke('a-cache');
+        $cache = (new CacheFactory($container))('one-login');
+        self::assertInstanceOf(Psr16Cache::class, $cache);
+        self::assertInstanceOf(Psr16Cache::class, $cache);
     }
 
     #[Test]
-    public function itRequiresACacheConfigurationForIndividualCaches(): void
+    public function it_should_reject_a_service_that_is_not_a_cache_item_pool(): void
     {
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->willReturn(['cache' => []])
-            ->shouldBeCalled();
+        $container = $this->createMock(ContainerInterface::class);
+        $container->expects(self::once())->method('get')->with('cache.one-login')->willReturn(new stdClass());
 
-        $factory = new CacheFactory($containerProphecy->reveal());
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('cache.one-login must implement CacheItemPoolInterface');
 
-        $this->expectException(RuntimeException::class);
-        $factory->__invoke('a-cache');
-    }
-
-    #[Test]
-    public function itCreatesAConfiguredCache(): void
-    {
-        $cacheAdapterProphecy    = $this->prophesize(StorageAdapterFactoryInterface::class);
-        $storageInterfacePropecy = $this->prophesize(StorageInterface::class);
-        $capabilitiesPropecy     = $this->prophesize(Capabilities::class);
-
-        // Mocking the scenario where all required types are supported with allowed values
-        $capabilitiesPropecy->getSupportedDatatypes()->willReturn([
-            'string'  => true,
-            'integer' => true,
-            'double'  => true,
-            'boolean' => true,
-            'NULL'    => true,
-            'array'   => true,
-            'object'  => true,
-        ]);
-
-        $capabilitiesPropecy->getMaxKeyLength()->willReturn(128);
-        $capabilitiesPropecy->getStaticTtl()->willReturn(true);
-        $capabilitiesPropecy->getMinTtl()->willReturn(0);
-
-        $storageInterfacePropecy->getCapabilities()->willReturn($capabilitiesPropecy->reveal());
-
-        $cacheAdapterProphecy
-            ->createFromArrayConfiguration(['adapter' => 'memory'])
-            ->willReturn($storageInterfacePropecy->reveal());
-
-        $containerProphecy = $this->prophesize(ContainerInterface::class);
-        $containerProphecy
-            ->get('config')
-            ->shouldBeCalled()
-            ->willReturn(
-                [
-                    'cache' => [
-                        'a-cache' => [
-                            'adapter' => 'memory',
-                        ],
-                    ],
-                ]
-            );
-
-        $containerProphecy
-            ->get(StorageAdapterFactoryInterface::class)
-            ->shouldBeCalled()
-            ->willReturn($cacheAdapterProphecy->reveal());
-
-        $factory = new CacheFactory($containerProphecy->reveal());
-
-        $cache = $factory->__invoke('a-cache');
-
-        $this->assertInstanceOf(CacheInterface::class, $cache);
-        $this->assertInstanceOf(SimpleCacheDecorator::class, $cache);
+        (new CacheFactory($container))('one-login');
     }
 }
