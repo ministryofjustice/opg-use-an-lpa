@@ -6,7 +6,7 @@ namespace Common\Service\Security\RateLimit;
 
 use Common\Exception\RateLimitExceededException;
 use Common\Service\Security\RateLimitService;
-use Laminas\Cache\Exception\ExceptionInterface;
+use Psr\Cache\InvalidArgumentException;
 
 use function time;
 
@@ -20,16 +20,19 @@ class KeyedRateLimitService extends RateLimitService
      * @param string $identity A unique identity to track
      * @param string $key      An optional piece of information to key this limit for
      * @return bool Is the identity limited for the given key
-     * @throws ExceptionInterface
+     * @throws InvalidArgumentException
      */
     public function isLimited(string $identity, string $key = ''): bool
     {
         $recordKey = $this->getRecordKey($identity, $key);
 
-        /** @var array $accessRecords */
-        if (null === $accessRecords = $this->cacheService->getItem($recordKey)) {
+        $cacheItem = $this->cacheService->getItem($recordKey);
+        if (!$cacheItem->isHit()) {
             return false;
         }
+
+        /** @var array<int, int> $accessRecords */
+        $accessRecords = $cacheItem->get();
 
         // walk the time window and drop expired records
         $expiredTime   = time() - $this->interval;
@@ -38,7 +41,8 @@ class KeyedRateLimitService extends RateLimitService
         });
 
         // update the window
-        $this->cacheService->setItem($recordKey, $accessRecords);
+        $cacheItem->set($accessRecords);
+        $this->cacheService->save($cacheItem);
 
         return count($accessRecords) > $this->requestsPerInterval;
     }
@@ -50,18 +54,20 @@ class KeyedRateLimitService extends RateLimitService
      * @param string $identity A unique identity to limit
      * @param string $key      An optional piece of information to key this limit for
      * @throws RateLimitExceededException If a limit check exceeds the configured limit
-     * @throws ExceptionInterface
+     * @throws InvalidArgumentException
      */
     public function limit(string $identity, string $key = ''): void
     {
         $recordKey = $this->getRecordKey($identity, $key);
 
-        /** @var array $accessRecords */
-        $accessRecords = $this->cacheService->getItem($recordKey) ?: [];
+        $cacheItem = $this->cacheService->getItem($recordKey);
+        /** @var array<int, int> $accessRecords */
+        $accessRecords = $cacheItem->isHit() ? $cacheItem->get() : [];
 
         // add our record
         $accessRecords[] = time();
-        $this->cacheService->setItem($recordKey, $accessRecords);
+        $cacheItem->set($accessRecords);
+        $this->cacheService->save($cacheItem);
 
         // throw exception if rate limit is exceeded
         if (count($accessRecords) > $this->requestsPerInterval) {
@@ -73,6 +79,6 @@ class KeyedRateLimitService extends RateLimitService
 
     private function getRecordKey(string $identity, string $key): string
     {
-        return $identity . ':' . $key;
+        return hash('sha256', $this->getName() . ':' . $identity . ':' . $key);
     }
 }
