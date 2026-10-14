@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2026-05-11T07:02:41+00:00\n"
-"PO-Revision-Date: 2026-10-14 12:06+0000\n"
+"PO-Revision-Date: 2026-10-14 13:47+0000\n"
 "Last-Translator: Angharad Watson <Angharad.Watson@justice.gov.uk>\n"
 "Language-Team: English (United Kingdom) <https://moj.weblate.cloud/projects/opg-use-an-lpa/service-front/en_GB/>\n"
 "Language: en_GB\n"
@@ -578,17 +578,17 @@ msgstr "Give %organisation% this access code. They should go to <a href=\"%link_
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:73
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:71
 msgid "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences and instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:77
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:75
 msgid "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s preferences will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s preferences will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:81
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:79
 msgid "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
-msgstr "Scanned copies of the donor’s instructions will be shown in the LPA summary. You’ll need to show organisations the paper LPA if any part of these cannot be read properly."
+msgstr "Scanned copies of the donor’s instructions will be shown in the <abbr title=\"lasting power of attorney\">LPA</abbr> summary. You’ll need to show organisations the paper <abbr title=\"lasting power of attorney\">LPA</abbr> if any part of these cannot be read properly."
 
 #: src/Actor/templates/actor/lpa-show-viewercode-combined-lpa.html.twig:91
 #: src/Actor/templates/actor/lpa-show-viewercode.html.twig:89
